@@ -1,0 +1,8 @@
+# OS
+.DS_Store
+
+# Browser-automation artifacts. These landed in the repo root during
+# development more than once; ignoring them stops it recurring.
+.playwright-mcp/
+*.png
+!web/public/**/*.png
