@@ -211,9 +211,22 @@ separates a real regression test from a vacuous one.
 Test names encode the rationale, not the mechanic:
 `test('still fires ai_analysis_run when the run fails, since failure volume is a useful signal')`.
 
+## Project artifacts
+
+| File | Holds |
+|---|---|
+| `CLAUDE.md` | How this project works. You are reading it. |
+| `KICKOFF.md` | Paste-buffer for cold-starting a new session with full context. Refresh its *Project state* before use — a stale kickoff is worse than none, because it is trusted. |
+| `docs/task.md` | Scope, milestones (`P-` content, `W-` web app), dependency map |
+| `docs/tracker.md` | What shipped with evidence, numbered decisions, technical debt, bug ledger |
+| `web/DESIGN.md` | The design system. Any new UI matches it. |
+| `docs/superpowers/specs/`, `plans/` | Delivery-loop artifacts |
+| `docs/learnings/` | Guides written for future-you when a round teaches something expensive |
+| `reference/stack.md` | The default stack. Versions live here and nowhere else. |
+
 ## Recording work
 
-`docs/task.md` — scope, milestones (`P-` content, `W-` web app), dependency map.
+`docs/task.md` — scope, milestones, dependency map.
 `docs/tracker.md` — what shipped with evidence, numbered decisions with reasoning,
 technical debt ranked by cost, bug ledger.
 

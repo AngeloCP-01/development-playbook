@@ -47,6 +47,7 @@ response — so the app has to introduce concepts, not only remind.
 | **P-4** | Long tail — 15, 16, 17, 18 | ☑ |
 | **P-5** | Reconcile docs with the app's real stack | ☐ |
 | **P-6** | Fold the real working conventions into the stage docs | ☐ |
+| **P-7** | Project scaffolding — kickoff, design system, loop directories | ☑ |
 
 ### W — Web app
 
