@@ -46,6 +46,7 @@ response — so the app has to introduce concepts, not only remind.
 | **P-3** | Upfront thinking — 01, 02, 03, 08 | ☑ |
 | **P-4** | Long tail — 15, 16, 17, 18 | ☑ |
 | **P-5** | Reconcile docs with the app's real stack | ☐ |
+| **P-6** | Fold the real working conventions into the stage docs | ☐ |
 
 ### W — Web app
 
@@ -71,6 +72,7 @@ P-0 ──> P-1 ──> P-2 ──> P-3 ──> P-4
 
 W-4 gates W-5: do not deploy without a merge gate.
 P-5 blocks nothing, but grows more expensive the longer it waits.
+P-6 depends on nothing, but is best written while the conventions are fresh.
 ```
 
 ---
@@ -86,6 +88,32 @@ or the doc is amended, but the two cannot keep disagreeing. See **TD-1**.
 - [ ] Decide: adopt Lefthook, or drop the git-hooks section
 - [ ] Re-verify every version in `reference/stack.md` against `npm view`
 - [ ] Confirm no stage doc contains a version number — they belong in stack.md
+
+### P-6 — Fold the real working conventions into the stage docs ☐
+
+`CLAUDE.md` now records how this project actually works — conventions ported from
+`SmartJobSearchCRM` and verified against ~500 commits. The stage docs still describe a
+generic version of the same ground. Close the gap so the playbook documents the practice
+rather than an idealised one.
+
+Map of what lands where:
+
+| Convention | Stage |
+|---|---|
+| Conventional commits, scopes, branch naming, `--no-ff` merges, the TEMP idiom | 05 Development · 07 Code Review |
+| Spec → plan → TDD → per-task review → whole-branch review | 02 Planning · 05 Development |
+| Review severity (`Critical`/`Important`/`Minor`), finding IDs, provenance tags | 07 Code Review |
+| Reviewer must disprove as well as confirm, including its own claims | 07 Code Review |
+| TDD evidence: RED and GREEN output, failure "for the right reason", teeth check | 06 Testing |
+| Test names that encode rationale, not mechanic | 06 Testing |
+| TASKS/TRACKER conventions: evidence over adjectives, standing `Deferred` field | 02 Planning · 10 Documentation |
+| Kickoff prompt files for cold-starting a session with full context | 10 Documentation |
+| Which skill/MCP/agent for which job | 01 (done) · extend per stage |
+| Learning guides written for future-you (`docs/learnings/`) | 10 Documentation · 18 Continuous Improvement |
+
+- [ ] Update the markdown stage docs listed above
+- [ ] Mirror into the interactive stage as each is built under W-3
+- [ ] Record any convention deliberately *not* adopted, and why
 
 ### W-3 — Stages 02–18 interactive ☐
 
