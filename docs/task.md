@@ -112,10 +112,12 @@ Map of what lands where:
 | Which skill/MCP/agent for which job | 01 (done) · extend per stage |
 | Skills as the process: TDD iron law, brainstorm-before-code, systematic-debugging, verification-before-completion | 05 Development · 06 Testing · 07 Code Review |
 | Learning guides written for future-you (`docs/learnings/`) | 10 Documentation · 18 Continuous Improvement |
+| Run `humanizer:humanizer` over prose before it is done | 10 Documentation |
 
 - [ ] Update the markdown stage docs listed above
 - [ ] Mirror into the interactive stage as each is built under W-3
 - [ ] Record any convention deliberately *not* adopted, and why
+- [ ] Pass every touched doc through `humanizer:humanizer`
 
 ### W-3 — Stages 02–18 interactive ☐
 
@@ -128,6 +130,7 @@ Per stage:
 - [ ] Add glossary terms for jargon that stage introduces
 - [ ] Register in `src/features/stage-content.ts`; flip `ready: true` in `stages.ts`
 - [ ] Verify: contrast in both themes, 320–2560px, no console errors
+- [ ] Run `humanizer:humanizer` over the stage's prose
 
 Suggested order — highest teaching value first, since that is the point:
 

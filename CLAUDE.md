@@ -283,6 +283,18 @@ Decisions are appended and superseded, never edited — the record of what was b
 at the time is the value. Follow-ups are struck through with a date when closed
 (`~~rotate the key~~ ✓ done 2026-07-02`) rather than deleted.
 
+### Prose that does not read as AI-written
+
+Documentation is a deliverable here — the stage docs *are* the product — so it cannot
+read like generated filler. Run **`humanizer:humanizer`** over anything prose-heavy before
+it is considered done: the stage docs, the READMEs, spec and plan bodies, learning
+guides. It flags the tells this project is prone to — em-dash overuse, the rule of three,
+inflated symbolism, vague attributions, negative parallelisms, AI-vocabulary words.
+
+It is a review pass, not an autopilot: apply the fixes that make the writing clearer and
+skip the ones that would flatten a deliberate voice. Skip it for terminal output, code,
+tables, and tracker entries, where the flagged patterns are not the problem.
+
 ## Tooling
 
 Skills are covered above — they are the process, not tooling. Beyond Superpowers, two
