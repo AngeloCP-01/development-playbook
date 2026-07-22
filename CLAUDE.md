@@ -146,21 +146,61 @@ the point the decision was made.
 Temporary commits meant to be reverted are labelled as such:
 `chore(TEMP): add /api/debug/boom to verify Sentry prod capture (revert after)`.
 
+## Skills are how we develop
+
+This is not a "reach for these if useful" list. **The Superpowers skills are the
+process** — every substantive change runs through them, the same way it does in
+`SmartJobSearchCRM`. Invoke the skill before the work it governs, not after. If a skill
+applies and you skip it, that is a defect in the process, not a shortcut.
+
+The delivery loop *is* a sequence of skills:
+
+| Phase | Skill | Non-negotiable |
+|---|---|---|
+| Explore intent, before any code | `superpowers:brainstorming` | Runs before plan mode, before clarifying questions |
+| Turn the spec into steps | `superpowers:writing-plans` | For any multi-step task |
+| Implement | `superpowers:test-driven-development` | **The iron law below** |
+| Run a plan with subagents | `superpowers:subagent-driven-development` | For plans with independent tasks |
+| Fan out independent work | `superpowers:dispatching-parallel-agents` | 2+ tasks with no shared state |
+| Before proposing any fix | `superpowers:systematic-debugging` | Hypothesis before edit, always |
+| Before claiming done | `superpowers:verification-before-completion` | Evidence before assertion |
+| Ask for / receive review | `superpowers:requesting-code-review`, `receiving-code-review` | Verify feedback, don't comply reflexively |
+| Close the branch | `superpowers:finishing-a-development-branch` | The merge / PR decision |
+| Isolate risky work | `superpowers:using-git-worktrees` | Parallel branches that would collide |
+
+### The iron law
+
+TDD is not optional here, because the whole project's verification standard depends on
+it. From `superpowers:test-driven-development`:
+
+```
+NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
+```
+
+Write the test, watch it fail *for the right reason*, write the minimum to pass. If you
+wrote code before the test, delete it and start over — keeping it "as reference" is the
+rationalization the skill names explicitly. The teeth check (see TDD evidence below) is
+how we prove a test isn't vacuous.
+
+The exceptions are narrow and require asking first: throwaway prototypes, generated
+code, configuration. "Skip TDD just this once" is not one of them.
+
 ## Delivery loop
 
-The established loop, adapted from the source project:
+The loop, adapted from the source project — each arrow is a skill from the table above:
 
 ```
 brainstorm  →  spec  →  plan  →  TDD tasks  →  per-task review  →  final whole-branch review  →  merge  →  verify
 ```
 
-- **Spec** → `docs/superpowers/specs/YYYY-MM-DD-<slug>-design.md` (superpowers:brainstorming)
-- **Plan** → `docs/superpowers/plans/YYYY-MM-DD-<slug>.md` with checkbox steps (superpowers:writing-plans)
-- **Execute** → superpowers:subagent-driven-development, or inline for small slices
+- **Spec** → `docs/superpowers/specs/YYYY-MM-DD-<slug>-design.md` (`superpowers:brainstorming`)
+- **Plan** → `docs/superpowers/plans/YYYY-MM-DD-<slug>.md` with checkbox steps (`superpowers:writing-plans`)
+- **Execute** → `superpowers:subagent-driven-development`, TDD per task, or inline for small slices
 - **Review** → a final whole-branch pass before merge, not only per-task
+- **Finish** → `superpowers:finishing-a-development-branch`
 
-Scale it to the work. A single-component fix does not need a spec; a milestone
-(`W-3`, `W-4`) does.
+Scale the ceremony, not the discipline. A single-component fix does not need a spec; it
+still needs a failing test first. A milestone (`W-3`, `W-4`) needs the whole loop.
 
 **Spec sections, in order:** Problem · Goals · Non-goals · Constraints · Architecture ·
 Testing · Verification · Documentation updates · Risks. Non-goals state *why* each was
@@ -245,19 +285,18 @@ at the time is the value. Follow-ups are struck through with a date when closed
 
 ## Tooling
 
-MCP servers configured at user level, and what each is actually for here:
+Skills are covered above — they are the process, not tooling. Beyond Superpowers, two
+design skills are in regular use: **`frontend-design`** for visual direction (the only
+project-enabled plugin) and **`ui-ux-pro-max`** for design-system and accessibility rule
+lookups. Match `web/DESIGN.md` when using either.
+
+MCP servers, configured at user level, and what each is actually for here:
 
 | Server | Use |
 |---|---|
 | **context7** | Library docs before writing framework code. Prefer over training memory — this Next.js version postdates it. |
 | **playwright** | Driving the running app for the verification passes above. |
 | **claude-mem** | "Did I already decide this?" across sessions. |
-
-Skills worth reaching for: `superpowers:brainstorming` before creative work,
-`superpowers:writing-plans` for multi-step milestones,
-`superpowers:systematic-debugging` before proposing a fix,
-`frontend-design` for visual direction (the only project-enabled plugin),
-`ui-ux-pro-max` for design-system and accessibility rule lookups.
 
 ## Known contradiction
 

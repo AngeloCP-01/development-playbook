@@ -110,6 +110,7 @@ Map of what lands where:
 | TASKS/TRACKER conventions: evidence over adjectives, standing `Deferred` field | 02 Planning · 10 Documentation |
 | Kickoff prompt files for cold-starting a session with full context | 10 Documentation |
 | Which skill/MCP/agent for which job | 01 (done) · extend per stage |
+| Skills as the process: TDD iron law, brainstorm-before-code, systematic-debugging, verification-before-completion | 05 Development · 06 Testing · 07 Code Review |
 | Learning guides written for future-you (`docs/learnings/`) | 10 Documentation · 18 Continuous Improvement |
 
 - [ ] Update the markdown stage docs listed above
