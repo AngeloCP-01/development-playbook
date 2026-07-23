@@ -173,6 +173,29 @@ Where it genuinely earns its keep:
 Where it is less useful: exploratory UI work where you are discovering the shape as you
 go. Spike it, then write tests before it merges.
 
+### The teeth check
+
+When a test is written *after* the code it covers — a regression test, or tests added to
+an existing module — green proves nothing, because the test never failed. Prove it bites:
+deliberately break the implementation, confirm the new test — and only that test — fails,
+then restore. Both outputs go in the task report.
+
+This is not ceremony. This playbook's own gate passed a deliberately bad commit twice
+before a teeth check exposed that eslint exits 0 on warnings; the check is what
+separates a safety net from a decoration.
+
+### Invariant tests over hand-edited data
+
+Content-heavy projects have a class of bug no behaviour test catches: a config or data
+file edited by hand, wrongly. Duplicate keys, an ID that stopped matching its slug, an
+entry registered nowhere. Write tests that assert the *shape* of the data — counts,
+uniqueness, cross-references between files — not its values.
+
+Thirteen such tests guard this playbook's stage registry, and a corrupted slug fails
+exactly four of them with messages naming the slug. They cost minutes to write and run
+in milliseconds, and they fire precisely when a human is editing data by hand — the
+moment reviews are at their weakest.
+
 ### What not to test
 
 Deleting a bad test is as valuable as writing a good one. Do not test:

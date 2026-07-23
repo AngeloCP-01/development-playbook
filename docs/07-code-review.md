@@ -84,10 +84,11 @@ Fast pass, in this order:
 ### Test the tests
 
 The most commonly skipped review step: confirm the test would fail without the fix.
+This is the **teeth check** ([06 — Testing](06-testing.md#the-teeth-check)): break the
+implementation, run the test, watch it — and only it — fail, restore.
 
-Comment out the implementation, run the test. If it still passes, it is not testing what
-you think. This takes twenty seconds and catches a surprising number of tests that assert
-nothing meaningful.
+If it still passes broken, it is not testing what you think. This takes twenty seconds
+and catches a surprising number of tests that assert nothing meaningful.
 
 ### PR descriptions
 
@@ -177,7 +178,7 @@ break is what makes review work.
 **Reviewing in your editor.** Same context that produced the bugs. The diff view is a
 different lens.
 
-**Spending review on formatting.** Biome handles it. Every comment about spacing is
+**Spending review on formatting.** Prettier handles it. Every comment about spacing is
 attention not spent on the authorization bug.
 
 **Approving large PRs anyway.** If it is too big to review properly, saying so is the

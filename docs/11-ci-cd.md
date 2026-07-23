@@ -59,8 +59,11 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Lint and format
-        run: pnpm biome ci .
+      - name: Format
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint   # eslint --max-warnings 0 — see the trap below
 
       - name: Typecheck
         run: pnpm tsc --noEmit
@@ -241,6 +244,13 @@ avoidable surprise.
 
 **`npm install` instead of `--frozen-lockfile`.** CI silently resolves different versions
 than you tested against, and you get a green build for code that will not run.
+
+**A lint step that ignores warnings.** ESLint exits 0 when there are only warnings, and
+most of `eslint-config-next`'s rules are warnings — so a bare `eslint` step waves through
+unused variables, missing deps arrays, all of it. Gate at `--max-warnings 0`. This
+playbook's own gate let an unused variable through twice before the teeth check exposed
+it; the fix had to land in the hook *and* the script, because the hook called eslint
+directly.
 
 **Unenforced branch protection.** Every pipeline problem eventually traces back to a gate
 that was never actually required.
