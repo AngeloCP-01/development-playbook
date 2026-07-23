@@ -1,0 +1,23 @@
+# Git hooks. The app lives in web/, so every command roots there and
+# receives only the staged files under it.
+pre-commit:
+  parallel: true
+  commands:
+    format:
+      root: 'web/'
+      glob: '*.{ts,tsx,mjs,css,json}'
+      run: pnpm exec prettier --write {staged_files}
+      stage_fixed: true
+    lint:
+      root: 'web/'
+      glob: '*.{ts,tsx,mjs}'
+      run: pnpm exec eslint --max-warnings 0 {staged_files}
+
+pre-push:
+  commands:
+    typecheck:
+      root: 'web/'
+      run: pnpm exec tsc --noEmit
+    test:
+      root: 'web/'
+      run: pnpm test
