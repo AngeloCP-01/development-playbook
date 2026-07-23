@@ -17,3 +17,7 @@ Naming: `<topic>-101.md`.
 - `stage-implementation-101.md` — what building stage 01 taught: the layout traps, the
   contrast method, the JSX gotchas, and the verification checklist. Read it before
   building stages 02–18.
+- `quality-gates-101.md` — what wiring the gates taught: eslint's warnings-exit-0 trap,
+  teeth checks as the method, hooks in a subdirectory repo, and why the committed audit
+  suite being stricter than the throwaway scripts was a feature. Read it on any new
+  project's day one.
