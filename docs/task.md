@@ -48,6 +48,7 @@ response — so the app has to introduce concepts, not only remind.
 | **P-5** | Reconcile docs with the app's real stack | ☐ |
 | **P-6** | Fold the real working conventions into the stage docs | ☐ |
 | **P-7** | Project scaffolding — kickoff, design system, loop directories | ☑ |
+| **P-8** | Working standards — conventions, skills-as-process, humanizer, interaction patterns | ☑ |
 
 ### W — Web app
 
@@ -55,7 +56,7 @@ response — so the app has to introduce concepts, not only remind.
 |---|---|---|
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
-| **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms | ☑ |
+| **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
 | **W-3** | Stages 02–18 interactive | ☐ |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☐ |
 | **W-5** | Deploy | ☐ |
@@ -74,6 +75,7 @@ P-0 ──> P-1 ──> P-2 ──> P-3 ──> P-4
 W-4 gates W-5: do not deploy without a merge gate.
 P-5 blocks nothing, but grows more expensive the longer it waits.
 P-6 depends on nothing, but is best written while the conventions are fresh.
+P-8 (done) is the source P-6 folds into the stage docs.
 ```
 
 ---

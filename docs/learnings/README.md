@@ -14,5 +14,6 @@ a learning guide says what actually happened here, including the parts that went
 
 Naming: `<topic>-101.md`.
 
-Empty for now. The first candidate is a design-system guide — the whiteprint/cyanotype
-palette took three rounds of contrast fixes and the reasoning is worth keeping.
+- `stage-implementation-101.md` — what building stage 01 taught: the layout traps, the
+  contrast method, the JSX gotchas, and the verification checklist. Read it before
+  building stages 02–18.

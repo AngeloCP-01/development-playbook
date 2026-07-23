@@ -3,9 +3,12 @@
 **Purpose:** the log. What actually shipped, what was decided and why, and what
 debt was taken on. Scope and planning live in [task.md](task.md).
 
-**Last updated:** 2026-07-21
-**Current phase:** W-2 complete — stage 01 is the reference implementation.
-Next is W-3 (stage 03) or W-4 (quality gates); see *Next up*.
+**Last updated:** 2026-07-23
+**Current phase:** Stage 01 complete, polished (copy humanized, index reworked to
+full-width sections), and now the reference implementation for the rest. The working
+standards are documented: conventions, skills-as-process, the design system, and the
+interaction-pattern library. `web/` is committed. Next is W-4 (quality gates) or W-3
+(stage 03); see *Next up*.
 
 ---
 
@@ -24,8 +27,11 @@ because scope creep is invisible otherwise.
 | 2026-07-21 | P-4 | Stages 15, 16, 17, 18 | 18/18 pass the seven-section template check; 124/124 internal links resolve | — |
 | 2026-07-21 | W-0 | Next 16 scaffold, sidebar, 18 static stage routes | `pnpm build` prerenders 22 routes | Tests, CI, deploy (W-4/W-5) |
 | 2026-07-21 | W-1 | Design system: whiteprint/cyanotype, Archivo/Newsreader/JetBrains Mono | Contrast audited across every distinct text/background pair, both themes | Print stylesheet; motion beyond the hero rule |
-| 2026-07-21 | P-7 | `KICKOFF.md`, `web/DESIGN.md`, `docs/superpowers/{specs,plans}/`, `docs/learnings/` | Design tokens in DESIGN.md verified against `globals.css`; `218815a` | A first learning guide; per-round kickoff siblings |
-| 2026-07-21 | W-2 | Stage 01: 6-step stepper, 9 numbered figures, 5 exercises, worksheet, 10 terms defined (5 used inline so far) | AA in both themes with all term panels expanded; 320–2560px clean; no console errors | Stages 02–18; committed test suite |
+| 2026-07-21 | P-7 | `KICKOFF.md`, `web/DESIGN.md`, `docs/superpowers/{specs,plans}/`, `docs/learnings/` | Design tokens in DESIGN.md verified against `globals.css`; `218815a` | Per-round kickoff siblings |
+| 2026-07-21 | W-2 | Stage 01: 6-step stepper, 9 numbered figures, 5 exercises, worksheet, 10 terms defined (5 used inline so far) | AA in both themes with all term panels expanded; 320–2560px clean; no console errors; `edb315b` | Stages 02–18; committed test suite |
+| 2026-07-23 | W-2+ | Stage 01 polish: three sentences humanized; index reworked to full-width per-group sections | Copy pass `11ce4f2`; index `e87286d`→`fd112c9`, no overflow 320–2560px | Broader humanizer sweep of the docs |
+| 2026-07-23 | — | First learning guide: `docs/learnings/stage-implementation-101.md` | Every claim drawn from a real bug this session | More guides as rounds teach them |
+| 2026-07-23 | P-8 | Working standards documented: git + delivery-loop + review + TDD conventions, skills-as-process, humanizer pass, `web/PATTERNS.md` | Every convention verified against `SmartJobSearchCRM` git or the code; `218815a`, `5082e43`, `17b344e`, `a5901af` | Folding the same into the stage docs (P-6) |
 
 ### Verification standard used
 
@@ -130,12 +136,11 @@ expensive mistake on the page." Currently blocked by TD-4 having nothing to run.
 
 **Closes with:** W-4.
 
-### TD-7 — `web/` is uncommitted · **Medium**
+### TD-7 — `web/` is uncommitted · **Closed 2026-07-23**
 
-One commit exists (`a312186`, docs only). The entire application is untracked,
-so none of the above is recoverable if the working tree is lost.
-
-**Closes with:** commit it. Cheapest item on this list.
+~~The entire application is untracked, so none of the above is recoverable if the
+working tree is lost.~~ Committed in `edb315b`; the app and all docs are now tracked on
+`feat/playbook-web-app`.
 
 ### TD-8 — Playwright is a dependency with no committed usage · **Low**
 
@@ -169,6 +174,8 @@ these were found by checking rather than by reading.
 | Palette | `--faint` at 2.99:1, accent at 4.11:1 — both below AA | Exhaustive contrast audit |
 | Home hero | "DEVELOPMENT" needed 333px in a 280px box at 320px wide | Responsive sweep |
 | `ProductDiscovery` | JSX dropped the space around inline `<Term>`, rendering "solution treeis" | DOM inspection after spotting it in a screenshot |
+| Home index | Hero placed in a 2-col grid overflowed 137px at 1024px — expanded caps do not fit a half column once the sidebar appears | Responsive sweep at the exact breakpoint |
+| Home index | `.measure-full` sat on the `<ul>`, but the global 68ch cap lands on the `<li>`; rows stayed capped and cadence stopped mid-page | Measured the row's right edge against the content edge |
 
 **Two false alarms worth remembering.** A link checker once reported 124 broken
 links — the checker was broken, not the links. A contrast audit reported 1.34:1
@@ -189,6 +196,7 @@ is a stage built without a safety net.
 **W-3 starting with stage 03 (Architecture)** — more visible progress and the
 richest teaching content, but multiplies TD-2 and TD-3 by every stage added.
 
-**Recommendation:** commit `web/` first (TD-7, five minutes), then W-4, then
-W-3. The audits have already caught nine real bugs in one stage; running them by
-hand for seventeen more is not a plan.
+**Recommendation:** W-4 before W-3. `web/` is committed and the standards are
+documented, so the remaining blocker is that every stage built before W-4 is built
+without a safety net. The audits have already caught eleven real bugs in one stage;
+running them by hand for seventeen more is not a plan.
