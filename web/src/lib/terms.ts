@@ -64,6 +64,19 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'On its own it is close to meaningless and easy to inflate. It is useful only for telling a hobby apart from a business.',
   },
+  npm: {
+    short: 'The package manager that ships with Node.js.',
+    full: 'Reads your package.json, downloads every package it names (and everything those packages need) from the npm registry, and copies the whole tree into the project\u2019s node_modules folder. Every project gets its own full copy, hoisted into one flat pile.',
+    soWhat:
+      'The flat pile means your code can import packages you never declared \u2014 phantom dependencies \u2014 which work until the package that dragged them in stops doing so. Zero setup is why it remains the default everywhere.',
+  },
+  pnpm: {
+    short:
+      'A faster npm replacement that stores each package once per machine.',
+    full: 'Same registry and same package.json as npm, but packages live in one content-addressable store on your machine and get hard-linked into each project. Its node_modules layout is strict: only dependencies you actually declared are importable.',
+    soWhat:
+      'Repeat installs take seconds and undeclared imports fail on your machine today rather than in production later. The trade: it does not ship with Node, so it is one corepack step away from a fresh machine.',
+  },
   'problem-interview': {
     short:
       'A conversation about what someone actually did, not what they would do.',

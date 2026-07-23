@@ -67,6 +67,13 @@ Wrap the first appearance of any term a reader new to the stage might not know. 
 definition for a first encounter: plain language, no forward references, and the
 `soWhat` line is the part a glossary would omit.
 
+A term may also carry a **mini-diagram**: register a component against its id in
+`src/components/term-visuals.tsx` (the `STAGE_CONTENT` registry pattern again) and the
+popover renders it between the definition and the why-it-matters line. Everything in a
+visual must be `<span>`, never `<div>` — a Term sits inside `<p>`, and invalid nesting
+breaks hydration. An invariant test fails any visual whose id has no definition. See
+`npm`/`pnpm` for the house examples.
+
 Two JSX cautions, both real bugs that shipped once: put an explicit `{' '}` around a
 `<Term>` or the surrounding spaces get trimmed; Straight quotes inside
 definitions are fine (they render as text); the JSX-attribute hazard applies to
