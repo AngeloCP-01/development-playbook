@@ -1,0 +1,272 @@
+@import 'tailwindcss';
+
+/* ─────────────────────────────────────────────────────────────────────────
+   Development Playbook — technical drawing
+
+   Light mode is a whiteprint: dark blue linework on drafting paper, the way a
+   modern diazo print reads. Dark mode is a cyanotype: pale linework on Prussian
+   blue, the way the original blueprints did. Both are real artifacts, so dark
+   is a second drawing rather than an inverted filter.
+
+   Accent is annotation orange — the colour of redline markup on a drawing —
+   and it is reserved for attention. Go/stop stay semantic and are never used
+   for emphasis.
+   ───────────────────────────────────────────────────────────────────────── */
+
+@theme {
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-newsreader), Georgia, 'Times New Roman', serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, 'SF Mono', Menlo, monospace;
+}
+
+:root {
+  /* whiteprint */
+  --paper: #efeee8;
+  --surface: #faf9f5;
+  --sunk: #e6e4dc;
+  --ink: #10243e;
+  --graphite: #46586e;
+  --faint: #556377;
+  --rule: #cbc7bc;
+  --rule-strong: #ada79a;
+  --blueprint: #23508f;
+  --signal: #a54407;
+  --signal-wash: #f6e5d5;
+  --go: #1a6b4f;
+  --go-wash: #dceae2;
+  --stop: #a52218;
+  --stop-wash: #f3ddda;
+  --warn: #8a5a06;
+  --warn-wash: #f6ead1;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* cyanotype */
+    --paper: #0a1a2c;
+    --surface: #102640;
+    --sunk: #071322;
+    --ink: #e9eff6;
+    --graphite: #adc0d4;
+    --faint: #98abc0;
+    --rule: #23405f;
+    --rule-strong: #37587c;
+    --blueprint: #86b4ee;
+    --signal: #f2954a;
+    --signal-wash: #3a2413;
+    --go: #4fc296;
+    --go-wash: #0e3628;
+    --stop: #f2776d;
+    --stop-wash: #3d1815;
+    --warn: #e3ab4d;
+    --warn-wash: #362708;
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='light'] {
+  --paper: #efeee8;
+  --surface: #faf9f5;
+  --sunk: #e6e4dc;
+  --ink: #10243e;
+  --graphite: #46586e;
+  --faint: #556377;
+  --rule: #cbc7bc;
+  --rule-strong: #ada79a;
+  --blueprint: #23508f;
+  --signal: #a54407;
+  --signal-wash: #f6e5d5;
+  --go: #1a6b4f;
+  --go-wash: #dceae2;
+  --stop: #a52218;
+  --stop-wash: #f3ddda;
+  --warn: #8a5a06;
+  --warn-wash: #f6ead1;
+
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  --paper: #0a1a2c;
+  --surface: #102640;
+  --sunk: #071322;
+  --ink: #e9eff6;
+  --graphite: #adc0d4;
+  --faint: #98abc0;
+  --rule: #23405f;
+  --rule-strong: #37587c;
+  --blueprint: #86b4ee;
+  --signal: #f2954a;
+  --signal-wash: #3a2413;
+  --go: #4fc296;
+  --go-wash: #0e3628;
+  --stop: #f2776d;
+  --stop-wash: #3d1815;
+  --warn: #e3ab4d;
+  --warn-wash: #362708;
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--paper);
+  --color-raised: var(--surface);
+  --color-sunken: var(--sunk);
+  --color-fg: var(--ink);
+  --color-muted: var(--graphite);
+  --color-subtle: var(--faint);
+  --color-line: var(--rule);
+  --color-line-strong: var(--rule-strong);
+  --color-blueprint: var(--blueprint);
+
+  /* accent — attention only */
+  --color-brand: var(--signal);
+  --color-brand-fg: var(--surface);
+  --color-brand-tint: var(--signal-wash);
+
+  /* semantic — never used for emphasis */
+  --color-go: var(--go);
+  --color-go-tint: var(--go-wash);
+  --color-danger: var(--stop);
+  --color-danger-tint: var(--stop-wash);
+  --color-warn: var(--warn);
+  --color-warn-tint: var(--warn-wash);
+  --color-info: var(--blueprint);
+  --color-info-tint: var(--sunk);
+}
+
+/* ── drafting grid ──────────────────────────────────────────────────────── */
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── type roles ─────────────────────────────────────────────────────────── */
+
+/* Display: Archivo pushed wide on its width axis — the plate lettering of a
+   drawing title block. Used in caps, sparingly. */
+.t-display {
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 118;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.t-head {
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 108;
+  font-weight: 600;
+  letter-spacing: -0.008em;
+  line-height: 1.2;
+}
+
+/* Utility: stamped labels on the drawing. */
+.t-label {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+
+.t-data {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+.t-ui {
+  font-family: var(--font-display);
+  font-variation-settings: 'wdth' 100;
+  letter-spacing: 0;
+}
+
+/* Running text keeps a readable measure no matter how wide the sheet is.
+   Widening the container buys room for diagrams and tables, never for prose,
+   so paragraphs cap themselves by default rather than one component at a time.
+   Anything that genuinely needs the full width opts out with .measure-full. */
+main :is(p, li) {
+  max-width: 68ch;
+}
+.measure {
+  max-width: 68ch;
+}
+.measure-full,
+main .measure-full {
+  max-width: none;
+}
+
+/* ── linework ───────────────────────────────────────────────────────────── */
+
+/* Corner ticks, like a registration mark on a print. */
+.ticked {
+  position: relative;
+}
+.ticked::before,
+.ticked::after {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-color: var(--signal);
+  pointer-events: none;
+}
+.ticked::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+.ticked::after {
+  right: -1px;
+  bottom: -1px;
+  border-right: 2px solid;
+  border-bottom: 2px solid;
+}
+
+::selection {
+  background: var(--signal);
+  color: var(--surface);
+}
+
+:focus-visible {
+  outline: 2px solid var(--signal);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* One orchestrated moment: the hero rule draws itself like an ink line. */
+@keyframes draw-rule {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.rule-draw {
+  transform-origin: left;
+  animation: draw-rule 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
