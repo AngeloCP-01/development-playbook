@@ -35,25 +35,20 @@ Before doing anything, read these for context:
   implementation: 6-step stepper, 9 numbered figures, 5 interactive exercises, a
   localStorage worksheet, 10 glossary terms.
 - **Stages 02–18** render a "sheet not drawn" placeholder. Routing works for all 18.
-- **No tests, no CI, not deployed.** This is tracked as TD-4/TD-5/TD-6 and is the
-  project's largest inconsistency — the playbook it implements calls adding CI later
-  "the most expensive mistake on the page."
+- **Quality gates are in place** (W-4): vitest invariants, the committed audit suite,
+  lefthook hooks, and a CI workflow. Not deployed yet (W-5). Branch protection is a
+  GitHub-side switch to flip after pushing.
 - **Branch:** `feat/playbook-web-app`, merged/unmerged state per `git log main..HEAD`.
 
 ### This round's scope
 
 Open candidates, in the order `docs/task.md` recommends:
 
-- **W-4 — Quality gates.** Vitest, a committed Playwright suite for the contrast and
-  responsive audits, CI workflow. Closes four debts and stops the project contradicting
-  its own advice.
 - **W-3 — Stages 02–18 interactive.** Suggested first: **03 Architecture** (densest
   concepts, most diagram-friendly), then 15 Observability, 16 Incident Management.
-- **P-5 — Reconcile the stack drift.** `reference/stack.md` prescribes Biome and
-  Lefthook; the app uses ESLint and no hooks.
 - **P-6 — Fold the real working conventions into the stage docs.**
 
-I lean toward **[FILL IN: W-4 / W-3 / P-5 / P-6]** — but advise me, and say if you
+I lean toward **[FILL IN: W-3 / P-6 / W-5]** — but advise me, and say if you
 disagree.
 
 ### How we work
@@ -76,7 +71,8 @@ does.
 ### Environment notes
 
 - All app commands run from `web/`: `pnpm dev` (port 3000), `pnpm build`, `pnpm lint`,
-  `pnpm exec tsc --noEmit`. **There is no `pnpm test` yet.**
+  `pnpm exec tsc --noEmit`, `pnpm test` (vitest), `pnpm test:e2e` (playwright audit
+  suite). Lefthook hooks run format+lint on commit, typecheck+test on push.
 - No env vars, no database, no backend. Static site.
 - MCP in use: **context7** (library docs — prefer it over memory for framework code),
   **playwright** (driving the running app for verification), **claude-mem** ("did I

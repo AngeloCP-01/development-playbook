@@ -36,7 +36,8 @@ starting a new project rather than trusting this file blindly.
 |---|---|---|---|
 | Unit & integration tests | Vitest | 4.x | Shares Vite's transform pipeline, so TS and path aliases work with no extra config. |
 | End-to-end tests | Playwright | 1.61+ | Run against a real build, not the dev server. |
-| Linting & formatting | Biome | 2.x | One tool, one config, one pass. Replaces the ESLint + Prettier pair and their disagreements. |
+| Linting | ESLint (`eslint-config-next`) | 9.x | Next ships and maintains the config, and the react-hooks rule family has caught real bugs here that younger linters miss. Gate at `--max-warnings 0` — eslint exits 0 on warnings otherwise. |
+| Formatting | Prettier | 3.x | Paired with `eslint-config-prettier` so the two never argue. |
 | Git hooks | Lefthook | 1.x | Fast, single binary, config in one YAML file. |
 
 ## Operations
@@ -63,6 +64,11 @@ in an ADR (see [03 — Architecture](../docs/03-architecture.md)).
   be bent into Next.js just because it is the familiar tool.
 - **A required dependency is Python-only** (most ML work) — run it as a separate
   service with an HTTP boundary rather than contorting the Node app.
+- **Biome** replaces the ESLint + Prettier pair with one faster binary and is a
+  reasonable choice for projects that do not lean on the ESLint plugin
+  ecosystem. On a Next.js app you would give up `eslint-config-next` and the
+  react-hooks rules — the family that caught this repo's worst lint bug — for
+  speed this size of project cannot feel.
 - **A client mandates their own infrastructure** — the stage docs still apply; only
   the deployment and observability chapters change.
 

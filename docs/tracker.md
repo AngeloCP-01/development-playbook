@@ -4,11 +4,10 @@
 debt was taken on. Scope and planning live in [task.md](task.md).
 
 **Last updated:** 2026-07-23
-**Current phase:** Stage 01 complete, polished (copy humanized, index reworked to
-full-width sections), and now the reference implementation for the rest. The working
-standards are documented: conventions, skills-as-process, the design system, and the
-interaction-pattern library. `web/` is committed. Next is W-4 (quality gates) or W-3
-(stage 03); see *Next up*.
+**Current phase:** W-4 shipped — quality gates are in: prettier + eslint at
+`--max-warnings 0`, 13 vitest invariants, the 9-test audit suite, lefthook hooks, and a
+two-job CI workflow. P-5 resolved in ESLint's favour (D-22). Stage 01 remains the
+reference implementation. Next is W-3 (stage 03) or W-5 (deploy); see *Next up*.
 
 ---
 
@@ -30,6 +29,8 @@ because scope creep is invisible otherwise.
 | 2026-07-21 | P-7 | `KICKOFF.md`, `web/DESIGN.md`, `docs/superpowers/{specs,plans}/`, `docs/learnings/` | Design tokens in DESIGN.md verified against `globals.css`; `218815a` | Per-round kickoff siblings |
 | 2026-07-21 | W-2 | Stage 01: 6-step stepper, 9 numbered figures, 5 exercises, worksheet, 10 terms defined (5 used inline so far) | AA in both themes with all term panels expanded; 320–2560px clean; no console errors; `edb315b` | Stages 02–18; committed test suite |
 | 2026-07-23 | W-2+ | Stage 01 polish: three sentences humanized; index reworked to full-width per-group sections | Copy pass `11ce4f2`; index `e87286d`→`fd112c9`, no overflow 320–2560px | Broader humanizer sweep of the docs |
+| 2026-07-23 | W-4 | Quality gates: prettier + eslint-config-prettier, 13 vitest invariants, 9-test playwright audit suite, lefthook hooks, 2-job CI | Teeth: slug corruption failed exactly 4 tests; --faint regression failed contrast with named pairs; a bad commit was rejected on the third probe after two real gate weaknesses were found and fixed | Component/E2E behaviour tests (arrive with W-3); visual regression; branch protection (GitHub-side, after push) |
+| 2026-07-23 | P-5 | Stack drift resolved: ESLint kept, Prettier added, Biome demoted to documented alternative; docs 04/stack.md/CLAUDE/KICKOFF amended | Every biome reference in doc 04 sections 3/6/7 replaced; `web/` and docs now agree | — |
 | 2026-07-23 | — | First learning guide: `docs/learnings/stage-implementation-101.md` | Every claim drawn from a real bug this session | More guides as rounds teach them |
 | 2026-07-23 | P-8 | Working standards documented: git + delivery-loop + review + TDD conventions, skills-as-process, humanizer pass, `web/PATTERNS.md` | Every convention verified against `SmartJobSearchCRM` git or the code; `218815a`, `5082e43`, `17b344e`, `a5901af` | Folding the same into the stage docs (P-6) |
 
@@ -70,6 +71,8 @@ of what was believed at the time is the point.
 | **D-14** | Removed the drafting grid background | Flagged as disruptive; softening was not enough. The sheet reads as technical from the title block and linework without it | Lost some texture; gained legibility |
 | **D-15** | Wide container (1400px) + per-element measure cap | Wide screens wasted space, but unconstrained prose is unreadable. `main :is(p, li)` caps at 68ch by default | New text elements inherit the cap automatically; opt out with `.measure-full` |
 | **D-17** | Adopt `SmartJobSearchCRM` working conventions wholesale | They are established across ~500 commits and already suit how the author works; inventing a second set would fragment two active projects | `CLAUDE.md` now carries git, review and TDD conventions verbatim. P-6 folds them into the stage docs |
+| **D-23** | The audit suite runs in CI against a production build, not as a local convenience | The dev server differs in rendering and console noise, and a check that only runs when remembered is TD-5 all over again | `test:e2e` uses playwright's webServer on :3100; CI's audit job needs verify first |
+| **D-22** | ESLint kept over Biome; Prettier added; lint gated at `--max-warnings 0` | Biome is ~80% of the ESLint ecosystem, but this repo's best lint catch (`set-state-in-effect` on `useLocalStorage`) is ESLint-only and Next ships the config. The warnings gate exists because eslint exits 0 on warnings — proven by a teeth check that let an unused variable through twice | Closes TD-1; Biome documented in `stack.md` as the non-Next alternative |
 | **D-21** | Stage 01's interaction patterns are documented as a reusable library, not left implicit | The reader praised the progressive disclosure, inline term popovers, and guess-then-reveal exercises specifically; those need to reach stages 02–18 rather than being reinvented or watered down | `web/PATTERNS.md`: the principle (interact to learn), the shared components, a pattern-per-content table, and the a11y baseline |
 | **D-20** | Documentation gets a `humanizer:humanizer` pass before it is done | The stage docs are the product, not scaffolding, so they cannot read as generated filler; this project's prose leans on em-dashes and the rule of three | A documentation-pass convention in `CLAUDE.md`; P-6 and every W-3 stage carry the step |
 | **D-19** | Superpowers skills are the process, not an optional aid | Every substantive change in `SmartJobSearchCRM` ran through them (`executing-plans` and `subagent-driven-development` alone appear 70+ times); TDD is the iron law the whole verification standard rests on | `CLAUDE.md` has a skills-as-process section with a phase→skill table; P-6 folds the same into stages 05/06/07 |
@@ -82,15 +85,10 @@ of what was believed at the time is the point.
 
 Ordered by cost of leaving it. Each names where it lives and what closes it.
 
-### TD-1 — The playbook prescribes tooling the app does not use · **High**
+### TD-1 — The playbook prescribes tooling the app does not use · **Closed 2026-07-23**
 
-`reference/stack.md` and `docs/04-project-setup.md` specify **Biome** for
-linting and **Lefthook** for git hooks. `web/` uses ESLint (the create-next-app
-default) and has no hooks at all.
-
-This is the playbook contradicting itself in the most visible possible way, and
-it will only get more embarrassing as more of the app gets built.
-**Closes with:** P-5.
+Resolved in ESLint's favour (D-22): Prettier added, Lefthook added, `stack.md` and
+doc 04 amended, Biome documented as the non-Next alternative.
 
 ### TD-2 — Stage metadata duplicated · **High**
 
@@ -111,30 +109,20 @@ This scales badly: eighteen stages will need a few hundred entries.
 **Closes with:** pick one source. The richer shape is the better one, so the
 likely answer is to generate the markdown glossary from `terms.ts`.
 
-### TD-4 — No tests · **High**
+### TD-4 — No tests · **Closed 2026-07-23**
 
-Zero test files in `web/`. `docs/06-testing.md` says business logic gets unit
-tests and bug fixes get regression tests. There is currently no way to refactor
-`useLocalStorage` or `Stepper` and know nothing broke.
+13 vitest invariant tests over `stages.ts`/`terms.ts` (`e6dd51e`), teeth-checked.
 
-**Closes with:** W-4.
+### TD-5 — Verification is manual and uncommitted · **Closed 2026-07-23**
 
-### TD-5 — Verification is manual and uncommitted · **High**
+The audits are `web/e2e/audit.spec.ts` (`53fdfaf`), 9 tests run by CI against a
+production build. On its first run the committed suite caught a case the ad-hoc
+sweeps had masked (inline Term touch targets).
 
-The contrast, responsive and console audits are genuinely thorough and have
-caught real bugs — an unreadable `--faint`, an accent failing AA at small
-sizes, sub-44px touch targets, a 320px overflow. All of it was run from
-throwaway scripts and none of it is repeatable by anyone else, including future
-sessions.
+### TD-6 — No CI · **Closed 2026-07-23**
 
-**Closes with:** W-4. Highest value item in that milestone.
-
-### TD-6 — No CI · **Medium**
-
-No `.github/workflows`. `docs/11-ci-cd.md` calls adding CI later "the most
-expensive mistake on the page." Currently blocked by TD-4 having nothing to run.
-
-**Closes with:** W-4.
+`.github/workflows/ci.yml` (`6c26784`): verify (format→lint→types→unit→build) then
+audit. Branch protection remains a GitHub-side switch after push.
 
 ### TD-7 — `web/` is uncommitted · **Closed 2026-07-23**
 
@@ -142,11 +130,9 @@ expensive mistake on the page." Currently blocked by TD-4 having nothing to run.
 working tree is lost.~~ Committed in `edb315b`; the app and all docs are now tracked on
 `feat/playbook-web-app`.
 
-### TD-8 — Playwright is a dependency with no committed usage · **Low**
+### TD-8 — Playwright is a dependency with no committed usage · **Closed 2026-07-23**
 
-Added to `web/devDependencies` for the audits, then the scripts were deleted. It
-is currently an unused dependency. TD-5 justifies it retroactively; if W-4 is
-deferred, remove it.
+Now `@playwright/test` with a committed suite; the dependency earns its place.
 
 ### TD-9 — Figure numbers are manual · **Low**
 
@@ -176,6 +162,8 @@ these were found by checking rather than by reading.
 | `ProductDiscovery` | JSX dropped the space around inline `<Term>`, rendering "solution treeis" | DOM inspection after spotting it in a screenshot |
 | Home index | Hero placed in a 2-col grid overflowed 137px at 1024px — expanded caps do not fit a half column once the sidebar appears | Responsive sweep at the exact breakpoint |
 | Home index | `.measure-full` sat on the `<ul>`, but the global 68ch cap lands on the `<li>`; rows stayed capped and cadence stopped mid-page | Measured the row's right edge against the content edge |
+| Lint gate | eslint exits 0 on warnings, so an unused variable passed both the hook and the script — twice | Hook teeth check; fixed with `--max-warnings 0` in both places |
+| Ad-hoc audits | The old touch-target sweep excluded `aria-controls` elements wholesale, silently masking inline Term buttons | The committed suite's first run; resolved per WCAG 2.5.8's inline exemption |
 
 **Two false alarms worth remembering.** A link checker once reported 124 broken
 links — the checker was broken, not the links. A contrast audit reported 1.34:1
@@ -196,7 +184,6 @@ is a stage built without a safety net.
 **W-3 starting with stage 03 (Architecture)** — more visible progress and the
 richest teaching content, but multiplies TD-2 and TD-3 by every stage added.
 
-**Recommendation:** W-4 before W-3. `web/` is committed and the standards are
-documented, so the remaining blocker is that every stage built before W-4 is built
-without a safety net. The audits have already caught eleven real bugs in one stage;
-running them by hand for seventeen more is not a plan.
+**Recommendation:** W-3 next, starting with stage 03 (Architecture) — the gates exist
+now, so every new stage lands on a safety net. W-5 (deploy) is also unblocked; doing it
+early would let stage work ship continuously per docs/13. Either order is defensible.

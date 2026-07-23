@@ -68,8 +68,10 @@ definition for a first encounter: plain language, no forward references, and the
 `soWhat` line is the part a glossary would omit.
 
 Two JSX cautions, both real bugs that shipped once: put an explicit `{' '}` around a
-`<Term>` or the surrounding spaces get trimmed; and definitions are `full` strings, so a
-double-quote inside one breaks the attribute — use typographic quotes.
+`<Term>` or the surrounding spaces get trimmed; Straight quotes inside
+definitions are fine (they render as text); the JSX-attribute hazard applies to
+`Figure` captions, where a straight double quote breaks the attribute — use
+typographic quotes there.
 
 ### Content primitives — `src/components/ui.tsx`
 
