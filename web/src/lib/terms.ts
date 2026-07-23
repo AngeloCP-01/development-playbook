@@ -15,13 +15,15 @@ export type Term = {
 
 export const TERMS: Record<string, Term> = {
   'product-discovery': {
-    short: 'Finding out whether something is worth building before you build it.',
+    short:
+      'Finding out whether something is worth building before you build it.',
     full: 'The work of testing whether a problem is real, whose it is, and how badly it hurts — before any code exists. It is deliberately cheap, because its main output is often the decision not to build.',
     soWhat:
       'Skipping it is the most expensive mistake available to a developer: months spent building something correct that nobody needed.',
   },
   'opportunity-solution-tree': {
-    short: 'A map linking one outcome to problems, then to candidate solutions.',
+    short:
+      'A map linking one outcome to problems, then to candidate solutions.',
     full: 'A diagram by Teresa Torres with four levels: the outcome you want to move, the customer opportunities (problems, needs, desires) that could move it, the solutions that address each opportunity, and the experiments that test each solution.',
     soWhat:
       'It enforces one rule that is hard to keep otherwise: no solution may exist without an opportunity above it, and no opportunity without evidence someone actually said it.',
@@ -63,7 +65,8 @@ export const TERMS: Record<string, Term> = {
       'On its own it is close to meaningless and easy to inflate. It is useful only for telling a hobby apart from a business.',
   },
   'problem-interview': {
-    short: 'A conversation about what someone actually did, not what they would do.',
+    short:
+      'A conversation about what someone actually did, not what they would do.',
     full: 'A short interview — 20 to 30 minutes — focused entirely on past behaviour around a problem. No pitch, no product, no hypotheticals.',
     soWhat:
       'Predictions about future behaviour are unreliable. What someone did last Tuesday is evidence.',

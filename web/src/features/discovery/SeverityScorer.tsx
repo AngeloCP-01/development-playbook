@@ -130,7 +130,9 @@ export function SeverityScorer() {
             >
               {level.verdict}
             </p>
-            <p className="measure text-sm leading-6 text-muted">{level.detail}</p>
+            <p className="measure text-sm leading-6 text-muted">
+              {level.detail}
+            </p>
           </div>
         ) : (
           <div className="border border-dashed border-line p-4">

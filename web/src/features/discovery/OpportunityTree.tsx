@@ -70,7 +70,11 @@ const TREE: Node = {
 // it sat too close to the orange accent to read as a distinct level.
 const LEVEL_STYLE = [
   { ring: 'border-fg', chip: 'bg-fg text-bg', name: 'Outcome' },
-  { ring: 'border-blueprint', chip: 'bg-blueprint text-bg', name: 'Opportunity' },
+  {
+    ring: 'border-blueprint',
+    chip: 'bg-blueprint text-bg',
+    name: 'Opportunity',
+  },
   { ring: 'border-brand', chip: 'bg-brand text-brand-fg', name: 'Solution' },
 ] as const
 

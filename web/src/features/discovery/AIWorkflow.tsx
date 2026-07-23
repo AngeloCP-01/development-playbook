@@ -186,7 +186,9 @@ export function AIWorkflow() {
 
                 {open && (
                   <div className="border-t border-line bg-sunken px-4 py-4 sm:px-5">
-                    <p className="measure text-sm leading-6 text-muted">{p.how}</p>
+                    <p className="measure text-sm leading-6 text-muted">
+                      {p.how}
+                    </p>
 
                     <div className="mt-3.5 overflow-hidden border border-line bg-bg">
                       <div className="flex items-center justify-between gap-2 border-b border-line px-3 py-1.5">

@@ -57,7 +57,9 @@ export function Callout({
   const { fg, bg, Icon } = CALLOUT[kind]
   return (
     <div className={`border border-line ${bg} px-5 py-4`}>
-      <p className={`t-ui mb-1.5 flex items-center gap-2 text-sm font-semibold ${fg}`}>
+      <p
+        className={`t-ui mb-1.5 flex items-center gap-2 text-sm font-semibold ${fg}`}
+      >
         <Icon className="size-4 shrink-0" aria-hidden />
         {title}
       </p>
