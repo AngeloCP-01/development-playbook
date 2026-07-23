@@ -190,6 +190,15 @@ how we prove a test isn't vacuous.
 The exceptions are narrow and require asking first: throwaway prototypes, generated
 code, configuration. "Skip TDD just this once" is not one of them.
 
+## Workflow preferences
+
+**Presenting plan execution options.** When presenting the two plan-execution
+approaches (Subagent-Driven vs. Inline) at the end of the writing-plans workflow,
+always add a short note stating **which approach is recommended for this specific
+plan and why** — grounded in the plan's actual shape (task count, independence, risk,
+need for context isolation), not a generic default. Ported verbatim from
+`SmartJobSearchCRM`, where it was added as its own commit.
+
 ## Delivery loop
 
 The loop, adapted from the source project — each arrow is a skill from the table above:
