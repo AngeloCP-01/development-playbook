@@ -71,55 +71,45 @@ export default function Home() {
         </section>
       </div>
 
-      {/* The full index, two columns of groups on wide screens. */}
-      <section className="mt-16">
-        <div className="mb-6 flex items-center gap-3">
-          <span className="t-label text-subtle">All 18 sheets</span>
-          <span className="h-px flex-1 bg-line" aria-hidden />
-        </div>
-        <div className="grid gap-x-12 gap-y-10 lg:grid-cols-2">
-          {STAGE_GROUPS.map((group) => (
-            <section key={group}>
-              <p className="t-label mb-3 text-brand">{group}</p>
-              <ul>
-                {stagesByGroup(group).map((stage) => (
-                  <li
-                    key={stage.slug}
-                    className="measure-full border-b border-line first:border-t"
+      {/* The full index. Each group is its own full-width section with a
+          divider header; rows span the whole width, title left and cadence
+          pinned right, so the horizontal space is used without cramping. */}
+      {STAGE_GROUPS.map((group) => (
+        <section key={group} className="mt-14 first:mt-16">
+          <div className="mb-2 flex items-center gap-3">
+            <span className="t-label text-brand">{group}</span>
+            <span className="h-px flex-1 bg-line" aria-hidden />
+          </div>
+          <ul className="measure-full">
+            {stagesByGroup(group).map((stage) => (
+              <li key={stage.slug} className="border-b border-line">
+                <Link
+                  href={`/stages/${stage.slug}`}
+                  className="group grid grid-cols-[2.25rem_1fr] items-baseline gap-x-3 py-3.5 md:grid-cols-[2.25rem_1fr_auto] md:gap-x-8"
+                >
+                  <span
+                    className={[
+                      't-data text-xs',
+                      stage.ready ? 'text-brand' : 'text-subtle',
+                    ].join(' ')}
                   >
-                    <Link
-                      href={`/stages/${stage.slug}`}
-                      className="group grid grid-cols-[1.75rem_1fr] items-baseline gap-x-3 py-3"
-                    >
-                      <span
-                        className={[
-                          't-data text-xs',
-                          stage.ready ? 'text-brand' : 'text-subtle',
-                        ].join(' ')}
-                      >
-                        {stage.num}
-                      </span>
-                      <span className="min-w-0">
-                        <span className="flex items-baseline justify-between gap-3">
-                          <span className="t-head text-[1.0625rem] transition-colors duration-150 group-hover:text-brand">
-                            {stage.title}
-                          </span>
-                          <span className="t-label hidden shrink-0 text-subtle xl:block">
-                            {stage.cadence}
-                          </span>
-                        </span>
-                        <span className="mt-1 block text-[0.9375rem] leading-relaxed text-muted">
-                          {stage.blurb}
-                        </span>
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ))}
-        </div>
-      </section>
+                    {stage.num}
+                  </span>
+                  <span className="t-head text-[1.0625rem] transition-colors duration-150 group-hover:text-brand">
+                    {stage.title}
+                  </span>
+                  <span className="t-label col-start-2 row-start-2 mt-1.5 text-subtle md:col-start-3 md:row-start-1 md:mt-0 md:whitespace-nowrap md:text-right">
+                    {stage.cadence}
+                  </span>
+                  <span className="col-start-2 row-start-3 mt-1 max-w-[64ch] text-[0.9375rem] leading-relaxed text-muted md:row-start-2">
+                    {stage.blurb}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
     </div>
   )
 }
