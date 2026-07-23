@@ -54,6 +54,11 @@ routing works for all 18 regardless.
 renders one panel at a time. `Figure` numbers run across the whole stage, not per step,
 and are passed explicitly.
 
+**Before building a stage, read `web/PATTERNS.md`.** It catalogs the interaction
+patterns (expand-to-reveal, inline terms, guess-then-reveal, click-node inspector, and
+so on) and says which fits which content. The default is not a paragraph — it is
+something the reader clicks. A stage that is only prose blocks is the anti-pattern.
+
 ## Design system
 
 Tokens live in `src/app/globals.css`. Light mode is a whiteprint (dark linework on
@@ -260,6 +265,7 @@ Test names encode the rationale, not the mechanic:
 | `docs/task.md` | Scope, milestones (`P-` content, `W-` web app), dependency map |
 | `docs/tracker.md` | What shipped with evidence, numbered decisions, technical debt, bug ledger |
 | `web/DESIGN.md` | The design system. Any new UI matches it. |
+| `web/PATTERNS.md` | Interaction patterns — which UX pattern fits which content. Read before building a stage. |
 | `docs/superpowers/specs/`, `plans/` | Delivery-loop artifacts |
 | `docs/learnings/` | Guides written for future-you when a round teaches something expensive |
 | `reference/stack.md` | The default stack. Versions live here and nowhere else. |

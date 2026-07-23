@@ -124,6 +124,7 @@ Map of what lands where:
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
 Per stage:
+- [ ] Read `web/PATTERNS.md`; pick a pattern per section (prose is the fallback, not the default)
 - [ ] Group the doc's sections into 4–6 stepper steps
 - [ ] Identify diagrams worth building; wrap each as a numbered `<Figure>`
 - [ ] Build 1–3 interactive exercises where judgement is being taught
