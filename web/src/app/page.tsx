@@ -80,9 +80,12 @@ export default function Home() {
             <span className="t-label text-brand">{group}</span>
             <span className="h-px flex-1 bg-line" aria-hidden />
           </div>
-          <ul className="measure-full">
+          <ul>
             {stagesByGroup(group).map((stage) => (
-              <li key={stage.slug} className="border-b border-line">
+              <li
+                key={stage.slug}
+                className="measure-full border-b border-line"
+              >
                 <Link
                   href={`/stages/${stage.slug}`}
                   className="group grid grid-cols-[2.25rem_1fr] items-baseline gap-x-3 py-3.5 md:grid-cols-[2.25rem_1fr_auto] md:gap-x-8"
