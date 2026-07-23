@@ -177,9 +177,9 @@ export function OpportunityTree() {
 
       <p className="mt-4 border-t border-line pt-3.5 text-sm leading-6 text-subtle">
         The discipline the tree enforces: you cannot add a solution without
-        attaching it to an opportunity, and you cannot add an opportunity
-        without having heard it from someone. It makes unsupported features
-        visibly homeless.
+        attaching it to an opportunity, and you cannot add an opportunity you
+        have not heard from a real user. A feature with no evidence behind it
+        has nowhere to hang.
       </p>
     </Card>
   )

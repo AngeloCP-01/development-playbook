@@ -148,12 +148,12 @@ export function AIWorkflow() {
     <div className="space-y-4">
       <Callout kind="warn" title="The failure mode to design around">
         An LLM will help you justify almost anything. Ask &ldquo;is this a good
-        idea?&rdquo; and you will get a balanced-sounding yes — which is the
-        exact failure mode discovery exists to prevent, in a new costume. It is
-        the leading-question problem from your interviews, except this witness
-        never gets tired of agreeing with you.
+        idea?&rdquo; and you will get a balanced-sounding yes. That is exactly
+        the failure discovery is meant to catch. It is the leading-question
+        problem from your interviews, except this witness never gets tired of
+        agreeing with you.
         <span className="mt-2 block font-medium text-fg">
-          So point it at evidence and at refutation, never at validation.
+          So point it at evidence and at refutation, not at validation.
         </span>
       </Callout>
 

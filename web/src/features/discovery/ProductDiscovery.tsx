@@ -237,10 +237,9 @@ const STEPS: Step[] = [
           <Prose>
             <p>
               An <Term id="opportunity-solution-tree">opportunity solution tree</Term>{' '}is
-              Teresa Torres&rsquo; map of the problem space. It exists to stop
-              solutions floating free of evidence — every solution hangs off an
-              opportunity, and every opportunity came from someone&rsquo;s
-              mouth.
+              Teresa Torres&rsquo; map of the problem space. It keeps solutions
+              tied to evidence: every solution hangs off an opportunity, and
+              every opportunity is something a real user actually said.
             </p>
             <p>
               Click any node. The value is less the picture than the rule it
