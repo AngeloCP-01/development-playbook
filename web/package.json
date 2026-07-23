@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "vitest run",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -27,7 +28,8 @@
     "playwright": "^1.61.1",
     "prettier": "^3.9.6",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.10"
   },
   "packageManager": "pnpm@10.33.0"
 }
