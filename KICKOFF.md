@@ -96,7 +96,8 @@ Notes for whoever is preparing this handoff:
 - If a round is already scoped, add a per-round sibling — `KICKOFF-W4.md` — rather than
   overwriting this one. The generic version stays useful.
 - Open threads worth carrying forward:
-  - `docs/superpowers/specs/` and `plans/` exist but are empty — nothing has run through
-    the full loop in this repo yet.
+  - The full loop has run once: the quality-gates round (spec and plan dated
+    2026-07-23) went brainstorm → spec → plan → TDD tasks → whole-branch review.
+    Use those two files as the house example of the format.
   - The glossary lives in two places (`reference/glossary.md`, `web/src/lib/terms.ts`)
     and they already disagree. Decide before W-3 multiplies it.

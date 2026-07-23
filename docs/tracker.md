@@ -4,10 +4,13 @@
 debt was taken on. Scope and planning live in [task.md](task.md).
 
 **Last updated:** 2026-07-23
-**Current phase:** W-4 shipped — quality gates are in: prettier + eslint at
-`--max-warnings 0`, 13 vitest invariants, the 9-test audit suite, lefthook hooks, and a
-two-job CI workflow. P-5 resolved in ESLint's favour (D-22). Stage 01 remains the
-reference implementation. Next is W-3 (stage 03) or W-5 (deploy); see *Next up*.
+**Current phase:** W-4 shipped on `feat/quality-gates` (11 commits, review verdict
+Ready to merge) — prettier + eslint at `--max-warnings 0`, 13 vitest invariants, the
+9-test audit suite, lefthook hooks, a two-job CI workflow. P-5 resolved in ESLint's
+favour (D-22). The round's lessons were fed back into stage docs 05/06/07/11 (teeth
+check, invariant tests, the warnings trap) — the build-notice-drift-amend loop working
+as intended. Awaiting the user's manual test + merge decision. Next after that: W-3
+(stage 03) or W-5 (deploy).
 
 ---
 
@@ -29,7 +32,7 @@ because scope creep is invisible otherwise.
 | 2026-07-21 | P-7 | `KICKOFF.md`, `web/DESIGN.md`, `docs/superpowers/{specs,plans}/`, `docs/learnings/` | Design tokens in DESIGN.md verified against `globals.css`; `218815a` | Per-round kickoff siblings |
 | 2026-07-21 | W-2 | Stage 01: 6-step stepper, 9 numbered figures, 5 exercises, worksheet, 10 terms defined (5 used inline so far) | AA in both themes with all term panels expanded; 320–2560px clean; no console errors; `edb315b` | Stages 02–18; committed test suite |
 | 2026-07-23 | W-2+ | Stage 01 polish: three sentences humanized; index reworked to full-width per-group sections | Copy pass `11ce4f2`; index `e87286d`→`fd112c9`, no overflow 320–2560px | Broader humanizer sweep of the docs |
-| 2026-07-23 | W-4 | Quality gates: prettier + eslint-config-prettier, 13 vitest invariants, 9-test playwright audit suite, lefthook hooks, 2-job CI | Teeth: slug corruption failed exactly 4 tests; --faint regression failed contrast with named pairs; a bad commit was rejected on the third probe after two real gate weaknesses were found and fixed | Component/E2E behaviour tests (arrive with W-3); visual regression; branch protection (GitHub-side, after push) |
+| 2026-07-23 | W-4 | Quality gates: prettier + eslint-config-prettier, 13 vitest invariants, 9-test playwright audit suite, lefthook hooks, 2-job CI | Teeth: slug corruption failed exactly 4 tests; --faint regression failed contrast with named pairs; a bad commit was rejected on the third probe after two real gate weaknesses were found and fixed. Final whole-branch review: Ready to merge, 0 blocking, 2 minors (prepare-in-CI noise; audit PAGES hard-codes step hashes) | Component/E2E behaviour tests (arrive with W-3); visual regression; branch protection (GitHub-side, after push) |
 | 2026-07-23 | P-5 | Stack drift resolved: ESLint kept, Prettier added, Biome demoted to documented alternative; docs 04/stack.md/CLAUDE/KICKOFF amended | Every biome reference in doc 04 sections 3/6/7 replaced; `web/` and docs now agree | — |
 | 2026-07-23 | — | First learning guide: `docs/learnings/stage-implementation-101.md` | Every claim drawn from a real bug this session | More guides as rounds teach them |
 | 2026-07-23 | P-8 | Working standards documented: git + delivery-loop + review + TDD conventions, skills-as-process, humanizer pass, `web/PATTERNS.md` | Every convention verified against `SmartJobSearchCRM` git or the code; `218815a`, `5082e43`, `17b344e`, `a5901af` | Folding the same into the stage docs (P-6) |

@@ -117,6 +117,10 @@ Map of what lands where:
 | Run `humanizer:humanizer` over prose before it is done | 10 Documentation |
 
 - [ ] Update the markdown stage docs listed above
+      *(partial, 2026-07-23: teeth check + invariant tests → 06, teeth link → 07,
+      warnings-gate trap + gate yaml → 11, DoD line → 05 — landed with W-4's doc pass.
+      Remaining: commit/branch conventions → 05/07, review severity + provenance → 07,
+      tracker conventions + kickoff files → 02/10, skills-per-stage → all.)*
 - [ ] Mirror into the interactive stage as each is built under W-3
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
