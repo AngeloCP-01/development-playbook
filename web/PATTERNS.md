@@ -80,6 +80,18 @@ definitions are fine (they render as text); the JSX-attribute hazard applies to
 `Figure` captions, where a straight double quote breaks the attribute — use
 typographic quotes there.
 
+### `References` — `src/components/References.tsx` + `src/lib/references.ts`
+
+Closes a stage with 3–5 outward links (a test enforces the cap — a link dump is not a
+reading list). Each entry states **what it adds beyond the stage**, not just its title,
+so the reader can judge the click before making it. Renders nothing when a stage has no
+references, so it is safe to mount everywhere.
+
+Pick sources that extend rather than repeat: the origin of an artifact the stage
+borrows, a second lens on the same decision, the team-shaped version of a solo
+practice. Verify each URL resolves in a real browser — some publishers 403 command-line
+requests while serving fine to people.
+
 ### Content primitives — `src/components/ui.tsx`
 
 - **`Section`** (`eyebrow`, `title`) — a titled block with the label-plus-rule header.

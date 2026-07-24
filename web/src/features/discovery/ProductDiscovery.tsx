@@ -2,6 +2,7 @@ import { Callout, Contrast, Prose, Section } from '@/components/ui'
 import { Figure } from '@/components/Figure'
 import { Term } from '@/components/Term'
 import { Stepper, type Step } from '@/components/Stepper'
+import { References } from '@/components/References'
 import { DiscoveryFlow } from './DiscoveryFlow'
 import { SeverityScorer } from './SeverityScorer'
 import { QuestionLab } from './QuestionLab'
@@ -342,6 +343,8 @@ const STEPS: Step[] = [
             </Callout>
           </div>
         </Section>
+
+        <References slug="01-product-discovery" />
       </div>
     ),
   },

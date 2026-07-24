@@ -135,6 +135,7 @@ Per stage:
 - [ ] Identify diagrams worth building; wrap each as a numbered `<Figure>`
 - [ ] Build 1–3 interactive exercises where judgement is being taught
 - [ ] Add glossary terms for jargon that stage introduces
+- [ ] Add 3–5 references (`src/lib/references.ts`), each stating what it adds
 - [ ] Register in `src/features/stage-content.ts`; flip `ready: true` in `stages.ts`
 - [ ] Verify: contrast in both themes, 320–2560px, no console errors
 - [ ] Run `humanizer:humanizer` over the stage's prose
