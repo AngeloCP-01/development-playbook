@@ -125,20 +125,20 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ☐
+### W-3 — Stages 02–18 interactive ☐ *(02 done; 17 remain)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
-Per stage:
-- [ ] Read `web/PATTERNS.md`; pick a pattern per section (prose is the fallback, not the default)
-- [ ] Group the doc's sections into 4–6 stepper steps
-- [ ] Identify diagrams worth building; wrap each as a numbered `<Figure>`
-- [ ] Build 1–3 interactive exercises where judgement is being taught
-- [ ] Add glossary terms for jargon that stage introduces
-- [ ] Add 3–5 references (`src/lib/references.ts`), each stating what it adds
-- [ ] Register in `src/features/stage-content.ts`; flip `ready: true` in `stages.ts`
-- [ ] Verify: contrast in both themes, 320–2560px, no console errors
-- [ ] Run `humanizer:humanizer` over the stage's prose
+Per stage (checklist ticked for **02 Product Planning**, feat/stage-02-product-planning):
+- [x] Read `web/PATTERNS.md`; pick a pattern per section (prose is the fallback, not the default)
+- [x] Group the doc's sections into 4–6 stepper steps *(six: done · cut · sequence · size · write · horizon)*
+- [x] Identify diagrams worth building; wrap each as a numbered `<Figure>` *(nine)*
+- [x] Build 1–3 interactive exercises where judgement is being taught *(five: done-statement, cut table, slice sequencer, size scorer, horizon triage)*
+- [x] Add glossary terms for jargon that stage introduces *(seven: mvp, product-roadmap, product-vision, appetite, vertical-slice, spike, feasibility-risk)*
+- [x] Add 3–5 references (`src/lib/references.ts`), each stating what it adds *(four, all browser-verified)*
+- [x] Register in `src/features/stage-content.ts`; flip `ready: true` in `stages.ts`
+- [x] Verify: contrast in both themes, 320–2560px, no console errors *(9/9 audit suite against a production build)*
+- [x] Run `humanizer:humanizer` over the stage's prose *(doc amendment; em-dashes kept as house voice)*
 
 Suggested order. Revised 2026-07-24 (D-27): the first pass ranked purely by teaching
 value and put 02 fifth. That ignored the reader's journey and the risk of proving the
@@ -156,9 +156,14 @@ pattern library on the hardest stage.
 **Settle before stage 03:** TD-2 and TD-3 (stage metadata and the glossary each live in
 two places). Every new stage multiplies the drift, so the cost of deferring compounds.
 
-**Open product decision for stage 02:** should its worksheet read the answers stage 01
-saved? It would make the two stages a real chain rather than independent pages. Nothing
-does this yet.
+**~~Open product decision for stage 02:~~ ✓ resolved 2026-07-24.** Stage 02's worksheet
+reads stage 01's saved answers via a read-only carry-forward (`src/lib/discovery-sheet.ts`,
+shared by both stages). It seeds "Done means" and "Not in v1" from stage 01's `success`
+and `notThis`, disabling each seed once the target field has text so it can never
+overwrite. A shared cross-stage store was rejected as premature (it would make stage 01 a
+migration target and fix a schema before stages 03–18 have said what they need). The chain
+extends: the reader's own "Not in v1" entries become the items they triage in the horizon
+step. Verified end-to-end in a live browser.
 
 ### W-4 — Quality gates ☑
 

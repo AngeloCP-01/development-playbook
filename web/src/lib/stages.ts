@@ -28,14 +28,15 @@ export const STAGES: Stage[] = [
   },
   {
     num: '02',
-    cadence: 'After discovery · before architecture',
+    cadence: 'After discovery · re-run whenever scope shifts',
     slug: '02-planning',
-    title: 'Planning',
+    title: 'Product Planning',
     blurb:
-      'Decide what to build first, and what you are deliberately not building at all.',
+      'Decide what to build first, what you are deliberately not building at all, and where it goes after that.',
     group: 'Before code',
-    timing: 'After discovery, before architecture.',
-    ready: false,
+    timing:
+      'After discovery, before architecture — and again every time scope shifts.',
+    ready: true,
   },
   {
     num: '03',

@@ -90,6 +90,50 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'This is why "annoying" problems never convert. The pain you remove has to exceed the cost of moving.',
   },
+  mvp: {
+    short:
+      'The smallest version that delivers the outcome you defined as done.',
+    full: 'Minimum viable product: the least you can build that still achieves the result you wrote down, so that real usage can tell you what to build next. It is defined by the outcome, not by a feature count.',
+    soWhat:
+      'The phrase is usually misused to mean "v1 with the hard parts removed", which produces something nobody can use and teaches you nothing. If your MVP cannot deliver the outcome, it is not minimum — it is unfinished.',
+  },
+  'product-roadmap': {
+    short: 'What you plan to build, in order, without dates.',
+    full: 'An ordered statement of intent — usually now, next and later — saying what is being built and what is waiting. The good ones name what has to be true before an item moves up, rather than naming a month.',
+    soWhat:
+      'The moment a roadmap carries dates it becomes a promise, and replanning turns political. Horizons give you the sequence without the commitment.',
+  },
+  'product-vision': {
+    short: 'Where the product is going, written as a state of the world.',
+    full: 'A short description of what the product becomes if it works — not a feature list, and not a slogan. One paragraph is the right length.',
+    soWhat:
+      'Without one, an MVP reads as a list of things you cut. With one, it reads as a first step, and every "not now" decision has something to be judged against.',
+  },
+  appetite: {
+    short: 'How much time something is worth, decided before the design.',
+    full: 'A fixed budget of time you are willing to spend, which the solution is then shaped to fit. An estimate starts with a design and ends with a number; an appetite starts with a number and ends with a design.',
+    soWhat:
+      'It reverses who is in charge. An estimate lets the design dictate the schedule; an appetite lets the schedule dictate the design — which, solo, is almost always the trade you want.',
+  },
+  'vertical-slice': {
+    short:
+      'A piece of work that touches every layer and produces something usable.',
+    full: 'Work sequenced so each step goes through storage, logic and interface at once, rather than building each layer across the whole product before starting the next.',
+    soWhat:
+      'Layer-first work means nothing functions until everything does, and you learn nothing until the end. A vertical slice is demonstrable the day it lands, which is also what makes it possible to change your mind cheaply.',
+  },
+  spike: {
+    short: 'A timeboxed investigation whose output is a decision, not code.',
+    full: 'A short, deliberately bounded piece of exploration answering one specific question — can this integration do what we need, is this approach fast enough — with a hard stop and a written answer.',
+    soWhat:
+      'The discipline is throwing the code away. If you keep it, you have not run a spike; you have merged untested, unreviewed work through the side door.',
+  },
+  'feasibility-risk': {
+    short: 'The risk that the thing cannot be built as imagined.',
+    full: 'One of the standard product risks, alongside whether people want it and whether it makes business sense. It asks whether the technology, data, budget and time actually permit the solution.',
+    soWhat:
+      'Discovery tests whether anyone wants it; this tests whether you can make it. They fail differently and at different costs, so finding feasibility problems late is the more expensive of the two.',
+  },
 }
 
 export function getTerm(key: string): Term | undefined {

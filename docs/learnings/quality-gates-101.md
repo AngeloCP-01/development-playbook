@@ -37,7 +37,49 @@ from birth, which proves nothing. Every suite in this round was teeth-checked:
 
 Budget for the teeth check finding real problems. Here it found two.
 
-## The committed suite was stricter than the throwaway scripts — good
+## One mutation is not a teeth check — stage 02 proved it three times
+
+Building stage 02, three separate test sets shipped green while passing against a
+*broken* implementation. Each had a teeth check that reported success. Each was caught
+later — twice by a reviewer, once by an implementer warned in advance — never by the
+author.
+
+- **A fixture symmetric under negation.** `scoreCut`'s partial-run test used
+  `{ 'create-invoice': true, 'dark-mode': true }` → `correct: 1`. One core feature
+  guessed core, one non-core guessed core: a match and a mismatch. Flip the comparison
+  `===` to `!==` and it is still `correct: 1`. The whole suite passed with the scorer
+  inverted. Fix: an asymmetric fixture (two matches, one miss → 2 under `===`, 1 under
+  `!==`) plus an all-core fixture (3 vs 5 vs 8 — three distinguishable outcomes).
+- **Keyword-regex assertions on user-facing prose.** `scoreOrder` returns `notes[]`
+  explaining which rule failed. The tests asserted `notes.join(' ').toMatch(/end to end/i)`
+  — satisfied by *any* string containing the phrase. Replacing all note-building with one
+  hardcoded string containing the right keywords passed 44/44. The notes are the teaching
+  (the whole reason the two rules report separately), and they were unpinned. Fix:
+  positive **and** negative assertions — the failing branch's message present, the other
+  branch's message absent.
+- **A constant mutated by value while tests reference it by symbol.** The plan's teeth
+  check for `discovery-sheet` said "change `DISCOVERY_KEY`'s value and watch tests fail."
+  The tests import `DISCOVERY_KEY`, so both sides of every assertion move together and
+  nothing fails. Fix: mutate the *logic*, not a symbol both sides share.
+
+The pattern under all three: **the teeth check confirmed the code ran, not that it was
+right.** A coarse mutation (delete the branch, blank the field) only proves the line is
+reached. The mutations that matter are the plausible near-misses — an inverted comparison,
+an off-by-one boundary, a swapped operand, a human-readable string replaced by a
+plausible constant.
+
+Two rules of thumb that would have caught all three:
+
+1. **Run more than one mutation, and make them adversarial.** After the obvious "delete
+   it" mutation, ask: what is the *subtlest* wrong version that would still look right? Try
+   that one. If it survives, the test is the bug.
+2. **Keyword-regex on prose is almost always vacuous.** `toMatch(/word/i)` passes for any
+   string mentioning the word. Pin user-facing strings with a negative assertion too, or
+   pin them to `.toBe(item.why)` exact.
+
+The cheap structural fix that worked: have a *different* agent hunt for a mutation the
+author did not try. It caught two of the three. The author's own teeth check is
+necessary but not sufficient — an adversarial second pass is where the vacuous ones die.
 
 First real run of the committed audit suite flagged inline `<Term>` buttons as sub-44px
 touch targets. The ad-hoc sweeps had never flagged them, because one iteration had

@@ -55,6 +55,16 @@ test('every ready stage is registered in STAGE_CONTENT, so no live route renders
   }
 })
 
+test('stage 02 is titled Product Planning, since that is the discipline it teaches', () => {
+  expect(getStage('02-planning')?.title).toBe('Product Planning')
+})
+
+test('stage 02 cadence does not pin it to a slot in a sequence, per the playbook’s central claim', () => {
+  const cadence = getStage('02-planning')?.cadence ?? ''
+  expect(cadence.toLowerCase()).not.toContain('before architecture')
+  expect(cadence.trim().length).toBeGreaterThan(0)
+})
+
 test('every STAGE_CONTENT key is a real stage slug, so no dead registration lingers', () => {
   for (const key of Object.keys(STAGE_CONTENT)) {
     expect(getStage(key), `${key} registered but not a stage`).toBeDefined()

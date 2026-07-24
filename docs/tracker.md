@@ -48,6 +48,7 @@ because scope creep is invisible otherwise.
 | 2026-07-23 | P-5 | Stack drift resolved: ESLint kept, Prettier added, Biome demoted to documented alternative; docs 04/stack.md/CLAUDE/KICKOFF amended | Every biome reference in doc 04 sections 3/6/7 replaced; `web/` and docs now agree | — |
 | 2026-07-23 | — | First learning guide: `docs/learnings/stage-implementation-101.md` | Every claim drawn from a real bug this session | More guides as rounds teach them |
 | 2026-07-23 | P-8 | Working standards documented: git + delivery-loop + review + TDD conventions, skills-as-process, humanizer pass, `web/PATTERNS.md` | Every convention verified against `SmartJobSearchCRM` git or the code; `218815a`, `5082e43`, `17b344e`, `a5901af` | Folding the same into the stage docs (P-6) |
+| 2026-07-24 | W-3 (02) | Stage 02 **Product Planning**: doc reframed + retitled, six-step stepper, nine figures, five exercises, plan worksheet with 01→02 carry-forward, 7 terms, 4 references. `docs/02-planning.md` amended (MVP/roadmap/appetite/feasibility-risk named; now/next/later horizon added — "vision" was absent from all 18 docs) | 56 vitest (31 new); 9/9 audit suite on a production build (overflow 320–2560, touch ≥44px, WCAG AA both themes, zero console); full 01→02 chain verified live (seed fills + disables, reader's Not-in-v1 → horizon triage); every component reviewed clean by a fresh subagent; `2bd421b`…`1d7f327` | TD-2/TD-3 (due before 03); stage 01 team-section retrofit; deploy (W-5); edits to `docs/03` |
 
 ### Verification standard used
 
@@ -70,6 +71,9 @@ of what was believed at the time is the point.
 
 | # | Decision | Reasoning | Consequence |
 |---|---|---|---|
+| **D-30** | The horizon roadmap lives inside stage 02, not as a 19th stage | Asking where a roadmap belongs surfaced that "vision" appears in none of the 18 docs. A separate Roadmap stage was considered at two placements and rejected at both: *after* architecture inverts a stated dependency (`docs/03`'s entry criteria already require 02's scope), and *before* it splits one activity in two — every source treats roadmapping as a step of product planning. Either placement renames 15 docs across 20 files and breaks the `exactly 18 stages` invariant | Stage 02 gains a dateless now/next/later section; the eighteen-stage count stays load-bearing and test-enforced (`stages.test.ts:9`) |
+| **D-29** | Stage 02 is *product* planning, and the doc is amended to say so | The stage taught product planning (its "cut to the core" is Atlassian's roadmap step almost verbatim) but never named it; MVP and roadmap were absent from all 18 docs. Moving slicing/estimation into stage 03 was rejected — 02 attacks layer-first sequencing by name, so scheduling slices after architecture reintroduces the waterfall it exists to kill | `docs/02-planning.md` retitled and reframed; the doc/app agree per the README's own rule (`2bd421b`) |
+| **D-28** | Stage 01→02 chain via a read-only shared sheet, not a shared store | The carry-forward makes the two stages a real chain. A shared `playbook:project` store was rejected as premature — it would make stage 01 a migration target and fix a schema before stages 03–18 have said what they need. Read-only carry-forward gets the chain with none of the coupling | `src/lib/discovery-sheet.ts` owns the shape both stages import; stage 02 reads, never writes, stage 01's key; the extraction also pays down one instance of the TD-2/TD-3 duplication |
 | **D-1** | 18 flat stage docs, not 7 phases or 21 steps | Granular enough to look things up; flat enough to navigate | More files to maintain |
 | **D-2** | Opinionated and stack-specific over stack-agnostic | Advice you can act on immediately beats advice you must translate | Docs age with the stack; **TD-1** is the first instance |
 | **D-3** | Baseline is solo but production-grade, with team callouts | Matches how the author actually works | Every doc carries a "Scaling to a team" section |
@@ -186,6 +190,52 @@ on the first run.
 means renumbering the rest by hand, and nothing catches a duplicate or a gap.
 
 **Closes with:** a lint rule, or a build-time check that numbers are contiguous.
+
+### TD-11 — `DESIGN.md` names tokens the code does not expose · **Medium**
+
+`web/DESIGN.md` documents the accent and semantic tokens as `signal` / `stop`, but every
+shipped component and the CSS use `brand` / `danger` (with `-tint` / `-fg`). Found while
+briefing stage 02's component agents — the doc nearly sent an implementer at a class name
+that does not exist. Same class of drift as the resolved TD-1, one layer down.
+
+**Closes with:** pick one naming and make the other match. The code is canonical (a
+rename there is a wide diff for no behaviour change), so `DESIGN.md` should adopt
+`brand`/`danger`, or note both names explicitly.
+
+### TD-12 — The audit `PAGES` list is hand-maintained · **Low**
+
+`web/e2e/audit.spec.ts` hard-codes each step hash to sweep (`#done`, `#cut`, …). Every new
+`ready` stage must add its hashes by hand, and nothing fails if they drift from the stages
+actually live — a stage could ship unaudited and the suite would still pass green. First
+flagged as a W-4 minor; stage 02 added six hashes by hand, so it is now real rather than
+hypothetical.
+
+**Closes with:** derive `PAGES` from `STAGES.filter(s => s.ready)` crossed with each
+stage's step ids, so the sweep tracks the ready set automatically.
+
+### TD-14 — Stage 02 exercise cards render at two different widths · **Low**
+
+`HorizonTriage` builds its item cards from `role="list"` divs (full container
+width), while `CutTable`, `DoneStatement` and `SliceSequencer` use real `<li>`
+cards that hit the 68ch measure cap. On a wide screen the horizon cards are about
+twice the width of the others on the same stage. Found by the final whole-branch
+review (M2). Cosmetic, not wrong — the `<li>` cap is the established stage-01
+pattern (`QuestionLab`), and the horizon divs were a deliberate escape for their
+own reason — but the two now sit in one stage at visibly different widths.
+
+**Closes with:** pick one width for exercise cards stage-wide — either cap the
+horizon cards to the measure, or lift the others. A polish-pass call, not a bug.
+
+### TD-13 — Stage 02 has a "Scaling to a team" block; stage 01 does not · **Low**
+
+Stage 02's interactive build includes a collapsed "If you are not solo" disclosure porting
+the doc's team section; stage 01 silently dropped its equivalent. A deliberate asymmetry,
+taken to avoid reopening a finished stage mid-round. Every later stage now has to decide
+which precedent to follow.
+
+**Closes with:** either retrofit stage 01's team section as a disclosure, or decide team
+content stays doc-only and remove stage 02's — a one-stage convention call, cheap now,
+cheaper before seventeen more stages copy one side or the other.
 
 ---
 
