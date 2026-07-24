@@ -20,8 +20,25 @@ test('feature ids are unique, because answers are keyed by id', () => {
 })
 
 test('scores only what was answered, so a partial run still reports honestly', () => {
-  const answers = { 'create-invoice': true, 'dark-mode': true }
-  expect(scoreCut(answers)).toEqual({ answered: 2, correct: 1 })
+  // Asymmetric on purpose: two matches (create-invoice, mark-paid) and one miss
+  // (dark-mode). A symmetric fixture — one match, one miss — scores the same
+  // whether the comparison is `===` or its negation, so it cannot tell a
+  // correct implementation from an inverted one.
+  const answers = {
+    'create-invoice': true,
+    'mark-paid': true,
+    'dark-mode': true,
+  }
+  expect(scoreCut(answers)).toEqual({ answered: 3, correct: 2 })
+})
+
+test('counts matches against the core verdict, not mismatches, so guessing everything is core does not inflate the score', () => {
+  const answers = Object.fromEntries(CUT_FEATURES.map((f) => [f.id, true]))
+  // Only the three core features (create-invoice, mark-paid, overdue-list)
+  // match a guess of `true`; the other five are wrong. If the comparison were
+  // ever flipped, or the guard dropped so every answered id counted as
+  // correct, this would report 5 or 8 instead of 3.
+  expect(scoreCut(answers)).toEqual({ answered: 8, correct: 3 })
 })
 
 test('an empty run scores zero rather than dividing by nothing', () => {
