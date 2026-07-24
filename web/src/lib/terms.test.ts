@@ -27,3 +27,17 @@ test('every term visual is registered against a real term id', () => {
     expect(getTerm(key), `${key} has a visual but no definition`).toBeDefined()
   }
 })
+
+test('stage 02 vocabulary is defined, since the stage introduces words the playbook never used', () => {
+  for (const id of [
+    'mvp',
+    'product-roadmap',
+    'product-vision',
+    'appetite',
+    'vertical-slice',
+    'spike',
+    'feasibility-risk',
+  ]) {
+    expect(TERMS[id], `${id} is missing`).toBeDefined()
+  }
+})

@@ -47,6 +47,32 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: 'The team-shaped version of this stage: how discovery runs alongside delivery, and how findings move into a backlog. Most relevant when the "Scaling to a team" notes here start applying to you.',
     },
   ],
+  '02-planning': [
+    {
+      title: 'The complete guide to product planning',
+      source: 'Atlassian',
+      url: 'https://www.atlassian.com/agile/product-management/product-planning',
+      adds: 'The seven-step industry version of the phrase — ideate, research, vision, specification, roadmap, prototype, launch. Read it to see how much wider "product planning" is elsewhere than it is here, and which of this playbook\'s stages own the rest of it.',
+    },
+    {
+      title: 'Mapping User Stories in Agile',
+      source: 'Nielsen Norman Group',
+      url: 'https://www.nngroup.com/articles/user-story-mapping/',
+      adds: "How slicing actually gets done when the work is bigger than one person can hold. Story mapping lays the whole product out and then cuts release lines through it, hunting the smallest release someone would find genuinely useful — the team-shaped version of this stage's vertical slices.",
+    },
+    {
+      title: 'Shape Up — The Betting Table',
+      source: 'Ryan Singer · Basecamp',
+      url: 'https://basecamp.com/shapeup/2.2-chapter-08',
+      adds: 'The sharpest available argument for appetite over estimate, and for calling the decision a bet rather than a plan. Go here when "estimate for sequencing" feels like it is still smuggling a promise in.',
+    },
+    {
+      title: 'Dual-Track Agile',
+      source: 'Marty Cagan · Silicon Valley Product Group',
+      url: 'https://www.svpg.com/dual-track-agile/',
+      adds: 'Why there is no planning phase between deciding and building — discovery and delivery run in parallel, continuously. The clearest statement of why the number on this document is a filing code rather than a position in a queue.',
+    },
+  ],
 }
 
 export function getReferences(slug: string): Reference[] {
