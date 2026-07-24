@@ -4,33 +4,18 @@ import { useState } from 'react'
 import { Check, Copy, RotateCcw, Save } from 'lucide-react'
 import { Card } from '@/components/ui'
 import { useLocalStorage } from '@/lib/useLocalStorage'
+import {
+  DISCOVERY_KEY,
+  EMPTY_SHEET,
+  type DiscoverySheet,
+} from '@/lib/discovery-sheet'
 
 type Field = {
-  key: keyof Sheet
+  key: keyof DiscoverySheet
   label: string
   hint: string
   placeholder: string
   rows: number
-}
-
-type Sheet = {
-  problem: string
-  who: string
-  today: string
-  evidence: string
-  severity: string
-  success: string
-  notThis: string
-}
-
-const EMPTY: Sheet = {
-  problem: '',
-  who: '',
-  today: '',
-  evidence: '',
-  severity: '',
-  success: '',
-  notThis: '',
 }
 
 const FIELDS: Field[] = [
@@ -92,7 +77,7 @@ const FIELDS: Field[] = [
   },
 ]
 
-function toMarkdown(s: Sheet): string {
+function toMarkdown(s: DiscoverySheet): string {
   const section = (title: string, body: string) =>
     `## ${title}\n\n${body.trim() || '_(not answered)_'}\n`
   return [
@@ -109,9 +94,9 @@ function toMarkdown(s: Sheet): string {
 }
 
 export function Worksheet() {
-  const { value, setValue, reset } = useLocalStorage<Sheet>(
-    'playbook:discovery-worksheet',
-    EMPTY,
+  const { value, setValue, reset } = useLocalStorage<DiscoverySheet>(
+    DISCOVERY_KEY,
+    EMPTY_SHEET,
   )
   const [copied, setCopied] = useState(false)
 
