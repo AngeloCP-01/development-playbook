@@ -53,7 +53,7 @@ whole stage, not per step, and are passed explicitly, so "Fig 4" means one thing
 wherever the reader entered. The caption states what the figure _claims_, which is the
 line between a picture and an explanation.
 
-Wrap every diagram. A diagram without a caption is decorations.
+Wrap every diagram. A diagram without a caption is decoration.
 
 ### `Term` — `src/components/Term.tsx` + `src/lib/terms.ts`
 
