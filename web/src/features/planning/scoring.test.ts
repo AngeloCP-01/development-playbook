@@ -239,6 +239,28 @@ test('the off verdict is grounded in the specific item, so two different wrong p
   expect(offB.why).toContain(laterItem.why)
 })
 
+test('the off verdict names the horizon that actually fits, since a label pointing at the wrong one teaches the opposite of the lesson', () => {
+  // The prefix is what tells the reader where the item belongs. Pinning only the
+  // trailing `why` leaves the label free to say "Now fits better here" about a
+  // Later item — wrong, and invisible to a test that checks the explanation alone.
+  const nowItem = HORIZON_ITEMS.find(
+    (i) => i.best === 'now' && i.alsoDefensible !== 'later',
+  )!
+  const laterItem = HORIZON_ITEMS.find(
+    (i) => i.best === 'later' && i.alsoDefensible !== 'now',
+  )!
+  expect(judgeHorizon(nowItem.id, 'later').why).toMatch(
+    /^Now fits better here\./,
+  )
+  expect(judgeHorizon(laterItem.id, 'now').why).toMatch(
+    /^Later fits better here\./,
+  )
+})
+
 test('an unknown id is off rather than a crash, since ids come from user state', () => {
-  expect(judgeHorizon('nope', 'now').verdict).toBe('off')
+  const result = judgeHorizon('nope', 'now')
+  expect(result.verdict).toBe('off')
+  // Pinned to non-empty: this string is all a reader gets when their saved answer
+  // references an item that no longer exists, so an empty one is a dead end.
+  expect(result.why.trim().length).toBeGreaterThan(0)
 })
