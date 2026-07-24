@@ -26,6 +26,17 @@
 - Commit trailer on every commit: `Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>`
 - Conventional Commits, lowercase after the colon. Scopes here: `planning`, `docs`, `web`, `a11y`, `tracker`.
 
+**Note on teeth checks in this plan.** Two of the mutation checks originally written
+here were vacuous, and both were caught downstream rather than by the plan author.
+Task 2's mutated a constant's *value* while the tests referenced its *symbol*, so
+both sides moved together and nothing failed. Task 3's original fixture was symmetric
+under negation, so inverting `===` to `!==` left the whole suite green. **One mutation
+is not evidence of a test set's teeth.** When you run a teeth check, prefer plausible
+near-misses — inverted comparisons, off-by-one boundaries, swapped operands — over
+deleting the logic outright, which only proves the code executes. If a mutation does
+not fail anything, that is a finding about the tests, not a formality to note and move
+past.
+
 **Note on the shared test file.** Tasks 3, 4 and 5 all append to `web/src/features/planning/scoring.test.ts`. Each shows its own `import … from './scoring'` line for readability, but **merge them into the single existing import** rather than adding a second and third statement — three imports from one module is untidy and may trip lint.
 
 **Note on prose provenance.** Component tasks cite their copy by `docs/02-planning.md` line range rather than restating it. The doc is canonical; duplicating its prose in this plan would create a third copy that drifts, which is the TD-2/TD-3 failure mode this project already tracks. Task 1 writes that prose, so it exists before any task consumes it.
@@ -499,8 +510,24 @@ test('feature ids are unique, because answers are keyed by id', () => {
 })
 
 test('scores only what was answered, so a partial run still reports honestly', () => {
-  const answers = { 'create-invoice': true, 'dark-mode': true }
-  expect(scoreCut(answers)).toEqual({ answered: 2, correct: 1 })
+  // Asymmetric on purpose: two matches (create-invoice, mark-paid) and one miss
+  // (dark-mode). A symmetric fixture — one match, one miss — scores the same
+  // whether the comparison is `===` or its negation, so it cannot tell a
+  // correct implementation from an inverted one.
+  const answers = {
+    'create-invoice': true,
+    'mark-paid': true,
+    'dark-mode': true,
+  }
+  expect(scoreCut(answers)).toEqual({ answered: 3, correct: 2 })
+})
+
+test('counts matches against the core verdict, not mismatches, so guessing everything is core does not inflate the score', () => {
+  const answers = Object.fromEntries(CUT_FEATURES.map((f) => [f.id, true]))
+  // Only the three core features match a guess of `true`; the other five are
+  // wrong. Flip the comparison and this reports 5; drop the guard and it
+  // reports 8. Three distinguishable outcomes, which is what pins the semantic.
+  expect(scoreCut(answers)).toEqual({ answered: 8, correct: 3 })
 })
 
 test('an empty run scores zero rather than dividing by nothing', () => {
