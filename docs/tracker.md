@@ -213,6 +213,19 @@ hypothetical.
 **Closes with:** derive `PAGES` from `STAGES.filter(s => s.ready)` crossed with each
 stage's step ids, so the sweep tracks the ready set automatically.
 
+### TD-14 — Stage 02 exercise cards render at two different widths · **Low**
+
+`HorizonTriage` builds its item cards from `role="list"` divs (full container
+width), while `CutTable`, `DoneStatement` and `SliceSequencer` use real `<li>`
+cards that hit the 68ch measure cap. On a wide screen the horizon cards are about
+twice the width of the others on the same stage. Found by the final whole-branch
+review (M2). Cosmetic, not wrong — the `<li>` cap is the established stage-01
+pattern (`QuestionLab`), and the horizon divs were a deliberate escape for their
+own reason — but the two now sit in one stage at visibly different widths.
+
+**Closes with:** pick one width for exercise cards stage-wide — either cap the
+horizon cards to the measure, or lift the others. A polish-pass call, not a bug.
+
 ### TD-13 — Stage 02 has a "Scaling to a team" block; stage 01 does not · **Low**
 
 Stage 02's interactive build includes a collapsed "If you are not solo" disclosure porting
