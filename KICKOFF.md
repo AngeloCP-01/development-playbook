@@ -74,7 +74,7 @@ does.
 ### Environment notes
 
 - All app commands run from `web/`: `pnpm dev` (port 3000), `pnpm build`, `pnpm lint`,
-  `pnpm exec tsc --noEmit`, `pnpm test` (vitest), `pnpm test:e2e` (playwright audit
+  `pnpm typecheck`, `pnpm test` (vitest), `pnpm test:e2e` (playwright audit
   suite). Lefthook hooks run format+lint on commit, typecheck+test on push.
 - No env vars, no database, no backend. Static site.
 - MCP in use: **context7** (library docs — prefer it over memory for framework code),

@@ -12,7 +12,7 @@ return here when the pipeline needs to grow, not when you are starting out.
 ## Entry criteria
 
 - [ ] Repository exists with a `main` branch
-- [ ] `pnpm build`, `pnpm vitest run`, and `pnpm tsc --noEmit` all pass locally
+- [ ] `pnpm build`, `pnpm test`, and `pnpm typecheck` all pass locally
 - [ ] Vercel project is linked ([04](04-project-setup.md))
 
 ---
@@ -66,7 +66,7 @@ jobs:
         run: pnpm lint   # eslint --max-warnings 0 — see the trap below
 
       - name: Typecheck
-        run: pnpm tsc --noEmit
+        run: pnpm typecheck   # generates route types first — see the trap below
 
       - name: Unit and integration tests
         run: pnpm vitest run --coverage
@@ -237,6 +237,14 @@ green before merging, and the gate becomes advisory. Speed is a correctness feat
 **Tolerating flaky tests.** One test that fails 5% of the time trains you to re-run red
 builds without reading them. That habit is what lets a real failure through. Fix it or
 delete it — a test you do not trust has negative value.
+
+**Typechecking generated types on a clean checkout.** Frameworks generate types into
+build directories — Next.js writes `PageProps` and route types into `.next/types/`. On
+your machine those files linger from the last build, so `tsc --noEmit` passes. CI checks
+out clean, and if typecheck runs before build, it fails on types that do not exist yet.
+Run the generator first (`next typegen`) and put it inside the script both CI and your
+hooks call, so the two cannot drift. This playbook's own CI caught exactly this on its
+first real run.
 
 **Testing against the dev server.** The dev server has different bundling, different
 caching, and no edge network. Passing there and failing in production is a common and

@@ -13,7 +13,7 @@ pnpm lint         # eslint --max-warnings 0
 pnpm format       # prettier --write (format:check is what CI runs)
 pnpm test         # vitest — data-layer invariant tests
 pnpm test:e2e     # playwright audit suite against a production build on :3100
-pnpm exec tsc --noEmit   # typecheck
+pnpm typecheck    # next typegen && tsc --noEmit
 ```
 
 Lefthook runs format+lint on commit and typecheck+test on push. CI
@@ -85,6 +85,12 @@ get room; prose stays readable without per-component effort. Opt out with
 `web/AGENTS.md` instructs reading `node_modules/next/dist/docs/` before writing code.
 Follow it — this Next.js version has breaking changes from training data. Notably
 `params` and `searchParams` are Promises; use the generated `PageProps<'/route'>` helper.
+
+**Route types are generated, not written.** `PageProps<'/route'>` and friends live in
+`.next/types/`, produced by `next build` or `next typegen`. A bare `tsc --noEmit` passes
+locally only because a previous build left `.next` behind, and fails on a clean checkout
+— which is exactly how CI caught it. Always typecheck via `pnpm typecheck`, which runs
+typegen first.
 
 **React 19 forbids setState in an effect body** (`react-hooks/set-state-in-effect`, an
 error not a warning). `src/lib/useLocalStorage.ts` uses `useSyncExternalStore` for this

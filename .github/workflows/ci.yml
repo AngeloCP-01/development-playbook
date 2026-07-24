@@ -31,7 +31,7 @@ jobs:
       # Cheapest failure first: format, lint, types, unit, build.
       - run: pnpm format:check
       - run: pnpm lint
-      - run: pnpm exec tsc --noEmit
+      - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
 

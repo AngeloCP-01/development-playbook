@@ -17,7 +17,7 @@ pre-push:
   commands:
     typecheck:
       root: 'web/'
-      run: pnpm exec tsc --noEmit
+      run: pnpm typecheck
     test:
       root: 'web/'
       run: pnpm test

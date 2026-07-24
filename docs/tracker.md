@@ -11,8 +11,13 @@ suite, lefthook hooks, and a two-job CI workflow. P-5 resolved in ESLint's favou
 (D-22). The round fed itself back into stage docs 05/06/07/11 — the
 build-notice-drift-amend loop working as intended.
 
-**Open on the gate:** CI has never been observed running (see TD-10). Next round is
-W-3 (stage 03) or W-5 (deploy).
+**The gate proved itself.** CI's first real run went red on a genuine bug — `PageProps`
+is generated into `.next/types/`, so typechecking before building fails on a clean
+checkout while passing locally forever. Fixed at the source with a `typecheck` script
+both CI and the hook call. This is the exact class of bug CI exists to catch, and it
+arrived unprompted on day one.
+
+**Still open:** branch protection (TD-10). Next round is W-3 (stage 03) or W-5 (deploy).
 
 ---
 
@@ -77,6 +82,7 @@ of what was believed at the time is the point.
 | **D-14** | Removed the drafting grid background | Flagged as disruptive; softening was not enough. The sheet reads as technical from the title block and linework without it | Lost some texture; gained legibility |
 | **D-15** | Wide container (1400px) + per-element measure cap | Wide screens wasted space, but unconstrained prose is unreadable. `main :is(p, li)` caps at 68ch by default | New text elements inherit the cap automatically; opt out with `.measure-full` |
 | **D-17** | Adopt `SmartJobSearchCRM` working conventions wholesale | They are established across ~500 commits and already suit how the author works; inventing a second set would fragment two active projects | `CLAUDE.md` now carries git, review and TDD conventions verbatim. P-6 folds them into the stage docs |
+| **D-25** | Typechecking goes through a `typecheck` script, never bare `tsc` | Route types are generated into `.next/types/`; a bare `tsc` passes locally off a stale build and fails on a clean checkout. Putting typegen inside one script means CI and the hooks cannot drift apart | `pnpm typecheck` = `next typegen && tsc --noEmit`, used by CI and pre-push |
 | **D-24** | Stages close with 3–5 curated outward references, capped by a test | A reference list that grows unbounded stops being read; the cap forces the question "does this add something the stage does not". Each entry states what it adds so the click is judgeable | `src/lib/references.ts` + `References`; stage 01 cites Torres, Cagan, Scrum.org, Maze, Atlassian |
 | **D-23** | The audit suite runs in CI against a production build, not as a local convenience | The dev server differs in rendering and console noise, and a check that only runs when remembered is TD-5 all over again | `test:e2e` uses playwright's webServer on :3100; CI's audit job needs verify first |
 | **D-22** | ESLint kept over Biome; Prettier added; lint gated at `--max-warnings 0` | Biome is ~80% of the ESLint ecosystem, but this repo's best lint catch (`set-state-in-effect` on `useLocalStorage`) is ESLint-only and Next ships the config. The warnings gate exists because eslint exits 0 on warnings — proven by a teeth check that let an unused variable through twice | Closes TD-1; Biome documented in `stack.md` as the non-Next alternative |
@@ -141,26 +147,21 @@ working tree is lost.~~ Committed in `edb315b`; the app and all docs are now tra
 
 Now `@playwright/test` with a committed suite; the dependency earns its place.
 
-### TD-10 — CI has never been observed running or failing · **High**
+### TD-10 — CI is not yet enforced · **Medium**
 
-The workflow is committed and `main` is pushed, but nothing here has confirmed a run.
-`docs/11-ci-cd.md` is explicit that an unenforced gate is decoration and that you must
-watch CI go red once before trusting it — this round already proved the point locally,
-where the gate passed a deliberately bad commit twice before the third probe rejected it.
+~~CI has never been observed running or failing.~~ **Half closed 2026-07-24.** CI ran on
+push and went red on its first real run, catching a genuine bug no local check could see
+(generated route types missing on a clean checkout — see the bug ledger). That is
+stronger evidence than the planned deliberate break: the gate caught something real,
+unprompted, on day one.
 
-Two specific gaps:
-
-1. **Branch protection is not on.** Until `verify` and `audit` are required checks on
-   `main`, the workflow is advisory and a red run blocks nothing.
-2. **No red run has been seen.** The proof is a scratch branch with a deliberately
-   broken commit pushed using `--no-verify` (bypassing hooks is the point — CI must
-   catch what they miss), then confirming Actions goes red.
+Remaining gap: **branch protection is not on.** Until `verify` and `audit` are required
+checks on `main`, a red run blocks nothing and the gate stays advisory.
 
 Cannot be checked from this environment: `gh` is authenticated as `angelitopaa` while
-the repo belongs to `AngeloCP-01`, so the Actions API returns 404 here. Verification is
-the user's, in the browser.
+the repo belongs to `AngeloCP-01`, so the Actions API returns 404 here.
 
-**Closes with:** both gaps closed and the result recorded here.
+**Closes with:** branch protection enabled, recorded here.
 
 ### TD-9 — Figure numbers are manual · **Low**
 
@@ -192,6 +193,7 @@ these were found by checking rather than by reading.
 | Home index | `.measure-full` sat on the `<ul>`, but the global 68ch cap lands on the `<li>`; rows stayed capped and cadence stopped mid-page | Measured the row's right edge against the content edge |
 | Lint gate | eslint exits 0 on warnings, so an unused variable passed both the hook and the script — twice | Hook teeth check; fixed with `--max-warnings 0` in both places |
 | Ad-hoc audits | The old touch-target sweep excluded `aria-controls` elements wholesale, silently masking inline Term buttons | The committed suite's first run; resolved per WCAG 2.5.8's inline exemption |
+| CI typecheck | `PageProps` is generated into `.next/types/` by the build, so `tsc --noEmit` before `build` fails on a clean checkout. Local passed only because `.next` lingered | **CI's first real run.** Reproduced locally by deleting `.next`; fixed with a `typecheck` script running `next typegen` first, used by both CI and the pre-push hook |
 
 **Two false alarms worth remembering.** A link checker once reported 124 broken
 links — the checker was broken, not the links. A contrast audit reported 1.34:1
@@ -203,9 +205,9 @@ alpha background that had no business in a print-derived design.
 
 ## Next up
 
-**First, and small: close TD-10.** Turn on branch protection and watch one deliberately
-broken commit turn CI red. Minutes of work, and until it is done the gate is a
-hypothesis rather than a gate.
+**First, and small: finish TD-10.** Turn on branch protection (require `verify` and
+`audit`). The deliberate-break step is no longer needed — CI already went red on a real
+bug — so this is one settings page away from done.
 
 Then two candidates:
 

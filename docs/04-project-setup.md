@@ -186,7 +186,7 @@ pre-commit:
 pre-push:
   commands:
     typecheck:
-      run: pnpm tsc --noEmit
+      run: pnpm typecheck
     test:
       run: pnpm vitest run
 ```
@@ -217,7 +217,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm format:check
       - run: pnpm lint
-      - run: pnpm tsc --noEmit
+      - run: pnpm typecheck
       - run: pnpm vitest run
       - run: pnpm build
 ```

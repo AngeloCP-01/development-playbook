@@ -78,6 +78,33 @@ Port 3100 keeps clear of the dev server; the production build keeps the dev over
 console noise out of the console-error check. Locally, `reuseExistingServer` skips the
 rebuild when a server is already up.
 
+## Generated types make local typechecks lie
+
+CI's first real run failed with `Cannot find name 'PageProps'` — a type used in a route
+file that had typechecked cleanly on the machine for weeks.
+
+`PageProps` is not written anywhere. Next.js generates it into `.next/types/` during
+`next build` (or `next typegen`), and `tsconfig.json` includes that directory. Locally
+`.next` survives from the last build, so `tsc --noEmit` always finds it. CI checks out
+clean, and the verify job ran typecheck *before* build, so the types did not exist yet.
+
+The fix is not to reorder CI. It is to make the typecheck self-sufficient:
+
+```json
+"typecheck": "next typegen && tsc --noEmit"
+```
+
+and have CI *and* the git hook both call that one script. The pre-push hook had the same
+latent bug — a fresh clone would have failed it — and fixing only CI would have left
+that in place.
+
+**The general lesson:** any check that depends on generated artifacts passes locally for
+the wrong reason. To find these before CI does, delete the build directory and run the
+check. That single command reproduced this exactly.
+
+**And the meta-lesson:** this is what CI is for. No amount of local discipline finds a
+bug whose entire nature is "the local machine has state the clean machine does not."
+
 ## When the browser suite "fails mysteriously", check who owns the port
 
 Four screenshot attempts failed in a row while building a term popover. The clicks did
