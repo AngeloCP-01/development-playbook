@@ -145,7 +145,13 @@ step with a DOM snapshot.
 
 ### Branch protection
 
-The pipeline is decoration until this is on. In repository settings, require:
+The pipeline is decoration until this is on. **On GitHub Free this only works on public
+repositories** — on a private repo the ruleset saves, shows a banner, and never fires.
+Enforcement on private repos needs Pro, Team, or Enterprise. Check that your plan
+actually enforces what you just configured, because the setting looks identical either
+way.
+
+In repository settings, require:
 
 - Status check `verify` to pass
 - Branches to be up to date before merging

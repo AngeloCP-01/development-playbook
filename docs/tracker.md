@@ -17,7 +17,11 @@ checkout while passing locally forever. Fixed at the source with a `typecheck` s
 both CI and the hook call. This is the exact class of bug CI exists to catch, and it
 arrived unprompted on day one.
 
-**Still open:** branch protection (TD-10). Next round is W-3 (stage 03) or W-5 (deploy).
+**The gate is now enforced.** Branch protection required making the repository public —
+GitHub Free enforces rulesets on public repos only (D-26). CI history reads red, red,
+green, green across the typegen fix. TD-10 closed; W-4 is fully done.
+
+Next round is W-3 (stage 03) or W-5 (deploy).
 
 ---
 
@@ -82,6 +86,7 @@ of what was believed at the time is the point.
 | **D-14** | Removed the drafting grid background | Flagged as disruptive; softening was not enough. The sheet reads as technical from the title block and linework without it | Lost some texture; gained legibility |
 | **D-15** | Wide container (1400px) + per-element measure cap | Wide screens wasted space, but unconstrained prose is unreadable. `main :is(p, li)` caps at 68ch by default | New text elements inherit the cap automatically; opt out with `.measure-full` |
 | **D-17** | Adopt `SmartJobSearchCRM` working conventions wholesale | They are established across ~500 commits and already suit how the author works; inventing a second set would fragment two active projects | `CLAUDE.md` now carries git, review and TDD conventions verbatim. P-6 folds them into the stage docs |
+| **D-26** | The repository is public | Branch protection is unenforceable on a private repo under GitHub Free, and this is a playbook with no secrets. Public also means unlimited Actions minutes, which the browser audit job consumes quickly | The gate is real rather than advisory; commit history and author emails are public |
 | **D-25** | Typechecking goes through a `typecheck` script, never bare `tsc` | Route types are generated into `.next/types/`; a bare `tsc` passes locally off a stale build and fails on a clean checkout. Putting typegen inside one script means CI and the hooks cannot drift apart | `pnpm typecheck` = `next typegen && tsc --noEmit`, used by CI and pre-push |
 | **D-24** | Stages close with 3–5 curated outward references, capped by a test | A reference list that grows unbounded stops being read; the cap forces the question "does this add something the stage does not". Each entry states what it adds so the click is judgeable | `src/lib/references.ts` + `References`; stage 01 cites Torres, Cagan, Scrum.org, Maze, Atlassian |
 | **D-23** | The audit suite runs in CI against a production build, not as a local convenience | The dev server differs in rendering and console noise, and a check that only runs when remembered is TD-5 all over again | `test:e2e` uses playwright's webServer on :3100; CI's audit job needs verify first |
@@ -147,7 +152,7 @@ working tree is lost.~~ Committed in `edb315b`; the app and all docs are now tra
 
 Now `@playwright/test` with a committed suite; the dependency earns its place.
 
-### TD-10 — CI is not yet enforced · **Medium**
+### TD-10 — CI is not yet enforced · **Closed 2026-07-24**
 
 ~~CI has never been observed running or failing.~~ **Half closed 2026-07-24.** CI ran on
 push and went red on its first real run, catching a genuine bug no local check could see
@@ -155,13 +160,24 @@ push and went red on its first real run, catching a genuine bug no local check c
 stronger evidence than the planned deliberate break: the gate caught something real,
 unprompted, on day one.
 
-Remaining gap: **branch protection is not on.** Until `verify` and `audit` are required
-checks on `main`, a red run blocks nothing and the gate stays advisory.
+~~Remaining gap: branch protection is not on.~~ **Closed.** Enabling it surfaced a plan
+constraint worth knowing: **GitHub Free enforces rulesets on public repositories only.**
+On a private repo the ruleset saves but never fires, with only a banner to say so. The
+repo was made public — it is a playbook with no secrets, and public repositories also get
+unlimited Actions minutes, which matters because the audit job drives a browser.
 
-Cannot be checked from this environment: `gh` is authenticated as `angelitopaa` while
-the repo belongs to `AngeloCP-01`, so the Actions API returns 404 here.
+Evidence, from the Actions history:
 
-**Closes with:** branch protection enabled, recorded here.
+| Run | Commit | Result |
+|---|---|---|
+| CI #1 | `e7b3afd` | ❌ 35s — failed at typecheck |
+| CI #2 | `cc5b4b0` | ❌ 35s — same failure |
+| CI #3 | `e1fbdaa` | ✅ 2m12s — the typegen fix |
+| CI #4 | `710cf49` | ✅ 1m54s |
+
+The red runs failed in 35 seconds because the gate is ordered cheapest-first, so
+typecheck fails long before the browser suite ever starts. That ordering paid for itself
+on the first run.
 
 ### TD-9 — Figure numbers are manual · **Low**
 

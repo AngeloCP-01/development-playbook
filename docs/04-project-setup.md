@@ -223,7 +223,8 @@ jobs:
 ```
 
 Then enable branch protection on `main` requiring this check. An unenforced gate is
-decoration.
+decoration — and on GitHub Free, branch protection is only enforced on *public* repos.
+On a private one it saves and silently never fires. Confirm your plan enforces it.
 
 ### 8. Connect Vercel
 

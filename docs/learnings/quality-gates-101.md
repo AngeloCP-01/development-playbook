@@ -132,6 +132,28 @@ browser before deleting or "fixing" them — this is the
 "a checker reporting mass failures is usually the checker" rule again, one link at a
 time.
 
+## Cheapest-first ordering paid for itself on the first run
+
+The gate runs format → lint → typecheck → test → build, then the browser audit as a
+separate job. When the first two runs failed, they failed in **35 seconds**, at
+typecheck, long before anything launched a browser. The green runs take about two
+minutes because they do the whole thing.
+
+That is the entire argument for ordering the gate by cost rather than by importance. A
+build-first pipeline would have burned two minutes to tell you the same thing.
+
+## "Enable branch protection" has a plan asterisk
+
+Standard advice everywhere, and on GitHub Free it does not apply to private
+repositories: the ruleset saves, displays a banner, and never enforces anything. The
+setting looks identical to a working one.
+
+Options are to go public, pay for Pro, or accept an advisory gate. For a solo project
+with no secrets, public also brings unlimited Actions minutes, which matters as soon as
+CI drives a browser.
+
+Check that the gate you configured is one your plan actually runs.
+
 ## What was deliberately left out
 
 - Component/behaviour tests for the stage exercises — deferred to W-3, where each stage
