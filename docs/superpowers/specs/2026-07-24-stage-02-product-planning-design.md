@@ -218,8 +218,12 @@ RED before GREEN, with raw output for both runs and a stated reason the RED fail
   slice first for the *wrong* reason (not end-to-end) scores one rule, not both; horizon
   triage, including that an item can be defensible in either Next or Later and the verdict
   says so rather than marking it wrong.
-- `web/src/lib/stages.test.ts` — generalized invariant: **any** stage with `ready: true`
-  must be registered in `STAGE_CONTENT`. Stages 03–18 get it for free.
+- `web/src/lib/stages.test.ts` — **correction to an earlier draft of this spec:** the
+  "every ready stage is registered in `STAGE_CONTENT`" invariant already exists at
+  `web/src/lib/stages.test.ts:49-56`, along with its converse at `:58-62`. Nothing to add.
+  Flipping `ready: true` without registering stage 02 will fail an existing test, which is
+  the coverage this spec wanted. The `getStage` title assertion at `:42` pins stage 01
+  only, so the stage 02 rename does not break it.
 - `web/src/lib/terms.test.ts`, `references.test.ts` — existing invariants cover the new
   entries; the references cap (3–5) is already enforced.
 
