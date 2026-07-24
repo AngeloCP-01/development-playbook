@@ -26,33 +26,53 @@ Before doing anything, read these for context:
 - `web/AGENTS.md` — this Next.js version postdates your training data; read
   `node_modules/next/dist/docs/` before writing framework code
 
-### Project state (as of 2026-07-21)
+### Project state (as of 2026-07-24)
 
-- **Playbook content:** all 18 stage docs written (`P-0`…`P-4` done). 18/18 pass the
-  seven-section template check; 124/124 internal links resolve.
-- **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. Scaffold, design
-  system and **stage 01 complete** (`W-0`…`W-2`). Stage 01 is the reference
-  implementation: 6-step stepper, 9 numbered figures, 5 interactive exercises, a
-  localStorage worksheet, 10 glossary terms.
+- **Playbook content:** all 18 stage docs written (`P-0`…`P-4`). 18/18 pass the
+  seven-section template check; internal links resolve.
+- **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. Stage 01 complete
+  and polished (`W-0`…`W-2`): 6-step stepper, 9 numbered figures, 5 interactive
+  exercises, a localStorage worksheet, inline term popovers (some with mini-diagrams),
+  and 5 curated outward references.
 - **Stages 02–18** render a "sheet not drawn" placeholder. Routing works for all 18.
-- **Quality gates are in place** (W-4): vitest invariants, the committed audit suite,
-  lefthook hooks, and a CI workflow. Not deployed yet (W-5). Branch protection is a
-  GitHub-side switch to flip after pushing.
-- **Branch:** work happens on `feat/<topic>`, merged to `main` with `--no-ff`. Both
-  rounds so far are merged and pushed; `main` is the current tip.
-- **One open gate item:** CI has never been observed running (TD-10) — branch
-  protection is off and no red run has been seen.
+- **Quality gates live and proven** (`W-4` done): prettier, eslint at
+  `--max-warnings 0`, 13 vitest invariants, a 9-test playwright audit suite, lefthook
+  hooks, and CI. CI's first runs went red on a real bug (generated route types missing
+  on a clean checkout) and are green since the fix. Branch protection is on — which
+  required making the repo public, since GitHub Free does not enforce rulesets on
+  private repos (D-26).
+- **Not deployed** (`W-5` open).
+- **Branch:** work happens on `feat/<topic>`, merged to `main` with `--no-ff`, then
+  pushed. `main` is the current tip and CI is green.
 
 ### This round's scope
 
-Open candidates, in the order `docs/task.md` recommends:
+**Recommended: `W-3` — build stage 02 (Planning) interactive.**
 
-- **W-3 — Stages 02–18 interactive.** Suggested first: **03 Architecture** (densest
-  concepts, most diagram-friendly), then 15 Observability, 16 Incident Management.
-- **P-6 — Fold the real working conventions into the stage docs.**
+Stage 01 already promises it: its last step hints "One page, then hand off to planning",
+and its `PipelineFit` figure draws Discovery → Brainstorm → Plan → Build. That handoff
+currently lands on a placeholder. Stage 02 is also the safer second stage — 211 lines,
+7 subsections — for proving `web/PATTERNS.md` transfers before betting the densest
+stage on it.
 
-I lean toward **[FILL IN: W-3 / P-6 / W-5]** — but advise me, and say if you
-disagree.
+Sections that map onto existing patterns: "Cut to the core" (a feature yes/no table →
+guess-then-reveal), "Sequence in vertical slices" (an explicit wrong/right pair →
+`Contrast` plus a diagram), "Estimate for sequencing" (S/M/L → a scorer), "Write the
+plan" (a one-page artifact → a worksheet).
+
+**One product decision to settle first:** should stage 02's worksheet read the answers
+saved by stage 01's? It would make the two stages a real chain rather than two
+independent pages. Nothing does this yet.
+
+Other open candidates:
+- **`P-6`** — fold the remaining working conventions into the stage docs (commit and
+  branch conventions → 05/07, review severity and provenance → 07, tracker conventions
+  and kickoff files → 02/10). Partially done; see `docs/task.md`.
+- **`W-5`** — deploy.
+- **Known debt worth deciding before more stages:** `TD-2` and `TD-3` — stage metadata
+  and the glossary each live in two places, and every new stage multiplies the drift.
+
+I lean toward **W-3 / stage 02** — but advise me, and say if you disagree.
 
 ### How we work
 
