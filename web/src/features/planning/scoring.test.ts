@@ -80,6 +80,16 @@ test('an order that opens end to end and probes the integration early satisfies 
   expect(verdict.riskEarly).toBe(true)
 })
 
+test('an order that satisfies both rules gets the affirming note, and neither failure note', () => {
+  // No coverage of notes existed for the all-correct path before this test — a
+  // hardcoded notes string would pass every other assertion in this file, but
+  // fails here because it never says both rules were satisfied.
+  const joined = scoreOrder(IDEAL).notes.join(' ')
+  expect(joined).toMatch(/both rules satisfied/i)
+  expect(joined).not.toMatch(/does not work end to end/i)
+  expect(joined).not.toMatch(/left it late/i)
+})
+
 test('payments first is right for the wrong reason: risk is early but nothing works end to end', () => {
   const verdict = scoreOrder([
     'payments',
@@ -91,7 +101,12 @@ test('payments first is right for the wrong reason: risk is early but nothing wo
   ])
   expect(verdict.riskEarly).toBe(true)
   expect(verdict.endToEndFirst).toBe(false)
-  expect(verdict.notes.join(' ')).toMatch(/end to end/i)
+  // The end-to-end failure note must be the one that fires here, not the
+  // risk-late note — riskEarly is already true, so nothing should be said
+  // about the integration being left late.
+  const joined = verdict.notes.join(' ')
+  expect(joined).toMatch(/does not work end to end/i)
+  expect(joined).not.toMatch(/left it late/i)
 })
 
 test('the integration left until last fails the risk rule even behind a correct opener', () => {
@@ -105,7 +120,11 @@ test('the integration left until last fails the risk rule even behind a correct 
   ])
   expect(verdict.endToEndFirst).toBe(true)
   expect(verdict.riskEarly).toBe(false)
-  expect(verdict.notes.join(' ')).toMatch(/week eight|late/i)
+  // Mirror of the case above: the risk-late note must fire, and the
+  // end-to-end note must not, since endToEndFirst is already true here.
+  const joined = verdict.notes.join(' ')
+  expect(joined).toMatch(/left it late/i)
+  expect(joined).not.toMatch(/does not work end to end/i)
 })
 
 test('early means within the first half: position 3 of 6 passes, position 4 does not', () => {
@@ -135,9 +154,12 @@ test('an incomplete order scores what it can rather than throwing', () => {
   expect(verdict.riskEarly).toBe(false)
 })
 
-test('an empty order fails both rules and says why', () => {
+test('an empty order fails both rules and names both problems, not just one', () => {
   const verdict = scoreOrder([])
   expect(verdict.endToEndFirst).toBe(false)
   expect(verdict.riskEarly).toBe(false)
   expect(verdict.notes.length).toBeGreaterThan(0)
+  const joined = verdict.notes.join(' ')
+  expect(joined).toMatch(/nothing ordered yet/i)
+  expect(joined).toMatch(/is unplaced/i)
 })
