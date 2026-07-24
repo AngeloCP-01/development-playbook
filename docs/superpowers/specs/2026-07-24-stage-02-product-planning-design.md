@@ -24,6 +24,12 @@ verbatim — but the doc names none of the vocabulary a reader will meet everywh
 stated job is teaching ground the reader has not worked in, that is a gap, not a style
 choice.
 
+Behind that sits a second gap, found by asking where a roadmap belongs. **The playbook has
+no product vision anywhere** — "vision" appears as a product concept in none of the
+eighteen docs. Stage 02's "not in v1" is a *rejection* list; stage 18 handles what comes
+next *after* shipping, evidence-driven. Nothing says where the product is going, so the MVP
+reads as a cut rather than as a first step.
+
 Two smaller defects surfaced in the same pass:
 
 - Stage 01's worksheet shape and storage key are private to a component
@@ -39,12 +45,14 @@ Two smaller defects surfaced in the same pass:
 1. `docs/02-planning.md` names itself as product planning and supplies the vocabulary —
    MVP, roadmap, appetite, feasibility risk — mapped onto the practices it already
    teaches.
-2. Stage 02 renders as a full interactive stage: five steps, eight figures, four judgment
+2. Stage 02 gains a **roadmap horizon** — now / next / later — so the MVP is framed as a
+   first step toward a stated product goal rather than only as a cut.
+3. Stage 02 renders as a full interactive stage: six steps, nine figures, five judgment
    exercises, a persisted worksheet.
-3. The stage 01 → 02 handoff is real: stage 02's worksheet reads what stage 01 saved.
-4. `web/PATTERNS.md` is proven to transfer — the second stage is built from the pattern
+4. The stage 01 → 02 handoff is real: stage 02's worksheet reads what stage 01 saved.
+5. `web/PATTERNS.md` is proven to transfer — the second stage is built from the pattern
    library rather than reinventing it.
-5. The doc and the app agree at every point, per `README.md:136-138`.
+6. The doc and the app agree at every point, per `README.md:136-138`.
 
 ## Non-goals
 
@@ -61,6 +69,20 @@ Two smaller defects surfaced in the same pass:
   layer-first sequencing by name; vertical slices exist so you do *not* need full
   architecture up front, so putting them after stage 03 inverts the doc's own argument and
   reintroduces the waterfall it was written to kill.
+- **A separate Roadmap stage** — considered at two placements and rejected at both.
+  *After architecture* (the original proposal) inverts a stated dependency:
+  `docs/03-architecture.md:14` already lists "a plan with defined scope and vertical slices
+  ([02])" as its entry criteria, so deciding MVP-versus-full-product after stage 03 means
+  the expensive-to-reverse decisions were made without knowing what the product grows into.
+  It is also the same error as moving slicing to 03, one level up. *Before architecture* is
+  coherent but splits one activity in two — every source we gathered treats roadmapping as
+  a step **of** product planning (Atlassian's step 5 of seven). Either placement costs a
+  19th stage: 15 docs renamed, cross-links rewritten across 20 files, and the
+  `there are exactly 18 stages, because the playbook says so` invariant
+  (`web/src/lib/stages.test.ts:9`) broken. The horizon section inside stage 02 buys the same
+  content for none of that.
+  The real insight behind the ordering — architecture teaches you what is expensive, which
+  should change the roadmap — is already served by the revisit loop (`README.md:47-48`).
 - **A shared `playbook:project` store across all stages** — rejected. It makes stage 01 a
   migration target on day one of stage 02 and fixes a schema before stages 03–18 have said
   what they need. Read-only carry-forward gets the chain with none of the coupling.
@@ -104,12 +126,23 @@ Committed before any component, so the app is built from an already-correct doc.
 3. **Name the vocabulary** — MVP against "Cut to the core"; roadmap against the "not now"
    list plus slice order; appetite against "Estimate for sequencing, not for promises".
    Each is introduced where the practice already lives, not in a glossary dump.
-4. **Reframe spikes** — "Timebox the unknowns" becomes explicitly about **feasibility
+4. **Set the horizon** — a new section after "Write the plan", giving the playbook the
+   product direction it currently lacks, in the standard dateless format:
+
+   | Horizon | Holds | Sourced from |
+   |---|---|---|
+   | **Now** | the MVP | the output of "Cut to the core" |
+   | **Next** | evidence-triggered work | the prioritised "not now" list → hands to stage 18 |
+   | **Later** | the complete product goal | new — nothing in the playbook states this today |
+
+   Dateless on purpose: a roadmap with dates becomes the plan-as-contract the doc's own
+   team section warns against (`docs/02-planning.md:181-182`).
+5. **Reframe spikes** — "Timebox the unknowns" becomes explicitly about **feasibility
    risk**, tying to Cagan's four risks that stage 01 already cites, and states that the
    spike's written decision is what stage 03 consumes. That is the 02 → 03 handoff.
-5. **Loosen the cadence string** in `web/src/lib/stages.ts:31` to match the doc's timing
+6. **Loosen the cadence string** in `web/src/lib/stages.ts:31` to match the doc's timing
    line rather than implying a waterfall.
-6. `humanizer:humanizer` over the amended prose.
+7. `humanizer:humanizer` over the amended prose.
 
 ### Part B — the shared discovery sheet
 
@@ -132,25 +165,37 @@ carry-forward cannot drift by construction rather than by test.
 | 2 | Cut | Cut to the core | Guess-then-reveal over the 8-feature table, scored `n/8` |
 | 3 | Sequence | Sequence in vertical slices | `Contrast` (layer-first vs vertical) + click-to-order sequencer |
 | 4 | Size | Estimate for sequencing · Timebox the unknowns | S/M/L scorer + copyable spike card |
-| 5 | Write | Write the plan · Replan · Scaling to a team | Worksheet with carry-forward; team block collapsed; `trap` callouts close |
+| 5 | Write | Write the plan | Persisted worksheet with stage-01 carry-forward |
+| 6 | Horizon | Set the horizon · Replan · Scaling to a team | Now/next/later triage; team block collapsed; `trap` callouts close |
 
-Figures, numbered 1–8 across the stage: the disambiguation band (industry's seven steps,
-this stage's slice highlighted); the cut funnel; layer-first vs vertical; anatomy of one
-slice; risk-first ordering (revealed after the sequencer locks); the decomposition ladder;
-the spike loop; the annotated one-page plan.
+Six is the `Stepper` cap (`web/PATTERNS.md:42`), so this stage sits at it. If a seventh
+step ever seems necessary, that is a signal the grouping is wrong, not the cap.
 
-**Carry-forward.** A `CarryForward` block above the worksheet fields renders stage 01's
-`success` and `notThis` when present, each with a button seeding "Done means" and "Not in
-v1". Empty or unparseable storage degrades to a quiet line pointing at stage 01. Seeding
-is one-way and explicit — never an automatic overwrite of text the reader has typed.
+Figures, numbered 1–9 across the stage, matching stage 01's density: the disambiguation
+band (industry's seven steps, this stage's slice highlighted); the cut funnel; layer-first
+vs vertical; anatomy of one slice; risk-first ordering (revealed after the sequencer
+locks); the decomposition ladder; the spike loop; the annotated one-page plan; the
+now/next/later horizon. **Build Fig 1 first** — it carries the new argument; if figures get
+cut they get cut from the end.
+
+**Two carry-forwards, one chain.** A `CarryForward` block above the step-5 worksheet
+renders stage 01's `success` and `notThis` when present, each with a button seeding "Done
+means" and "Not in v1"; empty or unparseable storage degrades to a quiet line pointing at
+stage 01. Then step 6 reads the worksheet's own "Not in v1" entries and asks the reader to
+place each into **Next** or **Later** — which turns the doc's claim that *"the 'Not in v1'
+list is the part that does actual work over the following weeks"*
+(`docs/02-planning.md:142`) into something the reader performs rather than reads. Seeding
+is always explicit and per-field, never an automatic overwrite of typed text.
 
 **Judgment logic is not in the components.** Every existing vitest file lives in
 `web/src/lib/`; there is no `@testing-library/react` in the project. Rather than add a
-component harness mid-round, the cut-table verdicts and the sequencer's two rules
-(end-to-end first, riskiest early) go in `web/src/features/planning/scoring.ts` as pure
-functions. That file is what gets the failing test first; components stay presentational.
+component harness mid-round, the cut-table verdicts, the sequencer's two rules (end-to-end
+first, riskiest early) and the horizon triage go in
+`web/src/features/planning/scoring.ts` as pure functions. That file is what gets the
+failing test first; components stay presentational.
 
-**Terms** added to `web/src/lib/terms.ts`: `mvp`, `product-roadmap`, `appetite`,
+**Terms** added to `web/src/lib/terms.ts` as `{ short, full, soWhat? }`
+(`web/src/lib/terms.ts:9-14`): `mvp`, `product-roadmap`, `product-vision`, `appetite`,
 `vertical-slice`, `spike`, `feasibility-risk`. Each wrapped at first appearance.
 
 **References** — four, each adding something distinct, all browser-verified:
@@ -170,7 +215,9 @@ RED before GREEN, with raw output for both runs and a stated reason the RED fail
   malformed, and partial JSON; a read never writes to localStorage.
 - `web/src/features/planning/scoring.test.ts` — cut-table verdicts per feature; both
   sequencing rules, including the case that matters most: a reader who puts the risky
-  slice first for the *wrong* reason (not end-to-end) scores one rule, not both.
+  slice first for the *wrong* reason (not end-to-end) scores one rule, not both; horizon
+  triage, including that an item can be defensible in either Next or Later and the verdict
+  says so rather than marking it wrong.
 - `web/src/lib/stages.test.ts` — generalized invariant: **any** stage with `ready: true`
   must be registered in `STAGE_CONTENT`. Stages 03–18 get it for free.
 - `web/src/lib/terms.test.ts`, `references.test.ts` — existing invariants cover the new
@@ -182,12 +229,12 @@ Teeth check on each: break the implementation, confirm only the new test fails, 
 
 Against a production build, per `CLAUDE.md`:
 
-- Contrast — every distinct text/background pair, both themes, all five steps, WCAG AA
+- Contrast — every distinct text/background pair, both themes, all six steps, WCAG AA
 - Responsive — 320→2560px, no horizontal overflow, no sub-44px target below `lg`
 - Console — zero errors in a clean browser context
 - All four reference URLs opened in a real browser
 
-`web/e2e/audit.spec.ts:9-17` has a **hand-maintained** `PAGES` list; five stage-02 hashes
+`web/e2e/audit.spec.ts:9-17` has a **hand-maintained** `PAGES` list; six stage-02 hashes
 are added. That list silently drifting from the ready stages is real debt — logged, not
 fixed here.
 
@@ -197,9 +244,10 @@ fixed here.
 - `README.md:60` — retitled list entry
 - `docs/task.md` — W-3 per-stage checklist ticked for 02; the "open product decision"
   note resolved
-- `docs/tracker.md` — the slice with evidence and its `Deferred:` list; a decision entry
-  recording the product-planning reframe and the rejected re-scope; debt entries for the
-  stage 01 team-section asymmetry and the hand-maintained `PAGES` list
+- `docs/tracker.md` — the slice with evidence and its `Deferred:` list; decision entries
+  recording the product-planning reframe, the rejected re-scope, and the rejection of a
+  separate Roadmap stage at both candidate placements; debt entries for the stage 01
+  team-section asymmetry and the hand-maintained `PAGES` list
 - `web/PATTERNS.md` — only if the build produces a genuinely new pattern; the
   click-to-order sequencer is a variant of guess-then-reveal and may warrant a row
 
@@ -212,8 +260,13 @@ fixed here.
   stage 02 with empty storage. The empty state is a designed state, not a fallback.
 - **Seeding overwrites typed text.** Mitigation: seeding is explicit, per-field, and
   disabled once that field is non-empty.
-- **Eight figures is ambitious for one round.** Stage 01 shipped nine, so the precedent
-  holds, but the disambiguation band (Fig 1) is the one carrying new argument and should be
-  built first — if figures get cut, they get cut from the end.
+- **Nine figures and six steps is a big round.** Stage 01 shipped nine figures across six
+  steps, so the precedent holds exactly — but this stage adds a doc amendment on top. The
+  cut order is figures from the end, never the exercises, since a prose-only step is the
+  anti-pattern `web/PATTERNS.md:31-32` names.
+- **The horizon section invites scope creep into stage 18.** "Later" is product direction;
+  "what we do next based on evidence" belongs to Continuous Improvement. Mitigation: stage
+  02 states the horizon once and hands Next to 18 explicitly rather than teaching
+  prioritisation twice.
 - **Extracting `discovery-sheet.ts` touches finished stage 01 code.** Mitigation: type and
   key move, behaviour does not; stage 01's existing tests plus the audit suite cover it.
