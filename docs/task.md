@@ -140,16 +140,25 @@ Per stage:
 - [ ] Verify: contrast in both themes, 320–2560px, no console errors
 - [ ] Run `humanizer:humanizer` over the stage's prose
 
-Suggested order — highest teaching value first, since that is the point:
+Suggested order. Revised 2026-07-24 (D-27): the first pass ranked purely by teaching
+value and put 02 fifth. That ignored the reader's journey and the risk of proving the
+pattern library on the hardest stage.
 
 | Order | Stage | Why this one next |
 |---|---|---|
-| 1 | 03 Architecture | Densest concepts, most diagram-friendly, and where a solutions-architect view gets built |
-| 2 | 15 Observability | Unfamiliar ground; benefits most from figures |
-| 3 | 16 Incident Management | Procedural, so a stepper fits naturally |
-| 4 | 13 Production Deployment | Expand/migrate/contract needs a visual |
-| 5 | 02 Planning | Short, and pairs with 01 |
+| 1 | 02 Planning | Stage 01 already promises it — its last step hints "hand off to planning" and its `PipelineFit` figure draws Discovery → Plan → Build, currently into a placeholder. At 211 lines it is also the safe place to prove `web/PATTERNS.md` transfers before betting the densest stage on it. |
+| 2 | 03 Architecture | Densest concepts, most diagram-friendly, and where a solutions-architect view gets built |
+| 3 | 15 Observability | Unfamiliar ground; benefits most from figures |
+| 4 | 16 Incident Management | Procedural, so a stepper fits naturally |
+| 5 | 13 Production Deployment | Expand/migrate/contract needs a visual |
 | — | remainder | 04–12, 14, 17, 18 |
+
+**Settle before stage 03:** TD-2 and TD-3 (stage metadata and the glossary each live in
+two places). Every new stage multiplies the drift, so the cost of deferring compounds.
+
+**Open product decision for stage 02:** should its worksheet read the answers stage 01
+saved? It would make the two stages a real chain rather than independent pages. Nothing
+does this yet.
 
 ### W-4 — Quality gates ☑
 

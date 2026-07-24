@@ -86,6 +86,7 @@ of what was believed at the time is the point.
 | **D-14** | Removed the drafting grid background | Flagged as disruptive; softening was not enough. The sheet reads as technical from the title block and linework without it | Lost some texture; gained legibility |
 | **D-15** | Wide container (1400px) + per-element measure cap | Wide screens wasted space, but unconstrained prose is unreadable. `main :is(p, li)` caps at 68ch by default | New text elements inherit the cap automatically; opt out with `.measure-full` |
 | **D-17** | Adopt `SmartJobSearchCRM` working conventions wholesale | They are established across ~500 commits and already suit how the author works; inventing a second set would fragment two active projects | `CLAUDE.md` now carries git, review and TDD conventions verbatim. P-6 folds them into the stage docs |
+| **D-27** | Stage 02 is built before stage 03, reversing the original order | The first ordering ranked by teaching value alone. It missed that stage 01 explicitly hands off to planning and currently lands on a placeholder, and that proving `PATTERNS.md` transfers is safer on a 211-line stage than on the densest one | `docs/task.md`'s W-3 order revised; `KICKOFF.md` scope updated |
 | **D-26** | The repository is public | Branch protection is unenforceable on a private repo under GitHub Free, and this is a playbook with no secrets. Public also means unlimited Actions minutes, which the browser audit job consumes quickly | The gate is real rather than advisory; commit history and author emails are public |
 | **D-25** | Typechecking goes through a `typecheck` script, never bare `tsc` | Route types are generated into `.next/types/`; a bare `tsc` passes locally off a stale build and fails on a clean checkout. Putting typegen inside one script means CI and the hooks cannot drift apart | `pnpm typecheck` = `next typegen && tsc --noEmit`, used by CI and pre-push |
 | **D-24** | Stages close with 3–5 curated outward references, capped by a test | A reference list that grows unbounded stops being read; the cap forces the question "does this add something the stage does not". Each entry states what it adds so the click is judgeable | `src/lib/references.ts` + `References`; stage 01 cites Torres, Cagan, Scrum.org, Maze, Atlassian |
@@ -221,20 +222,20 @@ alpha background that had no business in a print-derived design.
 
 ## Next up
 
-**First, and small: finish TD-10.** Turn on branch protection (require `verify` and
-`audit`). The deliberate-break step is no longer needed — CI already went red on a real
-bug — so this is one settings page away from done.
+**W-3, starting with stage 02 (Planning).** Reordered from stage 03 on 2026-07-24
+(D-27). Stage 01 already promises this handoff and currently delivers a placeholder, and
+a 211-line stage is the safer place to prove the pattern library transfers.
 
-Then two candidates:
+Carry into that round:
 
-**W-3 starting with stage 03 (Architecture)** — the richest teaching content, and the
-first stage to land on a safety net. It will exercise the newer capabilities (term
-visuals, references) hardest, and it multiplies TD-2 and TD-3 by every stage added, so
-deciding those first is defensible.
+- **A product decision:** should stage 02's worksheet read stage 01's saved answers?
+  That would chain the stages rather than leaving them independent.
+- **A structural decision, ideally before stage 03:** TD-2 and TD-3. Metadata and
+  glossary duplication get worse with every stage added.
 
-**W-5 (deploy)** — unblocked now. Doing it early lets stage work ship continuously per
-`docs/13`, and turns the audit suite into a real post-deployment check rather than a
-local one.
+**Also open:** `W-5` (deploy) — unblocked, and would turn the audit suite into a real
+post-deployment check rather than a local one. `P-6` — the remaining conventions to fold
+into the stage docs.
 
-**Recommendation:** TD-10, then W-3. Deploy matters less while the app has one finished
-stage; the safety net matters more with seventeen to go.
+**Recommendation:** stage 02, then resolve TD-2/TD-3, then stage 03. Deploy matters less
+while the app has one finished stage.
