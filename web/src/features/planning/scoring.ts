@@ -194,3 +194,81 @@ export function scoreOrder(order: string[]): OrderVerdict {
 
   return { endToEndFirst, riskEarly, notes }
 }
+
+export type Horizon = 'now' | 'next' | 'later'
+
+export type HorizonItem = {
+  id: string
+  label: string
+  best: Horizon
+  /** A second placement a thoughtful reader could defend. Judgment, not a quiz. */
+  alsoDefensible?: Horizon
+  why: string
+}
+
+export const HORIZON_ITEMS: HorizonItem[] = [
+  {
+    id: 'overdue-highlight',
+    label: 'Highlight which invoices are overdue',
+    best: 'now',
+    why: 'It is the definition of done. Anything the done statement names is Now by construction — that is what makes the statement useful.',
+  },
+  {
+    id: 'recurring',
+    label: 'Recurring invoices',
+    best: 'next',
+    why: 'Waiting on evidence: a user billing the same client three months running. That is a trigger you can actually observe, which is what makes it Next rather than Later.',
+  },
+  {
+    id: 'pdf-export',
+    label: 'PDF export',
+    best: 'next',
+    alsoDefensible: 'later',
+    why: 'Next if you expect the request quickly — the trigger is "someone asks twice". Later is defensible if nothing about your audience suggests they need a file at all; the honest answer depends on what discovery told you.',
+  },
+  {
+    id: 'accountant-handoff',
+    label: 'A year-end export your accountant can use',
+    best: 'later',
+    alsoDefensible: 'next',
+    why: 'Later, because it points at the product this becomes rather than at v1. Defensible as Next if your audience is close enough to a tax deadline that the first January decides whether they keep using it.',
+  },
+  {
+    id: 'become-accounting-tool',
+    label: 'Full expense tracking and bookkeeping',
+    best: 'later',
+    why: 'This is the one to be careful with. Stage 01 wrote “not an accounting tool” under what this is NOT — so putting it anywhere but Later contradicts a decision made when you were thinking clearly. Later is where you record that you know the pull exists.',
+  },
+  {
+    id: 'dark-mode',
+    label: 'Dark mode',
+    best: 'later',
+    why: 'Nothing triggers it and nothing depends on it, which is the definition of Later. It gets built anyway, usually on a Friday.',
+  },
+]
+
+const HORIZON_BY_ID = new Map(HORIZON_ITEMS.map((i) => [i.id, i]))
+
+const HORIZON_LABEL: Record<Horizon, string> = {
+  now: 'Now',
+  next: 'Next',
+  later: 'Later',
+}
+
+export function judgeHorizon(
+  id: string,
+  choice: Horizon,
+): { verdict: 'best' | 'defensible' | 'off'; why: string } {
+  const item = HORIZON_BY_ID.get(id)
+  if (!item) {
+    return { verdict: 'off', why: 'That item is no longer on the board.' }
+  }
+  if (choice === item.best) return { verdict: 'best', why: item.why }
+  if (choice === item.alsoDefensible) {
+    return { verdict: 'defensible', why: item.why }
+  }
+  return {
+    verdict: 'off',
+    why: `${HORIZON_LABEL[item.best]} fits better here. ${item.why}`,
+  }
+}

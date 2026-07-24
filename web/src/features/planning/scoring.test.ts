@@ -1,5 +1,12 @@
 import { expect, test } from 'vitest'
-import { CUT_FEATURES, scoreCut, SLICES, scoreOrder } from './scoring'
+import {
+  CUT_FEATURES,
+  scoreCut,
+  SLICES,
+  scoreOrder,
+  HORIZON_ITEMS,
+  judgeHorizon,
+} from './scoring'
 
 test('the cut table carries all eight features from the doc, so the exercise matches the prose', () => {
   expect(CUT_FEATURES).toHaveLength(8)
@@ -162,4 +169,76 @@ test('an empty order fails both rules and names both problems, not just one', ()
   const joined = verdict.notes.join(' ')
   expect(joined).toMatch(/nothing ordered yet/i)
   expect(joined).toMatch(/is unplaced/i)
+})
+
+test('every horizon item explains itself', () => {
+  for (const i of HORIZON_ITEMS) {
+    expect(i.why.trim().length, `${i.id} has no why`).toBeGreaterThan(0)
+  }
+})
+
+test('all three horizons appear among the items, so the exercise exercises all three', () => {
+  const used = new Set(HORIZON_ITEMS.map((i) => i.best))
+  expect(used).toEqual(new Set(['now', 'next', 'later']))
+})
+
+test('the best horizon is recognised as best', () => {
+  const item = HORIZON_ITEMS[0]
+  expect(judgeHorizon(item.id, item.best).verdict).toBe('best')
+})
+
+test('the best verdict returns that item’s own explanation, not a generic placeholder', () => {
+  // A hardcoded string that is the same for every branch would still satisfy
+  // "verdict is best" and "why is non-empty" — this pins the why to the
+  // specific item's prose, and the next case pins a *different* item's prose,
+  // so a shared placeholder fails both.
+  const item = HORIZON_ITEMS[0]
+  const result = judgeHorizon(item.id, item.best)
+  expect(result.why).toBe(item.why)
+})
+
+test('a second defensible horizon is called defensible, not wrong, because this is judgment', () => {
+  const item = HORIZON_ITEMS.find((i) => i.alsoDefensible)
+  expect(item, 'at least one item must be defensible two ways').toBeDefined()
+  const result = judgeHorizon(item!.id, item!.alsoDefensible!)
+  expect(result.verdict).toBe('defensible')
+})
+
+test('the defensible verdict also returns that item’s own explanation', () => {
+  const item = HORIZON_ITEMS.find((i) => i.alsoDefensible)!
+  const result = judgeHorizon(item.id, item.alsoDefensible!)
+  expect(result.why).toBe(item.why)
+  // Negative check: the defensible verdict must not be dressed up as the
+  // "off" wording for some other item's best horizon.
+  expect(result.why).not.toMatch(/fits better here/i)
+})
+
+test('a clearly wrong placement is called off, and says why', () => {
+  const nowItem = HORIZON_ITEMS.find(
+    (i) => i.best === 'now' && i.alsoDefensible !== 'later',
+  )
+  const result = judgeHorizon(nowItem!.id, 'later')
+  expect(result.verdict).toBe('off')
+  expect(result.why.trim().length).toBeGreaterThan(0)
+})
+
+test('the off verdict is grounded in the specific item, so two different wrong placements explain themselves differently', () => {
+  // Guards against a single hardcoded "why" shared across every branch: if the
+  // off explanation were a generic placeholder, these two calls — different
+  // items, both wrongly placed — would return the identical string.
+  const nowItem = HORIZON_ITEMS.find(
+    (i) => i.best === 'now' && i.alsoDefensible !== 'later',
+  )!
+  const laterItem = HORIZON_ITEMS.find(
+    (i) => i.best === 'later' && i.alsoDefensible !== 'now',
+  )!
+  const offA = judgeHorizon(nowItem.id, 'later')
+  const offB = judgeHorizon(laterItem.id, 'now')
+  expect(offA.why).not.toBe(offB.why)
+  expect(offA.why).toContain(nowItem.why)
+  expect(offB.why).toContain(laterItem.why)
+})
+
+test('an unknown id is off rather than a crash, since ids come from user state', () => {
+  expect(judgeHorizon('nope', 'now').verdict).toBe('off')
 })
