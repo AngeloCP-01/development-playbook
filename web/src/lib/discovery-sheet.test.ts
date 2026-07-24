@@ -1,4 +1,5 @@
 import { afterEach, expect, test, vi } from 'vitest'
+import '@/test/localstorage-polyfill'
 import {
   DISCOVERY_KEY,
   EMPTY_SHEET,
