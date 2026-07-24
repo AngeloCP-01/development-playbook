@@ -211,11 +211,21 @@ In `## Definition of done`, add:
 
 - [ ] **Step 11: Verify the seven-section template still holds**
 
-Run: `grep -c '^## ' docs/02-planning.md`
-Expected: `7` — Entry criteria, The work, Artifacts, Definition of done, Scaling to a team, Traps, plus the H1's sibling count. If this returns anything else, a `##` was added where a `###` belonged.
+A naive `grep -c '^## '` does **not** work here: the doc's example plan is a fenced block
+containing `## Done means`, `## Slices` and so on, and the horizon example adds `## Now`,
+`## Next`, `## Later`. Counting those gives 14 and means nothing. Use a fence-aware check
+and compare against the neighbouring stages:
 
-Run: `grep -n '^## ' docs/02-planning.md`
-Expected: exactly the seven canonical sections in the README's documented order.
+```bash
+for f in docs/01-product-discovery.md docs/02-planning.md docs/03-architecture.md; do
+  echo "== $f"
+  awk '/^```/{fence=!fence; next} !fence && /^## /{print "   " $0}' "$f"
+done
+```
+
+Expected: all three print the same six headings — Entry criteria, The work, Artifacts,
+Definition of done, Scaling to a team, Traps. Those six plus the bold "When this actually
+happens" line are the seven-section template; the seventh is not a `##` heading.
 
 - [ ] **Step 12: Run humanizer over the amended prose**
 

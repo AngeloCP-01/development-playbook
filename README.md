@@ -57,7 +57,7 @@ Trust that line over the number.
 
 ### Before code
 1. [Product Discovery](docs/01-product-discovery.md) — what problem, for whom, and is it worth solving
-2. [Planning](docs/02-planning.md) — scope, sequence, and what you are deliberately not doing
+2. [Product Planning](docs/02-planning.md) — scope, sequence, and what you are deliberately not doing
 3. [Architecture](docs/03-architecture.md) — the decisions that are expensive to reverse
 
 ### Building
