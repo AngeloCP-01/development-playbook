@@ -14,6 +14,12 @@ const PAGES = [
   '/stages/01-product-discovery#talk',
   '/stages/01-product-discovery#decide',
   '/stages/01-product-discovery#record',
+  '/stages/02-planning#done',
+  '/stages/02-planning#cut',
+  '/stages/02-planning#sequence',
+  '/stages/02-planning#size',
+  '/stages/02-planning#write',
+  '/stages/02-planning#horizon',
 ]
 
 const WIDTHS = [320, 768, 1024, 1440, 2560]

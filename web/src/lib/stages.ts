@@ -36,7 +36,7 @@ export const STAGES: Stage[] = [
     group: 'Before code',
     timing:
       'After discovery, before architecture — and again every time scope shifts.',
-    ready: false,
+    ready: true,
   },
   {
     num: '03',

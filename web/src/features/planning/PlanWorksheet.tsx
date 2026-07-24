@@ -5,7 +5,6 @@ import { Check, Copy, RotateCcw, Save } from 'lucide-react'
 import { Card } from '@/components/ui'
 import { useLocalStorage } from '@/lib/useLocalStorage'
 import { CarryForward } from './CarryForward'
-import { HorizonTriage } from './HorizonTriage'
 
 /**
  * The stage's persisted output: the one-page plan from `docs/02-planning.md:158-182`,
@@ -13,11 +12,12 @@ import { HorizonTriage } from './HorizonTriage'
  * counter, same copy/clear behaviour, under its own storage key so the two
  * stages never collide.
  *
- * Hosts both carry-forwards. `CarryForward` renders above the fields and can
- * seed `doneMeans`/`notInV1` from stage 01's answers; `HorizonTriage` renders
- * below the fields and reads the reader's own `notInV1` lines back as items to
- * triage. Both are wired through this component so the localStorage read for
- * this stage's key stays in one place.
+ * `CarryForward` renders above the fields and can seed `doneMeans`/`notInV1`
+ * from stage 01's answers. The horizon triage that reads this plan's `notInV1`
+ * back lives in the next stepper step, not here: stepper panels are siblings,
+ * not a parent chain, so that step reads `PLANNING_KEY` from storage (the reads
+ * stay in sync through `useSyncExternalStore`) rather than receiving a prop
+ * across a panel boundary it cannot cross.
  */
 
 export type PlanSheet = {
@@ -133,102 +133,92 @@ export function PlanWorksheet() {
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-sm font-medium">Your one-page plan</p>
-            <p className="mt-0.5 text-sm text-subtle">
-              Saved in this browser as you type. Nothing leaves your machine.
-            </p>
-          </div>
-          <span
-            className="flex items-center gap-1.5 font-mono text-xs tabular-nums text-subtle"
-            aria-live="polite"
-          >
-            {complete ? (
-              <Check className="size-3.5 text-brand" aria-hidden />
-            ) : (
-              <Save className="size-3.5" aria-hidden />
-            )}
-            {filled}/{FIELDS.length}
-          </span>
-        </div>
-
-        <CarryForward onSeed={onSeed} canSeed={canSeed} />
-
-        <div className="space-y-5 border-t border-line pt-5">
-          {FIELDS.map((f) => {
-            const id = `plan-${f.key}`
-            return (
-              <div key={f.key}>
-                <label
-                  htmlFor={id}
-                  className="block text-sm font-medium text-fg"
-                >
-                  {f.label}
-                </label>
-                <p
-                  id={`${id}-hint`}
-                  className="mb-2 mt-0.5 text-sm text-subtle"
-                >
-                  {f.hint}
-                </p>
-                <textarea
-                  id={id}
-                  aria-describedby={`${id}-hint`}
-                  rows={f.rows}
-                  value={value[f.key]}
-                  placeholder={f.placeholder}
-                  onChange={(e) =>
-                    setValue({ ...value, [f.key]: e.target.value })
-                  }
-                  className="w-full resize-y border border-line bg-sunken px-3.5 py-2.5 text-[15px] leading-6 text-fg transition-colors duration-150 placeholder:text-subtle/70 hover:border-line-strong focus:border-brand focus:outline-none focus-visible:outline-2 focus-visible:outline-brand"
-                />
-              </div>
-            )
-          })}
-        </div>
-
-        <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-line pt-4">
-          <button
-            type="button"
-            onClick={copy}
-            disabled={filled === 0}
-            className="flex min-h-11 items-center gap-2 bg-brand px-4 text-sm font-medium text-brand-fg transition-opacity duration-150 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            {copied ? (
-              <Check className="size-4" aria-hidden />
-            ) : (
-              <Copy className="size-4" aria-hidden />
-            )}
-            {copied ? 'Copied' : 'Copy as Markdown'}
-          </button>
-          <span aria-live="polite" className="sr-only">
-            {copied ? 'Copied to clipboard' : ''}
-          </span>
-          <button
-            type="button"
-            onClick={() => {
-              if (window.confirm('Clear the plan? This cannot be undone.')) {
-                reset()
-              }
-            }}
-            disabled={filled === 0}
-            className="flex min-h-11 items-center gap-2 border border-line px-3.5 text-sm text-muted transition-colors duration-150 hover:bg-sunken hover:text-fg disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            <RotateCcw className="size-4" aria-hidden />
-            Clear
-          </button>
-          <p className="text-sm text-subtle" aria-live="polite">
-            {complete
-              ? 'Complete — paste it into the repo as your plan.'
-              : 'Paste the result into your project as docs/plan.md'}
+    <Card>
+      <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-sm font-medium">Your one-page plan</p>
+          <p className="mt-0.5 text-sm text-subtle">
+            Saved in this browser as you type. Nothing leaves your machine.
           </p>
         </div>
-      </Card>
+        <span
+          className="flex items-center gap-1.5 font-mono text-xs tabular-nums text-subtle"
+          aria-live="polite"
+        >
+          {complete ? (
+            <Check className="size-3.5 text-brand" aria-hidden />
+          ) : (
+            <Save className="size-3.5" aria-hidden />
+          )}
+          {filled}/{FIELDS.length}
+        </span>
+      </div>
 
-      <HorizonTriage notInV1={value.notInV1} />
-    </div>
+      <CarryForward onSeed={onSeed} canSeed={canSeed} />
+
+      <div className="space-y-5 border-t border-line pt-5">
+        {FIELDS.map((f) => {
+          const id = `plan-${f.key}`
+          return (
+            <div key={f.key}>
+              <label htmlFor={id} className="block text-sm font-medium text-fg">
+                {f.label}
+              </label>
+              <p id={`${id}-hint`} className="mb-2 mt-0.5 text-sm text-subtle">
+                {f.hint}
+              </p>
+              <textarea
+                id={id}
+                aria-describedby={`${id}-hint`}
+                rows={f.rows}
+                value={value[f.key]}
+                placeholder={f.placeholder}
+                onChange={(e) =>
+                  setValue({ ...value, [f.key]: e.target.value })
+                }
+                className="w-full resize-y border border-line bg-sunken px-3.5 py-2.5 text-[15px] leading-6 text-fg transition-colors duration-150 placeholder:text-subtle/70 hover:border-line-strong focus:border-brand focus:outline-none focus-visible:outline-2 focus-visible:outline-brand"
+              />
+            </div>
+          )
+        })}
+      </div>
+
+      <div className="mt-6 flex flex-wrap items-center gap-2 border-t border-line pt-4">
+        <button
+          type="button"
+          onClick={copy}
+          disabled={filled === 0}
+          className="flex min-h-11 items-center gap-2 bg-brand px-4 text-sm font-medium text-brand-fg transition-opacity duration-150 hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {copied ? (
+            <Check className="size-4" aria-hidden />
+          ) : (
+            <Copy className="size-4" aria-hidden />
+          )}
+          {copied ? 'Copied' : 'Copy as Markdown'}
+        </button>
+        <span aria-live="polite" className="sr-only">
+          {copied ? 'Copied to clipboard' : ''}
+        </span>
+        <button
+          type="button"
+          onClick={() => {
+            if (window.confirm('Clear the plan? This cannot be undone.')) {
+              reset()
+            }
+          }}
+          disabled={filled === 0}
+          className="flex min-h-11 items-center gap-2 border border-line px-3.5 text-sm text-muted transition-colors duration-150 hover:bg-sunken hover:text-fg disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <RotateCcw className="size-4" aria-hidden />
+          Clear
+        </button>
+        <p className="text-sm text-subtle" aria-live="polite">
+          {complete
+            ? 'Complete — paste it into the repo as your plan.'
+            : 'Paste the result into your project as docs/plan.md'}
+        </p>
+      </div>
+    </Card>
   )
 }
