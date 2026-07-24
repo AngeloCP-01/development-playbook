@@ -160,7 +160,10 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
 - [x] Commit the throwaway audit scripts as a real Playwright suite: contrast in
       both themes, no overflow 320–2560px, touch targets ≥44px
 - [x] `.github/workflows/ci.yml` — lint, typecheck, test, build
-- [ ] Branch protection requiring the gate *(GitHub-side, after push: require `verify` + `audit`, branches up to date)*
+- [ ] Branch protection requiring the gate *(GitHub-side: require `verify` + `audit`,
+      branches up to date)* — **TD-10**
+- [ ] Watch CI go red once: scratch branch, broken commit pushed with `--no-verify`,
+      confirm Actions fails — **TD-10**
 - [x] Fix or document whatever the suite reveals
 
 ### W-5 — Deploy ☐

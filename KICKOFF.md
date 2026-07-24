@@ -38,7 +38,10 @@ Before doing anything, read these for context:
 - **Quality gates are in place** (W-4): vitest invariants, the committed audit suite,
   lefthook hooks, and a CI workflow. Not deployed yet (W-5). Branch protection is a
   GitHub-side switch to flip after pushing.
-- **Branch:** `feat/playbook-web-app`, merged/unmerged state per `git log main..HEAD`.
+- **Branch:** work happens on `feat/<topic>`, merged to `main` with `--no-ff`. Both
+  rounds so far are merged and pushed; `main` is the current tip.
+- **One open gate item:** CI has never been observed running (TD-10) — branch
+  protection is off and no red run has been seen.
 
 ### This round's scope
 

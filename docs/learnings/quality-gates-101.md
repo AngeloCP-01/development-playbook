@@ -78,6 +78,33 @@ Port 3100 keeps clear of the dev server; the production build keeps the dev over
 console noise out of the console-error check. Locally, `reuseExistingServer` skips the
 rebuild when a server is already up.
 
+## When the browser suite "fails mysteriously", check who owns the port
+
+Four screenshot attempts failed in a row while building a term popover. The clicks did
+nothing, no panel ever appeared, and the feature looked broken. It was not: a **stale
+`next start` process** from an earlier run still held port 3100 and was serving old HTML
+whose chunks 500'd, so the page never hydrated and every click was inert.
+
+Two things made it slow to spot:
+
+- `pkill -f 'next start'` missed the process, because its actual command line did not
+  contain that literal string. `kill $(lsof -t -iTCP:3100 -sTCP:LISTEN)` is the reliable
+  form — target the port, not a guessed process name.
+- The symptom (buttons do nothing) points at your code, not your environment.
+
+The diagnostic that ended it was listening for console errors and failed requests during
+the run, which showed 500s on `_next/static/chunks/*`. Before rebuilding, kill the
+server; a rebuild while the old server is serving the same `.next` directory produces
+exactly this half-written state.
+
+## Some publishers 403 command-line requests
+
+A link check over the stage's outward references reported one dead link. It was not: the
+publisher serves fine to a browser and blocks `curl`. Verify external links with a real
+browser before deleting or "fixing" them — this is the
+"a checker reporting mass failures is usually the checker" rule again, one link at a
+time.
+
 ## What was deliberately left out
 
 - Component/behaviour tests for the stage exercises — deferred to W-3, where each stage

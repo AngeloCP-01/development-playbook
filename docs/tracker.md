@@ -3,14 +3,16 @@
 **Purpose:** the log. What actually shipped, what was decided and why, and what
 debt was taken on. Scope and planning live in [task.md](task.md).
 
-**Last updated:** 2026-07-23
-**Current phase:** W-4 shipped on `feat/quality-gates` (11 commits, review verdict
-Ready to merge) — prettier + eslint at `--max-warnings 0`, 13 vitest invariants, the
-9-test audit suite, lefthook hooks, a two-job CI workflow. P-5 resolved in ESLint's
-favour (D-22). The round's lessons were fed back into stage docs 05/06/07/11 (teeth
-check, invariant tests, the warnings trap) — the build-notice-drift-amend loop working
-as intended. Awaiting the user's manual test + merge decision. Next after that: W-3
-(stage 03) or W-5 (deploy).
+**Last updated:** 2026-07-24
+**Current phase:** W-4 merged to `main` (`e7b3afd`, `--no-ff`, branch deleted) and
+pushed, followed by stage 01's references section (`cc5b4b0`). Quality gates are live
+locally: prettier, eslint at `--max-warnings 0`, 13 vitest invariants, the 9-test audit
+suite, lefthook hooks, and a two-job CI workflow. P-5 resolved in ESLint's favour
+(D-22). The round fed itself back into stage docs 05/06/07/11 — the
+build-notice-drift-amend loop working as intended.
+
+**Open on the gate:** CI has never been observed running (see TD-10). Next round is
+W-3 (stage 03) or W-5 (deploy).
 
 ---
 
@@ -139,6 +141,27 @@ working tree is lost.~~ Committed in `edb315b`; the app and all docs are now tra
 
 Now `@playwright/test` with a committed suite; the dependency earns its place.
 
+### TD-10 — CI has never been observed running or failing · **High**
+
+The workflow is committed and `main` is pushed, but nothing here has confirmed a run.
+`docs/11-ci-cd.md` is explicit that an unenforced gate is decoration and that you must
+watch CI go red once before trusting it — this round already proved the point locally,
+where the gate passed a deliberately bad commit twice before the third probe rejected it.
+
+Two specific gaps:
+
+1. **Branch protection is not on.** Until `verify` and `audit` are required checks on
+   `main`, the workflow is advisory and a red run blocks nothing.
+2. **No red run has been seen.** The proof is a scratch branch with a deliberately
+   broken commit pushed using `--no-verify` (bypassing hooks is the point — CI must
+   catch what they miss), then confirming Actions goes red.
+
+Cannot be checked from this environment: `gh` is authenticated as `angelitopaa` while
+the repo belongs to `AngeloCP-01`, so the Actions API returns 404 here. Verification is
+the user's, in the browser.
+
+**Closes with:** both gaps closed and the result recorded here.
+
 ### TD-9 — Figure numbers are manual · **Low**
 
 `<Figure n={4}>` is passed explicitly (**D-16**). Inserting a figure mid-stage
@@ -180,15 +203,20 @@ alpha background that had no business in a print-derived design.
 
 ## Next up
 
-Two candidates. They trade off against each other.
+**First, and small: close TD-10.** Turn on branch protection and watch one deliberately
+broken commit turn CI red. Minutes of work, and until it is done the gate is a
+hypothesis rather than a gate.
 
-**W-4 (quality gates)** — closes TD-4, TD-5, TD-6, TD-8 and stops the project
-contradicting its own advice. Unglamorous, and every stage built before it lands
-is a stage built without a safety net.
+Then two candidates:
 
-**W-3 starting with stage 03 (Architecture)** — more visible progress and the
-richest teaching content, but multiplies TD-2 and TD-3 by every stage added.
+**W-3 starting with stage 03 (Architecture)** — the richest teaching content, and the
+first stage to land on a safety net. It will exercise the newer capabilities (term
+visuals, references) hardest, and it multiplies TD-2 and TD-3 by every stage added, so
+deciding those first is defensible.
 
-**Recommendation:** W-3 next, starting with stage 03 (Architecture) — the gates exist
-now, so every new stage lands on a safety net. W-5 (deploy) is also unblocked; doing it
-early would let stage work ship continuously per docs/13. Either order is defensible.
+**W-5 (deploy)** — unblocked now. Doing it early lets stage work ship continuously per
+`docs/13`, and turns the audit suite into a real post-deployment check rather than a
+local one.
+
+**Recommendation:** TD-10, then W-3. Deploy matters less while the app has one finished
+stage; the safety net matters more with seventeen to go.
