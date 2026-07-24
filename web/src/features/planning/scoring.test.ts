@@ -48,6 +48,14 @@ test('counts matches against the core verdict, not mismatches, so guessing every
   expect(scoreCut(answers)).toEqual({ answered: 8, correct: 3 })
 })
 
+test('credits a correct cut, so a reader who rightly cuts a non-core feature is counted', () => {
+  // Every other fixture guesses `true`, which cannot distinguish `core === guess`
+  // from a scorer that ignores the guess and counts core features alone (both
+  // give the same total when no guess is `false`). This one guesses `false` on a
+  // non-core feature — a correct cut — and must score it.
+  expect(scoreCut({ 'dark-mode': false })).toEqual({ answered: 1, correct: 1 })
+})
+
 test('an empty run scores zero rather than dividing by nothing', () => {
   expect(scoreCut({})).toEqual({ answered: 0, correct: 0 })
 })

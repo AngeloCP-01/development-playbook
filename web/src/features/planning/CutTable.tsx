@@ -88,7 +88,7 @@ export function CutTable() {
                   <p
                     className={[
                       'mb-1.5 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide',
-                      feature.core ? 'text-go' : 'text-danger',
+                      feature.core ? 'text-go' : 'text-muted',
                     ].join(' ')}
                   >
                     {feature.core ? (
