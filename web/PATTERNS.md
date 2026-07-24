@@ -25,7 +25,7 @@ Three moves carry most of the value, and every stage should use them:
    explains itself in place. Unfamiliar jargon is never a dead end, because the stage
    doubles as a primer for ground the reader has not worked in.
 3. **Judgment exercises.** Where the stage teaches a decision (is this severe enough to
-   build? is this a good interview question?), the reader commits to an answer *before*
+   build? is this a good interview question?), the reader commits to an answer _before_
    the reasoning is revealed. Guessing is the lesson.
 
 The anti-pattern to avoid: a stage that is only `<Prose>` blocks. If a step has no
@@ -50,7 +50,7 @@ Use it for every stage. Group the doc's sections into steps by phase, not by len
 
 Wraps a diagram with a number and a caption (`{ n, caption }`). Numbers run across the
 whole stage, not per step, and are passed explicitly, so "Fig 4" means one thing
-wherever the reader entered. The caption states what the figure *claims*, which is the
+wherever the reader entered. The caption states what the figure _claims_, which is the
 line between a picture and an explanation.
 
 Wrap every diagram. A diagram without a caption is decoration.
@@ -67,9 +67,18 @@ Wrap the first appearance of any term a reader new to the stage might not know. 
 definition for a first encounter: plain language, no forward references, and the
 `soWhat` line is the part a glossary would omit.
 
+A term may also carry a **mini-diagram**: register a component against its id in
+`src/components/term-visuals.tsx` (the `STAGE_CONTENT` registry pattern again) and the
+popover renders it between the definition and the why-it-matters line. Everything in a
+visual must be `<span>`, never `<div>` — a Term sits inside `<p>`, and invalid nesting
+breaks hydration. An invariant test fails any visual whose id has no definition. See
+`npm`/`pnpm` for the house examples.
+
 Two JSX cautions, both real bugs that shipped once: put an explicit `{' '}` around a
-`<Term>` or the surrounding spaces get trimmed; and definitions are `full` strings, so a
-double-quote inside one breaks the attribute — use typographic quotes.
+`<Term>` or the surrounding spaces get trimmed; Straight quotes inside
+definitions are fine (they render as text); the JSX-attribute hazard applies to
+`Figure` captions, where a straight double quote breaks the attribute — use
+typographic quotes there.
 
 ### Content primitives — `src/components/ui.tsx`
 
@@ -89,15 +98,15 @@ double-quote inside one breaks the attribute — use typographic quotes.
 The reusable UX moves. Each names its canonical example in stage 01 so the next stage can
 copy a working version rather than start from scratch.
 
-| Pattern | What it teaches | Reach for it when | Canonical example |
-|---|---|---|---|
-| **Expand to reveal** | A list of things, each with detail worth hiding until wanted | You have 3+ items that each need a paragraph | `ValidationLadder`, `AIWorkflow`, `WorkedExample` |
-| **Tabs** | Parallel categories the reader picks between | Content splits into 3–5 peer groups | `Toolkit` |
-| **Single-select scorer** | A judgment call along a scale, with the consequence of each choice | The stage turns on one decision (severity, risk, priority) | `SeverityScorer` |
-| **Guess then reveal** | Right-vs-wrong judgment, scored | You can show good and bad examples of the same skill | `QuestionLab` |
-| **Click-node inspector** | A structure whose parts each mean something | You have a diagram, tree, or pipeline with explainable nodes | `OpportunityTree`, `DiscoveryFlow` |
-| **Copy artifact** | A prompt, command, or template the reader will actually use | You are handing over something to paste elsewhere | `AIWorkflow` prompts |
-| **Persisted worksheet** | The stage's output, filled in and kept | The stage produces a document (a one-pager, a checklist, an ADR) | `Worksheet` |
+| Pattern                  | What it teaches                                                    | Reach for it when                                                | Canonical example                                 |
+| ------------------------ | ------------------------------------------------------------------ | ---------------------------------------------------------------- | ------------------------------------------------- |
+| **Expand to reveal**     | A list of things, each with detail worth hiding until wanted       | You have 3+ items that each need a paragraph                     | `ValidationLadder`, `AIWorkflow`, `WorkedExample` |
+| **Tabs**                 | Parallel categories the reader picks between                       | Content splits into 3–5 peer groups                              | `Toolkit`                                         |
+| **Single-select scorer** | A judgment call along a scale, with the consequence of each choice | The stage turns on one decision (severity, risk, priority)       | `SeverityScorer`                                  |
+| **Guess then reveal**    | Right-vs-wrong judgment, scored                                    | You can show good and bad examples of the same skill             | `QuestionLab`                                     |
+| **Click-node inspector** | A structure whose parts each mean something                        | You have a diagram, tree, or pipeline with explainable nodes     | `OpportunityTree`, `DiscoveryFlow`                |
+| **Copy artifact**        | A prompt, command, or template the reader will actually use        | You are handing over something to paste elsewhere                | `AIWorkflow` prompts                              |
+| **Persisted worksheet**  | The stage's output, filled in and kept                             | The stage produces a document (a one-pager, a checklist, an ADR) | `Worksheet`                                       |
 
 Notes that make each land:
 
@@ -141,7 +150,7 @@ The mechanics (see `CLAUDE.md` for the file-by-file trace):
 1. Read the stage's markdown doc. Its sections and its "Traps" block are the raw material.
 2. Group sections into 4–6 `Step`s by phase.
 3. For each section, pick a pattern from the table above. Prose is the fallback, not the
-   default — if a section is only prose, ask what the reader could *do* with it instead.
+   default — if a section is only prose, ask what the reader could _do_ with it instead.
 4. Wrap every diagram in `Figure`; number them across the stage.
 5. Add `terms.ts` entries for jargon the stage introduces, and wrap first appearances.
 6. Close on a `Callout kind="trap"` set, the way stage 01 does.

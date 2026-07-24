@@ -27,11 +27,11 @@ You do **not** need finished designs, a complete feature list, or a name you lov
 
 ```bash
 pnpm create next-app@latest my-app \
-  --typescript --app --tailwind --eslint=false --src-dir --use-pnpm
+  --typescript --app --tailwind --eslint --src-dir --use-pnpm
 cd my-app
 ```
 
-`--eslint=false` because Biome replaces it (step 3). `--src-dir` keeps application code
+`--src-dir` keeps application code
 in `src/` and leaves the root for configuration — worth it once the root accumulates a
 dozen config files.
 
@@ -90,34 +90,31 @@ booting a framework.
 
 ### 3. Linting and formatting
 
-One tool, one config:
+`create-next-app` already wired ESLint with `eslint-config-next` — keep it. Its
+react-hooks rules are the ones that catch real bugs (a setState-in-effect rule found a
+cascading render in this playbook's own app). Add Prettier for formatting, with the
+config that stops the two arguing:
 
 ```bash
-pnpm add -D --save-exact @biomejs/biome
-pnpm biome init
+pnpm add -D prettier eslint-config-prettier
 ```
 
-In `biome.json`, the settings worth changing from the defaults:
+`.prettierrc`:
 
 ```json
 {
-  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
-  "formatter": { "enabled": true, "indentStyle": "space", "indentWidth": 2 },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "correctness": { "noUnusedVariables": "error" },
-      "suspicious": { "noExplicitAny": "error" }
-    }
-  },
-  "assist": { "actions": { "source": { "organizeImports": "on" } } }
+  "singleQuote": true,
+  "semi": false
 }
 ```
 
-`noExplicitAny` as an error is the one that matters. `any` is how a typed codebase
-quietly becomes an untyped one — each individual use is defensible, and the aggregate is
-not.
+Append `eslint-config-prettier/flat` last in `eslint.config.mjs`, and add `format` /
+`format:check` scripts. One tool lints, one tool formats, and neither owns the other's
+job.
+
+Gate lint at **`--max-warnings 0`**. ESLint exits 0 on warnings, so without it an unused
+variable sails through both hooks and CI — this playbook's own gate let one through on
+its first teeth check.
 
 ### 4. TypeScript settings
 
@@ -178,10 +175,13 @@ pnpm add -D lefthook && pnpm lefthook install
 pre-commit:
   parallel: true
   commands:
-    check:
-      glob: '*.{ts,tsx,json}'
-      run: pnpm biome check --write --no-errors-on-unmatched {staged_files}
+    format:
+      glob: '*.{ts,tsx,mjs,css,json}'
+      run: pnpm exec prettier --write {staged_files}
       stage_fixed: true
+    lint:
+      glob: '*.{ts,tsx,mjs}'
+      run: pnpm exec eslint --max-warnings 0 {staged_files}
 
 pre-push:
   commands:
@@ -215,7 +215,8 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version-file: '.nvmrc', cache: 'pnpm' }
       - run: pnpm install --frozen-lockfile
-      - run: pnpm biome ci .
+      - run: pnpm format:check
+      - run: pnpm lint
       - run: pnpm tsc --noEmit
       - run: pnpm vitest run
       - run: pnpm build
@@ -260,7 +261,7 @@ That last line matters more than it looks. See [10 — Documentation](10-documen
 ## Artifacts
 
 - Repository with the feature-first `src/` structure
-- `biome.json`, `tsconfig.json`, `lefthook.yml`, `.nvmrc`, `.env.example`
+- `.prettierrc`, `eslint.config.mjs`, `tsconfig.json`, `lefthook.yml`, `.nvmrc`, `.env.example`
 - `src/lib/env.ts` validating configuration at boot
 - `.github/workflows/ci.yml` with branch protection enforcing it
 - A Vercel project producing preview URLs per pull request

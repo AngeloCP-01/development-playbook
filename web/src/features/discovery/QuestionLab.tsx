@@ -135,7 +135,9 @@ export function QuestionLab() {
                       {right ? ', correct' : ''}
                     </span>
                   </p>
-                  <p className="measure text-sm leading-6 text-muted">{item.why}</p>
+                  <p className="measure text-sm leading-6 text-muted">
+                    {item.why}
+                  </p>
                   {item.fix && (
                     <p className="mt-2.5 border-l-2 border-go pl-3 text-sm leading-6 text-muted">
                       <span className="font-medium text-fg">Ask instead: </span>

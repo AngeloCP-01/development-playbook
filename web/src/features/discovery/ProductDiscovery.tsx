@@ -77,7 +77,10 @@ const STEPS: Step[] = [
               saves the most time.
             </p>
           </Prose>
-          <Figure n={1} caption="The two exits from discovery. Everything above the gate is cheap; everything below it is a commitment. Note that stop is drawn the same size as build — it is an equally successful outcome, and the more common one.">
+          <Figure
+            n={1}
+            caption="The two exits from discovery. Everything above the gate is cheap; everything below it is a commitment. Note that stop is drawn the same size as build — it is an equally successful outcome, and the more common one."
+          >
             <DiscoveryFlow />
           </Figure>
         </Section>
@@ -101,7 +104,10 @@ const STEPS: Step[] = [
               favour of building.
             </p>
           </Prose>
-          <Figure n={2} caption="The four kinds of discovery work, cheapest first. Desk research costs nothing and kills most ideas; interviews cost time; tests cost real effort. Climb only as far as the decision requires.">
+          <Figure
+            n={2}
+            caption="The four kinds of discovery work, cheapest first. Desk research costs nothing and kills most ideas; interviews cost time; tests cost real effort. Climb only as far as the decision requires."
+          >
             <Toolkit />
           </Figure>
         </Section>
@@ -109,15 +115,16 @@ const STEPS: Step[] = [
         <Section eyebrow="Cheapest first" title="Validate before building">
           <Prose>
             <p>
-              Every rung costs more than the one below it — from a search query up to a
-              {' '}
-              <Term id="fake-door-test">fake door test</Term>{' '}or a full
-              {' '}
-              <Term id="concierge-test">concierge test</Term>. Climb only as far as
-              the decision requires.
+              Every rung costs more than the one below it — from a search query
+              up to a <Term id="fake-door-test">fake door test</Term> or a full{' '}
+              <Term id="concierge-test">concierge test</Term>. Climb only as far
+              as the decision requires.
             </p>
           </Prose>
-          <Figure n={3} caption="Each rung buys stronger evidence at higher cost — and each one misleads in its own way, which is why the ladder matters more than any single rung.">
+          <Figure
+            n={3}
+            caption="Each rung buys stronger evidence at higher cost — and each one misleads in its own way, which is why the ladder matters more than any single rung."
+          >
             <ValidationLadder />
           </Figure>
         </Section>
@@ -140,7 +147,10 @@ const STEPS: Step[] = [
             stop.
           </p>
         </Prose>
-        <Figure n={4} caption="Where agents fit in discovery. They are strong on breadth and speed at the desk-research rungs, and structurally unable to tell you to stop.">
+        <Figure
+          n={4}
+          caption="Where agents fit in discovery. They are strong on breadth and speed at the desk-research rungs, and structurally unable to tell you to stop."
+        >
           <AIWorkflow />
         </Figure>
       </Section>
@@ -155,8 +165,9 @@ const STEPS: Step[] = [
         <Prose>
           <p>
             Five conversations dramatically outperform zero. The failure mode is
-            asking <Term id="leading-question">leading questions</Term>{' '}that generate agreement rather than information —
-            people say yes to be nice, and a yes costs them nothing.
+            asking <Term id="leading-question">leading questions</Term> that
+            generate agreement rather than information — people say yes to be
+            nice, and a yes costs them nothing.
           </p>
           <p>
             The rule: <strong className="text-fg">ask about the past</strong>.
@@ -164,7 +175,10 @@ const STEPS: Step[] = [
             Tuesday is data.
           </p>
         </Prose>
-        <Figure n={5} caption="Six interview questions. Three gather evidence; three manufacture agreement. The difference is almost always whether the question asks about the past or the future.">
+        <Figure
+          n={5}
+          caption="Six interview questions. Three gather evidence; three manufacture agreement. The difference is almost always whether the question asks about the past or the future."
+        >
           <QuestionLab />
         </Figure>
       </Section>
@@ -179,12 +193,16 @@ const STEPS: Step[] = [
         <Section eyebrow="Exercise" title="How much does it hurt?">
           <Prose>
             <p>
-              Severity decides everything downstream. Most ideas are annoying-tier,
-              because the <Term id="switching-cost">switching cost</Term>{' '}exceeds the
-              pain removed — which is exactly why most ideas should not be built.
+              Severity decides everything downstream. Most ideas are
+              annoying-tier, because the{' '}
+              <Term id="switching-cost">switching cost</Term> exceeds the pain
+              removed — which is exactly why most ideas should not be built.
             </p>
           </Prose>
-          <Figure n={6} caption="The severity scale that governs the build/stop decision. Most ideas sit in the first two bands, where switching costs exceed the pain removed.">
+          <Figure
+            n={6}
+            caption="The severity scale that governs the build/stop decision. Most ideas sit in the first two bands, where switching costs exceed the pain removed."
+          >
             <SeverityScorer />
           </Figure>
         </Section>
@@ -197,7 +215,10 @@ const STEPS: Step[] = [
               because stopping is the outcome people skip.
             </p>
           </Prose>
-          <Figure n={7} caption="The same four questions applied to two real ideas — one built, one abandoned at question three. The abandoned one is the more instructive case.">
+          <Figure
+            n={7}
+            caption="The same four questions applied to two real ideas — one built, one abandoned at question three. The abandoned one is the more instructive case."
+          >
             <WorkedExample />
           </Figure>
         </Section>
@@ -236,17 +257,24 @@ const STEPS: Step[] = [
         <Section eyebrow="The artifact" title="Opportunity solution tree">
           <Prose>
             <p>
-              An <Term id="opportunity-solution-tree">opportunity solution tree</Term>{' '}is
-              Teresa Torres&rsquo; map of the problem space. It keeps solutions
-              tied to evidence: every solution hangs off an opportunity, and
-              every opportunity is something a real user actually said.
+              An{' '}
+              <Term id="opportunity-solution-tree">
+                opportunity solution tree
+              </Term>{' '}
+              is Teresa Torres&rsquo; map of the problem space. It keeps
+              solutions tied to evidence: every solution hangs off an
+              opportunity, and every opportunity is something a real user
+              actually said.
             </p>
             <p>
               Click any node. The value is less the picture than the rule it
               enforces.
             </p>
           </Prose>
-          <Figure n={8} caption="An opportunity solution tree. Outcome at the root, problems heard from users in the middle, candidate solutions at the leaves. Nothing may be added at one level without a parent at the level above.">
+          <Figure
+            n={8}
+            caption="An opportunity solution tree. Outcome at the root, problems heard from users in the middle, candidate solutions at the leaves. Nothing may be added at one level without a parent at the level above."
+          >
             <OpportunityTree />
           </Figure>
         </Section>

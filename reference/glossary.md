@@ -31,6 +31,12 @@ things, instrument these. See [15 — Observability](../docs/15-observability.md
 **Merge gate** — The set of automated checks that must pass before code reaches the main
 branch. Distinct from deployment: the gate protects the branch, the deploy ships it.
 
+**Phantom dependency** — A package your code imports but never declared in
+`package.json`. It works only because some *other* dependency happened to pull it into a
+flat `node_modules` — and it breaks, mysteriously, when that other package updates or
+drops it. The reason [reference/stack.md](stack.md) picks pnpm: its strict layout makes
+phantom imports fail on your machine today instead of in CI next month.
+
 **Preview deployment** — A full, isolated deployment of a branch, with its own URL. On
 Vercel these are automatic per pull request. Not the same as staging — see
 [12 — Staging](../docs/12-staging.md).

@@ -113,6 +113,30 @@ That is what [stage 14](docs/14-post-deployment-verification.md) is for.
 
 ---
 
+## This repository
+
+The playbook ships in two forms from one body of content:
+
+- **`docs/NN-*.md`** — the eighteen stage documents. Canonical prose, readable here.
+- **`web/`** — an interactive version: a stepper per stage, exercises, numbered
+  figures, and inline definitions for unfamiliar terms. Stage 01 is built; the rest
+  render a placeholder until their turn.
+
+The project practises what the documents preach, and records itself doing it:
+
+| File | Holds |
+|---|---|
+| [`docs/task.md`](docs/task.md) | Scope, milestones, dependency map |
+| [`docs/tracker.md`](docs/tracker.md) | What shipped with evidence, decisions, technical debt, bug ledger |
+| [`docs/superpowers/`](docs/superpowers/README.md) | Specs and plans from the delivery loop |
+| [`docs/learnings/`](docs/learnings/README.md) | Guides written when a round taught something expensive |
+| [`web/DESIGN.md`](web/DESIGN.md) · [`web/PATTERNS.md`](web/PATTERNS.md) | The design system and the interaction-pattern library |
+| [`CLAUDE.md`](CLAUDE.md) | The working conventions: git, delivery loop, review, TDD |
+
+When the project and a stage doc disagree, one of them is wrong and the tracker gets a
+debt entry until they agree again. That loop — build, notice the drift, amend the doc —
+is the point.
+
 ## Maintaining this playbook
 
 - **Versions live in [reference/stack.md](reference/stack.md), nowhere else.** A version

@@ -7,14 +7,17 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 All app commands run from `web/`:
 
 ```bash
-pnpm dev      # dev server on :3000 (Turbopack)
-pnpm build    # production build; prerenders all 22 routes
-pnpm lint     # eslint
-pnpm exec tsc --noEmit   # typecheck (no dedicated script yet)
+pnpm dev          # dev server on :3000 (Turbopack)
+pnpm build        # production build; prerenders all 22 routes
+pnpm lint         # eslint --max-warnings 0
+pnpm format       # prettier --write (format:check is what CI runs)
+pnpm test         # vitest — data-layer invariant tests
+pnpm test:e2e     # playwright audit suite against a production build on :3100
+pnpm exec tsc --noEmit   # typecheck
 ```
 
-There is **no test suite yet** — `pnpm test` does not exist. See `docs/tracker.md`
-TD-4/TD-5 before assuming otherwise or claiming tests pass.
+Lefthook runs format+lint on commit and typecheck+test on push. CI
+(`.github/workflows/ci.yml`) is the same gate cheapest-first, plus the audit suite.
 
 ## Two deliverables, one body of content
 
@@ -97,7 +100,7 @@ touching UI are expected to clear:
 - **Responsive** — 320→2560px, no horizontal overflow, no sub-44px touch target below `lg`
 - **Console** — zero errors in a clean browser context
 
-These scripts are currently written ad hoc and thrown away (TD-5). Two cautions learned
+These checks live in `web/e2e/audit.spec.ts` and run in CI. Two cautions learned
 the hard way: a checker reporting mass failures is usually the checker (a link audit
 once reported 124 false breaks), and colour parsers must handle `oklab()` — Tailwind
 emits it for alpha backgrounds.
@@ -189,6 +192,15 @@ how we prove a test isn't vacuous.
 
 The exceptions are narrow and require asking first: throwaway prototypes, generated
 code, configuration. "Skip TDD just this once" is not one of them.
+
+## Workflow preferences
+
+**Presenting plan execution options.** When presenting the two plan-execution
+approaches (Subagent-Driven vs. Inline) at the end of the writing-plans workflow,
+always add a short note stating **which approach is recommended for this specific
+plan and why** — grounded in the plan's actual shape (task count, independence, risk,
+need for context isolation), not a generic default. Ported verbatim from
+`SmartJobSearchCRM`, where it was added as its own commit.
 
 ## Delivery loop
 
@@ -316,8 +328,10 @@ MCP servers, configured at user level, and what each is actually for here:
 | **playwright** | Driving the running app for the verification passes above. |
 | **claude-mem** | "Did I already decide this?" across sessions. |
 
-## Known contradiction
+## Resolved contradiction (kept for history)
 
-`reference/stack.md` and `docs/04-project-setup.md` prescribe **Biome** and **Lefthook**.
-`web/` uses ESLint and has no git hooks (TD-1). Do not install Biome to "match the docs"
-without deciding which side wins — that decision is task P-5.
+`reference/stack.md` and `docs/04-project-setup.md` used to prescribe **Biome** while
+`web/` ran ESLint with no hooks (TD-1). Resolved 2026-07-23 in ESLint's favour — its
+react-hooks rule family caught a real bug here — with Prettier added for formatting and
+Lefthook for hooks. Biome stays documented in `reference/stack.md` as the alternative
+for projects off the ESLint plugin ecosystem. Decision D-22.

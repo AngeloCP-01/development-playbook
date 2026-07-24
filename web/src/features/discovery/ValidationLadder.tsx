@@ -77,7 +77,9 @@ export function ValidationLadder() {
 
               {active && (
                 <div className="space-y-3 border-t border-line bg-sunken px-5 py-4">
-                  <p className="measure text-sm leading-6 text-muted">{rung.what}</p>
+                  <p className="measure text-sm leading-6 text-muted">
+                    {rung.what}
+                  </p>
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wide text-brand">
                       What it tells you

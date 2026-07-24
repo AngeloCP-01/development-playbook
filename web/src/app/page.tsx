@@ -36,10 +36,10 @@ export default function Home() {
             The numbering is for lookup, not sequence
           </h2>
           <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">
-            Sheets are numbered so you can find them, not so you can execute them
-            in order. CI/CD (11) gets wired during Project Setup (04), on day
-            one. Documentation (10) and Observability (15) never stop. Sheets 13
-            through 18 form a loop, not a line.
+            Sheets are numbered so you can find them, not so you can execute
+            them in order. CI/CD (11) gets wired during Project Setup (04), on
+            day one. Documentation (10) and Observability (15) never stop.
+            Sheets 13 through 18 form a loop, not a line.
           </p>
           <p className="mt-3 text-[0.9375rem] leading-relaxed text-muted">
             Every sheet states its real cadence in the title block. Trust that

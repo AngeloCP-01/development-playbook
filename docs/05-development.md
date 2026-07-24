@@ -198,7 +198,7 @@ For each slice, before opening a PR:
 
 - [ ] Tests written and passing ([06](06-testing.md))
 - [ ] `pnpm tsc --noEmit` clean
-- [ ] `pnpm biome check` clean
+- [ ] `pnpm lint` (at `--max-warnings 0`) and `pnpm format:check` clean
 - [ ] No `any`, no unexplained `as`
 - [ ] Server Actions authorize, not just authenticate
 - [ ] Loading and error states exist for anything async

@@ -15,13 +15,15 @@ export type Term = {
 
 export const TERMS: Record<string, Term> = {
   'product-discovery': {
-    short: 'Finding out whether something is worth building before you build it.',
+    short:
+      'Finding out whether something is worth building before you build it.',
     full: 'The work of testing whether a problem is real, whose it is, and how badly it hurts — before any code exists. It is deliberately cheap, because its main output is often the decision not to build.',
     soWhat:
       'Skipping it is the most expensive mistake available to a developer: months spent building something correct that nobody needed.',
   },
   'opportunity-solution-tree': {
-    short: 'A map linking one outcome to problems, then to candidate solutions.',
+    short:
+      'A map linking one outcome to problems, then to candidate solutions.',
     full: 'A diagram by Teresa Torres with four levels: the outcome you want to move, the customer opportunities (problems, needs, desires) that could move it, the solutions that address each opportunity, and the experiments that test each solution.',
     soWhat:
       'It enforces one rule that is hard to keep otherwise: no solution may exist without an opportunity above it, and no opportunity without evidence someone actually said it.',
@@ -62,8 +64,22 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'On its own it is close to meaningless and easy to inflate. It is useful only for telling a hobby apart from a business.',
   },
+  npm: {
+    short: 'The package manager that ships with Node.js.',
+    full: 'Reads your package.json, downloads every package it names (and everything those packages need) from the npm registry, and copies the whole tree into the project\u2019s node_modules folder. Every project gets its own full copy, hoisted into one flat pile.',
+    soWhat:
+      'The flat pile means your code can import packages you never declared \u2014 phantom dependencies \u2014 which work until the package that dragged them in stops doing so. Zero setup is why it remains the default everywhere.',
+  },
+  pnpm: {
+    short:
+      'A faster npm replacement that stores each package once per machine.',
+    full: 'Same registry and same package.json as npm, but packages live in one content-addressable store on your machine and get hard-linked into each project. Its node_modules layout is strict: only dependencies you actually declared are importable.',
+    soWhat:
+      'Repeat installs take seconds and undeclared imports fail on your machine today rather than in production later. The trade: it does not ship with Node, so it is one corepack step away from a fresh machine.',
+  },
   'problem-interview': {
-    short: 'A conversation about what someone actually did, not what they would do.',
+    short:
+      'A conversation about what someone actually did, not what they would do.',
     full: 'A short interview — 20 to 30 minutes — focused entirely on past behaviour around a problem. No pitch, no product, no hypotheticals.',
     soWhat:
       'Predictions about future behaviour are unreliable. What someone did last Tuesday is evidence.',

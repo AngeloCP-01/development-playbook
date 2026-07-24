@@ -45,7 +45,7 @@ response — so the app has to introduce concepts, not only remind.
 | **P-2** | Daily loop — 05, 06, 07, 09, 10 | ☑ |
 | **P-3** | Upfront thinking — 01, 02, 03, 08 | ☑ |
 | **P-4** | Long tail — 15, 16, 17, 18 | ☑ |
-| **P-5** | Reconcile docs with the app's real stack | ☐ |
+| **P-5** | Reconcile docs with the app's real stack | ☑ |
 | **P-6** | Fold the real working conventions into the stage docs | ☐ |
 | **P-7** | Project scaffolding — kickoff, design system, loop directories | ☑ |
 | **P-8** | Working standards — conventions, skills-as-process, humanizer, interaction patterns | ☑ |
@@ -58,7 +58,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
 | **W-3** | Stages 02–18 interactive | ☐ |
-| **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☐ |
+| **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☐ |
 
 ### Dependency map
@@ -82,13 +82,13 @@ P-8 (done) is the source P-6 folds into the stage docs.
 
 ## Task detail
 
-### P-5 — Reconcile docs with the app's real stack ☐
+### P-5 — Reconcile docs with the app's real stack ☑ *(resolved: ESLint kept, D-22)*
 
 The playbook prescribes tooling the app does not use. Either the app adopts it
 or the doc is amended, but the two cannot keep disagreeing. See **TD-1**.
 
-- [ ] Decide: adopt Biome, or amend `reference/stack.md` + `docs/04` to ESLint
-- [ ] Decide: adopt Lefthook, or drop the git-hooks section
+- [x] Decide: adopt Biome, or amend `reference/stack.md` + `docs/04` to ESLint
+- [x] Decide: adopt Lefthook, or drop the git-hooks section
 - [ ] Re-verify every version in `reference/stack.md` against `npm view`
 - [ ] Confirm no stage doc contains a version number — they belong in stack.md
 
@@ -117,6 +117,10 @@ Map of what lands where:
 | Run `humanizer:humanizer` over prose before it is done | 10 Documentation |
 
 - [ ] Update the markdown stage docs listed above
+      *(partial, 2026-07-23: teeth check + invariant tests → 06, teeth link → 07,
+      warnings-gate trap + gate yaml → 11, DoD line → 05 — landed with W-4's doc pass.
+      Remaining: commit/branch conventions → 05/07, review severity + provenance → 07,
+      tracker conventions + kickoff files → 02/10, skills-per-stage → all.)*
 - [ ] Mirror into the interactive stage as each is built under W-3
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
@@ -146,17 +150,17 @@ Suggested order — highest teaching value first, since that is the point:
 | 5 | 02 Planning | Short, and pairs with 01 |
 | — | remainder | 04–12, 14, 17, 18 |
 
-### W-4 — Quality gates ☐
+### W-4 — Quality gates ☑
 
 The playbook says CI on day one. The app does not have it. Closing this is also
 how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
 
-- [ ] Vitest, plus a first unit test (`stages.ts` helpers, `terms.ts` lookups)
-- [ ] Commit the throwaway audit scripts as a real Playwright suite: contrast in
+- [x] Vitest, plus a first unit test (`stages.ts` helpers, `terms.ts` lookups)
+- [x] Commit the throwaway audit scripts as a real Playwright suite: contrast in
       both themes, no overflow 320–2560px, touch targets ≥44px
-- [ ] `.github/workflows/ci.yml` — lint, typecheck, test, build
-- [ ] Branch protection requiring the gate
-- [ ] Fix or document whatever the suite reveals
+- [x] `.github/workflows/ci.yml` — lint, typecheck, test, build
+- [ ] Branch protection requiring the gate *(GitHub-side, after push: require `verify` + `audit`, branches up to date)*
+- [x] Fix or document whatever the suite reveals
 
 ### W-5 — Deploy ☐
 

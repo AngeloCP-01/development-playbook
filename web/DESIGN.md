@@ -1,7 +1,7 @@
 # Development Playbook — Design System
 
 The visual direction, in one place, so seventeen more stages can be built without
-re-deriving it. Token values here are the source of truth's *documentation* —
+re-deriving it. Token values here are the source of truth's _documentation_ —
 `src/app/globals.css` is the source of truth itself. If they disagree, the CSS wins and
 this file is the bug.
 
@@ -32,48 +32,48 @@ Two rules govern everything:
 2. **Semantic colours carry meaning and nothing else.** `go` / `danger` / `warn` are
    never used for emphasis or decoration.
 
-| Token | Light | Dark | Use |
-|---|---|---|---|
-| `paper` | `#efeee8` | `#0a1a2c` | Page |
-| `surface` | `#faf9f5` | `#102640` | Raised panels, cards |
-| `sunk` | `#e6e4dc` | `#071322` | Recessed fills, code blocks |
-| `ink` | `#10243e` | `#e9eff6` | Primary text |
-| `graphite` | `#46586e` | `#adc0d4` | Body text |
-| `faint` | `#556377` | `#98abc0` | Secondary labels |
-| `rule` | `#cbc7bc` | `#23405f` | Hairlines |
-| `rule-strong` | `#ada79a` | `#37587c` | Emphasised rules |
-| `blueprint` | `#23508f` | `#86b4ee` | Structure, diagram linework |
-| `signal` (accent) | `#a54407` | `#f2954a` | Attention only |
-| `go` | `#1a6b4f` | `#4fc296` | Semantic yes |
-| `stop` | `#a52218` | `#f2776d` | Semantic no |
-| `warn` | `#8a5a06` | `#e3ab4d` | Caution |
+| Token             | Light     | Dark      | Use                         |
+| ----------------- | --------- | --------- | --------------------------- |
+| `paper`           | `#efeee8` | `#0a1a2c` | Page                        |
+| `surface`         | `#faf9f5` | `#102640` | Raised panels, cards        |
+| `sunk`            | `#e6e4dc` | `#071322` | Recessed fills, code blocks |
+| `ink`             | `#10243e` | `#e9eff6` | Primary text                |
+| `graphite`        | `#46586e` | `#adc0d4` | Body text                   |
+| `faint`           | `#556377` | `#98abc0` | Secondary labels            |
+| `rule`            | `#cbc7bc` | `#23405f` | Hairlines                   |
+| `rule-strong`     | `#ada79a` | `#37587c` | Emphasised rules            |
+| `blueprint`       | `#23508f` | `#86b4ee` | Structure, diagram linework |
+| `signal` (accent) | `#a54407` | `#f2954a` | Attention only              |
+| `go`              | `#1a6b4f` | `#4fc296` | Semantic yes                |
+| `stop`            | `#a52218` | `#f2776d` | Semantic no                 |
+| `warn`            | `#8a5a06` | `#e3ab4d` | Caution                     |
 
 Each semantic colour has a `-wash` companion for fills.
 
 **Both `faint` and `signal` were darkened to clear WCAG AA** — `faint` was 2.99:1 on the
 darkest light surface, `signal` was 4.11:1 at small sizes. Solve numerically against the
-*worst-case* surface before changing either: for dark text that is `sunk`, for light text
+_worst-case_ surface before changing either: for dark text that is `sunk`, for light text
 it is `surface`.
 
 ---
 
 ## Type
 
-| Face | Role |
-|---|---|
-| **Archivo** (variable `wdth`) | Display and UI. Pushed wide for plate lettering. |
-| **Newsreader** | Body. A serif, on purpose — this is read at length. |
-| **JetBrains Mono** | Data and labels. |
+| Face                          | Role                                                |
+| ----------------------------- | --------------------------------------------------- |
+| **Archivo** (variable `wdth`) | Display and UI. Pushed wide for plate lettering.    |
+| **Newsreader**                | Body. A serif, on purpose — this is read at length. |
+| **JetBrains Mono**            | Data and labels.                                    |
 
 Body is **17px / 1.75**. Roles are utility classes, not Tailwind sizes:
 
-| Class | Spec | Use |
-|---|---|---|
+| Class       | Spec                                            | Use                            |
+| ----------- | ----------------------------------------------- | ------------------------------ |
 | `t-display` | Archivo, `wdth 118`, 700, uppercase, `-0.005em` | Stage titles, hero. Sparingly. |
-| `t-head` | Archivo, `wdth 108`, 600, `-0.008em` | Section headings |
-| `t-ui` | Archivo, `wdth 100` | Buttons, nav, controls |
-| `t-label` | JetBrains Mono, 500, 11px, `0.1em`, uppercase | Stamped labels, eyebrows |
-| `t-data` | JetBrains Mono, 500, tabular | Sheet numbers, counts, timings |
+| `t-head`    | Archivo, `wdth 108`, 600, `-0.008em`            | Section headings               |
+| `t-ui`      | Archivo, `wdth 100`                             | Buttons, nav, controls         |
+| `t-label`   | JetBrains Mono, 500, 11px, `0.1em`, uppercase   | Stamped labels, eyebrows       |
+| `t-data`    | JetBrains Mono, 500, tabular                    | Sheet numbers, counts, timings |
 
 **Display type is sized with `clamp()`**, never fixed steps. Expanded caps are wide by
 nature — "DEVELOPMENT" overflowed a 320px viewport at a fixed size. Check the longest
@@ -114,7 +114,7 @@ One orchestrated moment: the hero rule draws itself like an ink line
 
 Non-negotiable for any UI change. These are checked against a live build, not asserted:
 
-- **Contrast** — every distinct text/background pair passes WCAG AA in *both* themes
+- **Contrast** — every distinct text/background pair passes WCAG AA in _both_ themes
 - **Responsive** — 320→2560px, no horizontal overflow
 - **Touch targets** — ≥44px below `lg`; may tighten to 36px at `lg` where the pointer is
   a mouse
