@@ -79,6 +79,7 @@ of what was believed at the time is the point.
 
 | # | Decision | Reasoning | Consequence |
 |---|---|---|---|
+| **D-35** | Every stage carries its own "AI plays" section, in both the doc and the app, tuned to that stage's work | Stages 01 and 02 both earned real value from naming where agents help and where they mislead, and the failure modes are stage-specific (discovery: don't seek validation; planning: don't accept a padded plan; architecture, testing, incidents will each differ). Making it a standard per-stage section rather than a one-off means the guidance propagates instead of being reinvented. Generalizes D-34 | Added to the W-3 per-stage checklist and PATTERNS; a per-stage AI-plays tracker lives in `task.md`; the 7-step shape is now the norm for a built stage, not an exception |
 | **D-34** | Stage 02's AI section goes in both the doc and the app, and the stage runs to 7 steps; the doc names stable in-environment tools, not install counts | The user asked for AI content "just like discovery," but chose doc+web where stage 01 is app-only — more complete, at the cost of an asymmetry (TD-15). The 7th "AI plays" step is the first past the 4–6 guideline, so `PATTERNS.md` records it as a recognized addition rather than drift. Install counts and unvetted third-party skill *contents* stay out of canonical prose — they date and I have not audited them — so the doc leans on the mechanism (Subagents/Skill/MCP/Slash command) plus stable tools, with find-skills/skills.sh as the pointer | New per-stage pattern (optional AI step) recorded in PATTERNS; stage 01 doc now lags (TD-15) |
 | **D-33** | Stage 02 teaches value-vs-effort for backlog ordering, named as such, with RICE/ICE/MoSCoW as the heavier alternatives | A cold-reader test showed the stage had no method for ordering the "Next" list, only an anecdote. The user asked specifically for standard, widely-used practice. Research confirmed the impact-effort matrix is the named lightweight standard for small products, and it reuses the stage's own S/M/L sizing rather than inventing a scale. An earlier draft's "pain × frequency" was a homegrown coinage; it survives as the *value* half of value-vs-effort | The Risk/Open-question split is likewise grounded in the RAID vocabulary rather than invented; a 5th reference (Atlassian prioritization) points readers to the fuller frameworks |
 | **D-32** | Doc completeness is tested with a "cold-reader" agent: it may read only the one stage doc, is forbidden its own domain knowledge, and must flag every gap rather than fill it | Opinion cannot tell whether a teaching doc works for a beginner; the author always knows too much. Running an agent that plans a *different* product from the doc alone turns "is this complete?" into an empirical list of exactly where a beginner stalls. It found two real content defects in stage 02 that four rounds of human-style review had missed | A reusable QA pass for every stage doc; stage 02's re-run confirmed all four fixes landed. Worth a `docs/learnings/` guide once a second stage uses it |
@@ -224,15 +225,13 @@ hypothetical.
 **Closes with:** derive `PAGES` from `STAGES.filter(s => s.ready)` crossed with each
 stage's step ids, so the sweep tracks the ready set automatically.
 
-### TD-15 — Stage 01's doc has no AI content; stage 02's now does · **Low**
+### TD-15 — Stage 01's doc has no AI content; stage 02's now does · **Closed 2026-07-27**
 
-Stage 02's markdown doc gained an `### AI in planning` subsection (D-34), but stage 01's
-"AI plays" still lives only in the web app — `docs/01-product-discovery.md` has no AI
-content. The two docs now diverge on whether AI belongs in the canonical prose. Same class
-as TD-13 (the team-section asymmetry): a convention that must be one thing or the other.
-
-**Closes with:** give `docs/01-product-discovery.md` an AI subsection mirroring its
-`AIWorkflow` component, so both "Before code" stages carry AI in the doc, not just the app.
+~~Stage 02's markdown doc gained an `### AI in planning` subsection (D-34), but stage 01's
+"AI plays" still lived only in the web app.~~ Closed: `docs/01-product-discovery.md` now
+carries a `### AI in discovery` subsection porting its `AIWorkflow` plays to prose, so both
+built stages carry AI in the doc as well as the app. Consistent with D-35 (AI plays is a
+standard per-stage section).
 
 ### TD-14 — Stage 02 exercise cards render at two different widths · **Low**
 

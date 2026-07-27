@@ -46,10 +46,11 @@ Arrow keys move between steps; visited steps get a check. Pass a `Step[]`
 
 Use it for every stage. Group the doc's sections into steps by phase, not by length.
 
-A stage may add one further **"AI plays"** step beyond the 4–6 — the "where agents help
-and where they mislead" pattern from stage 01 — so a stage that carries it, like stage 02,
-runs to 7. The 4–6 governs *content* steps; the AI step is a recognized addition, not
-drift.
+Every stage carries one further **"AI plays"** step beyond the 4–6 — the "where agents help
+and where they mislead" pattern from stage 01, tuned to that stage's work — so a built
+stage runs to 7 (stage 02 is the reference). The 4–6 governs *content* steps; the AI step
+is standard, not drift (D-35). It also appears in the doc as an `### AI in <stage>`
+subsection inside "The work".
 
 ### `Figure` — `src/components/Figure.tsx`
 
