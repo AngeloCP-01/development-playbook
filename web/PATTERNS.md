@@ -66,8 +66,14 @@ Wrap every diagram. A diagram without a caption is decoration.
 Inline, click-to-expand definition. `<Term id="...">visible text</Term>` renders the
 text with a dashed underline; clicking opens a small panel with the full definition and a
 **"Why it matters"** line. Escape or an outside click closes it. Definitions live in
-`src/lib/terms.ts` as `{ short, full, soWhat }`; an unknown `id` degrades to plain text
-so it can never break a sentence.
+`src/lib/terms.ts` as `{ name, short, full, soWhat?, see? }`; an unknown `id` degrades to
+plain text so it can never break a sentence.
+
+`terms.ts` is the **single glossary source**: `reference/glossary.md` is generated from it
+(`renderGlossary()` + a `toMatchFileSnapshot` test), so the inline definitions and the
+reference glossary cannot drift. Edit the term here and run `pnpm gen:glossary` to
+regenerate the markdown; never hand-edit `glossary.md`. `name` is the glossary heading and
+`see` (a stage slug) its cross-link.
 
 Wrap the first appearance of any term a reader new to the stage might not know. Write the
 definition for a first encounter: plain language, no forward references, and the

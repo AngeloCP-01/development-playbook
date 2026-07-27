@@ -172,8 +172,9 @@ pattern library on the hardest stage.
 | 5 | 13 Production Deployment | Expand/migrate/contract needs a visual |
 | — | remainder | 04–12, 14, 17, 18 |
 
-**Settle before stage 03:** TD-2 and TD-3 (stage metadata and the glossary each live in
-two places). Every new stage multiplies the drift, so the cost of deferring compounds.
+**~~Settle before stage 03:~~ ✓ resolved 2026-07-27 (D-36).** TD-2 and TD-3 are closed:
+`terms.ts` is the single glossary source (`reference/glossary.md` generated via
+`pnpm gen:glossary`), and a title sync test guards stage metadata. Stage 03 is unblocked.
 
 **~~Open product decision for stage 02:~~ ✓ resolved 2026-07-24.** Stage 02's worksheet
 reads stage 01's saved answers via a read-only carry-forward (`src/lib/discovery-sheet.ts`,

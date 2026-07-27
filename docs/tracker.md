@@ -79,6 +79,7 @@ of what was believed at the time is the point.
 
 | # | Decision | Reasoning | Consequence |
 |---|---|---|---|
+| **D-36** | `terms.ts` is the single glossary source (markdown generated as a snapshot); stage metadata is guarded by detection, not generation | Exploration narrowed both debts. TD-3's richer shape belongs in code, and generation with `toMatchFileSnapshot` closes it with zero new tooling (regenerate via `pnpm gen:glossary`); the 16 arch/ops terms migrated in are used inline by stage 03+. TD-2's only real duplication is the title — the blurb is two purpose-built strings (doc subtitle vs UI tooltip) that diverge for 15/18 by design, so a title-only sync test is right and doc-header generation was rejected (it would inject generated lines into hand-authored prose for a two-field payoff) | `glossary.md` grew 18→35 and carries a "generated, do not edit" header; a term or a stage title now lives in one place; stage 03 is unblocked |
 | **D-35** | Every stage carries its own "AI plays" section, in both the doc and the app, tuned to that stage's work | Stages 01 and 02 both earned real value from naming where agents help and where they mislead, and the failure modes are stage-specific (discovery: don't seek validation; planning: don't accept a padded plan; architecture, testing, incidents will each differ). Making it a standard per-stage section rather than a one-off means the guidance propagates instead of being reinvented. Generalizes D-34 | Added to the W-3 per-stage checklist and PATTERNS; a per-stage AI-plays tracker lives in `task.md`; the 7-step shape is now the norm for a built stage, not an exception |
 | **D-34** | Stage 02's AI section goes in both the doc and the app, and the stage runs to 7 steps; the doc names stable in-environment tools, not install counts | The user asked for AI content "just like discovery," but chose doc+web where stage 01 is app-only — more complete, at the cost of an asymmetry (TD-15). The 7th "AI plays" step is the first past the 4–6 guideline, so `PATTERNS.md` records it as a recognized addition rather than drift. Install counts and unvetted third-party skill *contents* stay out of canonical prose — they date and I have not audited them — so the doc leans on the mechanism (Subagents/Skill/MCP/Slash command) plus stable tools, with find-skills/skills.sh as the pointer | New per-stage pattern (optional AI step) recorded in PATTERNS; stage 01 doc now lags (TD-15) |
 | **D-33** | Stage 02 teaches value-vs-effort for backlog ordering, named as such, with RICE/ICE/MoSCoW as the heavier alternatives | A cold-reader test showed the stage had no method for ordering the "Next" list, only an anecdote. The user asked specifically for standard, widely-used practice. Research confirmed the impact-effort matrix is the named lightweight standard for small products, and it reuses the stage's own S/M/L sizing rather than inventing a scale. An earlier draft's "pain × frequency" was a homegrown coinage; it survives as the *value* half of value-vs-effort | The Risk/Open-question split is likewise grounded in the RAID vocabulary rather than invented; a 5th reference (Atlassian prioritization) points readers to the fuller frameworks |
@@ -125,24 +126,27 @@ Ordered by cost of leaving it. Each names where it lives and what closes it.
 Resolved in ESLint's favour (D-22): Prettier added, Lefthook added, `stack.md` and
 doc 04 amended, Biome documented as the non-Next alternative.
 
-### TD-2 — Stage metadata duplicated · **High**
+### TD-2 — Stage metadata duplicated · **Closed 2026-07-27**
 
-Titles, blurbs, groups and cadence exist in both `docs/NN-*.md` and
-`web/src/lib/stages.ts`. Editing one does not update the other, and nothing
-detects the drift.
+~~Titles, blurbs, groups and cadence exist in both `docs/NN-*.md` and
+`web/src/lib/stages.ts`, with nothing detecting the drift.~~ Closed, and narrowed on
+inspection (D-36). Only the **title** is genuine duplication (identical across all 18);
+`group`/`cadence`/`ready` are app-only, and the **blurb** turned out to be two
+purpose-built strings — the doc's `>` subtitle vs `stages.ts`'s UI-tooltip `blurb` (its own
+comment says so) — which diverge for 15 of 18 stages by design, like `timing` vs `cadence`.
+`stage-metadata.test.ts` asserts each doc's H1 title equals `stages.ts` for all 18;
+renaming one side without the other now fails a test. Detection, not generation — the docs
+stay hand-written.
 
-**Closes with:** either parse frontmatter from the markdown at build time, or
-declare `stages.ts` canonical and generate doc headers from it. Decide before
-W-3 multiplies the problem by seventeen.
+### TD-3 — Glossary duplicated · **Closed 2026-07-27**
 
-### TD-3 — Glossary duplicated · **High**
-
-`reference/glossary.md` holds 17 terms; `web/src/lib/terms.ts` holds 10 with a
-richer shape (`short` / `full` / `soWhat`). They already disagree.
-
-This scales badly: eighteen stages will need a few hundred entries.
-**Closes with:** pick one source. The richer shape is the better one, so the
-likely answer is to generate the markdown glossary from `terms.ts`.
+~~`reference/glossary.md` and `web/src/lib/terms.ts` held two glossaries with different
+coverage, shape, and audience, and could silently diverge.~~ Closed (D-36):
+`terms.ts` is now canonical (the richer `{name, short, full, soWhat, see}` shape), the 16
+doc-only architecture/ops terms migrated in, and `reference/glossary.md` is generated from
+it as a vitest file snapshot (`renderGlossary()` + `toMatchFileSnapshot`, regenerated with
+`pnpm gen:glossary`). The glossary grew 18→35 by design; a term now lives in exactly one
+place, and drift fails a test.
 
 ### TD-4 — No tests · **Closed 2026-07-23**
 
