@@ -27,9 +27,14 @@ in a plain editor and on GitHub.
 **`web/`** — a Next.js 16 static site that turns those documents into something you
 consult rather than read. No backend, no database, no env vars.
 
-The web app does **not** read the markdown. Content is hand-ported into React
-components. This duplication is known and tracked (`docs/tracker.md` TD-2, TD-3) —
-do not "fix" it casually, but do not widen it without noting it either.
+The web app does **not** read the markdown. The interactive stage *content* is
+hand-ported into React components — known duplication, do not "fix" it casually, but do
+not widen it without noting it either.
+
+Two pieces that used to be hand-ported are now single-sourced (D-36): the **glossary**
+lives in `web/src/lib/terms.ts` and `reference/glossary.md` is generated from it (run
+`pnpm gen:glossary`; never hand-edit the markdown), and stage **titles** are guarded by a
+sync test against `stages.ts`. A term or a stage title now lives in exactly one place.
 
 ## The claim the structure rests on
 

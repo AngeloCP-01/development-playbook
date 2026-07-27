@@ -26,7 +26,7 @@ stage you are standing in, read it, and get back to work.
 | Shipped, deciding what's next | [18 — Continuous Improvement](docs/18-continuous-improvement.md) |
 
 **"What tools does this assume?"** → [reference/stack.md](reference/stack.md)
-**"What does that word mean?"** → [reference/glossary.md](reference/glossary.md)
+**"What does that word mean?"** → [reference/glossary.md](reference/glossary.md) (generated from `web/src/lib/terms.ts`)
 
 ---
 
