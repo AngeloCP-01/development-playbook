@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, X } from 'lucide-react'
+import { Check, RotateCcw, X } from 'lucide-react'
 import { Card } from '@/components/ui'
 
 /**
@@ -46,6 +46,7 @@ export function DoneStatement() {
 
   const pick = (i: number) => setPicked((prev) => (prev === null ? i : prev))
   const done = picked !== null
+  const reset = () => setPicked(null)
   const gotIt = done && CANDIDATES[picked].checkable
 
   return (
@@ -131,6 +132,15 @@ export function DoneStatement() {
                 </li>
               ))}
             </ul>
+
+            <button
+              type="button"
+              onClick={reset}
+              className="flex min-h-11 items-center gap-1.5 border border-line px-3 text-xs text-muted transition-colors duration-150 hover:bg-sunken hover:text-fg lg:min-h-9"
+            >
+              <RotateCcw className="size-3.5" aria-hidden />
+              Try again
+            </button>
           </div>
         )}
       </div>
