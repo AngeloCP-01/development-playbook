@@ -225,15 +225,13 @@ hypothetical.
 **Closes with:** derive `PAGES` from `STAGES.filter(s => s.ready)` crossed with each
 stage's step ids, so the sweep tracks the ready set automatically.
 
-### TD-15 — Stage 01's doc has no AI content; stage 02's now does · **Low**
+### TD-15 — Stage 01's doc has no AI content; stage 02's now does · **Closed 2026-07-27**
 
-Stage 02's markdown doc gained an `### AI in planning` subsection (D-34), but stage 01's
-"AI plays" still lives only in the web app — `docs/01-product-discovery.md` has no AI
-content. The two docs now diverge on whether AI belongs in the canonical prose. Same class
-as TD-13 (the team-section asymmetry): a convention that must be one thing or the other.
-
-**Closes with:** give `docs/01-product-discovery.md` an AI subsection mirroring its
-`AIWorkflow` component, so both "Before code" stages carry AI in the doc, not just the app.
+~~Stage 02's markdown doc gained an `### AI in planning` subsection (D-34), but stage 01's
+"AI plays" still lived only in the web app.~~ Closed: `docs/01-product-discovery.md` now
+carries a `### AI in discovery` subsection porting its `AIWorkflow` plays to prose, so both
+built stages carry AI in the doc as well as the app. Consistent with D-35 (AI plays is a
+standard per-stage section).
 
 ### TD-14 — Stage 02 exercise cards render at two different widths · **Low**
 

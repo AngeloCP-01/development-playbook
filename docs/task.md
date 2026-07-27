@@ -155,7 +155,7 @@ plan"; architecture's, testing's and so on will each have their own). Status:
 
 | Stage | Doc | App | Notes |
 |---|---|---|---|
-| 01 Product Discovery | ☐ | ☑ | App-only; doc subsection owed — **TD-15** |
+| 01 Product Discovery | ☑ | ☑ | Doc `### AI in discovery` backfilled; TD-15 closed |
 | 02 Product Planning | ☑ | ☑ | Done: 7th step + `### AI in planning` |
 | 03–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
 

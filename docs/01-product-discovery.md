@@ -111,6 +111,43 @@ worth running manually for a month before writing a line of code.
 **Fake the front door.** A landing page describing the product with a signup form. Costs
 an afternoon. Measures actual interest instead of politeness.
 
+### AI in discovery
+
+An LLM will help you justify almost anything. Ask "is this a good idea?" and you get a
+balanced-sounding yes — the leading-question problem from your interviews, except this
+witness never tires of agreeing. So point it at evidence and at refutation, never at
+validation.
+
+Where it earns its place:
+
+- **Tear down competitors in parallel** (subagents). One agent per competitor, each
+  returning the same fixed shape — pricing, segment, what it refuses to do — so the results
+  compare instead of piling up as prose. Eight sites read serially is an afternoon; this is
+  minutes.
+- **Mine complaints at scale** (subagents). Send agents at Reddit, review sites, app
+  stores and forums, because each surfaces a different population. Demand verbatim quotes;
+  the moment it paraphrases you lose the vocabulary you need for interviews and copy.
+- **Synthesize interviews** (a skill). After five or more conversations, cluster by
+  problem rather than by person, keep the quotes, and separate what was observed from what
+  was inferred. Encoding it as a skill means every synthesis runs the same way.
+- **Pull real usage data** (an MCP). For a feature in an existing product, an MCP server on
+  your database or analytics turns "I think people struggle here" into a number. A brand-new
+  product has no data, which is exactly why the cheaper rungs exist.
+- **Check what you already decided** (memory). `claude-mem` answers "did I already research
+  or reject this?" The most expensive discovery is the kind you do twice, and the second
+  pass rarely remembers why the first said no.
+- **Red-team your own idea** (a saved command). The highest-value play: point it at the
+  one-pager and have it argue *against* building, naming which claims rest on what people
+  said rather than did. Run it before you write a line of code.
+
+Named tools, so this is actionable: `dispatching-parallel-agents` from the Superpowers
+plugin for the fan-outs; `claude-mem` and a database or analytics MCP as servers; and
+`find-skills` (skills.sh) for research and synthesis skills.
+
+What none of this replaces: talking to people — an agent can find complaints but cannot
+hear the pause before an answer; judging severity honestly, the call the whole stage turns
+on; and the nerve to stop, which never reads as helpful to a model built to help.
+
 ### Write it down
 
 One page, no more:
