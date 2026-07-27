@@ -169,6 +169,137 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'Discovery tests whether anyone wants it; this tests whether you can make it. They fail differently and at different costs, so finding feasibility problems late is the more expensive of the two.',
   },
+  adr: {
+    name: 'ADR (Architecture Decision Record)',
+    short:
+      'A short document capturing one decision: context, choice, consequences.',
+    full: 'A short record of a single architecture decision — the context, the choice, and the consequences — written when the decision is made and never edited afterward. Superseded by a new ADR rather than revised.',
+    soWhat:
+      'The value is the record of what was believed at the time. Months later, "why did we do it this way?" has an answer instead of a reconstruction.',
+    see: '03-architecture',
+  },
+  'blast-radius': {
+    name: 'Blast radius',
+    short: 'How much breaks when this breaks.',
+    full: 'The reach of a change or a failure: how much of the system is affected when this one piece goes wrong.',
+    soWhat:
+      'It sets how carefully you ship. A small blast radius can go out casually; a large one needs a gate, a canary, and a rollback plan.',
+    see: '03-architecture',
+  },
+  canary: {
+    name: 'Canary',
+    short: 'Releasing to a small fraction of traffic before everyone.',
+    full: 'Releasing a change to a small slice of traffic first, watching it, then widening. On Vercel it is approximated with skew protection and staged rollouts rather than true traffic splitting.',
+    soWhat:
+      'It turns a deploy into an experiment with an escape hatch: a failure shows up on 1% of users, not 100%.',
+    see: '13-production-deployment',
+  },
+  'definition-of-done': {
+    name: 'Definition of done',
+    short:
+      'The checkable state that separates "works on my machine" from "this stage is complete."',
+    full: 'A specific, checkable statement of what "done" means for a piece of work — a state you can hold the running product up against and confirm, yes or no. Every stage doc has one.',
+    soWhat:
+      'Without it, "done" is an opinion and scope stays arguable forever. With it, a feature request has a boundary to be judged against.',
+  },
+  'error-budget': {
+    name: 'Error budget',
+    short: 'The amount of failure you have decided is acceptable in a period.',
+    full: 'The failure you have decided is acceptable over a window. A 99.9% uptime target is roughly a 43-minute monthly budget. Spending it is allowed — that is what a budget is for; exceeding it means stop shipping features and fix reliability.',
+    soWhat:
+      'It turns "is it reliable enough?" from an argument into arithmetic, and gives the feature-versus-reliability call a rule instead of a mood.',
+    see: '15-observability',
+  },
+  'golden-signals': {
+    name: 'Golden signals',
+    short:
+      'Latency, traffic, errors, saturation — the four things to instrument first.',
+    full: 'The four measurements to instrument before any others: latency, traffic, errors, and saturation. If you watch only four things, watch these.',
+    soWhat:
+      'They cover most of what actually pages you, so you get the bulk of observability value for a small, fixed amount of instrumentation.',
+    see: '15-observability',
+  },
+  'merge-gate': {
+    name: 'Merge gate',
+    short: 'The automated checks that must pass before code reaches main.',
+    full: 'The set of automated checks that must pass before code merges to the main branch. Distinct from deployment: the gate protects the branch, the deploy ships it.',
+    soWhat:
+      'It is where "works on my machine" stops being anyone’s problem. Added late it is a fight; wired on day one it is invisible.',
+    see: '11-ci-cd',
+  },
+  'phantom-dependency': {
+    name: 'Phantom dependency',
+    short: 'A package you import but never declared, working only by accident.',
+    full: 'A package your code imports but never listed in package.json. It resolves only because some other dependency happened to pull it into a flat node_modules, and it breaks mysteriously when that package updates or drops it.',
+    soWhat:
+      'It is why this playbook picks pnpm: the strict layout makes a phantom import fail on your machine today instead of in CI next month.',
+    see: '04-project-setup',
+  },
+  'preview-deployment': {
+    name: 'Preview deployment',
+    short: 'A full, isolated deployment of a branch, with its own URL.',
+    full: 'A complete, isolated deployment of a single branch at its own URL — automatic per pull request on Vercel. Not the same as staging.',
+    soWhat:
+      'It lets anyone see the change running as a real build before it merges, which catches what a local dev server cannot.',
+    see: '12-staging',
+  },
+  'production-grade': {
+    name: 'Production-grade',
+    short: 'Someone other than you depends on it working.',
+    full: 'The state where someone other than you depends on the software working. It is about consequences, not scale: ten paying users make software production-grade; ten thousand on a toy do not.',
+    soWhat:
+      'It is the baseline assumption of the whole playbook — solo, but with something real depending on the result — and it is what separates rigor from ceremony.',
+  },
+  rollback: {
+    name: 'Rollback',
+    short: 'Returning production to the previous known-good state.',
+    full: 'Returning production to the last known-good state. On Vercel it is promoting a prior deployment, which takes seconds — but it is not automatic for database migrations, which is why migrations get careful, separate treatment.',
+    soWhat:
+      'A deploy you can undo in seconds is a deploy you can make casually. The asymmetry with database changes is the whole reason migrations are handled apart.',
+    see: '13-production-deployment',
+  },
+  'skew-protection': {
+    name: 'Skew protection',
+    short:
+      'Letting a browser on old client JS still talk to the server after a deploy.',
+    full: 'Ensuring a browser still running the previous client JavaScript can talk to the server after a new deploy. Without it, users mid-session hit errors every time you ship.',
+    soWhat:
+      'It is the difference between deploying whenever you like and only deploying when nobody is using the app.',
+    see: '13-production-deployment',
+  },
+  'smoke-test': {
+    name: 'Smoke test',
+    short:
+      'A small set of checks confirming the critical paths work after a deploy.',
+    full: 'A small set of checks confirming the critical paths still work after a deploy. Not comprehensive by design; it answers "is this catastrophically broken?" in under a minute.',
+    soWhat:
+      'It is the cheapest insurance in shipping: a minute of checks between "deployed" and "walked away" catches the failures that otherwise page you at night.',
+    see: '14-post-deployment-verification',
+  },
+  slo: {
+    name: 'SLO (Service Level Objective)',
+    short:
+      'The reliability target you commit to, e.g. "99.9% of requests succeed."',
+    full: 'The reliability target you commit to — for example, "99.9% of requests succeed." Meaningful only if you have decided in advance what happens when you miss it.',
+    soWhat:
+      'An SLO without a consequence is a wish. Paired with an error budget, it becomes the rule that governs when you ship and when you stop.',
+    see: '15-observability',
+  },
+  traps: {
+    name: 'Traps',
+    short: 'The last section of every stage doc: failure modes worth naming.',
+    full: 'The closing section of every stage doc — the failure modes worth naming. They accumulate from real experience and become the most valuable part of the playbook over time.',
+    soWhat:
+      'Generic advice ages; the specific traps you actually hit do not. Adding to them is what turns a borrowed playbook into your own.',
+  },
+  yagni: {
+    name: 'YAGNI (You Aren’t Gonna Need It)',
+    short:
+      'Do not build for requirements you have imagined rather than encountered.',
+    full: 'You Aren’t Gonna Need It: do not build for requirements you have imagined rather than met. The most common cause of accidental complexity.',
+    soWhat:
+      'Half the advice in this playbook is a specific application of it — the "not now" list, the MVP cut, deferring architecture. When in doubt, do less.',
+  },
 }
 
 export function getTerm(key: string): Term | undefined {
