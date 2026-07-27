@@ -129,10 +129,11 @@ Map of what lands where:
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
-Stage 02 also carries an **"AI plays" step** (7 steps total — the first stage past the
-4–6 guideline, recorded in `PATTERNS.md`), mirroring stage 01's, in both the doc and the
-app. Stage 01's AI content is still app-only; giving its *doc* an AI subsection to match
-is tracked as TD-15.
+**Every stage carries an "AI plays" section** (D-34, D-35): where agents help in that
+stage's work and where they mislead, mirroring stage 01's. It is a dedicated stepper step
+in the app and a `### AI in <stage>` subsection in the doc, and it pushes a stage past the
+4–6 content-step guideline (recorded in `PATTERNS.md`). See the per-stage AI-plays tracker
+below for where each stage stands.
 
 Per stage (checklist ticked for **02 Product Planning**, feat/stage-02-product-planning):
 - [x] Read `web/PATTERNS.md`; pick a pattern per section (prose is the fallback, not the default)
@@ -141,9 +142,22 @@ Per stage (checklist ticked for **02 Product Planning**, feat/stage-02-product-p
 - [x] Build 1–3 interactive exercises where judgement is being taught *(five: done-statement, cut table, slice sequencer, size scorer, horizon triage)*
 - [x] Add glossary terms for jargon that stage introduces *(seven: mvp, product-roadmap, product-vision, appetite, vertical-slice, spike, feasibility-risk)*
 - [x] Add 3–5 references (`src/lib/references.ts`), each stating what it adds *(four, all browser-verified)*
+- [x] **Add an "AI plays" step for this stage's domain** — where agents help, where they mislead — in both the doc (`### AI in <stage>`) and the app; name real skills/MCPs
 - [x] Register in `src/features/stage-content.ts`; flip `ready: true` in `stages.ts`
 - [x] Verify: contrast in both themes, 320–2560px, no console errors *(9/9 audit suite against a production build)*
 - [x] Run `humanizer:humanizer` over the stage's prose *(doc amendment; em-dashes kept as house voice)*
+
+#### AI-plays coverage, per stage
+
+Each stage gets its own "AI plays" section, tuned to that stage's work (discovery's is
+"point it at evidence, not validation"; planning's is "point it at cutting, not a thorough
+plan"; architecture's, testing's and so on will each have their own). Status:
+
+| Stage | Doc | App | Notes |
+|---|---|---|---|
+| 01 Product Discovery | ☐ | ☑ | App-only; doc subsection owed — **TD-15** |
+| 02 Product Planning | ☑ | ☑ | Done: 7th step + `### AI in planning` |
+| 03–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
 
 Suggested order. Revised 2026-07-24 (D-27): the first pass ranked purely by teaching
 value and put 02 fifth. That ignored the reader's journey and the risk of proving the
