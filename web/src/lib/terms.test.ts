@@ -1,6 +1,19 @@
 import { expect, test } from 'vitest'
 import { TERM_VISUALS } from '@/components/term-visuals'
 import { TERMS, getTerm } from './terms'
+import { getStage } from './stages'
+
+test('every term has a non-empty display name, since the glossary is generated from it', () => {
+  for (const [id, t] of Object.entries(TERMS)) {
+    expect(t.name?.trim().length, `${id} has no name`).toBeGreaterThan(0)
+  }
+})
+
+test('every term’s see (when present) is a real stage slug', () => {
+  for (const [id, t] of Object.entries(TERMS)) {
+    if (t.see) expect(getStage(t.see), `${id} see=${t.see}`).toBeDefined()
+  }
+})
 
 test('a known key returns its entry', () => {
   expect(getTerm('opportunity-solution-tree')?.short).toBeTruthy()
