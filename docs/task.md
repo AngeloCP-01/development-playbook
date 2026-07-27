@@ -129,6 +129,11 @@ Map of what lands where:
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
+Stage 02 also carries an **"AI plays" step** (7 steps total — the first stage past the
+4–6 guideline, recorded in `PATTERNS.md`), mirroring stage 01's, in both the doc and the
+app. Stage 01's AI content is still app-only; giving its *doc* an AI subsection to match
+is tracked as TD-15.
+
 Per stage (checklist ticked for **02 Product Planning**, feat/stage-02-product-planning):
 - [x] Read `web/PATTERNS.md`; pick a pattern per section (prose is the fallback, not the default)
 - [x] Group the doc's sections into 4–6 stepper steps *(six: done · cut · sequence · size · write · horizon)*

@@ -46,6 +46,11 @@ Arrow keys move between steps; visited steps get a check. Pass a `Step[]`
 
 Use it for every stage. Group the doc's sections into steps by phase, not by length.
 
+A stage may add one further **"AI plays"** step beyond the 4–6 — the "where agents help
+and where they mislead" pattern from stage 01 — so a stage that carries it, like stage 02,
+runs to 7. The 4–6 governs *content* steps; the AI step is a recognized addition, not
+drift.
+
 ### `Figure` — `src/components/Figure.tsx`
 
 Wraps a diagram with a number and a caption (`{ n, caption }`). Numbers run across the
