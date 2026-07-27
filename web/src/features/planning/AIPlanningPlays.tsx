@@ -100,7 +100,7 @@ Do not add features, phases, or ceremony I did not give you.`,
     name: 'Sort value against effort',
     mechanism: 'Skill',
     when: 'To order the "not now" list once you have more items than you can rank by eye.',
-    how: 'Ask for a value-and-effort score per item, as a starting sort. The caveat is load-bearing: the model has no data on your users’ real pain, so treat its value column as a hypothesis to correct, not a verdict. Community skills exist for this — find-skills surfaces prioritisation-framework skills.',
+    how: 'Ask for a value-and-effort score per item, as a starting sort. The caveat is load-bearing: the model has no data on your users’ real pain, so treat its value column as a hypothesis to correct, not a verdict. Community skills exist for this — find-skills surfaces prioritization-framework skills.',
     prompt: `Here is my "not in v1" list, one per line:
 [paste]
 
@@ -272,7 +272,7 @@ export function AIPlanningPlays() {
             <span>
               <span className="font-medium text-fg">Keeping v1 small.</span>{' '}
               Cutting is the whole skill, and it is the one move a
-              help-maximising assistant will never volunteer.
+              help-maximizing assistant will never volunteer.
             </span>
           </li>
         </ul>

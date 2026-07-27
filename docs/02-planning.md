@@ -167,6 +167,43 @@ That written decision is the handoff. [03 — Architecture](03-architecture.md) 
 directly: a spike settling "can this provider do what we need" is what turns an
 architecture decision from a guess into a choice you can defend later.
 
+### AI in planning
+
+An agent asked to plan will hand you a thorough one: phases, sub-features, a rollout,
+contingencies. That thoroughness is the trap. "The default answer to a feature is no" is a
+discipline the model does not share — it is built to be helpful, and more always reads as
+more helpful. So point it at cutting and at feasibility, never at "write me a good plan."
+
+Where it earns its place:
+
+- **Exhaust the feature list before you cut** (subagents). You can only cut from a
+  complete set, and a model's instinct to over-generate is exactly what you want when
+  building the pile. Ask for the maximal list; apply the outcome test yourself.
+- **Red-team your MVP** (a saved command). Have it argue every feature you marked core
+  could be cut and the outcome still holds. Default framing gives you a yes-man; this one
+  keeps v1 small.
+- **Run the spike** (an MCP, or a sandbox). A spike is a timeboxed feasibility question
+  whose output is a decision. Point an agent at the provider's own docs (context7) or a
+  throwaway experiment in an isolated sandbox (Vercel Sandbox, or a git worktree), timebox
+  it, and take the written decision — the code is discarded.
+- **Draft the one-page plan, then sort the roadmap** (skills). It assembles the artifact
+  from your inputs, if you force it to one page. `writing-plans` (the Superpowers plugin)
+  is the engineering-planning version: a spec becomes a checkbox build plan. For ordering
+  the "not now" list, a value-against-effort score is a starting sort, never the verdict —
+  the model has no data on your users' real pain.
+- **Check what you already planned** (memory). `claude-mem` answers "did I already scope or
+  reject this?" The cheapest planning is the kind you do not repeat.
+
+Named tools, so this is actionable: `writing-plans` and `dispatching-parallel-agents` from
+the Superpowers plugin; `claude-mem` and `context7` as MCP servers; Vercel Sandbox for a
+throwaway experiment. For product-specific skills — prioritization frameworks, roadmap
+templates — `find-skills` (skills.sh) is the catalogue; `deanpeters/product-manager-skills`
+and `phuryn/pm-skills` are two worth a look.
+
+What none of this replaces: deciding what is core, knowing the real pain behind a priority,
+and the nerve to keep v1 small. The model has no stake in being wrong, and cutting is the
+one move a help-maximizing assistant will never volunteer.
+
 ### Write the plan
 
 Short. A plan longer than a page will not be read, including by you.
