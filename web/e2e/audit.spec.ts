@@ -18,6 +18,7 @@ const PAGES = [
   '/stages/02-planning#cut',
   '/stages/02-planning#sequence',
   '/stages/02-planning#size',
+  '/stages/02-planning#ai',
   '/stages/02-planning#write',
   '/stages/02-planning#horizon',
 ]

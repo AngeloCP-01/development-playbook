@@ -17,6 +17,7 @@ import { PlanAnatomy } from './PlanAnatomy'
 import { PlanWorksheet } from './PlanWorksheet'
 import { HorizonBands } from './HorizonBands'
 import { HorizonBoard } from './HorizonBoard'
+import { AIPlanningPlays } from './AIPlanningPlays'
 
 const STEPS: Step[] = [
   {
@@ -234,6 +235,28 @@ const STEPS: Step[] = [
           >
             <SpikeCard />
           </Figure>
+        </Section>
+      </div>
+    ),
+  },
+  {
+    id: 'ai',
+    label: 'AI plays',
+    hint: 'Where agents cut, and where they pad',
+    content: (
+      <div className="space-y-16">
+        <Section eyebrow="Leverage" title="AI in planning">
+          <Prose>
+            <p>
+              An agent is genuinely useful in planning, but not in the way it
+              first offers to be. Asked to plan, it inflates; the plays below
+              turn that instinct around and point it at cutting and at
+              feasibility instead. Each is a prompt you can copy.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <AIPlanningPlays />
+          </div>
         </Section>
       </div>
     ),
