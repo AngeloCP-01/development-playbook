@@ -74,15 +74,15 @@ const FIELDS: Field[] = [
   {
     key: 'risks',
     label: 'Risks',
-    hint: 'Named while they are still cheap to name, with where each gets decided.',
+    hint: 'Something that could go wrong — a sentence about danger. Name it so you can plan a mitigation or a decision-point before it bites.',
     placeholder:
-      'Auth choice affects the data model — decide before slice 4.\nDate/timezone handling for "overdue" is fiddlier than it looks.',
+      'Auth choice affects the data model — decide before slice 4.\n"Overdue" spans timezones, so a naive date check can flag an invoice a day early — confirm with a test.',
     rows: 3,
   },
   {
     key: 'openQuestions',
     label: 'Open questions',
-    hint: 'Listed with a plan to resolve them, not a promise to remember them.',
+    hint: 'A choice you have not made yet — a sentence with a fork in it. Decide it on purpose (spike it if it is a feasibility unknown), not by accident in the code.',
     placeholder:
       'Do overdue calculations use the client’s timezone or the user’s?',
     rows: 2,

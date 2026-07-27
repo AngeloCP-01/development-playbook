@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Callout, Contrast, Prose, Section } from '@/components/ui'
 import { Figure } from '@/components/Figure'
 import { Term } from '@/components/Term'
@@ -33,6 +34,16 @@ const STEPS: Step[] = [
               already decided to build, and now you decide what
               &ldquo;built&rdquo; means, what is in v1, in what order, and where
               it goes next.
+            </p>
+            <p>
+              It assumes you know the thing is worth building, which is the job
+              of{' '}
+              <Link href="/stages/01-product-discovery" className="text-brand">
+                01 — Product Discovery
+              </Link>
+              . If you have not been through discovery, do that first: planning
+              what to build before you know whether it should be built is
+              planning in the dark.
             </p>
           </Prose>
           <Figure
@@ -73,11 +84,20 @@ const STEPS: Step[] = [
           <Prose>
             <p>
               List every feature you can imagine, then ask of each one:{' '}
-              <em>does the definition of done fail without this?</em> Most
-              features fail that test. What survives is your{' '}
+              <em>does the outcome fail without this?</em> Most features fail
+              that test. What survives is your{' '}
               <Term id="mvp">minimum viable product</Term> — the smallest thing
               that delivers the outcome, not version one with the hard parts
               removed.
+            </p>
+            <p>
+              Read the test as the <em>outcome</em>, not the sentence. Plenty of
+              necessary features are not spelled out in a one-line
+              &ldquo;done&rdquo; — &ldquo;edit an invoice&rdquo; is not, but an
+              invoice you cannot correct makes &ldquo;see which are
+              overdue&rdquo; wrong the moment a detail changes, so it fails the
+              outcome even though it fails no word of the sentence. Ask whether
+              a real user could get the result they came for without it.
             </p>
             <p>
               Judge each feature before the verdict shows. Guessing is the
@@ -262,6 +282,18 @@ const STEPS: Step[] = [
               way in on evidence, Later is the{' '}
               <Term id="product-vision">product vision</Term> you are building
               toward.
+            </p>
+            <p>
+              &ldquo;Priority order&rdquo; for the Next list needs a method, or
+              it becomes whatever you feel like building. The lightweight one,
+              right for a small product, is{' '}
+              <strong>value against effort</strong>: value is how much pain an
+              item removes times how often that pain is felt — count the hurt,
+              not the votes — and effort is the S/M/L you already assigned.
+              Cheap and high-value goes first; expensive and low-value may never
+              get built. RICE, ICE and MoSCoW are the heavier, named versions of
+              the same idea, for once you have real usage data and more items
+              than you can hold in your head.
             </p>
           </Prose>
           <Figure

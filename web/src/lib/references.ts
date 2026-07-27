@@ -72,6 +72,12 @@ export const REFERENCES: Record<string, Reference[]> = {
       url: 'https://www.svpg.com/dual-track-agile/',
       adds: 'Why there is no planning phase between deciding and building — discovery and delivery run in parallel, continuously. The clearest statement of why the number on this document is a filing code rather than a position in a queue.',
     },
+    {
+      title: 'Prioritization frameworks',
+      source: 'Atlassian',
+      url: 'https://www.atlassian.com/agile/product-management/prioritization-framework',
+      adds: 'The next step up from the value-against-effort method this stage teaches: RICE, ICE, MoSCoW and the rest, with when each earns its extra ceremony. Reach for it once you have real usage data and more items than value-vs-effort can order by eye.',
+    },
   ],
 }
 

@@ -11,8 +11,16 @@ is often.
 
 ## Entry criteria
 
+This stage plans what to build. It assumes you already know the thing is worth building —
+which is the job of [01 — Product Discovery](01-product-discovery.md). If you have not
+been through discovery, do that first. Planning what to build before you know whether it
+should be built is planning in the dark, and no amount of good planning fixes a problem
+nobody has.
+
+You are ready to plan when you have discovery's output:
+
 - [ ] A written problem statement with a real audience ([01](01-product-discovery.md))
-- [ ] An honest severity assessment
+- [ ] An honest severity assessment — how much the problem actually hurts ([01](01-product-discovery.md))
 - [ ] A decision to actually build this
 
 ---
@@ -52,8 +60,16 @@ enthusiasm.
 
 ### Cut to the core
 
-List every feature you can imagine. Then, for each one, ask: **does the definition of
-done fail without this?**
+List every feature you can imagine. Then, for each one, ask: **does the outcome fail
+without this?**
+
+Read that as the outcome, not the sentence. The definition of done is a short line, and
+plenty of necessary features are not spelled out in it — "edit an invoice" is nowhere in
+the example above, but an invoice you cannot correct makes "see which are overdue" wrong
+the moment a client's details change, so it fails the outcome even though it fails no
+word of the sentence. The test is about the state you are trying to reach, not the wording
+you happened to use. When in doubt, ask whether a real user could get the result they came
+for without it.
 
 Most features fail that test. For an invoice tracker:
 
@@ -175,11 +191,27 @@ recurring invoices, expenses.
 ## Risks
 - Auth choice affects the data model → decide in [03](03-architecture.md)
   before slice 4
-- Date/timezone handling for "overdue" is fiddlier than it looks
+- "Overdue" spans timezones, so a naive date comparison can mark an invoice
+  overdue a day early → confirm with a test before slice 3 ships
 
 ## Open questions
 - Do overdue calculations use the client's timezone or the user's?
 ```
+
+**Risks and open questions are not the same list**, and the difference decides what you do
+about each. A **risk** is something that could go wrong — you name it so you can plan a
+mitigation or a decision-point before it bites. An **open question** is a choice you have
+not made yet but will have to — you name it so it is decided on purpose rather than by
+accident. A rough test: a risk is a sentence about *danger* ("this could break"); an open
+question is a sentence with a *fork* in it ("do we do A or B?"). The timezone example is
+both, because most real unknowns have a danger side and a decision side — file the danger
+under Risks and the decision under Open questions, as above.
+
+Resolving an open question has exactly two moves. If it is a *feasibility* question — can
+this be built at all — spike it (next section). If it is a *choice* — which of two
+workable options — just make the decision and write it down, or set the trigger that will
+make it for you ("decide once a paying user actually needs multi-currency"). What you do
+not do is leave it to be discovered in the code.
 
 The "Not in v1" list is the part that does actual work over the following weeks.
 
@@ -192,9 +224,26 @@ Three horizons, and no dates.
 
 **Now** is the MVP: whatever the cut left standing.
 
-**Next** is what earns its way in. It is the "not now" list in priority order, and each
-item waits on evidence rather than on a date. When three people ask for it. When a client's
-volume makes it necessary.
+**Next** is what earns its way in, in priority order. "Priority order" needs a method, or
+it collapses into whatever you feel like building. The lightweight one, and the right one
+for a small product, is **value against effort**: for each item, weigh how much it is
+worth against how much it costs.
+
+- **Value** is how much pain it removes times how often that pain is felt. A thing that
+  badly blocks even one core user beats a mild convenience a dozen people mention in
+  passing. Count the hurt, not the votes — "three people asked" is a weak signal on its
+  own, because the loudest request is rarely the most painful problem.
+- **Effort** is the size you already gave it — the S / M / L from the sizing step.
+
+Order by the best value for the least effort: the cheap, high-value items go first, the
+expensive low-value ones may never get built at all. This is the *impact-effort matrix*,
+the plainest of a family of prioritization methods you will meet by name — RICE, ICE and
+MoSCoW are the heavier, more formal versions, useful once you have real usage data and
+more items than you can hold in your head. Solo, at this size, value against effort is
+enough.
+
+Each item still waits on *evidence* rather than a date: you move it up when real usage
+shows the pain is real, not when the calendar says so.
 
 **Later** is the product you are actually building toward, written as a paragraph rather
 than a feature list. Without it, nothing in "Next" has anything to be judged against.
