@@ -48,7 +48,7 @@ Use it for every stage. Group the doc's sections into steps by phase, not by len
 
 Every stage carries one further **"AI plays"** step beyond the 4–6 — the "where agents help
 and where they mislead" pattern from stage 01, tuned to that stage's work — so a built
-stage runs to 7 (stage 02 is the reference). The 4–6 governs *content* steps; the AI step
+stage runs to 7 (stage 02 is the reference). The 4–6 governs _content_ steps; the AI step
 is standard, not drift (D-35). It also appears in the doc as an `### AI in <stage>`
 subsection inside "The work".
 

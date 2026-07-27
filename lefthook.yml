@@ -5,7 +5,7 @@ pre-commit:
   commands:
     format:
       root: 'web/'
-      glob: '*.{ts,tsx,mjs,css,json}'
+      glob: '*.{ts,tsx,mjs,css,json,md}'
       run: pnpm exec prettier --write {staged_files}
       stage_fixed: true
     lint:
