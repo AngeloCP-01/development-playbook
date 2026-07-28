@@ -300,6 +300,65 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'Half the advice in this playbook is a specific application of it — the "not now" list, the MVP cut, deferring architecture. When in doubt, do less.',
   },
+  'domain-model': {
+    name: 'Domain model',
+    see: '03-architecture',
+    short:
+      'The nouns your system holds and how they relate, before any table exists.',
+    full: 'A description of the system in entities and relationships — a user has many clients, a client has many invoices — written in the language of the problem rather than the language of the database. Tables come after, as one way of storing it.',
+    soWhat:
+      'It is the decision that outlives every framework choice, because migrating code is easy and migrating data is not. Getting it wrong is the most expensive kind of wrong available before you have users.',
+  },
+  'derived-state': {
+    name: 'Derived state',
+    see: '03-architecture',
+    short:
+      'A value that could be calculated from others, but is stored anyway.',
+    full: 'Anything you could work out on demand — whether an invoice is overdue, how many items are in a cart, a running total — that is written into a column instead. Storing it means something has to keep it up to date.',
+    soWhat:
+      'Stored derived state drifts. The job that updates it misses a run, or a script writes around it, and now two fields in your database disagree about the same fact with no way to tell which is right.',
+  },
+  'soft-delete': {
+    name: 'Soft delete',
+    see: '03-architecture',
+    short: 'Marking a row deleted instead of removing it.',
+    full: 'A deleted_at timestamp or a boolean flag, set instead of issuing a DELETE. The row stays; every query that should not see it has to filter it out.',
+    soWhat:
+      'It is the trade the stage asks you to make deliberately: a permanently more complex query set, in exchange for being able to answer “where did that invoice go”. For financial or audited records, the complexity is usually worth it, and the decision cannot be revisited after the rows are gone.',
+  },
+  'join-table': {
+    name: 'Join table',
+    see: '03-architecture',
+    short: 'A table whose job is to connect two other tables.',
+    full: 'When a client can belong to several users and a user to several clients, neither table can hold the relationship in a column. A third table holds pairs of ids instead — one row per connection.',
+    soWhat:
+      'Starting with a foreign key and discovering later that you needed a join table is a migration plus a rewrite of every query that touched the relationship. The asymmetry is the reason to think about it now rather than when it bites.',
+  },
+  monolith: {
+    name: 'Monolith',
+    see: '03-architecture',
+    short: 'One application, one deployment, one process.',
+    full: 'A system where all the code runs together rather than being split across services that talk over a network. Internal structure can still be strict; the distinction is about deployment and process boundaries, not tidiness.',
+    soWhat:
+      'For one developer it is the correct default rather than a compromise. The benefits of splitting — independent deploys, independent team scaling — are organisational, and you cannot collect them alone, but you pay every cost from day one.',
+  },
+  authorization: {
+    name: 'Authorization',
+    see: '03-architecture',
+    short: 'Deciding what a known user is allowed to do.',
+    full: 'The check that this particular record belongs to this particular caller. Distinct from authentication, which establishes who the caller is: authentication gets you a user id, authorization decides whether that user id may read invoice 42.',
+    soWhat:
+      'Authentication is the part people buy or borrow and mostly get right. Authorization is the part written by hand in every route, and the part that leaks other people’s data when one route forgets it.',
+  },
+  'database-constraint': {
+    name: 'Database constraint',
+    see: '03-architecture',
+    short:
+      'A rule the database enforces itself, regardless of what the code does.',
+    full: 'NOT NULL, UNIQUE, CHECK, and foreign keys with their delete behaviour. Declared in the schema, so the database refuses to store a row that breaks them.',
+    soWhat:
+      'Application code has bugs, gets bypassed by migration scripts and one-off fixes, and races with itself under concurrency. The database does not get bypassed, which makes it the only place a rule genuinely holds.',
+  },
 }
 
 export function getTerm(key: string): Term | undefined {

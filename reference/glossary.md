@@ -13,13 +13,21 @@ drift apart.
 
 **Appetite** — A fixed budget of time you are willing to spend, which the solution is then shaped to fit. An estimate starts with a design and ends with a number; an appetite starts with a number and ends with a design. See [02 — Product Planning](../docs/02-planning.md).
 
+**Authorization** — The check that this particular record belongs to this particular caller. Distinct from authentication, which establishes who the caller is: authentication gets you a user id, authorization decides whether that user id may read invoice 42. See [03 — Architecture](../docs/03-architecture.md).
+
 **Blast radius** — The reach of a change or a failure: how much of the system is affected when this one piece goes wrong. See [03 — Architecture](../docs/03-architecture.md).
 
 **Canary** — Releasing a change to a small slice of traffic first, watching it, then widening. On Vercel it is approximated with skew protection and staged rollouts rather than true traffic splitting. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **Concierge test** — You do the work manually for a handful of real users — spreadsheets, emails, your own labour — while they experience the result as if it were a product.
 
+**Database constraint** — NOT NULL, UNIQUE, CHECK, and foreign keys with their delete behaviour. Declared in the schema, so the database refuses to store a row that breaks them. See [03 — Architecture](../docs/03-architecture.md).
+
 **Definition of done** — A specific, checkable statement of what "done" means for a piece of work — a state you can hold the running product up against and confirm, yes or no. Every stage doc has one.
+
+**Derived state** — Anything you could work out on demand — whether an invoice is overdue, how many items are in a cart, a running total — that is written into a column instead. Storing it means something has to keep it up to date. See [03 — Architecture](../docs/03-architecture.md).
+
+**Domain model** — A description of the system in entities and relationships — a user has many clients, a client has many invoices — written in the language of the problem rather than the language of the database. Tables come after, as one way of storing it. See [03 — Architecture](../docs/03-architecture.md).
 
 **Error budget** — The failure you have decided is acceptable over a window. A 99.9% uptime target is roughly a 43-minute monthly budget. Spending it is allowed — that is what a budget is for; exceeding it means stop shipping features and fix reliability. See [15 — Observability](../docs/15-observability.md).
 
@@ -31,9 +39,13 @@ drift apart.
 
 **Jobs to be done (JTBD)** — A framing that describes users by the job they are "hiring" a product to do — "help me look organised to my clients" — rather than by who they are. Two people with nothing demographically in common can share a job.
 
+**Join table** — When a client can belong to several users and a user to several clients, neither table can hold the relationship in a column. A third table holds pairs of ids instead — one row per connection. See [03 — Architecture](../docs/03-architecture.md).
+
 **Leading question** — "Would this save you time?" contains its own answer. The polite response is yes, it costs the respondent nothing, and you learn only that they are agreeable.
 
 **Merge gate** — The set of automated checks that must pass before code merges to the main branch. Distinct from deployment: the gate protects the branch, the deploy ships it. See [11 — CI/CD](../docs/11-ci-cd.md).
+
+**Monolith** — A system where all the code runs together rather than being split across services that talk over a network. Internal structure can still be strict; the distinction is about deployment and process boundaries, not tidiness. See [03 — Architecture](../docs/03-architecture.md).
 
 **MVP (Minimum Viable Product)** — Minimum viable product: the least you can build that still achieves the result you wrote down, so that real usage can tell you what to build next. It is defined by the outcome, not by a feature count. See [02 — Product Planning](../docs/02-planning.md).
 
@@ -64,6 +76,8 @@ drift apart.
 **SLO (Service Level Objective)** — The reliability target you commit to — for example, "99.9% of requests succeed." Meaningful only if you have decided in advance what happens when you miss it. See [15 — Observability](../docs/15-observability.md).
 
 **Smoke test** — A small set of checks confirming the critical paths still work after a deploy. Not comprehensive by design; it answers "is this catastrophically broken?" in under a minute. See [14 — Post-Deployment Verification](../docs/14-post-deployment-verification.md).
+
+**Soft delete** — A deleted_at timestamp or a boolean flag, set instead of issuing a DELETE. The row stays; every query that should not see it has to filter it out. See [03 — Architecture](../docs/03-architecture.md).
 
 **Spike** — A short, deliberately bounded piece of exploration answering one specific question — can this integration do what we need, is this approach fast enough — with a hard stop and a written answer. See [02 — Product Planning](../docs/02-planning.md).
 
