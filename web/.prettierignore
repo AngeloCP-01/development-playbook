@@ -1,3 +1,8 @@
 .next
 node_modules
 pnpm-lock.yaml
+
+# Markdown is documentation, not code — Prettier's prose/emphasis rules are
+# opinionated formatting, not correctness, so it is deliberately not checked.
+# (reference/glossary.md is also generated and must not be reformatted.)
+*.md
