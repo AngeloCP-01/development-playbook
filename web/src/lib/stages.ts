@@ -47,7 +47,7 @@ export const STAGES: Stage[] = [
       'Make the decisions that are expensive to reverse. Defer everything else.',
     group: 'Before code',
     timing: 'After planning, before project setup.',
-    ready: false,
+    ready: true,
   },
   {
     num: '04',

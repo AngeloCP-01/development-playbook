@@ -21,6 +21,12 @@ const PAGES = [
   '/stages/02-planning#ai',
   '/stages/02-planning#write',
   '/stages/02-planning#horizon',
+  '/stages/03-architecture#reverse',
+  '/stages/03-architecture#model',
+  '/stages/03-architecture#constrain',
+  '/stages/03-architecture#shape',
+  '/stages/03-architecture#decide',
+  '/stages/03-architecture#ai',
 ]
 
 const WIDTHS = [320, 768, 1024, 1440, 2560]
@@ -213,4 +219,42 @@ test('zero console errors across every page and step', async ({ browser }) => {
   }
   await context.close()
   expect(errors, errors.join('\n')).toEqual([])
+})
+
+// ── stage 03: the reasoning survives a wrong answer ────────────────────────
+
+/**
+ * `judgeInterrogation` returns `why` on both correct and incorrect answers, and
+ * `scoring.test.ts` holds it to that at the module level. Nothing held
+ * `ModelInterrogation` to actually rendering it, so gating the paragraph on
+ * `correct` would pass lint, typecheck, every unit test and the rest of this
+ * suite — while quietly hiding the lesson from exactly the readers who needed
+ * it. This is the assertion that notices.
+ */
+test('the interrogation still explains itself after a wrong answer, since the reasoning is the lesson and not the reward', async ({
+  page,
+}) => {
+  await page.goto('/stages/03-architecture#model', { waitUntil: 'networkidle' })
+
+  const row = page.locator('li').filter({
+    has: page.getByRole('radiogroup', {
+      name: /a status, or a computed value/,
+    }),
+  })
+
+  await row
+    .getByRole('radio', { name: 'A stored status, updated when it changes' })
+    .click()
+
+  await expect(row.getByText('Not quite')).toBeVisible()
+
+  // Two paragraphs in the verdict block: the headline, then the reasoning.
+  // Gating the reasoning on `correct` leaves one, which is the regression.
+  const paragraphs = row.locator('[aria-live="polite"] p')
+  await expect(paragraphs).toHaveCount(2)
+
+  const why = paragraphs.last()
+  await expect(why).toBeVisible()
+  await expect(why).not.toContainText('Not quite')
+  expect((await why.innerText()).trim().length).toBeGreaterThan(80)
 })
