@@ -1,5 +1,10 @@
 import { expect, test } from 'vitest'
-import { DECISIONS, scoreReversibility } from './scoring'
+import {
+  DECISIONS,
+  INTERROGATIONS,
+  judgeInterrogation,
+  scoreReversibility,
+} from './scoring'
 
 test('the table carries six decisions, matching the exercise the stage describes', () => {
   expect(DECISIONS).toHaveLength(6)
@@ -65,4 +70,71 @@ test('unknown ids are ignored rather than counted, so stale answers cannot infla
 
 test('an empty run scores zero rather than dividing by nothing', () => {
   expect(scoreReversibility({})).toEqual({ answered: 0, correct: 0 })
+})
+
+test('four questions, matching the four the doc asks of a domain model', () => {
+  expect(INTERROGATIONS).toHaveLength(4)
+})
+
+test('every question offers exactly two options, because a third would be padding', () => {
+  for (const q of INTERROGATIONS) {
+    expect(q.options, `${q.id} option count`).toHaveLength(2)
+  }
+})
+
+test('every question’s answer is one of its own options, so the right answer is reachable', () => {
+  for (const q of INTERROGATIONS) {
+    expect(
+      q.options.map((o) => o.id),
+      `${q.id} answer not in options`,
+    ).toContain(q.answer)
+  }
+})
+
+test('option ids are unique within a question, since a choice is keyed by id', () => {
+  for (const q of INTERROGATIONS) {
+    expect(new Set(q.options.map((o) => o.id)).size).toBe(q.options.length)
+  }
+})
+
+test('question ids are unique across the set', () => {
+  expect(new Set(INTERROGATIONS.map((q) => q.id)).size).toBe(
+    INTERROGATIONS.length,
+  )
+})
+
+test('overdue is computed rather than stored, which is the stage’s named trap', () => {
+  const verdict = judgeInterrogation('overdue-status', 'computed')
+  expect(verdict.correct).toBe(true)
+  expect(verdict.why).toMatch(/drift|disagree/i)
+})
+
+test('storing overdue is judged wrong, and the reason names what breaks', () => {
+  const verdict = judgeInterrogation('overdue-status', 'stored')
+  expect(verdict.correct).toBe(false)
+  expect(verdict.why.trim().length).toBeGreaterThan(0)
+})
+
+test('a wrong answer gets the same explanation as a right one, because the lesson is the reasoning', () => {
+  // Not a formatting detail: an exercise that explains itself only when you are
+  // right teaches the readers who least need it.
+  for (const q of INTERROGATIONS) {
+    const wrong = q.options.find((o) => o.id !== q.answer)
+    expect(wrong, `${q.id} has no wrong option`).toBeDefined()
+    const verdict = judgeInterrogation(q.id, wrong!.id)
+    expect(
+      verdict.why.trim().length,
+      `${q.id} wrong answer why`,
+    ).toBeGreaterThan(0)
+  }
+})
+
+test('an unknown question id is judged incorrect rather than throwing, since this runs in render', () => {
+  const verdict = judgeInterrogation('not-a-question', 'computed')
+  expect(verdict.correct).toBe(false)
+  expect(verdict.why.trim().length).toBeGreaterThan(0)
+})
+
+test('an unknown option on a real question is judged incorrect', () => {
+  expect(judgeInterrogation('overdue-status', 'neither').correct).toBe(false)
 })

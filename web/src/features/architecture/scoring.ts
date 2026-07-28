@@ -84,3 +84,76 @@ export function scoreReversibility(answers: Record<string, boolean>): {
   }
   return { answered, correct }
 }
+
+export type InterrogationOption = {
+  id: string
+  label: string
+}
+
+export type Interrogation = {
+  id: string
+  /** The question, phrased as the doc phrases it. */
+  question: string
+  options: InterrogationOption[]
+  /** The id of the defensible answer. */
+  answer: string
+  /** Shown whichever way the reader answered. The reasoning is the lesson. */
+  why: string
+}
+
+/** Source: docs/03-architecture.md:58-76. */
+export const INTERROGATIONS: Interrogation[] = [
+  {
+    id: 'overdue-status',
+    question: 'Is “overdue” a status, or a computed value?',
+    options: [
+      { id: 'stored', label: 'A stored status, updated when it changes' },
+      { id: 'computed', label: 'Computed from due_date and status' },
+    ],
+    answer: 'computed',
+    why: 'Computed. If it is stored, something has to update it — a cron job, a trigger, a write on read — and the day that something misses a run, the column disagrees with the date it was derived from. Computed from due_date < now() AND status = ‘sent’, it is always correct and cannot drift. Storing derived state is one of the most common sources of data that disagrees with itself.',
+  },
+  {
+    id: 'invoice-delete',
+    question: 'What happens when an invoice is deleted?',
+    options: [
+      { id: 'hard', label: 'Remove the row' },
+      { id: 'soft', label: 'Mark it deleted and keep the row' },
+    ],
+    answer: 'soft',
+    why: 'Soft delete, or an immutable ledger. A hard delete loses history you may be legally required to keep; a soft delete keeps it at the cost of every query remembering to filter. For financial records that trade is worth making, because “where did that invoice go” is a much worse conversation than a slightly more complex query.',
+  },
+  {
+    id: 'client-owners',
+    question: 'Can a client belong to two users?',
+    options: [
+      { id: 'fk', label: 'No — a foreign key on the client' },
+      { id: 'join', label: 'Yes, or plausibly later — a join table' },
+    ],
+    answer: 'join',
+    why: 'If the answer is yes now, or plausibly yes later, the relationship is a join table rather than a foreign key. Retrofitting many-to-many onto a one-to-many is a migration plus every query that touched it. This is the one question here where the honest answer depends on your product — but the cost is asymmetric, and that asymmetry is the lesson.',
+  },
+  {
+    id: 'number-uniqueness',
+    question: 'Invoice numbers must be unique — in what scope?',
+    options: [
+      { id: 'global', label: 'Globally, across the whole table' },
+      { id: 'per-owner', label: 'Per user' },
+    ],
+    answer: 'per-owner',
+    why: 'Per user. Two freelancers both issuing invoice 001 is normal and correct; a global constraint makes the second one fail for no reason a user could understand. Getting uniqueness scope wrong surfaces months later as a confusing constraint violation, which is why it belongs in the schema as UNIQUE (owner_id, number) rather than in a validation function.',
+  },
+]
+
+const INTERROGATION_BY_ID = new Map(INTERROGATIONS.map((q) => [q.id, q]))
+
+export function judgeInterrogation(
+  id: string,
+  choice: string,
+): { correct: boolean; why: string } {
+  const question = INTERROGATION_BY_ID.get(id)
+  if (!question) {
+    return { correct: false, why: 'That question is no longer on the sheet.' }
+  }
+  return { correct: choice === question.answer, why: question.why }
+}
