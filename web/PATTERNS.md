@@ -86,10 +86,20 @@ visual must be `<span>`, never `<div>` — a Term sits inside `<p>`, and invalid
 breaks hydration. An invariant test fails any visual whose id has no definition. See
 `npm`/`pnpm` for the house examples.
 
-Two JSX cautions, both real bugs that shipped once: put an explicit `{' '}` around a
-`<Term>` or the surrounding spaces get trimmed; Straight quotes inside
-definitions are fine (they render as text); the JSX-attribute hazard applies to
-`Figure` captions, where a straight double quote breaks the attribute — use
+Two JSX cautions, both real bugs that shipped once.
+
+**Spacing.** Put an explicit `{' '}` between a `<Term>` and the text beside it. JSX keeps
+whitespace that sits on the same line as the tag and strips whitespace that contains a
+newline, so `<Term>adr</Term> is the answer` compiles with its space, while the same
+markup rewrapped to put `is the answer` on the following line compiles without one — and
+rewrapping is Prettier's job, not a decision you make. Where the term sits in the
+paragraph has nothing to do with it: a `<Term>` opening a `<p>` is safe when the text
+follows on the same line and unsafe when it does not, exactly like one in mid-sentence.
+`{' '}` is the fix because it is a real child that survives a rewrap. This is the
+"solution treeis" bug.
+
+**Quotes.** Straight quotes inside definitions are fine — they render as text. The hazard
+is in `Figure` captions, where a straight double quote closes the JSX attribute early; use
 typographic quotes there.
 
 ### `References` — `src/components/References.tsx` + `src/lib/references.ts`
@@ -129,6 +139,7 @@ copy a working version rather than start from scratch.
 | **Single-select scorer** | A judgment call along a scale, with the consequence of each choice | The stage turns on one decision (severity, risk, priority)       | `SeverityScorer`                                  |
 | **Guess then reveal**    | Right-vs-wrong judgment, scored                                    | You can show good and bad examples of the same skill             | `QuestionLab`                                     |
 | **Click-node inspector** | A structure whose parts each mean something                        | You have a diagram, tree, or pipeline with explainable nodes     | `OpportunityTree`, `DiscoveryFlow`                |
+| **Annotated artifact**   | Which parts of a real artifact carry a decision                    | You are quoting something verbatim — schema, config, workflow file | `SchemaInspector`                                 |
 | **Copy artifact**        | A prompt, command, or template the reader will actually use        | You are handing over something to paste elsewhere                | `AIWorkflow` prompts                              |
 | **Persisted worksheet**  | The stage's output, filled in and kept                             | The stage produces a document (a one-pager, a checklist, an ADR) | `Worksheet`                                       |
 
@@ -143,8 +154,20 @@ Notes that make each land:
 - **Click-node inspector** pairs a diagram with a detail panel that updates on selection.
   Colour-code levels but always add a second signal (a dot, a label) so the coding is not
   the only cue.
+- **Annotated artifact** is the click-node inspector applied to text you did not draw.
+  Quote the artifact verbatim, so the reader can lift it; then annotate only the lines
+  that carry a decision, and leave the structural lines inert and unclickable — which
+  parts are worth explaining is itself the lesson. Give the block its own
+  `overflow-x-auto` container with `tabIndex={0}` rather than shrinking the type or
+  letting the page scroll sideways: code does not reflow, and a keyboard user without a
+  trackpad still has to reach the scroll. Use no semantic colour unless a line is
+  genuinely wrong — in a schema, none of them is.
 - **Persisted worksheet** uses `useLocalStorage` and exports to markdown, so the reader
   leaves with the artifact. It is the bridge from reading the stage to doing the work.
+  Where the stage also has a scored exercise, ask the worksheet the *same questions* the
+  exercise asked: the reader answers them against the worked example first, then against
+  their own project (`ModelInterrogation` → `DomainWorksheet`). That pairing is a
+  composition of two patterns already in this table, not a third one.
 
 ---
 

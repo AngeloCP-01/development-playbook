@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ☐ |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03 done; 16 remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☐ |
 
@@ -125,7 +125,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ☐ *(02 done; 17 remain)*
+### W-3 — Stages 02–18 interactive ◐ *(02 and 03 done; 16 remain)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -147,6 +147,21 @@ Per stage (checklist ticked for **02 Product Planning**, feat/stage-02-product-p
 - [x] Verify: contrast in both themes, 320–2560px, no console errors *(9/9 audit suite against a production build)*
 - [x] Run `humanizer:humanizer` over the stage's prose *(doc amendment; em-dashes kept as house voice)*
 
+Per stage (checklist ticked for **03 Architecture**, feat/stage-03-architecture):
+- [x] Read `web/PATTERNS.md`; pick a pattern per section (prose is the fallback, not the default)
+- [x] Group the doc's sections into 4–6 stepper steps *(five content steps: reverse · model · constrain · shape · decide — the ceiling, on the densest stage; D-38)*
+- [x] Identify diagrams worth building; wrap each as a numbered `<Figure>` *(nine, 1–9 ascending in DOM order)*
+- [x] Build 1–3 interactive exercises where judgement is being taught *(four: reversibility table, model interrogation, split trigger, boundary map — plus the schema inspector and the domain worksheet)*
+- [x] Add glossary terms for jargon that stage introduces *(seven new; `adr` and `blast-radius` reused from the D-36 migration)*
+- [x] Add 3–5 references (`src/lib/references.ts`), each stating what it adds *(four, every URL opened in a real browser and its claim corroborated against the source)*
+- [x] **Add an "AI plays" step for this stage's domain** — where agents help, where they mislead — in both the doc (`### AI in <stage>`) and the app; name real skills/MCPs *(the doc had no AI section at all — added in Task 1, and `stage-metadata.test.ts` now enforces D-35 for every stage)*
+- [x] Register in `src/features/stage-content.ts`; flip `ready: true` in `stages.ts`
+- [x] Verify: contrast in both themes, 320–2560px, no console errors *(10/10 audit suite over 20 URLs against a production build; 133/133 unit across 9 files; 22 routes prerendered. Plus a by-hand pass in the interacted state — every disclosure open and one radio committed per radiogroup — across 7 widths, which the suite does not do)*
+- [x] Run `humanizer:humanizer` over the stage's prose *(doc amendment; em-dashes kept as house voice)*
+- [ ] **Doc gaps outstanding.** The cold-reader pass found 14 gaps, 3 of them blocking
+      (**TD-18**). The interactive build is complete; the underlying doc is not. See the
+      tracker.
+
 #### AI-plays coverage, per stage
 
 Each stage gets its own "AI plays" section, tuned to that stage's work (discovery's is
@@ -157,7 +172,8 @@ plan"; architecture's, testing's and so on will each have their own). Status:
 |---|---|---|---|
 | 01 Product Discovery | ☑ | ☑ | Doc `### AI in discovery` backfilled; TD-15 closed |
 | 02 Product Planning | ☑ | ☑ | Done: 7th step + `### AI in planning` |
-| 03–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
+| 03 Architecture | ☑ | ☑ | `### AI in architecture` + a 6th step. The doc had **no** AI section — the round had to write one before it could mirror it, which is why `stage-metadata.test.ts` now fails any stage whose doc lacks the heading |
+| 04–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
 
 Suggested order. Revised 2026-07-24 (D-27): the first pass ranked purely by teaching
 value and put 02 fifth. That ignored the reader's journey and the risk of proving the
@@ -166,10 +182,11 @@ pattern library on the hardest stage.
 | Order | Stage | Why this one next |
 |---|---|---|
 | ~~1~~ ✓ | 02 Product Planning | **Done.** Complete + interactive + audience-validated (D-37: developer-complete; PM/SA are scope boundaries). Proved `web/PATTERNS.md`, the carry-forward chain, and the AI-plays pattern transfer. |
-| **2 (next)** | 03 Architecture | Densest concepts, most diagram-friendly, and the **solutions architect's home** — the audience stage 02 feeds but does not serve. Unblocked now that TD-2/TD-3 are closed. Uses the migrated `adr`/`blast-radius` terms inline. |
-| 3 | 15 Observability | Unfamiliar ground; benefits most from figures |
-| 4 | 16 Incident Management | Procedural, so a stepper fits naturally |
-| 5 | 13 Production Deployment | Expand/migrate/contract needs a visual |
+| ~~2~~ ✓ | 03 Architecture | **App done; doc has open gaps (TD-18).** Densest stage, nine figures, six steps. Stress-tested the pattern library and produced one new row (annotated artifact). The cold-reader pass then found the *doc* underneath it is incomplete for a beginner — see the recommendation below. |
+| **3 (next, recommended)** | — | **Close stage 03's doc gaps (TD-18)** before building another stage. Three are blocking for a reader using the stage as intended, and the app mirrors the doc, so every fix is a two-file change that gets more expensive as more stages copy the pattern. |
+| 4 | 15 Observability | Unfamiliar ground; benefits most from figures |
+| 5 | 16 Incident Management | Procedural, so a stepper fits naturally |
+| 6 | 13 Production Deployment | Expand/migrate/contract needs a visual |
 | — | remainder | 04–12, 14, 17, 18 |
 
 **~~Settle before stage 03:~~ ✓ resolved 2026-07-27 (D-36).** TD-2 and TD-3 are closed:

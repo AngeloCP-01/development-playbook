@@ -48,7 +48,7 @@ const HELPS: Entry[] = [
   {
     id: 'schema-gaps',
     claim: 'Read a schema for what is missing',
-    body: 'Uniqueness scope, delete behaviour, and nullability are mechanical to check and easy for a person to skim past. Paste the DDL and ask what a hostile script could write into it.',
+    body: 'Uniqueness scope, delete behaviour, and nullability are mechanical to check and easy for a person to skim past. Paste the DDL — the CREATE TABLE statements themselves — and ask what a hostile script could write into it.',
   },
   {
     id: 'adr-draft',

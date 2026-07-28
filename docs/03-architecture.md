@@ -152,8 +152,9 @@ migration of user records plus a rewrite of every access check.
   identity in someone else's system.
 - **A library (Auth.js)** — middle ground: your database, standard implementations.
 
-Whatever you choose, write the ADR. This is exactly the decision that gets relitigated in
-six months by someone who has forgotten the constraints.
+Whatever you choose, write the ADR — the architecture decision record, covered below. This
+is exactly the decision that gets relitigated in six months by someone who has forgotten
+the constraints.
 
 The part people get wrong is not authentication but **authorization** — proving the
 record belongs to the caller. Decide the pattern now and apply it uniformly. See
@@ -202,8 +203,9 @@ Where it earns its place:
   it is stored data. A model is good at enumerating consequences and bad at deciding they
   are acceptable.
 - **Read a schema for what is missing.** Uniqueness scope, delete behaviour, and
-  nullability are mechanical to check and easy for a person to skim past. Paste the DDL and
-  ask what a hostile script could write into it.
+  nullability are mechanical to check and easy for a person to skim past. Paste the DDL —
+  the `CREATE TABLE` statements themselves — and ask what a hostile script could write
+  into it.
 - **Draft the ADR's first pass** from your own notes, while the alternatives are still
   fresh. You supply the reasons; it supplies the structure.
 

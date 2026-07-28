@@ -167,7 +167,7 @@ export type SplitCandidate = {
 }
 
 /**
- * Source: docs/03-architecture.md:116-123 for the four triggers, and :233-235
+ * Source: docs/03-architecture.md:116-123 for the four triggers, and :281-282
  * for the second non-reason.
  *
  * Six rather than the four-plus-one the spec proposed. A set where five of six

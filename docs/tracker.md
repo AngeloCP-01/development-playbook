@@ -4,18 +4,19 @@
 debt was taken on. Scope and planning live in [task.md](task.md).
 
 **Last updated:** 2026-07-28
-**Current phase:** W-3 — stage 02 (**Product Planning**) is **complete** and merged, and
-**stage 03 (Architecture) is next**. Stage 02 shipped through the full loop (13
-subagent-reviewed tasks + a whole-branch review), then follow-up rounds added the roadmap
-horizon, closed four beginner-completeness gaps a cold-reader test found, added the "AI
-plays" section (now a standard per-stage section, D-35), and validated audience fit (D-37:
-developer-complete; PM/SA are deliberate scope boundaries). The **TD-2/TD-3 gate on stage
-03 is cleared** (D-36): `terms.ts` is the single glossary source and a title sync test
-guards metadata.
+**Current phase:** W-3 — stages 01, 02 and **03 (Architecture)** are interactive. Stage 03
+shipped through the full loop on `feat/stage-03-architecture`: 17 tasks, every one
+subagent-reviewed, with a whole-branch review still to come. It is the densest stage and
+the **solutions architect's home** — the audience stage 02 feeds but does not serve (D-37).
 
-Quality gates remain live: prettier (now skipping markdown, see the build note below),
-eslint at `--max-warnings 0`, 78 vitest tests (scoring + invariants + the glossary
-snapshot), the audit suite sweeping stage 02's seven steps, lefthook, and CI. Everything
+**The app for stage 03 is done; the doc underneath it is not.** The cold-reader pass run at
+the end of the round found 14 beginner-completeness gaps in `docs/03-architecture.md`, three
+of them blocking (**TD-18**). Those are pre-existing doc gaps, not defects this branch
+introduced, and closing them is its own round.
+
+Quality gates remain live: prettier (skipping markdown, see the build note below), eslint at
+`--max-warnings 0`, **133 vitest tests across 9 files**, a **10-test audit suite sweeping 20
+URLs** (stage 03's six step hashes added by hand — TD-12), lefthook, and CI. Everything
 since `82a980b` is local; `main` is well ahead of `origin/main` and unpushed (the user
 handles pushes).
 
@@ -56,6 +57,7 @@ because scope creep is invisible otherwise.
 | 2026-07-23 | P-5 | Stack drift resolved: ESLint kept, Prettier added, Biome demoted to documented alternative; docs 04/stack.md/CLAUDE/KICKOFF amended | Every biome reference in doc 04 sections 3/6/7 replaced; `web/` and docs now agree | — |
 | 2026-07-23 | — | First learning guide: `docs/learnings/stage-implementation-101.md` | Every claim drawn from a real bug this session | More guides as rounds teach them |
 | 2026-07-23 | P-8 | Working standards documented: git + delivery-loop + review + TDD conventions, skills-as-process, humanizer pass, `web/PATTERNS.md` | Every convention verified against `SmartJobSearchCRM` git or the code; `218815a`, `5082e43`, `17b344e`, `a5901af` | Folding the same into the stage docs (P-6) |
+| 2026-07-28 | W-3 (03) | Stage 03 **Architecture** interactive: six steps (reverse · model · constrain · shape · decide · AI plays), nine figures, four judgment exercises, an annotated-DDL inspector, a domain worksheet carrying stage 02's answers forward, 7 new terms, 4 references. `docs/03-architecture.md` gained the `### AI in architecture` section it never had | 20 commits `21f555b`…`cf1aada`. Gate from a deleted `.next`: lint 0 warnings, typecheck clean, **133/133 unit across 9 files**, **22 routes prerendered**, **10/10 e2e over 20 URLs**. Review caught two blocking defects: (1) `DomainSketch` rendered the status enum as `draft \| sent \| paid`, which **pre-answered the interrogation exercise rendered in the same stepper panel** — the doc's arc is naive sketch → interrogate → schema drops it, so `overdue` was restored (`83b6cba`); (2) `BoundaryMap`'s `EDGE_NAME` hardcoded "allowed"/"not allowed" into each accessible name while only the visible badge derived from `edge.legal`, so flipping the data would have told a sighted reader and a screen-reader user opposite things with nothing failing — the suffix now derives from the data, teeth-checked by flipping `legal` and proving the name followed (`7893272`). Two reviewers reproduced measurements independently rather than accepting reports: the 320px overflow numbers (page 305/305, container 621/213) and the reassembled DDL executed against a real PostgreSQL 17 instance | **TD-18** (14 cold-reader doc gaps, 3 blocking) — recorded, not fixed; TD-11 and TD-14 stay open; **TD-16** (placeholder contrast) and **TD-17** (no component-test harness) opened; no ADR worksheet (D-39); no schema validation — the worksheet records, it does not grade; no component-test harness — vitest is `environment: 'node'` and matches only `*.test.ts` |
 | 2026-07-28 | W-3 (02) | Stage 02 **declared complete** for its scope, after an audience-readiness check | Two cold-reader persona tests (PM, solutions architect) reading only the doc: PM = primer not a tool (5 blocking-for-PM gaps, all scope-boundary), SA = feeder that defers architecture to stage 03 (6 gaps, all stage-03 content). Developer-completeness already confirmed by the earlier cold reader. Scope confirmed (D-37); method written up in `docs/learnings/cold-reader-testing.md` | PM support (whole-playbook scope expansion); SA support (build stage 03) |
 | 2026-07-28 | — | Build: Prettier no longer checks markdown (`*.md` in `web/.prettierignore`); pre-commit format glob reverted to code extensions | Fixed a CI `format:check` failure on `web/PATTERNS.md` at the source. Markdown is documentation, not code, and the generated `reference/glossary.md` must not be reformatted out of sync with `renderGlossary()`. Teeth-checked: a bad-emphasis `.md` no longer trips the gate | — |
 | 2026-07-27 | W-3 (02+) | Stage 02 "AI plays" section: a 7th step + `### AI in planning` doc subsection, mirroring stage 01. Six plays (exhaust, red-team MVP, spike, draft plan, value-vs-effort sort, memory), copyable prompts, opening on planning's inflate-don't-cut failure mode. Names real tools: Superpowers writing-plans/dispatching, claude-mem, context7, Vercel Sandbox; find-skills → deanpeters/product-manager-skills, phuryn/pm-skills as the ecosystem pointer | 57/57; audit 9-of-9 on a production build now sweeping `#ai` (contrast both themes, no overflow, zero console); live pass: 6 plays + 4 badges render, accordion single-open, copy present, `<pre>` scrolls internally; `47c6a64`…`a15d648` | Stage 01's doc still lacks AI content (TD-15); no copyable prompts in the doc (web-stage's job) |
@@ -83,6 +85,10 @@ of what was believed at the time is the point.
 
 | # | Decision | Reasoning | Consequence |
 |---|---|---|---|
+| **D-41** | The pattern library gains **annotated artifact** (`SchemaInspector`); the taught-then-recorded pairing does **not** get a row | Two candidates were judged rather than assumed. The annotated artifact earns one because the authoring job is different from the click-node inspector it resembles: you *quote something real verbatim* and then choose which lines teach, rather than authoring a structure where every node is selectable. It carries constraints the existing row does not — leave structural lines inert, give the block its own `overflow-x-auto` container with `tabIndex={0}`, no semantic colour. The deciding argument is recurrence: setup has config files, CI/CD has workflow YAML, deployment has migration steps, and none of those is a "diagram, tree, or pipeline", so the existing row would not send an implementer here. The taught-then-recorded pairing (`ModelInterrogation` → `DomainWorksheet`) is a **composition of two rows that already exist** — no new component, no new constraint, no new a11y requirement — so it became a clause on the `Persisted worksheet` note instead | `PATTERNS.md` gains one row and two sharpened notes rather than two rows. The non-obvious half of the rejected candidate (reuse the *same questions* across exercise and worksheet) is recorded where an implementer will actually meet it |
+| **D-40** | `SplitTrigger` ships **six** candidates, not the four-plus-one the spec proposed — and this is recorded as a **plan-authored refinement**, not implementer drift | A set where five of six answers are "yes" can be scored without reading it; the reader learns the pattern of the exercise instead of the judgment it teaches. Four-and-two forces every row to be read. The sixth entry (`codebase-tidier` — "the codebase is getting large and a service would be tidier") was confirmed by review as genuinely sourced from the doc's Traps and "Boundaries inside the monolith" sections rather than invented to pad the count | Deliberate deviations from a spec are recorded at the level that authored them. This one was the plan's, so a reviewer comparing component to spec finds the reasoning here rather than filing it as drift |
+| **D-39** | Stage 03's worksheet records the **domain model**, not an ADR | The stage's five questions about your own domain are the thing the reader cannot get anywhere else, and they chain: the four interrogation questions are asked first against the doc's worked example, then again as free text against the reader's own product. An ADR worksheet was rejected on two grounds — `docs/03-architecture.md:165` defers ADR *format* to stage 10 by design, so stage 03 would have been inventing a template it does not own; and the cold-reader pass then confirmed the doc gives no example, length, status field, naming or location for an ADR (G9), so a worksheet would have had nothing to scaffold from | `architecture-sheet.ts` holds five keys; the ADR stays taught (`ADRAnatomy`) rather than filled in. If stage 10 later fixes a format, an ADR worksheet becomes cheap and belongs there or here by then, not before |
+| **D-38** | A dense stage may run to **five content steps plus the AI step**. This is a **ceiling for dense stages, not the new default** | `PATTERNS.md` says 4–6 content steps and stage 03 is the densest of the eighteen — nine figures, four exercises, an inspector and a worksheet. Grouping it into four would have put the schema inspector and the boundary map in the same panel, which is two unrelated judgments competing for one screen. Five is the honest grouping for this content. It is explicitly not a licence: the guideline exists because a stepper stops being navigable when a step is a scroll, and stages 04–18 should still aim at 4–6 | The 4–6 guideline stands and governs *content* steps; the AI step remains standard beyond it (D-35). A stage proposing more than five content steps needs the same argument this one made, in its spec |
 | **D-37** | The playbook's audience stays "solo but production-grade developer"; PM and solutions-architect readiness are deliberate boundaries, not gaps to close in stage 02 | Two cold-reader persona tests confirmed it empirically. A PM persona found the doc a *primer, not a tool* (it skips dates, stakeholder roadmaps, resourcing — the solo scope showing its edge, 5 blocking-for-PM gaps). An SA persona found it a *feeder* that scopes work and hands architecture off *by design* (6 blocking-for-SA gaps, all stage-03 content). Both sets of gaps are the scope boundary doing its job, not defects — patching them into stage 02 would blur the structure both tests confirmed works | Stage 02 is complete for its scope; SAs are served by building **stage 03** (their home), PMs would need a playbook-wide scope expansion (deferred, not planned). Reports in `.superpowers/sdd/cold-reader-{pm,sa}.md` |
 | **D-36** | `terms.ts` is the single glossary source (markdown generated as a snapshot); stage metadata is guarded by detection, not generation | Exploration narrowed both debts. TD-3's richer shape belongs in code, and generation with `toMatchFileSnapshot` closes it with zero new tooling (regenerate via `pnpm gen:glossary`); the 16 arch/ops terms migrated in are used inline by stage 03+. TD-2's only real duplication is the title — the blurb is two purpose-built strings (doc subtitle vs UI tooltip) that diverge for 15/18 by design, so a title-only sync test is right and doc-header generation was rejected (it would inject generated lines into hand-authored prose for a two-field payoff) | `glossary.md` grew 18→35 and carries a "generated, do not edit" header; a term or a stage title now lives in one place; stage 03 is unblocked |
 | **D-35** | Every stage carries its own "AI plays" section, in both the doc and the app, tuned to that stage's work | Stages 01 and 02 both earned real value from naming where agents help and where they mislead, and the failure modes are stage-specific (discovery: don't seek validation; planning: don't accept a padded plan; architecture, testing, incidents will each differ). Making it a standard per-stage section rather than a one-off means the guidance propagates instead of being reinvented. Generalizes D-34 | Added to the W-3 per-stage checklist and PATTERNS; a per-stage AI-plays tracker lives in `task.md`; the 7-step shape is now the norm for a built stage, not an exception |
@@ -210,7 +216,15 @@ on the first run.
 `<Figure n={4}>` is passed explicitly (**D-16**). Inserting a figure mid-stage
 means renumbering the rest by hand, and nothing catches a duplicate or a gap.
 
-**Closes with:** a lint rule, or a build-time check that numbers are contiguous.
+Now a confirmed instance, not a hypothetical: stage 02 numbers its figures
+**1, 2, 3, 4, 6, 7, 8, 9** — `Planning.tsx` has no Figure 5. Found by stage 03's Task 15
+review while checking its own numbering (which is correct: 1–9 ascending in DOM order,
+verified by grepping all 17 sibling files for competing `<Figure>` numbering). A reader
+who notices the gap has to wonder what they missed.
+
+**Closes with:** a lint rule, or a build-time check that numbers are contiguous. The
+stage-02 gap is a one-character fix once something detects it — but fixing it blind, with
+nothing to catch the next one, is how it happened the first time.
 
 ### TD-11 — `DESIGN.md` names tokens the code does not expose · **Medium**
 
@@ -223,16 +237,74 @@ that does not exist. Same class of drift as the resolved TD-1, one layer down.
 rename there is a wide diff for no behaviour change), so `DESIGN.md` should adopt
 `brand`/`danger`, or note both names explicitly.
 
-### TD-12 — The audit `PAGES` list is hand-maintained · **Low**
+### TD-12 — The audit `PAGES` list is hand-maintained · **Medium** *(was Low)*
 
 `web/e2e/audit.spec.ts` hard-codes each step hash to sweep (`#done`, `#cut`, …). Every new
 `ready` stage must add its hashes by hand, and nothing fails if they drift from the stages
 actually live — a stage could ship unaudited and the suite would still pass green. First
-flagged as a W-4 minor; stage 02 added six hashes by hand, so it is now real rather than
-hypothetical.
+flagged as a W-4 minor; stage 02 added six hashes by hand, and **stage 03 added six more by
+hand** (20 URLs now). Raised to Medium because it has now cost a manual step in every stage
+build, and `KICKOFF.md` asserted the opposite — that the suite "sweeps every ready stage's
+step hashes" — which is exactly the kind of trusted-but-false claim that lets a stage ship
+unaudited. That line is corrected.
 
 **Closes with:** derive `PAGES` from `STAGES.filter(s => s.ready)` crossed with each
 stage's step ids, so the sweep tracks the ready set automatically.
+
+### TD-16 — Worksheet placeholder text fails AA, and the audit suite cannot see it · **Medium**
+
+All three worksheets — `discovery/Worksheet.tsx:161`, `planning/PlanWorksheet.tsx:179`,
+`architecture/DomainWorksheet.tsx:165` — carry the identical class
+`placeholder:text-subtle/70`. Measured against a production build by rasterizing the
+composited colour rather than parsing it:
+
+| Theme | Effective placeholder | Field background | Ratio | AA (4.5:1) |
+|---|---|---|---|---|
+| Light | `rgb(129,137,150)` | `rgb(230,228,220)` | **2.77:1** | fails |
+| Dark | `rgb(109,125,145)` | `rgb(7,19,34)` | **4.44:1** | fails, narrowly |
+
+17 fields, both themes, 34 samples, all below AA. Stage 03 copied the existing class
+string, which was the right call for consistency — this is repo-wide and pre-dates the
+branch, not drift introduced by it.
+
+It matters more than typical placeholder text because **these placeholders carry the
+worked example**: they show the reader what a good answer looks like. That is
+instructional content sitting below the contrast floor.
+
+**The more valuable half of this finding is why the gate never caught it.**
+`audit.spec.ts:155` samples `el.textContent` and skips anything shorter than three
+characters. A `placeholder` has no text node, so no placeholder in the app has ever been
+checked. The suite is green and correct about what it looked at.
+
+**Closes with:** raise the placeholder token to meet AA in both themes (light needs a real
+change; dark is one nudge away), **and** extend the audit suite to sample
+`getComputedStyle(el, '::placeholder')`. Fixing the colour without closing the blind spot
+leaves the next one undetected. Note that `text-subtle/70` resolves to `oklab()`, which the
+suite's parser deliberately skips — see `docs/learnings/contrast-checkers-lie.md` before
+writing that assertion.
+
+### TD-17 — No component-test harness, so a class of regression is ungated · **Medium**
+
+vitest runs `environment: 'node'` and its include glob matches only `*.test.ts`, so nothing
+in this repo can render a component and assert on the output. Every test is module-level.
+
+What that leaves unguarded, using the case that surfaced it: `judgeInterrogation` returns
+`why` on both correct and incorrect answers, and `scoring.test.ts` holds it to that. But
+nothing held `ModelInterrogation` to actually *rendering* it. Gating that paragraph on
+`correct` would have passed lint, typecheck, all 133 unit tests and the audit suite — while
+hiding the reasoning from exactly the readers who got it wrong, which is the stage's whole
+teaching claim. The same shape covers `fieldName()` in `SchemaInspector` (token parsing
+with no unit test) and any future "the data is right but the component ignores it" defect.
+
+An interim gate landed instead: `audit.spec.ts:234-260` drives the real page, commits a
+knowingly wrong answer, confirms the wrongness via `getByText('Not quite')` *before*
+asserting, then checks the reasoning paragraph is present, is not the headline, and is over
+80 characters. That is one assertion covering one component. It does not generalize.
+
+**Closes with:** jsdom or happy-dom plus `@testing-library/react`, a `*.test.tsx` include,
+and the vitest environment split per-file. A config and dependency change, correctly out of
+scope for a stage build — but it is now the cheapest remaining way to raise the floor,
+because every stage from here adds components nothing can render-test.
 
 ### TD-15 — Stage 01's doc has no AI content; stage 02's now does · **Closed 2026-07-27**
 
@@ -241,6 +313,95 @@ stage's step ids, so the sweep tracks the ready set automatically.
 carries a `### AI in discovery` subsection porting its `AIWorkflow` plays to prose, so both
 built stages carry AI in the doc as well as the app. Consistent with D-35 (AI plays is a
 standard per-stage section).
+
+### TD-18 — `docs/03-architecture.md` has 14 beginner-completeness gaps, 3 blocking · **High**
+
+Found by a cold-reader pass (D-32) run at the end of the stage 03 build: an agent allowed
+to read only that one doc, forbidden from filling gaps with its own knowledge, taking a
+shift-swap product through the stage's four artifacts (schema, reversibility sort, an ADR,
+feature boundaries).
+
+**These are pre-existing gaps in the doc, not defects the stage 03 branch introduced.** The
+branch's one owned doc change — the AI section — is done. Ranked High anyway: they are
+blocking for a reader using the stage as intended, and every fix is a two-file change
+because the app mirrors the doc, so the cost grows as more stages copy the pattern.
+
+**Blocking — the stage cannot be completed from the doc alone:**
+
+| ID | Where the reader stalled | What is missing | The line that closes it |
+|---|---|---|---|
+| **G3** | Tasks (b)/(c). The DoD requires "authorization pattern decided and written down" | Ownership ("proving the record belongs to the caller") is the *only* authorization concept in the document. On a shared-workspace product almost nothing important is owned by its caller — a manager approves a swap between two other people. No second pattern is offered, so the exit condition is unsatisfiable from the doc | Name the ownership / role / membership split, keeping enforcement in stage 05 |
+| **G4** | Task (a), the schema. Artifacts requires "constraints, keys, and indexes" | "indexes" appears **once**, in that Artifacts line, and nowhere else in the document. The annotated DDL has none | Add two indexes to the DDL with reasoning, or drop indexes from Artifacts |
+| **G5** | Task (a), expressing "at most one approved claim per shift" | Races are named as *the* reason to push constraints into the database, then only PK / FK / CHECK / UNIQUE are supplied — none of which expresses a conditional uniqueness rule. Partial unique indexes are unmentioned; **transactions are unmentioned in the entire document** | A conditional-uniqueness annotation, plus one sentence that row-spanning invariants need a transaction |
+
+**Friction — the reader proceeded, but had to guess:**
+
+| ID | Where | Missing | Closes with |
+|---|---|---|---|
+| G1 | Deriving the entity list | No procedure from product description to nouns; it shows the finished invoicing block, and entry criteria assume the answer | 2–3 sentences deriving candidate nouns from stage 02's vertical slices |
+| G2 | Is Manager an entity, a column, or a table | No treatment of role-bearing actors; the worked example has one actor type that owns everything it touches | A fifth interrogation question: "does every actor have the same rights over this entity?" |
+| G6 | Deletion for cancelled shifts, withdrawn claims, departed workers | Only the financial-record heuristic; the sole audit-trail signal is "event sourcing, almost certainly not" | Generalize: keep what someone will later ask "where did that go?" about |
+| G7 | Whether an approved swap rewrites a column or is recomputed | No criterion separating derived from stored (`overdue` computed, `paid` stored, difference unstated); normalization never appears | State the test — is it a pure function of other columns in the same row — and name the point-in-time exception |
+| G8 | Typing `starts_at` / `ends_at` | `date` and `timestamptz` both appear in the DDL with no note of the difference; no timezone or midnight-crossing guidance | One annotation line on `date` vs `timestamptz` |
+| G10 | Is "Next.js + Postgres" one ADR or three | No statement of what constitutes a single decision, so "every expensive decision has an ADR" is uncheckable | One ADR per thing reversible independently |
+| G11 | Are `scheduling` and `swapping` one feature or two | The rule for *enforcing* boundaries is given, not for *choosing* them — and it is stated only for reads, while swap approval writes across the seam | Define a feature by the tables it alone writes; cross-feature writes go through the owner's exported function |
+| G12 | The deferral list, which the DoD requires be explicit | No format, no location, no test separating a safe deferral from a dangerous one — "Defer aggressively" is six fixed infrastructure items, not a criterion | Defer anything whose reversal does not require migrating stored data |
+| G13 | The first `CREATE TABLE` | `uuid PRIMARY KEY DEFAULT gen_random_uuid()` is unannotated while `amount_cents` and `ON DELETE RESTRICT` beside it are explained, though a PK type is stored data touching every row and every FK | One clause naming the alternative |
+| G14 | Placing notification channel / hosting / real-time updates | The reversibility section gives two example lists but no test. The actual test — "what would have to change, how many call sites touch it, whether any of it is stored data" — is **buried in the AI section, framed as a prompt for a model** | Promote that sentence into the reversibility section as the rule the two lists exemplify |
+
+**G9 (BOUNDARY, not blocking — do not rank it with the three above):** the ADR section
+gives five section nouns, no example, no length, no status field, no naming or location,
+yet an ADR is a stage-03 artifact required twice in the DoD. This is deliberate — the doc
+defers ADR *format* to stage 10 (see D-39, which is why stage 03's worksheet records the
+domain model instead). Closing it means inlining one short real ADR here and leaving the
+rationale in 10.
+
+**Self-contradictions:**
+
+- **C1** (sharpest) — "Multi-tenancy beyond a `user_id` column" is on the defer list, but a
+  tenant key is stored data on every table, which the reversibility section classifies as
+  decide-now. The two rules point opposite ways with no tie-breaker.
+- **C2** — that same line presumes the invoicing app's shape, where each user owns a private
+  slice. Where the tenant is an organization and its data is shared, `user_id` is the wrong
+  axis rather than a weaker version of the right one.
+- **C3** — entry criteria require "you know roughly what data the system holds"; the stage's
+  first work section is how to determine what data the system holds.
+- **C4** — a single Next.js app on Postgres is prescribed as "the correct choice", yet the
+  data store is stored data (expensive list) and every expensive decision needs an ADR.
+  Next.js gets four supporting bullets; Postgres is asserted.
+
+**Undefined or late-defined terms:** ~~ADR~~ and ~~DDL~~ ✓ expanded on first use
+2026-07-28 (one clause each, the only fix taken in this round) · `immutable ledger` ·
+`event sourcing` (dismissed without being defined) · `big ball of mud` (carries the
+justification for the boundary rule) · `trigger` · `function execution limits` (presumes
+serverless knowledge not established). `vertical slices` is stage 02's term — a boundary,
+not a defect. Conway's law is named and glossed in the same line: the model the rest should
+follow.
+
+**What the same pass validated** — recorded because an entry listing only faults would
+misrepresent the result, and evidence cuts both ways:
+
+- **The four interrogation questions are the strongest thing in the document.** All four
+  fired productively on a product they were not written for. "Can a client belong to two
+  users?" transposed directly into "can a posted shift have two claimants?" — which told the
+  reader that Claim is a table with a row per worker, not a nullable `claimed_by` column.
+  That is the most consequential decision in their schema, and the doc handed it to them.
+- **The reversibility sort held** — two concrete lists, an explicit instruction on where to
+  spend thinking, a named failure mode.
+- **The annotated DDL teaches by its annotations, not its SQL.** Money as integer cents,
+  `CHECK` for fixed value sets and `ON DELETE RESTRICT` all transferred to a different
+  domain unmodified.
+- **"Constraints live in the database" is argued, not asserted** — three specific reasons,
+  and it changed what the reader wrote.
+- **"Defer aggressively" did real work** — no queue, cache or feature-flag service in the
+  reader's design, and the doc is the reason.
+- **Traps functions as a self-audit** — it caught a real cascade bug in the reader's draft.
+
+**Closes with:** its own round, with a spec. Full findings at
+`.superpowers/sdd/2026-07-28-stage-03-architecture/cold-reader-findings.md`. Expect matching
+app changes for anything touching the DDL annotations, the interrogation set or the
+reversibility lists, since those are ported into `scoring.ts` — G2 and G14 in particular are
+two-file changes.
 
 ### TD-14 — Stage 02 exercise cards render at two different widths · **Low**
 
@@ -255,16 +416,20 @@ own reason — but the two now sit in one stage at visibly different widths.
 **Closes with:** pick one width for exercise cards stage-wide — either cap the
 horizon cards to the measure, or lift the others. A polish-pass call, not a bug.
 
-### TD-13 — Stage 02 has a "Scaling to a team" block; stage 01 does not · **Low**
+### TD-13 — Stage 02 has a "Scaling to a team" block; stage 01 does not · **Closed 2026-07-28**
 
-Stage 02's interactive build includes a collapsed "If you are not solo" disclosure porting
-the doc's team section; stage 01 silently dropped its equivalent. A deliberate asymmetry,
-taken to avoid reopening a finished stage mid-round. Every later stage now has to decide
-which precedent to follow.
+~~Stage 02's interactive build includes a collapsed "If you are not solo" disclosure porting
+the doc's team section; stage 01 silently dropped its equivalent.~~ Closed in `cf1aada` by
+retrofitting stage 01 rather than by removing stage 02's — 32 insertions, 0 deletions, one
+file, every added line either the import or inside the `TeamNotes` block. Content matched
+line-for-line against `docs/01-product-discovery.md:221-230`.
 
-**Closes with:** either retrofit stage 01's team section as a disclosure, or decide team
-content stays doc-only and remove stage 02's — a one-stage convention call, cheap now,
-cheaper before seventeen more stages copy one side or the other.
+**The rule, which is the actual deliverable:** every stage ships its doc's "Scaling to a
+team" section as a **collapsed disclosure**, in the final content step, after the content
+and before the traps. Collapsed because the solo reader is the baseline (D-3) and must never
+be slowed by team material; present because the doc has it and the app is not allowed to
+quietly hold less than the doc. `TeamNotes` is the shared component — do not re-invent it
+per stage. Stages 04–18 now copy a convention instead of choosing a precedent.
 
 ---
 
@@ -290,35 +455,130 @@ these were found by checking rather than by reading.
 | Lint gate | eslint exits 0 on warnings, so an unused variable passed both the hook and the script — twice | Hook teeth check; fixed with `--max-warnings 0` in both places |
 | Ad-hoc audits | The old touch-target sweep excluded `aria-controls` elements wholesale, silently masking inline Term buttons | The committed suite's first run; resolved per WCAG 2.5.8's inline exemption |
 | CI typecheck | `PageProps` is generated into `.next/types/` by the build, so `tsc --noEmit` before `build` fails on a clean checkout. Local passed only because `.next` lingered | **CI's first real run.** Reproduced locally by deleting `.next`; fixed with a `typecheck` script running `next typegen` first, used by both CI and the pre-push hook |
+| `DomainSketch` | The naive-sketch figure rendered `draft \| sent \| paid`, **pre-answering the interrogation exercise in the same stepper panel** — which asks whether "overdue" is a status or computed | Controller review holding cross-task context. The task reviewer had passed it as faithful to its brief, correctly on its own terms: the brief said three, and the brief was wrong |
+| `BoundaryMap` | `EDGE_NAME` hardcoded "allowed"/"not allowed" into each accessible name while only the visible badge derived from `edge.legal`. Correct output today, but flipping the data would tell a sighted reader and a screen-reader user opposite things with nothing failing | Task review. Fixed by appending the suffix from `edge.legal`, teeth-checked by flipping `legal` and proving the name followed — then proving the revert with an empty `git diff` |
+| Worksheet placeholders | All three worksheets ship instructional placeholder text at 2.77:1 in light mode | Sampling `::placeholder` by hand after noticing the audit suite keys on `el.textContent`, which a placeholder does not have. **TD-16** |
 
-**Two false alarms worth remembering.** A link checker once reported 124 broken
+**Four false alarms worth remembering.** A link checker once reported 124 broken
 links — the checker was broken, not the links. A contrast audit reported 1.34:1
 — the parser could not read `oklab()`. Both were investigated rather than
 "fixed", and the second one still led somewhere useful: it exposed a frosted
 alpha background that had no business in a print-derived design.
 
+Stage 03 added two more, both colour, both disproved rather than "fixed":
+
+- A **phantom AA failure** from flipping `data-theme` and calling `getComputedStyle` in the
+  same evaluate call. The elements carry `transition-colors duration-150` and
+  `getComputedStyle` returns the *used* value, so the read sampled a colour mid-interpolation
+  that belongs to neither theme. Decisive evidence: the offending `rgb(173,192,212)` is dark
+  mode's `--graphite`, and on a clean reload it exists nowhere in a light render.
+- A placeholder probe reporting **7.64:1 light / 1.09:1 dark** for the same colour. It
+  resolved colours by assigning to `canvas.fillStyle` and reading the string back; Chromium
+  echoes `oklab()` unchanged, so the regex read oklab's lightness/a/b channels as R/G/B. The
+  giveaway was physical impossibility — `oklab(0.7334 …)` is pale and cannot composite to
+  `rgb(3,6,10)`. Rasterizing instead of parsing gave the real numbers (2.77:1 / 4.44:1), which
+  is TD-16.
+
+That is three oklab-parsing incidents. Both traps, and the "the gate is green because it never
+looked" case, are written up in `docs/learnings/contrast-checkers-lie.md`.
+
+---
+
+## Process observations
+
+Kept separate from the bug ledger because these are about how the work was run, not
+about the code.
+
+### Most of stage 03's defects were plan-authored, not implementer error
+
+Three of the findings on `feat/stage-03-architecture` originated in the **plan**, and the
+implementers followed it correctly:
+
+| Finding | What the plan got wrong |
+|---|---|
+| Task 2 | The task's test block omitted `import '@/test/localstorage-polyfill'`, without which the suite cannot run under `environment: 'node'` |
+| Task 5 | Every `docs/03-architecture.md:NNN` citation was written before Task 1 inserted ~48 lines at line 186, so all citations into later sections were stale on arrival |
+| Task 8 | `DomainSketch`'s status enum was specified as `draft \| sent \| paid`, which pre-answers the interrogation exercise Task 10 renders in the same panel |
+
+**The pattern worth carrying:** a per-task review sees one diff and judges it against one
+brief. All three of these were invisible at that altitude — the Task 8 reviewer explicitly
+passed the figure as faithful to its brief, which it was. They surfaced at controller level,
+where the cross-task context lives. Two consequences for the next stage build:
+
+1. **Budget for controller-level review of task *interactions*,** not only per-task review of
+   task *outputs*. The question "does this task's output undermine another task's output?"
+   has no owner otherwise.
+2. **Line-number citations in a plan are stale the moment any task edits the doc above them.**
+   Either cite by heading rather than by line, or re-derive citations after every doc-editing
+   task. This round paid for it twice — once in the briefs, once in the committed source,
+   and once more when Task 17's own two-clause doc fix shifted four more citations.
+
+A fourth finding is the mirror image and worth recording as such: an implementer proposed
+adding a rule to `PATTERNS.md` (that a `<Term>` must never be the first child of a `<p>`)
+and **review disproved it** by transpiling with the repo's own TypeScript. Position in the
+paragraph is irrelevant; the real variable is whether the whitespace between the tag and the
+adjacent text contains a newline. The rule would have forbidden a safe shape and still
+permitted the unsafe one. It was not added. `PATTERNS.md`'s existing note was sharpened to
+state the mechanic instead, so the same false rule is not proposed a third time.
+
+### Long-running agents lose work; persistence has to be incremental
+
+Four agents on this round were terminated mid-flight — a watchdog stall, an account session
+limit, and two connection drops. What survived in every case was whatever had already been
+written to a file. The instruction that worked was "write the report first, then do the
+work, saving after each step": one agent's report persisted at 286 lines with its evidence
+intact and the remaining sections explicitly marked OUTSTANDING, which made resumption cheap
+rather than a redo. This is now standard for reviewers as well as implementers.
+
 ---
 
 ## Next up
 
-**W-3, stage 03 (Architecture).** Stages 01 and 02 are complete and interactive; 03 is next
-in the revised order (D-27) and now unblocked (TD-2/TD-3 closed, D-36). It is the densest
-stage and the **solutions architect's home** — the audience stage 02 feeds but does not
-serve (D-37).
+**Recommendation: close stage 03's doc gaps (TD-18) before building stage 04.**
 
-Carry into that round:
+The reasoning, rather than the assertion. Stage 03's app is finished and verified; the doc
+underneath it is not. Three of the fourteen gaps are blocking for a reader using the stage as
+intended — the DoD makes "authorization pattern decided" an exit condition and the doc offers
+only one pattern; "indexes" is a required artifact that appears nowhere else in the document;
+races are named as the reason to push constraints into the database and no tool is given that
+expresses a conditional uniqueness rule. A reader who follows the stage honestly cannot
+finish it.
 
-- **The migrated glossary terms are ready to use inline:** `adr`, `blast-radius`, plus the
-  deploy/ops terms — already in `terms.ts`, so wrap their first appearances with `<Term>`.
-- **The AI-plays step is now standard** (D-35): stage 03 gets its own, tuned to architecture
-  (where agents help decide reversibility and generate options, where they over-engineer).
-- **Settle before stage 03 proper:** nothing structural now blocks it. The remaining debt
-  (TD-11 design-token names, TD-13 team-section asymmetry, TD-14 card widths) is low and can
-  ride along.
+Three things make this more urgent than another stage:
 
-**Also open:** `W-5` (deploy) — unblocked, and would turn the audit suite into a real
-post-deployment check rather than a local one. `P-6` — the remaining conventions to fold
-into the stage docs.
+1. **The app mirrors the doc**, so several fixes are two-file changes (G2 adds an
+   interrogation question, G14 moves a sentence that is currently in the AI section into the
+   reversibility section — both are ported into `scoring.ts`). That coupling gets more
+   expensive, not less, as stages accumulate.
+2. **The cold-reader pass is cheap and it works.** It found in one run what four rounds of
+   review on stage 02 did not (D-32). Acting on the first stage where it produced blocking
+   findings sets the precedent that it is a gate rather than a formality.
+3. **Stage 03 is the solutions architect's home** (D-37) — the audience the playbook
+   currently serves worst. Shipping it with an unsatisfiable exit condition undercuts the
+   claim that stage 02 legitimately defers architecture to it.
 
-**Recommendation:** stage 02, then resolve TD-2/TD-3, then stage 03. Deploy matters less
-while the app has one finished stage.
+Against that: the gaps are pre-existing, the stage is genuinely usable, and building stage 04
+would keep W-3's momentum. That is a real argument, and it loses mainly on point 1 — the
+coupling.
+
+**Also open, in rough order:**
+
+- **`W-5` (deploy)** — unblocked, and would turn the audit suite into a real post-deployment
+  check rather than a local one. Stronger now than it was: three stages are finished, so the
+  "deploy matters less while the app has one finished stage" reasoning has expired.
+- **`TD-17`** (no component-test harness) — the cheapest remaining way to raise the floor,
+  and it gets more valuable with every stage that adds components nothing can render-test.
+- **`TD-16`** (placeholder contrast) — a real AA failure on instructional text, plus the
+  audit blind spot that hid it. Fix both halves together.
+- **`TD-12`** (audit `PAGES` hand-maintained) — now cost a manual step in two consecutive
+  stage builds.
+- **`P-6`** — the remaining conventions to fold into the stage docs.
+
+Carry into whichever round is next:
+
+- **`TeamNotes` is the convention now** (TD-13 closed): every stage ships its doc's team
+  section as a collapsed disclosure, using the shared component.
+- **The AI-plays section is enforced, not remembered** — `stage-metadata.test.ts` fails any
+  stage whose doc lacks the `### AI in <stage>` heading. Stage 03's doc did not have one.
+- **`PATTERNS.md` gained "annotated artifact"** (D-41) — reach for it for config files,
+  workflow YAML and migrations, not just schemas.
