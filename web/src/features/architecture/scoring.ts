@@ -230,3 +230,108 @@ export function scoreSplit(answers: Record<string, boolean>): {
   }
   return { answered, correct }
 }
+
+export type SchemaLine = {
+  id: string
+  /** The line exactly as it appears in the DDL. */
+  sql: string
+  /** Indentation depth, so the component does not parse whitespace. */
+  indent: 0 | 1
+  /** What this line buys. Absent on structural lines with nothing to teach. */
+  note?: string
+}
+
+/** Source: docs/03-architecture.md:81-97. */
+export const SCHEMA_LINES: SchemaLine[] = [
+  { id: 'open', sql: 'CREATE TABLE invoices (', indent: 0 },
+  {
+    id: 'pk',
+    sql: 'id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),',
+    indent: 1,
+    note: 'A generated uuid rather than a sequence. Nothing about an invoice’s identity is guessable from it, and two databases can generate ids without coordinating.',
+  },
+  {
+    id: 'owner-fk',
+    sql: 'owner_id     uuid NOT NULL REFERENCES users(id) ON DELETE RESTRICT,',
+    indent: 1,
+    note: 'ON DELETE RESTRICT is the load-bearing half. Deleting a user who has invoices fails loudly instead of quietly cascading financial history away. CASCADE here is one careless statement from destroying records you are legally required to keep.',
+  },
+  {
+    id: 'client-fk',
+    sql: 'client_id    uuid NOT NULL REFERENCES clients(id) ON DELETE RESTRICT,',
+    indent: 1,
+    note: 'Same rule, same reason. Note that this is a foreign key, not a join table — which is the cardinality decision from the interrogation, written down where the database will hold you to it.',
+  },
+  {
+    id: 'number',
+    sql: 'number       text NOT NULL,',
+    indent: 1,
+    note: 'Text, not an integer. Invoice numbers acquire prefixes, years and dashes the moment a real person uses them, and none of that arithmetic is ever performed.',
+  },
+  {
+    id: 'amount-cents',
+    sql: 'amount_cents integer NOT NULL CHECK (amount_cents >= 0),',
+    indent: 1,
+    note: 'Money as integer cents. A float cannot represent 0.10 exactly, so totals drift by a cent in ways nobody can reproduce. The CHECK stops a negative amount at the door rather than in a validation function a script can bypass.',
+  },
+  { id: 'due-date', sql: 'due_date     date NOT NULL,', indent: 1 },
+  {
+    id: 'status-check',
+    sql: "status       text NOT NULL CHECK (status IN ('draft','sent','paid')),",
+    indent: 1,
+    note: 'A fixed set of values, enforced where it cannot be bypassed. Note what is absent: “overdue”. It is computed from due_date and status, so it cannot drift out of agreement with the date it derives from.',
+  },
+  {
+    id: 'created-at',
+    sql: 'created_at   timestamptz NOT NULL DEFAULT now(),',
+    indent: 1,
+    note: 'timestamptz, not timestamp. The version without a time zone silently means “whatever the server thought local time was”, which stops being funny the first time you deploy to a different region.',
+  },
+  {
+    id: 'unique-number',
+    sql: 'UNIQUE (owner_id, number)',
+    indent: 1,
+    note: 'Uniqueness scoped per user, not globally. Two freelancers both issuing invoice 001 is normal; a global constraint would fail the second for no reason a user could understand.',
+  },
+  { id: 'close', sql: ');', indent: 0 },
+]
+
+export type BoundaryEdge = {
+  id: string
+  from: string
+  to: string
+  /** The call this edge represents, written the way the codebase would write it. */
+  call: string
+  legal: boolean
+  why: string
+}
+
+/** Source: docs/03-architecture.md:130-142. */
+export const BOUNDARY_MODULES = ['billing', 'clients', 'auth']
+
+export const BOUNDARY_EDGES: BoundaryEdge[] = [
+  {
+    id: 'clients-calls-billing',
+    from: 'clients',
+    to: 'billing',
+    call: 'billing.getInvoicesForClient(clientId)',
+    legal: true,
+    why: 'The rule, working. Clients needs invoice data and asks the module that owns it, through a function that module chose to export. Billing can change how invoices are stored tomorrow without clients noticing.',
+  },
+  {
+    id: 'billing-calls-auth',
+    from: 'billing',
+    to: 'auth',
+    call: 'auth.currentUser()',
+    legal: true,
+    why: 'Every module needs to know who is calling, and exactly one module owns that answer. A second place that decodes a session is a second place to get authorization wrong.',
+  },
+  {
+    id: 'clients-queries-invoices',
+    from: 'clients',
+    to: 'billing',
+    call: 'db.select().from(invoices).where(eq(invoices.clientId, id))',
+    legal: false,
+    why: 'The one move that turns a monolith into a ball of mud. It works, it is shorter, and it silently makes billing’s table part of clients’ public interface — so the next change to the invoice schema breaks a module that never mentioned invoices. Keeping this rule is what makes extracting a service later a mechanical job rather than an archaeology project.',
+  },
+]

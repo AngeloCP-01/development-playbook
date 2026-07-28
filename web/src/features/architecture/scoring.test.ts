@@ -1,9 +1,12 @@
 import { expect, test } from 'vitest'
 import {
+  BOUNDARY_EDGES,
+  BOUNDARY_MODULES,
   DECISIONS,
   INTERROGATIONS,
   judgeInterrogation,
   scoreReversibility,
+  SCHEMA_LINES,
   SPLIT_CANDIDATES,
   scoreSplit,
 } from './scoring'
@@ -192,4 +195,70 @@ test('unknown ids are ignored rather than counted', () => {
 
 test('an empty run scores zero', () => {
   expect(scoreSplit({})).toEqual({ answered: 0, correct: 0 })
+})
+
+test('every schema line carries its SQL text, since the block is rendered from this data', () => {
+  for (const l of SCHEMA_LINES) {
+    expect(l.sql.length, `${l.id} has no sql`).toBeGreaterThan(0)
+  }
+})
+
+test('annotated lines explain what the constraint buys, not what it says', () => {
+  for (const l of SCHEMA_LINES.filter((x) => x.note)) {
+    expect(l.note!.trim().length, `${l.id} note`).toBeGreaterThan(0)
+  }
+})
+
+test('at least five lines are annotated, so the inspector has something to inspect', () => {
+  expect(SCHEMA_LINES.filter((l) => l.note).length).toBeGreaterThanOrEqual(5)
+})
+
+test('the four constraints the doc calls out by name are all annotated', () => {
+  // docs/03-architecture.md:95-97 names these four specifically. If a future
+  // edit drops one, the inspector silently stops teaching the thing the prose
+  // promises it teaches.
+  for (const id of [
+    'amount-cents',
+    'status-check',
+    'owner-fk',
+    'unique-number',
+  ]) {
+    const line = SCHEMA_LINES.find((l) => l.id === id)
+    expect(line, `${id} missing from the schema block`).toBeDefined()
+    expect(line!.note, `${id} is not annotated`).toBeTruthy()
+  }
+})
+
+test('schema line ids are unique, because selection is keyed by id', () => {
+  expect(new Set(SCHEMA_LINES.map((l) => l.id)).size).toBe(SCHEMA_LINES.length)
+})
+
+test('the boundary map has three modules, matching the doc’s example', () => {
+  expect(BOUNDARY_MODULES).toEqual(['billing', 'clients', 'auth'])
+})
+
+test('every edge runs between declared modules, so the map cannot draw a dangling arrow', () => {
+  for (const e of BOUNDARY_EDGES) {
+    expect(BOUNDARY_MODULES, `${e.id} from`).toContain(e.from)
+    expect(BOUNDARY_MODULES, `${e.id} to`).toContain(e.to)
+  }
+})
+
+test('exactly one edge is illegal, and it is the cross-table query', () => {
+  const illegal = BOUNDARY_EDGES.filter((e) => !e.legal)
+  expect(illegal).toHaveLength(1)
+  expect(illegal[0].id).toBe('clients-queries-invoices')
+})
+
+test('legality is data, not styling, so a screen reader gets the same information as a sighted reader', () => {
+  for (const e of BOUNDARY_EDGES) {
+    expect(typeof e.legal, `${e.id} legal`).toBe('boolean')
+    expect(e.why.trim().length, `${e.id} why`).toBeGreaterThan(0)
+  }
+})
+
+test('every edge names the call it represents, since that is what the reader is meant to copy', () => {
+  for (const e of BOUNDARY_EDGES) {
+    expect(e.call.trim().length, `${e.id} call`).toBeGreaterThan(0)
+  }
 })
