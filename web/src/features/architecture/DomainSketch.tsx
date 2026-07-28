@@ -26,7 +26,7 @@ const CHAIN: Token[] = [
   { kind: 'node', label: 'LineItem' },
 ]
 
-const STATUSES = ['draft', 'sent', 'paid']
+const STATUSES = ['draft', 'sent', 'paid', 'overdue']
 
 export function DomainSketch() {
   return (
