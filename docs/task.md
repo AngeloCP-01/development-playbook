@@ -165,8 +165,8 @@ pattern library on the hardest stage.
 
 | Order | Stage | Why this one next |
 |---|---|---|
-| 1 | 02 Planning | Stage 01 already promises it — its last step hints "hand off to planning" and its `PipelineFit` figure draws Discovery → Plan → Build, currently into a placeholder. At 211 lines it is also the safe place to prove `web/PATTERNS.md` transfers before betting the densest stage on it. |
-| 2 | 03 Architecture | Densest concepts, most diagram-friendly, and where a solutions-architect view gets built |
+| ~~1~~ ✓ | 02 Product Planning | **Done.** Complete + interactive + audience-validated (D-37: developer-complete; PM/SA are scope boundaries). Proved `web/PATTERNS.md`, the carry-forward chain, and the AI-plays pattern transfer. |
+| **2 (next)** | 03 Architecture | Densest concepts, most diagram-friendly, and the **solutions architect's home** — the audience stage 02 feeds but does not serve. Unblocked now that TD-2/TD-3 are closed. Uses the migrated `adr`/`blast-radius` terms inline. |
 | 3 | 15 Observability | Unfamiliar ground; benefits most from figures |
 | 4 | 16 Incident Management | Procedural, so a stepper fits naturally |
 | 5 | 13 Production Deployment | Expand/migrate/contract needs a visual |

@@ -23,3 +23,8 @@ Naming: `<topic>-101.md`.
   with the mutation-testing lesson: one mutation is not a teeth check, and the three
   vacuous-test patterns that shipped green against broken code. Read it on any new
   project's day one, and before writing tests for scoring/judgment logic.
+- `cold-reader-testing.md` — how to test whether a teaching doc actually works: an agent
+  reads only the doc, forbidden from filling gaps with its own knowledge, and tries to
+  produce the real artifact. A beginner persona finds completeness defects; role personas
+  answer "is it ready for audience X?" It caught two content defects in stage 02 and
+  settled its scope. Read it before calling any stage doc done.
