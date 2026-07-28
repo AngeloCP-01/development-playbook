@@ -3,19 +3,21 @@
 **Purpose:** the log. What actually shipped, what was decided and why, and what
 debt was taken on. Scope and planning live in [task.md](task.md).
 
-**Last updated:** 2026-07-27
-**Current phase:** W-3 underway — stage 02 (**Product Planning**) is the first of the
-seventeen and is merged to `main` (`82a980b`, `--no-ff`, branch deleted; not yet pushed).
-It reframes the doc as product planning, adds the roadmap horizon, and ships a six-step
-interactive stage built through the full delivery loop (13 subagent-reviewed tasks + a
-whole-branch review). A follow-up round then closed four beginner-completeness gaps a
-cold-reader test surfaced (see the W-3(02+) entry and D-33). Stage 03 is next, gated on
-settling TD-2/TD-3.
+**Last updated:** 2026-07-28
+**Current phase:** W-3 — stage 02 (**Product Planning**) is **complete** and merged, and
+**stage 03 (Architecture) is next**. Stage 02 shipped through the full loop (13
+subagent-reviewed tasks + a whole-branch review), then follow-up rounds added the roadmap
+horizon, closed four beginner-completeness gaps a cold-reader test found, added the "AI
+plays" section (now a standard per-stage section, D-35), and validated audience fit (D-37:
+developer-complete; PM/SA are deliberate scope boundaries). The **TD-2/TD-3 gate on stage
+03 is cleared** (D-36): `terms.ts` is the single glossary source and a title sync test
+guards metadata.
 
-Quality gates remain live locally: prettier, eslint at `--max-warnings 0`, the vitest
-invariants (now 57 with stage 02's scoring), the audit suite (now sweeping stage 02's six
-steps), lefthook hooks, and a two-job CI workflow. Everything since `82a980b` is local;
-`main` is ahead of `origin/main` and unpushed.
+Quality gates remain live: prettier (now skipping markdown, see the build note below),
+eslint at `--max-warnings 0`, 78 vitest tests (scoring + invariants + the glossary
+snapshot), the audit suite sweeping stage 02's seven steps, lefthook, and CI. Everything
+since `82a980b` is local; `main` is well ahead of `origin/main` and unpushed (the user
+handles pushes).
 
 **The gate proved itself.** CI's first real run went red on a genuine bug — `PageProps`
 is generated into `.next/types/`, so typechecking before building fails on a clean
@@ -54,6 +56,8 @@ because scope creep is invisible otherwise.
 | 2026-07-23 | P-5 | Stack drift resolved: ESLint kept, Prettier added, Biome demoted to documented alternative; docs 04/stack.md/CLAUDE/KICKOFF amended | Every biome reference in doc 04 sections 3/6/7 replaced; `web/` and docs now agree | — |
 | 2026-07-23 | — | First learning guide: `docs/learnings/stage-implementation-101.md` | Every claim drawn from a real bug this session | More guides as rounds teach them |
 | 2026-07-23 | P-8 | Working standards documented: git + delivery-loop + review + TDD conventions, skills-as-process, humanizer pass, `web/PATTERNS.md` | Every convention verified against `SmartJobSearchCRM` git or the code; `218815a`, `5082e43`, `17b344e`, `a5901af` | Folding the same into the stage docs (P-6) |
+| 2026-07-28 | W-3 (02) | Stage 02 **declared complete** for its scope, after an audience-readiness check | Two cold-reader persona tests (PM, solutions architect) reading only the doc: PM = primer not a tool (5 blocking-for-PM gaps, all scope-boundary), SA = feeder that defers architecture to stage 03 (6 gaps, all stage-03 content). Developer-completeness already confirmed by the earlier cold reader. Scope confirmed (D-37); method written up in `docs/learnings/cold-reader-testing.md` | PM support (whole-playbook scope expansion); SA support (build stage 03) |
+| 2026-07-28 | — | Build: Prettier no longer checks markdown (`*.md` in `web/.prettierignore`); pre-commit format glob reverted to code extensions | Fixed a CI `format:check` failure on `web/PATTERNS.md` at the source. Markdown is documentation, not code, and the generated `reference/glossary.md` must not be reformatted out of sync with `renderGlossary()`. Teeth-checked: a bad-emphasis `.md` no longer trips the gate | — |
 | 2026-07-27 | W-3 (02+) | Stage 02 "AI plays" section: a 7th step + `### AI in planning` doc subsection, mirroring stage 01. Six plays (exhaust, red-team MVP, spike, draft plan, value-vs-effort sort, memory), copyable prompts, opening on planning's inflate-don't-cut failure mode. Names real tools: Superpowers writing-plans/dispatching, claude-mem, context7, Vercel Sandbox; find-skills → deanpeters/product-manager-skills, phuryn/pm-skills as the ecosystem pointer | 57/57; audit 9-of-9 on a production build now sweeping `#ai` (contrast both themes, no overflow, zero console); live pass: 6 plays + 4 badges render, accordion single-open, copy present, `<pre>` scrolls internally; `47c6a64`…`a15d648` | Stage 01's doc still lacks AI content (TD-15); no copyable prompts in the doc (web-stage's job) |
 | 2026-07-27 | W-3 (02+) | Stage 02 beginner-completeness fixes: cut-to-core reframed to "does the outcome fail" (was contradicting its own MVP warning); Risk vs Open-question defined + example de-duplicated; entry criteria made to point at stage 01 explicitly; Next-list ordering given a method (value-vs-effort, reusing S/M/L), 5th reference added. Doc + app kept in sync | A cold-reader agent (only the doc, own PM knowledge forbidden) planned a *different* product, stalled at 4 points; all 4 ruled FIXED on a re-run of the same test. lint/typecheck/57 tests/build/audit 9-of-9 clean; `6b8dbe0` | The stage-01-dependency in entry criteria (by design, not a bug); deeper prioritization frameworks (linked, not taught) |
 | 2026-07-24 | W-3 (02) | Stage 02 **Product Planning**: doc reframed + retitled, six-step stepper, nine figures, five exercises, plan worksheet with 01→02 carry-forward, 7 terms, 4 references. `docs/02-planning.md` amended (MVP/roadmap/appetite/feasibility-risk named; now/next/later horizon added — "vision" was absent from all 18 docs) | 56 vitest (31 new); 9/9 audit suite on a production build (overflow 320–2560, touch ≥44px, WCAG AA both themes, zero console); full 01→02 chain verified live (seed fills + disables, reader's Not-in-v1 → horizon triage); every component reviewed clean by a fresh subagent; `2bd421b`…`1d7f327` | TD-2/TD-3 (due before 03); stage 01 team-section retrofit; deploy (W-5); edits to `docs/03` |
@@ -79,6 +83,7 @@ of what was believed at the time is the point.
 
 | # | Decision | Reasoning | Consequence |
 |---|---|---|---|
+| **D-37** | The playbook's audience stays "solo but production-grade developer"; PM and solutions-architect readiness are deliberate boundaries, not gaps to close in stage 02 | Two cold-reader persona tests confirmed it empirically. A PM persona found the doc a *primer, not a tool* (it skips dates, stakeholder roadmaps, resourcing — the solo scope showing its edge, 5 blocking-for-PM gaps). An SA persona found it a *feeder* that scopes work and hands architecture off *by design* (6 blocking-for-SA gaps, all stage-03 content). Both sets of gaps are the scope boundary doing its job, not defects — patching them into stage 02 would blur the structure both tests confirmed works | Stage 02 is complete for its scope; SAs are served by building **stage 03** (their home), PMs would need a playbook-wide scope expansion (deferred, not planned). Reports in `.superpowers/sdd/cold-reader-{pm,sa}.md` |
 | **D-36** | `terms.ts` is the single glossary source (markdown generated as a snapshot); stage metadata is guarded by detection, not generation | Exploration narrowed both debts. TD-3's richer shape belongs in code, and generation with `toMatchFileSnapshot` closes it with zero new tooling (regenerate via `pnpm gen:glossary`); the 16 arch/ops terms migrated in are used inline by stage 03+. TD-2's only real duplication is the title — the blurb is two purpose-built strings (doc subtitle vs UI tooltip) that diverge for 15/18 by design, so a title-only sync test is right and doc-header generation was rejected (it would inject generated lines into hand-authored prose for a two-field payoff) | `glossary.md` grew 18→35 and carries a "generated, do not edit" header; a term or a stage title now lives in one place; stage 03 is unblocked |
 | **D-35** | Every stage carries its own "AI plays" section, in both the doc and the app, tuned to that stage's work | Stages 01 and 02 both earned real value from naming where agents help and where they mislead, and the failure modes are stage-specific (discovery: don't seek validation; planning: don't accept a padded plan; architecture, testing, incidents will each differ). Making it a standard per-stage section rather than a one-off means the guidance propagates instead of being reinvented. Generalizes D-34 | Added to the W-3 per-stage checklist and PATTERNS; a per-stage AI-plays tracker lives in `task.md`; the 7-step shape is now the norm for a built stage, not an exception |
 | **D-34** | Stage 02's AI section goes in both the doc and the app, and the stage runs to 7 steps; the doc names stable in-environment tools, not install counts | The user asked for AI content "just like discovery," but chose doc+web where stage 01 is app-only — more complete, at the cost of an asymmetry (TD-15). The 7th "AI plays" step is the first past the 4–6 guideline, so `PATTERNS.md` records it as a recognized addition rather than drift. Install counts and unvetted third-party skill *contents* stay out of canonical prose — they date and I have not audited them — so the doc leans on the mechanism (Subagents/Skill/MCP/Slash command) plus stable tools, with find-skills/skills.sh as the pointer | New per-stage pattern (optional AI step) recorded in PATTERNS; stage 01 doc now lags (TD-15) |
@@ -296,16 +301,20 @@ alpha background that had no business in a print-derived design.
 
 ## Next up
 
-**W-3, starting with stage 02 (Planning).** Reordered from stage 03 on 2026-07-24
-(D-27). Stage 01 already promises this handoff and currently delivers a placeholder, and
-a 211-line stage is the safer place to prove the pattern library transfers.
+**W-3, stage 03 (Architecture).** Stages 01 and 02 are complete and interactive; 03 is next
+in the revised order (D-27) and now unblocked (TD-2/TD-3 closed, D-36). It is the densest
+stage and the **solutions architect's home** — the audience stage 02 feeds but does not
+serve (D-37).
 
 Carry into that round:
 
-- **A product decision:** should stage 02's worksheet read stage 01's saved answers?
-  That would chain the stages rather than leaving them independent.
-- **A structural decision, ideally before stage 03:** TD-2 and TD-3. Metadata and
-  glossary duplication get worse with every stage added.
+- **The migrated glossary terms are ready to use inline:** `adr`, `blast-radius`, plus the
+  deploy/ops terms — already in `terms.ts`, so wrap their first appearances with `<Term>`.
+- **The AI-plays step is now standard** (D-35): stage 03 gets its own, tuned to architecture
+  (where agents help decide reversibility and generate options, where they over-engineer).
+- **Settle before stage 03 proper:** nothing structural now blocks it. The remaining debt
+  (TD-11 design-token names, TD-13 team-section asymmetry, TD-14 card widths) is low and can
+  ride along.
 
 **Also open:** `W-5` (deploy) — unblocked, and would turn the audit suite into a real
 post-deployment check rather than a local one. `P-6` — the remaining conventions to fold
