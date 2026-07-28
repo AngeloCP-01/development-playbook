@@ -41,15 +41,18 @@ const MODULE_INFO: Record<string, { path: string; note: string }> = {
   },
 }
 
-// Written out per edge rather than derived, so the accessible name says
+// The verb phrase is written out per edge, so the accessible name says
 // exactly what a screen-reader user needs — "calls" for a legal function
 // call, "queries ... table" for the illegal one that reaches into another
 // module's storage directly — instead of a generic "from calls to" that
-// would flatten the distinction the exercise is about.
-const EDGE_NAME: Record<string, string> = {
-  'clients-calls-billing': 'clients calls billing — allowed',
-  'billing-calls-auth': 'billing calls auth — allowed',
-  'clients-queries-invoices': "clients queries billing's table — not allowed",
+// would flatten the distinction the exercise is about. The verdict is
+// deliberately not baked in here: it is appended from `edge.legal` at the
+// call site, so the accessible name cannot go stale if `legal` ever flips
+// without this map being touched.
+const EDGE_VERB: Record<string, string> = {
+  'clients-calls-billing': 'clients calls billing',
+  'billing-calls-auth': 'billing calls auth',
+  'clients-queries-invoices': "clients queries billing's table",
 }
 
 function EdgeRow({
@@ -69,10 +72,10 @@ function EdgeRow({
     <button
       type="button"
       aria-pressed={selected}
-      aria-label={EDGE_NAME[edge.id] ?? `${edge.from} to ${edge.to}`}
+      aria-label={`${EDGE_VERB[edge.id] ?? `${edge.from} to ${edge.to}`} — ${edge.legal ? 'allowed' : 'not allowed'}`}
       onClick={onSelect}
       className={[
-        'flex min-h-11 w-full flex-wrap items-center justify-between gap-2.5 border px-3.5 py-2.5 text-left transition-colors duration-150 lg:min-h-10',
+        'flex min-h-11 w-full flex-wrap items-center justify-between gap-2.5 border px-3.5 py-2.5 text-left transition-colors duration-150 lg:min-h-9',
         toneClasses,
         selected ? 'ring-2 ring-inset ring-brand' : '',
       ].join(' ')}
