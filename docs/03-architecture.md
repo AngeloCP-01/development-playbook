@@ -183,6 +183,52 @@ Things you do not need on day one and should not build:
 Each of these solves a real problem. None of them solves a problem you have yet, and each
 one makes every subsequent change more expensive.
 
+### AI in architecture
+
+An agent asked to design a system will give you one: services, a queue, a cache, an event
+bus, a diagram with twelve boxes. Every one of those is on the list you just read as
+something not to build. The problem is not that the model is careless — it is that most
+architecture writing on the internet is about systems at a scale you do not have, and that
+is what it learned from. So point it at options and at checking, never at "design my
+system."
+
+Where it earns its place:
+
+- **Generate the option set, then throw most of it away.** The expensive failure is
+  choosing without knowing the alternatives existed. Over-generation is the one habit that
+  helps here — ask for six ways to model this, then argue them down yourself.
+- **Pressure-test a reversibility claim.** "This is cheap to undo" has a falsifiable
+  answer. Ask what would have to change, how many call sites touch it, and whether any of
+  it is stored data. A model is good at enumerating consequences and bad at deciding they
+  are acceptable.
+- **Read a schema for what is missing.** Uniqueness scope, delete behaviour, and
+  nullability are mechanical to check and easy for a person to skim past. Paste the DDL and
+  ask what a hostile script could write into it.
+- **Draft the ADR's first pass** from your own notes, while the alternatives are still
+  fresh. You supply the reasons; it supplies the structure.
+
+Where it misleads, which is the half worth reading twice:
+
+- **It reaches for distribution by default.** Microservices, queues and caching layers turn
+  up unprompted, because that is what the training material is about. Each one is a real
+  solution to a problem you do not yet have.
+- **It invents scale.** Ask it to design for growth and it will design for growth you
+  cannot describe, then justify the complexity with the number it made up.
+- **Schema advice arrives confident and context-free.** It does not know your compliance
+  boundary, your budget, or that this table is financial and legally has to survive a
+  deletion.
+- **An unsupervised ADR is worse than no ADR.** It reads plausibly while recording reasons
+  you never had. That is exactly the reconstruction this stage warns about, except it
+  arrives eight months early, in writing, and you will believe it.
+
+The tools worth naming: `context7` for the provider's own documentation rather than the
+model's memory of it, which matters most for anything touching auth; `claude-mem` for "did
+I already decide this and write it down"; a git worktree or a sandbox for the throwaway
+spike that answers a feasibility question without polluting the repo.
+
+What none of this replaces: knowing which decisions are expensive, and being willing to
+build less than the model offers. It has no stake in maintaining what it proposes.
+
 ---
 
 ## Artifacts
