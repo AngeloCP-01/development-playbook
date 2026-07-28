@@ -4,6 +4,8 @@ import {
   INTERROGATIONS,
   judgeInterrogation,
   scoreReversibility,
+  SPLIT_CANDIDATES,
+  scoreSplit,
 } from './scoring'
 
 test('the table carries six decisions, matching the exercise the stage describes', () => {
@@ -137,4 +139,57 @@ test('an unknown question id is judged incorrect rather than throwing, since thi
 
 test('an unknown option on a real question is judged incorrect', () => {
   expect(judgeInterrogation('overdue-status', 'neither').correct).toBe(false)
+})
+
+test('six candidates: the doc’s four triggers and two of its named non-reasons', () => {
+  expect(SPLIT_CANDIDATES).toHaveLength(6)
+})
+
+test('four are real triggers and two are not, so the set is not guessable by answering yes', () => {
+  expect(SPLIT_CANDIDATES.filter((c) => c.valid)).toHaveLength(4)
+  expect(SPLIT_CANDIDATES.filter((c) => !c.valid)).toHaveLength(2)
+})
+
+test('every candidate explains itself', () => {
+  for (const c of SPLIT_CANDIDATES) {
+    expect(c.why.trim().length, `${c.id} has no why`).toBeGreaterThan(0)
+  }
+})
+
+test('candidate ids are unique', () => {
+  expect(new Set(SPLIT_CANDIDATES.map((c) => c.id)).size).toBe(
+    SPLIT_CANDIDATES.length,
+  )
+})
+
+test('scoring is asymmetric, so an inverted comparison cannot pass', () => {
+  const answers = {
+    'execution-limit': true, // valid — correct
+    'different-runtime': true, // valid — correct
+    'will-scale-better': true, // not valid — wrong
+  }
+  expect(scoreSplit(answers)).toEqual({ answered: 3, correct: 2 })
+})
+
+test('answering yes to everything scores exactly the four real triggers', () => {
+  const answers = Object.fromEntries(SPLIT_CANDIDATES.map((c) => [c.id, true]))
+  expect(scoreSplit(answers)).toEqual({ answered: 6, correct: 4 })
+})
+
+test('rejecting “it will scale better” is credited, which is the row the exercise exists for', () => {
+  expect(scoreSplit({ 'will-scale-better': false })).toEqual({
+    answered: 1,
+    correct: 1,
+  })
+})
+
+test('unknown ids are ignored rather than counted', () => {
+  expect(scoreSplit({ 'not-a-candidate': true })).toEqual({
+    answered: 0,
+    correct: 0,
+  })
+})
+
+test('an empty run scores zero', () => {
+  expect(scoreSplit({})).toEqual({ answered: 0, correct: 0 })
 })

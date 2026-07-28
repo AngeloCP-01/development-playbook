@@ -157,3 +157,76 @@ export function judgeInterrogation(
   }
   return { correct: choice === question.answer, why: question.why }
 }
+
+export type SplitCandidate = {
+  id: string
+  label: string
+  /** True when this is a concrete reason to split something out. */
+  valid: boolean
+  why: string
+}
+
+/**
+ * Source: docs/03-architecture.md:116-123 for the four triggers, and :233-235
+ * for the second non-reason.
+ *
+ * Six rather than the four-plus-one the spec proposed. A set where five of six
+ * answers are yes can be scored without reading it; four and two cannot.
+ */
+export const SPLIT_CANDIDATES: SplitCandidate[] = [
+  {
+    id: 'execution-limit',
+    label: 'A job routinely runs longer than the function execution limit',
+    valid: true,
+    why: 'A concrete limit you have hit, not one you expect to. This is what a queue and a worker are for, and the split is forced by the platform rather than chosen.',
+  },
+  {
+    id: 'different-runtime',
+    label: 'One piece genuinely needs a different runtime — Python for a model',
+    valid: true,
+    why: 'You cannot run two runtimes in one process, so the boundary already exists. Putting it behind HTTP acknowledges a split that reality made for you.',
+  },
+  {
+    id: 'load-profile',
+    label:
+      'One component’s load profile is wildly different and provably expensive',
+    valid: true,
+    why: 'Note both halves: wildly different *and* provably expensive. Measured, not predicted. Without the measurement this is the imagined-scale trap wearing a costume.',
+  },
+  {
+    id: 'compliance-boundary',
+    label: 'A real compliance boundary requires isolation',
+    valid: true,
+    why: 'An external requirement with someone else’s signature on it. The cost of distribution is not optional here, which makes it one of the few cases where paying it early is correct.',
+  },
+  {
+    id: 'will-scale-better',
+    label: 'It will scale better',
+    valid: false,
+    why: 'The row this exercise exists for. It is a prediction, and usually a wrong one. Distribution solves problems you do not have — independent team scaling, independent deploy cadence — while charging you network failure modes and distributed debugging today.',
+  },
+  {
+    id: 'codebase-tidier',
+    label: 'The codebase is getting large and a service would be tidier',
+    valid: false,
+    why: 'Tidiness inside one application is what module boundaries are for, and they cost nothing at runtime. Reaching for a network call to enforce a boundary you could enforce with an import rule is every cost of distribution bought for an organisational benefit you cannot collect solo.',
+  },
+]
+
+const SPLIT_BY_ID = new Map(SPLIT_CANDIDATES.map((c) => [c.id, c]))
+
+/** `answers[id] === true` means the reader judged it a real reason to split. */
+export function scoreSplit(answers: Record<string, boolean>): {
+  answered: number
+  correct: number
+} {
+  let answered = 0
+  let correct = 0
+  for (const [id, guess] of Object.entries(answers)) {
+    const candidate = SPLIT_BY_ID.get(id)
+    if (!candidate) continue
+    answered += 1
+    if (candidate.valid === guess) correct += 1
+  }
+  return { answered, correct }
+}
