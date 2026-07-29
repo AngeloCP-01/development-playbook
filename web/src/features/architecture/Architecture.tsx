@@ -11,6 +11,7 @@ import { ModelInterrogation } from './ModelInterrogation'
 import { DriftDiagram } from './DriftDiagram'
 import { DomainWorksheet } from './DomainWorksheet'
 import { SchemaInspector } from './SchemaInspector'
+import { SCHEMA_LINES } from './scoring'
 import { DeleteBehaviour } from './DeleteBehaviour'
 import { OneAppCosts } from './OneAppCosts'
 import { SplitTrigger } from './SplitTrigger'
@@ -211,7 +212,7 @@ const STEPS: Step[] = [
             n={4}
             caption="Each annotated line is a rule the database will hold even when the application forgets. Click one to see what it buys — the load-bearing words are the ones easiest to skim past."
           >
-            <SchemaInspector />
+            <SchemaInspector lines={SCHEMA_LINES} title="the invoices table" />
           </Figure>
         </Section>
 

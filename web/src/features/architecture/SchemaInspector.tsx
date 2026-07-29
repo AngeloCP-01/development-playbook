@@ -2,16 +2,18 @@
 
 import { useState } from 'react'
 import { Card } from '@/components/ui'
-import { SCHEMA_LINES, type SchemaLine } from './scoring'
+import { type SchemaLine } from './scoring'
 
 /**
- * The doc's CREATE TABLE block, rendered from data rather than pasted as a
- * blob of text, so each constraint can explain what it buys rather than what
- * it says. Modelled on `OpportunityTree` (discovery) for the
- * click-node-plus-detail-panel shape, with the radio semantics borrowed from
- * this feature's own `ModelInterrogation` / `ReversibilityTable` for
- * consistency within stage 03: `role="radio"` inside `role="radiogroup"`,
- * one selection at a time, nothing checked on load.
+ * An annotated SQL block: rendered from data rather than pasted as text, so
+ * each line can explain what it buys rather than what it says. Four blocks in
+ * this stage use it — the invoices table, the two indexes, the partial unique
+ * index, and processed_events in the sketch — which is why the lines arrive as
+ * a prop rather than being imported here. Modelled on `OpportunityTree`
+ * (discovery) for the click-node-plus-detail-panel shape, with the radio
+ * semantics borrowed from this feature's own `ModelInterrogation` /
+ * `ReversibilityTable` for consistency within stage 03: `role="radio"` inside
+ * `role="radiogroup"`, one selection at a time, nothing checked on load.
  *
  * The longest line is 66 characters and does not fit 320px at a readable
  * monospace size, so the block gets its own horizontally-scrolling container
@@ -84,23 +86,31 @@ function SchemaRow({
   )
 }
 
-export function SchemaInspector() {
+export function SchemaInspector({
+  lines,
+  title,
+  emptyHint = 'Select a line to see what it buys.',
+}: {
+  lines: SchemaLine[]
+  title: string
+  emptyHint?: string
+}) {
   const [selectedId, setSelectedId] = useState<string | null>(null)
-  const selectedLine = SCHEMA_LINES.find((l) => l.id === selectedId) ?? null
+  const selectedLine = lines.find((l) => l.id === selectedId) ?? null
 
   return (
     <Card>
       <div
         tabIndex={0}
-        aria-label="CREATE TABLE invoices statement, scrolls horizontally"
+        aria-label={`${title}, scrolls horizontally`}
         className="overflow-x-auto border border-line bg-sunken py-2"
       >
         <div
           role="radiogroup"
-          aria-label="Annotated lines of the invoices table"
+          aria-label={`Annotated lines of ${title}`}
           className="min-w-max"
         >
-          {SCHEMA_LINES.map((line) => (
+          {lines.map((line) => (
             <SchemaRow
               key={line.id}
               line={line}
@@ -128,9 +138,7 @@ export function SchemaInspector() {
             </p>
           </>
         ) : (
-          <p className="text-sm text-subtle">
-            Select a line to see what it buys.
-          </p>
+          <p className="text-sm text-subtle">{emptyHint}</p>
         )}
       </div>
     </Card>
