@@ -359,6 +359,22 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'Application code has bugs, gets bypassed by migration scripts and one-off fixes, and races with itself under concurrency. The database does not get bypassed, which makes it the only place a rule genuinely holds.',
   },
+  normalisation: {
+    name: 'Normalisation',
+    see: '03-architecture',
+    short: 'Arranging tables so each fact is stored in exactly one place.',
+    full: 'A series of increasingly strict forms — first, second and third normal form are the ones that matter in practice — describing how far a schema has removed duplicated facts. Third normal form roughly means every column depends on the key, the whole key, and nothing but the key.',
+    soWhat:
+      'The practical test is shorter than the theory: if changing one fact means updating two rows, the model is wrong and will eventually disagree with itself. Denormalising on purpose to make a slow query fast is fine; denormalising by accident is how data rots.',
+  },
+  'partial-unique-index': {
+    name: 'Partial unique index',
+    see: '03-architecture',
+    short: 'Uniqueness enforced over only the rows that match a condition.',
+    full: "A unique index with a WHERE clause, so the constraint applies to a subset of the table. `CREATE UNIQUE INDEX ... ON claims (shift_id) WHERE status = 'approved'` permits many rejected claims per shift and exactly one approved one.",
+    soWhat:
+      'It is the tool for rules of the form "at most one active X per Y", which plain UNIQUE cannot express and application code cannot enforce against a race. Without it, the usual workaround is a check-then-insert that two concurrent requests both pass.',
+  },
   'c4-model': {
     name: 'C4 model',
     see: '03-architecture',

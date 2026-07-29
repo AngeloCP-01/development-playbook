@@ -386,9 +386,35 @@ one above, written down rather than in your head.
 
 ### Design the database
 
-Now the model becomes a schema. Encode the answers from the domain model as **database
-constraints**, not application checks. Application code has bugs, gets bypassed by scripts,
-and races with itself. The database is the last line that actually holds.
+Now the model becomes a schema. The nouns from earlier, with their cardinality made explicit
+— this is the same picture the domain model described in words, which is why it is worth
+drawing once:
+
+```
+  users ──1──< clients ──1──< invoices ──1──< line_items
+    │                            │
+    └────────────1──────────────<┘
+         (owner_id: an invoice belongs to a user directly,
+          so a client can be reassigned without orphaning it)
+```
+
+That last relationship is a decision, not a detail. Hanging `invoices` off `users` as well as
+`clients` is what lets a client be merged or reassigned later without the invoices following
+it, and it is the kind of thing an ER view makes visible and a list of tables does not.
+
+**Normalisation** is the vocabulary for how far you have gone in removing duplicated facts —
+first, second and third normal form, of which third is the one worth aiming at. The theory is
+longer than the working rule, which is: **if changing one fact means updating two rows, the
+model is wrong.** A client's address stored on every invoice is not a shortcut, it is four
+hundred rows that will disagree the first time someone moves.
+
+Denormalise deliberately, later, when you have measured a query that needs it — and
+[09 — Performance Optimization](09-performance-optimization.md) is where that measurement
+belongs. Denormalising because it seemed easier at the time is how data rots.
+
+Encode the answers from the domain model as **database constraints**, not application checks.
+Application code has bugs, gets bypassed by scripts, and races with itself. The database is
+the last line that actually holds.
 
 ```sql
 CREATE TABLE invoices (
@@ -408,9 +434,90 @@ Money as integer cents. `CHECK` constraints for anything with a fixed set of val
 `ON DELETE RESTRICT` so deleting a user with invoices fails loudly instead of quietly
 cascading away financial history.
 
+Two lines in there are choices rather than defaults, and both are stored data, so both are
+on the expensive list from the top of this stage:
+
+- **`uuid` for the primary key.** Chosen because ids appear in URLs and can be generated
+  without a round trip to the database. The alternative, `bigserial`, is smaller and faster
+  to join on, but it publishes how many rows you have and how fast they arrive — visible to
+  anyone who can see two of your ids.
+- **`date` for `due_date`, `timestamptz` for `created_at`.** A due date is a calendar day and
+  means the same thing to a reader in any timezone. A creation time is an instant and does
+  not. Getting these backwards produces off-by-one-day bugs that appear only for users in
+  other timezones, which is to say not on your machine.
+
+**Indexes answer queries you actually run**, so write the queries first and add the index the
+query needs. Two, for this schema:
+
+```sql
+-- The dashboard lists one user's invoices filtered by status. Without this,
+-- every page load scans the whole table.
+CREATE INDEX invoices_owner_status_idx ON invoices (owner_id, status);
+
+-- The scheduled job from the sketch above looks for sent invoices past due.
+-- Partial, because it never asks about drafts or paid invoices, and a smaller
+-- index is a faster one.
+CREATE INDEX invoices_overdue_idx ON invoices (due_date) WHERE status = 'sent';
+```
+
+Both come from the system sketch rather than from intuition: one from a screen, one from the
+scheduled job. Indexes cost write time and disk, which is why "index everything" is not the
+answer and "index nothing until it hurts" is not either.
+
+**Some rules are conditional, and `UNIQUE` cannot express them.** The stage names races as
+the reason constraints belong in the database, then supplies only primary keys, foreign keys,
+`CHECK` and `UNIQUE` — none of which can say "at most one *approved* claim per shift". A
+plain `UNIQUE (shift_id)` would also forbid the second rejected claim, which is wrong. The
+tool is a **partial unique index**:
+
+```sql
+CREATE UNIQUE INDEX one_approved_claim_per_shift
+  ON claims (shift_id) WHERE status = 'approved';
+```
+
+Without it, the usual approach is to check for an existing approval and then insert — which
+two concurrent requests both pass, both believing they were first.
+
+**Some invariants span rows, and no constraint can express them at all.** Moving an amount
+from one row to another, or writing a record and marking its source consumed, has to happen
+as one unit or not at all. That is a **transaction**: the work commits together or none of it
+does. This is the point where a rule stops being the database's job to guarantee and starts
+being yours to demarcate — the database will hold the line, but only around the boundary you
+draw.
+
 ### Design the API contracts
 
-A contract's real cost is who you can force to move when it changes.
+A contract is a promise about shape, and its real cost is **who you can force to move when
+you break it.** That is the same reversibility axis the stage opens on, which is why the
+decision belongs here rather than in implementation.
+
+| Contract | Cost to change | Why |
+|---|---|---|
+| An internal server action or function | Cheap | One codebase, and the compiler finds every caller |
+| A public API someone else calls | Expensive | You do not know who depends on it and cannot make them move |
+| A webhook you receive | Not yours to change | Somebody else owns the shape; you adapt |
+
+Most solo projects live almost entirely in the first row, which is the argument for not
+building a public API until something actually needs one. The mistake is not noticing the
+moment you have moved into the second — a mobile client, a partner integration, a public
+endpoint someone found — because from then on the shape is a commitment.
+
+Three decisions worth making before the first row exists:
+
+- **Route shape.** Resource-oriented (`/invoices/:id`) is the default because it is
+  predictable, and predictable is most of what a contract is worth. The specific convention
+  matters far less than applying one consistently.
+- **Request and response shape.** Validate at the boundary — anything crossing into your
+  system is untrusted, including data from your own frontend. What you return is a promise:
+  adding a field is safe, removing or renaming one is not.
+- **Versioning.** Needed only for the expensive row, and the cheapest strategy is to avoid
+  needing it: add fields, never remove them, and never change the meaning of one that exists.
+  When that stops being enough, version the route rather than the payload.
+
+How these are implemented — where validation physically goes, how errors are shaped, what a
+route file should and should not contain — is
+[05 — Development](05-development.md#server-actions-need-validation-and-authorization)'s. As
+with authentication, this stage decides and 05 carries it out.
 
 ### Authentication and authorization
 
@@ -528,7 +635,8 @@ build less than the model offers. It has no stake in maintaining what it propose
 
 - Three or four architecture characteristics, each traced to a decision it forced
 - A domain model: entities, relationships, and the constraints that hold them together
-- Initial database schema with constraints, keys, and indexes
+- Initial database schema with constraints, keys, and indexes, each index traced to a query
+- The API contracts you are committing to, sorted by how expensive each is to change
 - ADRs for each expensive decision
 - A system sketch: the containers, the external systems they depend on, and one data flow
   drawn end to end
@@ -546,6 +654,9 @@ build less than the model offers. It has no stake in maintaining what it propose
 - [ ] Deletion behavior decided per entity
 - [ ] Uniqueness constraints scoped correctly
 - [ ] Constraints live in the database, not only in application code
+- [ ] Conditional rules expressed as partial unique indexes, not as check-then-insert
+- [ ] Indexes added for the queries you actually run, and no others
+- [ ] API contracts decided, sorted by how expensive each is to change
 - [ ] Auth strategy chosen, with an ADR
 - [ ] Authorization pattern decided and written down
 - [ ] Feature boundaries defined, with the no-cross-querying rule stated

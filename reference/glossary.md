@@ -65,9 +65,13 @@ drift apart.
 
 **MVP (Minimum Viable Product)** — Minimum viable product: the least you can build that still achieves the result you wrote down, so that real usage can tell you what to build next. It is defined by the outcome, not by a feature count. See [02 — Product Planning](../docs/02-planning.md).
 
+**Normalisation** — A series of increasingly strict forms — first, second and third normal form are the ones that matter in practice — describing how far a schema has removed duplicated facts. Third normal form roughly means every column depends on the key, the whole key, and nothing but the key. See [03 — Architecture](../docs/03-architecture.md).
+
 **npm** — Reads your package.json, downloads every package it names (and everything those packages need) from the npm registry, and copies the whole tree into the project’s node_modules folder. Every project gets its own full copy, hoisted into one flat pile. See [04 — Project Setup](../docs/04-project-setup.md).
 
 **Opportunity solution tree** — A diagram by Teresa Torres with four levels: the outcome you want to move, the customer opportunities (problems, needs, desires) that could move it, the solutions that address each opportunity, and the experiments that test each solution. See [01 — Product Discovery](../docs/01-product-discovery.md).
+
+**Partial unique index** — A unique index with a WHERE clause, so the constraint applies to a subset of the table. `CREATE UNIQUE INDEX ... ON claims (shift_id) WHERE status = 'approved'` permits many rejected claims per shift and exactly one approved one. See [03 — Architecture](../docs/03-architecture.md).
 
 **Phantom dependency** — A package your code imports but never listed in package.json. It resolves only because some other dependency happened to pull it into a flat node_modules, and it breaks mysteriously when that package updates or drops it. See [04 — Project Setup](../docs/04-project-setup.md).
 
