@@ -26,7 +26,7 @@ Before doing anything, read these for context:
 - `web/AGENTS.md` — this Next.js version postdates your training data; read
   `node_modules/next/dist/docs/` before writing framework code
 
-### Project state (as of 2026-07-28)
+### Project state (as of 2026-07-29)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`). 18/18 pass the
   seven-section template check; internal links resolve.
@@ -35,9 +35,12 @@ Before doing anything, read these for context:
   (Reverse · Model · Constrain · Shape · Decide · AI plays), 9 figures, 4 judgment
   exercises, an annotated-DDL inspector, and a domain worksheet that carries stage 02's
   answers forward.
-- **Stage 03's doc has open gaps.** A cold-reader pass found 14 beginner-completeness gaps
-  in `docs/03-architecture.md`, 3 of them blocking (**TD-18**). The app is done; the doc is
-  not. This is the recommended next round — see below.
+- **Stage 03's doc has open gaps, of two kinds.** A cold-reader pass found 14
+  beginner-completeness gaps in `docs/03-architecture.md`, 3 of them blocking (**TD-18**) —
+  things a reader cannot finish the stage without. Separately, the stage never names the
+  architecture styles landscape (**TD-21**): it teaches the modular monolith without using
+  the term, and never asks what the system needs to *be* before deciding how it is shaped.
+  The app is done; the doc is not. Both are the next round — see below.
 - **Every stage carries an "AI plays" section** (D-35), in both doc and app.
   `stage-metadata.test.ts` now **fails any stage whose doc lacks the `### AI in <stage>`
   heading**, because stage 03's doc turned out not to have one and the round had to write it
@@ -62,10 +65,31 @@ Before doing anything, read these for context:
 
 ### This round's scope
 
-**Recommended: close stage 03's doc gaps (`TD-18`) before building another stage.**
+**Decided: one round on stage 03's doc — `TD-18` and `TD-21` together — before building
+another stage.** This is settled, not a recommendation to weigh; the reasoning is here so you
+can execute it, and disagree only if you find something new.
 
-The reasoning, so you can disagree with it. Stage 03's app is finished and verified, but a
-cold-reader pass found the doc underneath it incomplete for a beginner: 14 gaps, 3 blocking.
+Stage 03's app is finished and verified. The doc underneath it has two separate problems.
+
+**`TD-21` — the styles landscape is missing** (decision **D-44**). The stage prescribes a
+single Next.js application, gives four triggers for splitting a service out, and teaches
+feature modules talking through exported functions. That advice is correct and matches
+current industry consensus — but it is delivered as a prescription the reader takes on faith.
+The stage never asks what the system needs to *be* before deciding how it is shaped, and it
+teaches the **modular monolith** without ever using the term. Microservices, event-driven,
+hexagonal, serverless, SOA and the DDD vocabulary (bounded context, ubiquitous language) go
+unnamed, so a reader finishes the stage unable to place their own decisions among the words
+they will meet everywhere else.
+
+**The round adds microservices content deliberately, and does not change the recommendation.**
+Monolith-first, modular boundaries and defer-aggressively all stand. The playbook's job is to
+teach ground the reader has not worked in, and someone who has never seen microservices
+cannot evaluate why monolith-first is right *for them* — they can only take it on faith,
+which is the same failure as G3 below. Knowing what you are not doing, and why, is what makes
+it a decision. Do not read the microservices material as drift from the solo-first stance;
+D-44 exists so you don't.
+
+**`TD-18` — a cold-reader pass found the doc incomplete for a beginner:** 14 gaps, 3 blocking.
 
 The blocking three are not cosmetic. The Definition of Done makes "authorization pattern
 decided" an exit condition, but the doc offers only ownership, which fails for any product
@@ -75,21 +99,30 @@ push constraints into the database, with no tool given that expresses a conditio
 uniqueness rule, and transactions unmentioned anywhere. A reader following the stage honestly
 cannot finish it.
 
-It ranks above stage 04 for three reasons. The app mirrors the doc, so several fixes are
-two-file changes and the coupling gets more expensive as stages accumulate. The cold-reader
-method is cheap and it works — acting on the first stage where it produced blocking findings
-sets it up as a gate rather than a formality. And stage 03 is the solutions architect's home
-(D-37), the audience the playbook serves worst; shipping it with an unsatisfiable exit
-condition undercuts stage 02's claim to legitimately defer architecture to it.
+**Why the two are one round.** Both live in `docs/03-architecture.md`, and both force matching
+changes in `src/features/architecture/` because the DDL annotations, the interrogation set and
+the reversibility lists are all ported into `scoring.ts`. They also meet in one place:
+`TD-21`'s new architecture-characteristics step is where `TD-18`'s **G14** belongs — the
+reversibility test is currently stranded in the AI section, framed as a prompt for a model
+rather than as the rule the whole stage turns on. Splitting the work would mean opening the
+same doc and the same components twice.
 
-The counter-argument, which is real: the gaps pre-date the branch, the stage is genuinely
-usable today, and building stage 04 would keep W-3 moving. It loses mainly on the coupling
-point.
+It ranks above stage 04 because the doc/app coupling gets more expensive as stages
+accumulate, because the cold-reader method is cheap and worked on its first real outing, and
+because stage 03 is the solutions architect's home (D-37) — the audience the playbook serves
+worst. Shipping it with an unsatisfiable exit condition undercuts stage 02's claim to
+legitimately defer architecture to it.
+
+**Suggested shape**, to argue with rather than follow: a new step before the structural
+advice (*what does this system need to be?* — three or four characteristics, not twenty), then
+a styles comparison where each option states what would have to be true to pick it, and the
+stage's own answer arrives as a conclusion rather than an opening. `TD-18`'s blocking three
+fold into the sections they belong to.
 
 Start from `.superpowers/sdd/2026-07-28-stage-03-architecture/cold-reader-findings.md` —
-every gap already carries the line that would close it. Expect matching app changes for
-anything touching the DDL annotations, the interrogation set or the reversibility lists,
-since those are ported into `src/features/architecture/scoring.ts`.
+every gap already carries the line that would close it. `docs/task.md`'s **W-3.1** has the
+full checklist. Note that `.superpowers/` is git-ignored scratch, so if the file is gone the
+same findings are reproduced inline in `TD-18`.
 
 Other open candidates, with what each is worth:
 - **`W-5` deploy** — stronger than it was. Three stages are finished, so "deploy matters less
@@ -102,7 +135,9 @@ Other open candidates, with what each is worth:
 - Low remaining debt: `TD-11` design-token names, `TD-14` card widths, `TD-9` (stage 02 has
   no Figure 5).
 
-I lean toward **TD-18** — but advise me, and say if you disagree.
+The round is **`TD-18` + `TD-21`**. Start with `superpowers:brainstorming` — the scope is
+decided but the shape is not, and the styles comparison in particular needs designing before
+it is planned.
 
 ### How we work
 

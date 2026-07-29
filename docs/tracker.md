@@ -85,6 +85,7 @@ of what was believed at the time is the point.
 
 | # | Decision | Reasoning | Consequence |
 |---|---|---|---|
+| **D-44** | Stage 03 will **teach the architecture styles trade-off, including microservices** — without changing its recommendation. Monolith-first, modular boundaries and defer-aggressively all stand | The playbook's stated job is that it "doubles as a learning tool — it will cover ground I have not worked in, so stages need to teach, not just remind." A reader who has never seen microservices cannot evaluate why monolith-first is right *for them*; they can only take it on faith, which is the same failure mode as G3 in TD-18 — a confident answer arrived at without understanding. Research confirmed the current recommendation is well-supported ("the days of building microservices-first as a default are over"), so the gap is not that the advice is wrong but that a reader cannot place it. The initial recommendation from research was to leave microservices out as off-stance for a solo developer; the project owner overrode it, correctly — knowing what you are not doing, and why, is the thing that makes the choice a decision | The round adds an architecture-characteristics step and a styles comparison covering monolith, modular monolith, microservices, event-driven and serverless, each stating what would have to be true to choose it. The stage's own answer stays where it is, but arrives as a conclusion. Recorded here because a future reader will otherwise read the microservices content as drift from the solo-first stance |
 | **D-43** | `DeferredList` ships in the **decide** step, not `reverse` as the spec and plan both specified | The spec's argument for `reverse` — "the defer list is the reversibility test applied to infrastructure" — is real, but shipping it there would pull "Defer aggressively" from its own eighth position in the doc to first, breaking the 1:1 mapping the app's six steps otherwise hold against the doc's section order (reversibility → model → schema → one app → boundaries → auth → ADRs → defer aggressively). `decide` already closes on the defer list as the cheap end of the axis the stage opens on, which the whole-branch review found to be the tighter seam. `reverse` was also already an axis figure plus a six-row scored exercise before adding a fourth component | A deliberate deviation from the spec and plan, recorded at the level that authored it — the same convention D-40 established for `SplitTrigger`'s candidate count. Caught unrecorded by the whole-branch review (M2); no component moved to produce this entry, it only fills the gap in the record |
 | **D-42** | Source citations in code comments and plans name a **heading**, not a line number. A range is used only where the exact lines are the point, and then it names the heading too | Line numbers are coordinates in a document that moves, and nothing in lint, typecheck, the unit suite or the audit suite can tell that one has drifted. The evidence is not theoretical: a single audit of `web/src/` found **14 of 33 citations wrong** — four staled by this round's own doc edits, ten inherited from the stage 02 round, the worst off by ~86 lines. Every one of them looked perfectly well-formed. Headings drift only when someone renames a section, which is a deliberate act that shows up in a diff, rather than a side effect of inserting a paragraph three sections earlier | Cite `docs/02-planning.md, "Cut to the core"` rather than `:63-64`. Six such citations already existed (`ReversibilityAxis`, `AIArchitecturePlays`, `CutTable`, `DoneStatement`, `HorizonBands`, `HorizonTriage`) and all were still correct after two rounds of doc edits, which is the argument in miniature. Where a range is genuinely needed — a transcribed DDL block, a quoted template — keep it and pair it with the heading, so a stale number is self-evidently repairable. A future check could assert that each cited heading exists |
 | **D-41** | The pattern library gains **annotated artifact** (`SchemaInspector`); the taught-then-recorded pairing does **not** get a row | Two candidates were judged rather than assumed. The annotated artifact earns one because the authoring job is different from the click-node inspector it resembles: you *quote something real verbatim* and then choose which lines teach, rather than authoring a structure where every node is selectable. It carries constraints the existing row does not — leave structural lines inert, give the block its own `overflow-x-auto` container with `tabIndex={0}`, no semantic colour. The deciding argument is recurrence: setup has config files, CI/CD has workflow YAML, deployment has migration steps, and none of those is a "diagram, tree, or pipeline", so the existing row would not send an implementer here. The taught-then-recorded pairing (`ModelInterrogation` → `DomainWorksheet`) is a **composition of two rows that already exist** — no new component, no new constraint, no new a11y requirement — so it became a clause on the `Persisted worksheet` note instead | `PATTERNS.md` gains one row and two sharpened notes rather than two rows. The non-obvious half of the rejected candidate (reuse the *same questions* across exercise and worksheet) is recorded where an implementer will actually meet it |
@@ -429,6 +430,39 @@ app changes for anything touching the DDL annotations, the interrogation set or 
 reversibility lists, since those are ported into `scoring.ts` — G2 and G14 in particular are
 two-file changes.
 
+### TD-21 — Stage 03 never names the architecture styles landscape · **High**
+
+Raised by the project owner after walking the built stage. Distinct from TD-18, which is
+about gaps a cold reader hits while *doing* the stage's four artifacts. This one is about
+vocabulary: a reader finishes stage 03 having made good decisions and still cannot place
+them among the words they will meet in every job description, conference talk and code
+review.
+
+**What the doc does today.** It prescribes a single Next.js application on Postgres, gives
+four concrete triggers for splitting a service out, and teaches feature modules that talk
+through exported functions. That advice is correct and matches current industry consensus.
+The problem is that it is delivered as a prescription a reader has to take on faith.
+
+**What is missing, in rough order of cost:**
+
+| Gap | What is absent | Why it matters here |
+|---|---|---|
+| **Architecture characteristics** | The stage never asks what the system needs to *be* — available, auditable, low-latency, cheap to run, secure. It goes straight to structure | This is the input that makes style selection a decision rather than a preference. Richards & Ford put it as "architecture is mainly about quality attributes, not features"; arc42 makes quality goals section 1.2 because every later decision is supposed to trace back to one. Its absence is the root cause of the next row |
+| **The styles taxonomy** | **Modular monolith**, layered, hexagonal / ports-and-adapters, event-driven, microkernel, serverless, SOA — none named. Microservices appear only as the thing not to do | The sharpest instance: the stage *already teaches* the modular monolith in "Boundaries inside the monolith" and never uses the term. The reader is doing the industry-standard thing without the word for it |
+| **DDD vocabulary** | Bounded context, ubiquitous language, aggregates, context mapping | "Boundaries inside the monolith" is groping toward bounded context unnamed. Fowler's reasoning — "total unification of the domain model for a large system will not be feasible or cost-effective", boundaries follow human language — is the missing justification for the stage's own rule |
+| **Integration style** | Synchronous REST/RPC versus asynchronous messaging is never posed as a decision | It is the fork that leads to event-driven architecture, and it has different failure modes on each branch. Ties directly to TD-18's G5, where the doc names races and supplies no tool for them |
+| **Diagramming standard** | Artifacts asks for "a diagram only if it clarifies" without saying what kind | **C4**'s context → container → component levels are the widely-used answer and would give the stage's boundary map a home |
+| **Terms dismissed undefined** | Event sourcing gets "almost certainly not" with no definition; CQRS is absent entirely | The cold reader could not tell whether its own approval-history table counted as event sourcing. Overlaps TD-18's undefined-terms list |
+
+**The scope call is D-44: teach the trade-off, do not change the recommendation.** Solo-first,
+defer aggressively, monolith default all stay. The round adds the landscape *around* that
+advice so the reader can see it derived rather than asserted.
+
+**Closes with:** one round, shared with TD-18 since both live in the same doc and both force
+matching app changes. Expect a new step before the monolith advice — what does this system
+need to be — and a styles comparison that states honestly what would have to be true to pick
+each one.
+
 ### TD-19 — Scored radiogroups have no roving tabindex · **Medium**
 
 `SeverityScorer` and `Toolkit` (discovery), `SizeScorer`, `HorizonTriage` and
@@ -615,7 +649,18 @@ rather than a redo. This is now standard for reviewers as well as implementers.
 
 ## Next up
 
-**Recommendation: close stage 03's doc gaps (TD-18) before building stage 04.**
+**Recommendation: one round on stage 03's doc — TD-18 and TD-21 together — before building
+stage 04.**
+
+The two were raised separately and are the same round. TD-18 is what a cold reader could not
+finish; TD-21 is what a reader finishes without ever learning the vocabulary for. Both live
+in `docs/03-architecture.md`, both force matching changes in `web/src/features/architecture/`,
+and TD-21's architecture-characteristics step is the natural place to resolve TD-18's G14 —
+the reversibility test currently stranded in the AI section — because both are about naming
+the inputs a structural decision derives from. Splitting them would mean opening the same doc
+and the same components twice.
+
+
 
 The reasoning, rather than the assertion. Stage 03's app is finished and verified; the doc
 underneath it is not. Three of the fourteen gaps are blocking for a reader using the stage as

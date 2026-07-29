@@ -161,6 +161,45 @@ Per stage (checklist ticked for **03 Architecture**, feat/stage-03-architecture)
 - [ ] **Doc gaps outstanding.** The cold-reader pass found 14 gaps, 3 of them blocking
       (**TD-18**). The interactive build is complete; the underlying doc is not. See the
       tracker.
+- [ ] **Architecture styles landscape outstanding** (**TD-21**, decision **D-44**). The stage
+      teaches the modular monolith without naming it, and never asks what the system needs to
+      *be* before deciding how it is shaped. Next round adds an architecture-characteristics
+      step and an honest styles comparison — monolith, modular monolith, microservices,
+      event-driven, serverless — each stating what would have to be true to pick it. The
+      recommendation does not change; it stops being an assertion.
+
+### W-3.1 — Stage 03 doc round (TD-18 + TD-21) ☐ *(next)*
+
+One round, two tracker entries, because both live in `docs/03-architecture.md` and both force
+matching changes in `web/src/features/architecture/`. Runs the full loop: brainstorm → spec →
+plan → TDD tasks → whole-branch review.
+
+- [ ] **Architecture characteristics** — a new step before the structural advice. What does
+      this system need to be (available · auditable · low-latency · cheap to run · secure)?
+      Three or four picked, not a checklist of twenty. This is the input every later decision
+      traces back to, and it is where TD-18's **G14** lands — the reversibility test currently
+      stranded in the AI section belongs here as the stated rule
+- [ ] **Styles comparison** — monolith · modular monolith · microservices · event-driven ·
+      serverless. Each with what it costs, what it buys, and what would have to be true to
+      choose it. Name the modular monolith as the thing the stage already teaches
+- [ ] **DDD vocabulary** — bounded context named where "Boundaries inside the monolith"
+      currently gropes at it; ubiquitous language; aggregates. Strategic DDD lightly, not the
+      tactical machinery
+- [ ] **G3 first, per TD-18** — the ownership / role / membership authorization split. The
+      only gap that produces a confident wrong answer rather than a stall
+- [ ] **G4** — indexes: teach two in the DDL with reasoning, or drop them from Artifacts
+- [ ] **G5** — conditional uniqueness and one sentence on transactions, since the doc names
+      races as the reason for database constraints and supplies no tool that expresses one
+- [ ] **Integration style** — synchronous versus asynchronous as a posed decision, which is
+      the fork into event-driven
+- [ ] **C4** — name a diagramming standard where Artifacts currently says "a diagram only if
+      it clarifies"
+- [ ] **Define the dismissed terms** — event sourcing and CQRS get a definition before they
+      get a verdict. Expand `ADR` and `DDL` on first use
+- [ ] **C1** — resolve "defer multi-tenancy" against "stored data is expensive to reverse"
+- [ ] Mirror every change into `web/src/features/architecture/` — the DDL annotations, the
+      interrogation set and the reversibility lists are all ported into `scoring.ts`
+- [ ] Re-run the cold-reader pass afterwards on the amended doc, and record what it finds
 
 #### AI-plays coverage, per stage
 
