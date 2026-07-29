@@ -5,7 +5,7 @@ import { Card } from '@/components/ui'
 import { SLICES } from './scoring'
 
 /**
- * Source: docs/02-planning.md:112-122.
+ * Source: docs/02-planning.md:130-137.
  *
  * Structure copied from `discovery/SeverityScorer.tsx`: `role="radiogroup"`,
  * `role="radio"`, `aria-checked`, an `aria-live` verdict panel, a dashed empty

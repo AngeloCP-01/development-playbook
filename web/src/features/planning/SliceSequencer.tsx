@@ -8,7 +8,7 @@ import { SLICES, scoreOrder, type OrderVerdict } from './scoring'
 import { RiskOrder } from './RiskOrder'
 
 /**
- * Source: docs/02-planning.md:70-84.
+ * Source: docs/02-planning.md:113-126.
  *
  * Click-to-order, not drag-and-drop — drag needs a keyboard fallback to clear
  * the a11y baseline and its reorder math is where bugs live. Clicking an
