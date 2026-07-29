@@ -236,10 +236,11 @@ test('every edge runs between declared modules, so the map cannot draw a danglin
   }
 })
 
-test('exactly one edge is illegal, and it is the cross-table query', () => {
+test('the boundary rule applies to writes as much as reads, so there are now two illegal edges', () => {
   const illegal = BOUNDARY_EDGES.filter((e) => !e.legal)
-  expect(illegal).toHaveLength(1)
-  expect(illegal[0].id).toBe('clients-queries-invoices')
+  expect(illegal).toHaveLength(2)
+  expect(illegal.map((e) => e.id)).toContain('clients-queries-invoices')
+  expect(illegal.map((e) => e.id)).toContain('clients-writes-invoices')
 })
 
 test('legality is data, not styling, so a screen reader gets the same information as a sighted reader', () => {
@@ -298,5 +299,23 @@ test('the primary-key note names the alternative it rejected, so the choice read
 test('every annotated line is inside the table body, since the CREATE and the closing paren have nothing to teach', () => {
   for (const line of SCHEMA_LINES) {
     if (line.note) expect(line.indent, `${line.id} is annotated`).toBe(1)
+  }
+})
+
+test('the boundary map shows a write crossing a boundary, which is the half of the rule that gets forgotten', () => {
+  const write = BOUNDARY_EDGES.find((e) => e.id === 'clients-writes-invoices')
+  expect(write).toBeDefined()
+  expect(write?.legal).toBe(false)
+})
+
+test('the map is not all-illegal or all-legal, so the shape of the call is what decides and not the pairing', () => {
+  expect(BOUNDARY_EDGES.filter((e) => e.legal).length).toBeGreaterThan(0)
+  expect(BOUNDARY_EDGES.filter((e) => !e.legal).length).toBeGreaterThan(1)
+})
+
+test('every edge names modules the map actually draws, since an edge to nowhere renders as a dangling line', () => {
+  for (const e of BOUNDARY_EDGES) {
+    expect(BOUNDARY_MODULES, `${e.id} from`).toContain(e.from)
+    expect(BOUNDARY_MODULES, `${e.id} to`).toContain(e.to)
   }
 })

@@ -53,6 +53,7 @@ const EDGE_VERB: Record<string, string> = {
   'clients-calls-billing': 'clients calls billing',
   'billing-calls-auth': 'billing calls auth',
   'clients-queries-invoices': "clients queries billing's table",
+  'clients-writes-invoices': "clients writes billing's table",
 }
 
 function EdgeRow({

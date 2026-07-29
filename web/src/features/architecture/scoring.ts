@@ -382,4 +382,12 @@ export const BOUNDARY_EDGES: BoundaryEdge[] = [
     legal: false,
     why: 'The one move that turns a monolith into a ball of mud. It works, it is shorter, and it silently makes billing’s table part of clients’ public interface — so the next change to the invoice schema breaks a module that never mentioned invoices. Keeping this rule is what makes extracting a service later a mechanical job rather than an archaeology project.',
   },
+  {
+    id: 'clients-writes-invoices',
+    from: 'clients',
+    to: 'billing',
+    call: 'db.update(invoices).set({ status: “paid” }).where(...)',
+    legal: false,
+    why: 'The same violation as the read below it, and the one people forget, because a boundary tends to get policed on the way in and not on the way out. Writing another module’s table means billing’s invariants — what a valid status transition is, what else has to change with it — now live in two places, and only one of them is the module that owns them. Approving a shift swap has the same shape: it changes rows the approval flow does not own, so it goes through the owning feature’s function or the boundary exists only in the folder names.',
+  },
 ]
