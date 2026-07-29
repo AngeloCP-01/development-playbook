@@ -7,7 +7,7 @@ import { Term } from '@/components/Term'
 
 /**
  * Source: docs/03-architecture.md:148-153, the three auth paths, plus the
- * authorization line at :158-160.
+ * authorization line at :159-161.
  *
  * Tab shape structurally follows `discovery/Toolkit.tsx` (`role="tablist"` /
  * `role="tab"` / `role="tabpanel"`), but Toolkit has no keyboard handling to

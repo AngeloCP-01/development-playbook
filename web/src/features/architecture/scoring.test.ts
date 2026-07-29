@@ -214,7 +214,8 @@ test('at least five lines are annotated, so the inspector has something to inspe
 })
 
 test('the four constraints the doc calls out by name are all annotated', () => {
-  // docs/03-architecture.md:95-97 names these four specifically. If a future
+  // docs/03-architecture.md:95-97 names three of these (cents, CHECK, RESTRICT)
+  // and :74 names the fourth (uniqueness scope). If a future
   // edit drops one, the inspector silently stops teaching the thing the prose
   // promises it teaches.
   for (const id of [
