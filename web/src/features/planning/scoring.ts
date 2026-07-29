@@ -14,7 +14,7 @@ export type CutFeature = {
   why: string
 }
 
-/** Source: docs/02-planning.md:39-48. "Does the definition of done fail without this?" */
+/** Source: docs/02-planning.md, "Cut to the core", judged by the test at  "Cut to the core" ("does the outcome fail without this?"). */
 export const CUT_FEATURES: CutFeature[] = [
   {
     id: 'create-invoice',
@@ -93,7 +93,7 @@ export type Slice = {
   why: string
 }
 
-/** Source: docs/02-planning.md:70-84. */
+/** Source: docs/02-planning.md, "Sequence in vertical slices". */
 export const SLICES: Slice[] = [
   {
     id: 'create-view',

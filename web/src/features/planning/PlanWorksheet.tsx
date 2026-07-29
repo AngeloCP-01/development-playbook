@@ -7,7 +7,7 @@ import { useLocalStorage } from '@/lib/useLocalStorage'
 import { CarryForward } from './CarryForward'
 
 /**
- * The stage's persisted output: the one-page plan from `docs/02-planning.md:158-182`,
+ * The stage's persisted output: the one-page plan from `docs/02-planning.md, "Write the plan"`,
  * structurally copied from `discovery/Worksheet.tsx` — same key shape, same
  * counter, same copy/clear behaviour, under its own storage key so the two
  * stages never collide.

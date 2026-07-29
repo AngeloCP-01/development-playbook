@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ☐ |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03 done; 16 remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☐ |
 
@@ -125,7 +125,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ☐ *(02 done; 17 remain)*
+### W-3 — Stages 02–18 interactive ◐ *(02 and 03 done; 16 remain)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -147,6 +147,118 @@ Per stage (checklist ticked for **02 Product Planning**, feat/stage-02-product-p
 - [x] Verify: contrast in both themes, 320–2560px, no console errors *(9/9 audit suite against a production build)*
 - [x] Run `humanizer:humanizer` over the stage's prose *(doc amendment; em-dashes kept as house voice)*
 
+Per stage (checklist ticked for **03 Architecture**, feat/stage-03-architecture):
+- [x] Read `web/PATTERNS.md`; pick a pattern per section (prose is the fallback, not the default)
+- [x] Group the doc's sections into 4–6 stepper steps *(five content steps: reverse · model · constrain · shape · decide — the ceiling, on the densest stage; D-38)*
+- [x] Identify diagrams worth building; wrap each as a numbered `<Figure>` *(nine, 1–9 ascending in DOM order)*
+- [x] Build 1–3 interactive exercises where judgement is being taught *(four: reversibility table, model interrogation, split trigger, boundary map — plus the schema inspector and the domain worksheet)*
+- [x] Add glossary terms for jargon that stage introduces *(seven new; `adr` and `blast-radius` reused from the D-36 migration)*
+- [x] Add 3–5 references (`src/lib/references.ts`), each stating what it adds *(four, every URL opened in a real browser and its claim corroborated against the source)*
+- [x] **Add an "AI plays" step for this stage's domain** — where agents help, where they mislead — in both the doc (`### AI in <stage>`) and the app; name real skills/MCPs *(the doc had no AI section at all — added in Task 1, and `stage-metadata.test.ts` now enforces D-35 for every stage)*
+- [x] Register in `src/features/stage-content.ts`; flip `ready: true` in `stages.ts`
+- [x] Verify: contrast in both themes, 320–2560px, no console errors *(10/10 audit suite over 20 URLs against a production build; 133/133 unit across 9 files; 22 routes prerendered. Plus a by-hand pass in the interacted state — every disclosure open and one radio committed per radiogroup — across 7 widths, which the suite does not do)*
+- [x] Run `humanizer:humanizer` over the stage's prose *(doc amendment; em-dashes kept as house voice)*
+- [ ] **Doc gaps outstanding.** The cold-reader pass found 14 gaps, 3 of them blocking
+      (**TD-18**). The interactive build is complete; the underlying doc is not. See the
+      tracker.
+- [ ] **Architecture styles landscape outstanding** (**TD-21**, decision **D-44**). The stage
+      teaches the modular monolith without naming it, and never asks what the system needs to
+      *be* before deciding how it is shaped. Next round adds an architecture-characteristics
+      step and an honest styles comparison — monolith, modular monolith, microservices,
+      event-driven, serverless — each stating what would have to be true to pick it. The
+      recommendation does not change; it stops being an assertion.
+
+### W-3.1 — Stage 03 doc round (TD-22 + TD-21 + TD-18) ☑ *(done 2026-07-29)*
+
+One round, three tracker entries, because all three live in `docs/03-architecture.md` and all
+three force matching changes in `web/src/features/architecture/`. Runs the full loop:
+brainstorm → spec → plan → TDD tasks → whole-branch review.
+
+**Sequence matters: settle TD-22 first.** It probably changes the stage's step structure, and
+designing TD-21 or TD-18 against the current six steps risks redoing that work.
+
+**TD-22 — the missing activity (do this first)**
+
+- [x] **Non-functional requirements** — a new step before the structural advice. What does
+      this system need to be (available · auditable · low-latency · cheap to run · secure)?
+      Three or four picked, not a checklist of twenty. Same artifact as TD-21's "architecture
+      characteristics" under the name most readers meet — build it once.
+      ~~This is also where TD-18's **G14** lands~~ **✗ corrected 2026-07-29: this checklist
+      put G14 here; TD-18's own text puts it in the reversibility section, and TD-18 is
+      right.** G14's defect is that the section gives two example lists and no test for
+      producing your own, so the fix has to land where the lists are. Shipped in section 1
+- [x] **A high-level design artifact** between the domain model and the schema — components,
+      how they interact, external systems, data flow, deployment shape. Today Artifacts asks
+      only for "a one-paragraph description plus a diagram only if it clarifies", which is an
+      HLD with no structure
+- [x] **Decide the functional-requirements boundary explicitly.** Stage 02 owns them (define
+      done · the cut · vertical slices). Stage 03 should state that it *consumes* them, not
+      restate them — getting this wrong duplicates stage 02 and breaks the filing-code claim
+- [x] **Decide how much ceremony to keep.** Take the HLD/LLD thinking, leave the specification
+      documents and sign-off. Say so in the doc, so a reader from an enterprise background
+      knows the omission is deliberate
+- [x] **Database design beyond the DDL** — an ER view, normalisation vocabulary, and the
+      access-pattern thinking that would justify **G4**'s indexes
+- [x] **API / contract design** — never posed today. Route shape, request/response contracts
+      and versioning, with their differing reversibility costs
+**TD-21 — the missing vocabulary**
+
+- [x] **Styles comparison** — monolith · modular monolith · microservices · event-driven ·
+      serverless. Each with what it costs, what it buys, and what would have to be true to
+      choose it. Name the modular monolith as the thing the stage already teaches
+- [x] **DDD vocabulary** — bounded context named where "Boundaries inside the monolith"
+      currently gropes at it; ubiquitous language; ~~aggregates~~ (**✗ not shipped** — neither
+      the doc nor `terms.ts` mentions aggregates; consistent with the "strategic lightly"
+      instruction on this same line, since aggregates are tactical, but the tick overstated
+      it. Caught by the whole-branch review, M5). Strategic DDD lightly, not the
+      tactical machinery
+**TD-18 — what a cold reader could not finish**
+
+- [x] **G3 first, per TD-18** — the ownership / role / membership authorization split. The
+      only gap that produces a confident wrong answer rather than a stall
+- [x] **G4** — indexes: teach two in the DDL with reasoning, or drop them from Artifacts
+- [x] **G5** — conditional uniqueness and one sentence on transactions, since the doc names
+      races as the reason for database constraints and supplies no tool that expresses one
+- [x] **Integration style** — synchronous versus asynchronous as a posed decision, which is
+      the fork into event-driven
+- [x] **C4** — name a diagramming standard where Artifacts currently says "a diagram only if
+      it clarifies"
+- [x] **Define the dismissed terms** — event sourcing and CQRS get a definition before they
+      get a verdict. Expand `ADR` and `DDL` on first use
+- [x] **C1** — resolve "defer multi-tenancy" against "stored data is expensive to reverse"
+- [ ] ~~Mirror every change into `web/src/features/architecture/`~~ **✗ not done — deliberately
+      deferred to W-3.2 per D-46, tracked as TD-23.** This was ticked in error when the round
+      closed; the whole-branch review caught it (I4). The round was scoped doc-only precisely
+      *because* this is the larger half, so marking it complete inverted the record. The DDL
+      annotations, the interrogation set and the reversibility lists in `scoring.ts` all still
+      describe the eight-subsection doc
+- [x] Re-run the cold-reader pass afterwards on the amended doc, and record what it finds
+
+### W-3.2 — Port stage 03's doc round into the app ☐ *(next)*
+
+W-3.1 was deliberately doc-only, so `docs/03-architecture.md` and
+`web/src/features/architecture/` now disagree about what the stage contains. That divergence
+is **TD-23**, and this round closes it.
+
+The doc went from eight subsections to thirteen and from 300 lines to 898. The app is still
+the six steps built in W-3: reverse · model · constrain · shape · decide · ai.
+
+- [ ] **Decide the new step structure first.** Five content steps is D-38's ceiling and the
+      doc no longer fits inside it. This round supersedes D-38 with the shape the doc proved,
+      and the superseding decision states the new ceiling and why — not "stage 03 is special"
+- [ ] **New content needing components**: architecture characteristics with the trace-forward
+      table, the styles comparison, the system sketch with its three views, the sync/async
+      decision, the database section's ER view and indexes, API contracts
+- [ ] **Mirror the corrections, not just the additions** — `scoring.ts` holds the DDL
+      annotations, the interrogation set and the reversibility lists, all of which changed.
+      The interrogation set gained a fifth question; the DDL gained indexes, a partial unique
+      index, and the `memberships` table
+- [ ] **`terms.ts` already has the 14 new terms** (glossary 42 → 56, shipped in W-3.1). They
+      are defined but not yet used inline by any component, which is the wiring this round does
+- [ ] Re-run the audit suite — new step hashes need adding to `e2e/audit.spec.ts` by hand
+      (TD-12), and the 320px overflow check matters for the ASCII diagrams and the wide tables
+- [ ] Close **TD-23** when doc and app agree again
+
 #### AI-plays coverage, per stage
 
 Each stage gets its own "AI plays" section, tuned to that stage's work (discovery's is
@@ -157,7 +269,8 @@ plan"; architecture's, testing's and so on will each have their own). Status:
 |---|---|---|---|
 | 01 Product Discovery | ☑ | ☑ | Doc `### AI in discovery` backfilled; TD-15 closed |
 | 02 Product Planning | ☑ | ☑ | Done: 7th step + `### AI in planning` |
-| 03–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
+| 03 Architecture | ☑ | ☑ | `### AI in architecture` + a 6th step. The doc had **no** AI section — the round had to write one before it could mirror it, which is why `stage-metadata.test.ts` now fails any stage whose doc lacks the heading |
+| 04–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
 
 Suggested order. Revised 2026-07-24 (D-27): the first pass ranked purely by teaching
 value and put 02 fifth. That ignored the reader's journey and the risk of proving the
@@ -166,10 +279,11 @@ pattern library on the hardest stage.
 | Order | Stage | Why this one next |
 |---|---|---|
 | ~~1~~ ✓ | 02 Product Planning | **Done.** Complete + interactive + audience-validated (D-37: developer-complete; PM/SA are scope boundaries). Proved `web/PATTERNS.md`, the carry-forward chain, and the AI-plays pattern transfer. |
-| **2 (next)** | 03 Architecture | Densest concepts, most diagram-friendly, and the **solutions architect's home** — the audience stage 02 feeds but does not serve. Unblocked now that TD-2/TD-3 are closed. Uses the migrated `adr`/`blast-radius` terms inline. |
-| 3 | 15 Observability | Unfamiliar ground; benefits most from figures |
-| 4 | 16 Incident Management | Procedural, so a stepper fits naturally |
-| 5 | 13 Production Deployment | Expand/migrate/contract needs a visual |
+| ~~2~~ ✓ | 03 Architecture | **App done; doc has open gaps (TD-18).** Densest stage, nine figures, six steps. Stress-tested the pattern library and produced one new row (annotated artifact). The cold-reader pass then found the *doc* underneath it is incomplete for a beginner — see the recommendation below. |
+| **3 (next, recommended)** | — | **Close stage 03's doc gaps (TD-18)** before building another stage. Three are blocking for a reader using the stage as intended, and the app mirrors the doc, so every fix is a two-file change that gets more expensive as more stages copy the pattern. |
+| 4 | 15 Observability | Unfamiliar ground; benefits most from figures |
+| 5 | 16 Incident Management | Procedural, so a stepper fits naturally |
+| 6 | 13 Production Deployment | Expand/migrate/contract needs a visual |
 | — | remainder | 04–12, 14, 17, 18 |
 
 **~~Settle before stage 03:~~ ✓ resolved 2026-07-27 (D-36).** TD-2 and TD-3 are closed:

@@ -54,3 +54,21 @@ test('stage 02 vocabulary is defined, since the stage introduces words the playb
     expect(TERMS[id], `${id} is missing`).toBeDefined()
   }
 })
+
+test('stage 03 vocabulary is defined, since the stage introduces words the playbook never used', () => {
+  for (const id of [
+    'domain-model',
+    'derived-state',
+    'soft-delete',
+    'join-table',
+    'monolith',
+    'authorization',
+    'database-constraint',
+  ]) {
+    expect(getTerm(id), `${id} is missing`).toBeDefined()
+  }
+})
+
+test('authorization is defined against authentication, because conflating them is the mistake the stage names', () => {
+  expect(getTerm('authorization')?.full).toMatch(/authentication/i)
+})

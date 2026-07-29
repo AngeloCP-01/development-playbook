@@ -6,8 +6,8 @@ import { ArrowRight, Check, Copy, Trash2 } from 'lucide-react'
 import { Card, Callout } from '@/components/ui'
 
 /**
- * Source: docs/02-planning.md:140-152, plus the "Spikes that become
- * production code" trap at docs/02-planning.md:285.
+ * Source: docs/02-planning.md, "Timebox the unknowns", plus the "Spikes that become
+ * production code" trap at docs/02-planning.md, "Traps".
  *
  * The copy-artifact pattern (`AIWorkflow` prompts are the canonical example
  * in this codebase): a filled template the reader takes and reuses, not a

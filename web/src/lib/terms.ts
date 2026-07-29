@@ -300,6 +300,183 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'Half the advice in this playbook is a specific application of it — the "not now" list, the MVP cut, deferring architecture. When in doubt, do less.',
   },
+  'domain-model': {
+    name: 'Domain model',
+    see: '03-architecture',
+    short:
+      'The nouns your system holds and how they relate, before any table exists.',
+    full: 'A description of the system in entities and relationships — a user has many clients, a client has many invoices — written in the language of the problem rather than the language of the database. Tables come after, as one way of storing it.',
+    soWhat:
+      'It is the decision that outlives every framework choice, because migrating code is easy and migrating data is not. Getting it wrong is the most expensive kind of wrong available before you have users.',
+  },
+  'derived-state': {
+    name: 'Derived state',
+    see: '03-architecture',
+    short:
+      'A value that could be calculated from others, but is stored anyway.',
+    full: 'Anything you could work out on demand — whether an invoice is overdue, how many items are in a cart, a running total — that is written into a column instead. Storing it means something has to keep it up to date.',
+    soWhat:
+      'Stored derived state drifts. The job that updates it misses a run, or a script writes around it, and now two fields in your database disagree about the same fact with no way to tell which is right.',
+  },
+  'soft-delete': {
+    name: 'Soft delete',
+    see: '03-architecture',
+    short: 'Marking a row deleted instead of removing it.',
+    full: 'A deleted_at timestamp or a boolean flag, set instead of issuing a DELETE. The row stays; every query that should not see it has to filter it out.',
+    soWhat:
+      'It is the trade the stage asks you to make deliberately: a permanently more complex query set, in exchange for being able to answer “where did that invoice go”. For financial or audited records, the complexity is usually worth it, and the decision cannot be revisited after the rows are gone.',
+  },
+  'join-table': {
+    name: 'Join table',
+    see: '03-architecture',
+    short: 'A table whose job is to connect two other tables.',
+    full: 'When a client can belong to several users and a user to several clients, neither table can hold the relationship in a column. A third table holds pairs of ids instead — one row per connection.',
+    soWhat:
+      'Starting with a foreign key and discovering later that you needed a join table is a migration plus a rewrite of every query that touched the relationship. The asymmetry is the reason to think about it now rather than when it bites.',
+  },
+  monolith: {
+    name: 'Monolith',
+    see: '03-architecture',
+    short: 'One application, one deployment, one process.',
+    full: 'A system where all the code runs together rather than being split across services that talk over a network. Internal structure can still be strict; the distinction is about deployment and process boundaries, not tidiness.',
+    soWhat:
+      'For one developer it is the correct default rather than a compromise. The benefits of splitting — independent deploys, independent team scaling — are organisational, and you cannot collect them alone, but you pay every cost from day one.',
+  },
+  authorization: {
+    name: 'Authorization',
+    see: '03-architecture',
+    short: 'Deciding what a known user is allowed to do.',
+    full: 'Distinct from authentication, which establishes who the caller is: authentication gets you a user id, authorization decides whether that user id may read invoice 42. It comes in three patterns, and most products need more than one. Ownership — the row carries the caller’s id and you compare them. Role — the caller holds a role that grants the action, whoever owns the row. Membership — the caller and the row belong to the same group, which is what shared workspaces actually need.',
+    soWhat:
+      'Authentication is the part people buy or borrow and mostly get right. Authorization is written by hand in every route, and it is where other people’s data leaks when one route forgets. Ownership is the dangerous default: it is right often enough to feel general, then fails silently on the first product where one person acts on another person’s record.',
+  },
+  'database-constraint': {
+    name: 'Database constraint',
+    see: '03-architecture',
+    short:
+      'A rule the database enforces itself, regardless of what the code does.',
+    full: 'NOT NULL, UNIQUE, CHECK, and foreign keys with their delete behaviour. Declared in the schema, so the database refuses to store a row that breaks them.',
+    soWhat:
+      'Application code has bugs, gets bypassed by migration scripts and one-off fixes, and races with itself under concurrency. The database does not get bypassed, which makes it the only place a rule genuinely holds.',
+  },
+  'event-sourcing': {
+    name: 'Event sourcing',
+    see: '03-architecture',
+    short:
+      'Storing the sequence of changes as the source of truth, not the current state.',
+    full: 'Instead of a row holding the current value, you store every change that ever happened and derive the current value by replaying them. The log is the database; the table you query is a projection built from it.',
+    soWhat:
+      'The distinction people get wrong: keeping an audit table alongside normal rows is not event sourcing. It is event sourcing only when the log is the truth and the current state is derived. That is a much larger commitment, and it is why the answer here is almost always no.',
+  },
+  cqrs: {
+    name: 'CQRS (Command Query Responsibility Segregation)',
+    see: '03-architecture',
+    short: 'Separate models for writing data and for reading it.',
+    full: 'Splitting the write path and the read path so each can be shaped for its own job — writes validated against one model, reads served from another built for the queries the screens make. Often paired with event sourcing, though neither requires the other.',
+    soWhat:
+      'It buys read performance and independent evolution of the two paths, at the cost of two models to keep aligned and reads that lag writes. For a system where one Postgres query answers the screen, it is complexity with nothing on the other side.',
+  },
+  normalisation: {
+    name: 'Normalisation',
+    see: '03-architecture',
+    short: 'Arranging tables so each fact is stored in exactly one place.',
+    full: 'A series of increasingly strict forms — first, second and third normal form are the ones that matter in practice — describing how far a schema has removed duplicated facts. Third normal form roughly means every column depends on the key, the whole key, and nothing but the key.',
+    soWhat:
+      'The practical test is shorter than the theory: if changing one fact means updating two rows, the model is wrong and will eventually disagree with itself. Denormalising on purpose to make a slow query fast is fine; denormalising by accident is how data rots.',
+  },
+  'partial-unique-index': {
+    name: 'Partial unique index',
+    see: '03-architecture',
+    short: 'Uniqueness enforced over only the rows that match a condition.',
+    full: "A unique index with a WHERE clause, so the constraint applies to a subset of the table. `CREATE UNIQUE INDEX ... ON claims (shift_id) WHERE status = 'approved'` permits many rejected claims per shift and exactly one approved one.",
+    soWhat:
+      'It is the tool for rules of the form "at most one active X per Y", which plain UNIQUE cannot express and application code cannot enforce against a race. Without it, the usual workaround is a check-then-insert that two concurrent requests both pass.',
+  },
+  'c4-model': {
+    name: 'C4 model',
+    see: '03-architecture',
+    short:
+      'Four zoom levels for diagramming a system: context, container, component, code.',
+    full: 'Simon Brown’s convention for architecture diagrams. Context shows your system and the outside world it talks to. Container shows the deployable things inside it — the application, the database, the worker. Component shows the pieces inside one container. Code is classes and functions.',
+    soWhat:
+      'It answers the question that stops most people drawing anything: what goes in the diagram, and at what altitude. For one person the first two levels do nearly all the work, and the code level is what an editor already draws for free.',
+  },
+  idempotency: {
+    name: 'Idempotency',
+    see: '03-architecture',
+    short: 'Doing it twice has the same effect as doing it once.',
+    full: 'A property of an operation: running it repeatedly with the same input leaves the system in the same state as running it once. Usually achieved by having the caller supply a key, and recording which keys have already been processed.',
+    soWhat:
+      'Anything that can be retried will eventually be retried, and anything delivered over a network will eventually arrive twice. Without it, a payment webhook that fires twice charges twice — and the second delivery is not a bug you can fix on your side.',
+  },
+  'bounded-context': {
+    name: 'Bounded context',
+    see: '03-architecture',
+    short: 'A boundary inside which one word means exactly one thing.',
+    full: 'From domain-driven design: a section of the system with its own model, where the terms have a single agreed meaning. "Invoice" in billing and "invoice" in a customer-support view are often not the same object, and a bounded context is the admission that forcing them together costs more than keeping them apart.',
+    soWhat:
+      'It gives you a reason to put a boundary somewhere specific rather than wherever the folders ended up. Fowler’s argument is that unifying the model across a whole large system is not cost-effective, so boundaries should follow the lines where people already use words differently.',
+  },
+  'ubiquitous-language': {
+    name: 'Ubiquitous language',
+    see: '03-architecture',
+    short:
+      'One vocabulary shared by the code and the people describing the problem.',
+    full: 'The practice of using the domain’s own words in the code — the table is called `claims` because the people who use the system say "claim". Not a translation layer between business terms and technical ones, but the deliberate absence of one.',
+    soWhat:
+      'Where the words diverge, bugs live in the gap: someone says "cancelled" meaning withdrawn-by-the-user and the code means rejected-by-a-manager. It also tells you where a bounded context boundary belongs — the point where the same word starts meaning something else.',
+  },
+  'modular-monolith': {
+    name: 'Modular monolith',
+    see: '03-architecture',
+    short:
+      'One deployable, with internal boundaries strict enough to split later.',
+    full: 'A monolith whose features own their data and talk to each other through published functions rather than by reaching into each other’s tables. One process and one deploy, but the seams are real and maintained.',
+    soWhat:
+      'It is what most solo and small-team projects should be, and it is frequently built without anyone using the name. Its cost is honest: the boundaries are held by discipline, because nothing in a single codebase enforces them for you.',
+  },
+  microservices: {
+    name: 'Microservices',
+    see: '03-architecture',
+    short:
+      'Separate deployables, each owning its data, talking over a network.',
+    full: 'An architecture where services are deployed and scaled independently and communicate over the network. Each owns its own storage; sharing a database between services undoes most of what the split was for.',
+    soWhat:
+      'What it buys is organisational — teams shipping without coordinating. What it costs is technical and arrives immediately: network failure modes, distributed debugging, and consistency problems that a single database solved for free. One person collects none of the benefit and all of the cost.',
+  },
+  'event-driven-architecture': {
+    name: 'Event-driven architecture',
+    see: '03-architecture',
+    short: 'Components react to events rather than calling each other.',
+    full: 'A style where a component announces that something happened and others respond, instead of one calling the next directly. It is a communication choice rather than a deployment shape — a single application can be event-driven inside.',
+    soWhat:
+      'It decouples the sender from who listens, which is exactly what makes it hard to follow: no call stack shows you the consequences of an event. Worth it where the consequences genuinely are open-ended, expensive where they are three known steps.',
+  },
+  serverless: {
+    name: 'Serverless',
+    see: '03-architecture',
+    short: 'Functions that run on demand, with no server you keep alive.',
+    full: 'Code deployed as individual functions the platform starts when a request arrives and stops afterwards, billed per invocation rather than per hour. Vercel’s deployment model for a Next.js application is this.',
+    soWhat:
+      'Scaling to zero is real and useful when load is spiky or near nothing. The costs are cold starts, execution time limits, and work that does not fit the request-response shape — which is why the stage’s split triggers name execution limits first.',
+  },
+  'hexagonal-architecture': {
+    name: 'Hexagonal architecture (ports and adapters)',
+    see: '03-architecture',
+    short:
+      'Domain logic in the middle, with everything external behind an interface.',
+    full: 'An organising principle where the core logic defines interfaces — ports — and the database, HTTP layer and third-party services are adapters plugged into them. The core depends on nothing outside itself.',
+    soWhat:
+      'It describes how a codebase is arranged inside, not how it deploys, so a hexagonal monolith is an ordinary thing. Confusing the two axes is what makes "monolith or microservices" sound like one question when it is two.',
+  },
+  'architecture-characteristic': {
+    name: 'Architecture characteristic (non-functional requirement)',
+    see: '03-architecture',
+    short: 'What a system has to be good at, as opposed to what it does.',
+    full: 'Availability, correctness, auditability, latency, security, cost to run — the qualities a design has to satisfy, separate from the features it delivers. Richards and Ford call them architecture characteristics; most job descriptions and specifications call the same thing non-functional requirements. One idea, two vocabularies.',
+    soWhat:
+      'They trade against each other, so a list of twenty is a list of none — high availability costs money, strong auditability costs write throughput, and cheap-to-run costs both. Three or four chosen deliberately are what turn a structural decision into something you can defend; without them, picking an architecture is picking a preference.',
+  },
 }
 
 export function getTerm(key: string): Term | undefined {

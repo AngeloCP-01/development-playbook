@@ -28,3 +28,8 @@ Naming: `<topic>-101.md`.
   produce the real artifact. A beginner persona finds completeness defects; role personas
   answer "is it ready for audience X?" It caught two content defects in stage 02 and
   settled its scope. Read it before calling any stage doc done.
+- `contrast-checkers-lie.md` — the three ways a colour audit reports a failure that is not
+  there: reading `getComputedStyle` while a `transition-colors` is still running, parsing
+  `oklab()` with a regex instead of rasterizing it, and passing green over surfaces it
+  never looked at. Each has happened here. Read it before changing a token in response to
+  a contrast number.

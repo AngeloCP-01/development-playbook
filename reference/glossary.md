@@ -13,15 +13,35 @@ drift apart.
 
 **Appetite** — A fixed budget of time you are willing to spend, which the solution is then shaped to fit. An estimate starts with a design and ends with a number; an appetite starts with a number and ends with a design. See [02 — Product Planning](../docs/02-planning.md).
 
+**Architecture characteristic (non-functional requirement)** — Availability, correctness, auditability, latency, security, cost to run — the qualities a design has to satisfy, separate from the features it delivers. Richards and Ford call them architecture characteristics; most job descriptions and specifications call the same thing non-functional requirements. One idea, two vocabularies. See [03 — Architecture](../docs/03-architecture.md).
+
+**Authorization** — Distinct from authentication, which establishes who the caller is: authentication gets you a user id, authorization decides whether that user id may read invoice 42. It comes in three patterns, and most products need more than one. Ownership — the row carries the caller’s id and you compare them. Role — the caller holds a role that grants the action, whoever owns the row. Membership — the caller and the row belong to the same group, which is what shared workspaces actually need. See [03 — Architecture](../docs/03-architecture.md).
+
 **Blast radius** — The reach of a change or a failure: how much of the system is affected when this one piece goes wrong. See [03 — Architecture](../docs/03-architecture.md).
+
+**Bounded context** — From domain-driven design: a section of the system with its own model, where the terms have a single agreed meaning. "Invoice" in billing and "invoice" in a customer-support view are often not the same object, and a bounded context is the admission that forcing them together costs more than keeping them apart. See [03 — Architecture](../docs/03-architecture.md).
+
+**C4 model** — Simon Brown’s convention for architecture diagrams. Context shows your system and the outside world it talks to. Container shows the deployable things inside it — the application, the database, the worker. Component shows the pieces inside one container. Code is classes and functions. See [03 — Architecture](../docs/03-architecture.md).
 
 **Canary** — Releasing a change to a small slice of traffic first, watching it, then widening. On Vercel it is approximated with skew protection and staged rollouts rather than true traffic splitting. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **Concierge test** — You do the work manually for a handful of real users — spreadsheets, emails, your own labour — while they experience the result as if it were a product.
 
+**CQRS (Command Query Responsibility Segregation)** — Splitting the write path and the read path so each can be shaped for its own job — writes validated against one model, reads served from another built for the queries the screens make. Often paired with event sourcing, though neither requires the other. See [03 — Architecture](../docs/03-architecture.md).
+
+**Database constraint** — NOT NULL, UNIQUE, CHECK, and foreign keys with their delete behaviour. Declared in the schema, so the database refuses to store a row that breaks them. See [03 — Architecture](../docs/03-architecture.md).
+
 **Definition of done** — A specific, checkable statement of what "done" means for a piece of work — a state you can hold the running product up against and confirm, yes or no. Every stage doc has one.
 
+**Derived state** — Anything you could work out on demand — whether an invoice is overdue, how many items are in a cart, a running total — that is written into a column instead. Storing it means something has to keep it up to date. See [03 — Architecture](../docs/03-architecture.md).
+
+**Domain model** — A description of the system in entities and relationships — a user has many clients, a client has many invoices — written in the language of the problem rather than the language of the database. Tables come after, as one way of storing it. See [03 — Architecture](../docs/03-architecture.md).
+
 **Error budget** — The failure you have decided is acceptable over a window. A 99.9% uptime target is roughly a 43-minute monthly budget. Spending it is allowed — that is what a budget is for; exceeding it means stop shipping features and fix reliability. See [15 — Observability](../docs/15-observability.md).
+
+**Event sourcing** — Instead of a row holding the current value, you store every change that ever happened and derive the current value by replaying them. The log is the database; the table you query is a projection built from it. See [03 — Architecture](../docs/03-architecture.md).
+
+**Event-driven architecture** — A style where a component announces that something happened and others respond, instead of one calling the next directly. It is a communication choice rather than a deployment shape — a single application can be event-driven inside. See [03 — Architecture](../docs/03-architecture.md).
 
 **Fake-door test** — A page describing the product with a real signup or purchase button. Clicking it reaches a "coming soon" message. You measure how many people click.
 
@@ -29,17 +49,33 @@ drift apart.
 
 **Golden signals** — The four measurements to instrument before any others: latency, traffic, errors, and saturation. If you watch only four things, watch these. See [15 — Observability](../docs/15-observability.md).
 
+**Hexagonal architecture (ports and adapters)** — An organising principle where the core logic defines interfaces — ports — and the database, HTTP layer and third-party services are adapters plugged into them. The core depends on nothing outside itself. See [03 — Architecture](../docs/03-architecture.md).
+
+**Idempotency** — A property of an operation: running it repeatedly with the same input leaves the system in the same state as running it once. Usually achieved by having the caller supply a key, and recording which keys have already been processed. See [03 — Architecture](../docs/03-architecture.md).
+
 **Jobs to be done (JTBD)** — A framing that describes users by the job they are "hiring" a product to do — "help me look organised to my clients" — rather than by who they are. Two people with nothing demographically in common can share a job.
+
+**Join table** — When a client can belong to several users and a user to several clients, neither table can hold the relationship in a column. A third table holds pairs of ids instead — one row per connection. See [03 — Architecture](../docs/03-architecture.md).
 
 **Leading question** — "Would this save you time?" contains its own answer. The polite response is yes, it costs the respondent nothing, and you learn only that they are agreeable.
 
 **Merge gate** — The set of automated checks that must pass before code merges to the main branch. Distinct from deployment: the gate protects the branch, the deploy ships it. See [11 — CI/CD](../docs/11-ci-cd.md).
 
+**Microservices** — An architecture where services are deployed and scaled independently and communicate over the network. Each owns its own storage; sharing a database between services undoes most of what the split was for. See [03 — Architecture](../docs/03-architecture.md).
+
+**Modular monolith** — A monolith whose features own their data and talk to each other through published functions rather than by reaching into each other’s tables. One process and one deploy, but the seams are real and maintained. See [03 — Architecture](../docs/03-architecture.md).
+
+**Monolith** — A system where all the code runs together rather than being split across services that talk over a network. Internal structure can still be strict; the distinction is about deployment and process boundaries, not tidiness. See [03 — Architecture](../docs/03-architecture.md).
+
 **MVP (Minimum Viable Product)** — Minimum viable product: the least you can build that still achieves the result you wrote down, so that real usage can tell you what to build next. It is defined by the outcome, not by a feature count. See [02 — Product Planning](../docs/02-planning.md).
+
+**Normalisation** — A series of increasingly strict forms — first, second and third normal form are the ones that matter in practice — describing how far a schema has removed duplicated facts. Third normal form roughly means every column depends on the key, the whole key, and nothing but the key. See [03 — Architecture](../docs/03-architecture.md).
 
 **npm** — Reads your package.json, downloads every package it names (and everything those packages need) from the npm registry, and copies the whole tree into the project’s node_modules folder. Every project gets its own full copy, hoisted into one flat pile. See [04 — Project Setup](../docs/04-project-setup.md).
 
 **Opportunity solution tree** — A diagram by Teresa Torres with four levels: the outcome you want to move, the customer opportunities (problems, needs, desires) that could move it, the solutions that address each opportunity, and the experiments that test each solution. See [01 — Product Discovery](../docs/01-product-discovery.md).
+
+**Partial unique index** — A unique index with a WHERE clause, so the constraint applies to a subset of the table. `CREATE UNIQUE INDEX ... ON claims (shift_id) WHERE status = 'approved'` permits many rejected claims per shift and exactly one approved one. See [03 — Architecture](../docs/03-architecture.md).
 
 **Phantom dependency** — A package your code imports but never listed in package.json. It resolves only because some other dependency happened to pull it into a flat node_modules, and it breaks mysteriously when that package updates or drops it. See [04 — Project Setup](../docs/04-project-setup.md).
 
@@ -59,11 +95,15 @@ drift apart.
 
 **Rollback** — Returning production to the last known-good state. On Vercel it is promoting a prior deployment, which takes seconds — but it is not automatic for database migrations, which is why migrations get careful, separate treatment. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
+**Serverless** — Code deployed as individual functions the platform starts when a request arrives and stops afterwards, billed per invocation rather than per hour. Vercel’s deployment model for a Next.js application is this. See [03 — Architecture](../docs/03-architecture.md).
+
 **Skew protection** — Ensuring a browser still running the previous client JavaScript can talk to the server after a new deploy. Without it, users mid-session hit errors every time you ship. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **SLO (Service Level Objective)** — The reliability target you commit to — for example, "99.9% of requests succeed." Meaningful only if you have decided in advance what happens when you miss it. See [15 — Observability](../docs/15-observability.md).
 
 **Smoke test** — A small set of checks confirming the critical paths still work after a deploy. Not comprehensive by design; it answers "is this catastrophically broken?" in under a minute. See [14 — Post-Deployment Verification](../docs/14-post-deployment-verification.md).
+
+**Soft delete** — A deleted_at timestamp or a boolean flag, set instead of issuing a DELETE. The row stays; every query that should not see it has to filter it out. See [03 — Architecture](../docs/03-architecture.md).
 
 **Spike** — A short, deliberately bounded piece of exploration answering one specific question — can this integration do what we need, is this approach fast enough — with a hard stop and a written answer. See [02 — Product Planning](../docs/02-planning.md).
 
@@ -74,6 +114,8 @@ drift apart.
 **TAM (Total Addressable Market)** — Total Addressable Market — every person or business who could conceivably buy this, if you had no competitors and perfect reach. Usually paired with SAM (the slice you could realistically serve) and SOM (the slice you could realistically win).
 
 **Traps** — The closing section of every stage doc — the failure modes worth naming. They accumulate from real experience and become the most valuable part of the playbook over time.
+
+**Ubiquitous language** — The practice of using the domain’s own words in the code — the table is called `claims` because the people who use the system say "claim". Not a translation layer between business terms and technical ones, but the deliberate absence of one. See [03 — Architecture](../docs/03-architecture.md).
 
 **Vertical slice** — Work sequenced so each step goes through storage, logic and interface at once, rather than building each layer across the whole product before starting the next. See [02 — Product Planning](../docs/02-planning.md).
 

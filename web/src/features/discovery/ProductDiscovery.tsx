@@ -13,6 +13,7 @@ import { OpportunityTree } from './OpportunityTree'
 import { WorkedExample } from './WorkedExample'
 import { PipelineFit } from './PipelineFit'
 import { Worksheet } from './Worksheet'
+import { TeamNotes } from '@/features/architecture/TeamNotes'
 
 const STEPS: Step[] = [
   {
@@ -298,6 +299,37 @@ const STEPS: Step[] = [
             <Worksheet />
           </div>
         </Section>
+
+        <TeamNotes>
+          <ul className="space-y-2.5">
+            <li>
+              <strong className="font-medium text-fg">
+                Write it down properly,
+              </strong>{' '}
+              because now discovery has to transfer to people who were not in
+              the conversations.
+            </li>
+            <li>
+              <strong className="font-medium text-fg">
+                Share raw notes, not summaries.
+              </strong>{' '}
+              Summaries lose the specific quotes that change minds.
+            </li>
+            <li>
+              <strong className="font-medium text-fg">
+                Include an engineer in customer conversations.
+              </strong>{' '}
+              Requirements passed through a game of telephone lose exactly the
+              details that determine implementation.
+            </li>
+            <li>
+              <strong className="font-medium text-fg">
+                Keep a decision log of what you declined and why,
+              </strong>{' '}
+              or the same rejected idea returns quarterly.
+            </li>
+          </ul>
+        </TeamNotes>
 
         <Section eyebrow="Traps" title="Failure modes worth naming">
           <div className="space-y-3">

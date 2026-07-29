@@ -79,6 +79,32 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: 'The next step up from the value-against-effort method this stage teaches: RICE, ICE, MoSCoW and the rest, with when each earns its extra ceremony. Reach for it once you have real usage data and more items than value-vs-effort can order by eye.',
     },
   ],
+  '03-architecture': [
+    {
+      title: 'Documenting Architecture Decisions',
+      source: 'Michael Nygard',
+      url: 'https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions',
+      adds: 'The origin of the artifact this stage tells you to write, from the person who named it. Go here for the status lifecycle — proposed, accepted, superseded — which is the part that makes a folder of ADRs a record of how thinking changed rather than a pile of decisions that may or may not still hold.',
+    },
+    {
+      title: 'MonolithFirst',
+      source: 'Martin Fowler',
+      url: 'https://martinfowler.com/bliki/MonolithFirst.html',
+      adds: 'Evidence where this stage asserts. Fowler reports what happened to teams who started with microservices rather than arguing from first principles, and names the reason it fails: you cannot draw good service boundaries before you understand the domain, and building the monolith is how you come to understand it.',
+    },
+    {
+      title: 'Choose Boring Technology',
+      source: 'Dan McKinley',
+      url: 'https://mcfunley.com/choose-boring-technology',
+      adds: 'The budget framing this stage implies but never states. You get roughly three innovation tokens; everything novel spends one, and the ones you spend on infrastructure are not available for the thing you are actually building. Useful for the decisions that feel too small to deliberate over.',
+    },
+    {
+      title: 'Who Needs an Architect?',
+      source: 'Martin Fowler · IEEE Software',
+      url: 'https://martinfowler.com/ieeeSoftware/whoNeedsArchitect.pdf',
+      adds: 'Where this stage’s opening claim comes from — architecture as the decisions that are hard to change — and, more usefully, its limits. Fowler’s argument is that the job is to make decisions reversible rather than to make them correctly, which reframes the whole reversibility sort.',
+    },
+  ],
 }
 
 export function getReferences(slug: string): Reference[] {

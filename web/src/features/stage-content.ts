@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react'
 import { ProductDiscovery } from './discovery/ProductDiscovery'
 import { Planning } from './planning/Planning'
+import { Architecture } from './architecture/Architecture'
 
 /**
  * Stage slug → interactive page body. A stage missing from this map renders the
@@ -9,4 +10,5 @@ import { Planning } from './planning/Planning'
 export const STAGE_CONTENT: Record<string, ComponentType> = {
   '01-product-discovery': ProductDiscovery,
   '02-planning': Planning,
+  '03-architecture': Architecture,
 }

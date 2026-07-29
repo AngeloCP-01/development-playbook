@@ -9,8 +9,8 @@ import { CUT_FEATURES, scoreCut } from './scoring'
  * Source: docs/02-planning.md, "Cut to the core".
  *
  * Eight candidate features for the invoice tracker. For each, the reader
- * guesses Core or Cut before the verdict shows — the same "does the
- * definition of done fail without this?" test the doc applies at :55-56.
+ * guesses Core or Cut before the verdict shows — the same "does the outcome
+ * fail without this?" test the doc applies at  "Cut to the core".
  */
 
 export function CutTable() {
