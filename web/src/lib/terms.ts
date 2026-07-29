@@ -346,9 +346,9 @@ export const TERMS: Record<string, Term> = {
     name: 'Authorization',
     see: '03-architecture',
     short: 'Deciding what a known user is allowed to do.',
-    full: 'The check that this particular record belongs to this particular caller. Distinct from authentication, which establishes who the caller is: authentication gets you a user id, authorization decides whether that user id may read invoice 42.',
+    full: 'Distinct from authentication, which establishes who the caller is: authentication gets you a user id, authorization decides whether that user id may read invoice 42. It comes in three patterns, and most products need more than one. Ownership — the row carries the caller’s id and you compare them. Role — the caller holds a role that grants the action, whoever owns the row. Membership — the caller and the row belong to the same group, which is what shared workspaces actually need.',
     soWhat:
-      'Authentication is the part people buy or borrow and mostly get right. Authorization is the part written by hand in every route, and the part that leaks other people’s data when one route forgets it.',
+      'Authentication is the part people buy or borrow and mostly get right. Authorization is written by hand in every route, and it is where other people’s data leaks when one route forgets. Ownership is the dangerous default: it is right often enough to feel general, then fails silently on the first product where one person acts on another person’s record.',
   },
   'database-constraint': {
     name: 'Database constraint',

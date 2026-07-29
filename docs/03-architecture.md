@@ -156,8 +156,28 @@ Whatever you choose, write the ADR — the architecture decision record, covered
 is exactly the decision that gets relitigated in six months by someone who has forgotten
 the constraints.
 
-The part people get wrong is not authentication but **authorization** — proving the
-record belongs to the caller. Decide the pattern now and apply it uniformly. See
+The part people get wrong is not authentication but **authorization**: deciding whether this
+caller may do this thing to this record. It comes in three patterns, and the mistake is
+assuming there is only one.
+
+| Pattern | The question it asks | Where it holds |
+|---|---|---|
+| **Ownership** | Does this row carry the caller's id? | A user's own invoices, drafts, notes |
+| **Role** | Does this caller hold a role that grants the action? | A manager approving someone else's request |
+| **Membership** | Do the caller and the row belong to the same group? | Anything with a shared workspace or team |
+
+Ownership is the one everybody reaches for, and it is the one that fails quietly. It is
+correct for a product where each person works on their own things, which makes it feel
+general — until the first feature where somebody acts on a record they do not own. A manager
+approving a shift swap between two other people owns none of the three rows involved.
+
+So the decision is not which pattern to use. It is **which pattern applies to which
+entity**, written down per entity, because a system with a shared workspace will use all
+three. Getting this wrong is not an error you find later; it is a system that works
+correctly for the person who built it and leaks for everyone else.
+
+Enforcement — where the check physically goes, and what happens when a route forgets — is
+stage 05's, in
 [05 — Development](05-development.md#server-actions-need-validation-and-authorization).
 
 ### Write the ADRs
