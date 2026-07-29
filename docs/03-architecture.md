@@ -284,8 +284,105 @@ project.
 
 ### Sketch the system
 
-One application is still not one box — the sketch is of everything it depends on, and what
-happens when each of those is down.
+There is an obvious objection to drawing anything at this point: if the answer is one
+application and one database, the diagram is two boxes and a line, and drawing it teaches
+nobody anything.
+
+The objection is right about the application and wrong about the system. **Your application
+is one box. Your system is not.** The invoicing example takes payments, sends email, renders
+and stores PDFs, and needs something to notice when an invoice has gone past its due date.
+None of those is code you wrote, all of them fail on their own schedule, and every one is a
+decision you have already made without writing it down.
+
+**C4** is the usual answer to "what kind of diagram". Four levels: **context** (your system
+and the world around it), **container** (the deployable things inside it), **component**
+(the pieces inside one container), **code**. For one person, context and container earn
+their keep. Component is worth drawing for the one subsystem that is genuinely intricate.
+Code is what your editor already draws. Draw two diagrams, not four.
+
+The container view of the invoicing app, which is the one that pays for itself:
+
+```
+                        ┌──────────────────┐
+              ┌────────►│  Payment provider │  (Stripe)
+              │         └────────┬─────────┘
+              │  charge          │ webhook: payment succeeded
+              │                  ▼
+  ┌───────┐   │         ┌──────────────────┐        ┌────────────┐
+  │ User  ├───┼────────►│  Next.js app      │───────►│  Postgres  │
+  └───────┘   │         └────┬────────┬────┘        └────────────┘
+              │              │        │
+              │      send    │        │  render + store
+              │              ▼        ▼
+              │      ┌────────────┐  ┌────────────┐
+              └──────┤   Email    │  │Blob storage│
+                     └────────────┘  └────────────┘
+
+  ┌──────────────────┐
+  │ Scheduled job    │───► marks sent invoices past due_date as overdue
+  └──────────────────┘     (runs daily; see 11 — CI/CD for where it lives)
+```
+
+The deployment view, for this system, is close enough to the same picture that drawing it
+separately would be padding: one application on one platform, one managed database, three
+third-party services reached over HTTPS. Say that rather than producing a second diagram out
+of obligation. It stops being true the moment anything runs on its own schedule or its own
+hardware, and then the view earns its place.
+
+**One data flow, drawn end to end.** Pick the flow that crosses the most boundaries, because
+that is where the design decisions hide:
+
+```
+1. User clicks "send"          →  app writes status = 'sent', calls the email provider
+2. Email provider accepts      →  synchronous; if it fails, the user finds out now
+3. Client pays, days later     →  payment provider fires a webhook at your app
+4. App receives the webhook    →  asynchronous; nobody is waiting, and it may arrive twice
+5. App writes status = 'paid'  →  must be safe to run twice (see below)
+```
+
+Steps 2 and 4 are different in kind, and that difference is a decision the stage has not yet
+posed.
+
+**Synchronous or asynchronous.** This is the fork that leads to event-driven architecture,
+and it has real consequences on each branch:
+
+| | Synchronous | Asynchronous |
+|---|---|---|
+| You learn about failure | Immediately, inside the request | Later, or never, unless you go looking |
+| The caller waits | Yes | No |
+| Fails by | The callee being down or slow | The message being lost, delayed, or delivered twice |
+| Needs | A timeout and a retry policy | **Idempotency**, and somewhere to put what failed |
+
+The rule that catches people: **for anything you receive, you do not get to choose.** A
+payment webhook is asynchronous because somebody else decided it is, it will be delivered
+twice eventually, and step 5 above has to be safe when that happens. That is what idempotency
+means, and it is not optional on a payment flow.
+
+Choose synchronous by default for work you initiate. Reach for asynchronous when the caller
+genuinely should not wait, and accept that you have bought a failure mode you now have to
+watch — which is [15 — Observability](15-observability.md)'s problem, and it starts here.
+
+**Then ask the question that makes the whole sketch worth drawing:** for each box that is not
+yours, what happens when it is down?
+
+- **Payment provider down** — invoices still send; payment reconciles late. Survivable, and
+  it needs no code.
+- **Email provider down** — the invoice must not be lost because the send failed. Either
+  retry, or record the intent and send later. This one is a decision, and the diagram is what
+  forced it.
+- **Blob storage down** — PDFs are regenerable from the invoice row, so this is an
+  inconvenience rather than data loss. That is only true because the row is the source of
+  truth, which is a design property worth having noticed.
+
+Three questions, three answers, one of which is a genuine piece of work you would otherwise
+have discovered in production. That is the return on a diagram.
+
+**What is deliberately not here.** Full high-level design practice comes with a system
+specification document, a review board, and a sign-off before implementation starts. None of
+that is in this stage, on purpose. The thinking survives — what the pieces are, how they
+talk, what happens when one fails — and the paperwork does not, because its actual purpose is
+coordinating people you do not have. If you later have them, the artifact to add first is the
+one above, written down rather than in your head.
 
 ### Design the database
 
@@ -433,7 +530,8 @@ build less than the model offers. It has no stake in maintaining what it propose
 - A domain model: entities, relationships, and the constraints that hold them together
 - Initial database schema with constraints, keys, and indexes
 - ADRs for each expensive decision
-- A one-paragraph description of the system, plus a diagram only if it clarifies
+- A system sketch: the containers, the external systems they depend on, and one data flow
+  drawn end to end
 
 ---
 
@@ -441,6 +539,8 @@ build less than the model offers. It has no stake in maintaining what it propose
 
 - [ ] Characteristics chosen, and each one traced to a decision it forced
 - [ ] Architecture style named, with the alternatives rejected and the reason for each
+- [ ] System sketched, with what happens when each external dependency is down
+- [ ] Integration style decided per external call, and anything received is idempotent
 - [ ] Domain modeled in nouns and relationships, not tables
 - [ ] Derived values computed, not stored
 - [ ] Deletion behavior decided per entity

@@ -359,6 +359,23 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'Application code has bugs, gets bypassed by migration scripts and one-off fixes, and races with itself under concurrency. The database does not get bypassed, which makes it the only place a rule genuinely holds.',
   },
+  'c4-model': {
+    name: 'C4 model',
+    see: '03-architecture',
+    short:
+      'Four zoom levels for diagramming a system: context, container, component, code.',
+    full: 'Simon Brown’s convention for architecture diagrams. Context shows your system and the outside world it talks to. Container shows the deployable things inside it — the application, the database, the worker. Component shows the pieces inside one container. Code is classes and functions.',
+    soWhat:
+      'It answers the question that stops most people drawing anything: what goes in the diagram, and at what altitude. For one person the first two levels do nearly all the work, and the code level is what an editor already draws for free.',
+  },
+  idempotency: {
+    name: 'Idempotency',
+    see: '03-architecture',
+    short: 'Doing it twice has the same effect as doing it once.',
+    full: 'A property of an operation: running it repeatedly with the same input leaves the system in the same state as running it once. Usually achieved by having the caller supply a key, and recording which keys have already been processed.',
+    soWhat:
+      'Anything that can be retried will eventually be retried, and anything delivered over a network will eventually arrive twice. Without it, a payment webhook that fires twice charges twice — and the second delivery is not a bug you can fix on your side.',
+  },
   'bounded-context': {
     name: 'Bounded context',
     see: '03-architecture',
