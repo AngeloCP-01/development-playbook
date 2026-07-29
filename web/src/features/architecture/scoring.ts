@@ -147,12 +147,12 @@ export const INTERROGATIONS: Interrogation[] = [
     id: 'actor-rights',
     question: 'Does every actor have the same rights over this entity?',
     options: [
-      { id: 'entity', label: 'No — "Manager" is its own entity' },
+      { id: 'entity', label: 'No — “Manager” is its own entity' },
       { id: 'column', label: 'No — a role column on users' },
       { id: 'membership', label: 'No — a role on the membership' },
     ],
     answer: 'membership',
-    why: 'The role belongs on the relationship. A users.role column is a single global answer to a question that gets asked per team: a person can manage one team and be an ordinary member of another, and the column cannot say that. Making "Manager" its own entity is worse, because it duplicates the person. Ask this before the schema exists and you get a memberships table with the role on it; ask it afterwards and you get a migration. It is also the question that decides which authorization pattern applies to this entity, which is why ownership is not the only one.',
+    why: 'The role belongs on the relationship. A users.role column is a single global answer to a question that gets asked per team: a person can manage one team and be an ordinary member of another, and the column cannot say that. Making “Manager” its own entity is worse, because it duplicates the person. Ask this before the schema exists and you get a memberships table with the role on it; ask it afterwards and you get a migration. It is also the question that decides which authorization pattern applies to this entity, which is why ownership is not the only one.',
   },
 ]
 

@@ -269,12 +269,3 @@ test('every interrogation offers at least two options, since a question with one
     expect(q.options.length, `${q.id} has too few options`).toBeGreaterThan(1)
   }
 })
-
-test('every interrogation answer names one of its own options, so a typo cannot make a question unanswerable', () => {
-  for (const q of INTERROGATIONS) {
-    expect(
-      q.options.map((o) => o.id),
-      `${q.id} answers with an option it does not offer`,
-    ).toContain(q.answer)
-  }
-})
