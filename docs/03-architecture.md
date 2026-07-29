@@ -308,6 +308,10 @@ their keep. Component is worth drawing for the one subsystem complicated enough 
 re-deriving how it fits together.
 Code is what your editor already draws. Draw two diagrams, not four.
 
+In practice one drawing often covers both: the container view below carries the user and the
+external systems, which is the context view's whole content. Draw them separately when the
+outside world gets busy enough that mixing the two makes either unreadable.
+
 The container view of the invoicing app, which is the one that pays for itself:
 
 ```
@@ -327,8 +331,10 @@ The container view of the invoicing app, which is the one that pays for itself:
                      └────────────┘  └────────────┘
 
   ┌──────────────────┐
-  │ Scheduled job    │───► marks sent invoices past due_date as overdue
+  │ Scheduled job    │───► emails a reminder for sent invoices past due_date
   └──────────────────┘     (runs daily; see 11 — CI/CD for where it lives)
+                           it sends; it does not write a status. "Overdue" is
+                           computed, per the interrogation above.
 ```
 
 The deployment view, for this system, is close enough to the same picture that drawing it
@@ -382,8 +388,13 @@ rather than in implementation. Two mechanisms cover almost everything:
   );
   ```
 
-  Insert the row and do the work in the same transaction. The second delivery fails the
-  primary key, the transaction rolls back, and nothing happens twice.
+  **Insert the row first, then do the work, both in one transaction.** Order matters as soon
+  as "the work" reaches outside the database, which is the case being taught here. The second
+  delivery fails the primary key, the transaction rolls back, and nothing happens twice.
+
+  Then answer the sender **success**. This is the half that gets missed: a duplicate is not
+  an error, it is the system working. Returning a failure means the provider retries, fails
+  again, and keeps going — you have built a loop out of the mechanism meant to prevent one.
 
 - **Make the write itself repeatable.** Setting `status = 'paid'` is already safe to run
   twice; adding to a balance is not. Where you can phrase the change as "set this to that"
@@ -530,11 +541,18 @@ same rights?" was no, or your tenant is an organisation rather than a person, th
 this:
 
 ```sql
--- The tenant key. On every table that holds tenant data, decided now (see
--- "Defer aggressively" for why this one cannot be deferred).
 CREATE TABLE companies (
   id   uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   name text NOT NULL
+);
+
+-- The tenant key, carried on every table that holds tenant data. Decided now:
+-- see "Defer aggressively" for why this is the one item there that cannot wait.
+CREATE TABLE teams (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  company_id uuid NOT NULL REFERENCES companies(id) ON DELETE RESTRICT,
+  name       text NOT NULL,
+  UNIQUE (company_id, name)
 );
 
 -- Roles live on the relationship, not on the user. A person can be a manager
@@ -547,6 +565,11 @@ CREATE TABLE memberships (
   PRIMARY KEY (user_id, team_id)
 );
 ```
+
+`company_id` on `teams` is what the tenant-key decision actually looks like once
+written down, and the `UNIQUE (company_id, name)` beside it is the scoped-uniqueness
+rule from the domain model applied to a tenant: two companies may both have a team
+called Kitchen.
 
 That is the answer to the fifth interrogation question, and it is why the question is asked
 before the schema exists. A `role` column on `users` is the shape you regret: it is a single
@@ -793,6 +816,8 @@ build less than the model offers. It has no stake in maintaining what it propose
 ## Artifacts
 
 - Three or four architecture characteristics, each traced to a decision it forced
+- The architecture style you chose, and the alternatives you rejected with a reason each
+- The tenant axis, if the product has organisations or teams
 - A domain model: entities, relationships, and the constraints that hold them together
 - Initial database schema with constraints, keys, and indexes, each index traced to a query
 - The API contracts you are committing to, sorted by how expensive each is to change
@@ -813,6 +838,8 @@ build less than the model offers. It has no stake in maintaining what it propose
 - [ ] Deletion behavior decided per entity
 - [ ] Uniqueness constraints scoped correctly
 - [ ] Constraints live in the database, not only in application code
+- [ ] Tenant axis decided — person or organisation — and the key present on every table
+      that holds tenant data
 - [ ] Conditional rules expressed as partial unique indexes, not as check-then-insert
 - [ ] Indexes added for the queries you actually run, and no others
 - [ ] API contracts decided, sorted by how expensive each is to change
