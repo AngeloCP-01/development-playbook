@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Check, RotateCcw, X } from 'lucide-react'
 import { Callout, Card } from '@/components/ui'
-import { DECISIONS, scoreReversibility } from './scoring'
+import { DECISIONS, REVERSIBILITY_TEST, scoreReversibility } from './scoring'
 
 /**
  * Source: docs/03-architecture.md, "Sort decisions by reversibility".
@@ -41,6 +41,32 @@ export function ReversibilityTable() {
 
   return (
     <Card>
+      <div className="mb-5 border border-line bg-sunken p-4">
+        <p className="t-label mb-3 text-subtle">
+          The test, applied three times
+        </p>
+        <ol className="space-y-2.5">
+          {REVERSIBILITY_TEST.map((q, i) => (
+            <li key={q.id} className="flex gap-3">
+              <span
+                className="t-data shrink-0 pt-0.5 text-[11px] text-brand"
+                aria-hidden
+              >
+                {`0${i + 1}`}
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-medium text-fg">
+                  {q.question}
+                </span>
+                <span className="mt-0.5 block text-sm leading-6 text-muted">
+                  {q.note}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-sm font-medium">Cheap or expensive to undo?</p>

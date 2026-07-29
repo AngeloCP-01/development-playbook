@@ -19,6 +19,38 @@ export type Decision = {
   why: string
 }
 
+export type TestQuestion = {
+  id: string
+  question: string
+  note: string
+}
+
+/**
+ * Source: docs/03-architecture.md, "Sort decisions by reversibility".
+ *
+ * The test the reader applies to their own decisions rather than looking them
+ * up. It sat in the AI section until W-3.1 promoted it here, which is where it
+ * belongs: the exercise below is six worked examples of this test, and without
+ * it the exercise teaches the answers instead of the method.
+ */
+export const REVERSIBILITY_TEST: TestQuestion[] = [
+  {
+    id: 'what-changes',
+    question: 'What would have to change?',
+    note: 'Name the files, the tables and the deploys. A decision you cannot describe the reversal of is one you have not thought about yet, which is a different problem.',
+  },
+  {
+    id: 'call-sites',
+    question: 'How many call sites touch it?',
+    note: 'A real signal, with one trap in it. Logging calls are everywhere and still cheap, because nothing reads them back. Count what depends on the shape, not what mentions the name.',
+  },
+  {
+    id: 'stored-data',
+    question: 'Is any of it stored data?',
+    note: 'This one dominates the other two. Code is refactorable; data has to be migrated, and a migration runs against rows that already exist, written by a version of the system you no longer have.',
+  },
+]
+
 /** Source: docs/03-architecture.md, "Sort decisions by reversibility". "How expensive is this to undo?" */
 export const DECISIONS: Decision[] = [
   {

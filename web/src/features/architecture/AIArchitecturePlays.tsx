@@ -43,7 +43,7 @@ const HELPS: Entry[] = [
   {
     id: 'reversibility',
     claim: 'Pressure-test a reversibility claim',
-    body: '“This is cheap to undo” has a falsifiable answer. Ask what would have to change, how many call sites touch it, and whether any of it is stored data. A model is good at enumerating consequences and bad at deciding they are acceptable.',
+    body: '”This is cheap to undo” has a falsifiable answer, and the test is the one at the top of this stage. Hand it the decision and the test, and make it argue the expensive case. A model is good at enumerating consequences and bad at deciding they are acceptable.',
   },
   {
     id: 'schema-gaps',

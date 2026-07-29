@@ -5,6 +5,7 @@ import {
   DECISIONS,
   INTERROGATIONS,
   judgeInterrogation,
+  REVERSIBILITY_TEST,
   scoreReversibility,
   SCHEMA_LINES,
   SPLIT_CANDIDATES,
@@ -267,5 +268,19 @@ test('the actor-rights question answers with the relationship, since a users.rol
 test('every interrogation offers at least two options, since a question with one answer is not a judgment', () => {
   for (const q of INTERROGATIONS) {
     expect(q.options.length, `${q.id} has too few options`).toBeGreaterThan(1)
+  }
+})
+
+test('the reversibility test has three questions, which is what makes it a test rather than an instinct', () => {
+  expect(REVERSIBILITY_TEST).toHaveLength(3)
+})
+
+test('the last question is the stored-data one, because the doc says it dominates the other two', () => {
+  expect(REVERSIBILITY_TEST.at(-1)?.id).toBe('stored-data')
+})
+
+test('every test question explains itself, since the questions alone read as a checklist', () => {
+  for (const q of REVERSIBILITY_TEST) {
+    expect(q.note.trim().length, `${q.id} has no note`).toBeGreaterThan(0)
   }
 })
