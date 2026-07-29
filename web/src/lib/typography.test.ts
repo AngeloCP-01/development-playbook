@@ -10,8 +10,9 @@ import { expect, test } from 'vitest'
 // quotation. Every one was caught by a person reading a diff, not by any
 // gate, and one implementer's report admitted its own edit tooling had
 // silently mangled a quote character mid-session and caught only one of the
-// instances itself. The two glyphs, U+201C (opening) and U+201D (closing),
-// are near-identical in most fonts — the defect is real and invisible on
+// instances itself. The opening quote (Unicode U+201C, LEFT DOUBLE QUOTATION
+// MARK) and the closing quote (U+201D, RIGHT DOUBLE QUOTATION MARK) are
+// near-identical in most fonts — the defect is real and invisible on
 // inspection, which is exactly the case a test earns its keep.
 //
 // The rule this test enforces is narrow on purpose: within a file, the curly
@@ -20,6 +21,20 @@ import { expect, test } from 'vitest'
 // legitimately throughout JSX attributes, import paths and string delimiters,
 // and a broader check would produce false positives, which is how a gate
 // gets switched off.
+//
+// This file refers to the two codepoints only by \u escape, never by the
+// literal glyph, anywhere — including in this comment. It lives inside the
+// tree it walks, so a literal glyph here would make the test check itself,
+// and pass or fail on some coincidental detail of its own source (a
+// character-class member order, a variable declaration order, or any other
+// semantically-null edit) rather than on anything about the content it
+// guards. `source-citations.test.ts` avoids the equivalent trap by
+// construction, since its own patterns cannot match its own regex literals;
+// this file avoids it by containing zero instances of the actual glyphs.
+
+const OPEN = '\u201C'
+const CLOSE = '\u201D'
+const CURLY_QUOTE = new RegExp(`[${OPEN}${CLOSE}]`, 'g')
 
 const SRC = fileURLToPath(new URL('..', import.meta.url))
 
@@ -40,8 +55,8 @@ const files = sourceFiles(SRC).map((path) => ({
 // open/close alternation, or null if the file's curly quotes are consistent.
 function firstBrokenQuote(text: string): number | null {
   let expectOpen = true
-  for (const m of text.matchAll(/[“”]/g)) {
-    const isOpen = m[0] === '“'
+  for (const m of text.matchAll(CURLY_QUOTE)) {
+    const isOpen = m[0] === OPEN
     if (isOpen !== expectOpen) return m.index
     expectOpen = !expectOpen
   }
