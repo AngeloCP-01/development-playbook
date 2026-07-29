@@ -1,5 +1,5 @@
 /**
- * Figure 6. Source: docs/03-architecture.md:104-114, "Start with one
+ * Figure 6. Source: docs/03-architecture.md, "Start with one application", "Start with one
  * application".
  *
  * Two neutral columns, not a verdict — this is a trade-off, not a good/bad

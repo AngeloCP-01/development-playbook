@@ -1,5 +1,5 @@
 /**
- * Figure 5. Source: docs/03-architecture.md:293-295, "Cascading deletes on
+ * Figure 5. Source: docs/03-architecture.md, "Traps", "Cascading deletes on
  * financial data" (the trap), read together with the `ON DELETE RESTRICT`
  * schema earlier in the stage.
  *

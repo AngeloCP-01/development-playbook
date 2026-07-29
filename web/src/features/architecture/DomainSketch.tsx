@@ -1,5 +1,5 @@
 /**
- * Figure 2. Source: docs/03-architecture.md:51-56, "Model the domain first".
+ * Figure 2. Source: docs/03-architecture.md, "Model the domain first".
  *
  * Nouns become boxes, relationships become labelled edges — the verb phrase
  * from the doc ("has many"), not a bare arrow, since an unlabelled arrow

@@ -5,7 +5,7 @@ import { ChevronDown } from 'lucide-react'
 import { Card } from '@/components/ui'
 
 /**
- * Source: docs/03-architecture.md:171-185, "Defer aggressively".
+ * Source: docs/03-architecture.md, "Defer aggressively".
  *
  * Six of the doc's seven items. The seventh is the closing claim — "each of
  * these solves a real problem, none of them solves a problem you have yet" —

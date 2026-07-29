@@ -6,7 +6,7 @@ import { Card } from '@/components/ui'
 import { Term } from '@/components/Term'
 
 /**
- * Source: docs/03-architecture.md:148-153, the three auth paths, plus the
+ * Source: docs/03-architecture.md, "Authentication and authorization", the three auth paths, plus the
  * authorization line at :159-161.
  *
  * Tab shape structurally follows `discovery/Toolkit.tsx` (`role="tablist"` /

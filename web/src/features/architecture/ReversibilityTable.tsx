@@ -6,7 +6,7 @@ import { Callout, Card } from '@/components/ui'
 import { DECISIONS, scoreReversibility } from './scoring'
 
 /**
- * Source: docs/03-architecture.md:22-42, "Sort decisions by reversibility".
+ * Source: docs/03-architecture.md, "Sort decisions by reversibility".
  *
  * Six decisions from the invoice tracker. For each, the reader judges cheap
  * or expensive to undo before the verdict shows — the guess is the lesson

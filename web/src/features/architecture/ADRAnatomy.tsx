@@ -7,7 +7,7 @@ import { Card } from '@/components/ui'
 import { Term } from '@/components/Term'
 
 /**
- * Source: docs/03-architecture.md:163-169, "Write the ADRs" — context, choice,
+ * Source: docs/03-architecture.md, "Write the ADRs" — context, choice,
  * reasoning, consequences, alternatives.
  *
  * Collapsed-row shape modelled on `DeferredList`: items open independently as

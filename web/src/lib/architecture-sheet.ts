@@ -2,7 +2,7 @@
  * Stage 03's worksheet shape, owned in one place.
  *
  * The four content fields are the doc's four interrogation questions
- * (docs/03-architecture.md:58-76) in the order it asks them. The fifth
+ * (docs/03-architecture.md, "Model the domain first") in the order it asks them. The fifth
  * accumulates the decisions that need an ADR, which is where stage 02's risks
  * land when the reader carries them forward.
  *

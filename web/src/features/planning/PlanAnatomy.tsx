@@ -1,7 +1,7 @@
 import { Pin } from 'lucide-react'
 
 /**
- * Figure 8. Source: docs/02-planning.md:211-236.
+ * Figure 8. Source: docs/02-planning.md, "Write the plan".
  *
  * The one-page plan, annotated: each heading paired with what that section is
  * *for*, not just what it holds. "Not in v1" carries the load-bearing

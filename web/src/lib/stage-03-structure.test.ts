@@ -36,8 +36,25 @@ const EXPECTED = [
   'AI in architecture',
 ]
 
+/**
+ * Just the body of `## The work`, so an `###` added under Traps or Scaling to a
+ * team fails its own check rather than this one with a misleading message.
+ */
+function theWork(md: string): string {
+  const start = md.indexOf('\n## The work')
+  expect(
+    start,
+    'docs/03-architecture.md has no "## The work" section',
+  ).not.toBe(-1)
+  const rest = md.slice(start + 1)
+  const next = rest.indexOf('\n## ', 1)
+  return next === -1 ? rest : rest.slice(0, next)
+}
+
 test('stage 03 "The work" carries its thirteen subsections in order', () => {
   const md = readFileSync(DOC, 'utf8')
-  const headings = [...md.matchAll(/^### (.+)$/gm)].map((m) => m[1].trim())
+  const headings = [...theWork(md).matchAll(/^### (.+)$/gm)].map((m) =>
+    m[1].trim(),
+  )
   expect(headings).toEqual(EXPECTED)
 })

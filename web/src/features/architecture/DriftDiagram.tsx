@@ -1,5 +1,5 @@
 /**
- * Figure 3. Source: docs/03-architecture.md:60-63, the `is_overdue` example.
+ * Figure 3. Source: docs/03-architecture.md, "Model the domain first", the `is_overdue` example.
  *
  * Two snapshots a week apart, then the computed alternative. The disagreeing
  * cell in row two is marked `danger` with the word "disagrees" printed next

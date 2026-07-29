@@ -5,7 +5,7 @@ import { Card } from '@/components/ui'
 import { BOUNDARY_EDGES, BOUNDARY_MODULES, type BoundaryEdge } from './scoring'
 
 /**
- * Source: docs/03-architecture.md:130-142, "Boundaries inside the monolith".
+ * Source: docs/03-architecture.md, "Boundaries inside the monolith".
  *
  * Structural reference: `OpportunityTree` (discovery) for the
  * click-node-plus-detail-panel shape; `SchemaInspector` (this stage) for

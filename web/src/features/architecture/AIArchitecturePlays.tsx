@@ -5,7 +5,7 @@ import { ChevronDown, TriangleAlert } from 'lucide-react'
 import { Card, Callout } from '@/components/ui'
 
 /**
- * Source: docs/03-architecture.md, "### AI in architecture" (the last
+ * Source: docs/03-architecture.md, "AI in architecture" (the last
  * subsection of "The work"). Where agents help in system design, and where
  * they mislead. The counterpart to stage 02's AIPlanningPlays.
  *

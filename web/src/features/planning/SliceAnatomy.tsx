@@ -1,7 +1,7 @@
 import { Contrast } from '@/components/ui'
 
 /**
- * Figure 4. Source: docs/02-planning.md:104-121.
+ * Figure 4. Source: docs/02-planning.md, "Sequence in vertical slices".
  *
  * Same three bands — storage, logic, interface — drawn two ways. Layer-first
  * fills one band at a time and nothing works until the last step; a vertical

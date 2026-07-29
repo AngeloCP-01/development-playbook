@@ -6,7 +6,7 @@ import { Callout, Card } from '@/components/ui'
 import { SPLIT_CANDIDATES, scoreSplit } from './scoring'
 
 /**
- * Source: docs/03-architecture.md:116-123 and :281-282, the four real
+ * Source: docs/03-architecture.md, "Start with one application" and  "Traps", the four real
  * triggers for splitting a service out and the two non-reasons that sound
  * like engineering judgment.
  *

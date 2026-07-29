@@ -6,7 +6,7 @@ import { Callout, Card } from '@/components/ui'
 import { INTERROGATIONS, judgeInterrogation } from './scoring'
 
 /**
- * Source: docs/03-architecture.md:58-76, the four questions the doc puts to the
+ * Source: docs/03-architecture.md, "Model the domain first", the four questions the doc puts to the
  * invoice domain once it has been written down as nouns.
  *
  * The guess-then-reveal shape is `QuestionLab` (discovery) by way of

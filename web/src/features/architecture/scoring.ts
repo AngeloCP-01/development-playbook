@@ -19,7 +19,7 @@ export type Decision = {
   why: string
 }
 
-/** Source: docs/03-architecture.md:22-42. "How expensive is this to undo?" */
+/** Source: docs/03-architecture.md, "Sort decisions by reversibility". "How expensive is this to undo?" */
 export const DECISIONS: Decision[] = [
   {
     id: 'component-library',
@@ -101,7 +101,7 @@ export type Interrogation = {
   why: string
 }
 
-/** Source: docs/03-architecture.md:58-76. */
+/** Source: docs/03-architecture.md, "Model the domain first". */
 export const INTERROGATIONS: Interrogation[] = [
   {
     id: 'overdue-status',
@@ -167,7 +167,7 @@ export type SplitCandidate = {
 }
 
 /**
- * Source: docs/03-architecture.md:116-123 for the four triggers, and :281-282
+ * Source: docs/03-architecture.md, "Start with one application" for the four triggers, and  "Traps"
  * for the second non-reason.
  *
  * Six rather than the four-plus-one the spec proposed. A set where five of six
@@ -241,7 +241,7 @@ export type SchemaLine = {
   note?: string
 }
 
-/** Source: docs/03-architecture.md:81-97. */
+/** Source: docs/03-architecture.md, "Design the database". */
 export const SCHEMA_LINES: SchemaLine[] = [
   { id: 'open', sql: 'CREATE TABLE invoices (', indent: 0 },
   {
@@ -306,7 +306,7 @@ export type BoundaryEdge = {
   why: string
 }
 
-/** Source: docs/03-architecture.md:130-142. */
+/** Source: docs/03-architecture.md, "Boundaries inside the monolith". */
 export const BOUNDARY_MODULES = ['billing', 'clients', 'auth']
 
 export const BOUNDARY_EDGES: BoundaryEdge[] = [
