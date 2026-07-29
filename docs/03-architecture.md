@@ -135,15 +135,67 @@ once the system around the data has a shape.
 
 ### The shapes a system can take
 
-Two questions get collapsed into one here: how a system deploys, and how it is organised
-inside.
+Before choosing, know what you are choosing between — otherwise the next section is advice
+you take on faith.
+
+Start by separating two questions that usually get collapsed into one. **How does it
+deploy** — one unit or many? And **how is it organised inside** — what depends on what? A
+hexagonal monolith is an ordinary, sensible thing. "Monolith or microservices" is a bad
+question because it treats one answer as covering both.
+
+**Deployment shape.** What runs, and how many things you deploy:
+
+| Style | What it buys | What it costs | What would have to be true |
+|---|---|---|---|
+| **Monolith** | One process, one deploy; refactoring across the system is a rename | Everything scales together; one bad deploy takes all of it down | Almost anything, starting out |
+| **Modular monolith** | The above, plus seams that make a later split mechanical | The boundaries hold by discipline — nothing enforces them | You expect the system to outlive your first guess at its shape |
+| **Microservices** | Independent deploys, independent scaling, team autonomy | Network failure modes, distributed debugging, consistency across stores | Separate teams need to ship without coordinating with each other |
+| **Serverless** | No servers to keep alive, scales to zero, pay per invocation | Cold starts, execution limits, work that does not fit request-response | Load is spiky or near zero, and the work fits inside the limits |
+
+The microservices row is worth reading twice, because it is the one people adopt for the
+wrong reason. What it buys is **organisational**. Independent deploys matter when the
+alternative is four teams negotiating a release; alone, you are negotiating with yourself,
+and you will win. The costs, by contrast, are technical and arrive on day one.
+
+**Internal organisation.** How the code is arranged, independent of the row above:
+
+- **Layered** — routes call services call repositories. Familiar, easy to explain, and prone
+  to a bottom layer that everything reaches through.
+- **Hexagonal (ports and adapters)** — the domain logic defines interfaces and the database,
+  HTTP and third parties plug into them. More indirection; the payoff is that the core is
+  testable without any of them running.
+
+Both are compatible with every deployment shape. This is the axis the stage's own advice
+lives on, and it is why the next two sections are about structure *inside* one application.
+
+**Communication style**, a third axis: **event-driven** means components announce that
+something happened rather than calling the next step directly. It is not a deployment shape
+— a single application can be event-driven internally. The decision that leads here is posed
+in "Sketch the system" below, where it is concrete.
+
+**What this stage teaches is a modular monolith**, and it is worth having the name. The
+boundaries in the next section are its defining feature, and a reader who has been building
+one for years without the term cannot look up whether they are doing it well.
+
+That choice follows from the characteristics, not from taste: **cheap to run** rules out
+microservices, whose costs are paid per service regardless of load, and makes serverless a
+deployment detail rather than an architecture. **Correctness** favours one database with
+real constraints over consistency maintained by hand across several. **Auditability** is
+easier where every write goes through one place.
+
+Run the same trace against your own three. If it produces a different answer than the next
+section, the next section is wrong for your system, and you should be able to say why.
 
 ### Start with one application
 
-For a solo project, the default architecture is **a single Next.js application with a
-Postgres database.** Not microservices, not a separate API, not a queue, not an event bus.
+So: **a single Next.js application with a Postgres database**, organised as a modular
+monolith. Not microservices, not a separate API, not a queue, not an event bus.
 
-This is not a compromise. It is the correct choice, because:
+That is a conclusion, not a starting position. It comes out of three characteristics and a
+table of four alternatives, and it would come out differently for a system that had to be
+something else. Hold it that way — the reasoning is what tells you when it stops applying.
+
+It is also not a compromise, because:
 
 - Everything runs in one process locally
 - One deployment, one place to look when it breaks
@@ -341,6 +393,7 @@ build less than the model offers. It has no stake in maintaining what it propose
 ## Definition of done
 
 - [ ] Characteristics chosen, and each one traced to a decision it forced
+- [ ] Architecture style named, with the alternatives rejected and the reason for each
 - [ ] Domain modeled in nouns and relationships, not tables
 - [ ] Derived values computed, not stored
 - [ ] Deletion behavior decided per entity

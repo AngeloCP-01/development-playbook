@@ -359,6 +359,49 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'Application code has bugs, gets bypassed by migration scripts and one-off fixes, and races with itself under concurrency. The database does not get bypassed, which makes it the only place a rule genuinely holds.',
   },
+  'modular-monolith': {
+    name: 'Modular monolith',
+    see: '03-architecture',
+    short:
+      'One deployable, with internal boundaries strict enough to split later.',
+    full: 'A monolith whose features own their data and talk to each other through published functions rather than by reaching into each other’s tables. One process and one deploy, but the seams are real and maintained.',
+    soWhat:
+      'It is what most solo and small-team projects should be, and it is frequently built without anyone using the name. Its cost is honest: the boundaries are held by discipline, because nothing in a single codebase enforces them for you.',
+  },
+  microservices: {
+    name: 'Microservices',
+    see: '03-architecture',
+    short:
+      'Separate deployables, each owning its data, talking over a network.',
+    full: 'An architecture where services are deployed and scaled independently and communicate over the network. Each owns its own storage; sharing a database between services undoes most of what the split was for.',
+    soWhat:
+      'What it buys is organisational — teams shipping without coordinating. What it costs is technical and arrives immediately: network failure modes, distributed debugging, and consistency problems that a single database solved for free. One person collects none of the benefit and all of the cost.',
+  },
+  'event-driven-architecture': {
+    name: 'Event-driven architecture',
+    see: '03-architecture',
+    short: 'Components react to events rather than calling each other.',
+    full: 'A style where a component announces that something happened and others respond, instead of one calling the next directly. It is a communication choice rather than a deployment shape — a single application can be event-driven inside.',
+    soWhat:
+      'It decouples the sender from who listens, which is exactly what makes it hard to follow: no call stack shows you the consequences of an event. Worth it where the consequences genuinely are open-ended, expensive where they are three known steps.',
+  },
+  serverless: {
+    name: 'Serverless',
+    see: '03-architecture',
+    short: 'Functions that run on demand, with no server you keep alive.',
+    full: 'Code deployed as individual functions the platform starts when a request arrives and stops afterwards, billed per invocation rather than per hour. Vercel’s deployment model for a Next.js application is this.',
+    soWhat:
+      'Scaling to zero is real and useful when load is spiky or near nothing. The costs are cold starts, execution time limits, and work that does not fit the request-response shape — which is why the stage’s split triggers name execution limits first.',
+  },
+  'hexagonal-architecture': {
+    name: 'Hexagonal architecture (ports and adapters)',
+    see: '03-architecture',
+    short:
+      'Domain logic in the middle, with everything external behind an interface.',
+    full: 'An organising principle where the core logic defines interfaces — ports — and the database, HTTP layer and third-party services are adapters plugged into them. The core depends on nothing outside itself.',
+    soWhat:
+      'It describes how a codebase is arranged inside, not how it deploys, so a hexagonal monolith is an ordinary thing. Confusing the two axes is what makes "monolith or microservices" sound like one question when it is two.',
+  },
   'architecture-characteristic': {
     name: 'Architecture characteristic (non-functional requirement)',
     see: '03-architecture',
