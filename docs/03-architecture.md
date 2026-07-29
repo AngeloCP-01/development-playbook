@@ -470,7 +470,11 @@ the last line that actually holds.
 
 Below is the invoices table as **DDL** — data definition language, the `CREATE` statements
 that define shape rather than move data. The word turns up in migration tooling and in
-anything you read about schemas, so it is worth having:
+anything you read about schemas, so it is worth having.
+
+Each block from here on shows only the tables under discussion, and assumes the others the
+domain model named — `users` and `clients` here — already exist. They are excerpts, not a
+migration file:
 
 ```sql
 CREATE TABLE invoices (
