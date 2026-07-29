@@ -41,6 +41,11 @@ deliberating over it is a comfortable way to avoid the hard part.
 The failure mode: agonizing over folder structure while the data model — which will still
 be shaping the codebase in three years — gets chosen in ten minutes.
 
+### What this system has to be
+
+Before deciding how a system is shaped, name the three or four things it has to be good at —
+everything later in this stage is downstream of that answer.
+
 ### Model the domain first
 
 The data model is the highest-stakes decision you will make. It outlives every framework
@@ -74,27 +79,13 @@ query that touched it.
 **What must be unique, and in what scope?** Invoice numbers unique per user, not globally.
 Getting this wrong surfaces as a confusing constraint violation months later.
 
-Encode these as **database constraints**, not application checks. Application code has
-bugs, gets bypassed by scripts, and races with itself. The database is the last line that
-actually holds.
+These answers are the model. They are not yet a schema — that comes later in this stage,
+once the system around the data has a shape.
 
-```sql
-CREATE TABLE invoices (
-  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  owner_id     uuid NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
-  client_id    uuid NOT NULL REFERENCES clients(id) ON DELETE RESTRICT,
-  number       text NOT NULL,
-  amount_cents integer NOT NULL CHECK (amount_cents >= 0),
-  due_date     date NOT NULL,
-  status       text NOT NULL CHECK (status IN ('draft','sent','paid')),
-  created_at   timestamptz NOT NULL DEFAULT now(),
-  UNIQUE (owner_id, number)
-);
-```
+### The shapes a system can take
 
-Money as integer cents. `CHECK` constraints for anything with a fixed set of values.
-`ON DELETE RESTRICT` so deleting a user with invoices fails loudly instead of quietly
-cascading away financial history.
+Two questions get collapsed into one here: how a system deploys, and how it is organised
+inside.
 
 ### Start with one application
 
@@ -141,7 +132,40 @@ That single rule is what keeps a monolith from becoming a big ball of mud, and i
 what makes extracting a service later a mechanical job rather than an archaeology
 project.
 
-### Authentication: decide early, deliberately
+### Sketch the system
+
+One application is still not one box — the sketch is of everything it depends on, and what
+happens when each of those is down.
+
+### Design the database
+
+Now the model becomes a schema. Encode the answers from the domain model as **database
+constraints**, not application checks. Application code has bugs, gets bypassed by scripts,
+and races with itself. The database is the last line that actually holds.
+
+```sql
+CREATE TABLE invoices (
+  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  owner_id     uuid NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
+  client_id    uuid NOT NULL REFERENCES clients(id) ON DELETE RESTRICT,
+  number       text NOT NULL,
+  amount_cents integer NOT NULL CHECK (amount_cents >= 0),
+  due_date     date NOT NULL,
+  status       text NOT NULL CHECK (status IN ('draft','sent','paid')),
+  created_at   timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (owner_id, number)
+);
+```
+
+Money as integer cents. `CHECK` constraints for anything with a fixed set of values.
+`ON DELETE RESTRICT` so deleting a user with invoices fails loudly instead of quietly
+cascading away financial history.
+
+### Design the API contracts
+
+A contract's real cost is who you can force to move when it changes.
+
+### Authentication and authorization
 
 Auth touches the data model, every route, and every query. Changing it later is a
 migration of user records plus a rewrite of every access check.
