@@ -27,6 +27,8 @@ drift apart.
 
 **Concierge test** — You do the work manually for a handful of real users — spreadsheets, emails, your own labour — while they experience the result as if it were a product.
 
+**CQRS (Command Query Responsibility Segregation)** — Splitting the write path and the read path so each can be shaped for its own job — writes validated against one model, reads served from another built for the queries the screens make. Often paired with event sourcing, though neither requires the other. See [03 — Architecture](../docs/03-architecture.md).
+
 **Database constraint** — NOT NULL, UNIQUE, CHECK, and foreign keys with their delete behaviour. Declared in the schema, so the database refuses to store a row that breaks them. See [03 — Architecture](../docs/03-architecture.md).
 
 **Definition of done** — A specific, checkable statement of what "done" means for a piece of work — a state you can hold the running product up against and confirm, yes or no. Every stage doc has one.
@@ -36,6 +38,8 @@ drift apart.
 **Domain model** — A description of the system in entities and relationships — a user has many clients, a client has many invoices — written in the language of the problem rather than the language of the database. Tables come after, as one way of storing it. See [03 — Architecture](../docs/03-architecture.md).
 
 **Error budget** — The failure you have decided is acceptable over a window. A 99.9% uptime target is roughly a 43-minute monthly budget. Spending it is allowed — that is what a budget is for; exceeding it means stop shipping features and fix reliability. See [15 — Observability](../docs/15-observability.md).
+
+**Event sourcing** — Instead of a row holding the current value, you store every change that ever happened and derive the current value by replaying them. The log is the database; the table you query is a projection built from it. See [03 — Architecture](../docs/03-architecture.md).
 
 **Event-driven architecture** — A style where a component announces that something happened and others respond, instead of one calling the next directly. It is a communication choice rather than a deployment shape — a single application can be event-driven inside. See [03 — Architecture](../docs/03-architecture.md).
 

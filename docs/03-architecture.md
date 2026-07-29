@@ -416,6 +416,10 @@ Encode the answers from the domain model as **database constraints**, not applic
 Application code has bugs, gets bypassed by scripts, and races with itself. The database is
 the last line that actually holds.
 
+Below is the invoices table as **DDL** — data definition language, the `CREATE` statements
+that define shape rather than move data. The word turns up in migration tooling and in
+anything you read about schemas, so it is worth having:
+
 ```sql
 CREATE TABLE invoices (
   id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -566,21 +570,62 @@ Format and rationale in [10 — Documentation](10-documentation.md#document-deci
 Write them now, while the alternatives are fresh. Reconstructing why you chose something
 eight months later produces a plausible story rather than the actual reasons.
 
+"Every expensive decision has an ADR" is uncheckable until you say what counts as one
+decision. The rule: **one ADR per thing that could be reversed independently.** "Next.js,
+Postgres and Vercel" is three, because you could move the database without touching the
+framework. "Auth.js with a Postgres adapter" is one, because unpicking either half means
+redoing both.
+
+What an ADR looks like — length, status field, naming, where the files live — belongs to
+[10 — Documentation](10-documentation.md#document-decisions-not-descriptions), deliberately.
+This stage decides *that* a decision needs recording and *what counts as one*; the format is
+owned in one place so it stays consistent across all eighteen stages.
+
 ### Defer aggressively
 
-Things you do not need on day one and should not build:
+"Aggressively" needs a test, or it is just a mood. Here is the one, and it is the stage's own
+axis pointed at infrastructure:
+
+> **Defer anything whose reversal does not require migrating stored data.**
+
+Adding a cache later touches code. Adding a queue later touches code. Those are afternoons,
+or at worst weeks, and you will make the decision with information you do not have today.
+
+Things that pass the test — do not build them on day one:
 
 - **Caching layer.** Postgres is fast. Add caching when you have a measured problem
   ([09](09-performance-optimization.md)).
 - **A queue.** Until something genuinely exceeds request time.
-- **Multi-tenancy** beyond a `user_id` column.
-- **Event sourcing.** Almost certainly not.
+- **Event sourcing** — storing every change as the source of truth and deriving current
+  state by replaying it, rather than storing the current state directly. Almost certainly
+  not. Worth knowing the boundary, because people talk themselves into thinking they are
+  already doing it: **an audit table alongside normal rows is not event sourcing.** It is
+  event sourcing only when the log is the truth and the tables you query are derived from it.
+  A history of who approved what is an ordinary table and you should keep it.
+- **CQRS** — separate models for writing and for reading. It travels with event sourcing and
+  gets deferred for the same reason: two models to keep aligned, in exchange for read
+  performance you have not yet been unable to get from one query.
 - **A design system.** Component library plus consistency is enough for a long time.
 - **Feature flags infrastructure.** A config object is fine until it is not
   ([13](13-production-deployment.md)).
 
 Each of these solves a real problem. None of them solves a problem you have yet, and each
 one makes every subsequent change more expensive.
+
+**One item fails the test, and it used to be on the list above.** Multi-tenancy beyond a
+`user_id` column looks like deferrable infrastructure and is not, because a tenant key is
+stored data on every table — which the top of this stage classifies as decide-now. The two
+rules pointed opposite ways, and the tie-breaker is the one you just read.
+
+So split it. **Decide the axis now; defer everything built on top of it.** The axis is a
+single question: is the tenant a *person* or an *organisation*? Everything else — invitations,
+roles, per-tenant settings, billing — can wait, and should.
+
+That question matters more than it looks. Where data is genuinely shared across a team,
+`user_id` is not a lighter version of the right answer, it is the **wrong axis**: rows belong
+to the organisation and the person is merely who touched them. Retrofitting `org_id` in place
+of `user_id` is a migration of every table plus every query that ever touched one, which is
+the most expensive shape of change this stage has a name for.
 
 ### AI in architecture
 
@@ -596,10 +641,20 @@ Where it earns its place:
 - **Generate the option set, then throw most of it away.** The expensive failure is
   choosing without knowing the alternatives existed. Over-generation is the one habit that
   helps here — ask for six ways to model this, then argue them down yourself.
-- **Pressure-test a reversibility claim.** "This is cheap to undo" has a falsifiable
-  answer. Ask what would have to change, how many call sites touch it, and whether any of
-  it is stored data. A model is good at enumerating consequences and bad at deciding they
-  are acceptable.
+- **Pressure-test a reversibility claim.** "This is cheap to undo" has a falsifiable answer,
+  and the test is at the top of this stage. Hand it the decision and the test, and make it
+  argue the expensive case. A model is good at enumerating consequences and bad at deciding
+  they are acceptable.
+- **Argue down a characteristics list.** Ask for the ten things this system could need to
+  be, then make it defend cutting six. The generating half is where it helps; the cutting
+  half is where you find out whether your three were actually chosen.
+- **Find the box you left out of the sketch.** Paste the container view and ask what a
+  system like this usually talks to that is missing. It is good at this because it is
+  pattern-matching against every similar system it has read, which is the one situation where
+  that habit works for you.
+- **Read a schema for the index you need.** Paste the DDL *and the queries your screens
+  actually make*. Without the queries it will suggest indexes for imagined access patterns,
+  which is worse than none.
 - **Read a schema for what is missing.** Uniqueness scope, delete behaviour, and
   nullability are mechanical to check and easy for a person to skim past. Paste the DDL —
   the `CREATE TABLE` statements themselves — and ask what a hostile script could write
@@ -612,6 +667,12 @@ Where it misleads, which is the half worth reading twice:
 - **It reaches for distribution by default.** Microservices, queues and caching layers turn
   up unprompted, because that is what the training material is about. Each one is a real
   solution to a problem you do not yet have.
+- **Asked which style to use, it answers with the one it has read most about.** Not the one
+  your characteristics select. It will produce a comparison table that looks like the one in
+  "The shapes a system can take" and then recommend against your own constraints, with
+  citations. This is the exact failure that section exists to prevent, so use it the same
+  way: give it your three characteristics and make it derive the answer, rather than asking
+  what to pick.
 - **It invents scale.** Ask it to design for growth and it will design for growth you
   cannot describe, then justify the complexity with the number it made up.
 - **Schema advice arrives confident and context-free.** It does not know your compliance
@@ -681,6 +742,10 @@ build less than the model offers. It has no stake in maintaining what it propose
 ---
 
 ## Traps
+
+**Choosing a style before choosing characteristics.** The answer sounds identical either
+way — "a modular monolith" — and only one of them is a decision. The other is a preference
+you will not be able to defend the first time it is questioned, including by yourself.
 
 **Designing for imagined scale.** Building for a million users you do not have costs
 complexity today for benefits that will probably never arrive — and if they do, you will

@@ -359,6 +359,23 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'Application code has bugs, gets bypassed by migration scripts and one-off fixes, and races with itself under concurrency. The database does not get bypassed, which makes it the only place a rule genuinely holds.',
   },
+  'event-sourcing': {
+    name: 'Event sourcing',
+    see: '03-architecture',
+    short:
+      'Storing the sequence of changes as the source of truth, not the current state.',
+    full: 'Instead of a row holding the current value, you store every change that ever happened and derive the current value by replaying them. The log is the database; the table you query is a projection built from it.',
+    soWhat:
+      'The distinction people get wrong: keeping an audit table alongside normal rows is not event sourcing. It is event sourcing only when the log is the truth and the current state is derived. That is a much larger commitment, and it is why the answer here is almost always no.',
+  },
+  cqrs: {
+    name: 'CQRS (Command Query Responsibility Segregation)',
+    see: '03-architecture',
+    short: 'Separate models for writing data and for reading it.',
+    full: 'Splitting the write path and the read path so each can be shaped for its own job — writes validated against one model, reads served from another built for the queries the screens make. Often paired with event sourcing, though neither requires the other.',
+    soWhat:
+      'It buys read performance and independent evolution of the two paths, at the cost of two models to keep aligned and reads that lag writes. For a system where one Postgres query answers the screen, it is complexity with nothing on the other side.',
+  },
   normalisation: {
     name: 'Normalisation',
     see: '03-architecture',
