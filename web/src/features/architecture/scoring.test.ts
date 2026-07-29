@@ -284,3 +284,19 @@ test('every test question explains itself, since the questions alone read as a c
     expect(q.note.trim().length, `${q.id} has no note`).toBeGreaterThan(0)
   }
 })
+
+test('the due_date line is annotated, because date versus timestamptz is one of the two lines the doc argues about', () => {
+  const line = SCHEMA_LINES.find((l) => l.id === 'due-date')
+  expect(line?.note?.trim().length ?? 0).toBeGreaterThan(0)
+})
+
+test('the primary-key note names the alternative it rejected, so the choice reads as a choice', () => {
+  const line = SCHEMA_LINES.find((l) => l.id === 'pk')
+  expect(line?.note).toMatch(/bigserial/)
+})
+
+test('every annotated line is inside the table body, since the CREATE and the closing paren have nothing to teach', () => {
+  for (const line of SCHEMA_LINES) {
+    if (line.note) expect(line.indent, `${line.id} is annotated`).toBe(1)
+  }
+})

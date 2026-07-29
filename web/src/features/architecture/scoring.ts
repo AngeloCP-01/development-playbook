@@ -291,7 +291,7 @@ export const SCHEMA_LINES: SchemaLine[] = [
     id: 'pk',
     sql: 'id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),',
     indent: 1,
-    note: 'A generated uuid rather than a sequence. Nothing about an invoice’s identity is guessable from it, and two databases can generate ids without coordinating.',
+    note: 'A choice, not a default. A uuid can be generated without a round trip to the database and gives away nothing when it appears in a URL. The alternative, bigserial, is smaller and faster to join on — but it publishes how many rows you have and how fast they arrive, to anyone who can see two of your ids.',
   },
   {
     id: 'owner-fk',
@@ -317,7 +317,12 @@ export const SCHEMA_LINES: SchemaLine[] = [
     indent: 1,
     note: 'Money as integer cents. A float cannot represent 0.10 exactly, so totals drift by a cent in ways nobody can reproduce. The CHECK stops a negative amount at the door rather than in a validation function a script can bypass.',
   },
-  { id: 'due-date', sql: 'due_date     date NOT NULL,', indent: 1 },
+  {
+    id: 'due-date',
+    sql: 'due_date     date NOT NULL,',
+    indent: 1,
+    note: 'date here, timestamptz below, and the difference is not pedantry. A due date is a calendar day and means the same thing to a reader in any timezone. A creation time is an instant and does not. Getting these backwards produces off-by-one-day bugs that appear only for users in other timezones, which is to say never on your machine.',
+  },
   {
     id: 'status-check',
     sql: "status       text NOT NULL CHECK (status IN ('draft','sent','paid')),",
