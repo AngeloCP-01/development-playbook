@@ -32,6 +32,8 @@ type Item = {
   problem: string
   notYet: string
   costsToday: string
+  /** Marks the item that fails the deferral test and therefore is not deferred. */
+  failsTest?: boolean
 }
 
 const ITEMS: Item[] = [
@@ -57,17 +59,20 @@ const ITEMS: Item[] = [
     costsToday:
       'A worker to deploy and monitor, retry and idempotency logic to get right, and a second system that can fail for reasons request/response never could.',
   },
+
   {
     id: 'multi-tenancy',
-    name: 'Multi-tenancy beyond a user_id column',
-    summary: 'A user_id column and a query filter is real isolation.',
+    name: 'Multi-tenancy: the axis, not the machinery',
+    summary: 'The one item here that fails the test. Decide the axis now.',
+    failsTest: true,
     problem:
       'Isolates each customer’s data and access so tenants never see or affect one another’s rows.',
     notYet:
-      'A user_id column plus a filter on every query already provides that isolation for one customer at a time, which is the shape almost every early product actually has.',
+      'Everything built on top of the axis can wait: invitations, per-tenant settings, roles, billing. None of it is stored data on every table, so none of it fails the test.',
     costsToday:
-      'Every query grows a tenant clause, schema choices multiply, and the first tenant you build for fixes a shape you are then generalising from — before a second tenant has told you what it needs.',
+      'The axis itself cannot wait, and it is a single question — is the tenant a person or an organisation? Where data is genuinely shared across a team, user_id is not a lighter version of the right answer, it is the wrong axis: the rows belong to the organisation and the person is merely who touched them. Retrofitting org_id in place of user_id is a migration of every table plus every query that ever touched one.',
   },
+
   {
     id: 'event-sourcing',
     name: 'Event sourcing',
@@ -135,6 +140,11 @@ export function DeferredList() {
                 >
                   <span className="min-w-0 flex-1">
                     <span className="block font-medium">{item.name}</span>
+                    {item.failsTest && (
+                      <span className="mt-1 inline-block border border-warn px-1.5 py-0.5 text-[11px] font-medium text-warn">
+                        fails the test
+                      </span>
+                    )}
                     <span className="mt-0.5 block text-sm text-subtle">
                       {item.summary}
                     </span>
@@ -183,8 +193,11 @@ export function DeferredList() {
       </ul>
 
       <p className="border-t border-line bg-raised px-5 py-4 text-sm leading-6 text-muted">
-        Each of these solves a real problem. None of them solves a problem you
-        have yet — and each one makes every later change more expensive.
+        The test: defer anything whose reversal does not require migrating
+        stored data. Adding a cache later touches code. Adding a queue later
+        touches code. Those are afternoons, and you will make the decision with
+        information you do not have today. One item above fails that test, which
+        is why it is split into the part you decide now and the part you defer.
       </p>
     </Card>
   )
