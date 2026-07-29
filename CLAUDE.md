@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 All app commands run from `web/`:
 
 ```bash
-pnpm dev          # dev server on :3000 (Turbopack)
+pnpm dev          # dev server on :3200 (Turbopack) — 3000 is left free for other projects
 pnpm build        # production build; prerenders all 22 routes
 pnpm lint         # eslint --max-warnings 0
 pnpm format       # prettier --write (format:check is what CI runs)
