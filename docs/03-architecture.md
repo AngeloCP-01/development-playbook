@@ -190,6 +190,13 @@ and you will win. The costs, by contrast, are technical and arrive on day one.
   HTTP and third parties plug into them. More indirection; the payoff is that the core is
   testable without any of them running.
 
+**Choose between them on one question: how much of your logic is worth testing without the
+database running?** If the answer is "most of it" — pricing rules, eligibility, anything with
+branches you care about — hexagonal pays for its indirection. If your logic is mostly
+validate, write, read back, layered is honest and hexagonal is ceremony around a thin middle.
+Start layered and extract ports where a piece of logic gets hard to test; going the other way
+is a rewrite.
+
 Both are compatible with every deployment shape. This is the axis the stage's own advice
 lives on, and it is why the next two sections are about structure *inside* one application.
 
@@ -359,6 +366,31 @@ payment webhook is asynchronous because somebody else decided it is, it will be 
 twice eventually, and step 5 above has to be safe when that happens. That is what idempotency
 means, and it is not optional on a payment flow.
 
+Making something idempotent is a schema decision, which is why it belongs in this stage
+rather than in implementation. Two mechanisms cover almost everything:
+
+- **Record what you have already processed.** The sender gives every event an id. You store
+  it with a unique constraint and ignore anything you have seen before. This is the general
+  answer, and it is the one to use when handling the event twice would do visible damage.
+
+  ```sql
+  CREATE TABLE processed_events (
+    provider   text NOT NULL,
+    event_id   text NOT NULL,
+    handled_at timestamptz NOT NULL DEFAULT now(),
+    PRIMARY KEY (provider, event_id)
+  );
+  ```
+
+  Insert the row and do the work in the same transaction. The second delivery fails the
+  primary key, the transaction rolls back, and nothing happens twice.
+
+- **Make the write itself repeatable.** Setting `status = 'paid'` is already safe to run
+  twice; adding to a balance is not. Where you can phrase the change as "set this to that"
+  rather than "adjust this by that", you need no bookkeeping at all.
+
+Reach for the second where it works and the first where it does not.
+
 Choose synchronous by default for work you initiate. Reach for asynchronous when the caller
 genuinely should not wait, and accept that you have bought a failure mode you now have to
 watch — which is [15 — Observability](15-observability.md)'s problem, and it starts here.
@@ -387,7 +419,12 @@ one above, written down rather than in your head.
 
 ### Design the database
 
-Now the model becomes a schema. The nouns from earlier, with their cardinality made explicit
+Now the model becomes a schema. If your product has organisations or teams, read
+[Defer aggressively](#defer-aggressively) before you write the first table: the tenant key is
+the one item on the deferral list that cannot be deferred, and it belongs on the tables you
+are about to create.
+
+The nouns from earlier, with their cardinality made explicit
 — this is the same picture the domain model described in words, which is why it is worth
 drawing once:
 
@@ -397,6 +434,8 @@ drawing once:
     └────────────1──────────────<┘
          (owner_id: an invoice belongs to a user directly,
           so a client can be reassigned without orphaning it)
+
+  reading it:  A ──1──< B   means one A has many B
 ```
 
 That last relationship is worth arguing about before it is typed. Hanging `invoices` off
@@ -484,6 +523,42 @@ CREATE UNIQUE INDEX one_approved_claim_per_shift
 Without it, the usual approach is to check for an existing approval and then insert — which
 two concurrent requests both pass, both believing they were first.
 
+**Actors and tenancy are stored data too, and they are the two this stage most often leaves
+implicit.** The invoicing schema above has neither, because one freelancer owning their own
+rows needs neither. Most products are not that. If your answer to "does every actor have the
+same rights?" was no, or your tenant is an organisation rather than a person, the shape is
+this:
+
+```sql
+-- The tenant key. On every table that holds tenant data, decided now (see
+-- "Defer aggressively" for why this one cannot be deferred).
+CREATE TABLE companies (
+  id   uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name text NOT NULL
+);
+
+-- Roles live on the relationship, not on the user. A person can be a manager
+-- of one team and an ordinary member of another, and a `users.role` column
+-- cannot say that.
+CREATE TABLE memberships (
+  user_id uuid NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
+  team_id uuid NOT NULL REFERENCES teams(id) ON DELETE RESTRICT,
+  role    text NOT NULL CHECK (role IN ('member','manager')),
+  PRIMARY KEY (user_id, team_id)
+);
+```
+
+That is the answer to the fifth interrogation question, and it is why the question is asked
+before the schema exists. A `role` column on `users` is the shape you regret: it is a single
+global answer to a question that is asked per team.
+
+**Nested tenancy — when the axis is not one level.** A company that contains teams gives you
+two candidate keys, and picking wrong costs the migration the deferral section warns about.
+The rule: **the tenant key is the level at which data stops being shared.** If a worker
+moving between teams should keep their history, the company is the tenant and the team is an
+ordinary foreign key. If teams are genuinely separate customers who must never see each
+other's rows, the team is the tenant. Answer it now; everything built on top of it can wait.
+
 **Some invariants span rows, and no constraint can express them at all.** Moving an amount
 from one row to another, or writing a record and marking its source consumed, has to happen
 as one unit or not at all. That is a **transaction**: the work commits together or none of it
@@ -508,16 +583,32 @@ its shape: **it will arrive twice eventually, and handling it has to be safe whe
 That is idempotency, and it is worked through in
 [Sketch the system](#sketch-the-system) above, where the payment flow makes it concrete.
 
+**A contract here means one callable surface with a shape somebody depends on** — a route, or
+an exported function another feature calls. Not every internal helper. If it crosses a
+feature boundary or leaves your process, it is a contract; if it is private to one module, it
+is code.
+
 Most solo projects live almost entirely in the first row, which is the argument for not
-building a public API until something actually needs one. The mistake is not noticing the
+building a public API until something actually needs one. If your whole list lands in that
+row, the sort is still worth thirty seconds: **the value is noticing you have nothing in rows
+two and three yet, and knowing which item would move there first.** The mistake is not noticing the
 moment you have moved into the second — a mobile client, a partner integration, a public
 endpoint someone found — because from then on the shape is a commitment.
 
 Three decisions worth making before the first row exists:
 
 - **Route shape.** Resource-oriented (`/invoices/:id`) is the default because it is
-  predictable, and predictable is most of what a contract is worth. The specific convention
-  matters far less than applying one consistently.
+  predictable, and predictable is most of what a contract is worth.
+
+  It stops being obvious the moment your operations are verbs rather than documents.
+  Approving a claim, withdrawing one, cancelling a shift: none of those is a create, read,
+  update or delete on a noun. Two workable answers, and picking either consistently beats
+  agonising. **Treat the verb as a sub-resource** (`POST /claims/:id/approve`), which keeps
+  the noun in the path and reads naturally. Or **make the verb a noun** — an approval *is* a
+  thing that happened, with an actor and a timestamp, and `POST /approvals` may be closer to
+  your real model than a status flip. The second is worth a moment's thought rather than a
+  reflex: if you would want to know later who approved what and when, the verb was an entity
+  all along, and the interrogation in "Model the domain first" should have caught it.
 - **Request and response shape.** Validate at the boundary — anything crossing into your
   system is untrusted, including data from your own frontend. What you return is a promise:
   adding a field is safe, removing or renaming one is not.
@@ -718,7 +809,7 @@ build less than the model offers. It has no stake in maintaining what it propose
 - [ ] System sketched, with what happens when each external dependency is down
 - [ ] Integration style decided per external call, and anything received is idempotent
 - [ ] Domain modeled in nouns and relationships, not tables
-- [ ] Derived values computed, not stored
+- [ ] Derived values computed; facts about a moment stored, and the difference stated per value
 - [ ] Deletion behavior decided per entity
 - [ ] Uniqueness constraints scoped correctly
 - [ ] Constraints live in the database, not only in application code
