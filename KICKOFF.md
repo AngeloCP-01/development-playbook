@@ -160,7 +160,10 @@ Notes for whoever is preparing this handoff:
   - **Most of stage 03's defects were plan-authored, not implementer error** (tracker,
     "Process observations"). A per-task review sees one diff; nothing but controller-level
     review catches a task whose output undermines another's. Budget for that.
-  - **Line-number citations in a plan go stale the moment a task edits the doc above them.**
-    This round paid for it three times. Cite by heading, or re-derive after every doc edit.
+  - **Cite doc sections by heading, never by line number** (D-42). An audit of `web/src/`
+    found 11 of 30 citations wrong — four staled by this round, seven inherited from the
+    stage 02 round, the worst off by ~86 lines. Nothing in the gate can detect it, and a
+    grep for the pattern cannot either: it only sees citations that repeat the filename, so
+    bare `:NNN` continuations and citations to other docs stay invisible. Open the lines.
   - `docs/learnings/contrast-checkers-lie.md` — read it before changing a token in response
     to a contrast number. Three of the failures reported in this repo were the checker.

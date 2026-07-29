@@ -85,6 +85,7 @@ of what was believed at the time is the point.
 
 | # | Decision | Reasoning | Consequence |
 |---|---|---|---|
+| **D-42** | Source citations in code comments and plans name a **heading**, not a line number. A range is used only where the exact lines are the point, and then it names the heading too | Line numbers are coordinates in a document that moves, and nothing in lint, typecheck, the unit suite or the audit suite can tell that one has drifted. The evidence is not theoretical: a single audit of `web/src/` found **11 of 30 citations wrong** — four staled by this round's own doc edits, seven inherited from the stage 02 round, the worst off by ~86 lines. Every one of them looked perfectly well-formed. Headings drift only when someone renames a section, which is a deliberate act that shows up in a diff, rather than a side effect of inserting a paragraph three sections earlier | Cite `docs/02-planning.md, "Cut to the core"` rather than `:63-64`. Four such citations already existed (`ReversibilityAxis`, `AIArchitecturePlays`, `CutTable`, `DoneStatement`, `HorizonBands`, `HorizonTriage`) and all were still correct after two rounds of doc edits, which is the argument in miniature. Where a range is genuinely needed — a transcribed DDL block, a quoted template — keep it and pair it with the heading, so a stale number is self-evidently repairable. A future check could assert that each cited heading exists |
 | **D-41** | The pattern library gains **annotated artifact** (`SchemaInspector`); the taught-then-recorded pairing does **not** get a row | Two candidates were judged rather than assumed. The annotated artifact earns one because the authoring job is different from the click-node inspector it resembles: you *quote something real verbatim* and then choose which lines teach, rather than authoring a structure where every node is selectable. It carries constraints the existing row does not — leave structural lines inert, give the block its own `overflow-x-auto` container with `tabIndex={0}`, no semantic colour. The deciding argument is recurrence: setup has config files, CI/CD has workflow YAML, deployment has migration steps, and none of those is a "diagram, tree, or pipeline", so the existing row would not send an implementer here. The taught-then-recorded pairing (`ModelInterrogation` → `DomainWorksheet`) is a **composition of two rows that already exist** — no new component, no new constraint, no new a11y requirement — so it became a clause on the `Persisted worksheet` note instead | `PATTERNS.md` gains one row and two sharpened notes rather than two rows. The non-obvious half of the rejected candidate (reuse the *same questions* across exercise and worksheet) is recorded where an implementer will actually meet it |
 | **D-40** | `SplitTrigger` ships **six** candidates, not the four-plus-one the spec proposed — and this is recorded as a **plan-authored refinement**, not implementer drift | A set where five of six answers are "yes" can be scored without reading it; the reader learns the pattern of the exercise instead of the judgment it teaches. Four-and-two forces every row to be read. The sixth entry (`codebase-tidier` — "the codebase is getting large and a service would be tidier") was confirmed by review as genuinely sourced from the doc's Traps and "Boundaries inside the monolith" sections rather than invented to pad the count | Deliberate deviations from a spec are recorded at the level that authored them. This one was the plan's, so a reviewer comparing component to spec finds the reasoning here rather than filing it as drift |
 | **D-39** | Stage 03's worksheet records the **domain model**, not an ADR | The stage's five questions about your own domain are the thing the reader cannot get anywhere else, and they chain: the four interrogation questions are asked first against the doc's worked example, then again as free text against the reader's own product. An ADR worksheet was rejected on two grounds — `docs/03-architecture.md:165` defers ADR *format* to stage 10 by design, so stage 03 would have been inventing a template it does not own; and the cold-reader pass then confirmed the doc gives no example, length, status field, naming or location for an ADR (G9), so a worksheet would have had nothing to scaffold from | `architecture-sheet.ts` holds five keys; the ADR stays taught (`ADRAnatomy`) rather than filled in. If stage 10 later fixes a format, an ADR worksheet becomes cheap and belongs there or here by then, not before |
@@ -508,10 +509,22 @@ where the cross-task context lives. Two consequences for the next stage build:
 1. **Budget for controller-level review of task *interactions*,** not only per-task review of
    task *outputs*. The question "does this task's output undermine another task's output?"
    has no owner otherwise.
-2. **Line-number citations in a plan are stale the moment any task edits the doc above them.**
-   Either cite by heading rather than by line, or re-derive citations after every doc-editing
-   task. This round paid for it twice — once in the briefs, once in the committed source,
-   and once more when Task 17's own two-clause doc fix shifted four more citations.
+2. **Line-number citations go stale the moment anything edits the doc above them**, and
+   nothing in the toolchain detects it. See D-42 — the convention is now to cite by heading.
+   This round hit it four times: the plan's briefs, the committed `scoring.ts` comment, the
+   five citations shifted by Task 17's own two-clause doc fix, and finally `AuthPaths`.
+   Auditing the class then found **seven more in stage 02**, stale since that stage's own AI
+   section was inserted, one of them off by ~86 lines. Eleven wrong citations in total.
+
+3. **A grep confirms the shape of a citation; only opening the file confirms it is true.**
+   The sweep that missed `AuthPaths` matched `docs/03-architecture\.md:[0-9]*-[0-9]*`, so it
+   could only see citations on a line repeating the filename. Invisible to it: bare `:NNN`
+   continuations on their own line (the miss), single-line citations with no range
+   (`SpikeCard`'s `:285`), and every citation to a different doc (all fourteen stage 02
+   ones). Two citations were caught **by luck**, sharing a line with their primary. The audit
+   that worked opened all 30 cited ranges and checked each against what the comment claimed —
+   which also caught two comments that were *misquoting* the doc, a kind of wrong that
+   renumbering would never have surfaced.
 
 A fourth finding is the mirror image and worth recording as such: an implementer proposed
 adding a rule to `PATTERNS.md` (that a `<Term>` must never be the first child of a `<p>`)
