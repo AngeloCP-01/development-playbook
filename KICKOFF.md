@@ -40,7 +40,10 @@ Before doing anything, read these for context:
   things a reader cannot finish the stage without. Separately, the stage never names the
   architecture styles landscape (**TD-21**): it teaches the modular monolith without using
   the term, and never asks what the system needs to *be* before deciding how it is shaped.
-  The app is done; the doc is not. Both are the next round — see below.
+  And it produces a schema — low-level design — without ever doing the high-level design that
+  should justify its shape (**TD-22**): no non-functional requirements, no component or data
+  flow view, no API contract design. The app is done; the doc is not. All three are the next
+  round — see below.
 - **Every stage carries an "AI plays" section** (D-35), in both doc and app.
   `stage-metadata.test.ts` now **fails any stage whose doc lacks the `### AI in <stage>`
   heading**, because stage 03's doc turned out not to have one and the round had to write it
@@ -65,11 +68,25 @@ Before doing anything, read these for context:
 
 ### This round's scope
 
-**Decided: one round on stage 03's doc — `TD-18` and `TD-21` together — before building
-another stage.** This is settled, not a recommendation to weigh; the reasoning is here so you
-can execute it, and disagree only if you find something new.
+**Decided: one round on stage 03's doc — `TD-22`, `TD-21` and `TD-18` together — before
+building another stage.** This is settled, not a recommendation to weigh; the reasoning is
+here so you can execute it, and disagree only if you find something new.
 
-Stage 03's app is finished and verified. The doc underneath it has two separate problems.
+**Do them in that order.** `TD-22` probably changes the stage's step structure, so designing
+the other two against the current six steps risks redoing the work.
+
+Stage 03's app is finished and verified. The doc underneath it has three separate problems.
+
+**`TD-22` — the stage produces low-level design without doing high-level design.** The
+industry sequence is requirements → HLD (components, interactions, data flow, deployment
+shape, non-functional requirements) → LLD (schemas, API contracts, error handling). Stage 03
+goes from "sort decisions by reversibility" **straight to a concrete `CREATE TABLE`
+statement** — which is LLD — with nothing above it to justify the shape. Missing: an NFR step,
+an HLD artifact, component/deployment/data-flow views, database design beyond the DDL, and API
+contract design. Two questions the brainstorm has to settle rather than assume: **functional
+requirements belong to stage 02** and stage 03 should say it consumes them rather than restate
+them; and **how much ceremony to keep** — take the HLD/LLD thinking, leave the specification
+documents and sign-off, and say in the doc that the omission is deliberate.
 
 **`TD-21` — the styles landscape is missing** (decision **D-44**). The stage prescribes a
 single Next.js application, gives four triggers for splitting a service out, and teaches
@@ -99,13 +116,14 @@ push constraints into the database, with no tool given that expresses a conditio
 uniqueness rule, and transactions unmentioned anywhere. A reader following the stage honestly
 cannot finish it.
 
-**Why the two are one round.** Both live in `docs/03-architecture.md`, and both force matching
+**Why the three are one round.** All live in `docs/03-architecture.md`, and all force matching
 changes in `src/features/architecture/` because the DDL annotations, the interrogation set and
-the reversibility lists are all ported into `scoring.ts`. They also meet in one place:
-`TD-21`'s new architecture-characteristics step is where `TD-18`'s **G14** belongs — the
-reversibility test is currently stranded in the AI section, framed as a prompt for a model
-rather than as the rule the whole stage turns on. Splitting the work would mean opening the
-same doc and the same components twice.
+the reversibility lists are ported into `scoring.ts`. They also converge on a single step:
+`TD-22`'s non-functional-requirements artifact is the same thing as `TD-21`'s architecture
+characteristics under the name most readers meet, and it is where `TD-18`'s **G14** belongs —
+the reversibility test is currently stranded in the AI section, framed as a prompt for a model
+rather than as the rule the whole stage turns on. One step resolves a piece of all three.
+Splitting the work means opening the same document three times.
 
 It ranks above stage 04 because the doc/app coupling gets more expensive as stages
 accumulate, because the cold-reader method is cheap and worked on its first real outing, and

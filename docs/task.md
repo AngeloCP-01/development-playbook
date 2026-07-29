@@ -168,23 +168,47 @@ Per stage (checklist ticked for **03 Architecture**, feat/stage-03-architecture)
       event-driven, serverless — each stating what would have to be true to pick it. The
       recommendation does not change; it stops being an assertion.
 
-### W-3.1 — Stage 03 doc round (TD-18 + TD-21) ☐ *(next)*
+### W-3.1 — Stage 03 doc round (TD-22 + TD-21 + TD-18) ☐ *(next)*
 
-One round, two tracker entries, because both live in `docs/03-architecture.md` and both force
-matching changes in `web/src/features/architecture/`. Runs the full loop: brainstorm → spec →
-plan → TDD tasks → whole-branch review.
+One round, three tracker entries, because all three live in `docs/03-architecture.md` and all
+three force matching changes in `web/src/features/architecture/`. Runs the full loop:
+brainstorm → spec → plan → TDD tasks → whole-branch review.
 
-- [ ] **Architecture characteristics** — a new step before the structural advice. What does
+**Sequence matters: settle TD-22 first.** It probably changes the stage's step structure, and
+designing TD-21 or TD-18 against the current six steps risks redoing that work.
+
+**TD-22 — the missing activity (do this first)**
+
+- [ ] **Non-functional requirements** — a new step before the structural advice. What does
       this system need to be (available · auditable · low-latency · cheap to run · secure)?
-      Three or four picked, not a checklist of twenty. This is the input every later decision
-      traces back to, and it is where TD-18's **G14** lands — the reversibility test currently
-      stranded in the AI section belongs here as the stated rule
+      Three or four picked, not a checklist of twenty. Same artifact as TD-21's "architecture
+      characteristics" under the name most readers meet — build it once. This is also where
+      TD-18's **G14** lands: the reversibility test currently stranded in the AI section
+      belongs here as the stated rule
+- [ ] **A high-level design artifact** between the domain model and the schema — components,
+      how they interact, external systems, data flow, deployment shape. Today Artifacts asks
+      only for "a one-paragraph description plus a diagram only if it clarifies", which is an
+      HLD with no structure
+- [ ] **Decide the functional-requirements boundary explicitly.** Stage 02 owns them (define
+      done · the cut · vertical slices). Stage 03 should state that it *consumes* them, not
+      restate them — getting this wrong duplicates stage 02 and breaks the filing-code claim
+- [ ] **Decide how much ceremony to keep.** Take the HLD/LLD thinking, leave the specification
+      documents and sign-off. Say so in the doc, so a reader from an enterprise background
+      knows the omission is deliberate
+- [ ] **Database design beyond the DDL** — an ER view, normalisation vocabulary, and the
+      access-pattern thinking that would justify **G4**'s indexes
+- [ ] **API / contract design** — never posed today. Route shape, request/response contracts
+      and versioning, with their differing reversibility costs
+**TD-21 — the missing vocabulary**
+
 - [ ] **Styles comparison** — monolith · modular monolith · microservices · event-driven ·
       serverless. Each with what it costs, what it buys, and what would have to be true to
       choose it. Name the modular monolith as the thing the stage already teaches
 - [ ] **DDD vocabulary** — bounded context named where "Boundaries inside the monolith"
       currently gropes at it; ubiquitous language; aggregates. Strategic DDD lightly, not the
       tactical machinery
+**TD-18 — what a cold reader could not finish**
+
 - [ ] **G3 first, per TD-18** — the ownership / role / membership authorization split. The
       only gap that produces a confident wrong answer rather than a stall
 - [ ] **G4** — indexes: teach two in the DDL with reasoning, or drop them from Artifacts

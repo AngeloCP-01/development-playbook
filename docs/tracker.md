@@ -447,7 +447,7 @@ The problem is that it is delivered as a prescription a reader has to take on fa
 
 | Gap | What is absent | Why it matters here |
 |---|---|---|
-| **Architecture characteristics** | The stage never asks what the system needs to *be* — available, auditable, low-latency, cheap to run, secure. It goes straight to structure | This is the input that makes style selection a decision rather than a preference. Richards & Ford put it as "architecture is mainly about quality attributes, not features"; arc42 makes quality goals section 1.2 because every later decision is supposed to trace back to one. Its absence is the root cause of the next row |
+| **Architecture characteristics** *(owned by **TD-22**, listed here because it is the input this entry depends on — build it once)* | The stage never asks what the system needs to *be* — available, auditable, low-latency, cheap to run, secure. It goes straight to structure | This is the input that makes style selection a decision rather than a preference. Richards & Ford put it as "architecture is mainly about quality attributes, not features"; arc42 makes quality goals section 1.2 because every later decision is supposed to trace back to one. Most readers will meet it as **non-functional requirements** — same activity, different name. Its absence is the root cause of the next row |
 | **The styles taxonomy** | **Modular monolith**, layered, hexagonal / ports-and-adapters, event-driven, microkernel, serverless, SOA — none named. Microservices appear only as the thing not to do | The sharpest instance: the stage *already teaches* the modular monolith in "Boundaries inside the monolith" and never uses the term. The reader is doing the industry-standard thing without the word for it |
 | **DDD vocabulary** | Bounded context, ubiquitous language, aggregates, context mapping | "Boundaries inside the monolith" is groping toward bounded context unnamed. Fowler's reasoning — "total unification of the domain model for a large system will not be feasible or cost-effective", boundaries follow human language — is the missing justification for the stage's own rule |
 | **Integration style** | Synchronous REST/RPC versus asynchronous messaging is never posed as a decision | It is the fork that leads to event-driven architecture, and it has different failure modes on each branch. Ties directly to TD-18's G5, where the doc names races and supplies no tool for them |
@@ -462,6 +462,47 @@ advice so the reader can see it derived rather than asserted.
 matching app changes. Expect a new step before the monolith advice — what does this system
 need to be — and a styles comparison that states honestly what would have to be true to pick
 each one.
+
+### TD-22 — Stage 03 produces low-level design without ever doing high-level design · **High**
+
+Raised by the project owner alongside TD-21, and structurally the more serious of the two.
+TD-21 is about vocabulary the reader never learns. This is about an **activity the stage
+never runs**.
+
+**The inversion.** The industry sequence is requirements → HLD → LLD. HLD settles what the
+components are, how they talk, what the deployment shape is, and which non-functional
+requirements the design has to satisfy; LLD then produces schemas, API contracts and error
+handling. Stage 03 goes from "sort decisions by reversibility" **directly to a concrete
+`CREATE TABLE` statement** — which is LLD — with no HLD in between. The schema is the most
+detailed artifact in the stage and it arrives with nothing above it to justify its shape.
+
+**What is missing:**
+
+| Missing | Where it should sit | Note |
+|---|---|---|
+| **Non-functional requirements** | A step before the structural advice | Same thing as TD-21's "architecture characteristics" under the name most readers will meet. **Owned here**, referenced from TD-21 — do not build it twice |
+| **A high-level design artifact** | Between the domain model and the schema | Components, how they interact, external systems, data flow, deployment shape. The doc's Artifacts asks only for "a one-paragraph description of the system, plus a diagram only if it clarifies", which is the HLD in one sentence and no structure |
+| **Component / deployment / data-flow views** | The HLD artifact | Ties to TD-21's C4 row — its context → container → component levels are exactly these views |
+| **Database design beyond the DDL** | The existing schema section | Has domain model and constraints. Missing: indexes (**TD-18 G4**), an ER view, normalisation vocabulary, and any sizing or access-pattern thinking that would justify the index choices |
+| **API / contract design** | LLD, alongside the schema | Never posed. Route shape, request/response contracts and versioning are architecture decisions with different reversibility costs |
+
+**Functional requirements are deliberately NOT on that list.** Stage 02 owns them — "define
+done before defining work", the cut, the vertical slices. Stage 03 should **state that it
+consumes them** rather than restate them, the same way it consumes stage 02's spike decision.
+Getting this boundary wrong would duplicate stage 02 and break the filing-code claim the whole
+playbook rests on. Worth deciding explicitly during the brainstorm rather than by default.
+
+**The ceremony question, which the round has to answer.** Full HLD/LLD practice comes with
+system specification documents, governance and sign-off — all wrong for a solo developer, and
+exactly the kind of thing this playbook's "defer aggressively" section exists to refuse. But
+the *thinking* is not ceremony: what are the pieces, how do they talk, what does this need to
+be, what happens when a piece fails. The round should take the thinking and leave the
+paperwork, and say so in the doc so a reader coming from an enterprise background knows the
+omission is deliberate.
+
+**Closes with:** the same round as TD-18 and TD-21. This one probably drives the stage's step
+structure, so brainstorm it first — if a new HLD step lands between Model and Constrain, the
+app's six steps and nine figures both change shape.
 
 ### TD-19 — Scored radiogroups have no roving tabindex · **Medium**
 
@@ -649,16 +690,27 @@ rather than a redo. This is now standard for reviewers as well as implementers.
 
 ## Next up
 
-**Recommendation: one round on stage 03's doc — TD-18 and TD-21 together — before building
-stage 04.**
+**Recommendation: one round on stage 03's doc — TD-18, TD-21 and TD-22 together — before
+building stage 04.**
 
-The two were raised separately and are the same round. TD-18 is what a cold reader could not
-finish; TD-21 is what a reader finishes without ever learning the vocabulary for. Both live
-in `docs/03-architecture.md`, both force matching changes in `web/src/features/architecture/`,
-and TD-21's architecture-characteristics step is the natural place to resolve TD-18's G14 —
-the reversibility test currently stranded in the AI section — because both are about naming
-the inputs a structural decision derives from. Splitting them would mean opening the same doc
-and the same components twice.
+Three entries, raised separately, one round. They are three views of the same document:
+
+- **TD-18** is what a cold reader **could not finish** — 14 gaps, 3 blocking.
+- **TD-21** is what a reader finishes **without ever learning the vocabulary for** — the
+  styles landscape, DDD, the modular monolith taught unnamed.
+- **TD-22** is an **activity the stage never runs** — it produces a schema (low-level design)
+  with no high-level design above it to justify the shape.
+
+They converge on one point. TD-22's non-functional-requirements step is the same artifact as
+TD-21's architecture characteristics, and it is also where TD-18's **G14** belongs — the
+reversibility test currently stranded in the AI section, framed as a prompt for a model rather
+than the rule the stage turns on. One step resolves a piece of all three. Splitting the work
+means opening the same document and the same components three times.
+
+**Sequence them TD-22 → TD-21 → TD-18.** TD-22 probably changes the stage's step structure,
+so it has to be settled before the other two are designed against it: if an HLD step lands
+between Model and Constrain, the app's six steps and nine figures both change shape, and any
+work done on the assumption of the current structure gets redone.
 
 
 
