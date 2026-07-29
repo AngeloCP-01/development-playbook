@@ -111,7 +111,7 @@ export const INTERROGATIONS: Interrogation[] = [
       { id: 'computed', label: 'Computed from due_date and status' },
     ],
     answer: 'computed',
-    why: 'Computed. If it is stored, something has to update it — a cron job, a trigger, a write on read — and the day that something misses a run, the column disagrees with the date it was derived from. Computed from due_date < now() AND status = ‘sent’, it is always correct and cannot drift. Storing derived state is one of the most common sources of data that disagrees with itself.',
+    why: 'Computed. If it is stored, something has to update it — a cron job, a trigger, a write on read — and the day that something misses a run, the column disagrees with the date it was derived from. Computed from due_date < now() AND status = ‘sent’, it is always correct and cannot drift. The general form is worth more than this answer: compute it when it is a pure function of data you already hold, and store it when it is a fact about a moment — the tax rate applied when the invoice was sent, the price at the time of purchase, the address it shipped to. Those look derivable and are not, because the thing they would derive from has since changed.',
   },
   {
     id: 'invoice-delete',
@@ -121,7 +121,7 @@ export const INTERROGATIONS: Interrogation[] = [
       { id: 'soft', label: 'Mark it deleted and keep the row' },
     ],
     answer: 'soft',
-    why: 'Soft delete, or an immutable ledger. A hard delete loses history you may be legally required to keep; a soft delete keeps it at the cost of every query remembering to filter. For financial records that trade is worth making, because “where did that invoice go” is a much worse conversation than a slightly more complex query.',
+    why: 'Soft delete, or an immutable ledger. The heuristic is wider than money: keep anything somebody will later ask “where did that go?” about. Financial records obviously, but also cancelled bookings, withdrawn requests, and users who left — each of those is a row whose absence is itself a question someone eventually needs answered. Pay the filtering cost where that is true, and hard delete where it genuinely is not, because a soft delete taxes every query that follows it.',
   },
   {
     id: 'client-owners',
@@ -142,6 +142,17 @@ export const INTERROGATIONS: Interrogation[] = [
     ],
     answer: 'per-owner',
     why: 'Per user. Two freelancers both issuing invoice 001 is normal and correct; a global constraint makes the second one fail for no reason a user could understand. Getting uniqueness scope wrong surfaces months later as a confusing constraint violation, which is why it belongs in the schema as UNIQUE (owner_id, number) rather than in a validation function.',
+  },
+  {
+    id: 'actor-rights',
+    question: 'Does every actor have the same rights over this entity?',
+    options: [
+      { id: 'entity', label: 'No — "Manager" is its own entity' },
+      { id: 'column', label: 'No — a role column on users' },
+      { id: 'membership', label: 'No — a role on the membership' },
+    ],
+    answer: 'membership',
+    why: 'The role belongs on the relationship. A users.role column is a single global answer to a question that gets asked per team: a person can manage one team and be an ordinary member of another, and the column cannot say that. Making "Manager" its own entity is worse, because it duplicates the person. Ask this before the schema exists and you get a memberships table with the role on it; ask it afterwards and you get a migration. It is also the question that decides which authorization pattern applies to this entity, which is why ownership is not the only one.',
   },
 ]
 

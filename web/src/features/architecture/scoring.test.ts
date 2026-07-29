@@ -77,16 +77,6 @@ test('an empty run scores zero rather than dividing by nothing', () => {
   expect(scoreReversibility({})).toEqual({ answered: 0, correct: 0 })
 })
 
-test('four questions, matching the four the doc asks of a domain model', () => {
-  expect(INTERROGATIONS).toHaveLength(4)
-})
-
-test('every question offers exactly two options, because a third would be padding', () => {
-  for (const q of INTERROGATIONS) {
-    expect(q.options, `${q.id} option count`).toHaveLength(2)
-  }
-})
-
 test('every question’s answer is one of its own options, so the right answer is reachable', () => {
   for (const q of INTERROGATIONS) {
     expect(
@@ -261,5 +251,30 @@ test('legality is data, not styling, so a screen reader gets the same informatio
 test('every edge names the call it represents, since that is what the reader is meant to copy', () => {
   for (const e of BOUNDARY_EDGES) {
     expect(e.call.trim().length, `${e.id} call`).toBeGreaterThan(0)
+  }
+})
+
+test('the model is interrogated with five questions, because the fifth is what decides whether a role is an entity, a column, or a relationship', () => {
+  expect(INTERROGATIONS).toHaveLength(5)
+})
+
+test('the actor-rights question answers with the relationship, since a users.role column is one global answer to a question asked per team', () => {
+  expect(judgeInterrogation('actor-rights', 'membership').correct).toBe(true)
+  expect(judgeInterrogation('actor-rights', 'column').correct).toBe(false)
+  expect(judgeInterrogation('actor-rights', 'entity').correct).toBe(false)
+})
+
+test('every interrogation offers at least two options, since a question with one answer is not a judgment', () => {
+  for (const q of INTERROGATIONS) {
+    expect(q.options.length, `${q.id} has too few options`).toBeGreaterThan(1)
+  }
+})
+
+test('every interrogation answer names one of its own options, so a typo cannot make a question unanswerable', () => {
+  for (const q of INTERROGATIONS) {
+    expect(
+      q.options.map((o) => o.id),
+      `${q.id} answers with an option it does not offer`,
+    ).toContain(q.answer)
   }
 })
