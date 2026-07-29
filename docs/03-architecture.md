@@ -297,7 +297,8 @@ decision you have already made without writing it down.
 **C4** is the usual answer to "what kind of diagram". Four levels: **context** (your system
 and the world around it), **container** (the deployable things inside it), **component**
 (the pieces inside one container), **code**. For one person, context and container earn
-their keep. Component is worth drawing for the one subsystem that is genuinely intricate.
+their keep. Component is worth drawing for the one subsystem complicated enough that you keep
+re-deriving how it fits together.
 Code is what your editor already draws. Draw two diagrams, not four.
 
 The container view of the invoicing app, which is the one that pays for itself:
@@ -398,7 +399,8 @@ drawing once:
           so a client can be reassigned without orphaning it)
 ```
 
-That last relationship is a decision, not a detail. Hanging `invoices` off `users` as well as
+That last relationship is worth arguing about before it is typed. Hanging `invoices` off
+`users` as well as
 `clients` is what lets a client be merged or reassigned later without the invoices following
 it, and it is the kind of thing an ER view makes visible and a list of tables does not.
 
@@ -500,6 +502,11 @@ decision belongs here rather than in implementation.
 | An internal server action or function | Cheap | One codebase, and the compiler finds every caller |
 | A public API someone else calls | Expensive | You do not know who depends on it and cannot make them move |
 | A webhook you receive | Not yours to change | Somebody else owns the shape; you adapt |
+
+A webhook is the row worth pausing on, because you inherit its delivery behaviour along with
+its shape: **it will arrive twice eventually, and handling it has to be safe when it does.**
+That is idempotency, and it is worked through in
+[Sketch the system](#sketch-the-system) above, where the payment flow makes it concrete.
 
 Most solo projects live almost entirely in the first row, which is the argument for not
 building a public API until something actually needs one. The mistake is not noticing the
