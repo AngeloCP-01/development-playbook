@@ -3,19 +3,21 @@
 **Purpose:** the log. What actually shipped, what was decided and why, and what
 debt was taken on. Scope and planning live in [task.md](task.md).
 
-**Last updated:** 2026-07-28
-**Current phase:** W-3 — stages 01, 02 and **03 (Architecture)** are interactive. Stage 03
-shipped through the full loop on `feat/stage-03-architecture`: 17 tasks, every one
-subagent-reviewed, with a whole-branch review still to come. It is the densest stage and
-the **solutions architect's home** — the audience stage 02 feeds but does not serve (D-37).
+**Last updated:** 2026-07-29
+**Current phase:** W-3 — stages 01, 02 and **03 (Architecture)** are interactive. Stage 03 is
+the densest stage and the **solutions architect's home** — the audience stage 02 feeds but
+does not serve (D-37).
 
-**The app for stage 03 is done; the doc underneath it is not.** The cold-reader pass run at
-the end of the round found 14 beginner-completeness gaps in `docs/03-architecture.md`, three
-of them blocking (**TD-18**). Those are pre-existing doc gaps, not defects this branch
-introduced, and closing them is its own round.
+**The position has inverted: stage 03's doc is now done, and the app lags it.** `W-3.1` closed
+**TD-18**, **TD-21** and **TD-22**, taking `docs/03-architecture.md` from 8 subsections and
+300 lines to **13 and 871**, running requirements → HLD → LLD. The round was scoped doc-only
+by decision (**D-46**), so `web/src/features/architecture/` still mirrors the eight-subsection
+doc. That divergence is **TD-23** and `W-3.2` closes it.
+
+A whole-branch review is still to come before this branch merges.
 
 Quality gates remain live: prettier (skipping markdown, see the build note below), eslint at
-`--max-warnings 0`, **133 vitest tests across 9 files**, a **10-test audit suite sweeping 20
+`--max-warnings 0`, **134 vitest tests across 10 files**, a **10-test audit suite sweeping 20
 URLs** (stage 03's six step hashes added by hand — TD-12), lefthook, and CI. Everything
 since `82a980b` is local; `main` is well ahead of `origin/main` and unpushed (the user
 handles pushes).
@@ -57,6 +59,7 @@ because scope creep is invisible otherwise.
 | 2026-07-23 | P-5 | Stack drift resolved: ESLint kept, Prettier added, Biome demoted to documented alternative; docs 04/stack.md/CLAUDE/KICKOFF amended | Every biome reference in doc 04 sections 3/6/7 replaced; `web/` and docs now agree | — |
 | 2026-07-23 | — | First learning guide: `docs/learnings/stage-implementation-101.md` | Every claim drawn from a real bug this session | More guides as rounds teach them |
 | 2026-07-23 | P-8 | Working standards documented: git + delivery-loop + review + TDD conventions, skills-as-process, humanizer pass, `web/PATTERNS.md` | Every convention verified against `SmartJobSearchCRM` git or the code; `218815a`, `5082e43`, `17b344e`, `a5901af` | Folding the same into the stage docs (P-6) |
+| 2026-07-29 | W-3.1 | Stage 03's **doc round**: `docs/03-architecture.md` 8 subsections → **13**, 300 → **871 lines**, running requirements → HLD → LLD. Closes **TD-22** (no high-level design: adds architecture characteristics with a trace-forward table, a system sketch with C4 and three views, database design past the DDL, API contract design), **TD-21** (styles landscape: monolith · modular monolith · microservices · serverless, plus bounded context and ubiquitous language — the stage had been teaching the modular monolith unnamed), and **TD-18** (14 cold-reader gaps). The TD-22 inversion was fixed by *splitting* "Model the domain first" — conceptual model stays, the `CREATE TABLE` moves below the sketch that justifies it | 11 commits `4afaec4`…`7a5108f`. **Cold-reader re-run** under identical constraints and the same shift-swap product as the baseline: **9 CLOSED · 3 PARTIAL · G9 correctly deferred · G5 thin**, 13 of 17 DoD boxes tickable on a first read against a previously unsatisfiable exit condition. It also found **five gaps this round introduced** — the headline being that the stage cites the shift-swap product three times and showed zero DDL for roles or tenancy, and that idempotency was a DoD gate taught nowhere — all fixed in `7a5108f`. Glossary 42 → 56 terms. 134/134 across 10 files from a cleaned `.next`, lint and typecheck clean, **16/16 internal links verified resolving** by script. New `stage-03-structure.test.ts` pins the thirteen headings in order, teeth-checked by swapping two and confirming exactly one test failed | **The app port (W-3.2 / TD-23)** — the larger half, taken deliberately (D-46); **G9** still stage 10's (D-39); G1's strike test, G8's wall-clock/DST case, G5's isolation level, G6's soft-delete mechanic, and the characteristics trace table's three rows against ten candidates — all recorded in `.superpowers/sdd/cold-reader-stage-03-after.md`, none silently dropped |
 | 2026-07-28 | W-3 (03) | Stage 03 **Architecture** interactive: six steps (reverse · model · constrain · shape · decide · AI plays), nine figures, four judgment exercises, an annotated-DDL inspector, a domain worksheet carrying stage 02's answers forward, 7 new terms, 4 references. `docs/03-architecture.md` gained the `### AI in architecture` section it never had | 24 commits `21f555b`…`9758cef`. Gate from a deleted `.next`: lint 0 warnings, typecheck clean, **133/133 unit across 9 files**, **22 routes prerendered**, **10/10 e2e over 20 URLs**. Review caught two blocking defects: (1) `DomainSketch` rendered the status enum as `draft \| sent \| paid`, which **pre-answered the interrogation exercise rendered in the same stepper panel** — the doc's arc is naive sketch → interrogate → schema drops it, so `overdue` was restored (`83b6cba`); (2) `BoundaryMap`'s `EDGE_NAME` hardcoded "allowed"/"not allowed" into each accessible name while only the visible badge derived from `edge.legal`, so flipping the data would have told a sighted reader and a screen-reader user opposite things with nothing failing — the suffix now derives from the data, teeth-checked by flipping `legal` and proving the name followed (`7893272`). Two reviewers reproduced measurements independently rather than accepting reports: the 320px overflow numbers (page 305/305, container 621/213) and the reassembled DDL executed against a real PostgreSQL 17 instance | **TD-18** (14 cold-reader doc gaps, 3 blocking) — recorded, not fixed; TD-11 and TD-14 stay open; **TD-16** (placeholder contrast) and **TD-17** (no component-test harness) opened; no ADR worksheet (D-39); no schema validation — the worksheet records, it does not grade; no component-test harness — vitest is `environment: 'node'` and matches only `*.test.ts` |
 | 2026-07-28 | W-3 (02) | Stage 02 **declared complete** for its scope, after an audience-readiness check | Two cold-reader persona tests (PM, solutions architect) reading only the doc: PM = primer not a tool (5 blocking-for-PM gaps, all scope-boundary), SA = feeder that defers architecture to stage 03 (6 gaps, all stage-03 content). Developer-completeness already confirmed by the earlier cold reader. Scope confirmed (D-37); method written up in `docs/learnings/cold-reader-testing.md` | PM support (whole-playbook scope expansion); SA support (build stage 03) |
 | 2026-07-28 | — | Build: Prettier no longer checks markdown (`*.md` in `web/.prettierignore`); pre-commit format glob reverted to code extensions | Fixed a CI `format:check` failure on `web/PATTERNS.md` at the source. Markdown is documentation, not code, and the generated `reference/glossary.md` must not be reformatted out of sync with `renderGlossary()`. Teeth-checked: a bad-emphasis `.md` no longer trips the gate | — |
@@ -85,6 +88,9 @@ of what was believed at the time is the point.
 
 | # | Decision | Reasoning | Consequence |
 |---|---|---|---|
+| **D-47** | The glossary is a **source of doc defects, not only a convenience**. `terms.ts` gets audited when a doc gap is fixed, before the prose is called done | `Authorization` was defined as "the check that this particular record belongs to this particular caller" — TD-18's G3 defect verbatim, sitting in the single source (D-36) that generates `reference/glossary.md` and the app's inline definitions. Three tracker entries and a cold-reader pass had all missed it, because every one of them was reading prose. A doc-only fix would have shipped the corrected paragraph and left the wrong definition authoritative in two other surfaces | Cheap and mechanical: when a round fixes a concept in a stage doc, grep `terms.ts` for that concept first. The failure mode is specific to single-sourced content, so it will recur as more of the app moves that way |
+| **D-46** | W-3.1 ships **doc-only**; the app port is its own round (**W-3.2**), and the divergence is recorded as **TD-23** rather than left implicit | Stage 03's app was already at D-38's ceiling of five content steps plus AI, and the round adds five sections — so the port needs a step structure that does not exist until the prose settles. Porting against moving prose means doing it twice, and the app mirrors more than the additions: `scoring.ts` carries the DDL annotations, the interrogation set and the reversibility lists, all three of which this round corrected. The alternative considered was one round covering both, rejected as a review surface the size of the original 24-commit stage build | `CLAUDE.md` permits the doc/app duplication but not widening it silently, so the debt is filed with its reasoning. W-3.2 supersedes D-38 with the shape the doc proved, and must state a new ceiling rather than "stage 03 is special" |
+| **D-45** | Stage 03 takes the **full HLD/LLD treatment**, accepting an 871-line doc — 2.3× the next longest stage | The project owner chose this over a lighter ~450-line option that would have taught the HLD questions without adding a named artifact. The brainstorm recommended the lighter one; the fuller one is defensible because stage 03 is the densest stage and the solutions architect's home (D-37), and because the lighter version leaves TD-22's core complaint standing — Artifacts asking only for "a one-paragraph description plus a diagram only if it clarifies". D-44's move applies a second time: teach the full apparatus, keep the stage's own answer, and name what is deliberately not adopted | The doc is now far out of family on length, and consultability becomes a real risk rather than a theoretical one. Mitigated by a check the cold-reader pass structurally cannot run (a cold reader reads linearly): three questions looked up from headings alone, scoring 4/5 with two misfilings found and fixed. If a future stage proposes the same treatment, this decision is the precedent to argue against, not for |
 | **D-44** | Stage 03 will **teach the architecture styles trade-off, including microservices** — without changing its recommendation. Monolith-first, modular boundaries and defer-aggressively all stand | The playbook's stated job is that it "doubles as a learning tool — it will cover ground I have not worked in, so stages need to teach, not just remind." A reader who has never seen microservices cannot evaluate why monolith-first is right *for them*; they can only take it on faith, which is the same failure mode as G3 in TD-18 — a confident answer arrived at without understanding. Research confirmed the current recommendation is well-supported ("the days of building microservices-first as a default are over"), so the gap is not that the advice is wrong but that a reader cannot place it. The initial recommendation from research was to leave microservices out as off-stance for a solo developer; the project owner overrode it, correctly — knowing what you are not doing, and why, is the thing that makes the choice a decision | The round adds an architecture-characteristics step and a styles comparison covering monolith, modular monolith, microservices, event-driven and serverless, each stating what would have to be true to choose it. The stage's own answer stays where it is, but arrives as a conclusion. Recorded here because a future reader will otherwise read the microservices content as drift from the solo-first stance |
 | **D-43** | `DeferredList` ships in the **decide** step, not `reverse` as the spec and plan both specified | The spec's argument for `reverse` — "the defer list is the reversibility test applied to infrastructure" — is real, but shipping it there would pull "Defer aggressively" from its own eighth position in the doc to first, breaking the 1:1 mapping the app's six steps otherwise hold against the doc's section order (reversibility → model → schema → one app → boundaries → auth → ADRs → defer aggressively). `decide` already closes on the defer list as the cheap end of the axis the stage opens on, which the whole-branch review found to be the tighter seam. `reverse` was also already an axis figure plus a six-row scored exercise before adding a fourth component | A deliberate deviation from the spec and plan, recorded at the level that authored it — the same convention D-40 established for `SplitTrigger`'s candidate count. Caught unrecorded by the whole-branch review (M2); no component moved to produce this entry, it only fills the gap in the record |
 | **D-42** | Source citations in code comments and plans name a **heading**, not a line number. A range is used only where the exact lines are the point, and then it names the heading too | Line numbers are coordinates in a document that moves, and nothing in lint, typecheck, the unit suite or the audit suite can tell that one has drifted. The evidence is not theoretical: a single audit of `web/src/` found **14 of 33 citations wrong** — four staled by this round's own doc edits, ten inherited from the stage 02 round, the worst off by ~86 lines. Every one of them looked perfectly well-formed. Headings drift only when someone renames a section, which is a deliberate act that shows up in a diff, rather than a side effect of inserting a paragraph three sections earlier | Cite `docs/02-planning.md, "Cut to the core"` rather than `:63-64`. Six such citations already existed (`ReversibilityAxis`, `AIArchitecturePlays`, `CutTable`, `DoneStatement`, `HorizonBands`, `HorizonTriage`) and all were still correct after two rounds of doc edits, which is the argument in miniature. Where a range is genuinely needed — a transcribed DDL block, a quoted template — keep it and pair it with the heading, so a stale number is self-evidently repairable. A future check could assert that each cited heading exists |
@@ -330,7 +336,33 @@ carries a `### AI in discovery` subsection porting its `AIWorkflow` plays to pro
 built stages carry AI in the doc as well as the app. Consistent with D-35 (AI plays is a
 standard per-stage section).
 
-### TD-18 — `docs/03-architecture.md` has 14 beginner-completeness gaps, 3 blocking · **High**
+### ~~TD-18~~ — `docs/03-architecture.md` has 14 beginner-completeness gaps, 3 blocking · **CLOSED 2026-07-29**
+
+> **Closed by W-3.1** (`4afaec4`…`7a5108f`, 11 commits). Verified by a cold-reader re-run under
+> the same constraints and the same shift-swap product as the original pass, so the numbers
+> compare: **9 CLOSED · 3 PARTIAL (G1, G2, G8) · G9 open and correctly deferred · G5 closed but
+> thin.** G2 was then closed by the fix wave. The reader ticked 13 of 17 Definition-of-done
+> boxes on a first read, against an exit condition that was previously unsatisfiable.
+>
+> **G3 first, as TD-18 asked.** The three-pattern split shipped in commit one, and the re-run
+> confirmed it with the doc's own example: "a manager approving a shift swap between two other
+> people owns none of the three rows involved." The same defect turned out to live in
+> `terms.ts` — `Authorization` was defined as ownership — which no entry had recorded and which
+> a doc-only fix would have left authoritative in the glossary and the app's inline terms.
+>
+> **What the re-run found that this round had introduced**, all fixed in `7a5108f`: roles and
+> tenancy had no DDL anywhere despite the stage citing the shift-swap product three times;
+> idempotency was a DoD gate taught nowhere; the DoD's "Derived values computed, not stored"
+> contradicted the new prose; layered-vs-hexagonal had no criterion; API contracts broke on
+> verb-shaped operations.
+>
+> **Still open, recorded not dropped:** G1's strike test needs a rule rather than one example;
+> G8 has no wall-clock/DST case, which is where shift scheduling lives; G5 says use a
+> transaction and nothing about isolation; G6 omits the soft-delete mechanic; the
+> characteristics trace table has three rows against a ten-item candidate list. Full report:
+> `.superpowers/sdd/cold-reader-stage-03-after.md`.
+>
+> **Deferred:** the app port (**W-3.2** / **TD-23**); G9, still stage 10's by design (D-39).
 
 Found by a cold-reader pass (D-32) run at the end of the stage 03 build: an agent allowed
 to read only that one doc, forbidden from filling gaps with its own knowledge, taking a
@@ -430,7 +462,28 @@ app changes for anything touching the DDL annotations, the interrogation set or 
 reversibility lists, since those are ported into `scoring.ts` — G2 and G14 in particular are
 two-file changes.
 
-### TD-21 — Stage 03 never names the architecture styles landscape · **High**
+### ~~TD-21~~ — Stage 03 never names the architecture styles landscape · **CLOSED 2026-07-29**
+
+> **Closed by W-3.1** (`fdb2abd`, `bf97a7b`). Section 4, "The shapes a system can take",
+> compares monolith · modular monolith · microservices · serverless, each with what it buys,
+> what it costs, and what would have to be true to choose it — and names the stage's own
+> approach as a **modular monolith**, which it had been teaching unnamed. Section 6 names
+> **bounded context** and **ubiquitous language** for what "Boundaries inside the monolith" was
+> groping at. Layered and hexagonal are separated onto the internal-organisation axis, which is
+> the distinction that makes "monolith or microservices" a bad question.
+>
+> **D-44 held.** The recommendation did not change. The section was read in isolation as the
+> plan required, and the microservices row's "what would have to be true" is *separate teams
+> need to ship without coordinating* — a condition a solo reader plainly fails. Section 5 now
+> states the single application as a conclusion drawn from characteristics and alternatives,
+> with an explicit invitation to disagree if the same trace comes out differently.
+>
+> Event sourcing and CQRS got definitions before their verdicts, with the boundary the cold
+> reader needed: an audit table alongside normal rows is not event sourcing, and you should
+> keep it. Glossary 42 → 56 terms.
+>
+> **Deferred:** the app port (**W-3.2**); the internal-organisation axis got a selection
+> criterion only after the cold reader found it missing.
 
 Raised by the project owner after walking the built stage. Distinct from TD-18, which is
 about gaps a cold reader hits while *doing* the stage's four artifacts. This one is about
@@ -463,7 +516,33 @@ matching app changes. Expect a new step before the monolith advice — what does
 need to be — and a styles comparison that states honestly what would have to be true to pick
 each one.
 
-### TD-22 — Stage 03 produces low-level design without ever doing high-level design · **High**
+### ~~TD-22~~ — Stage 03 produces low-level design without ever doing high-level design · **CLOSED 2026-07-29**
+
+> **Closed by W-3.1** (`6e24fff`, `eaafe0a`, `08975f2`, `3a6ed8c`). The stage now runs
+> requirements → HLD → LLD across thirteen subsections.
+>
+> **The inversion was fixed by splitting a section, not only by adding them.** "Model the
+> domain first" had fused the conceptual model (HLD) with the `CREATE TABLE` (LLD). The DDL
+> moved into its own "Design the database" section, positioned after the system sketch that
+> justifies its shape, and the domain section kept its name and its claim.
+>
+> All five missing pieces shipped: architecture characteristics with a trace-forward table,
+> the system sketch with container/deployment/data-flow views and C4 named, database design
+> past the DDL (ER view, normalisation, indexes), and API contract design.
+>
+> **Both open questions answered rather than assumed.** Functional requirements stay stage
+> 02's — verified against its headings, and the doc now states it consumes them. Ceremony:
+> the full HLD/LLD *thinking*, none of the paperwork, and the doc says so in text so an
+> enterprise-background reader reads the omission as a decision.
+>
+> **The failure mode this could have had, avoided deliberately:** if the answer is one
+> application and one database, the component view is two boxes and the section proves HLD is
+> pointless. The worked example scaled instead — an invoicing app really does take payments,
+> send email, store PDFs and need something scheduled — which also gave TD-18's
+> integration-style gap concrete material to close on.
+>
+> **Deferred:** the app port (**W-3.2** / **TD-23**), which is the larger half; the doc grew
+> 300 → 871 lines and the app is still six steps.
 
 Raised by the project owner alongside TD-21, and structurally the more serious of the two.
 TD-21 is about vocabulary the reader never learns. This is about an **activity the stage
@@ -503,6 +582,31 @@ omission is deliberate.
 **Closes with:** the same round as TD-18 and TD-21. This one probably drives the stage's step
 structure, so brainstorm it first — if a new HLD step lands between Model and Constrain, the
 app's six steps and nine figures both change shape.
+
+### TD-23 — Stage 03's doc and app now disagree about what the stage contains · **High**
+
+Opened deliberately by W-3.1 on 2026-07-29, which was scoped doc-only. This is a debt the
+round chose, not one it discovered, and it is recorded so the choice is visible rather than
+silent — `CLAUDE.md` permits the doc/app duplication but not widening it unnoted.
+
+`docs/03-architecture.md` is thirteen subsections and 871 lines.
+`web/src/features/architecture/` is the six steps built in W-3 (reverse · model · constrain ·
+shape · decide · ai) against the eight-subsection doc that no longer exists.
+
+**Why the round took the debt rather than avoiding it.** Stage 03's app already sat at D-38's
+ceiling of five content steps plus the AI step, and the round added five sections. The port
+therefore needs a step structure that did not exist until the prose settled, and porting
+against a moving target means doing it twice. The reasoning is in the spec's Non-goals.
+
+**It is not only additions.** `scoring.ts` holds the DDL annotations, the interrogation set
+and the reversibility lists, and all three changed: a fifth interrogation question, indexes
+and a partial unique index in the DDL, and the reversibility test promoted out of the AI
+section. A port that only adds components would leave the app stating things the doc has
+corrected.
+
+**Closes with:** **W-3.2**, which supersedes D-38 with the shape the doc proved. The 14 new
+terms already in `terms.ts` are defined but not yet used inline, which is the wiring that
+round does.
 
 ### TD-19 — Scored radiogroups have no roving tabindex · **Medium**
 

@@ -28,22 +28,29 @@ Before doing anything, read these for context:
 
 ### Project state (as of 2026-07-29)
 
-- **Playbook content:** all 18 stage docs written (`P-0`…`P-4`). 18/18 pass the
-  seven-section template check; internal links resolve.
+- **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
+  **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
+  figures quoted in the tracker came from **ad-hoc P-4 scripts that no longer exist** (TD-5).
+  They are not committed tests and nothing re-runs them. Do not cite them as having passed.
+  What *is* enforced: `stage-metadata.test.ts` (each doc's H1 matches `stages.ts`, and every
+  built stage has its `### AI in …` heading), `glossary.test.ts`, and — new in W-3.1 —
+  `stage-03-structure.test.ts`, which pins that doc's thirteen subsections in order.
 - **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01, 02 and 03
   are complete and interactive.** Stage 03 (Architecture) ships a 6-step stepper
   (Reverse · Model · Constrain · Shape · Decide · AI plays), 9 figures, 4 judgment
   exercises, an annotated-DDL inspector, and a domain worksheet that carries stage 02's
   answers forward.
-- **Stage 03's doc has open gaps, of two kinds.** A cold-reader pass found 14
-  beginner-completeness gaps in `docs/03-architecture.md`, 3 of them blocking (**TD-18**) —
-  things a reader cannot finish the stage without. Separately, the stage never names the
-  architecture styles landscape (**TD-21**): it teaches the modular monolith without using
-  the term, and never asks what the system needs to *be* before deciding how it is shaped.
-  And it produces a schema — low-level design — without ever doing the high-level design that
-  should justify its shape (**TD-22**): no non-functional requirements, no component or data
-  flow view, no API contract design. The app is done; the doc is not. All three are the next
-  round — see below.
+- **Stage 03's doc is done; its app now lags it (TD-23).** W-3.1 closed **TD-18**, **TD-21**
+  and **TD-22** in `docs/03-architecture.md`, which went from 8 subsections and 300 lines to
+  **13 subsections and 871 lines**, running requirements → HLD → LLD. The round was
+  deliberately doc-only (**D-46**), so the app's six steps still mirror a doc that no longer
+  exists. **Porting it is W-3.2 and it is the next round.** Note the app must mirror the
+  *corrections* as well as the additions — `scoring.ts` holds the interrogation set, the DDL
+  annotations and the reversibility lists, and all three changed.
+- **The cold-reader method is now load-bearing, not a formality.** The re-run on the amended
+  stage 03 scored 9 of 14 gaps closed and found five the round had *introduced*, including a
+  Definition-of-done checkbox gated on idempotency that the doc never taught. Budget for a
+  fix wave after every cold-reader pass; the first report is not the end of the round.
 - **Every stage carries an "AI plays" section** (D-35), in both doc and app.
   `stage-metadata.test.ts` now **fails any stage whose doc lacks the `### AI in <stage>`
   heading**, because stage 03's doc turned out not to have one and the round had to write it
@@ -54,7 +61,7 @@ Before doing anything, read these for context:
   `glossary.md`.
 - **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **133 vitest tests across 9 files**, a **10-test playwright
+  eslint at `--max-warnings 0`, **134 vitest tests across 10 files**, a **10-test playwright
   audit suite over 20 URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
   public (D-26).
 - **The audit suite does *not* sweep ready stages automatically.** `PAGES` in
@@ -68,127 +75,40 @@ Before doing anything, read these for context:
 
 ### This round's scope
 
-**Decided: one round on stage 03's doc — `TD-22`, `TD-21` and `TD-18` together — before
-building another stage.** This is settled, not a recommendation to weigh; the reasoning is
-here so you can execute it, and disagree only if you find something new.
+**Decided: port stage 03's amended doc into the app — `W-3.2`, closing `TD-23`.** The previous
+round (`W-3.1`) rewrote the doc and deliberately left the app behind (**D-46**), so the two
+now disagree. This round closes that, and it is the larger half.
 
-**Do them in that order.** `TD-22` probably changes the stage's step structure, so designing
-the other two against the current six steps risks redoing the work.
+**Settle the step structure first.** `D-38` caps a dense stage at five content steps plus the
+AI step, and the doc no longer fits: thirteen subsections against the app's six steps. W-3.2
+supersedes D-38, and the superseding decision has to state a **new ceiling with a reason** —
+"stage 03 is special" is not one, because stage 04 will make the same argument.
 
-Stage 03's app is finished and verified. The doc underneath it has three separate problems.
+**Mirror the corrections, not just the additions.** This is the part that is easy to miss.
+`scoring.ts` carries the DDL annotations, the interrogation set and the reversibility lists,
+and W-3.1 changed all three: a fifth interrogation question about actor rights, indexes and a
+partial unique index and a `memberships` table in the DDL, and the reversibility test promoted
+out of the AI section into section 1. A port that only adds components leaves the app asserting
+things the doc has since corrected.
 
-**`TD-22` — the stage produces low-level design without doing high-level design.** The
-industry sequence is requirements → HLD (components, interactions, data flow, deployment
-shape, non-functional requirements) → LLD (schemas, API contracts, error handling). Stage 03
-goes from "sort decisions by reversibility" **straight to a concrete `CREATE TABLE`
-statement** — which is LLD — with nothing above it to justify the shape. Missing: an NFR step,
-an HLD artifact, component/deployment/data-flow views, database design beyond the DDL, and API
-contract design. Two questions the brainstorm has to settle rather than assume: **functional
-requirements belong to stage 02** and stage 03 should say it consumes them rather than restate
-them; and **how much ceremony to keep** — take the HLD/LLD thinking, leave the specification
-documents and sign-off, and say in the doc that the omission is deliberate.
+**New content needing components:** architecture characteristics with the trace-forward table,
+the styles comparison, the system sketch and its three views, the sync/async decision, the ER
+view and indexes, API contracts. The 14 new terms are already in `terms.ts` (glossary 42 → 56)
+but not yet used inline — that wiring is this round's.
 
-**`TD-21` — the styles landscape is missing** (decision **D-44**). The stage prescribes a
-single Next.js application, gives four triggers for splitting a service out, and teaches
-feature modules talking through exported functions. That advice is correct and matches
-current industry consensus — but it is delivered as a prescription the reader takes on faith.
-The stage never asks what the system needs to *be* before deciding how it is shaped, and it
-teaches the **modular monolith** without ever using the term. Microservices, event-driven,
-hexagonal, serverless, SOA and the DDD vocabulary (bounded context, ubiquitous language) go
-unnamed, so a reader finishes the stage unable to place their own decisions among the words
-they will meet everywhere else.
+**Two cautions from W-3.1, both earned:**
 
-**The round adds microservices content deliberately, and does not change the recommendation.**
-Monolith-first, modular boundaries and defer-aggressively all stand. The playbook's job is to
-teach ground the reader has not worked in, and someone who has never seen microservices
-cannot evaluate why monolith-first is right *for them* — they can only take it on faith,
-which is the same failure as G3 below. Knowing what you are not doing, and why, is what makes
-it a decision. Do not read the microservices material as drift from the solo-first stance;
-D-44 exists so you don't.
+- **The cold-reader pass is a gate, not a formality.** Its re-run found five gaps the round had
+  *introduced*, including a Definition-of-done checkbox gated on idempotency that the doc never
+  taught. Budget for a fix wave after the report.
+- **Check `terms.ts` when fixing a concept** (**D-47**). `Authorization` was defined as
+  ownership — TD-18's blocking G3 defect verbatim — and three tracker entries plus a
+  cold-reader pass all missed it, because they were reading prose.
 
-**`TD-18` — a cold-reader pass found the doc incomplete for a beginner:** 14 gaps, 3 blocking.
-
-The blocking three are not cosmetic. The Definition of Done makes "authorization pattern
-decided" an exit condition, but the doc offers only ownership, which fails for any product
-where data is shared rather than owned. "Indexes" is a required artifact that appears exactly
-once in the whole document — in the list requiring it. And races are named as *the* reason to
-push constraints into the database, with no tool given that expresses a conditional
-uniqueness rule, and transactions unmentioned anywhere. A reader following the stage honestly
-cannot finish it.
-
-**Why the three are one round.** All live in `docs/03-architecture.md`, and all force matching
-changes in `src/features/architecture/` because the DDL annotations, the interrogation set and
-the reversibility lists are ported into `scoring.ts`. They also converge on a single step:
-`TD-22`'s non-functional-requirements artifact is the same thing as `TD-21`'s architecture
-characteristics under the name most readers meet, and it is where `TD-18`'s **G14** belongs —
-the reversibility test is currently stranded in the AI section, framed as a prompt for a model
-rather than as the rule the whole stage turns on. One step resolves a piece of all three.
-Splitting the work means opening the same document three times.
-
-It ranks above stage 04 because the doc/app coupling gets more expensive as stages
-accumulate, because the cold-reader method is cheap and worked on its first real outing, and
-because stage 03 is the solutions architect's home (D-37) — the audience the playbook serves
-worst. Shipping it with an unsatisfiable exit condition undercuts stage 02's claim to
-legitimately defer architecture to it.
-
-**Suggested shape**, to argue with rather than follow: a new step before the structural
-advice (*what does this system need to be?* — three or four characteristics, not twenty), then
-a styles comparison where each option states what would have to be true to pick it, and the
-stage's own answer arrives as a conclusion rather than an opening. `TD-18`'s blocking three
-fold into the sections they belong to.
-
-Start from `.superpowers/sdd/2026-07-28-stage-03-architecture/cold-reader-findings.md` —
-every gap already carries the line that would close it. `docs/task.md`'s **W-3.1** has the
-full checklist. Note that `.superpowers/` is git-ignored scratch, so if the file is gone the
-same findings are reproduced inline in `TD-18`.
-
-Other open candidates, with what each is worth:
-- **`W-5` deploy** — stronger than it was. Three stages are finished, so "deploy matters less
-  while the app has one finished stage" no longer holds, and it would turn the audit suite
-  into a real post-deployment check.
-- **`TD-17`** — no component-test harness. vitest is `environment: 'node'` and matches only
-  `*.test.ts`, so nothing can render a component. Gets more valuable with every stage built.
-- **`TD-16`** — worksheet placeholder text at 2.77:1 in light mode, across all three
-  worksheets, invisible to the audit suite because it samples `textContent`.
-- Low remaining debt: `TD-11` design-token names, `TD-14` card widths, `TD-9` (stage 02 has
-  no Figure 5).
-
-The round is **`TD-18` + `TD-21`**. Start with `superpowers:brainstorming` — the scope is
-decided but the shape is not, and the styles comparison in particular needs designing before
-it is planned.
-
-### How we work
-
-1. **Brainstorm** the slice (`superpowers:brainstorming`) → spec at
-   `docs/superpowers/specs/YYYY-MM-DD-<slug>-design.md`
-2. **Plan** it (`superpowers:writing-plans`) → `docs/superpowers/plans/YYYY-MM-DD-<slug>.md`
-   with checkbox steps and complete code inline
-3. **Execute** — `superpowers:subagent-driven-development`, or inline for small slices.
-   TDD throughout; commit after every task.
-4. **Review** — per task, then a **final whole-branch review** before merge. Findings
-   carry severity, an ID, and provenance. Disprove as well as confirm.
-5. **Merge** to `main` with `--no-ff` and a hand-written subject
-   (`superpowers:finishing-a-development-branch`). Do not push unless I ask.
-6. Use `frontend-design` or `ui-ux-pro-max` for any new UI, matching `web/DESIGN.md`.
-
-Scale the ceremony to the work: a one-component fix does not need a spec; a milestone
-does.
-
-### Environment notes
-
-- All app commands run from `web/`: `pnpm dev` (port 3200), `pnpm build`, `pnpm lint`,
-  `pnpm typecheck`, `pnpm test` (vitest), `pnpm test:e2e` (playwright audit
-  suite). Lefthook hooks run format+lint on commit, typecheck+test on push.
-- No env vars, no database, no backend. Static site.
-- MCP in use: **context7** (library docs — prefer it over memory for framework code),
-  **playwright** (driving the running app for verification), **claude-mem** ("did I
-  already decide this?").
-- Commit trailer: `Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>`
-
-Verification is not optional and is run against a live build: contrast in both themes,
-320–2560px with no overflow, touch targets, zero console errors.
-
-Start by reading the docs above, then let's decide the round and scope it.
+**Watch the length.** The doc is 871 lines, 2.3× the next-longest stage, which is a recorded
+consequence of D-45 rather than an accident. Consultability scored 4/5 and two misfilings were
+found and fixed. If the app port makes a step feel like a scroll, that is the same problem
+arriving in a second surface.
 
 ---
 

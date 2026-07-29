@@ -168,7 +168,7 @@ Per stage (checklist ticked for **03 Architecture**, feat/stage-03-architecture)
       event-driven, serverless — each stating what would have to be true to pick it. The
       recommendation does not change; it stops being an assertion.
 
-### W-3.1 — Stage 03 doc round (TD-22 + TD-21 + TD-18) ☐ *(next)*
+### W-3.1 — Stage 03 doc round (TD-22 + TD-21 + TD-18) ☑ *(done 2026-07-29)*
 
 One round, three tracker entries, because all three live in `docs/03-architecture.md` and all
 three force matching changes in `web/src/features/architecture/`. Runs the full loop:
@@ -179,51 +179,78 @@ designing TD-21 or TD-18 against the current six steps risks redoing that work.
 
 **TD-22 — the missing activity (do this first)**
 
-- [ ] **Non-functional requirements** — a new step before the structural advice. What does
+- [x] **Non-functional requirements** — a new step before the structural advice. What does
       this system need to be (available · auditable · low-latency · cheap to run · secure)?
       Three or four picked, not a checklist of twenty. Same artifact as TD-21's "architecture
-      characteristics" under the name most readers meet — build it once. This is also where
-      TD-18's **G14** lands: the reversibility test currently stranded in the AI section
-      belongs here as the stated rule
-- [ ] **A high-level design artifact** between the domain model and the schema — components,
+      characteristics" under the name most readers meet — build it once.
+      ~~This is also where TD-18's **G14** lands~~ **✗ corrected 2026-07-29: this checklist
+      put G14 here; TD-18's own text puts it in the reversibility section, and TD-18 is
+      right.** G14's defect is that the section gives two example lists and no test for
+      producing your own, so the fix has to land where the lists are. Shipped in section 1
+- [x] **A high-level design artifact** between the domain model and the schema — components,
       how they interact, external systems, data flow, deployment shape. Today Artifacts asks
       only for "a one-paragraph description plus a diagram only if it clarifies", which is an
       HLD with no structure
-- [ ] **Decide the functional-requirements boundary explicitly.** Stage 02 owns them (define
+- [x] **Decide the functional-requirements boundary explicitly.** Stage 02 owns them (define
       done · the cut · vertical slices). Stage 03 should state that it *consumes* them, not
       restate them — getting this wrong duplicates stage 02 and breaks the filing-code claim
-- [ ] **Decide how much ceremony to keep.** Take the HLD/LLD thinking, leave the specification
+- [x] **Decide how much ceremony to keep.** Take the HLD/LLD thinking, leave the specification
       documents and sign-off. Say so in the doc, so a reader from an enterprise background
       knows the omission is deliberate
-- [ ] **Database design beyond the DDL** — an ER view, normalisation vocabulary, and the
+- [x] **Database design beyond the DDL** — an ER view, normalisation vocabulary, and the
       access-pattern thinking that would justify **G4**'s indexes
-- [ ] **API / contract design** — never posed today. Route shape, request/response contracts
+- [x] **API / contract design** — never posed today. Route shape, request/response contracts
       and versioning, with their differing reversibility costs
 **TD-21 — the missing vocabulary**
 
-- [ ] **Styles comparison** — monolith · modular monolith · microservices · event-driven ·
+- [x] **Styles comparison** — monolith · modular monolith · microservices · event-driven ·
       serverless. Each with what it costs, what it buys, and what would have to be true to
       choose it. Name the modular monolith as the thing the stage already teaches
-- [ ] **DDD vocabulary** — bounded context named where "Boundaries inside the monolith"
+- [x] **DDD vocabulary** — bounded context named where "Boundaries inside the monolith"
       currently gropes at it; ubiquitous language; aggregates. Strategic DDD lightly, not the
       tactical machinery
 **TD-18 — what a cold reader could not finish**
 
-- [ ] **G3 first, per TD-18** — the ownership / role / membership authorization split. The
+- [x] **G3 first, per TD-18** — the ownership / role / membership authorization split. The
       only gap that produces a confident wrong answer rather than a stall
-- [ ] **G4** — indexes: teach two in the DDL with reasoning, or drop them from Artifacts
-- [ ] **G5** — conditional uniqueness and one sentence on transactions, since the doc names
+- [x] **G4** — indexes: teach two in the DDL with reasoning, or drop them from Artifacts
+- [x] **G5** — conditional uniqueness and one sentence on transactions, since the doc names
       races as the reason for database constraints and supplies no tool that expresses one
-- [ ] **Integration style** — synchronous versus asynchronous as a posed decision, which is
+- [x] **Integration style** — synchronous versus asynchronous as a posed decision, which is
       the fork into event-driven
-- [ ] **C4** — name a diagramming standard where Artifacts currently says "a diagram only if
+- [x] **C4** — name a diagramming standard where Artifacts currently says "a diagram only if
       it clarifies"
-- [ ] **Define the dismissed terms** — event sourcing and CQRS get a definition before they
+- [x] **Define the dismissed terms** — event sourcing and CQRS get a definition before they
       get a verdict. Expand `ADR` and `DDL` on first use
-- [ ] **C1** — resolve "defer multi-tenancy" against "stored data is expensive to reverse"
-- [ ] Mirror every change into `web/src/features/architecture/` — the DDL annotations, the
+- [x] **C1** — resolve "defer multi-tenancy" against "stored data is expensive to reverse"
+- [x] Mirror every change into `web/src/features/architecture/` — the DDL annotations, the
       interrogation set and the reversibility lists are all ported into `scoring.ts`
-- [ ] Re-run the cold-reader pass afterwards on the amended doc, and record what it finds
+- [x] Re-run the cold-reader pass afterwards on the amended doc, and record what it finds
+
+### W-3.2 — Port stage 03's doc round into the app ☐ *(next)*
+
+W-3.1 was deliberately doc-only, so `docs/03-architecture.md` and
+`web/src/features/architecture/` now disagree about what the stage contains. That divergence
+is **TD-23**, and this round closes it.
+
+The doc went from eight subsections to thirteen and from 300 lines to 871. The app is still
+the six steps built in W-3: reverse · model · constrain · shape · decide · ai.
+
+- [ ] **Decide the new step structure first.** Five content steps is D-38's ceiling and the
+      doc no longer fits inside it. This round supersedes D-38 with the shape the doc proved,
+      and the superseding decision states the new ceiling and why — not "stage 03 is special"
+- [ ] **New content needing components**: architecture characteristics with the trace-forward
+      table, the styles comparison, the system sketch with its three views, the sync/async
+      decision, the database section's ER view and indexes, API contracts
+- [ ] **Mirror the corrections, not just the additions** — `scoring.ts` holds the DDL
+      annotations, the interrogation set and the reversibility lists, all of which changed.
+      The interrogation set gained a fifth question; the DDL gained indexes, a partial unique
+      index, and the `memberships` table
+- [ ] **`terms.ts` already has the 14 new terms** (glossary 42 → 56, shipped in W-3.1). They
+      are defined but not yet used inline by any component, which is the wiring this round does
+- [ ] Re-run the audit suite — new step hashes need adding to `e2e/audit.spec.ts` by hand
+      (TD-12), and the 320px overflow check matters for the ASCII diagrams and the wide tables
+- [ ] Close **TD-23** when doc and app agree again
 
 #### AI-plays coverage, per stage
 
