@@ -43,7 +43,22 @@ const HELPS: Entry[] = [
   {
     id: 'reversibility',
     claim: 'Pressure-test a reversibility claim',
-    body: '“This is cheap to undo” has a falsifiable answer, and the test is the one at the top of this stage. Hand it the decision and the test, and make it argue the expensive case. A model is good at enumerating consequences and bad at deciding they are acceptable.',
+    body: '”This is cheap to undo” has a falsifiable answer, and the test is the one at the top of this stage. Hand it the decision and the test, and make it argue the expensive case. A model is good at enumerating consequences and bad at deciding they are acceptable.',
+  },
+  {
+    id: 'characteristics',
+    claim: 'Argue down a characteristics list',
+    body: 'Ask for the ten things this system could need to be, then make it defend cutting six. The generating half is where it helps. The cutting half is where you find out whether your three were actually chosen or merely listed.',
+  },
+  {
+    id: 'missing-box',
+    claim: 'Find the box you left out of the sketch',
+    body: 'Paste the container view and ask what a system like this usually talks to that is missing. It is good at this because it is pattern-matching against every similar system it has read, which is the one situation where that habit works for you rather than against you.',
+  },
+  {
+    id: 'schema-index',
+    claim: 'Read a schema for the index you need',
+    body: 'Paste the DDL and the queries your screens actually make. Without the queries it will suggest indexes for imagined access patterns, which is worse than no suggestion at all, because an index you do not need still costs write time and disk.',
   },
   {
     id: 'schema-gaps',
@@ -62,6 +77,12 @@ const MISLEADS: Entry[] = [
     id: 'distribution',
     claim: 'It reaches for distribution by default',
     body: 'Microservices, queues and caching layers turn up unprompted, because that is what the training material is about. Each one is a real solution to a problem you do not yet have.',
+  },
+  {
+    id: 'style-by-popularity',
+    claim:
+      'Asked which style to use, it answers with the one it has read most about',
+    body: 'Not the one your characteristics select. It will produce a comparison table that looks like the one in this stage and then recommend against your own constraints, with citations. Use it the other way round: give it your three characteristics and make it derive the answer, rather than asking it what to pick.',
   },
   {
     id: 'invented-scale',
