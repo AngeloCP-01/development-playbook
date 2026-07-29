@@ -27,7 +27,16 @@ Naming: `<topic>-101.md`.
   reads only the doc, forbidden from filling gaps with its own knowledge, and tries to
   produce the real artifact. A beginner persona finds completeness defects; role personas
   answer "is it ready for audience X?" It caught two content defects in stage 02 and
-  settled its scope. Read it before calling any stage doc done.
+  settled its scope. Extended after stage 03's doc round, where the re-run found five gaps
+  **the round itself had introduced** — so the report is the middle of the round, not the
+  end, and the fix wave answering it needs its own pass. Read it before calling any stage
+  doc done.
+- `decisions-need-tests-101.md` — why a recorded convention with no mechanical check decays
+  at the speed of the next round. D-42 (cite headings, not line numbers) was written after
+  an audit found 14 of 33 citations wrong, and four days later the next round on the same
+  branch staled all 18 that remained — including two that had just been repaired. The two
+  that survived were the two already converted. Read it whenever you are about to write
+  "from now on we will…" in the tracker.
 - `contrast-checkers-lie.md` — the three ways a colour audit reports a failure that is not
   there: reading `getComputedStyle` while a `transition-colors` is still running, parsing
   `oklab()` with a regex instead of rasterizing it, and passing green over surfaces it

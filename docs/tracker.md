@@ -14,7 +14,11 @@ does not serve (D-37).
 by decision (**D-46**), so `web/src/features/architecture/` still mirrors the eight-subsection
 doc. That divergence is **TD-23** and `W-3.2` closes it.
 
-A whole-branch review is still to come before this branch merges.
+**Merged.** `feat/stage-03-architecture` landed on `main` as `249bd9d` (`--no-ff`, 47 commits,
+branch deleted) after a whole-branch review that returned *Ready with fixes* — six blocking
+items and five minor, all resolved, including SQL that would not run and a checklist item
+ticked for work deliberately deferred. **Pushed** — `origin/main` is at `249bd9d`, so the
+long-standing local-only backlog is cleared and CI has a real branch to run against.
 
 Quality gates remain live: prettier (skipping markdown, see the build note below), eslint at
 `--max-warnings 0`, **136 vitest tests across 11 files**, a **10-test audit suite sweeping 20

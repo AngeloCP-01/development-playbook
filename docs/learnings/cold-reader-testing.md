@@ -54,10 +54,50 @@ The audience-fit run is really a scope test wearing a persona. When the personas
 exactly the places the doc says it defers, that is confirmation the scope is coherent, not
 a to-do list.
 
+## What the second run taught (stage 03, W-3.1)
+
+The stage 02 run above found gaps that **pre-dated** the round. That framing turned out to be
+incomplete, and the difference changes how you budget the work.
+
+**It finds gaps the round itself introduced, not only old ones.** Stage 03's doc round closed
+14 known gaps and the re-run scored 9 closed, 3 partial, 1 correctly deferred. It also found
+**five defects the round had just created** — including a Definition-of-done checkbox gating
+on a concept the body never taught, and a contradiction between a checklist line and prose
+written the same day. A doc that grows by 500 lines acquires new internal inconsistencies
+faster than a human author notices, because the author is checking each addition against
+intent rather than against the other 500 lines.
+
+**So the report is not the end of the round. Budget a fix wave after it.** The instinct is to
+treat a passing-ish re-run as a closing ceremony. It is the middle.
+
+**And the fix wave needs its own verification** — this is the expensive half, recorded as
+**D-48**. The wave exists *because* the pass found something, so by construction it lands
+after the pass ran, and nothing checks it. Stage 03's fix wave shipped the document's only
+unrunnable SQL: a `REFERENCES teams(id)` with no `teams` table, inside a block whose comment
+claimed to demonstrate a tenant key that appeared on zero tables. It was the round's headline
+fix and it did not survive being read as SQL. A later whole-branch review caught it.
+
+The cheap mitigation: **re-run the skim over the fix wave's own additions**, and for anything
+containing code, read it as code rather than as prose. "Verified" attaches to a commit range,
+not to a round.
+
+**Ask for a consultability rating separately.** A cold reader reads linearly, so it
+structurally cannot tell you whether a long document is still something you *look things up
+in* — which for this playbook is the whole point. Run it as its own check: pick three
+questions and try to answer them from headings alone, without reading through. On stage 03
+that scored 4/5 and found two misfilings, one of which would have sent a reader with a webhook
+problem to a section about diagrams.
+
 ## When to run it
 
 - Before calling any stage doc "done" — the completeness run, always.
+- **Again after any round that substantially rewrites a doc**, with the same scenario as the
+  first run so the results compare. A different scenario produces a fresh unrelated list and
+  tells you nothing about whether you fixed anything.
 - When someone asks "is this ready for audience X?" — the audience-fit run answers it with a
   concrete list instead of an opinion.
 - It is cheap (one agent, minutes) and it reliably finds things the author cannot see. There
   is no reason to skip it for a document meant to teach.
+
+What it will not catch: voice drift across sections, whether the document is navigable, and
+anything in the fix wave that answers it. Those need separate passes.
