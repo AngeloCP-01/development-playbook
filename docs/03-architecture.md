@@ -23,6 +23,14 @@ structure — which is a signal, not a failure.
 
 The only architecture question that matters up front: **how expensive is this to undo?**
 
+The test, which you apply to your own decisions rather than looking them up: **ask what
+would have to change, how many call sites touch it, and whether any of it is stored data.**
+The last one dominates. Code is refactorable and data has to be migrated, and a migration
+runs against rows that already exist, written by a version of the system you no longer have.
+
+The two lists below are that test already applied, to a typical web application. They are
+worked examples, not the answer for your system.
+
 **Expensive — decide carefully now:**
 - The data model
 - Authentication and authorization strategy
@@ -43,8 +51,51 @@ be shaping the codebase in three years — gets chosen in ten minutes.
 
 ### What this system has to be
 
-Before deciding how a system is shaped, name the three or four things it has to be good at —
-everything later in this stage is downstream of that answer.
+The stage has been sorting decisions by what they cost. This asks what they are *for*.
+
+Stage 02 settled what the system **does** — the outcome, the cut, the vertical slices. See
+[02 — Product Planning](02-planning.md#cut-to-the-core). This stage does not restate any of
+it. What it needs is the other half: what the system has to **be** while doing those things.
+Those are its **architecture characteristics** — the same thing most job descriptions and
+specifications call **non-functional requirements**.
+
+Candidates, to choose from rather than to complete:
+
+availability · correctness · auditability · latency · scalability · security · cost to run ·
+deployability · evolvability · observability
+
+**Pick three or four.** Not because a longer list is hard to write, but because they trade
+against each other and a system that is meant to be everything has been told nothing. High
+availability costs money. Strong auditability costs write throughput. Cheap-to-run costs
+both. Twenty characteristics is a system with no priorities, which is a system whose next
+hard call gets made by whoever is closest to it.
+
+The invoicing example picks three:
+
+- **Auditability.** Financial records get asked about years later, by people who were not
+  there.
+- **Correctness.** Money that disagrees with itself is worse than money that arrives slowly.
+- **Cheap to run.** One person is paying for this.
+
+And declines, out loud, because a characteristic you never considered is not the same as one
+you rejected: **high availability** — a few hours down is survivable when nobody sends
+invoices at 3am; **low latency** — nobody is in a hurry to look at an invoice; **scale** —
+there is no evidence of it and inventing some is the trap below.
+
+The part that makes this section load-bearing rather than a vocabulary exercise:
+
+| Characteristic | What it forces later in this stage |
+|---|---|
+| Auditability | Soft delete over hard delete; an immutable record of what was sent |
+| Correctness | Constraints in the database rather than the application; money as integer cents |
+| Cheap to run | One application, one database, no queue until something demands one |
+
+Every row is a decision this stage makes anyway. Choosing the characteristic first is what
+turns that decision from a preference into something with a reason attached.
+
+Which gives you the test: **a characteristic that traces to no decision was not chosen, it
+was listed.** If "secure" appears on your list and nothing downstream changed because of it,
+delete it — it is doing no work, and it is crowding out one that would.
 
 ### Model the domain first
 
@@ -279,6 +330,7 @@ build less than the model offers. It has no stake in maintaining what it propose
 
 ## Artifacts
 
+- Three or four architecture characteristics, each traced to a decision it forced
 - A domain model: entities, relationships, and the constraints that hold them together
 - Initial database schema with constraints, keys, and indexes
 - ADRs for each expensive decision
@@ -288,6 +340,7 @@ build less than the model offers. It has no stake in maintaining what it propose
 
 ## Definition of done
 
+- [ ] Characteristics chosen, and each one traced to a decision it forced
 - [ ] Domain modeled in nouns and relationships, not tables
 - [ ] Derived values computed, not stored
 - [ ] Deletion behavior decided per entity

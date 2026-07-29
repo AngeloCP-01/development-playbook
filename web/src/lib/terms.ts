@@ -359,6 +359,14 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'Application code has bugs, gets bypassed by migration scripts and one-off fixes, and races with itself under concurrency. The database does not get bypassed, which makes it the only place a rule genuinely holds.',
   },
+  'architecture-characteristic': {
+    name: 'Architecture characteristic (non-functional requirement)',
+    see: '03-architecture',
+    short: 'What a system has to be good at, as opposed to what it does.',
+    full: 'Availability, correctness, auditability, latency, security, cost to run — the qualities a design has to satisfy, separate from the features it delivers. Richards and Ford call them architecture characteristics; most job descriptions and specifications call the same thing non-functional requirements. One idea, two vocabularies.',
+    soWhat:
+      'They trade against each other, so a list of twenty is a list of none — high availability costs money, strong auditability costs write throughput, and cheap-to-run costs both. Three or four chosen deliberately are what turn a structural decision into something you can defend; without them, picking an architecture is picking a preference.',
+  },
 }
 
 export function getTerm(key: string): Term | undefined {
