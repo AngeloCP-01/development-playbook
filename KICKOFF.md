@@ -25,6 +25,11 @@ Before doing anything, read these for context:
 - `README.md` — the playbook's own index and its central claim
 - `web/AGENTS.md` — this Next.js version postdates your training data; read
   `node_modules/next/dist/docs/` before writing framework code
+- `docs/learnings/README.md` — five guides written after rounds that cost real time. Two are
+  directly relevant to W-3.2: `decisions-need-tests-101.md` (this round supersedes D-38, and
+  that guide is about what makes a recorded decision actually hold) and
+  `stage-implementation-101.md` (the layout traps and verification checklist for building a
+  stage)
 
 ### Project state (as of 2026-07-29)
 
@@ -71,8 +76,9 @@ Before doing anything, read these for context:
   unaudited with the suite still green. An earlier version of this kickoff claimed otherwise.
 - **Not deployed** (`W-5` open).
 - **Branch/push:** work happens on `feat/`|`fix/`|`docs/<date>-` branches, merged to `main`
-  with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes** —
-  `main` is currently well ahead of `origin/main` and unpushed.
+  with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes.**
+  `main` and `origin/main` are in sync at `249bd9d`; the long-standing local-only backlog
+  was pushed on 2026-07-29 and **CI ran green on it** (`30426083363`, 2m15s).
 
 ### This round's scope
 

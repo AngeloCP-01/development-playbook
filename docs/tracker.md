@@ -23,8 +23,9 @@ long-standing local-only backlog is cleared and CI has a real branch to run agai
 Quality gates remain live: prettier (skipping markdown, see the build note below), eslint at
 `--max-warnings 0`, **136 vitest tests across 11 files**, a **10-test audit suite sweeping 20
 URLs** (stage 03's six step hashes added by hand — TD-12), lefthook, and CI. Everything
-since `82a980b` is local; `main` is well ahead of `origin/main` and unpushed (the user
-handles pushes).
+since `82a980b` was local until 2026-07-29, when `main` was pushed and CI ran green on the
+stage 03 merge (`30426083363`). `main` and `origin/main` are in sync at `249bd9d`; the user
+handles pushes.
 
 **The gate proved itself.** CI's first real run went red on a genuine bug — `PageProps`
 is generated into `.next/types/`, so typechecking before building fails on a clean
@@ -588,7 +589,17 @@ omission is deliberate.
 structure, so brainstorm it first — if a new HLD step lands between Model and Constrain, the
 app's six steps and nine figures both change shape.
 
-### TD-24 — The `.agents/` skill library arrived unrecorded, and half of it is duplicated · **Medium**
+### ~~TD-24~~ — The `.agents/` skill library arrived unrecorded · **CLOSED 2026-07-29**
+
+> **Resolved by the project owner: the library is deliberate and stays.** That was the open
+> question, and it is now answered — the entry below stands as the record of what arrived and
+> when, not as an outstanding decision.
+>
+> The two remaining observations are noted and explicitly **not** being acted on: the root
+> `.agents/` tree is a byte-identical subset of `web/.agents/` (verified by `md5`), and
+> `8063587`'s commit message does not follow the repo's Conventional Commits rule. Neither is
+> worth rewriting history for. Left here so a future reader finds the explanation rather than
+> re-deriving it.
 
 `8063587` added ~8,500 lines of vendored agent skills plus `skills-lock.json`, on this branch,
 outside the delivery loop. Flagged by the whole-branch review as I6. Not deleted or rewritten
