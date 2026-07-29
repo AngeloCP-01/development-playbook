@@ -14,7 +14,7 @@ export type CutFeature = {
   why: string
 }
 
-/** Source: docs/02-planning.md:76-84, judged by the test at :63-64 ("does the outcome fail without this?"). */
+/** Source: docs/02-planning.md:76-85, judged by the test at :63-64 ("does the outcome fail without this?"). */
 export const CUT_FEATURES: CutFeature[] = [
   {
     id: 'create-invoice',

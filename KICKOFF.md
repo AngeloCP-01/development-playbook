@@ -161,7 +161,7 @@ Notes for whoever is preparing this handoff:
     "Process observations"). A per-task review sees one diff; nothing but controller-level
     review catches a task whose output undermines another's. Budget for that.
   - **Cite doc sections by heading, never by line number** (D-42). An audit of `web/src/`
-    found 11 of 30 citations wrong — four staled by this round, seven inherited from the
+    found 14 of 33 citations wrong — four staled by this round, ten inherited from the
     stage 02 round, the worst off by ~86 lines. Nothing in the gate can detect it, and a
     grep for the pattern cannot either: it only sees citations that repeat the filename, so
     bare `:NNN` continuations and citations to other docs stay invisible. Open the lines.

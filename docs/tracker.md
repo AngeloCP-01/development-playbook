@@ -57,7 +57,7 @@ because scope creep is invisible otherwise.
 | 2026-07-23 | P-5 | Stack drift resolved: ESLint kept, Prettier added, Biome demoted to documented alternative; docs 04/stack.md/CLAUDE/KICKOFF amended | Every biome reference in doc 04 sections 3/6/7 replaced; `web/` and docs now agree | — |
 | 2026-07-23 | — | First learning guide: `docs/learnings/stage-implementation-101.md` | Every claim drawn from a real bug this session | More guides as rounds teach them |
 | 2026-07-23 | P-8 | Working standards documented: git + delivery-loop + review + TDD conventions, skills-as-process, humanizer pass, `web/PATTERNS.md` | Every convention verified against `SmartJobSearchCRM` git or the code; `218815a`, `5082e43`, `17b344e`, `a5901af` | Folding the same into the stage docs (P-6) |
-| 2026-07-28 | W-3 (03) | Stage 03 **Architecture** interactive: six steps (reverse · model · constrain · shape · decide · AI plays), nine figures, four judgment exercises, an annotated-DDL inspector, a domain worksheet carrying stage 02's answers forward, 7 new terms, 4 references. `docs/03-architecture.md` gained the `### AI in architecture` section it never had | 20 commits `21f555b`…`cf1aada`. Gate from a deleted `.next`: lint 0 warnings, typecheck clean, **133/133 unit across 9 files**, **22 routes prerendered**, **10/10 e2e over 20 URLs**. Review caught two blocking defects: (1) `DomainSketch` rendered the status enum as `draft \| sent \| paid`, which **pre-answered the interrogation exercise rendered in the same stepper panel** — the doc's arc is naive sketch → interrogate → schema drops it, so `overdue` was restored (`83b6cba`); (2) `BoundaryMap`'s `EDGE_NAME` hardcoded "allowed"/"not allowed" into each accessible name while only the visible badge derived from `edge.legal`, so flipping the data would have told a sighted reader and a screen-reader user opposite things with nothing failing — the suffix now derives from the data, teeth-checked by flipping `legal` and proving the name followed (`7893272`). Two reviewers reproduced measurements independently rather than accepting reports: the 320px overflow numbers (page 305/305, container 621/213) and the reassembled DDL executed against a real PostgreSQL 17 instance | **TD-18** (14 cold-reader doc gaps, 3 blocking) — recorded, not fixed; TD-11 and TD-14 stay open; **TD-16** (placeholder contrast) and **TD-17** (no component-test harness) opened; no ADR worksheet (D-39); no schema validation — the worksheet records, it does not grade; no component-test harness — vitest is `environment: 'node'` and matches only `*.test.ts` |
+| 2026-07-28 | W-3 (03) | Stage 03 **Architecture** interactive: six steps (reverse · model · constrain · shape · decide · AI plays), nine figures, four judgment exercises, an annotated-DDL inspector, a domain worksheet carrying stage 02's answers forward, 7 new terms, 4 references. `docs/03-architecture.md` gained the `### AI in architecture` section it never had | 24 commits `21f555b`…`9758cef`. Gate from a deleted `.next`: lint 0 warnings, typecheck clean, **133/133 unit across 9 files**, **22 routes prerendered**, **10/10 e2e over 20 URLs**. Review caught two blocking defects: (1) `DomainSketch` rendered the status enum as `draft \| sent \| paid`, which **pre-answered the interrogation exercise rendered in the same stepper panel** — the doc's arc is naive sketch → interrogate → schema drops it, so `overdue` was restored (`83b6cba`); (2) `BoundaryMap`'s `EDGE_NAME` hardcoded "allowed"/"not allowed" into each accessible name while only the visible badge derived from `edge.legal`, so flipping the data would have told a sighted reader and a screen-reader user opposite things with nothing failing — the suffix now derives from the data, teeth-checked by flipping `legal` and proving the name followed (`7893272`). Two reviewers reproduced measurements independently rather than accepting reports: the 320px overflow numbers (page 305/305, container 621/213) and the reassembled DDL executed against a real PostgreSQL 17 instance | **TD-18** (14 cold-reader doc gaps, 3 blocking) — recorded, not fixed; TD-11 and TD-14 stay open; **TD-16** (placeholder contrast) and **TD-17** (no component-test harness) opened; no ADR worksheet (D-39); no schema validation — the worksheet records, it does not grade; no component-test harness — vitest is `environment: 'node'` and matches only `*.test.ts` |
 | 2026-07-28 | W-3 (02) | Stage 02 **declared complete** for its scope, after an audience-readiness check | Two cold-reader persona tests (PM, solutions architect) reading only the doc: PM = primer not a tool (5 blocking-for-PM gaps, all scope-boundary), SA = feeder that defers architecture to stage 03 (6 gaps, all stage-03 content). Developer-completeness already confirmed by the earlier cold reader. Scope confirmed (D-37); method written up in `docs/learnings/cold-reader-testing.md` | PM support (whole-playbook scope expansion); SA support (build stage 03) |
 | 2026-07-28 | — | Build: Prettier no longer checks markdown (`*.md` in `web/.prettierignore`); pre-commit format glob reverted to code extensions | Fixed a CI `format:check` failure on `web/PATTERNS.md` at the source. Markdown is documentation, not code, and the generated `reference/glossary.md` must not be reformatted out of sync with `renderGlossary()`. Teeth-checked: a bad-emphasis `.md` no longer trips the gate | — |
 | 2026-07-27 | W-3 (02+) | Stage 02 "AI plays" section: a 7th step + `### AI in planning` doc subsection, mirroring stage 01. Six plays (exhaust, red-team MVP, spike, draft plan, value-vs-effort sort, memory), copyable prompts, opening on planning's inflate-don't-cut failure mode. Names real tools: Superpowers writing-plans/dispatching, claude-mem, context7, Vercel Sandbox; find-skills → deanpeters/product-manager-skills, phuryn/pm-skills as the ecosystem pointer | 57/57; audit 9-of-9 on a production build now sweeping `#ai` (contrast both themes, no overflow, zero console); live pass: 6 plays + 4 badges render, accordion single-open, copy present, `<pre>` scrolls internally; `47c6a64`…`a15d648` | Stage 01's doc still lacks AI content (TD-15); no copyable prompts in the doc (web-stage's job) |
@@ -85,7 +85,8 @@ of what was believed at the time is the point.
 
 | # | Decision | Reasoning | Consequence |
 |---|---|---|---|
-| **D-42** | Source citations in code comments and plans name a **heading**, not a line number. A range is used only where the exact lines are the point, and then it names the heading too | Line numbers are coordinates in a document that moves, and nothing in lint, typecheck, the unit suite or the audit suite can tell that one has drifted. The evidence is not theoretical: a single audit of `web/src/` found **11 of 30 citations wrong** — four staled by this round's own doc edits, seven inherited from the stage 02 round, the worst off by ~86 lines. Every one of them looked perfectly well-formed. Headings drift only when someone renames a section, which is a deliberate act that shows up in a diff, rather than a side effect of inserting a paragraph three sections earlier | Cite `docs/02-planning.md, "Cut to the core"` rather than `:63-64`. Four such citations already existed (`ReversibilityAxis`, `AIArchitecturePlays`, `CutTable`, `DoneStatement`, `HorizonBands`, `HorizonTriage`) and all were still correct after two rounds of doc edits, which is the argument in miniature. Where a range is genuinely needed — a transcribed DDL block, a quoted template — keep it and pair it with the heading, so a stale number is self-evidently repairable. A future check could assert that each cited heading exists |
+| **D-43** | `DeferredList` ships in the **decide** step, not `reverse` as the spec and plan both specified | The spec's argument for `reverse` — "the defer list is the reversibility test applied to infrastructure" — is real, but shipping it there would pull "Defer aggressively" from its own eighth position in the doc to first, breaking the 1:1 mapping the app's six steps otherwise hold against the doc's section order (reversibility → model → schema → one app → boundaries → auth → ADRs → defer aggressively). `decide` already closes on the defer list as the cheap end of the axis the stage opens on, which the whole-branch review found to be the tighter seam. `reverse` was also already an axis figure plus a six-row scored exercise before adding a fourth component | A deliberate deviation from the spec and plan, recorded at the level that authored it — the same convention D-40 established for `SplitTrigger`'s candidate count. Caught unrecorded by the whole-branch review (M2); no component moved to produce this entry, it only fills the gap in the record |
+| **D-42** | Source citations in code comments and plans name a **heading**, not a line number. A range is used only where the exact lines are the point, and then it names the heading too | Line numbers are coordinates in a document that moves, and nothing in lint, typecheck, the unit suite or the audit suite can tell that one has drifted. The evidence is not theoretical: a single audit of `web/src/` found **14 of 33 citations wrong** — four staled by this round's own doc edits, ten inherited from the stage 02 round, the worst off by ~86 lines. Every one of them looked perfectly well-formed. Headings drift only when someone renames a section, which is a deliberate act that shows up in a diff, rather than a side effect of inserting a paragraph three sections earlier | Cite `docs/02-planning.md, "Cut to the core"` rather than `:63-64`. Six such citations already existed (`ReversibilityAxis`, `AIArchitecturePlays`, `CutTable`, `DoneStatement`, `HorizonBands`, `HorizonTriage`) and all were still correct after two rounds of doc edits, which is the argument in miniature. Where a range is genuinely needed — a transcribed DDL block, a quoted template — keep it and pair it with the heading, so a stale number is self-evidently repairable. A future check could assert that each cited heading exists |
 | **D-41** | The pattern library gains **annotated artifact** (`SchemaInspector`); the taught-then-recorded pairing does **not** get a row | Two candidates were judged rather than assumed. The annotated artifact earns one because the authoring job is different from the click-node inspector it resembles: you *quote something real verbatim* and then choose which lines teach, rather than authoring a structure where every node is selectable. It carries constraints the existing row does not — leave structural lines inert, give the block its own `overflow-x-auto` container with `tabIndex={0}`, no semantic colour. The deciding argument is recurrence: setup has config files, CI/CD has workflow YAML, deployment has migration steps, and none of those is a "diagram, tree, or pipeline", so the existing row would not send an implementer here. The taught-then-recorded pairing (`ModelInterrogation` → `DomainWorksheet`) is a **composition of two rows that already exist** — no new component, no new constraint, no new a11y requirement — so it became a clause on the `Persisted worksheet` note instead | `PATTERNS.md` gains one row and two sharpened notes rather than two rows. The non-obvious half of the rejected candidate (reuse the *same questions* across exercise and worksheet) is recorded where an implementer will actually meet it |
 | **D-40** | `SplitTrigger` ships **six** candidates, not the four-plus-one the spec proposed — and this is recorded as a **plan-authored refinement**, not implementer drift | A set where five of six answers are "yes" can be scored without reading it; the reader learns the pattern of the exercise instead of the judgment it teaches. Four-and-two forces every row to be read. The sixth entry (`codebase-tidier` — "the codebase is getting large and a service would be tidier") was confirmed by review as genuinely sourced from the doc's Traps and "Boundaries inside the monolith" sections rather than invented to pad the count | Deliberate deviations from a spec are recorded at the level that authored them. This one was the plan's, so a reviewer comparing component to spec finds the reasoning here rather than filing it as drift |
 | **D-39** | Stage 03's worksheet records the **domain model**, not an ADR | The stage's five questions about your own domain are the thing the reader cannot get anywhere else, and they chain: the four interrogation questions are asked first against the doc's worked example, then again as free text against the reader's own product. An ADR worksheet was rejected on two grounds — `docs/03-architecture.md:165` defers ADR *format* to stage 10 by design, so stage 03 would have been inventing a template it does not own; and the cold-reader pass then confirmed the doc gives no example, length, status field, naming or location for an ADR (G9), so a worksheet would have had nothing to scaffold from | `architecture-sheet.ts` holds five keys; the ADR stays taught (`ADRAnatomy`) rather than filled in. If stage 10 later fixes a format, an ADR worksheet becomes cheap and belongs there or here by then, not before |
@@ -252,7 +253,7 @@ unaudited. That line is corrected.
 **Closes with:** derive `PAGES` from `STAGES.filter(s => s.ready)` crossed with each
 stage's step ids, so the sweep tracks the ready set automatically.
 
-### TD-16 — Worksheet placeholder text fails AA, and the audit suite cannot see it · **Medium**
+### TD-16 — Worksheet placeholder text fails AA, and the audit suite cannot see it · **High** *(was Medium)*
 
 All three worksheets — `discovery/Worksheet.tsx:161`, `planning/PlanWorksheet.tsx:179`,
 `architecture/DomainWorksheet.tsx:165` — carry the identical class
@@ -283,6 +284,19 @@ change; dark is one nudge away), **and** extend the audit suite to sample
 leaves the next one undetected. Note that `text-subtle/70` resolves to `oklab()`, which the
 suite's parser deliberately skips — see `docs/learnings/contrast-checkers-lie.md` before
 writing that assertion.
+
+**Raised Medium → High during the stage 03 whole-branch review**, not because the failure
+got worse but because its cost compounds: every stage that copies the worksheet's class
+string — and all built so far have — inherits the same failing pixels, and the gate will
+not object. Worth stating plainly rather than leaving it implied: **by the letter of
+`CLAUDE.md`'s verification standard ("Contrast — every distinct text/background pair, both
+themes, all steps, WCAG AA"), `feat/stage-03-architecture` does not clear its own gate.**
+CI is green on this branch *because* `audit.spec.ts` samples `el.textContent` and a
+`<textarea>` placeholder has no text node to sample — not because the contrast passes.
+Shipping anyway was the right call (stages 01 and 02 already ship under the same blind
+spot, so holding stage 03 alone to the letter of the standard would be arbitrary rather
+than principled), but "CI is green" should not be read as "the gate cleared" for this class
+of failure until the blind spot itself closes.
 
 ### TD-17 — No component-test harness, so a class of regression is ungated · **Medium**
 
@@ -326,6 +340,17 @@ feature boundaries).
 branch's one owned doc change — the AI section — is done. Ranked High anyway: they are
 blocking for a reader using the stage as intended, and every fix is a two-file change
 because the app mirrors the doc, so the cost grows as more stages copy the pattern.
+
+**G3 is not like the other thirteen and should be fixed first.** The other gaps stall a
+reader — they notice something is missing and have to guess or go elsewhere. G3 does not
+stall anyone. The Definition of Done says "authorization pattern decided and written
+down," not "using the pattern above," so a reader on a shared-workspace product can decide
+ownership, tick the box, and believe they followed the playbook — while the doc's only
+authorization concept ("proving the record belongs to the caller") is wrong for their
+product. **A confident wrong answer is worse than a dead end**, because nothing downstream
+flags it: no error, no stall, no reason to double back. The next round should prioritise
+G3 above G4 (indexes) and G5 (conditional uniqueness), which are the quieter kind of gap a
+reader notices and routes around.
 
 **Blocking — the stage cannot be completed from the doc alone:**
 
@@ -403,6 +428,49 @@ misrepresent the result, and evidence cuts both ways:
 app changes for anything touching the DDL annotations, the interrogation set or the
 reversibility lists, since those are ported into `scoring.ts` — G2 and G14 in particular are
 two-file changes.
+
+### TD-19 — Scored radiogroups have no roving tabindex · **Medium**
+
+`SeverityScorer` and `Toolkit` (discovery), `SizeScorer`, `HorizonTriage` and
+`DoneStatement` (planning), `ReversibilityTable`, `ModelInterrogation` and `SplitTrigger`
+(architecture) — every scored or tabbed exercise across the three built stages — departs
+from the WAI-ARIA APG's radiogroup pattern: each `role="radio"` is its own tab stop rather
+than the group being a single stop with arrow keys moving focus inside it.
+
+Raised and ruled on four separate times during three stage builds (T9/M2, T10/M4, T10/M5,
+T11/M1), correctly each time — matching the existing convention beat inventing a
+one-stage fix — but no ruling landed anywhere durable, so the same finding kept
+resurfacing with nothing to point at. Recorded here so the fifth stage to raise it finds a
+tracker entry instead of reopening the question.
+
+**Closes with:** one shared roving-tabindex behaviour (`tabIndex` 0 on the checked or
+first option, -1 on the rest, arrow keys move and check, Home/End jump to the ends) that
+every scored radiogroup adopts, so the fix lands once rather than per component.
+
+### TD-20 — Score live regions mount already populated, so the first exercise commit is announced silently · **Medium**
+
+`ReversibilityTable.tsx:51-58`, `ModelInterrogation.tsx:49-56` and `SplitTrigger.tsx:44-51`
+(stage 03), and their stage 01/02 equivalents, wrap the running score as
+`{answered > 0 && (<span aria-live="polite">…)}`. The live region does not exist in the DOM
+until the reader's first answer, so it arrives already holding content — a screen reader
+has nothing to have been watching, and content that appears pre-populated is not reliably
+announced. The first scored commit of every exercise in the app is silent for that reader.
+
+The correct pattern already exists three lines below the incorrect one in the same files:
+each row's verdict region is `<div aria-live="polite">`, always mounted, with only its
+contents conditional on whether that row has been answered. Nobody had to invent a fix,
+only apply the one already sitting in the file.
+
+Same provenance as TD-19: raised and correctly deferred to existing convention four times
+(T9/M2, T10/M4, T10/M5, T11/M1) with no tracker entry until now. Worth recording precisely
+because this stage's own Definition of Done says "Deferred decisions listed explicitly, so
+deferral is visible rather than forgotten" — four deferrals of the same finding, recorded
+nowhere a future reader would look, is the playbook not taking its own advice.
+
+**Closes with:** always mount the score header's `aria-live` region and make only its
+contents conditional, matching the per-row verdict pattern already in each file. A single
+shared score-header component (paired with TD-19's roving-tabindex fix) would close both
+at once.
 
 ### TD-14 — Stage 02 exercise cards render at two different widths · **Low**
 
@@ -513,16 +581,16 @@ where the cross-task context lives. Two consequences for the next stage build:
    nothing in the toolchain detects it. See D-42 — the convention is now to cite by heading.
    This round hit it four times: the plan's briefs, the committed `scoring.ts` comment, the
    five citations shifted by Task 17's own two-clause doc fix, and finally `AuthPaths`.
-   Auditing the class then found **seven more in stage 02**, stale since that stage's own AI
-   section was inserted, one of them off by ~86 lines. Eleven wrong citations in total.
+   Auditing the class then found **ten more in stage 02**, stale since that stage's own AI
+   section was inserted, one of them off by ~86 lines. Fourteen wrong citations in total.
 
 3. **A grep confirms the shape of a citation; only opening the file confirms it is true.**
    The sweep that missed `AuthPaths` matched `docs/03-architecture\.md:[0-9]*-[0-9]*`, so it
    could only see citations on a line repeating the filename. Invisible to it: bare `:NNN`
    continuations on their own line (the miss), single-line citations with no range
-   (`SpikeCard`'s `:285`), and every citation to a different doc (all fourteen stage 02
+   (`SpikeCard`'s `:285`), and every citation to a different doc (all eleven stage 02
    ones). Two citations were caught **by luck**, sharing a line with their primary. The audit
-   that worked opened all 30 cited ranges and checked each against what the comment claimed —
+   that worked opened all 33 cited ranges and checked each against what the comment claimed —
    which also caught two comments that were *misquoting* the doc, a kind of wrong that
    renumbering would never have surfaced.
 
