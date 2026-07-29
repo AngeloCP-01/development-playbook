@@ -207,7 +207,10 @@ designing TD-21 or TD-18 against the current six steps risks redoing that work.
       serverless. Each with what it costs, what it buys, and what would have to be true to
       choose it. Name the modular monolith as the thing the stage already teaches
 - [x] **DDD vocabulary** — bounded context named where "Boundaries inside the monolith"
-      currently gropes at it; ubiquitous language; aggregates. Strategic DDD lightly, not the
+      currently gropes at it; ubiquitous language; ~~aggregates~~ (**✗ not shipped** — neither
+      the doc nor `terms.ts` mentions aggregates; consistent with the "strategic lightly"
+      instruction on this same line, since aggregates are tactical, but the tick overstated
+      it. Caught by the whole-branch review, M5). Strategic DDD lightly, not the
       tactical machinery
 **TD-18 — what a cold reader could not finish**
 
@@ -223,8 +226,12 @@ designing TD-21 or TD-18 against the current six steps risks redoing that work.
 - [x] **Define the dismissed terms** — event sourcing and CQRS get a definition before they
       get a verdict. Expand `ADR` and `DDL` on first use
 - [x] **C1** — resolve "defer multi-tenancy" against "stored data is expensive to reverse"
-- [x] Mirror every change into `web/src/features/architecture/` — the DDL annotations, the
-      interrogation set and the reversibility lists are all ported into `scoring.ts`
+- [ ] ~~Mirror every change into `web/src/features/architecture/`~~ **✗ not done — deliberately
+      deferred to W-3.2 per D-46, tracked as TD-23.** This was ticked in error when the round
+      closed; the whole-branch review caught it (I4). The round was scoped doc-only precisely
+      *because* this is the larger half, so marking it complete inverted the record. The DDL
+      annotations, the interrogation set and the reversibility lists in `scoring.ts` all still
+      describe the eight-subsection doc
 - [x] Re-run the cold-reader pass afterwards on the amended doc, and record what it finds
 
 ### W-3.2 — Port stage 03's doc round into the app ☐ *(next)*
@@ -233,7 +240,7 @@ W-3.1 was deliberately doc-only, so `docs/03-architecture.md` and
 `web/src/features/architecture/` now disagree about what the stage contains. That divergence
 is **TD-23**, and this round closes it.
 
-The doc went from eight subsections to thirteen and from 300 lines to 871. The app is still
+The doc went from eight subsections to thirteen and from 300 lines to 898. The app is still
 the six steps built in W-3: reverse · model · constrain · shape · decide · ai.
 
 - [ ] **Decide the new step structure first.** Five content steps is D-38's ceiling and the

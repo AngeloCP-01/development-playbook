@@ -34,7 +34,8 @@ Before doing anything, read these for context:
   They are not committed tests and nothing re-runs them. Do not cite them as having passed.
   What *is* enforced: `stage-metadata.test.ts` (each doc's H1 matches `stages.ts`, and every
   built stage has its `### AI in …` heading), `glossary.test.ts`, and — new in W-3.1 —
-  `stage-03-structure.test.ts`, which pins that doc's thirteen subsections in order.
+  `stage-03-structure.test.ts` (pins that doc's thirteen subsections in order) and
+  `source-citations.test.ts` (D-42: bans line-number citations and resolves every heading one).
 - **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01, 02 and 03
   are complete and interactive.** Stage 03 (Architecture) ships a 6-step stepper
   (Reverse · Model · Constrain · Shape · Decide · AI plays), 9 figures, 4 judgment
@@ -42,7 +43,7 @@ Before doing anything, read these for context:
   answers forward.
 - **Stage 03's doc is done; its app now lags it (TD-23).** W-3.1 closed **TD-18**, **TD-21**
   and **TD-22** in `docs/03-architecture.md`, which went from 8 subsections and 300 lines to
-  **13 subsections and 871 lines**, running requirements → HLD → LLD. The round was
+  **13 subsections and 898 lines**, running requirements → HLD → LLD. The round was
   deliberately doc-only (**D-46**), so the app's six steps still mirror a doc that no longer
   exists. **Porting it is W-3.2 and it is the next round.** Note the app must mirror the
   *corrections* as well as the additions — `scoring.ts` holds the interrogation set, the DDL
@@ -61,7 +62,7 @@ Before doing anything, read these for context:
   `glossary.md`.
 - **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **134 vitest tests across 10 files**, a **10-test playwright
+  eslint at `--max-warnings 0`, **136 vitest tests across 11 files**, a **10-test playwright
   audit suite over 20 URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
   public (D-26).
 - **The audit suite does *not* sweep ready stages automatically.** `PAGES` in
@@ -105,7 +106,7 @@ but not yet used inline — that wiring is this round's.
   ownership — TD-18's blocking G3 defect verbatim — and three tracker entries plus a
   cold-reader pass all missed it, because they were reading prose.
 
-**Watch the length.** The doc is 871 lines, 2.3× the next-longest stage, which is a recorded
+**Watch the length.** The doc is 898 lines, 2.4× the next-longest stage, which is a recorded
 consequence of D-45 rather than an accident. Consultability scored 4/5 and two misfilings were
 found and fixed. If the app port makes a step feel like a scroll, that is the same problem
 arriving in a second surface.
