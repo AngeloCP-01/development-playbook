@@ -102,6 +102,15 @@ delete it — it is doing no work, and it is crowding out one that would.
 The data model is the highest-stakes decision you will make. It outlives every framework
 choice, because migrating data is hard and migrating code is not.
 
+Getting to the nouns is mechanical, and worth doing rather than guessing. Take the vertical
+slices from [02 — Product Planning](02-planning.md#sequence-in-vertical-slices) and underline
+every noun in them. Strike the ones that are a property of another noun — an invoice's
+*total* is not an entity, it is a column, and possibly not even that. What survives is the
+candidate list.
+
+It will be wrong on the first pass. The interrogation below is what corrects it, which is
+why the questions matter more than the sketch.
+
 Work in nouns and relationships, before tables:
 
 ```
@@ -119,9 +128,11 @@ status = 'sent'`, it is always correct and cannot drift. **Computed, here.** Sto
 derived state is one of the most common sources of data that disagrees with itself.
 
 **What happens when an invoice is deleted?** Hard delete loses history. Soft delete keeps
-it but every query must remember to filter. For financial records, you almost certainly
-want soft delete or an immutable ledger — because "where did that invoice go" is a much
-worse conversation than a slightly more complex query.
+it but every query must remember to filter. The heuristic is wider than money: **keep
+anything somebody will later ask "where did that go?" about.** Financial records obviously,
+but also cancelled bookings, withdrawn requests, and users who left — each of those is a row
+whose absence is itself a question someone will eventually need answered. Pay the filtering
+cost where that is true, and hard delete where it genuinely is not.
 
 **Can a client belong to two users?** If yes now or plausibly later, the join is a table,
 not a foreign key. Retrofitting many-to-many onto a one-to-many is a migration plus every
@@ -129,6 +140,20 @@ query that touched it.
 
 **What must be unique, and in what scope?** Invoice numbers unique per user, not globally.
 Getting this wrong surfaces as a confusing constraint violation months later.
+
+**Does every actor have the same rights over this entity?** If a manager can approve a swap
+that the person who requested it cannot, then roles are part of the model rather than a
+column added later. This is the question that decides whether "Manager" is an entity, a
+column, or a role, and it feeds straight into
+[the authorization pattern](#authentication-and-authorization) further down.
+
+The first question above has a general form worth stating, because "computed, here" is an
+answer rather than a rule. **Compute it when it is a pure function of data you already
+hold** — `overdue` is `due_date` and `status`, so storing it only creates a second version
+that can disagree. **Store it when it is a fact about a moment**: the tax rate applied when
+the invoice was sent, the price at the time of purchase, the address it shipped to. Those
+look derivable and are not, because the thing they would derive from has since changed.
+Getting this backwards in either direction is a data bug you find years later.
 
 These answers are the model. They are not yet a schema — that comes later in this stage,
 once the system around the data has a shape.
@@ -227,9 +252,31 @@ src/features/clients/     # owns client records
 src/features/auth/        # owns sessions, users
 ```
 
-The rule: **features talk through exported functions, never by reaching into each other's
-internals.** If `clients` needs invoice data, it calls `billing.getInvoicesForClient()`.
-It does not query the `invoices` table directly.
+Each of those is a **bounded context** — the domain-driven design term for a boundary inside
+which a word means exactly one thing. It is worth the jargon here, because it tells you
+*where* to draw a line instead of leaving it to whatever the folders grew into. The line
+belongs where the vocabulary changes. If "invoice" means an unpaid obligation to billing and
+a support ticket attachment to somebody else, those are two contexts, and forcing one model
+across both costs more than keeping them apart.
+
+That is also what **ubiquitous language** buys: the table is called `claims` because the
+people who use the system say "claim". Where the words in the code and the words in the room
+drift apart, bugs live in the gap — someone says "cancelled" meaning withdrawn by the user
+and the code means rejected by a manager.
+
+**Choosing** a boundary and **enforcing** one are different problems, and the second is
+useless without the first. The test for choosing:
+
+> **A feature owns the tables it alone writes.** If two features both write a table, they are
+> one feature that has not admitted it yet.
+
+The test for enforcing: **features talk through exported functions, never by reaching into
+each other's internals.** If `clients` needs invoice data, it calls
+`billing.getInvoicesForClient()`. It does not query the `invoices` table directly.
+
+That applies to writes as much as reads, which is the half that gets forgotten. Approving a
+shift swap changes rows the approval flow does not own; it goes through the owning feature's
+function rather than reaching for the table, or the boundary exists only in the folder names.
 
 That single rule is what keeps a monolith from becoming a big ball of mud, and it is
 what makes extracting a service later a mechanical job rather than an archaeology

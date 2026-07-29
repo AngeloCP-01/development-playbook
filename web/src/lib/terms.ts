@@ -359,6 +359,23 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'Application code has bugs, gets bypassed by migration scripts and one-off fixes, and races with itself under concurrency. The database does not get bypassed, which makes it the only place a rule genuinely holds.',
   },
+  'bounded-context': {
+    name: 'Bounded context',
+    see: '03-architecture',
+    short: 'A boundary inside which one word means exactly one thing.',
+    full: 'From domain-driven design: a section of the system with its own model, where the terms have a single agreed meaning. "Invoice" in billing and "invoice" in a customer-support view are often not the same object, and a bounded context is the admission that forcing them together costs more than keeping them apart.',
+    soWhat:
+      'It gives you a reason to put a boundary somewhere specific rather than wherever the folders ended up. Fowler’s argument is that unifying the model across a whole large system is not cost-effective, so boundaries should follow the lines where people already use words differently.',
+  },
+  'ubiquitous-language': {
+    name: 'Ubiquitous language',
+    see: '03-architecture',
+    short:
+      'One vocabulary shared by the code and the people describing the problem.',
+    full: 'The practice of using the domain’s own words in the code — the table is called `claims` because the people who use the system say "claim". Not a translation layer between business terms and technical ones, but the deliberate absence of one.',
+    soWhat:
+      'Where the words diverge, bugs live in the gap: someone says "cancelled" meaning withdrawn-by-the-user and the code means rejected-by-a-manager. It also tells you where a bounded context boundary belongs — the point where the same word starts meaning something else.',
+  },
   'modular-monolith': {
     name: 'Modular monolith',
     see: '03-architecture',
