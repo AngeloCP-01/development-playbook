@@ -584,6 +584,41 @@ omission is deliberate.
 structure, so brainstorm it first — if a new HLD step lands between Model and Constrain, the
 app's six steps and nine figures both change shape.
 
+### TD-24 — The `.agents/` skill library arrived unrecorded, and half of it is duplicated · **Medium**
+
+`8063587` added ~8,500 lines of vendored agent skills plus `skills-lock.json`, on this branch,
+outside the delivery loop. Flagged by the whole-branch review as I6. Not deleted or rewritten
+here, because it is the project owner's commit and the content may well be wanted — recorded
+so it stops being invisible.
+
+**Two trees, one redundant.** `.agents/skills/` holds `brandkit`, `design-taste-frontend` and
+`minimalist-ui`. `web/.agents/skills/` holds those three plus six more. Verified by `md5`: all
+three root files are **byte-identical** to their `web/` counterparts, so the root tree is a
+strict subset with nothing of its own. `web/.agents/` additionally carries both
+`design-taste-frontend/` and `design-taste-frontend-v1/`. Whichever tree is authoritative, one
+copy of each skill is enough.
+
+**Nothing records what these are for.** No tracker entry, no decision, no mention in
+`CLAUDE.md`'s Tooling section, which otherwise names every tool in regular use. A future
+reader finds 8,500 lines of skill markdown with no statement of whether they are load-bearing,
+experimental, or left over.
+
+**The commit itself does not follow this repo's conventions**: no scope, a subject describing
+two unrelated changes (`feat: establish agentic skill library and update local development
+server configuration`), a `feat` type for a change that ships no product code, and **no
+`Co-Authored-By` trailer** — the only commit on the branch without one. Three unrelated
+dev-server port edits rode along inside it; `c8ac043` finished that change properly.
+
+**DISPROVED, and worth stating because the review claimed otherwise:** I6 asserted that
+`CLAUDE.md`'s *"`frontend-design` … (the only project-enabled plugin)"* is now false.
+It is **true**. `.claude/settings.local.json` lists exactly one entry under `enabledPlugins`,
+and these skills are a separate mechanism (`skills-lock.json`), not plugins. The line stands
+unedited.
+
+**Closes with:** the owner deciding whether the library stays. If it does — a decision entry
+saying what it is for, one tree rather than two, and a line in `CLAUDE.md`'s Tooling section.
+If it does not, it comes out on its own branch.
+
 ### TD-23 — Stage 03's doc and app now disagree about what the stage contains · **High**
 
 Opened deliberately by W-3.1 on 2026-07-29, which was scoped doc-only. This is a debt the
