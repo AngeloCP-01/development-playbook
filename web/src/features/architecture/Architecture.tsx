@@ -5,6 +5,7 @@ import { Term } from '@/components/Term'
 import { Stepper, type Step } from '@/components/Stepper'
 import { References } from '@/components/References'
 import { SCHEMA_LINES } from './scoring'
+import { INDEX_LINES, TENANCY_LINES } from './schema-blocks'
 import { ReversibilityAxis } from './ReversibilityAxis'
 import { ReversibilityTable } from './ReversibilityTable'
 import { CharacteristicPicker } from './CharacteristicPicker'
@@ -24,9 +25,14 @@ import { SystemSketch } from './SystemSketch'
 import { DataFlow } from './DataFlow'
 import { SyncAsync } from './SyncAsync'
 import { IdempotencyBlock } from './IdempotencyBlock'
+import { ERView } from './ERView'
 import { SchemaInspector } from './SchemaInspector'
+import { PartialUniqueIndex } from './PartialUniqueIndex'
 import { DeleteBehaviour } from './DeleteBehaviour'
+import { ContractCost } from './ContractCost'
+import { RouteShape } from './RouteShape'
 import { AuthPaths } from './AuthPaths'
+import { AuthzPatterns } from './AuthzPatterns'
 import { ADRAnatomy } from './ADRAnatomy'
 import { DeferredList } from './DeferredList'
 import { AIArchitecturePlays } from './AIArchitecturePlays'
@@ -570,11 +576,37 @@ const STEPS: Step[] = [
     ),
   },
   {
-    id: 'constrain',
-    label: 'Constrain',
-    hint: 'Rules the database holds, not the application',
+    id: 'schema',
+    label: 'Schema',
+    hint: 'The model becomes tables, and the rules become constraints',
     content: (
       <div className="space-y-16">
+        <Section eyebrow="The shape" title="Design the database">
+          <Prose>
+            <p>
+              Now the model becomes a schema. If your product has organisations
+              or teams, read the tenant question in <em>Record</em> before you
+              write the first table: the tenant key is the one item on the
+              deferral list that cannot be deferred, and it belongs on the
+              tables you are about to create.
+            </p>
+            <p>
+              <Term id="normalisation">Normalisation</Term> is the vocabulary
+              for how far you have gone in removing duplicated facts. The theory
+              is longer than the working rule, which is: if changing one fact
+              means updating two rows, the model is wrong. A client&rsquo;s
+              address stored on every invoice is not a shortcut, it is four
+              hundred rows that will disagree the first time somebody moves.
+            </p>
+          </Prose>
+          <Figure
+            n={12}
+            caption="The nouns with their cardinality made explicit. Three of the four relationships are obvious; the fourth is a decision, and it is the reason this view is worth drawing at all."
+          >
+            <ERView />
+          </Figure>
+        </Section>
+
         <Section
           eyebrow="Where the rule lives"
           title="Constraints belong in the database"
@@ -590,16 +622,90 @@ const STEPS: Step[] = [
               genuinely holds.
             </p>
             <p>
-              The schema below is the invoice table those four answers produce.
-              Most of its load is carried by a few words that read as
-              boilerplate.
+              The schema below is the invoice table those answers produce. Most
+              of its load is carried by a few words that read as boilerplate.
             </p>
           </Prose>
           <Figure
-            n={4}
+            n={13}
             caption="Each annotated line is a rule the database will hold even when the application forgets. Click one to see what it buys — the load-bearing words are the ones easiest to skim past."
           >
             <SchemaInspector lines={SCHEMA_LINES} title="the invoices table" />
+          </Figure>
+        </Section>
+
+        <Section
+          eyebrow="Answering real queries"
+          title="Indexes come from the sketch, not from intuition"
+        >
+          <Prose>
+            <p>
+              Write the queries first and add the index the query needs. Both of
+              these come from the system sketch two steps back: one from a
+              screen, one from the scheduled job. Indexes cost write time and
+              disk, which is why &ldquo;index everything&rdquo; is not the
+              answer and &ldquo;index nothing until it hurts&rdquo; is not
+              either.
+            </p>
+          </Prose>
+          <Figure
+            n={14}
+            caption="Two indexes, each traced to the thing that asks for it. The second is partial, because the job never asks about drafts or paid invoices and a smaller index is a faster one."
+          >
+            <SchemaInspector lines={INDEX_LINES} title="the two indexes" />
+          </Figure>
+        </Section>
+
+        <Section
+          eyebrow="The rule UNIQUE cannot express"
+          title="Some constraints have a condition on them"
+        >
+          <Prose>
+            <p>
+              The stage names races as the reason constraints belong in the
+              database, then supplies only primary keys, foreign keys,{' '}
+              <code className="t-data">CHECK</code> and{' '}
+              <code className="t-data">UNIQUE</code> — none of which can say
+              &ldquo;at most one <em>approved</em> claim per shift&rdquo;. The
+              tool is a{' '}
+              <Term id="partial-unique-index">partial unique index</Term>.
+            </p>
+          </Prose>
+          <Figure
+            n={15}
+            caption="The race first, the index second. A plain UNIQUE (shift_id) would also forbid the second rejected claim, which is wrong — the condition is what makes the rule expressible at all."
+          >
+            <PartialUniqueIndex />
+          </Figure>
+        </Section>
+
+        <Section
+          eyebrow="The two left implicit"
+          title="Actors and tenancy are stored data too"
+        >
+          <Prose>
+            <p>
+              The invoicing schema has neither, because one freelancer owning
+              their own rows needs neither. Most products are not that. If your
+              answer to &ldquo;does every actor have the same rights?&rdquo; was
+              no, or your tenant is an organisation rather than a person, this
+              is the shape.
+            </p>
+            <p>
+              And when the axis is not one level: a company that contains teams
+              gives you two candidate keys, and picking wrong costs a migration.
+              The rule is that the tenant key is the level at which data stops
+              being shared. If a worker moving between teams should keep their
+              history, the company is the tenant and the team is an ordinary
+              foreign key. If teams are genuinely separate customers who must
+              never see each other&rsquo;s rows, the team is the tenant.
+            </p>
+          </Prose>
+          <Figure
+            n={16}
+            caption="The answer to the fifth interrogation question, written down. Roles live on the membership rather than on the user, because a person can manage one team and be an ordinary member of another."
+          >
+            <SchemaInspector lines={TENANCY_LINES} title="the tenancy tables" />
           </Figure>
         </Section>
 
@@ -617,21 +723,77 @@ const STEPS: Step[] = [
             </p>
           </Prose>
           <Figure
-            n={5}
+            n={17}
             caption="The same DELETE under two foreign-key policies. One quietly takes the invoices with it; the other refuses the statement outright. On financial records that is the difference between an error message and a loss you cannot reverse."
           >
             <DeleteBehaviour />
           </Figure>
         </Section>
+
+        <Section
+          eyebrow="Beyond one row"
+          title="Some invariants no constraint can express"
+        >
+          <Prose>
+            <p>
+              Moving an amount from one row to another, or writing a record and
+              marking its source consumed, has to happen as one unit or not at
+              all. That is a{' '}
+              <strong className="font-medium text-fg">transaction</strong>: the
+              work commits together or none of it does. This is the point where
+              a rule stops being the database&rsquo;s job to guarantee and
+              starts being yours to demarcate. The database will hold the line,
+              but only around the boundary you draw.
+            </p>
+          </Prose>
+        </Section>
       </div>
     ),
   },
   {
-    id: 'decide',
-    label: 'Decide',
-    hint: 'The expensive choice, and the record of why',
+    id: 'contract',
+    label: 'Contract',
+    hint: 'Promises about shape, and who may do what to which record',
     content: (
       <div className="space-y-16">
+        <Section eyebrow="The axis again" title="Design the API contracts">
+          <Prose>
+            <p>
+              A contract is a promise about shape, and its real cost is{' '}
+              <em>who you can force to move when you break it</em>. That is the
+              same reversibility axis this stage opened on, which is why the
+              decision belongs here rather than in implementation.
+            </p>
+            <p>
+              A contract means one callable surface with a shape somebody
+              depends on — a route, or an exported function another feature
+              calls. Not every internal helper. If it crosses a feature boundary
+              or leaves your process, it is a contract; if it is private to one
+              module, it is code.
+            </p>
+          </Prose>
+          <Figure
+            n={18}
+            caption="Three kinds of contract, sorted by who you can make move. Most solo projects live almost entirely in the first row, which is the argument for not building a public API until something needs one."
+          >
+            <ContractCost />
+          </Figure>
+          <div className="mt-6">
+            <RouteShape />
+          </div>
+          <Prose>
+            <p>
+              How these are implemented — where validation physically goes, how
+              errors are shaped, what a route file should contain — belongs to{' '}
+              <Link href="/stages/05-development" className="text-brand">
+                05 — Development
+              </Link>
+              . As with authentication, this stage decides and 05 carries it
+              out.
+            </p>
+          </Prose>
+        </Section>
+
         <Section
           eyebrow="The expensive one"
           title="Decide auth early, deliberately"
@@ -650,13 +812,50 @@ const STEPS: Step[] = [
             </p>
           </Prose>
           <Figure
-            n={8}
+            n={19}
             caption="Three paths compared on the same three questions rather than each arguing its own case. None is marked correct, because the trade genuinely differs by project — and the line under them is the part most projects get wrong."
           >
             <AuthPaths />
           </Figure>
         </Section>
 
+        <Section
+          eyebrow="Your turn"
+          title="Which pattern applies to which entity?"
+        >
+          <Prose>
+            <p>
+              The part people get wrong is not authentication but{' '}
+              <Term id="authorization">authorization</Term>: deciding whether
+              this caller may do this thing to this record. It comes in three
+              patterns, and the mistake is assuming there is only one.
+            </p>
+            <p>
+              Ownership is the one everybody reaches for, and it is the one that
+              fails quietly. It is correct for a product where each person works
+              on their own things, which makes it feel general — until the first
+              feature where somebody acts on a record they do not own.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <AuthzPatterns />
+          </div>
+          <Prose>
+            <p>
+              Enforcement — where the check physically goes, and what happens
+              when a route forgets — is stage 05&rsquo;s.
+            </p>
+          </Prose>
+        </Section>
+      </div>
+    ),
+  },
+  {
+    id: 'record',
+    label: 'Record',
+    hint: 'Why you chose it, and what you chose not to build',
+    content: (
+      <div className="space-y-16">
         <Section eyebrow="The record" title="Write it down now, not later">
           <Prose>
             <p>
@@ -667,11 +866,22 @@ const STEPS: Step[] = [
             </p>
           </Prose>
           <Figure
-            n={9}
+            n={20}
             caption="Five headings, and what each is holding. The reasoning is the part that decays: the decision survives on its own, so in eight months only the record can say why it was made."
           >
             <ADRAnatomy />
           </Figure>
+          <Prose>
+            <p>
+              &ldquo;Every expensive decision has an <Term id="adr">ADR</Term>
+              &rdquo; is uncheckable until you say what counts as one decision.
+              The rule: one ADR per thing that could be reversed independently.
+              &ldquo;Next.js, Postgres and Vercel&rdquo; is three, because you
+              could move the database without touching the framework.
+              &ldquo;Auth.js with a Postgres adapter&rdquo; is one, because
+              unpicking either half means redoing both.
+            </p>
+          </Prose>
         </Section>
 
         <Section
@@ -680,13 +890,28 @@ const STEPS: Step[] = [
         >
           <Prose>
             <p>
-              Everything below solves a real problem. None of them solves a
-              problem you have yet, and each one makes every subsequent change
-              more expensive — <Term id="yagni">YAGNI</Term> applied to
-              infrastructure rather than to features. Deferring is only a
-              decision if it is written down, which is why the list is here
-              rather than implied.
+              &ldquo;Aggressively&rdquo; needs a test, or it is just a mood.
+              Here is the one, and it is this stage&rsquo;s own axis pointed at
+              infrastructure:{' '}
+              <strong className="font-medium text-fg">
+                defer anything whose reversal does not require migrating stored
+                data.
+              </strong>{' '}
+              Adding a cache later touches code. Adding a queue later touches
+              code. Those are afternoons, and you will make the decision with
+              information you do not have today — <Term id="yagni">YAGNI</Term>{' '}
+              applied to infrastructure rather than to features.
             </p>
+            <p>
+              Two of the items below are worth knowing the boundary of.{' '}
+              <Term id="event-sourcing">Event sourcing</Term> is not an audit
+              table alongside normal rows: it is event sourcing only when the
+              log is the truth and the tables you query are derived from it. A
+              history of who approved what is an ordinary table and you should
+              keep it. <Term id="cqrs">CQRS</Term> travels with it and gets
+              deferred for the same reason.
+            </p>
+            <p>One item fails the test, and the list says which.</p>
           </Prose>
           <div className="mt-5">
             <DeferredList />
@@ -724,6 +949,15 @@ const STEPS: Step[] = [
 
         <Section eyebrow="Traps" title="Failure modes worth naming">
           <div className="space-y-3">
+            <Callout
+              kind="trap"
+              title="Choosing a style before choosing characteristics"
+            >
+              The answer sounds identical either way — &ldquo;a modular
+              monolith&rdquo; — and only one of them is a decision. The other is
+              a preference you will not be able to defend the first time it is
+              questioned, including by yourself.
+            </Callout>
             <Callout kind="trap" title="Designing for imagined scale">
               Building for a million users you do not have costs complexity
               today for benefits that will probably never arrive. If they do

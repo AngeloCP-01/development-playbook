@@ -6,16 +6,17 @@ import { type SchemaLine } from './scoring'
 
 /**
  * An annotated SQL block: rendered from data rather than pasted as text, so
- * each line can explain what it buys rather than what it says. Four blocks in
- * this stage use it — the invoices table, the two indexes, the partial unique
- * index, and processed_events in the sketch — which is why the lines arrive as
- * a prop rather than being imported here. Modelled on `OpportunityTree`
- * (discovery) for the click-node-plus-detail-panel shape, with the radio
- * semantics borrowed from this feature's own `ModelInterrogation` /
- * `ReversibilityTable` for consistency within stage 03: `role="radio"` inside
- * `role="radiogroup"`, one selection at a time, nothing checked on load.
+ * each line can explain what it buys rather than what it says. Five blocks in
+ * this stage use it — the invoices table, the two indexes, the tenancy tables,
+ * the partial unique index, and processed_events in the sketch — which is why
+ * the lines arrive as a prop rather than being imported here. Modelled on
+ * `OpportunityTree` (discovery) for the click-node-plus-detail-panel shape,
+ * with the radio semantics borrowed from this feature's own
+ * `ModelInterrogation` / `ReversibilityTable` for consistency within stage 03:
+ * `role="radio"` inside `role="radiogroup"`, one selection at a time, nothing
+ * checked on load.
  *
- * The longest line is 66 characters and does not fit 320px at a readable
+ * The longest line is 79 characters and does not fit 320px at a readable
  * monospace size, so the block gets its own horizontally-scrolling container
  * rather than shrinking the type or letting the page scroll sideways. That
  * container carries `tabIndex={0}` so a keyboard user without a trackpad can
