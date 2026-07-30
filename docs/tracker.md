@@ -14,6 +14,16 @@ does not serve (D-37).
 by decision (**D-46**), so `web/src/features/architecture/` still mirrors the eight-subsection
 doc. That divergence is **TD-23** and `W-3.2` closes it.
 
+**Next round is W-3.1b, not the app port.** An architecture-completeness audit against standard
+practice found five clusters of widely-taught material missing from all eighteen docs
+(**TD-25**): resilience patterns, consistency and concurrency, safe schema evolution,
+statelessness and scaling, and fitness functions. Scope call is **D-49** — completeness beats
+length for this stage, standard practice only.
+
+**`W-3.2` is in flight, not queued.** The app port is being built on
+`feat/stage-03-app-port` — 31 commits, spec plus a 24-task plan, a nine-step stage, +9,446
+lines — so it lands first and `W-3.1b` follows it.
+
 **Merged.** `feat/stage-03-architecture` landed on `main` as `249bd9d` (`--no-ff`, 47 commits,
 branch deleted) after a whole-branch review that returned *Ready with fixes* — six blocking
 items and five minor, all resolved, including SQL that would not run and a checklist item
@@ -93,6 +103,7 @@ of what was believed at the time is the point.
 
 | # | Decision | Reasoning | Consequence |
 |---|---|---|---|
+| **D-49** | For stage 03, **completeness beats length**, and the content stays to **standard, widely-used practice**. The doc may grow past 898 lines; it may not grow by reaching for the exotic | The project owner's call, made in response to the TD-25 audit and explicitly overriding the length caution recorded in D-45: *"03 may seem bloated now but I'll prefer that completeness instead of worrying about it having too many, let's just make sure we do the standard / widely used practices."* The reasoning holds up — the playbook's stated job is to teach ground the reader has not worked in, and a reader who meets resilience or consistency vocabulary for the first time in a job interview was failed by the stage, not by the length budget. The second half of the decision is the real constraint: **standard** is the filter. Circuit breaker and expand-contract are in every architecture curriculum; bulkhead, sharding and CQRS-with-event-sourcing are not things a solo developer needs taught, only named | D-45's "argue against this precedent" note is **superseded for stage 03 specifically** and still stands for stages 04–18, which have no comparable teaching load. Length stops being the check, which means something else has to be: the consultability pass (look three questions up from headings alone) becomes the gate that matters, and a table of contents moves from nice-to-have to likely necessary. Scope discipline moves from "how long is it" to "is this standard" |
 | **D-48** | A round's **final fix wave gets its own verification pass**. The wave that answers a cold-reader or review report is not covered by the report that prompted it | W-3.1's last fix wave (`7a5108f`) shipped after the cold-reader pass, so nothing checked it — and it contained the doc's only unrunnable SQL (a `REFERENCES teams(id)` with no `teams` table) plus a tenant-key comment demonstrating the opposite of its own claim. Both were caught by the whole-branch review as I2. The pattern is structural, not carelessness: the wave exists *because* verification found something, so by construction it lands after verification ran | Re-run the cheap checks over the fix wave's own additions — the skim/consultability pass, and for anything with code in it, read it as code rather than as prose. A full cold-reader re-run is too expensive per wave; the point is that "verified" attaches to a commit range, not to a round |
 | **D-47** | The glossary is a **source of doc defects, not only a convenience**. `terms.ts` gets audited when a doc gap is fixed, before the prose is called done | `Authorization` was defined as "the check that this particular record belongs to this particular caller" — TD-18's G3 defect verbatim, sitting in the single source (D-36) that generates `reference/glossary.md` and the app's inline definitions. Three tracker entries and a cold-reader pass had all missed it, because every one of them was reading prose. A doc-only fix would have shipped the corrected paragraph and left the wrong definition authoritative in two other surfaces | Cheap and mechanical: when a round fixes a concept in a stage doc, grep `terms.ts` for that concept first. The failure mode is specific to single-sourced content, so it will recur as more of the app moves that way |
 | **D-46** | W-3.1 ships **doc-only**; the app port is its own round (**W-3.2**), and the divergence is recorded as **TD-23** rather than left implicit | Stage 03's app was already at D-38's ceiling of five content steps plus AI, and the round adds five sections — so the port needs a step structure that does not exist until the prose settles. Porting against moving prose means doing it twice, and the app mirrors more than the additions: `scoring.ts` carries the DDL annotations, the interrogation set and the reversibility lists, all three of which this round corrected. The alternative considered was one round covering both, rejected as a review surface the size of the original 24-commit stage build | `CLAUDE.md` permits the doc/app duplication but not widening it silently, so the debt is filed with its reasoning. W-3.2 supersedes D-38 with the shape the doc proved, and must state a new ceiling rather than "stage 03 is special" |
@@ -633,6 +644,41 @@ unedited.
 **Closes with:** the owner deciding whether the library stays. If it does — a decision entry
 saying what it is for, one tree rather than two, and a line in `CLAUDE.md`'s Tooling section.
 If it does not, it comes out on its own branch.
+
+### TD-25 — Stage 03 is missing five clusters of standard architecture practice · **High**
+
+Raised by the project owner asking a direct question after W-3.1 merged: is the stage complete
+against standard, widely-used software architecture practice? Audited by grepping all eighteen
+docs for the vocabulary a reader would meet in Richards & Ford, Kleppmann or Newman. The answer
+was no, and the gaps are **absent from the whole playbook** rather than deferred to a later
+stage — which is the distinction that makes this debt rather than scope.
+
+| Missing | Grep result | Why it belongs in stage 03 |
+|---|---|---|
+| **Resilience patterns** — timeout, retry with backoff, circuit breaker, graceful degradation | `circuit break` 0 · `backoff` 0, across all 18 docs | "Sketch the system" asks *"what happens when each dependency is down?"* — the right question — and answers with no patterns. It sets the question up and drops it |
+| **Consistency and concurrency** — CAP, eventual consistency, isolation levels, optimistic/pessimistic locking | `CAP theorem` 0 · `optimistic lock` 0 · `eventual consistency` 0 · `isolation level` only in this tracker | The doc says "use a transaction" and stops. The cold reader already flagged the hole. A version column is stored data, so it is decide-now by the stage's own reversibility axis |
+| **Safe schema evolution** — expand-contract / parallel change, strangler fig | `expand-contract` 0 · `strangler` 0 | The sharpest one. The stage's thesis is that stored data is expensive to reverse, and it teaches the *cost* without the *technique* |
+| **Statelessness and scaling mechanics** — statelessness, horizontal/vertical, load balancing, read replicas, connection pooling | `stateless` 0 · `load balanc` 0 · `read replica` 0 | Statelessness is what makes the serverless style the stage teaches work. Pooling is the best-known failure mode of serverless-plus-Postgres, which is the prescribed stack |
+| **Fitness functions** | `fitness function` 0 | Closes the characteristics section's loop. This repo already practises it in two tests without naming it |
+
+**The unifying tell.** "What this system has to be" offers a **ten-item candidate list** and a
+**three-row trace table** — the cold reader flagged that a reader choosing availability,
+security or evolvability gets the trace test with nothing to pass it. The missing seven map
+onto exactly the clusters above. It is one gap wearing several hats: the stage teaches you to
+choose characteristics it cannot then help you satisfy.
+
+**Worth stating plainly, because it is the uncomfortable part:** for a stage whose entire
+thesis is the cost of reversing decisions, it is thinnest on what happens when things fail or
+change.
+
+**Not gaps, and not to be closed here:** caching *patterns* belong to stage 09 (already
+linked), observability to 15, threat modelling and secrets to 08. Those are boundaries doing
+their job.
+
+**Closes with:** **W-3.1b**, scheduled **after** the app port. It was first scoped to run
+before, to avoid porting twice — sound reasoning on a wrong premise, since `W-3.2` was already
+31 commits and a built nine-step stage in a parallel session when this was written. The
+double-port cost is accepted and folded into W-3.1b rather than deferred to a third round.
 
 ### TD-23 — Stage 03's doc and app now disagree about what the stage contains · **High**
 
