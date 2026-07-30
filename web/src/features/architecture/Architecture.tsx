@@ -4,19 +4,28 @@ import { Figure } from '@/components/Figure'
 import { Term } from '@/components/Term'
 import { Stepper, type Step } from '@/components/Stepper'
 import { References } from '@/components/References'
+import { SCHEMA_LINES } from './scoring'
 import { ReversibilityAxis } from './ReversibilityAxis'
 import { ReversibilityTable } from './ReversibilityTable'
+import { CharacteristicPicker } from './CharacteristicPicker'
+import { TraceForward } from './TraceForward'
 import { DomainSketch } from './DomainSketch'
 import { ModelInterrogation } from './ModelInterrogation'
 import { DriftDiagram } from './DriftDiagram'
 import { DomainWorksheet } from './DomainWorksheet'
-import { SchemaInspector } from './SchemaInspector'
-import { SCHEMA_LINES } from './scoring'
-import { DeleteBehaviour } from './DeleteBehaviour'
+import { DeploymentStyles } from './DeploymentStyles'
+import { InternalOrganisation } from './InternalOrganisation'
+import { YourCharacteristics } from './YourCharacteristics'
 import { OneAppCosts } from './OneAppCosts'
 import { SplitTrigger } from './SplitTrigger'
 import { BoundaryMap } from './BoundaryMap'
 import { TeamNotes } from './TeamNotes'
+import { SystemSketch } from './SystemSketch'
+import { DataFlow } from './DataFlow'
+import { SyncAsync } from './SyncAsync'
+import { IdempotencyBlock } from './IdempotencyBlock'
+import { SchemaInspector } from './SchemaInspector'
+import { DeleteBehaviour } from './DeleteBehaviour'
 import { AuthPaths } from './AuthPaths'
 import { ADRAnatomy } from './ADRAnatomy'
 import { DeferredList } from './DeferredList'
@@ -81,6 +90,62 @@ const STEPS: Step[] = [
     ),
   },
   {
+    id: 'require',
+    label: 'Require',
+    hint: 'What the system has to be, and what that forces',
+    content: (
+      <div className="space-y-16">
+        <Section eyebrow="The other half" title="What this system has to be">
+          <Prose>
+            <p>
+              The stage has been sorting decisions by what they cost. This asks
+              what they are <em>for</em>. Stage 02 settled what the system{' '}
+              <em>does</em> — the outcome, the cut, the vertical slices — and{' '}
+              <Link href="/stages/02-planning" className="text-brand">
+                02 — Planning
+              </Link>{' '}
+              owns all of it. What this stage needs is the other half: what the
+              system has to <em>be</em> while doing those things. Those are its{' '}
+              <Term id="architecture-characteristic">
+                architecture characteristics
+              </Term>
+              , which is the same thing most job descriptions call
+              non-functional requirements.
+            </p>
+            <p>
+              Pick three or four, not because a longer list is hard to write but
+              because they trade against each other. A system that is meant to
+              be everything has been told nothing.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <CharacteristicPicker />
+          </div>
+        </Section>
+
+        <Section
+          eyebrow="The test"
+          title="A characteristic has to force something"
+        >
+          <Prose>
+            <p>
+              Every row below is a decision this stage makes anyway. Choosing
+              the characteristic first is what turns that decision from a
+              preference into something with a reason attached — and it is the
+              only thing separating this section from a vocabulary exercise.
+            </p>
+          </Prose>
+          <Figure
+            n={2}
+            caption="Three characteristics and the decision each one forces, with the step where that decision actually gets made. The link is the argument: a characteristic is not a label, it is the reason a later step goes the way it does."
+          >
+            <TraceForward />
+          </Figure>
+        </Section>
+      </div>
+    ),
+  },
+  {
     id: 'model',
     label: 'Model',
     hint: 'The data model outlives every framework choice',
@@ -99,6 +164,19 @@ const STEPS: Step[] = [
               before anything becomes a table.
             </p>
             <p>
+              Getting to the nouns is mechanical, and worth doing rather than
+              guessing at. Take the vertical slices from{' '}
+              <Link href="/stages/02-planning" className="text-brand">
+                02 — Planning
+              </Link>{' '}
+              and underline every noun in them. Strike the ones that are a
+              property of another noun — an invoice&rsquo;s <em>total</em> is
+              not an entity, it is a column, and possibly not even that. What
+              survives is the candidate list, and it will be wrong on the first
+              pass. The interrogation below is what corrects it, which is why
+              the questions matter more than the sketch.
+            </p>
+            <p>
               Working in nouns first is not a formality. A relationship you can
               say out loud is a relationship you can argue with; the same
               relationship expressed as a foreign key is already a decision
@@ -106,7 +184,7 @@ const STEPS: Step[] = [
             </p>
           </Prose>
           <Figure
-            n={2}
+            n={3}
             caption="The nouns come before the tables, and the tables come from the nouns. Each edge carries the verb — &ldquo;has many&rdquo; — because a bare arrow says two things are related without saying how."
           >
             <DomainSketch />
@@ -116,7 +194,7 @@ const STEPS: Step[] = [
         <Section eyebrow="Your turn" title="Interrogate the model">
           <Prose>
             <p>
-              A sketch like the one above looks finished long before it is. Four
+              A sketch like the one above looks finished long before it is. Five
               questions put to it now will surface the errors that are otherwise
               found by a migration eighteen months in. Answer each before the
               reasoning shows.
@@ -124,7 +202,7 @@ const STEPS: Step[] = [
             <p>
               The reasoning appears whichever way you answered, because the
               defensible answer is worth less than the argument for it — and one
-              of these four genuinely depends on a product you have not
+              of these five genuinely depends on a product you have not
               described.
             </p>
           </Prose>
@@ -149,7 +227,7 @@ const STEPS: Step[] = [
             </p>
           </Prose>
           <Figure
-            n={3}
+            n={4}
             caption="A stored flag and the date it was derived from, one week apart. Nothing wrote to the row and it is now wrong. The computed version cannot reach that state at all, which is the whole argument."
           >
             <DriftDiagram />
@@ -177,6 +255,313 @@ const STEPS: Step[] = [
           </Prose>
           <div className="mt-5">
             <DomainWorksheet />
+          </div>
+        </Section>
+      </div>
+    ),
+  },
+  {
+    id: 'shape',
+    label: 'Shape',
+    hint: 'Know the options, then take the one your characteristics pick',
+    content: (
+      <div className="space-y-16">
+        <Section eyebrow="The landscape" title="The shapes a system can take">
+          <Prose>
+            <p>
+              Before choosing, know what you are choosing between, or the next
+              section is advice you take on faith. Start by separating two
+              questions that usually get collapsed into one. How does it{' '}
+              <em>deploy</em> — one unit or many? And how is it{' '}
+              <em>organised inside</em> — what depends on what? A{' '}
+              <Term id="hexagonal-architecture">hexagonal</Term>{' '}
+              <Term id="monolith">monolith</Term> is an ordinary, sensible
+              thing, which is why &ldquo;monolith or{' '}
+              <Term id="microservices">microservices</Term>&rdquo; is a bad
+              question: it treats one answer as covering both.
+            </p>
+          </Prose>
+          <Figure
+            n={5}
+            caption="Four deployment shapes, each with what it buys, what it costs, and what would have to be true for it to be right. The microservices row is the one people adopt for the wrong reason — what it buys is organisational, and what it costs arrives on day one."
+          >
+            <DeploymentStyles />
+          </Figure>
+          <div className="mt-6">
+            <InternalOrganisation />
+          </div>
+          <Prose>
+            <p>
+              A third axis:{' '}
+              <Term id="event-driven-architecture">event-driven</Term> means
+              components announce that something happened rather than calling
+              the next step directly. It is not a deployment shape — a single
+              application can be event-driven inside. The decision that leads
+              there is posed in <em>Sketch</em>, where it is concrete.
+            </p>
+            <p>
+              What this stage teaches is a{' '}
+              <Term id="modular-monolith">modular monolith</Term>, and it is
+              worth having the name: a reader who has been building one for
+              years without the term cannot look up whether they are doing it
+              well. <Term id="serverless">Serverless</Term> is a deployment
+              detail underneath it rather than a rival to it.
+            </p>
+          </Prose>
+        </Section>
+
+        <Section
+          eyebrow="Your turn"
+          title="Run the trace against your own three"
+        >
+          <Prose>
+            <p>
+              That choice follows from the characteristics rather than from
+              taste. Run the same trace against yours. If it produces a
+              different answer than the next section, the next section is wrong
+              for your system, and you should be able to say why.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <YourCharacteristics />
+          </div>
+        </Section>
+
+        <Section eyebrow="The default" title="Start with one application">
+          <Prose>
+            <p>
+              For a solo project the default shape is one application and one
+              database. Not microservices, not a separate API, not a queue, not
+              an event bus. A <Term id="monolith">monolith</Term> here is the
+              correct choice rather than a compromise you are admitting to.
+            </p>
+            <p>
+              The reason is an accounting one. Distribution charges you network
+              failure modes and distributed debugging from the first deploy, and
+              pays you back in independent team scaling and independent deploy
+              cadence. One person cannot collect either.
+            </p>
+          </Prose>
+          <Figure
+            n={6}
+            caption="The costs of distribution are paid on day one; the benefits are organisational and need a team to collect. Alone you pay the full price for none of the return."
+          >
+            <OneAppCosts />
+          </Figure>
+        </Section>
+
+        <Section eyebrow="Your turn" title="Is this a reason to split?">
+          <Prose>
+            <p>
+              Splitting something out is right when there is a concrete reason,
+              and the concrete reasons are narrower than they sound. Six
+              candidates below, four of which hold. Commit to each before the
+              verdict.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <SplitTrigger />
+          </div>
+        </Section>
+
+        <Section
+          eyebrow="Inside one application"
+          title="Boundaries you keep honest"
+        >
+          <Prose>
+            <p>
+              Structure inside the application is what makes splitting possible
+              later, cheaply. Draw boundaries between features and enforce one
+              rule: features talk through exported functions and never reach
+              into each other&rsquo;s internals. If clients needs invoice data
+              it calls billing; it does not query the invoices table.
+            </p>
+            <p>
+              Each of those folders is a{' '}
+              <Term id="bounded-context">bounded context</Term> — a boundary
+              inside which a word means exactly one thing. The line belongs
+              where the vocabulary changes: if &ldquo;invoice&rdquo; means an
+              unpaid obligation to billing and a ticket attachment to somebody
+              else, those are two contexts, and forcing one model across both
+              costs more than keeping them apart. That is also what{' '}
+              <Term id="ubiquitous-language">ubiquitous language</Term> buys —
+              the table is called <code className="t-data">claims</code> because
+              the people who use the system say &ldquo;claim&rdquo;. Where the
+              words in the code and the words in the room drift apart, bugs live
+              in the gap.
+            </p>
+            <p>
+              Choosing a boundary and enforcing one are different problems, and
+              the second is useless without the first. The test for choosing: a
+              feature owns the tables it alone writes. If two features both
+              write a table, they are one feature that has not admitted it yet.
+            </p>
+            <p>
+              That single rule is the difference between extracting a service
+              later as a mechanical job and doing it as archaeology.
+            </p>
+          </Prose>
+          <Figure
+            n={7}
+            caption="Three calls between three modules, where only the shape of the call decides whether it is allowed. Reaching straight into another module&rsquo;s table works, is shorter, and is the move that turns a monolith into a ball of mud."
+          >
+            <BoundaryMap />
+          </Figure>
+          <div className="mt-6">
+            <TeamNotes>
+              <ul className="space-y-2.5">
+                <li>
+                  <strong className="font-medium text-fg">
+                    Boundaries become social.
+                  </strong>{' '}
+                  Team ownership tends to follow module boundaries, so drawing
+                  them badly creates coordination overhead that outlives the
+                  code.
+                </li>
+                <li>
+                  <strong className="font-medium text-fg">
+                    ADRs stop being optional.
+                  </strong>{' '}
+                  They are how a decision survives the person who made it.
+                </li>
+                <li>
+                  <strong className="font-medium text-fg">
+                    Splitting services can now be justified
+                  </strong>{' '}
+                  by independent deploy cadence and team autonomy — real
+                  benefits that simply do not exist solo.
+                </li>
+                <li>
+                  <strong className="font-medium text-fg">
+                    Review architectural changes more heavily
+                  </strong>{' '}
+                  than feature changes. The{' '}
+                  <Term id="blast-radius">blast radius</Term> is larger and the
+                  reversal cost is higher.
+                </li>
+                <li>
+                  <strong className="font-medium text-fg">
+                    Watch for Conway&rsquo;s law.
+                  </strong>{' '}
+                  Your architecture will come to mirror your communication
+                  structure whether you intend it or not.
+                </li>
+              </ul>
+            </TeamNotes>
+          </div>
+        </Section>
+      </div>
+    ),
+  },
+  {
+    id: 'sketch',
+    label: 'Sketch',
+    hint: 'Your app is one box; your system is not',
+    content: (
+      <div className="space-y-16">
+        <Section eyebrow="The objection" title="Sketch the system">
+          <Prose>
+            <p>
+              There is an obvious objection to drawing anything at this point:
+              if the answer is one application and one database, the diagram is
+              two boxes and a line, and drawing it teaches nobody anything.
+            </p>
+            <p>
+              The objection is right about the application and wrong about the
+              system.{' '}
+              <strong className="font-medium text-fg">
+                Your application is one box. Your system is not.
+              </strong>{' '}
+              The invoicing example takes payments, sends email, renders and
+              stores PDFs, and needs something to notice when an invoice has
+              gone past its due date. None of those is code you wrote, all of
+              them fail on their own schedule, and every one is a decision you
+              have already made without writing it down.
+            </p>
+            <p>
+              <Term id="c4-model">C4</Term> is the usual answer to &ldquo;what
+              kind of diagram&rdquo;. Four levels — context, container,
+              component, code. For one person, context and container earn their
+              keep; component is worth drawing for the one subsystem complicated
+              enough that you keep re-deriving how it fits together; code is
+              what your editor already draws. Draw two diagrams, not four.
+            </p>
+          </Prose>
+          <Figure
+            n={8}
+            caption="The container view. Four of the six boxes are not yours, which is the whole argument for drawing it — select an external one to see what it does and what happens when it is down."
+          >
+            <SystemSketch />
+          </Figure>
+        </Section>
+
+        <Section
+          eyebrow="One flow, end to end"
+          title="Pick the flow that crosses the most boundaries"
+        >
+          <Prose>
+            <p>
+              That is where the design decisions hide. Two of the five steps
+              below are different in kind from the rest, and the difference is a
+              decision the stage has not posed yet.
+            </p>
+          </Prose>
+          <Figure
+            n={9}
+            caption="Sending an invoice and being paid for it, drawn end to end. Step 2 is a call you make; step 4 is a call somebody makes to you, days later, possibly twice."
+          >
+            <DataFlow />
+          </Figure>
+        </Section>
+
+        <Section eyebrow="The fork" title="Synchronous or asynchronous">
+          <Prose>
+            <p>
+              This is the fork that leads to{' '}
+              <Term id="event-driven-architecture">
+                event-driven architecture
+              </Term>
+              , and it has real consequences on each branch. The rule that
+              catches people: for anything you <em>receive</em>, you do not get
+              to choose.
+            </p>
+          </Prose>
+          <Figure
+            n={10}
+            caption="The same four questions asked of both branches. The last row is the one that turns into work: asynchronous needs idempotency, and somewhere to put what failed."
+          >
+            <SyncAsync />
+          </Figure>
+        </Section>
+
+        <Section
+          eyebrow="The consequence"
+          title="Anything received has to be safe twice"
+        >
+          <Prose>
+            <p>
+              A payment webhook will be delivered twice eventually, and the
+              write it triggers has to survive that. That is{' '}
+              <Term id="idempotency">idempotency</Term>, and it is a schema
+              decision, which is why it belongs in this stage rather than in
+              implementation. Two mechanisms cover almost everything.
+            </p>
+          </Prose>
+          <Figure
+            n={11}
+            caption="The general mechanism and the cheaper one. Insert the row first and do the work second, in one transaction — and then answer the sender success, because a duplicate is the system working."
+          >
+            <IdempotencyBlock />
+          </Figure>
+          <div className="mt-6">
+            <Callout kind="info" title="What is deliberately not here">
+              Full high-level design practice comes with a system specification
+              document, a review board, and a sign-off before implementation
+              starts. None of that is in this stage, on purpose. The thinking
+              survives — what the pieces are, how they talk, what happens when
+              one fails — and the paperwork does not, because its actual purpose
+              is coordinating people you do not have.
+            </Callout>
           </div>
         </Section>
       </div>
@@ -235,118 +620,6 @@ const STEPS: Step[] = [
           >
             <DeleteBehaviour />
           </Figure>
-        </Section>
-      </div>
-    ),
-  },
-  {
-    id: 'shape',
-    label: 'Shape',
-    hint: 'One application, with honest boundaries inside',
-    content: (
-      <div className="space-y-16">
-        <Section eyebrow="The default" title="Start with one application">
-          <Prose>
-            <p>
-              For a solo project the default shape is one application and one
-              database. Not microservices, not a separate API, not a queue, not
-              an event bus. A <Term id="monolith">monolith</Term> here is the
-              correct choice rather than a compromise you are admitting to.
-            </p>
-            <p>
-              The reason is an accounting one. Distribution charges you network
-              failure modes and distributed debugging from the first deploy, and
-              pays you back in independent team scaling and independent deploy
-              cadence. One person cannot collect either.
-            </p>
-          </Prose>
-          <Figure
-            n={6}
-            caption="The costs of distribution are paid on day one; the benefits are organisational and need a team to collect. Alone you pay the full price for none of the return."
-          >
-            <OneAppCosts />
-          </Figure>
-        </Section>
-
-        <Section eyebrow="Your turn" title="Is this a reason to split?">
-          <Prose>
-            <p>
-              Splitting something out is right when there is a concrete reason,
-              and the concrete reasons are narrower than they sound. Six
-              candidates below, four of which hold. Commit to each before the
-              verdict.
-            </p>
-          </Prose>
-          <div className="mt-5">
-            <SplitTrigger />
-          </div>
-        </Section>
-
-        <Section
-          eyebrow="Inside one application"
-          title="Boundaries you keep honest"
-        >
-          <Prose>
-            <p>
-              Structure inside the application is what makes splitting possible
-              later, cheaply. Draw boundaries between features and enforce one
-              rule: features talk through exported functions and never reach
-              into each other&rsquo;s internals. If clients needs invoice data
-              it calls billing; it does not query the invoices table.
-            </p>
-            <p>
-              That single rule is the difference between extracting a service
-              later as a mechanical job and doing it as archaeology.
-            </p>
-          </Prose>
-          <Figure
-            n={7}
-            caption="Three calls between three modules, where only the shape of the call decides whether it is allowed. Reaching straight into another module&rsquo;s table works, is shorter, and is the move that turns a monolith into a ball of mud."
-          >
-            <BoundaryMap />
-          </Figure>
-          <div className="mt-6">
-            <TeamNotes>
-              <ul className="space-y-2.5">
-                <li>
-                  <strong className="font-medium text-fg">
-                    Boundaries become social.
-                  </strong>{' '}
-                  Team ownership tends to follow module boundaries, so drawing
-                  them badly creates coordination overhead that outlives the
-                  code.
-                </li>
-                <li>
-                  <strong className="font-medium text-fg">
-                    ADRs stop being optional.
-                  </strong>{' '}
-                  They are how a decision survives the person who made it.
-                </li>
-                <li>
-                  <strong className="font-medium text-fg">
-                    Splitting services can now be justified
-                  </strong>{' '}
-                  by independent deploy cadence and team autonomy — real
-                  benefits that simply do not exist solo.
-                </li>
-                <li>
-                  <strong className="font-medium text-fg">
-                    Review architectural changes more heavily
-                  </strong>{' '}
-                  than feature changes. The{' '}
-                  <Term id="blast-radius">blast radius</Term> is larger and the
-                  reversal cost is higher.
-                </li>
-                <li>
-                  <strong className="font-medium text-fg">
-                    Watch for Conway&rsquo;s law.
-                  </strong>{' '}
-                  Your architecture will come to mirror your communication
-                  structure whether you intend it or not.
-                </li>
-              </ul>
-            </TeamNotes>
-          </div>
         </Section>
       </div>
     ),
