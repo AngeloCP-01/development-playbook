@@ -71,13 +71,17 @@ test('every scenario explains itself, since a revealed verdict without a reason 
 })
 
 test('scoring counts only what was answered, so a partial run still reports honestly', () => {
-  const first = AUTHZ_SCENARIOS[0]
-  const second = AUTHZ_SCENARIOS[1]
-  const wrong = AUTHZ_PATTERNS.find((p) => p.id !== second.answer)!.id
-  // Asymmetric on purpose: one right, one wrong. A fixture where both match
-  // scores the same whether the comparison is `===` or its negation.
-  const result = scoreAuthz({ [first.id]: first.answer, [second.id]: wrong })
-  expect(result).toEqual({ answered: 2, correct: 1 })
+  const [a, b, c] = AUTHZ_SCENARIOS
+  const wrongForC = AUTHZ_PATTERNS.find((p) => p.id !== c.answer)!.id
+  // Asymmetric on purpose: two right and one wrong. A one-right-one-wrong
+  // fixture scores the same whether the comparison is `===` or its negation,
+  // so it cannot tell a working scorer from an inverted one.
+  const result = scoreAuthz({
+    [a.id]: a.answer,
+    [b.id]: b.answer,
+    [c.id]: wrongForC,
+  })
+  expect(result).toEqual({ answered: 3, correct: 2 })
 })
 
 test('scoring ignores ids it does not know, so stale storage cannot inflate a score', () => {
