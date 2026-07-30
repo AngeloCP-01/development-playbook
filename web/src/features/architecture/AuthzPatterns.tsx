@@ -21,13 +21,33 @@ import { AUTHZ_PATTERNS, AUTHZ_SCENARIOS, scoreAuthz } from './contracts'
  * the trap: a reader who notices the pattern repeating and answers ownership
  * for all four gets the manager scenario wrong, which is precisely the failure
  * the doc describes as working correctly for the person who built it.
+ *
+ * One scenario needs TWO patterns, because the doc's section teaches that they
+ * compose — role alone is true of every manager in the company, including one
+ * who manages a different team, and the partial rule does not error, it grants.
+ * Those scenarios render as a checkbox group with an explicit commit, because a
+ * radiogroup cannot express a conjunction and letting the first click commit
+ * would make the right answer unreachable.
  */
 
 export function AuthzPatterns() {
-  const [answers, setAnswers] = useState<Record<string, string>>({})
+  const [answers, setAnswers] = useState<Record<string, string[]>>({})
+  const [drafts, setDrafts] = useState<Record<string, string[]>>({})
 
-  const commit = (id: string, choice: string) =>
+  const commit = (id: string, choice: string[]) =>
     setAnswers((prev) => (id in prev ? prev : { ...prev, [id]: choice }))
+
+  /** Toggle one pattern in a multi-answer scenario's uncommitted selection. */
+  const toggleDraft = (id: string, patternId: string) =>
+    setDrafts((prev) => {
+      const current = prev[id] ?? []
+      return {
+        ...prev,
+        [id]: current.includes(patternId)
+          ? current.filter((p) => p !== patternId)
+          : [...current, patternId],
+      }
+    })
 
   const { answered, correct } = scoreAuthz(answers)
 
@@ -74,9 +94,15 @@ export function AuthzPatterns() {
 
       <ul className="space-y-2.5">
         {AUTHZ_SCENARIOS.map((scenario) => {
-          const choice = answers[scenario.id]
+          const needed = scenario.answer.length
+          const multi = needed > 1
+          const draft = drafts[scenario.id] ?? []
+          const choice = answers[scenario.id] ?? (multi ? draft : [])
           const done = scenario.id in answers
-          const right = done && choice === scenario.answer
+          const right =
+            done &&
+            choice.length === scenario.answer.length &&
+            scenario.answer.every((a) => choice.includes(a))
 
           return (
             <li key={scenario.id} className="border border-line bg-sunken p-4">
@@ -85,20 +111,28 @@ export function AuthzPatterns() {
               </p>
 
               <div
-                role="radiogroup"
-                aria-label={`Which pattern applies to: ${scenario.scenario}?`}
+                role={multi ? 'group' : 'radiogroup'}
+                aria-label={
+                  multi
+                    ? `Select both patterns that must hold for: ${scenario.scenario}`
+                    : `Which pattern applies to: ${scenario.scenario}?`
+                }
                 className="grid grid-cols-1 gap-2 sm:grid-cols-3"
               >
                 {AUTHZ_PATTERNS.map((p) => {
-                  const checked = done && choice === p.id
+                  const checked = choice.includes(p.id)
                   return (
                     <button
                       key={p.id}
                       type="button"
-                      role="radio"
+                      role={multi ? 'checkbox' : 'radio'}
                       aria-checked={checked}
                       disabled={done}
-                      onClick={() => commit(scenario.id, p.id)}
+                      onClick={() =>
+                        multi
+                          ? toggleDraft(scenario.id, p.id)
+                          : commit(scenario.id, [p.id])
+                      }
                       className={[
                         'min-h-11 min-w-0 border px-3 text-sm font-medium transition-colors duration-150 lg:min-h-9',
                         checked
@@ -113,6 +147,29 @@ export function AuthzPatterns() {
                   )
                 })}
               </div>
+
+              {multi && !done && (
+                <div className="mt-2.5 flex flex-wrap items-center gap-3">
+                  <button
+                    type="button"
+                    disabled={draft.length !== needed}
+                    onClick={() => commit(scenario.id, draft)}
+                    className={[
+                      'min-h-11 border px-4 text-sm font-medium transition-colors duration-150 lg:min-h-9',
+                      draft.length === needed
+                        ? 'border-brand bg-brand text-brand-fg hover:opacity-90'
+                        : 'cursor-not-allowed border-line bg-raised text-subtle opacity-60',
+                    ].join(' ')}
+                  >
+                    Commit
+                  </button>
+                  <span className="text-sm text-subtle" aria-live="polite">
+                    {draft.length === needed
+                      ? 'Both selected.'
+                      : `This one needs ${needed}. ${draft.length} selected.`}
+                  </span>
+                </div>
+              )}
 
               <div aria-live="polite">
                 {done && (
@@ -130,10 +187,12 @@ export function AuthzPatterns() {
                       )}
                       {right ? 'Correct' : 'Not quite'}
                       <span className="font-normal normal-case tracking-normal text-subtle">
-                        {
-                          AUTHZ_PATTERNS.find((p) => p.id === scenario.answer)
-                            ?.name
-                        }
+                        {scenario.answer
+                          .map(
+                            (a) =>
+                              AUTHZ_PATTERNS.find((p) => p.id === a)?.name ?? a,
+                          )
+                          .join(' and ')}
                       </span>
                     </p>
                     <p className="measure text-sm leading-6 text-muted">

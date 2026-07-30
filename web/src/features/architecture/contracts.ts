@@ -121,8 +121,12 @@ export const AUTHZ_PATTERNS: AuthzPattern[] = [
 export type AuthzScenario = {
   id: string
   scenario: string
-  /** The id of the pattern that applies. */
-  answer: string
+  /**
+   * The pattern ids that must ALL hold. Usually one; two where the rule is a
+   * conjunction, which the doc's authorization section teaches because the
+   * partial rule does not error — it grants.
+   */
+  answer: string[]
   why: string
 }
 
@@ -130,33 +134,41 @@ export const AUTHZ_SCENARIOS: AuthzScenario[] = [
   {
     id: 'own-draft',
     scenario: 'A freelancer edits their own draft invoice',
-    answer: 'ownership',
+    answer: ['ownership'],
     why: 'The row carries their id, and nobody else has any business in it. This is the case that makes ownership feel general, because for a product where each person works on their own things it genuinely is.',
   },
   {
     id: 'approve-swap',
-    scenario: 'A manager approves a shift swap between two other people',
-    answer: 'role',
-    why: 'The manager owns none of the three rows involved. This is where ownership fails, and it fails quietly: the system works correctly for the person who built it and refuses everyone else. Nothing about the row can grant this, so the grant has to come from the caller’s role.',
+    scenario:
+      'A manager approves a shift swap between two other people on a team they manage',
+    answer: ['role', 'membership'],
+    why: 'Two patterns, and this is the one scenario that needs both. The manager owns none of the three rows, so ownership is out and the grant has to come from their role — but role alone is true of every manager in the company, including one who manages a different team. Role without membership does not error, it approves: a Kitchen manager signing off a Front-of-House shift is a working feature and a privilege escalation at the same time.',
   },
   {
     id: 'shared-doc',
     scenario: 'Anyone on a team opens a document in their shared workspace',
-    answer: 'membership',
+    answer: ['membership'],
     why: 'No individual owns it and no special role is needed. The question is whether the caller and the row belong to the same group, which is a different query from both of the others — and the reason the memberships table exists.',
   },
   {
     id: 'own-feed',
     scenario: 'A user reads their own notification feed',
-    answer: 'ownership',
-    why: 'Ownership again, and deliberately: two of four are ownership because that is the honest ratio in most products. The lesson is not that ownership is wrong, it is that it is not the only one — so the decision is which pattern applies to which entity, written down per entity.',
+    answer: ['ownership'],
+    why: 'Ownership again, and deliberately: it is the answer for two of these four because that is the honest ratio in most products. The lesson is not that ownership is wrong, it is that it is not the only one — and that a rule is written per entity, sometimes with two patterns joined by *and*.',
   },
 ]
 
 const SCENARIO_BY_ID = new Map(AUTHZ_SCENARIOS.map((s) => [s.id, s]))
 
-/** `answers[id]` is the pattern id the reader chose. Unknown ids are ignored. */
-export function scoreAuthz(answers: Record<string, string>): {
+/**
+ * `answers[id]` is the set of pattern ids the reader chose. Unknown ids are
+ * ignored, so stale storage cannot inflate a score.
+ *
+ * A conjunction is scored as a set, not a sequence: picking membership then role
+ * is the same answer as role then membership. A subset is wrong, because the
+ * whole point of the conjunction scenario is that the partial rule grants.
+ */
+export function scoreAuthz(answers: Record<string, string[]>): {
   answered: number
   correct: number
 } {
@@ -166,7 +178,13 @@ export function scoreAuthz(answers: Record<string, string>): {
     const scenario = SCENARIO_BY_ID.get(id)
     if (!scenario) continue
     answered += 1
-    if (scenario.answer === choice) correct += 1
+    const chosen = new Set(choice)
+    if (
+      chosen.size === scenario.answer.length &&
+      scenario.answer.every((a) => chosen.has(a))
+    ) {
+      correct += 1
+    }
   }
   return { answered, correct }
 }
