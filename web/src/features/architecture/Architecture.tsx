@@ -237,13 +237,15 @@ const STEPS: Step[] = [
         <Section eyebrow="The artifact" title="Write down your own domain">
           <Prose>
             <p>
-              The same four questions, turned on the thing you are actually
+              Four of those five questions turn on the thing you are actually
               building. What are the nouns; what should be computed rather than
               stored; what happens on delete, entity by entity — a{' '}
               <Term id="soft-delete">soft delete</Term> keeps the row and taxes
               every query afterwards, so it is a trade to make deliberately
               rather than a default. Last, what must be unique and in what
-              scope.
+              scope. The fifth, whether every actor has the same rights, is
+              answered in <em>Contract</em>, where the authorization pattern
+              gets chosen.
             </p>
             <p>
               If a relationship might run both ways later, say so here. Yes now

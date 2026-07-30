@@ -6,7 +6,7 @@ import { Callout, Card } from '@/components/ui'
 import { INTERROGATIONS, judgeInterrogation } from './scoring'
 
 /**
- * Source: docs/03-architecture.md, "Model the domain first", the four questions the doc puts to the
+ * Source: docs/03-architecture.md, "Model the domain first", the five questions the doc puts to the
  * invoice domain once it has been written down as nouns.
  *
  * The guess-then-reveal shape is `QuestionLab` (discovery) by way of
@@ -42,7 +42,7 @@ export function ModelInterrogation() {
         <div>
           <p className="text-sm font-medium">Interrogate the model</p>
           <p className="text-sm text-subtle">
-            Four questions that surface design errors while they are still
+            Five questions that surface design errors while they are still
             cheap. Commit before the reasoning shows.
           </p>
         </div>
