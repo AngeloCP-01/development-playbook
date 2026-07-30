@@ -17,15 +17,15 @@ design; the numbering is the reading order, not a schedule.
 | | Section | Answers |
 |---|---|---|
 | | [Sort decisions by reversibility](#sort-decisions-by-reversibility) | Which decisions deserve the thinking |
-| **HLD** | [What this system has to be](#what-this-system-has-to-be) | Which qualities you are designing for, and how to check them later |
+| **HLD** | [What this system has to be](#what-this-system-has-to-be) | Which qualities you are designing for, and how you would know if one stopped holding |
 | | [Model the domain first](#model-the-domain-first) | Entities, relationships, and the questions that find design errors |
 | | [The shapes a system can take](#the-shapes-a-system-can-take) | Monolith · modular monolith · microservices · serverless, and scaling |
 | | [Start with one application](#start-with-one-application) | The recommendation, derived — and its one sharp edge |
 | | [Boundaries inside the monolith](#boundaries-inside-the-monolith) | Where to draw a line, and how to keep it |
-| | [Sketch the system](#sketch-the-system) | What you depend on, what happens when it is down |
-| **LLD** | [Design the database](#design-the-database) | Schema, indexes, constraints, concurrency |
-| | [Evolve the schema safely](#evolve-the-schema-safely) | Changing stored data without downtime |
-| | [Design the API contracts](#design-the-api-contracts) | Route shape, request/response, versioning |
+| | [Sketch the system](#sketch-the-system) | What you depend on · **timeouts, retries, webhooks, idempotency** · what happens when it is down |
+| **LLD** | [Design the database](#design-the-database) | Schema · indexes · constraints · tenancy · **locking, two people editing one row** |
+| | [Evolve the schema safely](#evolve-the-schema-safely) | **Adding or renaming a column** on a live table, without downtime |
+| | [Design the API contracts](#design-the-api-contracts) | Route shape · request/response · versioning · receiving a webhook |
 | | [Authentication and authorization](#authentication-and-authorization) | Who the caller is, and what they may do |
 | | [Write the ADRs](#write-the-adrs) | Recording a decision so it survives you |
 | | [Defer aggressively](#defer-aggressively) | What not to build, and the test for it |
@@ -121,6 +121,8 @@ pick-three rule above still stands:
 | Evolvability | Expand-contract for anything stored; boundaries that make a later split mechanical rather than archaeological |
 | Security | An authorization pattern chosen per entity rather than once for the system |
 | Deployability | Migrations that are safe to run before the code that needs them |
+| Latency | Indexes traced to real queries; synchronous work kept off the request path |
+| Observability | Asynchronous work you can see the failures of, rather than only the successes |
 
 Every row is a decision this stage makes anyway. Choosing the characteristic first is what
 turns that decision from a preference into something with a reason attached.
@@ -401,6 +403,8 @@ and stores PDFs, and needs something to notice when an invoice has gone past its
 None of those is code you wrote, all of them fail on their own schedule, and every one is a
 decision you have already made without writing it down.
 
+#### Which diagrams to draw
+
 **C4** is the usual answer to "what kind of diagram". Four levels: **context** (your system
 and the world around it), **container** (the deployable things inside it), **component**
 (the pieces inside one container), **code**. For one person, context and container earn
@@ -456,6 +460,8 @@ that is where the design decisions hide:
 
 Steps 2 and 4 are different in kind, and that difference is a decision the stage has not yet
 posed.
+
+#### Synchronous or asynchronous, and idempotency
 
 **Synchronous or asynchronous.** This is the fork that leads to event-driven architecture,
 and it has real consequences on each branch:
@@ -520,6 +526,8 @@ yours, what happens when it is down?
 
 Three questions, three answers, one of which is a genuine piece of work you would otherwise
 have discovered in production. That is the return on a diagram.
+
+#### Timeouts, retries and failing well
 
 Those three answers have a name: **graceful degradation**, deciding per feature what still
 works when a dependency does not. And there is a small standard vocabulary for producing them,
@@ -587,6 +595,8 @@ That last relationship is worth arguing about before it is typed. Hanging `invoi
 `users` as well as
 `clients` is what lets a client be merged or reassigned later without the invoices following
 it, and it is the kind of thing an ER view makes visible and a list of tables does not.
+
+#### Normalisation
 
 **Normalisation** is the vocabulary for how far you have gone in removing duplicated facts —
 first, second and third normal form, of which third is the one worth aiming at. The theory is
@@ -663,6 +673,8 @@ on the expensive list from the top of this stage:
   day, or a wall-clock time somewhere?** Most products only have the first two and never notice
   the third exists until a scheduling feature arrives.
 
+#### Indexes
+
 **Indexes answer queries you actually run**, so write the queries first and add the index the
 query needs. Two, for this schema:
 
@@ -681,6 +693,8 @@ Both come from the system sketch rather than from intuition: one from a screen, 
 scheduled job. Indexes cost write time and disk, which is why "index everything" is not the
 answer and "index nothing until it hurts" is not either.
 
+#### Constraints for conditional rules
+
 **Some rules are conditional, and `UNIQUE` cannot express them.** The stage names races as
 the reason constraints belong in the database, then supplies only primary keys, foreign keys,
 `CHECK` and `UNIQUE` — none of which can say "at most one *approved* claim per shift". A
@@ -694,6 +708,8 @@ CREATE UNIQUE INDEX one_approved_claim_per_shift
 
 Without it, the usual approach is to check for an existing approval and then insert — which
 two concurrent requests both pass, both believing they were first.
+
+#### Actors, roles and the tenant key
 
 **Actors and tenancy are stored data too, and they are the two this stage most often leaves
 implicit.** The invoicing schema above has neither, because one freelancer owning their own
@@ -742,6 +758,8 @@ The rule: **the tenant key is the level at which data stops being shared.** If a
 moving between teams should keep their history, the company is the tenant and the team is an
 ordinary foreign key. If teams are genuinely separate customers who must never see each
 other's rows, the team is the tenant. Answer it now; everything built on top of it can wait.
+
+#### Transactions, isolation and locking
 
 **Some invariants span rows, and no constraint can express them at all.** Moving an amount
 from one row to another, or writing a record and marking its source consumed, has to happen
@@ -847,17 +865,32 @@ why you stop writing it in a *later* deploy rather than the same one. A reader w
 next change.
 
 **And the backfill has to be safe to run twice**, which is idempotency from
-[Sketch the system](#sketch-the-system) arriving where it bites hardest. Step 2 is already
-writing correct values, and a user may have edited their name since. So guard it:
+[Sketch the system](#sketch-the-system) arriving where it bites hardest.
+
+Take a concrete change: `users.name` is being split into `first_name` and `last_name`. Step 2's
+code is already writing all three for anyone who saves, and some of those people have since
+corrected a name the split would have got wrong. So the backfill must skip rows that already
+have a value, and it has to run in batches so it never holds a long lock:
 
 ```sql
-UPDATE users SET first_name = split_part(full_name, ' ', 1)
- WHERE first_name IS NULL      -- do not overwrite what step 2 already wrote
-   AND id IN (SELECT id FROM users WHERE first_name IS NULL LIMIT 1000);
+-- Repeat until it reports zero rows. Safe to re-run at any point.
+UPDATE users
+   SET first_name = split_part(name, ' ', 1),
+       last_name  = substr(name, strpos(name, ' ') + 1)
+ WHERE id IN (
+   SELECT id FROM users
+    WHERE first_name IS NULL          -- never overwrite what step 2 wrote
+    LIMIT 1000                        -- one batch
+ );
 ```
 
-An unguarded backfill re-run does not error. It reverts corrections, which is the worst class of
-migration bug: silent, plausible, and invisible until somebody notices their edit did not stick.
+An unguarded backfill does not error when re-run. It reverts corrections, which is the worst
+class of migration bug: silent, plausible, and invisible until somebody notices their edit did
+not stick.
+
+The batch size is a judgement rather than a constant — large enough to finish, small enough that
+one statement is not holding rows for long. A thousand is a reasonable place to start and the
+number only matters on tables big enough that you would notice.
 
 The rule that makes this worth the ceremony: **never ship a destructive migration in the same
 deploy as the code that needs it.** If a deploy goes wrong you want the fix to be a code
