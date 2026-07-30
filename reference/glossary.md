@@ -31,6 +31,8 @@ drift apart.
 
 **Concierge test** — You do the work manually for a handful of real users — spreadsheets, emails, your own labour — while they experience the result as if it were a product.
 
+**Connection pooling** — A pooler sits between the application and the database, holding a limited number of real connections and multiplexing client requests onto them, instead of each caller opening its own. See [03 — Architecture](../docs/03-architecture.md).
+
 **CQRS (Command Query Responsibility Segregation)** — Splitting the write path and the read path so each can be shaped for its own job — writes validated against one model, reads served from another built for the queries the screens make. Often paired with event sourcing, though neither requires the other. See [03 — Architecture](../docs/03-architecture.md).
 
 **Database constraint** — NOT NULL, UNIQUE, CHECK, and foreign keys with their delete behaviour. Declared in the schema, so the database refuses to store a row that breaks them. See [03 — Architecture](../docs/03-architecture.md).
@@ -62,6 +64,8 @@ drift apart.
 **Graceful degradation** — Designing so that the loss of one component removes one capability rather than the whole system. Search goes down and browsing still works; the PDF renderer goes down and the invoice still sends. See [03 — Architecture](../docs/03-architecture.md).
 
 **Hexagonal architecture (ports and adapters)** — An organising principle where the core logic defines interfaces — ports — and the database, HTTP layer and third-party services are adapters plugged into them. The core depends on nothing outside itself. See [03 — Architecture](../docs/03-architecture.md).
+
+**Horizontal scaling** — Adding instances behind a load balancer so work spreads across them. The alternative, vertical scaling, is moving to a larger machine: simpler, requiring no statelessness, and eventually running out of machine. See [03 — Architecture](../docs/03-architecture.md).
 
 **Idempotency** — A property of an operation: running it repeatedly with the same input leaves the system in the same state as running it once. Usually achieved by having the caller supply a key, and recording which keys have already been processed. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -111,6 +115,8 @@ drift apart.
 
 **Production-grade** — The state where someone other than you depends on the software working. It is about consequences, not scale: ten paying users make software production-grade; ten thousand on a toy do not.
 
+**Read replica** — A secondary instance kept up to date from the primary, used to spread read load. Writes still go to one place, so replicas scale reads and do nothing for write throughput. See [03 — Architecture](../docs/03-architecture.md).
+
 **Rollback** — Returning production to the last known-good state. On Vercel it is promoting a prior deployment, which takes seconds — but it is not automatic for database migrations, which is why migrations get careful, separate treatment. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **Serverless** — Code deployed as individual functions the platform starts when a request arrives and stops afterwards, billed per invocation rather than per hour. Vercel’s deployment model for a Next.js application is this. See [03 — Architecture](../docs/03-architecture.md).
@@ -124,6 +130,8 @@ drift apart.
 **Soft delete** — A deleted_at timestamp or a boolean flag, set instead of issuing a DELETE. The row stays; every query that should not see it has to filter it out. See [03 — Architecture](../docs/03-architecture.md).
 
 **Spike** — A short, deliberately bounded piece of exploration answering one specific question — can this integration do what we need, is this approach fast enough — with a hard stop and a written answer. See [02 — Product Planning](../docs/02-planning.md).
+
+**Statelessness** — Every request carries or looks up whatever it needs, and anything that must persist between requests lives in a cookie, a database or a shared store rather than a local variable. Any instance can serve any request. See [03 — Architecture](../docs/03-architecture.md).
 
 **Strangler fig** — Put something in front of the existing system, route one path at a time to the replacement, and delete the old code once nothing reaches it. Named after the vine that grows around a tree and eventually stands without it. See [03 — Architecture](../docs/03-architecture.md).
 

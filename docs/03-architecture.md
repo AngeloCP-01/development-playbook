@@ -197,6 +197,25 @@ validate, write, read back, layered is honest and hexagonal is ceremony around a
 Start layered and extract ports where a piece of logic gets hard to test; going the other way
 is a rewrite.
 
+**One property decides whether the first table is even available to you: statelessness.** An
+application is stateless when it keeps no request state in its own memory — sessions live in a
+cookie, a table or a shared store, never a local variable. Any instance can then serve any
+request, which is what lets you run several copies, and what makes the serverless row possible
+at all, since the platform starts and stops instances whenever it likes. An in-memory session
+cache works perfectly on one machine and breaks the moment there are two.
+
+That is also what the table means by scaling independently, so it is worth saying how. **Vertical
+scaling** is a bigger machine: simpler, needs no statelessness, and eventually runs out of
+machine. **Horizontal scaling** is more machines behind a **load balancer**, needs statelessness
+first, and has effectively no ceiling. **Read replicas** spread read load, and do nothing for
+writes, because writes still go to one place. Their catch is lag — a replica is behind by some
+amount, which is where the eventual consistency from
+[Design the database](#design-the-database) turns up in your own product rather than in theory.
+
+Vertical first is almost always right. The point of knowing the difference is that horizontal
+scaling is not something you bolt on: it needs a property you either have or do not, decided
+now.
+
 Both are compatible with every deployment shape. This is the axis the stage's own advice
 lives on, and it is why the next two sections are about structure *inside* one application.
 
@@ -247,6 +266,21 @@ consistency — for benefits you cannot use.
 - A real compliance boundary requiring isolation
 
 "It will scale better" is not a reason. It is a prediction, and usually a wrong one.
+
+**The one sharp edge in this recommendation, named because you will meet it.** A Postgres
+instance accepts a limited number of simultaneous connections — often a couple of hundred, fewer
+on small plans. Serverless functions scale by starting more instances, and each instance wants
+its own connection. So traffic that looks entirely moderate exhausts the limit, and new requests
+fail *on connect* rather than on anything you wrote, which makes it a confusing first
+encounter: the application is fine, the database is fine, and the join between them is not.
+
+The fix is a **pooler** between the two, holding a small number of real connections and
+multiplexing everyone onto them. Managed Postgres providers ship one, and using it is a
+connection-string change rather than an architecture change.
+
+This does not weaken the recommendation. One application and one database is still right. It is
+the difference between a default that works and a default you understand — and this is the part
+a reader following this playbook is most likely to hit first.
 
 ### Boundaries inside the monolith
 

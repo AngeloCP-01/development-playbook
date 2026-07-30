@@ -469,6 +469,38 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'It describes how a codebase is arranged inside, not how it deploys, so a hexagonal monolith is an ordinary thing. Confusing the two axes is what makes "monolith or microservices" sound like one question when it is two.',
   },
+  statelessness: {
+    name: 'Statelessness',
+    see: '03-architecture',
+    short: 'The application keeps no request state in its own memory.',
+    full: 'Every request carries or looks up whatever it needs, and anything that must persist between requests lives in a cookie, a database or a shared store rather than a local variable. Any instance can serve any request.',
+    soWhat:
+      'It is the precondition for running more than one copy, which makes it the precondition for horizontal scaling and for serverless, where the platform starts and stops instances whenever it likes. An in-memory session cache works perfectly on one machine and breaks the moment there are two.',
+  },
+  'horizontal-scaling': {
+    name: 'Horizontal scaling',
+    see: '03-architecture',
+    short: 'More machines, rather than a bigger one.',
+    full: 'Adding instances behind a load balancer so work spreads across them. The alternative, vertical scaling, is moving to a larger machine: simpler, requiring no statelessness, and eventually running out of machine.',
+    soWhat:
+      'Vertical is the right first answer and has a ceiling; horizontal has effectively none and demands statelessness before it works at all. Knowing which one you are set up for is worth more than knowing you might need to scale.',
+  },
+  'read-replica': {
+    name: 'Read replica',
+    see: '03-architecture',
+    short: 'A copy of the database that serves reads but takes no writes.',
+    full: 'A secondary instance kept up to date from the primary, used to spread read load. Writes still go to one place, so replicas scale reads and do nothing for write throughput.',
+    soWhat:
+      'The catch is lag: a replica is behind the primary by some amount, so a read straight after a write can return the old value. That is eventual consistency arriving in your own product, which is why reads that must reflect a just-finished write go to the primary.',
+  },
+  'connection-pooling': {
+    name: 'Connection pooling',
+    see: '03-architecture',
+    short: 'Sharing a small set of database connections across many callers.',
+    full: 'A pooler sits between the application and the database, holding a limited number of real connections and multiplexing client requests onto them, instead of each caller opening its own.',
+    soWhat:
+      'It is the sharp edge of serverless plus Postgres, which is the stack this playbook prescribes. Functions scale by starting more instances and each one wants its own connection, so moderate traffic exhausts the database’s connection limit and requests start failing on connect rather than on anything you wrote.',
+  },
   'isolation-level': {
     name: 'Isolation level',
     see: '03-architecture',
