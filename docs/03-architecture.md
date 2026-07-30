@@ -8,6 +8,31 @@ structure — which is a signal, not a failure.
 
 ---
 
+## What is in here
+
+This is the longest stage in the playbook, deliberately, and it is meant to be looked things up
+in rather than read straight through. The work runs requirements → high-level design → low-level
+design; the numbering is the reading order, not a schedule.
+
+| | Section | Answers |
+|---|---|---|
+| | [Sort decisions by reversibility](#sort-decisions-by-reversibility) | Which decisions deserve the thinking |
+| **HLD** | [What this system has to be](#what-this-system-has-to-be) | Which qualities you are designing for, and how to check them later |
+| | [Model the domain first](#model-the-domain-first) | Entities, relationships, and the questions that find design errors |
+| | [The shapes a system can take](#the-shapes-a-system-can-take) | Monolith · modular monolith · microservices · serverless, and scaling |
+| | [Start with one application](#start-with-one-application) | The recommendation, derived — and its one sharp edge |
+| | [Boundaries inside the monolith](#boundaries-inside-the-monolith) | Where to draw a line, and how to keep it |
+| | [Sketch the system](#sketch-the-system) | What you depend on, what happens when it is down |
+| **LLD** | [Design the database](#design-the-database) | Schema, indexes, constraints, concurrency |
+| | [Evolve the schema safely](#evolve-the-schema-safely) | Changing stored data without downtime |
+| | [Design the API contracts](#design-the-api-contracts) | Route shape, request/response, versioning |
+| | [Authentication and authorization](#authentication-and-authorization) | Who the caller is, and what they may do |
+| | [Write the ADRs](#write-the-adrs) | Recording a decision so it survives you |
+| | [Defer aggressively](#defer-aggressively) | What not to build, and the test for it |
+| | [AI in architecture](#ai-in-architecture) | Where an agent helps, and where it misleads |
+
+---
+
 ## Entry criteria
 
 - [ ] A plan with defined scope and vertical slices ([02](02-planning.md))
@@ -958,6 +983,12 @@ Where it earns its place:
 - **Read a schema for the index you need.** Paste the DDL *and the queries your screens
   actually make*. Without the queries it will suggest indexes for imagined access patterns,
   which is worse than none.
+- **Enumerate the failure modes of a dependency.** "What are all the ways a payment provider
+  call can fail?" is list generation, which is the shape of work it is reliably good at. You
+  still decide which ones are worth handling.
+- **Order an expand-contract sequence for a specific change.** Give it the column and the
+  current readers and have it produce the six steps. Then check the order yourself, because the
+  step it tends to drop is the one that stops writing the old value.
 - **Read a schema for what is missing.** Uniqueness scope, delete behaviour, and
   nullability are mechanical to check and easy for a person to skim past. Paste the DDL —
   the `CREATE TABLE` statements themselves — and ask what a hostile script could write
@@ -978,6 +1009,11 @@ Where it misleads, which is the half worth reading twice:
   what to pick.
 - **It invents scale.** Ask it to design for growth and it will design for growth you
   cannot describe, then justify the complexity with the number it made up.
+- **Asked to make something resilient, it builds a resilience layer.** Retries, a breaker, a
+  dead-letter queue and a health-check dashboard, for three third-party calls. This is the
+  reach-for-distribution failure above in different clothes, and it is harder to spot because
+  every individual pattern it names is real. Ask instead which single call is most likely to
+  fail and what a timeout alone would do.
 - **Schema advice arrives confident and context-free.** It does not know your compliance
   boundary, your budget, or that this table is financial and legally has to survive a
   deletion.
@@ -1055,6 +1091,16 @@ build less than the model offers. It has no stake in maintaining what it propose
 **Choosing a style before choosing characteristics.** The answer sounds identical either
 way — "a modular monolith" — and only one of them is a decision. The other is a preference
 you will not be able to defend the first time it is questioned, including by yourself.
+
+**Retrying a write that is not idempotent.** The retry is the bug, not the failure it was
+answering. Two charges, one purchase, and a customer who is right to be annoyed.
+
+**A destructive migration in the same deploy as the code that needs it.** When the deploy goes
+wrong the fix you want is a code rollback, and a dropped column is not one.
+
+**Reading your own write from a replica.** The user saves, gets redirected, and their change is
+missing. It is not a race you can retry your way out of — reads that must reflect a
+just-finished write go to the primary.
 
 **Designing for imagined scale.** Building for a million users you do not have costs
 complexity today for benefits that will probably never arrive — and if they do, you will
