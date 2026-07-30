@@ -24,9 +24,25 @@ test('the tenancy block carries the memberships table, which is the answer to th
 })
 
 test('the tenancy block puts the role on the membership and not on users, which is the mistake it exists to prevent', () => {
-  const sql = TENANCY_LINES.map((l) => l.sql).join(' ')
-  expect(sql).toMatch(/role\s+text NOT NULL CHECK/)
-  expect(sql).not.toMatch(/users\s*\([^)]*role/)
+  const open = TENANCY_LINES.findIndex((l) => l.id === 'memberships-open')
+  const close = TENANCY_LINES.findIndex((l) => l.id === 'memberships-close')
+  expect(open, 'memberships-open is missing').toBeGreaterThan(-1)
+  expect(close, 'memberships-close is missing').toBeGreaterThan(open)
+
+  // Scoped to the memberships table on purpose. Asserting against the whole
+  // block passes with the role sitting on `teams` or `companies`, which is the
+  // exact misplacement this test is named for.
+  const memberships = TENANCY_LINES.slice(open, close + 1)
+    .map((l) => l.sql)
+    .join(' ')
+  expect(memberships).toMatch(/role\s+text NOT NULL CHECK/)
+
+  // And nowhere else in the block, which catches the misplacement directly
+  // rather than by guessing at how it would be phrased.
+  const elsewhere = TENANCY_LINES.filter((_, i) => i < open || i > close)
+    .map((l) => l.sql)
+    .join(' ')
+  expect(elsewhere).not.toMatch(/\brole\b/)
 })
 
 test('every block annotates at least one line, or it is a code dump rather than an annotated artifact', () => {
