@@ -346,9 +346,9 @@ export const TERMS: Record<string, Term> = {
     name: 'Authorization',
     see: '03-architecture',
     short: 'Deciding what a known user is allowed to do.',
-    full: 'Distinct from authentication, which establishes who the caller is: authentication gets you a user id, authorization decides whether that user id may read invoice 42. It comes in three patterns, and most products need more than one. Ownership — the row carries the caller’s id and you compare them. Role — the caller holds a role that grants the action, whoever owns the row. Membership — the caller and the row belong to the same group, which is what shared workspaces actually need.',
+    full: 'Distinct from authentication, which establishes who the caller is: authentication gets you a user id, authorization decides whether that user id may read invoice 42. Three patterns: ownership — the row carries the caller’s id and you compare them; role — the caller holds a role that grants the action, whoever owns the row; membership — the caller and the row belong to the same group. They combine, and one entity often needs two of them joined by *and*: a manager may approve a claim only if they hold the manager role *and* the shift belongs to a team they belong to.',
     soWhat:
-      'Authentication is the part people buy or borrow and mostly get right. Authorization is written by hand in every route, and it is where other people’s data leaks when one route forgets. Ownership is the dangerous default: it is right often enough to feel general, then fails silently on the first product where one person acts on another person’s record.',
+      'Authentication is the part people buy or borrow and mostly get right. Authorization is written by hand in every route, and it is where other people’s data leaks when one route forgets. Two ways it goes wrong quietly: ownership is the dangerous default, right often enough to feel general and then failing on the first product where one person acts on another person’s record; and a rule that needs two patterns and gets one does not error, it grants — a manager checked for role but not team approves another team’s work.',
   },
   'database-constraint': {
     name: 'Database constraint',

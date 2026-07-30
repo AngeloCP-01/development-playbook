@@ -52,7 +52,7 @@ function theWork(md: string): string {
   return next === -1 ? rest : rest.slice(0, next)
 }
 
-test('stage 03 "The work" carries its thirteen subsections in order', () => {
+test('stage 03 "The work" carries its fourteen subsections in order', () => {
   const md = readFileSync(DOC, 'utf8')
   const headings = [...theWork(md).matchAll(/^### (.+)$/gm)].map((m) =>
     m[1].trim(),

@@ -119,7 +119,7 @@ pick-three rule above still stands:
 | Availability | A timeout on every external call; retries only where they are safe; a decision about what still works when each dependency is down |
 | Scalability | Statelessness, so more instances are an option at all; a pooler between serverless and Postgres |
 | Evolvability | Expand-contract for anything stored; boundaries that make a later split mechanical rather than archaeological |
-| Security | An authorization pattern chosen per entity rather than once for the system |
+| Security | An authorization rule written per entity — often two patterns joined by *and*, not one chosen for the system |
 | Deployability | Migrations that are safe to run before the code that needs them |
 | Latency | Indexes traced to real queries; synchronous work kept off the request path |
 | Observability | Asynchronous work you can see the failures of, rather than only the successes |
@@ -265,7 +265,8 @@ validate, write, read back, layered is honest and hexagonal is ceremony around a
 Start layered and extract ports where a piece of logic gets hard to test; going the other way
 is a rewrite.
 
-**One property decides whether the first table is even available to you: statelessness.** An
+**One property decides whether the deployment table above is even available to you:
+statelessness.** An
 application is stateless when it keeps no request state in its own memory — sessions live in a
 cookie, a table or a shared store, never a local variable. Any instance can then serve any
 request, which is what lets you run several copies, and what makes the serverless row possible
@@ -343,8 +344,12 @@ fail *on connect* rather than on anything you wrote, which makes it a confusing 
 encounter: the application is fine, the database is fine, and the join between them is not.
 
 The fix is a **pooler** between the two, holding a small number of real connections and
-multiplexing everyone onto them. Managed Postgres providers ship one, and using it is a
-connection-string change rather than an architecture change.
+multiplexing everyone onto them. Managed Postgres providers ship one, and reaching for it is usually a
+connection-string change rather than an architecture change. One caveat, because this stage
+teaches `SELECT … FOR UPDATE` further down: a pooler in *transaction* mode hands your
+connection to someone else between statements, which breaks anything relying on session state —
+prepared statements, session variables, advisory locks. Most clients have a flag for it. Read
+your provider's note on the mode before assuming it is invisible.
 
 This does not weaken the recommendation. One application and one database is still right. It is
 the difference between a default that works and a default you understand — and this is the part
@@ -548,7 +553,7 @@ worth having because these four cover almost everything:
   through to test the water. This is the pattern you reach for once your retries have made you
   part of the outage rather than a victim of it.
 
-  It also has a catch that the [statelessness](#the-shapes-a-system-can-take) rule below makes
+  It also has a catch that the [statelessness](#the-shapes-a-system-can-take) rule above makes
   visible: **a breaker is failure-count state, and an in-memory one is per instance.** Across
   ten instances you get ten independent breakers, each needing its own five failures, so the
   thing trips ten times later than you designed it to. On one instance that is fine and you
@@ -647,6 +652,26 @@ The cost of `deleted_at` is the one already named: **every query must remember t
 That is a real tax, paid on every read forever, and it is why the decision is per entity rather
 than a habit.
 
+**Auditability wants one more thing, and it is the other half of that trace row.** A status of
+`sent` records that an invoice was sent; it does not record *when*, *to which address*, or that
+it was sent twice. Those are facts about moments, which the interrogation above says to store —
+so they belong in a table of their own, appended to and never updated:
+
+```sql
+CREATE TABLE invoice_sends (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  invoice_id uuid NOT NULL REFERENCES invoices(id) ON DELETE RESTRICT,
+  sent_to    text NOT NULL,          -- the address at the time, not a join to the client
+  sent_at    timestamptz NOT NULL DEFAULT now()
+);
+```
+
+Append-only is the whole point: rows go in, nothing edits them, and "we sent it on the 3rd to
+the old address" stops being a reconstruction. Note that this is **not** event sourcing — the
+invoice's current state still lives on `invoices`, and this table is a record beside it rather
+than the source it is derived from. That distinction is in
+[Defer aggressively](#defer-aggressively), and it is the one people talk themselves out of.
+
 Money as integer cents. `CHECK` constraints for anything with a fixed set of values.
 `ON DELETE RESTRICT` so deleting a user with invoices fails loudly instead of quietly
 cascading away financial history.
@@ -665,8 +690,8 @@ on the expensive list from the top of this stage:
 
   **There is a third case, and it catches anyone building a schedule.** A shift that starts at
   09:00 on Tuesday starts at 09:00 whatever the clocks do — it is a *wall-clock* fact attached
-  to a place, not an instant. Store it as an instant and it moves by an hour twice a year, in
-  one direction for the staff and the other for the payroll. Store it as `timestamp` without a
+  to a place, not an instant. Store it as an instant and it moves by an hour twice a year: the shift you scheduled for 09:00
+  starts arriving at 08:00 or 10:00, and nobody changed anything. Store it as `timestamp` without a
   zone plus the location's timezone (`Europe/London`, not an offset, because offsets change and
   zone names do not) and you can compute the instant whenever you need it while keeping the fact
   the business actually stated. The three-way question, then: **is this an instant, a calendar
@@ -771,13 +796,21 @@ draw.
 **How much a transaction sees of another is its isolation level**, and the default is not the
 strictest. Postgres runs **read committed**: you never see uncommitted rows, and you *do* see
 rows other transactions commit while yours is still running. That is enough for almost
-everything, and it does not prevent the problem below. **Serializable** does, by behaving as
-though transactions ran one at a time and aborting one when it cannot guarantee that — which
-costs you a retry path your code did not previously need.
+everything. **Serializable** is stricter: it behaves as though transactions ran one at a time and
+aborts one when it cannot guarantee that, which costs you a retry path your code did not
+previously need.
+
+**Neither of them solves the problem below, and this is the part that catches people.** An
+isolation level can only relate a read and a write that are inside *the same transaction*. When
+a person sits between them — page loads, reads a claim, thinks for a minute, clicks approve —
+those are two separate transactions with a human in the gap, and no isolation level in any
+database can see a relationship between them. Setting `SERIALIZABLE` and believing the next
+problem is handled is a specific and comfortable way to ship it anyway.
 
 **The lost update, which no constraint catches.** Two managers open the same claim. Both read
 it as pending. Both approve. The second write silently overwrites the first, no constraint was
-violated, and nothing anywhere records that a decision was discarded. Two standard fixes:
+violated, and nothing anywhere records that a decision was discarded. Two standard fixes, and
+both work by carrying something *across* the two transactions rather than tightening either one:
 
 - **Optimistic locking.** Put a version on the row and carry it into the write:
 
@@ -786,8 +819,10 @@ violated, and nothing anywhere records that a decision was discarded. Two standa
    WHERE id = $1 AND version = $2;
   ```
 
+  (`claims` carries the same `version integer NOT NULL DEFAULT 0` shown on `invoices` above.)
   Zero rows updated means somebody got there first, so you tell the user instead of losing
-  their work. Note what this is: **`version` is stored data**, so by the test at the top of
+  their work — as does an update against a row somebody deleted, which is worth distinguishing
+  if the message differs. Note what this is: **`version` is stored data**, so by the test at the top of
   this stage it is decide-now, and adding it later is an expand-contract sequence rather than
   an afternoon.
 
@@ -799,8 +834,8 @@ violated, and nothing anywhere records that a decision was discarded. Two standa
 The rule: **optimistic when conflict is rare, pessimistic when it is expected.** For anything
 with a human deciding in the middle, that is almost always optimistic.
 
-**Neither of them protects a rule that spans rows, and this is the trap.** Both lock a row
-against concurrent writes *to that row*. Two managers approving the same claim is the case above
+**Neither of them, applied to the rows being written, protects a rule that spans rows — and
+this is the trap.** Both lock a row against concurrent writes *to that row*. Two managers approving the same claim is the case above
 and optimistic locking catches it. Two managers approving **two different claims on the same
 shift** is a different case: different rows, both versions match, both writes succeed, and you
 now have two approved claims for one shift. The version column is silent because nothing about
@@ -876,13 +911,27 @@ have a value, and it has to run in batches so it never holds a long lock:
 -- Repeat until it reports zero rows. Safe to re-run at any point.
 UPDATE users
    SET first_name = split_part(name, ' ', 1),
-       last_name  = substr(name, strpos(name, ' ') + 1)
+       last_name  = CASE WHEN strpos(name, ' ') = 0 THEN NULL
+                         ELSE substr(name, strpos(name, ' ') + 1) END
  WHERE id IN (
    SELECT id FROM users
     WHERE first_name IS NULL          -- never overwrite what step 2 wrote
+      AND name IS NOT NULL            -- or the loop never reaches zero rows
     LIMIT 1000                        -- one batch
  );
 ```
+
+**Both guards in that inner select are there because the naive version is broken, and neither
+failure announces itself.** Without `name IS NOT NULL`, a row with a null name matches the guard
+forever — `split_part(NULL, …)` is null, so `first_name` stays null, the row re-matches, and the
+statement keeps reporting one row updated. "Repeat until zero" never terminates. And without the
+`CASE`, a mononym breaks: `strpos` returns 0 for a name with no space, `substr(name, 1)` returns
+the whole string, and every single-word name ends up with `last_name` equal to `first_name`.
+
+Which is worth sitting with, because it is the lesson rather than a footnote: **the data you are
+migrating contains cases your splitting rule was not written for.** Mononyms, null names, four
+words, a trailing space. Run the `SELECT` half first and look at what comes back before you let
+the `UPDATE` touch anything.
 
 An unguarded backfill does not error when re-run. It reverts corrections, which is the worst
 class of migration bug: silent, plausible, and invisible until somebody notices their edit did
@@ -1015,9 +1064,10 @@ correct for a product where each person works on their own things, which makes i
 general — until the first feature where somebody acts on a record they do not own. A manager
 approving a shift swap between two other people owns none of the three rows involved.
 
-So the decision is not which pattern to use. It is **which pattern applies to which
-entity**, written down per entity, because a system with a shared workspace will use all
-three. Getting this wrong is not an error you find later; it is a system that works
+So the decision is not which pattern to use. It is **which rule applies to which entity**,
+written down per entity — and a rule may need two of these patterns joined by *and*, which is
+the next paragraph. A system with a shared workspace will use all three across its entities, and
+more than one on some of them. Getting this wrong is not an error you find later; it is a system that works
 correctly for the person who built it and leaks for everyone else.
 
 **And the patterns compose — one entity often needs two of them joined by *and*.** This is the
@@ -1189,6 +1239,8 @@ build less than the model offers. It has no stake in maintaining what it propose
 - Three or four architecture characteristics, each traced to a decision it forced
 - The architecture style you chose, and the alternatives you rejected with a reason each
 - The tenant axis, if the product has organisations or teams
+- For each characteristic, one line on how you would know if it stopped holding
+- The authorization rule per entity, including any that need two patterns joined by *and*
 - A domain model: entities, relationships, and the constraints that hold them together
 - Initial database schema with constraints, keys, and indexes, each index traced to a query
 - The API contracts you are committing to, sorted by how expensive each is to change
@@ -1204,6 +1256,9 @@ build less than the model offers. It has no stake in maintaining what it propose
 - [ ] Architecture style named, with the alternatives rejected and the reason for each
 - [ ] System sketched, with what happens when each external dependency is down
 - [ ] Integration style decided per external call, and anything received is idempotent
+- [ ] A timeout on every external call, and a stated answer for each dependency being down
+- [ ] Concurrent-edit strategy decided where two people can act on one row
+- [ ] Each chosen characteristic has one line on how you would know it stopped holding
 - [ ] Domain modeled in nouns and relationships, not tables
 - [ ] Derived values computed; facts about a moment stored, and the difference stated per value
 - [ ] Deletion behavior decided per entity
@@ -1212,12 +1267,12 @@ build less than the model offers. It has no stake in maintaining what it propose
 - [ ] Tenant axis decided — person or organisation — and the key present on every table
       that holds tenant data
 - [ ] Conditional rules expressed as partial unique indexes, not as check-then-insert
-- [ ] Any change to stored data planned as an expand-contract sequence, with no destructive
-      step sharing a deploy with the code that needs it
+- [ ] Any change to stored data **on a system with users** planned as an expand-contract
+      sequence, with no destructive step sharing a deploy with the code that needs it
 - [ ] Indexes added for the queries you actually run, and no others
 - [ ] API contracts decided, sorted by how expensive each is to change
 - [ ] Auth strategy chosen, with an ADR
-- [ ] Authorization pattern decided and written down
+- [ ] Authorization rule written down per entity, including where two patterns must both hold
 - [ ] Feature boundaries defined, with the no-cross-querying rule stated
 - [ ] Every expensive decision has an ADR
 - [ ] Deferred decisions listed explicitly, so deferral is visible rather than forgotten

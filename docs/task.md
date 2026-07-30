@@ -275,8 +275,10 @@ these clusters — so this round is what makes that section honest.
       best-known failure mode. Extends the styles and one-application sections
 - [x] **Fitness functions** — evolutionary architecture's idea that a characteristic should be
       automatically checked rather than hoped for. Extends "What this system has to be" and
-      closes its loop. This project already practises it (`stage-03-structure.test.ts`,
-      `source-citations.test.ts`) without naming it, so the example is in the repo
+      closes its loop. ~~This project already practises it … so the example is in the repo~~ **✗ approach abandoned
+      during the round.** The cold reader found the repo-drawn examples were an appeal to
+      infrastructure the reader does not have, so all three were removed and the work deferred
+      to stage 06. See the TD-25 closure
 - [x] **Widen the characteristics trace table** past three rows, so the ten-item candidate list
       stops promising more than the stage delivers
 - [x] Expect **one new `###` section** (schema evolution); the rest extend existing sections.
@@ -302,7 +304,7 @@ W-3.1 was deliberately doc-only, so `docs/03-architecture.md` and
 `web/src/features/architecture/` now disagree about what the stage contains. That divergence
 is **TD-23**, and this round closes it.
 
-The doc went from eight subsections to thirteen and from 300 lines to 898. The app is still
+The doc went from eight subsections to thirteen and from 300 lines to 902. The app is still
 the six steps built in W-3: reverse · model · constrain · shape · decide · ai.
 
 - [ ] **Decide the new step structure first.** Five content steps is D-38's ceiling and the

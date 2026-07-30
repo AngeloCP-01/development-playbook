@@ -23,7 +23,7 @@ up in a diff; a line number changes when anyone inserts a paragraph three sectio
 Two citations were converted by hand as demonstration, and a follow-up commit repaired two
 more that had staled.
 
-Then the next round on the same branch took that document from 300 lines to 898.
+Then the next round on the same branch took that document from 300 lines to 902.
 
 **All 18 remaining citations staled.** Including the two that had just been repaired. The only
 two that survived were the two that had been converted to headings — D-42's own argument,
