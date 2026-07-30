@@ -134,23 +134,26 @@ nothing checks is a characteristic you are hoping for. The name for the check is
 function**: an automated test of a *property of the system*, rather than of what a function
 returns.
 
-They are more ordinary than the term suggests:
+**Not now, though.** You have no code yet, and standing up an import-graph linter before your
+first table is exactly the kind of infrastructure this stage spends a section refusing. What
+belongs in this stage is one line per characteristic in your notes: *how would I know if this
+stopped being true?* Writing the check is [06 — Testing](06-testing.md)'s, once there is
+something to check.
 
-- A test that fails when one feature imports from another's internals — which is exactly the
-  boundary rule in [Boundaries inside the monolith](#boundaries-inside-the-monolith), enforced
-  instead of agreed.
-- A build-size budget that fails the pipeline, defending a performance characteristic against
-  the dependency somebody adds in eight months.
-- An assertion that a page issues one query and not forty, which is how an N+1 gets caught
-  before a user finds it.
+The answers are more ordinary than the term suggests. The cheapest useful one is usually a
+plain test that asserts a fact about your own schema — that the constraint carrying your
+correctness rule still exists, for instance, which is three lines and catches a migration that
+quietly dropped it. Beyond that: a test that fails when one feature imports another's internals,
+which is the boundary rule in
+[Boundaries inside the monolith](#boundaries-inside-the-monolith) enforced instead of agreed; a
+build-size budget, defending a performance characteristic against the dependency somebody adds
+in eight months; a query-count assertion, which is how an N+1 gets caught before a user finds
+it. Each of those is a small amount of tooling research, and none is worth doing before the
+characteristic it defends is real.
 
-This playbook does it to itself, which is the honest reason to trust the advice: one test pins
-this document's section structure, another enforces its own citation convention, both because a
-convention nothing checks decays quietly. That story is in
-`docs/learnings/decisions-need-tests-101.md`.
-
-So the section is a sequence, not a list: **choose a characteristic, trace it to a decision,
-then write the check that tells you when the decision stopped holding.**
+So the section is a sequence, not a list: **choose a characteristic, trace it to a decision, and
+write down how you would know if the decision stopped holding.** The first two happen here. The
+third gets built when there is code under it.
 
 ### Model the domain first
 
@@ -650,6 +653,16 @@ on the expensive list from the top of this stage:
   not. Getting these backwards produces off-by-one-day bugs that appear only for users in
   other timezones, which is to say not on your machine.
 
+  **There is a third case, and it catches anyone building a schedule.** A shift that starts at
+  09:00 on Tuesday starts at 09:00 whatever the clocks do — it is a *wall-clock* fact attached
+  to a place, not an instant. Store it as an instant and it moves by an hour twice a year, in
+  one direction for the staff and the other for the payroll. Store it as `timestamp` without a
+  zone plus the location's timezone (`Europe/London`, not an offset, because offsets change and
+  zone names do not) and you can compute the instant whenever you need it while keeping the fact
+  the business actually stated. The three-way question, then: **is this an instant, a calendar
+  day, or a wall-clock time somewhere?** Most products only have the first two and never notice
+  the third exists until a scheduling feature arrives.
+
 **Indexes answer queries you actually run**, so write the queries first and add the index the
 query needs. Two, for this schema:
 
@@ -768,6 +781,22 @@ violated, and nothing anywhere records that a decision was discarded. Two standa
 The rule: **optimistic when conflict is rare, pessimistic when it is expected.** For anything
 with a human deciding in the middle, that is almost always optimistic.
 
+**Neither of them protects a rule that spans rows, and this is the trap.** Both lock a row
+against concurrent writes *to that row*. Two managers approving the same claim is the case above
+and optimistic locking catches it. Two managers approving **two different claims on the same
+shift** is a different case: different rows, both versions match, both writes succeed, and you
+now have two approved claims for one shift. The version column is silent because nothing about
+either row changed underneath it.
+
+The tool for that is the partial unique index from earlier in this section — a **cross-row
+invariant needs a constraint, not a lock.** Locks and constraints answer different questions,
+and any rule phrased "at most one X per Y" is the second kind.
+
+Which means you have to handle its failure. A constraint violation arrives as a database error,
+not as zero-rows-updated, so catch it by constraint name and turn it into the same message the
+optimistic path produces — *somebody approved a claim on this shift first*. Left uncaught it is
+a 500 served to a manager who did nothing wrong.
+
 **Two terms you will meet everywhere, worth having and not worth overselling.** **CAP** says
 that when the network between your nodes splits, you choose between refusing requests to stay
 consistent and serving them while copies disagree. With one database there is no partition to
@@ -787,17 +816,48 @@ designed with the understanding you had on the first day.
 That is not an argument for getting it right first time. It is an argument for knowing the
 technique, because the technique turns an expensive change into a tedious one.
 
-**Expand-contract**, also called parallel change. Renaming a column looks like one statement and
-is actually six deploys, each of which is safe on its own:
+**First, the honest precondition, because this stage spends a whole section refusing imagined
+scale and would be hypocritical to skip it.** If nobody is using the system yet — pre-launch,
+four test users, one instance — renaming a column *is* one statement. Write the migration, run
+it, move on. Everything below is protection against traffic, and you cannot lose data that
+nobody has entered.
+
+Adopt it the day you have users whose data you would be sorry to lose. That is a real
+threshold, and it usually arrives before people notice.
+
+**Expand-contract**, also called parallel change. Once there is traffic, renaming a column looks
+like one statement and is actually six deploys, each of which is safe on its own:
 
 ```
 1. Expand    add the new column, nullable. Nothing reads it yet.
 2. Write     write both old and new. Deploy. Every new row is now correct.
-3. Backfill  fill the old rows, in batches. No long lock, no downtime.
+3. Backfill  fill the old rows, in batches, skipping any the new code already wrote.
 4. Move      switch reads to the new column. Deploy. Watch it.
 5. Stop      stop writing the old one. Deploy.
 6. Contract  drop it.
 ```
+
+**Why "Deploy" is doing more work than it looks.** A deploy is not a moment, it is a rollover:
+for a while the old code and the new code are both serving traffic. That is the entire reason
+steps 2 and 5 exist. During step 2's rollover, instances that have not updated yet are still
+writing only the old column, so the new one cannot be trusted until the rollover finishes — and
+during step 4's, instances still reading the old column need it to still be correct, which is
+why you stop writing it in a *later* deploy rather than the same one. A reader who takes
+"Deploy." as atomic will follow all six steps without knowing why, and will skip 2 and 5 on the
+next change.
+
+**And the backfill has to be safe to run twice**, which is idempotency from
+[Sketch the system](#sketch-the-system) arriving where it bites hardest. Step 2 is already
+writing correct values, and a user may have edited their name since. So guard it:
+
+```sql
+UPDATE users SET first_name = split_part(full_name, ' ', 1)
+ WHERE first_name IS NULL      -- do not overwrite what step 2 already wrote
+   AND id IN (SELECT id FROM users WHERE first_name IS NULL LIMIT 1000);
+```
+
+An unguarded backfill re-run does not error. It reverts corrections, which is the worst class of
+migration bug: silent, plausible, and invisible until somebody notices their edit did not stick.
 
 The rule that makes this worth the ceremony: **never ship a destructive migration in the same
 deploy as the code that needs it.** If a deploy goes wrong you want the fix to be a code
@@ -809,6 +869,16 @@ fills it, there is a window, and in production that window has traffic in it.
 The same shape covers more than renames. Splitting one column into two, tightening a nullable
 column to `NOT NULL`, changing a type, extracting a table: all of them are expand, migrate,
 contract, with reads moving in the middle.
+
+**One thing to know about the statements themselves, because it is neither shape nor
+scheduling and so falls between this stage and the next.** Some `ALTER TABLE` statements take a
+lock that blocks reads and writes for as long as they run, and on a large table that is an
+outage rather than a migration. Adding a nullable column is instant. A bare `SET NOT NULL` is
+not — it scans the whole table under that lock. The safe route is a `NOT VALID` check
+constraint, then `VALIDATE CONSTRAINT` (which does not block writes), then `SET NOT NULL`.
+Check your database's documentation for which operations are instant before running one against
+a table with rows in it; the answer changes between versions and it is the difference between a
+deploy and an incident.
 
 **Where this stops being this stage's job:** deciding the *shape* of a safe change is
 architecture and belongs here. Running it — where migrations live, how they are ordered against
