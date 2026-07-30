@@ -234,13 +234,77 @@ designing TD-21 or TD-18 against the current six steps risks redoing that work.
       describe the eight-subsection doc
 - [x] Re-run the cold-reader pass afterwards on the amended doc, and record what it finds
 
-### W-3.2 — Port stage 03's doc round into the app ☐ *(next)*
+### W-3.1b — Stage 03 completeness: resilience, consistency, evolution ◐ *(doc done 2026-07-30; app port pending W-3.2)*
+
+Closes **TD-25**. An architecture-completeness audit against standard practice found that five
+clusters of widely-taught material are absent from **all eighteen docs**, not merely deferred
+to a later stage. Scope call is **D-49**: completeness beats length for this stage, and the
+content stays to standard, widely-used practice rather than reaching for the exotic.
+
+**Runs after W-3.2.** This was originally scoped to run *before* the port, on the reasoning
+that amending the doc again would mean porting twice. That reasoning was sound and the premise
+was wrong: `W-3.2` was already substantially built in a parallel session by the time this round
+was scoped — 31 commits, a nine-step stage, +9,446 lines — so the port is the thing in flight
+and this round follows it. **The double-port cost is therefore real and accepted**: this
+round's new content needs its own port pass afterwards, and that pass should be folded into the
+W-3.1b round rather than left as a third one.
+
+**The tell that ties them together:** the characteristics section offers a **ten-item candidate
+list** and supplies a **three-row trace table**. A reader who picks availability, scalability
+or evolvability gets the test with no material to pass it. The missing seven map onto exactly
+these clusters — so this round is what makes that section honest.
+
+- [x] **Resilience patterns** — timeout, retry with exponential backoff and jitter, circuit
+      breaker, graceful degradation. Extends "Sketch the system", which already asks *"what
+      happens when each dependency is down?"* and answers with no patterns. Name bulkhead
+      without teaching it; it rarely earns its place solo
+- [x] **Consistency and concurrency** — CAP named, eventual consistency as a term rather than
+      an adverb, isolation levels (Postgres defaults to read committed, and what serializable
+      buys), **optimistic locking** via a version column, pessimistic via `SELECT … FOR
+      UPDATE`. Extends "Design the database", which currently says "use a transaction" and
+      stops. Closes the hole the cold reader left open in G5. A version column is stored data,
+      so it is decide-now by the stage's own axis
+- [x] **Safe schema evolution** — **expand-contract / parallel change**, and **strangler fig**
+      for the service split the stage says to defer. Likely its own section, because it is a
+      distinct activity: the stage's whole thesis is that stored data is expensive to reverse,
+      and it never teaches how to change stored data safely. Names the cost, not the technique
+- [x] **Statelessness and scaling mechanics** — statelessness (which is what *makes* the
+      serverless style the stage teaches work), horizontal versus vertical, load balancing,
+      read replicas, and **connection pooling** — the last matters concretely here, since
+      serverless plus Postgres is the stack the playbook prescribes and pooling is its
+      best-known failure mode. Extends the styles and one-application sections
+- [x] **Fitness functions** — evolutionary architecture's idea that a characteristic should be
+      automatically checked rather than hoped for. Extends "What this system has to be" and
+      closes its loop. ~~This project already practises it … so the example is in the repo~~ **✗ approach abandoned
+      during the round.** The cold reader found the repo-drawn examples were an appeal to
+      infrastructure the reader does not have, so all three were removed and the work deferred
+      to stage 06. See the TD-25 closure
+- [x] **Widen the characteristics trace table** past three rows, so the ten-item candidate list
+      stops promising more than the stage delivers
+- [x] Expect **one new `###` section** (schema evolution); the rest extend existing sections.
+      `stage-03-structure.test.ts` pins the thirteen headings and must be updated in the same
+      commit as any structural change, with the teeth check re-run
+- [ ] ⏳ **Port this round's content into the app as part of this round** — blocked until `feat/stage-03-app-port` merges, not as a third pass.
+      W-3.2 will have just built a nine-step stage against the current doc; adding a section
+      and extending five others means new components plus edits to `styles.ts`, `sketch.ts`,
+      `schema-blocks.ts` and `contracts.ts`, all of which W-3.2 introduces
+- [x] Glossary terms for every new concept (`terms.ts` → `pnpm gen:glossary`), and **grep
+      `terms.ts` before writing prose** per D-47
+- [x] Cold-reader re-run on the amended doc, same shift-swap product; **budget a fix wave
+      after it and verify the wave itself** (D-48)
+- [x] `humanizer:humanizer` pass (D-20); consultability check, which the cold reader cannot do
+
+**Deliberately out of scope**, so the round does not sprawl: caching *patterns* stay with stage
+09 (linked, not taught); observability with 15; threat modelling and secrets with 08; table
+partitioning and sharding are named as the thing you do not need and not taught.
+
+### W-3.2 — Port stage 03's doc round into the app ◐ *(in progress — see `feat/stage-03-app-port`)*
 
 W-3.1 was deliberately doc-only, so `docs/03-architecture.md` and
 `web/src/features/architecture/` now disagree about what the stage contains. That divergence
 is **TD-23**, and this round closes it.
 
-The doc went from eight subsections to thirteen and from 300 lines to 898. The app is still
+The doc went from eight subsections to thirteen and from 300 lines to 902. The app is still
 the six steps built in W-3: reverse · model · constrain · shape · decide · ai.
 
 - [ ] **Decide the new step structure first.** Five content steps is D-38's ceiling and the

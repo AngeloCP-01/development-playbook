@@ -8,6 +8,31 @@ structure — which is a signal, not a failure.
 
 ---
 
+## What is in here
+
+This is the longest stage in the playbook, deliberately. It is built to be consulted rather
+than read straight through. The work runs requirements → high-level design → low-level
+design; the numbering is the reading order, not a schedule.
+
+| | Section | Answers |
+|---|---|---|
+| | [Sort decisions by reversibility](#sort-decisions-by-reversibility) | Which decisions deserve the thinking |
+| **HLD** | [What this system has to be](#what-this-system-has-to-be) | Which qualities you are designing for, and how you would know if one stopped holding |
+| | [Model the domain first](#model-the-domain-first) | Entities, relationships, and the questions that find design errors |
+| | [The shapes a system can take](#the-shapes-a-system-can-take) | Monolith · modular monolith · microservices · serverless, and scaling |
+| | [Start with one application](#start-with-one-application) | The recommendation, derived — and its one sharp edge |
+| | [Boundaries inside the monolith](#boundaries-inside-the-monolith) | Where to draw a line, and how to keep it |
+| | [Sketch the system](#sketch-the-system) | What you depend on · **timeouts, retries, webhooks, idempotency** · what happens when it is down |
+| **LLD** | [Design the database](#design-the-database) | Schema · indexes · constraints · tenancy · **locking, two people editing one row** |
+| | [Evolve the schema safely](#evolve-the-schema-safely) | **Adding or renaming a column** on a live table, without downtime |
+| | [Design the API contracts](#design-the-api-contracts) | Route shape · request/response · versioning · receiving a webhook |
+| | [Authentication and authorization](#authentication-and-authorization) | Who the caller is, and what they may do |
+| | [Write the ADRs](#write-the-adrs) | Recording a decision so it survives you |
+| | [Defer aggressively](#defer-aggressively) | What not to build, and the test for it |
+| | [AI in architecture](#ai-in-architecture) | Where an agent helps, and where it misleads |
+
+---
+
 ## Entry criteria
 
 - [ ] A plan with defined scope and vertical slices ([02](02-planning.md))
@@ -82,13 +107,22 @@ you rejected: **high availability** — a few hours down is survivable when nobo
 invoices at 3am; **low latency** — nobody is in a hurry to look at an invoice; **scale** —
 there is no evidence of it and inventing some is the trap below.
 
-The part that makes this section load-bearing rather than a vocabulary exercise:
+The part that makes this section load-bearing rather than a vocabulary exercise. This is a
+reference for whichever three or four you chose, **not a checklist to complete** — the
+pick-three rule above still stands:
 
 | Characteristic | What it forces later in this stage |
 |---|---|
 | Auditability | Soft delete over hard delete; an immutable record of what was sent |
-| Correctness | Constraints in the database rather than the application; money as integer cents |
+| Correctness | Constraints in the database rather than the application; money as integer cents; a locking strategy where two people can edit one row |
 | Cheap to run | One application, one database, no queue until something demands one |
+| Availability | A timeout on every external call; retries only where they are safe; a decision about what still works when each dependency is down |
+| Scalability | Statelessness, so more instances are an option at all; a pooler between serverless and Postgres |
+| Evolvability | Expand-contract for anything stored; boundaries that make a later split mechanical rather than archaeological |
+| Security | An authorization rule written per entity — often two patterns joined by *and*, not one chosen for the system |
+| Deployability | Migrations that are safe to run before the code that needs them |
+| Latency | Indexes traced to real queries; synchronous work kept off the request path |
+| Observability | Asynchronous work you can see the failures of, rather than only the successes |
 
 Every row is a decision this stage makes anyway. Choosing the characteristic first is what
 turns that decision from a preference into something with a reason attached.
@@ -96,6 +130,32 @@ turns that decision from a preference into something with a reason attached.
 Which gives you the test: **a characteristic that traces to no decision was not chosen, it
 was listed.** If "secure" appears on your list and nothing downstream changed because of it,
 delete it — it is doing no work, and it is crowding out one that would.
+
+**Then one step further, because a trace is a claim and claims rot.** A characteristic that
+nothing checks is a characteristic you are hoping for. The name for the check is a **fitness
+function**: an automated test of a *property of the system*, rather than of what a function
+returns.
+
+**Not now, though.** You have no code yet, and standing up an import-graph linter before your
+first table is exactly the kind of infrastructure this stage spends a section refusing. What
+belongs in this stage is one line per characteristic in your notes: *how would I know if this
+stopped being true?* Writing the check is [06 — Testing](06-testing.md)'s, once there is
+something to check.
+
+The answers are more ordinary than the term suggests. The cheapest useful one is usually a
+plain test that asserts a fact about your own schema — that the constraint carrying your
+correctness rule still exists, for instance, which is three lines and catches a migration that
+quietly dropped it. Beyond that: a test that fails when one feature imports another's internals,
+which is the boundary rule in
+[Boundaries inside the monolith](#boundaries-inside-the-monolith) enforced instead of agreed; a
+build-size budget, defending a performance characteristic against the dependency somebody adds
+in eight months; a query-count assertion, which is how an N+1 gets caught before a user finds
+it. Each of those is a small amount of tooling research, and none is worth doing before the
+characteristic it defends is real.
+
+So the section is a sequence, not a list: **choose a characteristic, trace it to a decision, and
+write down how you would know if the decision stopped holding.** The first two happen here. The
+third gets built when there is code under it.
 
 ### Model the domain first
 
@@ -140,6 +200,14 @@ query that touched it.
 
 **What must be unique, and in what scope?** Invoice numbers unique per user, not globally.
 Getting this wrong surfaces as a confusing constraint violation months later.
+
+**Is this a thing, or something that happened to a thing?** The strike test above removes
+nouns that are properties. This removes the opposite mistake: a verb that is really an entity.
+Ask whether you will later want to know **who did it and when**. If yes, it is a thing — an
+approval with an actor and a timestamp — and modelling it as a status flip throws that away
+irreversibly, because a column holds the current value and not the act. If no, it is a status.
+"Approved" is the usual case that goes both ways, and the answer is almost always that you
+will want to know.
 
 **Does every actor have the same rights over this entity?** If a manager can approve a swap
 that the person who requested it cannot, then roles are part of the model rather than a
@@ -197,6 +265,26 @@ validate, write, read back, layered is honest and hexagonal is ceremony around a
 Start layered and extract ports where a piece of logic gets hard to test; going the other way
 is a rewrite.
 
+**One property decides whether the deployment table above is even available to you:
+statelessness.** An
+application is stateless when it keeps no request state in its own memory — sessions live in a
+cookie, a table or a shared store, never a local variable. Any instance can then serve any
+request, which is what lets you run several copies, and what makes the serverless row possible
+at all, since the platform starts and stops instances whenever it likes. An in-memory session
+cache works perfectly on one machine and breaks the moment there are two.
+
+That is also what the table means by scaling independently, so it is worth saying how. **Vertical
+scaling** is a bigger machine: simpler, needs no statelessness, and eventually runs out of
+machine. **Horizontal scaling** is more machines behind a **load balancer**, needs statelessness
+first, and has effectively no ceiling. **Read replicas** spread read load, and do nothing for
+writes, because writes still go to one place. Their catch is lag — a replica is behind by some
+amount, which is where the eventual consistency from
+[Design the database](#design-the-database) turns up in your own product rather than in theory.
+
+Vertical first is almost always right. The point of knowing the difference is that horizontal
+scaling is not something you bolt on: it needs a property you either have or do not, decided
+now.
+
 Both are compatible with every deployment shape. This is the axis the stage's own advice
 lives on, and it is why the next two sections are about structure *inside* one application.
 
@@ -247,6 +335,25 @@ consistency — for benefits you cannot use.
 - A real compliance boundary requiring isolation
 
 "It will scale better" is not a reason. It is a prediction, and usually a wrong one.
+
+**The one sharp edge in this recommendation, named because you will meet it.** A Postgres
+instance accepts a limited number of simultaneous connections — often a couple of hundred, fewer
+on small plans. Serverless functions scale by starting more instances, and each instance wants
+its own connection. So traffic that looks entirely moderate exhausts the limit, and new requests
+fail *on connect* rather than on anything you wrote, which makes it a confusing first
+encounter: the application is fine, the database is fine, and the join between them is not.
+
+The fix is a **pooler** between the two, holding a small number of real connections and
+multiplexing everyone onto them. Managed Postgres providers ship one, and reaching for it is usually a
+connection-string change rather than an architecture change. One caveat, because this stage
+teaches `SELECT … FOR UPDATE` further down: a pooler in *transaction* mode hands your
+connection to someone else between statements, which breaks anything relying on session state —
+prepared statements, session variables, advisory locks. Most clients have a flag for it. Read
+your provider's note on the mode before assuming it is invisible.
+
+This does not weaken the recommendation. One application and one database is still right. It is
+the difference between a default that works and a default you understand — and this is the part
+a reader following this playbook is most likely to hit first.
 
 ### Boundaries inside the monolith
 
@@ -300,6 +407,8 @@ is one box. Your system is not.** The invoicing example takes payments, sends em
 and stores PDFs, and needs something to notice when an invoice has gone past its due date.
 None of those is code you wrote, all of them fail on their own schedule, and every one is a
 decision you have already made without writing it down.
+
+#### Which diagrams to draw
 
 **C4** is the usual answer to "what kind of diagram". Four levels: **context** (your system
 and the world around it), **container** (the deployable things inside it), **component**
@@ -356,6 +465,8 @@ that is where the design decisions hide:
 
 Steps 2 and 4 are different in kind, and that difference is a decision the stage has not yet
 posed.
+
+#### Synchronous or asynchronous, and idempotency
 
 **Synchronous or asynchronous.** This is the fork that leads to event-driven architecture,
 and it has real consequences on each branch:
@@ -421,6 +532,42 @@ yours, what happens when it is down?
 Three questions, three answers, one of which is a genuine piece of work you would otherwise
 have discovered in production. That is the return on a diagram.
 
+#### Timeouts, retries and failing well
+
+Those three answers have a name: **graceful degradation**, deciding per feature what still
+works when a dependency does not. And there is a small standard vocabulary for producing them,
+worth having because these four cover almost everything:
+
+- **A timeout on every network call.** Most HTTP clients and database drivers wait
+  indefinitely by default, which converts somebody else's slow afternoon into your outage —
+  requests pile up holding connections until nothing works. The specific number matters much
+  less than having one.
+- **Retry with exponential backoff and jitter.** Backoff because the service that just failed
+  is usually recovering, and retrying hard is how you keep it down. Jitter because without a
+  random offset every client that failed at the same moment retries at the same moment, which
+  is a thundering herd you built yourself. And the precondition this section has already
+  taught: **you may only retry what is safe to retry.** Retrying a charge without idempotency
+  is how you bill someone twice.
+- **A circuit breaker.** After a few consecutive failures — five is a common starting point —
+  stop calling and fail immediately for a cooldown of a minute or so, then let one request
+  through to test the water. This is the pattern you reach for once your retries have made you
+  part of the outage rather than a victim of it.
+
+  It also has a catch that the [statelessness](#the-shapes-a-system-can-take) rule above makes
+  visible: **a breaker is failure-count state, and an in-memory one is per instance.** Across
+  ten instances you get ten independent breakers, each needing its own five failures, so the
+  thing trips ten times later than you designed it to. On one instance that is fine and you
+  should not care. When it stops being fine the count has to move somewhere shared, and at that
+  point you are running infrastructure to protect a call — which is the moment to ask whether
+  the call needed protecting.
+- **Bulkhead**, named and not taught: isolating resource pools so one saturated dependency
+  cannot consume every thread. Real, and rarely earning its keep inside a single application.
+
+**For most calls the right answer is a timeout and nothing else.** Retries earn their place
+where the call is idempotent and the failure is plausibly transient. A breaker earns its place
+after you have watched something fail repeatedly. Building all four around three third-party
+calls on day one is the same instinct as reaching for microservices, wearing different clothes.
+
 **What is deliberately not here.** Full high-level design practice comes with a system
 specification document, a review board, and a sign-off before implementation starts. None of
 that is in this stage, on purpose. The thinking survives — what the pieces are, how they
@@ -454,6 +601,8 @@ That last relationship is worth arguing about before it is typed. Hanging `invoi
 `clients` is what lets a client be merged or reassigned later without the invoices following
 it, and it is the kind of thing an ER view makes visible and a list of tables does not.
 
+#### Normalisation
+
 **Normalisation** is the vocabulary for how far you have gone in removing duplicated facts —
 first, second and third normal form, of which third is the one worth aiming at. The theory is
 longer than the working rule, which is: **if changing one fact means updating two rows, the
@@ -485,10 +634,43 @@ CREATE TABLE invoices (
   amount_cents integer NOT NULL CHECK (amount_cents >= 0),
   due_date     date NOT NULL,
   status       text NOT NULL CHECK (status IN ('draft','sent','paid')),
+  version      integer NOT NULL DEFAULT 0,
   created_at   timestamptz NOT NULL DEFAULT now(),
+  deleted_at   timestamptz,
   UNIQUE (owner_id, number)
 );
 ```
+
+Two of those columns are there because the characteristics chose them, and it is worth naming
+which. `deleted_at` is **auditability** — the soft delete this stage argued for, where a null
+means live and a timestamp means gone-but-answerable. `version` is **correctness** — the
+optimistic-locking column from further down this section. Neither is a default; both trace back
+to [What this system has to be](#what-this-system-has-to-be), and a schema that skipped them
+would be one that agreed with the trace table in prose and disagreed with it in SQL.
+
+The cost of `deleted_at` is the one already named: **every query must remember to filter.**
+That is a real tax, paid on every read forever, and it is why the decision is per entity rather
+than a habit.
+
+**Auditability wants one more thing, and it is the other half of that trace row.** A status of
+`sent` records that an invoice was sent; it does not record *when*, *to which address*, or that
+it was sent twice. Those are facts about moments, which the interrogation above says to store —
+so they belong in a table of their own, appended to and never updated:
+
+```sql
+CREATE TABLE invoice_sends (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  invoice_id uuid NOT NULL REFERENCES invoices(id) ON DELETE RESTRICT,
+  sent_to    text NOT NULL,          -- the address at the time, not a join to the client
+  sent_at    timestamptz NOT NULL DEFAULT now()
+);
+```
+
+Append-only is the whole point: rows go in, nothing edits them, and "we sent it on the 3rd to
+the old address" stops being a reconstruction. Note that this is **not** event sourcing — the
+invoice's current state still lives on `invoices`, and this table is a record beside it rather
+than the source it is derived from. That distinction is in
+[Defer aggressively](#defer-aggressively), and it is the one people talk themselves out of.
 
 Money as integer cents. `CHECK` constraints for anything with a fixed set of values.
 `ON DELETE RESTRICT` so deleting a user with invoices fails loudly instead of quietly
@@ -505,6 +687,18 @@ on the expensive list from the top of this stage:
   means the same thing to a reader in any timezone. A creation time is an instant and does
   not. Getting these backwards produces off-by-one-day bugs that appear only for users in
   other timezones, which is to say not on your machine.
+
+  **There is a third case, and it catches anyone building a schedule.** A shift that starts at
+  09:00 on Tuesday starts at 09:00 whatever the clocks do — it is a *wall-clock* fact attached
+  to a place, not an instant. Store it as an instant and it moves by an hour twice a year: the shift you scheduled for 09:00
+  starts arriving at 08:00 or 10:00, and nobody changed anything. Store it as `timestamp` without a
+  zone plus the location's timezone (`Europe/London`, not an offset, because offsets change and
+  zone names do not) and you can compute the instant whenever you need it while keeping the fact
+  the business actually stated. The three-way question, then: **is this an instant, a calendar
+  day, or a wall-clock time somewhere?** Most products only have the first two and never notice
+  the third exists until a scheduling feature arrives.
+
+#### Indexes
 
 **Indexes answer queries you actually run**, so write the queries first and add the index the
 query needs. Two, for this schema:
@@ -524,6 +718,8 @@ Both come from the system sketch rather than from intuition: one from a screen, 
 scheduled job. Indexes cost write time and disk, which is why "index everything" is not the
 answer and "index nothing until it hurts" is not either.
 
+#### Constraints for conditional rules
+
 **Some rules are conditional, and `UNIQUE` cannot express them.** The stage names races as
 the reason constraints belong in the database, then supplies only primary keys, foreign keys,
 `CHECK` and `UNIQUE` — none of which can say "at most one *approved* claim per shift". A
@@ -537,6 +733,8 @@ CREATE UNIQUE INDEX one_approved_claim_per_shift
 
 Without it, the usual approach is to check for an existing approval and then insert — which
 two concurrent requests both pass, both believing they were first.
+
+#### Actors, roles and the tenant key
 
 **Actors and tenancy are stored data too, and they are the two this stage most often leaves
 implicit.** The invoicing schema above has neither, because one freelancer owning their own
@@ -586,12 +784,199 @@ moving between teams should keep their history, the company is the tenant and th
 ordinary foreign key. If teams are genuinely separate customers who must never see each
 other's rows, the team is the tenant. Answer it now; everything built on top of it can wait.
 
+#### Transactions, isolation and locking
+
 **Some invariants span rows, and no constraint can express them at all.** Moving an amount
 from one row to another, or writing a record and marking its source consumed, has to happen
 as one unit or not at all. That is a **transaction**: the work commits together or none of it
 does. This is the point where a rule stops being the database's job to guarantee and starts
 being yours to demarcate — the database will hold the line, but only around the boundary you
 draw.
+
+**How much a transaction sees of another is its isolation level**, and the default is not the
+strictest. Postgres runs **read committed**: you never see uncommitted rows, and you *do* see
+rows other transactions commit while yours is still running. That is enough for almost
+everything. **Serializable** is stricter: it behaves as though transactions ran one at a time and
+aborts one when it cannot guarantee that, which costs you a retry path your code did not
+previously need.
+
+**Neither of them solves the problem below, and this is the part that catches people.** An
+isolation level can only relate a read and a write that are inside *the same transaction*. When
+a person sits between them — page loads, reads a claim, thinks for a minute, clicks approve —
+those are two separate transactions with a human in the gap, and no isolation level in any
+database can see a relationship between them. Setting `SERIALIZABLE` and believing the next
+problem is handled is a specific and comfortable way to ship it anyway.
+
+**The lost update, which no constraint catches.** Two managers open the same claim. Both read
+it as pending. Both approve. The second write silently overwrites the first, no constraint was
+violated, and nothing anywhere records that a decision was discarded. Two standard fixes, and
+both work by carrying something *across* the two transactions rather than tightening either one:
+
+- **Optimistic locking.** Put a version on the row and carry it into the write:
+
+  ```sql
+  UPDATE claims SET status = 'approved', version = version + 1
+   WHERE id = $1 AND version = $2;
+  ```
+
+  (`claims` carries the same `version integer NOT NULL DEFAULT 0` shown on `invoices` above.)
+  Zero rows updated means somebody got there first, so you tell the user instead of losing
+  their work — as does an update against a row somebody deleted, which is worth distinguishing
+  if the message differs. Note what this is: **`version` is stored data**, so by the test at the top of
+  this stage it is decide-now, and adding it later is an expand-contract sequence rather than
+  an afternoon.
+
+- **Pessimistic locking.** `SELECT … FOR UPDATE` inside the transaction, and the second reader
+  waits. Correct when conflict is likely and the work between read and write is short. Wrong
+  when the work waits on a person, because you are holding a lock while somebody reads their
+  email, and two transactions taking rows in different orders will deadlock.
+
+The rule: **optimistic when conflict is rare, pessimistic when it is expected.** For anything
+with a human deciding in the middle, that is almost always optimistic.
+
+**Neither of them, applied to the rows being written, protects a rule that spans rows — and
+this is the trap.** Both lock a row against concurrent writes *to that row*. Two managers approving the same claim is the case above
+and optimistic locking catches it. Two managers approving **two different claims on the same
+shift** is a different case: different rows, both versions match, both writes succeed, and you
+now have two approved claims for one shift. The version column is silent because nothing about
+either row changed underneath it.
+
+The tool for that is the partial unique index from earlier in this section — a **cross-row
+invariant needs a constraint, not a lock.** Locks and constraints answer different questions,
+and any rule phrased "at most one X per Y" is the second kind.
+
+Which means you have to handle its failure. A constraint violation arrives as a database error,
+not as zero-rows-updated, so catch it by constraint name and turn it into the same message the
+optimistic path produces — *somebody approved a claim on this shift first*. Left uncaught it is
+a 500 served to a manager who did nothing wrong.
+
+**Two terms you will meet everywhere, worth having and not worth overselling.** **CAP** says
+that when the network between your nodes splits, you choose between refusing requests to stay
+consistent and serving them while copies disagree. With one database there is no partition to
+survive, so it is theory — it becomes a real decision the moment you add a replica or a second
+service that owns data. **Eventual consistency** is what you get at that moment: copies agree
+in the end, not immediately. Its everyday face is the read-after-write anomaly, where a user
+saves, gets redirected, reads from a replica and does not see their own change. That is why a
+read which must reflect a just-finished write goes to the primary, and it is a design decision
+rather than a bug to fix later.
+
+### Evolve the schema safely
+
+This stage has now said four times that stored data is the expensive kind. What it has not said
+is what you do when you have to change it anyway, which you will, because the schema above was
+designed with the understanding you had on the first day.
+
+That is not an argument for getting it right first time. It is an argument for knowing the
+technique, because the technique turns an expensive change into a tedious one.
+
+**First, the honest precondition, because this stage spends a whole section refusing imagined
+scale and would be hypocritical to skip it.** If nobody is using the system yet — pre-launch,
+four test users, one instance — renaming a column *is* one statement. Write the migration, run
+it, move on. Everything below is protection against traffic, and you cannot lose data that
+nobody has entered.
+
+Adopt it the day you have users whose data you would be sorry to lose. That is a real
+threshold, and it usually arrives before people notice.
+
+**Expand-contract**, also called parallel change. Once there is traffic, renaming a column looks
+like one statement and is actually six deploys, each of which is safe on its own:
+
+```
+1. Expand    add the new column, nullable. Nothing reads it yet.
+2. Write     write both old and new. Deploy. Every new row is now correct.
+3. Backfill  fill the old rows, in batches, skipping any the new code already wrote.
+4. Move      switch reads to the new column. Deploy. Watch it.
+5. Stop      stop writing the old one. Deploy.
+6. Contract  drop it.
+```
+
+**Why "Deploy" is doing more work than it looks.** A deploy is not a moment, it is a rollover:
+for a while the old code and the new code are both serving traffic. That is the entire reason
+steps 2 and 5 exist. During step 2's rollover, instances that have not updated yet are still
+writing only the old column, so the new one cannot be trusted until the rollover finishes — and
+during step 4's, instances still reading the old column need it to still be correct, which is
+why you stop writing it in a *later* deploy rather than the same one. A reader who takes
+"Deploy." as atomic will follow all six steps without knowing why, and will skip 2 and 5 on the
+next change.
+
+**And the backfill has to be safe to run twice**, which is idempotency from
+[Sketch the system](#sketch-the-system) arriving where it bites hardest.
+
+Take a concrete change: `users.name` is being split into `first_name` and `last_name`. Step 2's
+code is already writing all three for anyone who saves, and some of those people have since
+corrected a name the split would have got wrong. So the backfill must skip rows that already
+have a value, and it has to run in batches so it never holds a long lock:
+
+```sql
+-- Repeat until it reports zero rows. Safe to re-run at any point.
+UPDATE users
+   SET first_name = split_part(name, ' ', 1),
+       last_name  = CASE WHEN strpos(name, ' ') = 0 THEN NULL
+                         ELSE substr(name, strpos(name, ' ') + 1) END
+ WHERE id IN (
+   SELECT id FROM users
+    WHERE first_name IS NULL          -- never overwrite what step 2 wrote
+      AND name IS NOT NULL            -- or the loop never reaches zero rows
+    LIMIT 1000                        -- one batch
+ );
+```
+
+**Both guards in that inner select are there because the naive version is broken, and neither
+failure announces itself.** Without `name IS NOT NULL`, a row with a null name matches the guard
+forever — `split_part(NULL, …)` is null, so `first_name` stays null, the row re-matches, and the
+statement keeps reporting one row updated. "Repeat until zero" never terminates. And without the
+`CASE`, a mononym breaks: `strpos` returns 0 for a name with no space, `substr(name, 1)` returns
+the whole string, and every single-word name ends up with `last_name` equal to `first_name`.
+
+Which is worth sitting with, because it is the lesson rather than a footnote: **the data you are
+migrating contains cases your splitting rule was not written for.** Mononyms, null names, four
+words, a trailing space. Run the `SELECT` half first and look at what comes back before you let
+the `UPDATE` touch anything.
+
+An unguarded backfill does not error when re-run. It reverts corrections, which is the worst
+class of migration bug: silent, plausible, and invisible until somebody notices their edit did
+not stick.
+
+The batch size is a judgement rather than a constant — large enough to finish, small enough that
+one statement is not holding rows for long. A thousand is a reasonable place to start and the
+number only matters on tables big enough that you would notice.
+
+The rule that makes this worth the ceremony: **never ship a destructive migration in the same
+deploy as the code that needs it.** If a deploy goes wrong you want the fix to be a code
+rollback, and a dropped column is not something you can roll back. Steps 2 and 5 are the ones
+people skip because they feel redundant, and skipping them is exactly what turns a rename into
+an outage — between deploying code that reads the new column and running the migration that
+fills it, there is a window, and in production that window has traffic in it.
+
+The same shape covers more than renames. Splitting one column into two, tightening a nullable
+column to `NOT NULL`, changing a type, extracting a table: all of them are expand, migrate,
+contract, with reads moving in the middle.
+
+**One thing to know about the statements themselves, because it is neither shape nor
+scheduling and so falls between this stage and the next.** Some `ALTER TABLE` statements take a
+lock that blocks reads and writes for as long as they run, and on a large table that is an
+outage rather than a migration. Adding a nullable column is instant. A bare `SET NOT NULL` is
+not — it scans the whole table under that lock. The safe route is a `NOT VALID` check
+constraint, then `VALIDATE CONSTRAINT` (which does not block writes), then `SET NOT NULL`.
+Check your database's documentation for which operations are instant before running one against
+a table with rows in it; the answer changes between versions and it is the difference between a
+deploy and an incident.
+
+**Where this stops being this stage's job:** deciding the *shape* of a safe change is
+architecture and belongs here. Running it — where migrations live, how they are ordered against
+a deploy, what happens when one fails halfway — is
+[13 — Production Deployment](13-production-deployment.md)'s. Same split this stage already uses
+for authentication and for contracts.
+
+**Strangler fig**, for the other kind of evolution. "Start with one application" told you to
+split something out only when a concrete trigger fires, which is only credible advice if
+splitting later is actually possible. This is how: put something in front of the existing code,
+route one path at a time to the replacement, run both until nothing reaches the old one, then
+delete it. The system is never rewritten and never off.
+
+Naming it matters because the alternative people reach for is a rewrite that has to reach
+feature parity before anyone can use it, and that project has a well-documented ending. A
+deferral with a technique attached is a plan. Without one it is a hope.
 
 ### Design the API contracts
 
@@ -635,7 +1020,8 @@ Three decisions worth making before the first row exists:
   thing that happened, with an actor and a timestamp, and `POST /approvals` may be closer to
   your real model than a status flip. The second is worth a moment's thought rather than a
   reflex: if you would want to know later who approved what and when, the verb was an entity
-  all along, and the interrogation in "Model the domain first" should have caught it.
+  all along, and the thing-or-something-that-happened question in
+  [Model the domain first](#model-the-domain-first) is where that gets caught.
 - **Request and response shape.** Validate at the boundary — anything crossing into your
   system is untrusted, including data from your own frontend. What you return is a promise:
   adding a field is safe, removing or renaming one is not.
@@ -678,10 +1064,30 @@ correct for a product where each person works on their own things, which makes i
 general — until the first feature where somebody acts on a record they do not own. A manager
 approving a shift swap between two other people owns none of the three rows involved.
 
-So the decision is not which pattern to use. It is **which pattern applies to which
-entity**, written down per entity, because a system with a shared workspace will use all
-three. Getting this wrong is not an error you find later; it is a system that works
+So the decision is not which pattern to use. It is **which rule applies to which entity**,
+written down per entity — and a rule may need two of these patterns joined by *and*, which is
+the next paragraph. A system with a shared workspace will use all three across its entities, and
+more than one on some of them. Getting this wrong is not an error you find later; it is a system that works
 correctly for the person who built it and leaks for everyone else.
+
+**And the patterns compose — one entity often needs two of them joined by *and*.** This is the
+part that is easy to miss, because "one pattern per entity" invites you to pick the closest fit
+and move on. Take the manager approving a shift swap. Role alone says "this caller is a
+manager," and that is true of every manager in the company, including one who manages a
+different team. What you actually need is:
+
+```
+Claim → Role ∧ Membership
+        the caller holds 'manager' on the team that owns the shift
+```
+
+Write the conjunction down, because the version with one pattern missing does not fail — it
+approves. A Kitchen manager signing off a Front-of-House shift is a working feature and a
+privilege escalation at the same time, and nothing downstream flags it.
+
+The general form: **ownership and membership answer "which rows", role answers "which
+actions".** An entity where both questions have non-trivial answers needs both patterns, and
+listing one per entity is how that gets missed.
 
 Enforcement — where the check physically goes, and what happens when a route forgets — is
 stage 05's, in
@@ -780,6 +1186,12 @@ Where it earns its place:
 - **Read a schema for the index you need.** Paste the DDL *and the queries your screens
   actually make*. Without the queries it will suggest indexes for imagined access patterns,
   which is worse than none.
+- **Enumerate the failure modes of a dependency.** "What are all the ways a payment provider
+  call can fail?" is list generation, which is the shape of work it is reliably good at. You
+  still decide which ones are worth handling.
+- **Order an expand-contract sequence for a specific change.** Give it the column and the
+  current readers and have it produce the six steps. Then check the order yourself, because the
+  step it tends to drop is the one that stops writing the old value.
 - **Read a schema for what is missing.** Uniqueness scope, delete behaviour, and
   nullability are mechanical to check and easy for a person to skim past. Paste the DDL —
   the `CREATE TABLE` statements themselves — and ask what a hostile script could write
@@ -800,6 +1212,11 @@ Where it misleads, which is the half worth reading twice:
   what to pick.
 - **It invents scale.** Ask it to design for growth and it will design for growth you
   cannot describe, then justify the complexity with the number it made up.
+- **Asked to make something resilient, it builds a resilience layer.** Retries, a breaker, a
+  dead-letter queue and a health-check dashboard, for three third-party calls. This is the
+  reach-for-distribution failure above in different clothes, and it is harder to spot because
+  every individual pattern it names is real. Ask instead which single call is most likely to
+  fail and what a timeout alone would do.
 - **Schema advice arrives confident and context-free.** It does not know your compliance
   boundary, your budget, or that this table is financial and legally has to survive a
   deletion.
@@ -822,6 +1239,8 @@ build less than the model offers. It has no stake in maintaining what it propose
 - Three or four architecture characteristics, each traced to a decision it forced
 - The architecture style you chose, and the alternatives you rejected with a reason each
 - The tenant axis, if the product has organisations or teams
+- For each characteristic, one line on how you would know if it stopped holding
+- The authorization rule per entity, including any that need two patterns joined by *and*
 - A domain model: entities, relationships, and the constraints that hold them together
 - Initial database schema with constraints, keys, and indexes, each index traced to a query
 - The API contracts you are committing to, sorted by how expensive each is to change
@@ -837,6 +1256,9 @@ build less than the model offers. It has no stake in maintaining what it propose
 - [ ] Architecture style named, with the alternatives rejected and the reason for each
 - [ ] System sketched, with what happens when each external dependency is down
 - [ ] Integration style decided per external call, and anything received is idempotent
+- [ ] A timeout on every external call, and a stated answer for each dependency being down
+- [ ] Concurrent-edit strategy decided where two people can act on one row
+- [ ] Each chosen characteristic has one line on how you would know it stopped holding
 - [ ] Domain modeled in nouns and relationships, not tables
 - [ ] Derived values computed; facts about a moment stored, and the difference stated per value
 - [ ] Deletion behavior decided per entity
@@ -845,10 +1267,12 @@ build less than the model offers. It has no stake in maintaining what it propose
 - [ ] Tenant axis decided — person or organisation — and the key present on every table
       that holds tenant data
 - [ ] Conditional rules expressed as partial unique indexes, not as check-then-insert
+- [ ] Any change to stored data **on a system with users** planned as an expand-contract
+      sequence, with no destructive step sharing a deploy with the code that needs it
 - [ ] Indexes added for the queries you actually run, and no others
 - [ ] API contracts decided, sorted by how expensive each is to change
 - [ ] Auth strategy chosen, with an ADR
-- [ ] Authorization pattern decided and written down
+- [ ] Authorization rule written down per entity, including where two patterns must both hold
 - [ ] Feature boundaries defined, with the no-cross-querying rule stated
 - [ ] Every expensive decision has an ADR
 - [ ] Deferred decisions listed explicitly, so deferral is visible rather than forgotten
@@ -875,6 +1299,16 @@ build less than the model offers. It has no stake in maintaining what it propose
 **Choosing a style before choosing characteristics.** The answer sounds identical either
 way — "a modular monolith" — and only one of them is a decision. The other is a preference
 you will not be able to defend the first time it is questioned, including by yourself.
+
+**Retrying a write that is not idempotent.** The retry is the bug, not the failure it was
+answering. Two charges, one purchase, and a customer who is right to be annoyed.
+
+**A destructive migration in the same deploy as the code that needs it.** When the deploy goes
+wrong the fix you want is a code rollback, and a dropped column is not one.
+
+**Reading your own write from a replica.** The user saves, gets redirected, and their change is
+missing. It is not a race you can retry your way out of — reads that must reflect a
+just-finished write go to the primary.
 
 **Designing for imagined scale.** Building for a million users you do not have costs
 complexity today for benefits that will probably never arrive — and if they do, you will

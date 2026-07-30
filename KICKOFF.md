@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   `stage-implementation-101.md` (the layout traps and verification checklist for building a
   stage)
 
-### Project state (as of 2026-07-29)
+### Project state (as of 2026-07-30)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -39,16 +39,15 @@ Before doing anything, read these for context:
   They are not committed tests and nothing re-runs them. Do not cite them as having passed.
   What *is* enforced: `stage-metadata.test.ts` (each doc's H1 matches `stages.ts`, and every
   built stage has its `### AI in …` heading), `glossary.test.ts`, and — new in W-3.1 —
-  `stage-03-structure.test.ts` (pins that doc's thirteen subsections in order) and
+  `stage-03-structure.test.ts` (pins that doc's fourteen subsections in order) and
   `source-citations.test.ts` (D-42: bans line-number citations and resolves every heading one).
 - **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01, 02 and 03
   are complete and interactive.** Stage 03 (Architecture) ships a 6-step stepper
   (Reverse · Model · Constrain · Shape · Decide · AI plays), 9 figures, 4 judgment
   exercises, an annotated-DDL inspector, and a domain worksheet that carries stage 02's
   answers forward.
-- **Stage 03's doc is done; its app now lags it (TD-23).** W-3.1 closed **TD-18**, **TD-21**
-  and **TD-22** in `docs/03-architecture.md`, which went from 8 subsections and 300 lines to
-  **13 subsections and 898 lines**, running requirements → HLD → LLD. The round was
+- **Stage 03's doc is done; its app now lags it (TD-23).** W-3.1 closed **TD-18**, **TD-21** and **TD-22**, and **W-3.1b** closed **TD-25**'s doc half, in `docs/03-architecture.md`, which went from 8 subsections and 300 lines to
+  **14 subsections and 1,281 lines**, running requirements → HLD → LLD. The round was
   deliberately doc-only (**D-46**), so the app's six steps still mirror a doc that no longer
   exists. **Porting it is W-3.2 and it is the next round.** Note the app must mirror the
   *corrections* as well as the additions — `scoring.ts` holds the interrogation set, the DDL
@@ -87,7 +86,7 @@ round (`W-3.1`) rewrote the doc and deliberately left the app behind (**D-46**),
 now disagree. This round closes that, and it is the larger half.
 
 **Settle the step structure first.** `D-38` caps a dense stage at five content steps plus the
-AI step, and the doc no longer fits: thirteen subsections against the app's six steps. W-3.2
+AI step, and the doc no longer fits: fourteen subsections against the app's six steps. W-3.2
 supersedes D-38, and the superseding decision has to state a **new ceiling with a reason** —
 "stage 03 is special" is not one, because stage 04 will make the same argument.
 
@@ -101,7 +100,7 @@ things the doc has since corrected.
 **New content needing components:** architecture characteristics with the trace-forward table,
 the styles comparison, the system sketch and its three views, the sync/async decision, the ER
 view and indexes, API contracts. The 14 new terms are already in `terms.ts` (glossary 42 → 56)
-but not yet used inline — that wiring is this round's.
+but not yet used inline — that wiring is this round's. **W-3.1b then added 16 more (72 total)** and a fourteenth section, so the port has more surface than the branch was scoped against.
 
 **Two cautions from W-3.1, both earned:**
 
@@ -112,8 +111,8 @@ but not yet used inline — that wiring is this round's.
   ownership — TD-18's blocking G3 defect verbatim — and three tracker entries plus a
   cold-reader pass all missed it, because they were reading prose.
 
-**Watch the length.** The doc is 898 lines, 2.4× the next-longest stage, which is a recorded
-consequence of D-45 rather than an accident. Consultability scored 4/5 and two misfilings were
+**Watch the length.** The doc is 1,281 lines, 3.4× the next-longest stage, which is a recorded
+consequence of D-45 rather than an accident. Consultability scored 3/5 on the third run and was then fixed with eight subheadings and reworded TOC glosses; two misfilings were
 found and fixed. If the app port makes a step feel like a scroll, that is the same problem
 arriving in a second surface.
 

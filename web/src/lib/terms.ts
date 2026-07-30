@@ -346,9 +346,9 @@ export const TERMS: Record<string, Term> = {
     name: 'Authorization',
     see: '03-architecture',
     short: 'Deciding what a known user is allowed to do.',
-    full: 'Distinct from authentication, which establishes who the caller is: authentication gets you a user id, authorization decides whether that user id may read invoice 42. It comes in three patterns, and most products need more than one. Ownership — the row carries the caller’s id and you compare them. Role — the caller holds a role that grants the action, whoever owns the row. Membership — the caller and the row belong to the same group, which is what shared workspaces actually need.',
+    full: 'Distinct from authentication, which establishes who the caller is: authentication gets you a user id, authorization decides whether that user id may read invoice 42. Three patterns: ownership — the row carries the caller’s id and you compare them; role — the caller holds a role that grants the action, whoever owns the row; membership — the caller and the row belong to the same group. They combine, and one entity often needs two of them joined by *and*: a manager may approve a claim only if they hold the manager role *and* the shift belongs to a team they belong to.',
     soWhat:
-      'Authentication is the part people buy or borrow and mostly get right. Authorization is written by hand in every route, and it is where other people’s data leaks when one route forgets. Ownership is the dangerous default: it is right often enough to feel general, then fails silently on the first product where one person acts on another person’s record.',
+      'Authentication is the part people buy or borrow and mostly get right. Authorization is written by hand in every route, and it is where other people’s data leaks when one route forgets. Two ways it goes wrong quietly: ownership is the dangerous default, right often enough to feel general and then failing on the first product where one person acts on another person’s record; and a rule that needs two patterns and gets one does not error, it grants — a manager checked for role but not team approves another team’s work.',
   },
   'database-constraint': {
     name: 'Database constraint',
@@ -468,6 +468,139 @@ export const TERMS: Record<string, Term> = {
     full: 'An organising principle where the core logic defines interfaces — ports — and the database, HTTP layer and third-party services are adapters plugged into them. The core depends on nothing outside itself.',
     soWhat:
       'It describes how a codebase is arranged inside, not how it deploys, so a hexagonal monolith is an ordinary thing. Confusing the two axes is what makes "monolith or microservices" sound like one question when it is two.',
+  },
+  'fitness-function': {
+    name: 'Fitness function',
+    see: '03-architecture',
+    short:
+      'An automated check that an architecture characteristic still holds.',
+    full: 'From evolutionary architecture: a test asserting a property of the system rather than a behaviour of a function. A rule that no module imports across a feature boundary, a build-size budget that fails the pipeline, an assertion that a page issues one query rather than forty.',
+    soWhat:
+      'It is the difference between a characteristic you chose and one you are hoping for. Boundaries, budgets and conventions decay silently because nothing tells you the day they stop being true — a fitness function is what turns "we agreed to" into "the build fails".',
+  },
+  statelessness: {
+    name: 'Statelessness',
+    see: '03-architecture',
+    short: 'The application keeps no request state in its own memory.',
+    full: 'Every request carries or looks up whatever it needs, and anything that must persist between requests lives in a cookie, a database or a shared store rather than a local variable. Any instance can serve any request.',
+    soWhat:
+      'It is the precondition for running more than one copy, which makes it the precondition for horizontal scaling and for serverless, where the platform starts and stops instances whenever it likes. An in-memory session cache works perfectly on one machine and breaks the moment there are two.',
+  },
+  'horizontal-scaling': {
+    name: 'Horizontal scaling',
+    see: '03-architecture',
+    short: 'More machines, rather than a bigger one.',
+    full: 'Adding instances behind a load balancer so work spreads across them. The alternative, vertical scaling, is moving to a larger machine: simpler, requiring no statelessness, and eventually running out of machine.',
+    soWhat:
+      'Vertical is the right first answer and has a ceiling; horizontal has effectively none and demands statelessness before it works at all. Knowing which one you are set up for is worth more than knowing you might need to scale.',
+  },
+  'read-replica': {
+    name: 'Read replica',
+    see: '03-architecture',
+    short: 'A copy of the database that serves reads but takes no writes.',
+    full: 'A secondary instance kept up to date from the primary, used to spread read load. Writes still go to one place, so replicas scale reads and do nothing for write throughput.',
+    soWhat:
+      'The catch is lag: a replica is behind the primary by some amount, so a read straight after a write can return the old value. That is eventual consistency arriving in your own product, which is why reads that must reflect a just-finished write go to the primary.',
+  },
+  'connection-pooling': {
+    name: 'Connection pooling',
+    see: '03-architecture',
+    short: 'Sharing a small set of database connections across many callers.',
+    full: 'A pooler sits between the application and the database, holding a limited number of real connections and multiplexing client requests onto them, instead of each caller opening its own.',
+    soWhat:
+      'It is the sharp edge of serverless plus Postgres, which is the stack this playbook prescribes. Functions scale by starting more instances and each one wants its own connection, so moderate traffic exhausts the database’s connection limit and requests start failing on connect rather than on anything you wrote.',
+  },
+  'isolation-level': {
+    name: 'Isolation level',
+    see: '03-architecture',
+    short: 'How much one in-flight transaction can see of another.',
+    full: 'A per-transaction setting trading strictness against concurrency. Postgres defaults to read committed: you never see uncommitted rows, but you do see rows others commit while you are still running. Serializable behaves as though transactions ran one at a time, and aborts one when it cannot guarantee that.',
+    soWhat:
+      'Read committed is enough for almost everything and does not prevent a lost update — two transactions reading the same row and both writing. Serializable does, at the cost of transactions that fail on conflict, which means your code needs a retry path it did not need before.',
+  },
+  'optimistic-locking': {
+    name: 'Optimistic locking',
+    see: '03-architecture',
+    short:
+      'Let both writers proceed, and reject the second one that arrives stale.',
+    full: 'Keep a version number on the row. Read it, and include it in the update: `WHERE id = $1 AND version = $2`. Zero rows updated means somebody committed between your read and your write, so you retry or tell the user.',
+    soWhat:
+      'It is the standard fix for the lost update, and it needs no locks held across user think-time — which is why it suits anything with a human in the loop. The version column is stored data, so by this stage’s own axis it is decide-now rather than a later addition.',
+  },
+  'pessimistic-locking': {
+    name: 'Pessimistic locking',
+    see: '03-architecture',
+    short: 'Lock the row on read, so the second writer waits.',
+    full: '`SELECT … FOR UPDATE` inside a transaction takes a row lock, and any other transaction wanting that row blocks until yours commits or rolls back.',
+    soWhat:
+      'Right when conflict is expected and the work between read and write is short. Wrong when the work is long or waits on a person, because you are holding a lock the whole time and inviting deadlocks between transactions that grab rows in different orders.',
+  },
+  'eventual-consistency': {
+    name: 'Eventual consistency',
+    see: '03-architecture',
+    short: 'Copies agree in the end, not immediately.',
+    full: 'A guarantee that replicas converge on the same data given time, without saying when. A read from a replica may return a value the primary has already changed.',
+    soWhat:
+      'Its practical face is the read-after-write anomaly: a user saves, is redirected, reads from a replica, and does not see their own change. It looks like a bug and is not one, which is why reads that must reflect a just-finished write go to the primary.',
+  },
+  'cap-theorem': {
+    name: 'CAP theorem',
+    see: '03-architecture',
+    short:
+      'When the network splits, you can keep consistency or availability, not both.',
+    full: 'For a system spread across nodes: during a network partition you may either refuse requests to stay consistent, or serve them and let copies disagree. Consistency and availability are only jointly achievable when nothing is partitioned.',
+    soWhat:
+      'It is quoted far more often than it applies. With one database there is no partition to survive and CAP is theory; it becomes a real decision the moment you add a replica or a second service that owns data.',
+  },
+  timeout: {
+    name: 'Timeout',
+    see: '03-architecture',
+    short: 'A deadline on a call, after which you stop waiting and decide.',
+    full: 'An explicit limit on how long you will wait for a network call before treating it as failed. Most HTTP clients and database drivers default to waiting indefinitely.',
+    soWhat:
+      'Without one, somebody else’s slow afternoon becomes your outage: requests pile up holding connections and memory until nothing works. The specific number matters far less than having one at all.',
+  },
+  'exponential-backoff': {
+    name: 'Exponential backoff (with jitter)',
+    see: '03-architecture',
+    short: 'Waiting longer between each retry, plus a random offset.',
+    full: 'Retry after 1s, then 2s, then 4s, rather than immediately and repeatedly. Jitter adds a random amount to each delay so that many clients retrying the same failed service do not do it in unison.',
+    soWhat:
+      'A service that just failed is usually recovering, and retrying hard prevents that — you become the reason it stays down. Without jitter, every client that failed at the same moment retries at the same moment, which is a thundering herd rebuilt out of your own retry logic.',
+  },
+  'circuit-breaker': {
+    name: 'Circuit breaker',
+    see: '03-architecture',
+    short:
+      'After repeated failures, stop calling for a while and fail immediately.',
+    full: 'A wrapper that counts consecutive failures, and once past a threshold stops attempting the call at all for a cooldown period, failing fast instead. After the cooldown it lets one request through to test whether the dependency recovered.',
+    soWhat:
+      'It is the pattern you reach for once your retries have made you part of the outage rather than a victim of it. Failing fast is also kinder to the caller than a timeout: an instant error can be handled, a thirty-second hang cannot.',
+  },
+  'graceful-degradation': {
+    name: 'Graceful degradation',
+    see: '03-architecture',
+    short: 'Deciding, per feature, what still works when a dependency is down.',
+    full: 'Designing so that the loss of one component removes one capability rather than the whole system. Search goes down and browsing still works; the PDF renderer goes down and the invoice still sends.',
+    soWhat:
+      'It is a design decision, not a fallback you add later, because it determines what the system needs to be able to do without each of its dependencies. Answering it per dependency is what makes an architecture diagram worth drawing.',
+  },
+  'expand-contract': {
+    name: 'Expand-contract (parallel change)',
+    see: '03-architecture',
+    short:
+      'Changing stored data in steps, each of which is safe to deploy alone.',
+    full: 'A sequence for altering a schema without downtime: add the new shape, write to both, backfill the old rows, move reads across, stop writing the old shape, then remove it. Six deploys rather than one.',
+    soWhat:
+      'It is what makes "stored data is expensive to change" a cost rather than a wall. The property that matters is that every step is independently deployable, so a failure at any point rolls back as a code rollback — and a dropped column does not roll back.',
+  },
+  'strangler-fig': {
+    name: 'Strangler fig',
+    see: '03-architecture',
+    short: 'Replacing a system incrementally while it keeps serving traffic.',
+    full: 'Put something in front of the existing system, route one path at a time to the replacement, and delete the old code once nothing reaches it. Named after the vine that grows around a tree and eventually stands without it.',
+    soWhat:
+      'It is why "we will split that out later" can be a plan instead of a hope. The alternative — a rewrite that has to reach parity before anyone can use it — is the failure mode it exists to avoid.',
   },
   'architecture-characteristic': {
     name: 'Architecture characteristic (non-functional requirement)',
