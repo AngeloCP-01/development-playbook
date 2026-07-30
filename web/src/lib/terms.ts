@@ -469,6 +469,39 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'It describes how a codebase is arranged inside, not how it deploys, so a hexagonal monolith is an ordinary thing. Confusing the two axes is what makes "monolith or microservices" sound like one question when it is two.',
   },
+  timeout: {
+    name: 'Timeout',
+    see: '03-architecture',
+    short: 'A deadline on a call, after which you stop waiting and decide.',
+    full: 'An explicit limit on how long you will wait for a network call before treating it as failed. Most HTTP clients and database drivers default to waiting indefinitely.',
+    soWhat:
+      'Without one, somebody else’s slow afternoon becomes your outage: requests pile up holding connections and memory until nothing works. The specific number matters far less than having one at all.',
+  },
+  'exponential-backoff': {
+    name: 'Exponential backoff (with jitter)',
+    see: '03-architecture',
+    short: 'Waiting longer between each retry, plus a random offset.',
+    full: 'Retry after 1s, then 2s, then 4s, rather than immediately and repeatedly. Jitter adds a random amount to each delay so that many clients retrying the same failed service do not do it in unison.',
+    soWhat:
+      'A service that just failed is usually recovering, and retrying hard prevents that — you become the reason it stays down. Without jitter, every client that failed at the same moment retries at the same moment, which is a thundering herd rebuilt out of your own retry logic.',
+  },
+  'circuit-breaker': {
+    name: 'Circuit breaker',
+    see: '03-architecture',
+    short:
+      'After repeated failures, stop calling for a while and fail immediately.',
+    full: 'A wrapper that counts consecutive failures, and once past a threshold stops attempting the call at all for a cooldown period, failing fast instead. After the cooldown it lets one request through to test whether the dependency recovered.',
+    soWhat:
+      'It is the pattern you reach for once your retries have made you part of the outage rather than a victim of it. Failing fast is also kinder to the caller than a timeout: an instant error can be handled, a thirty-second hang cannot.',
+  },
+  'graceful-degradation': {
+    name: 'Graceful degradation',
+    see: '03-architecture',
+    short: 'Deciding, per feature, what still works when a dependency is down.',
+    full: 'Designing so that the loss of one component removes one capability rather than the whole system. Search goes down and browsing still works; the PDF renderer goes down and the invoice still sends.',
+    soWhat:
+      'It is a design decision, not a fallback you add later, because it determines what the system needs to be able to do without each of its dependencies. Answering it per dependency is what makes an architecture diagram worth drawing.',
+  },
   'expand-contract': {
     name: 'Expand-contract (parallel change)',
     see: '03-architecture',

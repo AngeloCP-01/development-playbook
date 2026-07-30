@@ -25,6 +25,8 @@ drift apart.
 
 **Canary** — Releasing a change to a small slice of traffic first, watching it, then widening. On Vercel it is approximated with skew protection and staged rollouts rather than true traffic splitting. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
+**Circuit breaker** — A wrapper that counts consecutive failures, and once past a threshold stops attempting the call at all for a cooldown period, failing fast instead. After the cooldown it lets one request through to test whether the dependency recovered. See [03 — Architecture](../docs/03-architecture.md).
+
 **Concierge test** — You do the work manually for a handful of real users — spreadsheets, emails, your own labour — while they experience the result as if it were a product.
 
 **CQRS (Command Query Responsibility Segregation)** — Splitting the write path and the read path so each can be shaped for its own job — writes validated against one model, reads served from another built for the queries the screens make. Often paired with event sourcing, though neither requires the other. See [03 — Architecture](../docs/03-architecture.md).
@@ -45,11 +47,15 @@ drift apart.
 
 **Expand-contract (parallel change)** — A sequence for altering a schema without downtime: add the new shape, write to both, backfill the old rows, move reads across, stop writing the old shape, then remove it. Six deploys rather than one. See [03 — Architecture](../docs/03-architecture.md).
 
+**Exponential backoff (with jitter)** — Retry after 1s, then 2s, then 4s, rather than immediately and repeatedly. Jitter adds a random amount to each delay so that many clients retrying the same failed service do not do it in unison. See [03 — Architecture](../docs/03-architecture.md).
+
 **Fake-door test** — A page describing the product with a real signup or purchase button. Clicking it reaches a "coming soon" message. You measure how many people click.
 
 **Feasibility risk** — One of the standard product risks, alongside whether people want it and whether it makes business sense. It asks whether the technology, data, budget and time actually permit the solution. See [02 — Product Planning](../docs/02-planning.md).
 
 **Golden signals** — The four measurements to instrument before any others: latency, traffic, errors, and saturation. If you watch only four things, watch these. See [15 — Observability](../docs/15-observability.md).
+
+**Graceful degradation** — Designing so that the loss of one component removes one capability rather than the whole system. Search goes down and browsing still works; the PDF renderer goes down and the invoice still sends. See [03 — Architecture](../docs/03-architecture.md).
 
 **Hexagonal architecture (ports and adapters)** — An organising principle where the core logic defines interfaces — ports — and the database, HTTP layer and third-party services are adapters plugged into them. The core depends on nothing outside itself. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -116,6 +122,8 @@ drift apart.
 **Switching cost** — Learning a new tool, migrating data, changing habits, and the risk that the new thing is worse. It is paid by the user, not by you, and it is usually larger than builders estimate.
 
 **TAM (Total Addressable Market)** — Total Addressable Market — every person or business who could conceivably buy this, if you had no competitors and perfect reach. Usually paired with SAM (the slice you could realistically serve) and SOM (the slice you could realistically win).
+
+**Timeout** — An explicit limit on how long you will wait for a network call before treating it as failed. Most HTTP clients and database drivers default to waiting indefinitely. See [03 — Architecture](../docs/03-architecture.md).
 
 **Traps** — The closing section of every stage doc — the failure modes worth naming. They accumulate from real experience and become the most valuable part of the playbook over time.
 

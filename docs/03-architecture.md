@@ -421,6 +421,31 @@ yours, what happens when it is down?
 Three questions, three answers, one of which is a genuine piece of work you would otherwise
 have discovered in production. That is the return on a diagram.
 
+Those three answers have a name: **graceful degradation**, deciding per feature what still
+works when a dependency does not. And there is a small standard vocabulary for producing them,
+worth having because these four cover almost everything:
+
+- **A timeout on every network call.** Most HTTP clients and database drivers wait
+  indefinitely by default, which converts somebody else's slow afternoon into your outage —
+  requests pile up holding connections until nothing works. The specific number matters much
+  less than having one.
+- **Retry with exponential backoff and jitter.** Backoff because the service that just failed
+  is usually recovering, and retrying hard is how you keep it down. Jitter because without a
+  random offset every client that failed at the same moment retries at the same moment, which
+  is a thundering herd you built yourself. And the precondition this section has already
+  taught: **you may only retry what is safe to retry.** Retrying a charge without idempotency
+  is how you bill someone twice.
+- **A circuit breaker.** After a few consecutive failures, stop calling and fail immediately
+  for a cooldown, then let one request through to test the water. This is the pattern you
+  reach for once your retries have made you part of the outage rather than a victim of it.
+- **Bulkhead**, named and not taught: isolating resource pools so one saturated dependency
+  cannot consume every thread. Real, and rarely earning its keep inside a single application.
+
+**For most calls the right answer is a timeout and nothing else.** Retries earn their place
+where the call is idempotent and the failure is plausibly transient. A breaker earns its place
+after you have watched something fail repeatedly. Building all four around three third-party
+calls on day one is the same instinct as reaching for microservices, wearing different clothes.
+
 **What is deliberately not here.** Full high-level design practice comes with a system
 specification document, a review board, and a sign-off before implementation starts. None of
 that is in this stage, on purpose. The thinking survives — what the pieces are, how they
