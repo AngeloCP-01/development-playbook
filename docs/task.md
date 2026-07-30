@@ -300,6 +300,14 @@ partitioning and sharding are named as the thing you do not need and not taught.
 
 ### W-3.2 — Port stage 03's doc round into the app ◐ *(in progress — see `feat/stage-03-app-port`)*
 
+**Live coverage map: `docs/stage-03-status.md`.** Section by section, doc against app, with the
+remaining tasks. Read it before picking up this round — it is more current than this checklist,
+because it is updated when the doc moves rather than when a round closes.
+
+`feat/stage-03-standard-practices` was merged **into** this branch on 2026-07-30 (D-51), so the
+doc has stopped moving and the port has one stable target. Tally at that point: 5 sections fully
+ported, 8 partial, 1 (section 9, "Evolve the schema safely") not ported at all.
+
 W-3.1 was deliberately doc-only, so `docs/03-architecture.md` and
 `web/src/features/architecture/` now disagree about what the stage contains. That divergence
 is **TD-23**, and this round closes it.

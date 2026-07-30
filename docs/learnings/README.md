@@ -36,7 +36,11 @@ Naming: `<topic>-101.md`.
   an audit found 14 of 33 citations wrong, and four days later the next round on the same
   branch staled all 18 that remained — including two that had just been repaired. The two
   that survived were the two already converted. Read it whenever you are about to write
-  "from now on we will…" in the tracker.
+  "from now on we will…" in the tracker. Extended with the sharper version of the same
+  failure: a check that runs, passes, and measures the wrong invariant — two branches were
+  confirmed to have no files in common and that was reported as "zero conflict risk", when the
+  question was whether they still meant the same thing. It cost an app shipping the security
+  defect its own doc had just fixed.
 - `contrast-checkers-lie.md` — the three ways a colour audit reports a failure that is not
   there: reading `getComputedStyle` while a `transition-colors` is still running, parsing
   `oklab()` with a regex instead of rasterizing it, and passing green over surfaces it
