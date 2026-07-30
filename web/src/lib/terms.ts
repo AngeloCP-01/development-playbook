@@ -469,6 +469,48 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'It describes how a codebase is arranged inside, not how it deploys, so a hexagonal monolith is an ordinary thing. Confusing the two axes is what makes "monolith or microservices" sound like one question when it is two.',
   },
+  'isolation-level': {
+    name: 'Isolation level',
+    see: '03-architecture',
+    short: 'How much one in-flight transaction can see of another.',
+    full: 'A per-transaction setting trading strictness against concurrency. Postgres defaults to read committed: you never see uncommitted rows, but you do see rows others commit while you are still running. Serializable behaves as though transactions ran one at a time, and aborts one when it cannot guarantee that.',
+    soWhat:
+      'Read committed is enough for almost everything and does not prevent a lost update — two transactions reading the same row and both writing. Serializable does, at the cost of transactions that fail on conflict, which means your code needs a retry path it did not need before.',
+  },
+  'optimistic-locking': {
+    name: 'Optimistic locking',
+    see: '03-architecture',
+    short:
+      'Let both writers proceed, and reject the second one that arrives stale.',
+    full: 'Keep a version number on the row. Read it, and include it in the update: `WHERE id = $1 AND version = $2`. Zero rows updated means somebody committed between your read and your write, so you retry or tell the user.',
+    soWhat:
+      'It is the standard fix for the lost update, and it needs no locks held across user think-time — which is why it suits anything with a human in the loop. The version column is stored data, so by this stage’s own axis it is decide-now rather than a later addition.',
+  },
+  'pessimistic-locking': {
+    name: 'Pessimistic locking',
+    see: '03-architecture',
+    short: 'Lock the row on read, so the second writer waits.',
+    full: '`SELECT … FOR UPDATE` inside a transaction takes a row lock, and any other transaction wanting that row blocks until yours commits or rolls back.',
+    soWhat:
+      'Right when conflict is expected and the work between read and write is short. Wrong when the work is long or waits on a person, because you are holding a lock the whole time and inviting deadlocks between transactions that grab rows in different orders.',
+  },
+  'eventual-consistency': {
+    name: 'Eventual consistency',
+    see: '03-architecture',
+    short: 'Copies agree in the end, not immediately.',
+    full: 'A guarantee that replicas converge on the same data given time, without saying when. A read from a replica may return a value the primary has already changed.',
+    soWhat:
+      'Its practical face is the read-after-write anomaly: a user saves, is redirected, reads from a replica, and does not see their own change. It looks like a bug and is not one, which is why reads that must reflect a just-finished write go to the primary.',
+  },
+  'cap-theorem': {
+    name: 'CAP theorem',
+    see: '03-architecture',
+    short:
+      'When the network splits, you can keep consistency or availability, not both.',
+    full: 'For a system spread across nodes: during a network partition you may either refuse requests to stay consistent, or serve them and let copies disagree. Consistency and availability are only jointly achievable when nothing is partitioned.',
+    soWhat:
+      'It is quoted far more often than it applies. With one database there is no partition to survive and CAP is theory; it becomes a real decision the moment you add a replica or a second service that owns data.',
+  },
   timeout: {
     name: 'Timeout',
     see: '03-architecture',

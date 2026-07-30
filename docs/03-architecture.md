@@ -618,6 +618,47 @@ does. This is the point where a rule stops being the database's job to guarantee
 being yours to demarcate — the database will hold the line, but only around the boundary you
 draw.
 
+**How much a transaction sees of another is its isolation level**, and the default is not the
+strictest. Postgres runs **read committed**: you never see uncommitted rows, and you *do* see
+rows other transactions commit while yours is still running. That is enough for almost
+everything, and it does not prevent the problem below. **Serializable** does, by behaving as
+though transactions ran one at a time and aborting one when it cannot guarantee that — which
+costs you a retry path your code did not previously need.
+
+**The lost update, which no constraint catches.** Two managers open the same claim. Both read
+it as pending. Both approve. The second write silently overwrites the first, no constraint was
+violated, and nothing anywhere records that a decision was discarded. Two standard fixes:
+
+- **Optimistic locking.** Put a version on the row and carry it into the write:
+
+  ```sql
+  UPDATE claims SET status = 'approved', version = version + 1
+   WHERE id = $1 AND version = $2;
+  ```
+
+  Zero rows updated means somebody got there first, so you tell the user instead of losing
+  their work. Note what this is: **`version` is stored data**, so by the test at the top of
+  this stage it is decide-now, and adding it later is an expand-contract sequence rather than
+  an afternoon.
+
+- **Pessimistic locking.** `SELECT … FOR UPDATE` inside the transaction, and the second reader
+  waits. Correct when conflict is likely and the work between read and write is short. Wrong
+  when the work waits on a person, because you are holding a lock while somebody reads their
+  email, and two transactions taking rows in different orders will deadlock.
+
+The rule: **optimistic when conflict is rare, pessimistic when it is expected.** For anything
+with a human deciding in the middle, that is almost always optimistic.
+
+**Two terms you will meet everywhere, worth having and not worth overselling.** **CAP** says
+that when the network between your nodes splits, you choose between refusing requests to stay
+consistent and serving them while copies disagree. With one database there is no partition to
+survive, so it is theory — it becomes a real decision the moment you add a replica or a second
+service that owns data. **Eventual consistency** is what you get at that moment: copies agree
+in the end, not immediately. Its everyday face is the read-after-write anomaly, where a user
+saves, gets redirected, reads from a replica and does not see their own change. That is why a
+read which must reflect a just-finished write goes to the primary, and it is a design decision
+rather than a bug to fix later.
+
 ### Evolve the schema safely
 
 This stage has now said four times that stored data is the expensive kind. What it has not said
