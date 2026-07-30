@@ -48,7 +48,7 @@ Before doing anything, read these for context:
   answers forward.
 - **Stage 03's doc is done; its app now lags it (TD-23).** W-3.1 closed **TD-18**, **TD-21**
   and **TD-22** in `docs/03-architecture.md`, which went from 8 subsections and 300 lines to
-  **13 subsections and 898 lines**, running requirements → HLD → LLD. The round was
+  **14 subsections and 1,281 lines**, running requirements → HLD → LLD. The round was
   deliberately doc-only (**D-46**), so the app's six steps still mirror a doc that no longer
   exists. **Porting it is W-3.2 and it is the next round.** Note the app must mirror the
   *corrections* as well as the additions — `scoring.ts` holds the interrogation set, the DDL
@@ -101,7 +101,7 @@ things the doc has since corrected.
 **New content needing components:** architecture characteristics with the trace-forward table,
 the styles comparison, the system sketch and its three views, the sync/async decision, the ER
 view and indexes, API contracts. The 14 new terms are already in `terms.ts` (glossary 42 → 56)
-but not yet used inline — that wiring is this round's.
+but not yet used inline — that wiring is this round's. **W-3.1b then added 16 more (72 total)** and a fourteenth section, so the port has more surface than the branch was scoped against.
 
 **Two cautions from W-3.1, both earned:**
 
@@ -112,7 +112,7 @@ but not yet used inline — that wiring is this round's.
   ownership — TD-18's blocking G3 defect verbatim — and three tracker entries plus a
   cold-reader pass all missed it, because they were reading prose.
 
-**Watch the length.** The doc is 898 lines, 2.4× the next-longest stage, which is a recorded
+**Watch the length.** The doc is 1,281 lines, 3.4× the next-longest stage, which is a recorded
 consequence of D-45 rather than an accident. Consultability scored 4/5 and two misfilings were
 found and fixed. If the app port makes a step feel like a scroll, that is the same problem
 arriving in a second surface.

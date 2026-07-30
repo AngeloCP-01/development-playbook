@@ -14,7 +14,9 @@ does not serve (D-37).
 by decision (**D-46**), so `web/src/features/architecture/` still mirrors the eight-subsection
 doc. That divergence is **TD-23** and `W-3.2` closes it.
 
-**Next round is W-3.1b, not the app port.** An architecture-completeness audit against standard
+**W-3.1b's doc half is done** (`1db6344`…`3cd19c4`); its app port is the open remainder.
+
+**How it was raised.** An architecture-completeness audit against standard
 practice found five clusters of widely-taught material missing from all eighteen docs
 (**TD-25**): resilience patterns, consistency and concurrency, safe schema evolution,
 statelessness and scaling, and fitness functions. Scope call is **D-49** — completeness beats
@@ -74,6 +76,7 @@ because scope creep is invisible otherwise.
 | 2026-07-23 | P-5 | Stack drift resolved: ESLint kept, Prettier added, Biome demoted to documented alternative; docs 04/stack.md/CLAUDE/KICKOFF amended | Every biome reference in doc 04 sections 3/6/7 replaced; `web/` and docs now agree | — |
 | 2026-07-23 | — | First learning guide: `docs/learnings/stage-implementation-101.md` | Every claim drawn from a real bug this session | More guides as rounds teach them |
 | 2026-07-23 | P-8 | Working standards documented: git + delivery-loop + review + TDD conventions, skills-as-process, humanizer pass, `web/PATTERNS.md` | Every convention verified against `SmartJobSearchCRM` git or the code; `218815a`, `5082e43`, `17b344e`, `a5901af` | Folding the same into the stage docs (P-6) |
+| 2026-07-30 | W-3.1b | Stage 03 **standard-practice completeness**: 898 → **1,281 lines**, 13 → **14 subsections**, glossary 56 → **72 terms**. Closes **TD-25**'s doc half — resilience patterns (timeout · backoff+jitter · circuit breaker · degradation), consistency and concurrency (isolation levels · optimistic and pessimistic locking · CAP · eventual consistency), a new "Evolve the schema safely" section (expand-contract · strangler fig), statelessness and scaling (+ the serverless/Postgres pooling edge), and fitness functions. The **trace table went 3 rows → 10 of 10 candidates**, which was the round's actual deliverable — it could not be widened until the material existed | 9 commits `1db6344`…`3cd19c4`. **Third cold-reader run**, same product as runs 1 and 2: 2 clusters ACTIONABLE first pass, 3 PARTIAL and fixed, verdict PARTIALLY and "more than the last run". **G5 CLOSED** ("a clean close"). It also found a **security defect open across all three runs** — G3's edge, where "one pattern per entity" followed literally produces cross-team privilege escalation — plus **three contradictions this round introduced**, including two trace rows the worked DDL did not satisfy, and **three valid over-reach findings**, chiefly expand-contract stated unconditionally to a pre-launch solo reader. D-48 applied to the fix wave caught a dangling `full_name` column referenced once with nothing introducing it — the same class as last round's `REFERENCES teams(id)`. 136/136 across 11 files, lint and typecheck clean, **38/38 links resolving**, structure test teeth-checked on misplacement. Humanizer needed **no changes** (0 AI-vocab hits; em-dash density 0.096 against 02-planning's 0.124) | **The app port** — blocked on `feat/stage-03-app-port`; G1's property-vs-entity test; G6's general soft-delete mechanic; the auth box missing from the container diagram; outbox cadence's seam with stage 11 — all in `.superpowers/sdd/cold-reader-stage-03-run3.md` |
 | 2026-07-29 | W-3.1 | Stage 03's **doc round**: `docs/03-architecture.md` 8 subsections → **13**, 300 → **898 lines**, running requirements → HLD → LLD. Closes **TD-22** (no high-level design: adds architecture characteristics with a trace-forward table, a system sketch with C4 and three views, database design past the DDL, API contract design), **TD-21** (styles landscape: monolith · modular monolith · microservices · serverless, plus bounded context and ubiquitous language — the stage had been teaching the modular monolith unnamed), and **TD-18** (14 cold-reader gaps). The TD-22 inversion was fixed by *splitting* "Model the domain first" — conceptual model stays, the `CREATE TABLE` moves below the sketch that justifies it | 14 commits `4afaec4`…`2e4162c`, the last three from the whole-branch review. **Cold-reader re-run** under identical constraints and the same shift-swap product as the baseline: **9 CLOSED · 3 PARTIAL · G9 correctly deferred · G5 thin**, 13 of 17 DoD boxes tickable on a first read against a previously unsatisfiable exit condition. It also found **five gaps this round introduced** — the headline being that the stage cites the shift-swap product three times and showed zero DDL for roles or tenancy, and that idempotency was a DoD gate taught nowhere — all fixed in `7a5108f`. Glossary 42 → 56 terms. **136/136 across 11 files** from a cleaned `.next`, lint and typecheck clean, **16/16 internal links verified resolving** by script. Two new tests, both teeth-checked: `stage-03-structure.test.ts` pins the thirteen headings in order, and `source-citations.test.ts` bans line-number citations outright and resolves every heading citation against the doc it names — closing D-42's own recorded follow-up | **The app port (W-3.2 / TD-23)** — the larger half, taken deliberately (D-46); **G9** still stage 10's (D-39); G1's strike test, G8's wall-clock/DST case, G5's isolation level, G6's soft-delete mechanic, and the characteristics trace table's three rows against ten candidates — all recorded in `.superpowers/sdd/cold-reader-stage-03-after.md`, none silently dropped |
 | 2026-07-28 | W-3 (03) | Stage 03 **Architecture** interactive: six steps (reverse · model · constrain · shape · decide · AI plays), nine figures, four judgment exercises, an annotated-DDL inspector, a domain worksheet carrying stage 02's answers forward, 7 new terms, 4 references. `docs/03-architecture.md` gained the `### AI in architecture` section it never had | 24 commits `21f555b`…`9758cef`. Gate from a deleted `.next`: lint 0 warnings, typecheck clean, **133/133 unit across 9 files**, **22 routes prerendered**, **10/10 e2e over 20 URLs**. Review caught two blocking defects: (1) `DomainSketch` rendered the status enum as `draft \| sent \| paid`, which **pre-answered the interrogation exercise rendered in the same stepper panel** — the doc's arc is naive sketch → interrogate → schema drops it, so `overdue` was restored (`83b6cba`); (2) `BoundaryMap`'s `EDGE_NAME` hardcoded "allowed"/"not allowed" into each accessible name while only the visible badge derived from `edge.legal`, so flipping the data would have told a sighted reader and a screen-reader user opposite things with nothing failing — the suffix now derives from the data, teeth-checked by flipping `legal` and proving the name followed (`7893272`). Two reviewers reproduced measurements independently rather than accepting reports: the 320px overflow numbers (page 305/305, container 621/213) and the reassembled DDL executed against a real PostgreSQL 17 instance | **TD-18** (14 cold-reader doc gaps, 3 blocking) — recorded, not fixed; TD-11 and TD-14 stay open; **TD-16** (placeholder contrast) and **TD-17** (no component-test harness) opened; no ADR worksheet (D-39); no schema validation — the worksheet records, it does not grade; no component-test harness — vitest is `environment: 'node'` and matches only `*.test.ts` |
 | 2026-07-28 | W-3 (02) | Stage 02 **declared complete** for its scope, after an audience-readiness check | Two cold-reader persona tests (PM, solutions architect) reading only the doc: PM = primer not a tool (5 blocking-for-PM gaps, all scope-boundary), SA = feeder that defers architecture to stage 03 (6 gaps, all stage-03 content). Developer-completeness already confirmed by the earlier cold reader. Scope confirmed (D-37); method written up in `docs/learnings/cold-reader-testing.md` | PM support (whole-playbook scope expansion); SA support (build stage 03) |
@@ -645,7 +648,42 @@ unedited.
 saying what it is for, one tree rather than two, and a line in `CLAUDE.md`'s Tooling section.
 If it does not, it comes out on its own branch.
 
-### TD-25 — Stage 03 is missing five clusters of standard architecture practice · **High**
+### ~~TD-25~~ — Stage 03 is missing five clusters of standard architecture practice · **CLOSED (doc) 2026-07-30**
+
+> **Doc closed by W-3.1b** (`1db6344`…`3cd19c4`, 9 commits). `docs/03-architecture.md` 898 →
+> 1,281 lines, 13 → 14 subsections, glossary 56 → 72 terms. **The app port remains open** and is
+> tracked as the last item of W-3.1b, blocked until `feat/stage-03-app-port` merges.
+>
+> **All five clusters landed, and the third cold-reader run rated two ACTIONABLE on the first
+> pass** — consistency/concurrency ("the only cluster that fully closes") and
+> statelessness/scaling ("best-scoped cluster in the amendment", with the connection-pooling
+> passage called the strongest writing in the document because it gives the failure *signature*).
+> The other three came back PARTIAL and were fixed in the wave: the breaker had no numbers to
+> code against, the six-step migration could be recited but not executed, and fitness functions
+> were close to vocabulary with all three examples drawn from this repository's infrastructure
+> rather than the reader's.
+>
+> **The trace table now covers 10 of 10 candidates**, verified by script rather than counted.
+> That was the round's actual deliverable: it could not be widened until the material existed.
+>
+> **The round's most serious finding was a security defect it had inherited, not created.** G3's
+> edge had been open across all three runs — the doc said to record "which pattern applies to
+> which entity", singular, and a reader following that literally produced cross-team privilege
+> escalation. Patterns compose, and the doc now says so with the conjunction written out.
+>
+> **And three contradictions the round introduced itself**, all caught by the re-run: widening
+> the trace table made Auditability force soft delete and Correctness force a locking strategy
+> while the worked DDL had neither column; a circuit breaker's in-memory failure count collides
+> with the statelessness rule added in the same round; and the over-reach check found
+> expand-contract stated unconditionally, which told a pre-launch solo developer to spend six
+> deploys renaming a column — ceremony against imagined traffic, in a document that refuses
+> imagined scale.
+>
+> **Deferred:** the app port; G1's property-vs-entity strike test; G6's general soft-delete
+> mechanic; the missing auth box in the container diagram; outbox cadence's seam with stage 11.
+> Full report: `.superpowers/sdd/cold-reader-stage-03-run3.md`.
+
+### ~~TD-25 (original entry)~~ — the audit that raised it
 
 Raised by the project owner asking a direct question after W-3.1 merged: is the stage complete
 against standard, widely-used software architecture practice? Audited by grepping all eighteen
