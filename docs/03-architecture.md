@@ -593,6 +593,54 @@ does. This is the point where a rule stops being the database's job to guarantee
 being yours to demarcate — the database will hold the line, but only around the boundary you
 draw.
 
+### Evolve the schema safely
+
+This stage has now said four times that stored data is the expensive kind. What it has not said
+is what you do when you have to change it anyway, which you will, because the schema above was
+designed with the understanding you had on the first day.
+
+That is not an argument for getting it right first time. It is an argument for knowing the
+technique, because the technique turns an expensive change into a tedious one.
+
+**Expand-contract**, also called parallel change. Renaming a column looks like one statement and
+is actually six deploys, each of which is safe on its own:
+
+```
+1. Expand    add the new column, nullable. Nothing reads it yet.
+2. Write     write both old and new. Deploy. Every new row is now correct.
+3. Backfill  fill the old rows, in batches. No long lock, no downtime.
+4. Move      switch reads to the new column. Deploy. Watch it.
+5. Stop      stop writing the old one. Deploy.
+6. Contract  drop it.
+```
+
+The rule that makes this worth the ceremony: **never ship a destructive migration in the same
+deploy as the code that needs it.** If a deploy goes wrong you want the fix to be a code
+rollback, and a dropped column is not something you can roll back. Steps 2 and 5 are the ones
+people skip because they feel redundant, and skipping them is exactly what turns a rename into
+an outage — between deploying code that reads the new column and running the migration that
+fills it, there is a window, and in production that window has traffic in it.
+
+The same shape covers more than renames. Splitting one column into two, tightening a nullable
+column to `NOT NULL`, changing a type, extracting a table: all of them are expand, migrate,
+contract, with reads moving in the middle.
+
+**Where this stops being this stage's job:** deciding the *shape* of a safe change is
+architecture and belongs here. Running it — where migrations live, how they are ordered against
+a deploy, what happens when one fails halfway — is
+[13 — Production Deployment](13-production-deployment.md)'s. Same split this stage already uses
+for authentication and for contracts.
+
+**Strangler fig**, for the other kind of evolution. "Start with one application" told you to
+split something out only when a concrete trigger fires, which is only credible advice if
+splitting later is actually possible. This is how: put something in front of the existing code,
+route one path at a time to the replacement, run both until nothing reaches the old one, then
+delete it. The system is never rewritten and never off.
+
+Naming it matters because the alternative people reach for is a rewrite that has to reach
+feature parity before anyone can use it, and that project has a well-documented ending. A
+deferral with a technique attached is a plan. Without one it is a hope.
+
 ### Design the API contracts
 
 A contract is a promise about shape, and its real cost is **who you can force to move when
@@ -845,6 +893,8 @@ build less than the model offers. It has no stake in maintaining what it propose
 - [ ] Tenant axis decided — person or organisation — and the key present on every table
       that holds tenant data
 - [ ] Conditional rules expressed as partial unique indexes, not as check-then-insert
+- [ ] Any change to stored data planned as an expand-contract sequence, with no destructive
+      step sharing a deploy with the code that needs it
 - [ ] Indexes added for the queries you actually run, and no others
 - [ ] API contracts decided, sorted by how expensive each is to change
 - [ ] Auth strategy chosen, with an ADR

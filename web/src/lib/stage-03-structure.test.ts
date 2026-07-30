@@ -29,6 +29,7 @@ const EXPECTED = [
   'Boundaries inside the monolith',
   'Sketch the system',
   'Design the database',
+  'Evolve the schema safely',
   'Design the API contracts',
   'Authentication and authorization',
   'Write the ADRs',

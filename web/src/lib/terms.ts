@@ -469,6 +469,23 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'It describes how a codebase is arranged inside, not how it deploys, so a hexagonal monolith is an ordinary thing. Confusing the two axes is what makes "monolith or microservices" sound like one question when it is two.',
   },
+  'expand-contract': {
+    name: 'Expand-contract (parallel change)',
+    see: '03-architecture',
+    short:
+      'Changing stored data in steps, each of which is safe to deploy alone.',
+    full: 'A sequence for altering a schema without downtime: add the new shape, write to both, backfill the old rows, move reads across, stop writing the old shape, then remove it. Six deploys rather than one.',
+    soWhat:
+      'It is what makes "stored data is expensive to change" a cost rather than a wall. The property that matters is that every step is independently deployable, so a failure at any point rolls back as a code rollback — and a dropped column does not roll back.',
+  },
+  'strangler-fig': {
+    name: 'Strangler fig',
+    see: '03-architecture',
+    short: 'Replacing a system incrementally while it keeps serving traffic.',
+    full: 'Put something in front of the existing system, route one path at a time to the replacement, and delete the old code once nothing reaches it. Named after the vine that grows around a tree and eventually stands without it.',
+    soWhat:
+      'It is why "we will split that out later" can be a plan instead of a hope. The alternative — a rewrite that has to reach parity before anyone can use it — is the failure mode it exists to avoid.',
+  },
   'architecture-characteristic': {
     name: 'Architecture characteristic (non-functional requirement)',
     see: '03-architecture',
