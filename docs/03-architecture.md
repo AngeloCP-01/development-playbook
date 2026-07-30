@@ -10,8 +10,8 @@ structure — which is a signal, not a failure.
 
 ## What is in here
 
-This is the longest stage in the playbook, deliberately, and it is meant to be looked things up
-in rather than read straight through. The work runs requirements → high-level design → low-level
+This is the longest stage in the playbook, deliberately. It is built to be consulted rather
+than read straight through. The work runs requirements → high-level design → low-level
 design; the numbering is the reading order, not a schedule.
 
 | | Section | Answers |
@@ -195,6 +195,14 @@ query that touched it.
 
 **What must be unique, and in what scope?** Invoice numbers unique per user, not globally.
 Getting this wrong surfaces as a confusing constraint violation months later.
+
+**Is this a thing, or something that happened to a thing?** The strike test above removes
+nouns that are properties. This removes the opposite mistake: a verb that is really an entity.
+Ask whether you will later want to know **who did it and when**. If yes, it is a thing — an
+approval with an actor and a timestamp — and modelling it as a status flip throws that away
+irreversibly, because a column holds the current value and not the act. If no, it is a status.
+"Approved" is the usual case that goes both ways, and the answer is almost always that you
+will want to know.
 
 **Does every actor have the same rights over this entity?** If a manager can approve a swap
 that the person who requested it cannot, then roles are part of the model rather than a
@@ -524,9 +532,18 @@ worth having because these four cover almost everything:
   is a thundering herd you built yourself. And the precondition this section has already
   taught: **you may only retry what is safe to retry.** Retrying a charge without idempotency
   is how you bill someone twice.
-- **A circuit breaker.** After a few consecutive failures, stop calling and fail immediately
-  for a cooldown, then let one request through to test the water. This is the pattern you
-  reach for once your retries have made you part of the outage rather than a victim of it.
+- **A circuit breaker.** After a few consecutive failures — five is a common starting point —
+  stop calling and fail immediately for a cooldown of a minute or so, then let one request
+  through to test the water. This is the pattern you reach for once your retries have made you
+  part of the outage rather than a victim of it.
+
+  It also has a catch that the [statelessness](#the-shapes-a-system-can-take) rule below makes
+  visible: **a breaker is failure-count state, and an in-memory one is per instance.** Across
+  ten instances you get ten independent breakers, each needing its own five failures, so the
+  thing trips ten times later than you designed it to. On one instance that is fine and you
+  should not care. When it stops being fine the count has to move somewhere shared, and at that
+  point you are running infrastructure to protect a call — which is the moment to ask whether
+  the call needed protecting.
 - **Bulkhead**, named and not taught: isolating resource pools so one saturated dependency
   cannot consume every thread. Real, and rarely earning its keep inside a single application.
 
@@ -599,10 +616,23 @@ CREATE TABLE invoices (
   amount_cents integer NOT NULL CHECK (amount_cents >= 0),
   due_date     date NOT NULL,
   status       text NOT NULL CHECK (status IN ('draft','sent','paid')),
+  version      integer NOT NULL DEFAULT 0,
   created_at   timestamptz NOT NULL DEFAULT now(),
+  deleted_at   timestamptz,
   UNIQUE (owner_id, number)
 );
 ```
+
+Two of those columns are there because the characteristics chose them, and it is worth naming
+which. `deleted_at` is **auditability** — the soft delete this stage argued for, where a null
+means live and a timestamp means gone-but-answerable. `version` is **correctness** — the
+optimistic-locking column from further down this section. Neither is a default; both trace back
+to [What this system has to be](#what-this-system-has-to-be), and a schema that skipped them
+would be one that agreed with the trace table in prose and disagreed with it in SQL.
+
+The cost of `deleted_at` is the one already named: **every query must remember to filter.**
+That is a real tax, paid on every read forever, and it is why the decision is per entity rather
+than a habit.
 
 Money as integer cents. `CHECK` constraints for anything with a fixed set of values.
 `ON DELETE RESTRICT` so deleting a user with invoices fails loudly instead of quietly
@@ -838,7 +868,8 @@ Three decisions worth making before the first row exists:
   thing that happened, with an actor and a timestamp, and `POST /approvals` may be closer to
   your real model than a status flip. The second is worth a moment's thought rather than a
   reflex: if you would want to know later who approved what and when, the verb was an entity
-  all along, and the interrogation in "Model the domain first" should have caught it.
+  all along, and the thing-or-something-that-happened question in
+  [Model the domain first](#model-the-domain-first) is where that gets caught.
 - **Request and response shape.** Validate at the boundary — anything crossing into your
   system is untrusted, including data from your own frontend. What you return is a promise:
   adding a field is safe, removing or renaming one is not.
@@ -885,6 +916,25 @@ So the decision is not which pattern to use. It is **which pattern applies to wh
 entity**, written down per entity, because a system with a shared workspace will use all
 three. Getting this wrong is not an error you find later; it is a system that works
 correctly for the person who built it and leaks for everyone else.
+
+**And the patterns compose — one entity often needs two of them joined by *and*.** This is the
+part that is easy to miss, because "one pattern per entity" invites you to pick the closest fit
+and move on. Take the manager approving a shift swap. Role alone says "this caller is a
+manager," and that is true of every manager in the company, including one who manages a
+different team. What you actually need is:
+
+```
+Claim → Role ∧ Membership
+        the caller holds 'manager' on the team that owns the shift
+```
+
+Write the conjunction down, because the version with one pattern missing does not fail — it
+approves. A Kitchen manager signing off a Front-of-House shift is a working feature and a
+privilege escalation at the same time, and nothing downstream flags it.
+
+The general form: **ownership and membership answer "which rows", role answers "which
+actions".** An entity where both questions have non-trivial answers needs both patterns, and
+listing one per entity is how that gets missed.
 
 Enforcement — where the check physically goes, and what happens when a route forgets — is
 stage 05's, in
