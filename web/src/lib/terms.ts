@@ -469,6 +469,15 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'It describes how a codebase is arranged inside, not how it deploys, so a hexagonal monolith is an ordinary thing. Confusing the two axes is what makes "monolith or microservices" sound like one question when it is two.',
   },
+  'fitness-function': {
+    name: 'Fitness function',
+    see: '03-architecture',
+    short:
+      'An automated check that an architecture characteristic still holds.',
+    full: 'From evolutionary architecture: a test asserting a property of the system rather than a behaviour of a function. A rule that no module imports across a feature boundary, a build-size budget that fails the pipeline, an assertion that a page issues one query rather than forty.',
+    soWhat:
+      'It is the difference between a characteristic you chose and one you are hoping for. Boundaries, budgets and conventions decay silently because nothing tells you the day they stop being true — a fitness function is what turns "we agreed to" into "the build fails".',
+  },
   statelessness: {
     name: 'Statelessness',
     see: '03-architecture',

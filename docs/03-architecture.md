@@ -82,13 +82,20 @@ you rejected: **high availability** — a few hours down is survivable when nobo
 invoices at 3am; **low latency** — nobody is in a hurry to look at an invoice; **scale** —
 there is no evidence of it and inventing some is the trap below.
 
-The part that makes this section load-bearing rather than a vocabulary exercise:
+The part that makes this section load-bearing rather than a vocabulary exercise. This is a
+reference for whichever three or four you chose, **not a checklist to complete** — the
+pick-three rule above still stands:
 
 | Characteristic | What it forces later in this stage |
 |---|---|
 | Auditability | Soft delete over hard delete; an immutable record of what was sent |
-| Correctness | Constraints in the database rather than the application; money as integer cents |
+| Correctness | Constraints in the database rather than the application; money as integer cents; a locking strategy where two people can edit one row |
 | Cheap to run | One application, one database, no queue until something demands one |
+| Availability | A timeout on every external call; retries only where they are safe; a decision about what still works when each dependency is down |
+| Scalability | Statelessness, so more instances are an option at all; a pooler between serverless and Postgres |
+| Evolvability | Expand-contract for anything stored; boundaries that make a later split mechanical rather than archaeological |
+| Security | An authorization pattern chosen per entity rather than once for the system |
+| Deployability | Migrations that are safe to run before the code that needs them |
 
 Every row is a decision this stage makes anyway. Choosing the characteristic first is what
 turns that decision from a preference into something with a reason attached.
@@ -96,6 +103,29 @@ turns that decision from a preference into something with a reason attached.
 Which gives you the test: **a characteristic that traces to no decision was not chosen, it
 was listed.** If "secure" appears on your list and nothing downstream changed because of it,
 delete it — it is doing no work, and it is crowding out one that would.
+
+**Then one step further, because a trace is a claim and claims rot.** A characteristic that
+nothing checks is a characteristic you are hoping for. The name for the check is a **fitness
+function**: an automated test of a *property of the system*, rather than of what a function
+returns.
+
+They are more ordinary than the term suggests:
+
+- A test that fails when one feature imports from another's internals — which is exactly the
+  boundary rule in [Boundaries inside the monolith](#boundaries-inside-the-monolith), enforced
+  instead of agreed.
+- A build-size budget that fails the pipeline, defending a performance characteristic against
+  the dependency somebody adds in eight months.
+- An assertion that a page issues one query and not forty, which is how an N+1 gets caught
+  before a user finds it.
+
+This playbook does it to itself, which is the honest reason to trust the advice: one test pins
+this document's section structure, another enforces its own citation convention, both because a
+convention nothing checks decays quietly. That story is in
+`docs/learnings/decisions-need-tests-101.md`.
+
+So the section is a sequence, not a list: **choose a characteristic, trace it to a decision,
+then write the check that tells you when the decision stopped holding.**
 
 ### Model the domain first
 

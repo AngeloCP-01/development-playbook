@@ -59,6 +59,8 @@ drift apart.
 
 **Feasibility risk** — One of the standard product risks, alongside whether people want it and whether it makes business sense. It asks whether the technology, data, budget and time actually permit the solution. See [02 — Product Planning](../docs/02-planning.md).
 
+**Fitness function** — From evolutionary architecture: a test asserting a property of the system rather than a behaviour of a function. A rule that no module imports across a feature boundary, a build-size budget that fails the pipeline, an assertion that a page issues one query rather than forty. See [03 — Architecture](../docs/03-architecture.md).
+
 **Golden signals** — The four measurements to instrument before any others: latency, traffic, errors, and saturation. If you watch only four things, watch these. See [15 — Observability](../docs/15-observability.md).
 
 **Graceful degradation** — Designing so that the loss of one component removes one capability rather than the whole system. Search goes down and browsing still works; the PDF renderer goes down and the invoice still sends. See [03 — Architecture](../docs/03-architecture.md).
