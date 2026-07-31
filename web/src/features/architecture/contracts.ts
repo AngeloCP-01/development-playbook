@@ -32,7 +32,7 @@ export const CONTRACT_ROWS: ContractRow[] = [
     id: 'webhook',
     contract: 'A webhook you receive',
     cost: 'not-yours',
-    why: 'Somebody else owns the shape and you adapt. You inherit its delivery behaviour along with it: it will arrive twice eventually, and handling it has to be safe when it does. That is idempotency, worked through in the sketch step where the payment flow makes it concrete.',
+    why: 'Somebody else owns the shape and you adapt. You inherit its delivery behaviour along with it: it will arrive twice eventually, and handling it has to be safe when it does. That is idempotency, worked through in the resilience step where the payment flow makes it concrete.',
   },
 ]
 

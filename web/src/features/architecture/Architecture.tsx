@@ -30,6 +30,7 @@ import { SystemSketch } from './SystemSketch'
 import { DataFlow } from './DataFlow'
 import { SyncAsync } from './SyncAsync'
 import { IdempotencyBlock } from './IdempotencyBlock'
+import { ResiliencePatterns } from './ResiliencePatterns'
 import { ERView } from './ERView'
 import { SchemaInspector } from './SchemaInspector'
 import { PartialUniqueIndex } from './PartialUniqueIndex'
@@ -520,8 +521,26 @@ const STEPS: (Step & { id: StepId })[] = [
           >
             <SystemSketch />
           </Figure>
+          <div className="mt-6">
+            <Callout kind="info" title="What is deliberately not here">
+              Full high-level design practice comes with a system specification
+              document, a review board, and a sign-off before implementation
+              starts. None of that is in this stage, on purpose. The thinking
+              survives — what the pieces are, how they talk, what happens when
+              one fails — and the paperwork does not, because its actual purpose
+              is coordinating people you do not have.
+            </Callout>
+          </div>
         </Section>
-
+      </div>
+    ),
+  },
+  {
+    id: 'flow',
+    label: 'Flow',
+    hint: 'One flow end to end, and the fork it turns out to pose',
+    content: (
+      <div className="space-y-16">
         <Section
           eyebrow="One flow, end to end"
           title="Pick the flow that crosses the most boundaries"
@@ -529,8 +548,8 @@ const STEPS: (Step & { id: StepId })[] = [
           <Prose>
             <p>
               That is where the design decisions hide. Two of the five steps
-              below are different in kind from the rest, and the difference is a
-              decision the stage has not posed yet.
+              below are different in kind from the rest, and that difference is
+              the decision the rest of this step is about.
             </p>
           </Prose>
           <Figure
@@ -560,7 +579,15 @@ const STEPS: (Step & { id: StepId })[] = [
             <SyncAsync />
           </Figure>
         </Section>
-
+      </div>
+    ),
+  },
+  {
+    id: 'resilience',
+    label: 'Resilience',
+    hint: 'What happens when something you depend on is slow, or down',
+    content: (
+      <div className="space-y-16">
         <Section
           eyebrow="The consequence"
           title="Anything received has to be safe twice"
@@ -580,15 +607,27 @@ const STEPS: (Step & { id: StepId })[] = [
           >
             <IdempotencyBlock />
           </Figure>
-          <div className="mt-6">
-            <Callout kind="info" title="What is deliberately not here">
-              Full high-level design practice comes with a system specification
-              document, a review board, and a sign-off before implementation
-              starts. None of that is in this stage, on purpose. The thinking
-              survives — what the pieces are, how they talk, what happens when
-              one fails — and the paperwork does not, because its actual purpose
-              is coordinating people you do not have.
-            </Callout>
+        </Section>
+
+        <Section
+          eyebrow="The vocabulary"
+          title="Timeouts, retries and failing well"
+        >
+          <Prose>
+            <p>
+              The three answers you clicked through in the container view have a
+              name: <Term id="graceful-degradation">graceful degradation</Term>,
+              deciding per feature what still works when a dependency does not.
+              There is a small standard vocabulary for producing them, and it is
+              worth having because these cover almost everything — but the
+              closing line matters more than the list.{' '}
+              <strong className="font-medium text-fg">
+                For most calls the right answer is a timeout and nothing else.
+              </strong>
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <ResiliencePatterns />
           </div>
         </Section>
       </div>

@@ -172,6 +172,82 @@ export const FLOW_STEPS: FlowStep[] = [
   },
 ]
 
+export type ResiliencePattern = {
+  id: string
+  name: string
+  /** One line, scanned from the collapsed row. Names the failure, not the mechanism. */
+  summary: string
+  /** The failure this answers. Without it the pattern is vocabulary. */
+  failure: string
+  what: string
+  /** When it is worth building. The doc's answer for most calls is "a timeout and nothing else". */
+  earnsItsPlace: string
+  /** The consequence a solo developer meets that the pattern's own description hides. */
+  catch?: string
+}
+
+/**
+ * Source: docs/03-architecture.md, "Sketch the system" — its "Timeouts, retries
+ * and failing well" subsection.
+ *
+ * Graceful degradation comes last rather than first because in the app it is a
+ * back-reference: the three "what happens when this is down" answers the reader
+ * has already clicked through in the container view are the thing being named.
+ * The doc can name it up front because its answers are four paragraphs above;
+ * here they are two steps back.
+ *
+ * Bulkhead is deliberately not in this list. The doc names it without teaching
+ * it — real, and rarely earning its keep inside a single application — and a
+ * row that expands into "we are not covering this" is worse than a sentence
+ * saying so.
+ */
+export const RESILIENCE_PATTERNS: ResiliencePattern[] = [
+  {
+    id: 'timeout',
+    name: 'A timeout on every network call',
+    summary: 'Somebody else’s slow afternoon becomes your outage.',
+    failure:
+      'Most HTTP clients and database drivers wait indefinitely by default, which converts somebody else’s slow afternoon into your outage. Requests pile up holding connections until nothing works — including the pages that never touched the slow dependency.',
+    what: 'A deadline on the call, after which you stop waiting and decide what to do instead. The specific number matters much less than having one.',
+    earnsItsPlace:
+      'Every call, without argument. For most of them this is the whole answer and the other three are not needed.',
+  },
+  {
+    id: 'backoff-jitter',
+    name: 'Retry with exponential backoff and jitter',
+    summary: 'Retrying hard, and in unison, is how you keep a service down.',
+    failure:
+      'Retrying hard is how you keep a service down: it has just failed, so it is usually recovering. And without a random offset, every client that failed at the same moment retries at the same moment — a thundering herd you built yourself out of the mechanism meant to help.',
+    what: 'Wait longer before each attempt — a second, then two, then four — and add jitter, a random offset, so that clients which failed together do not return together.',
+    earnsItsPlace:
+      'Where the call is idempotent and the failure is plausibly transient. Both halves are load-bearing: a timeout that fired because the request was malformed will fire again.',
+    catch:
+      'The precondition this step has already taught: you may only retry what is safe to retry. Retrying a charge without idempotency is how you bill someone twice.',
+  },
+  {
+    id: 'circuit-breaker',
+    name: 'A circuit breaker',
+    summary: 'Your retries have made you part of the outage.',
+    failure:
+      'Your retries have made you part of the outage rather than a victim of it — you are still calling something that has failed every time for ten minutes, and paying the timeout on each one.',
+    what: 'After a few consecutive failures — five is a common starting point — stop calling and fail immediately for a cooldown of a minute or so, then let one request through to test the water.',
+    earnsItsPlace:
+      'After you have watched something fail repeatedly. It is a response to an observed failure, not a precaution.',
+    catch:
+      'A breaker is failure-count state, and the statelessness rule makes the consequence visible: an in-memory breaker is per instance. Across ten instances you get ten independent breakers, each needing its own five failures, so the thing trips ten times later than you designed it to. On one instance that is fine and you should not care. When it stops being fine the count has to move somewhere shared — and that is running infrastructure to protect a call, which is the moment to ask whether the call needed protecting.',
+  },
+  {
+    id: 'graceful-degradation',
+    name: 'Graceful degradation',
+    summary: 'One box being down should cost one feature, not the product.',
+    failure:
+      'One dependency being down takes the whole product down, because nothing ever decided which features actually needed it. The invoice cannot be sent because the PDF cannot be rendered, and nobody chose that.',
+    what: 'The name for what the three answers in the container view already are: deciding, per feature, what still works when a dependency does not. It is the outcome the other three patterns are in service of.',
+    earnsItsPlace:
+      'Always, and it costs nothing but the decision — you make it by answering the failure question for each box, which you have already done.',
+  },
+]
+
 export type SyncAsyncRow = {
   id: string
   question: string

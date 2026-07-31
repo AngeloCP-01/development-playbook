@@ -20,6 +20,8 @@ export const STEP_IDS = [
   'worksheet',
   'shape',
   'sketch',
+  'flow',
+  'resilience',
   'schema',
   'contract',
   'record',

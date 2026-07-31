@@ -3,6 +3,7 @@ import {
   C4_LEVELS,
   FLOW_STEPS,
   PROCESSED_EVENTS_LINES,
+  RESILIENCE_PATTERNS,
   SKETCH_NODES,
   SYNC_ASYNC_ROWS,
 } from './sketch'
@@ -73,4 +74,62 @@ test('the sync/async comparison answers four questions on both sides', () => {
 test('the idempotency block annotates its primary key, since that is the line doing the work', () => {
   const pk = PROCESSED_EVENTS_LINES.find((l) => l.id === 'pk')
   expect(pk?.note?.trim().length ?? 0).toBeGreaterThan(0)
+})
+
+test('all four resilience patterns are carried, since a reader meeting circuit breaker first in an interview was failed by the stage', () => {
+  const ids = RESILIENCE_PATTERNS.map((p) => p.id)
+  expect(ids).toEqual([
+    'timeout',
+    'backoff-jitter',
+    'circuit-breaker',
+    'graceful-degradation',
+  ])
+})
+
+test('every pattern names the failure it answers, because the pattern without its failure mode is vocabulary', () => {
+  for (const p of RESILIENCE_PATTERNS) {
+    expect(
+      p.failure.trim().length,
+      `${p.id} has no failure mode`,
+    ).toBeGreaterThan(0)
+    expect(p.what.trim().length, `${p.id} has no description`).toBeGreaterThan(
+      0,
+    )
+  }
+})
+
+// Collapsed, the row shows its name and one line. PATTERNS.md is specific that
+// the summary is what the reader scans, and here it has a second job: the list
+// is four patterns a reader is likely to have heard named and not defined, so
+// the line they scan has to be the failure, not the mechanism.
+test('every pattern has a scannable one-line summary, since the reader decides what to open from the collapsed list alone', () => {
+  for (const p of RESILIENCE_PATTERNS) {
+    expect(p.summary.trim().length, `${p.id} has no summary`).toBeGreaterThan(0)
+    expect(
+      p.summary.length,
+      `${p.id} summary is a paragraph, not a line`,
+    ).toBeLessThan(120)
+  }
+})
+
+// The doc does not stop at naming the four. It says building all four around
+// three third-party calls on day one is the same instinct as reaching for
+// microservices, wearing different clothes — and then says, per pattern, what
+// earns it its place. Carrying the names without that turns a section about
+// restraint into a shopping list.
+test('every pattern says what earns it its place, since the doc’s answer for most calls is a timeout and nothing else', () => {
+  for (const p of RESILIENCE_PATTERNS) {
+    expect(
+      p.earnsItsPlace.trim().length,
+      `${p.id} has no earns-its-place`,
+    ).toBeGreaterThan(0)
+  }
+  const timeout = RESILIENCE_PATTERNS.find((p) => p.id === 'timeout')
+  expect(timeout?.earnsItsPlace).toMatch(/every|most|always/i)
+})
+
+test('backoff carries jitter and says why, since retrying in lockstep is the failure that makes retries worse than none', () => {
+  const backoff = RESILIENCE_PATTERNS.find((p) => p.id === 'backoff-jitter')
+  expect(backoff?.what).toMatch(/jitter/i)
+  expect(backoff?.failure).toMatch(/same moment|lockstep|thunder|synchron/i)
 })
