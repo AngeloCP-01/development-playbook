@@ -112,7 +112,7 @@ Task 11 of the plan.
       round — SQL blocks in a grid could not scroll, because a grid child defaults to
       `min-width: auto`, so the page scrolled sideways 204px at 320px.
 - [ ] **Whole-branch review, covering doc and app together.** Still the load-bearing one. The
-      port half has never had it — **75 commits** now. Three per-task reviews have run and
+      port half has never had it — **73 commits** now. Three per-task reviews have run and
       found **eleven blocking defects** between them, at a rate that did not fall off: the last
       task reviewed produced five. Two were factual errors about Postgres that read plausibly
       and that no test could have caught until the tests were rewritten.

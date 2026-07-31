@@ -78,7 +78,7 @@ Before doing anything, read these for context:
 - **Branch/push:** work happens on `feat/`|`fix/`|`docs/<date>-` branches, merged to `main`
   with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes.**
   `main` and `origin/main` are in sync at **`eeb16f1`**. **Everything since is unmerged on
-  `feat/stage-03-app-port`, which is 75 commits ahead.**
+  `feat/stage-03-app-port`, which is 73 commits ahead.**
 
 ### This round's scope
 
@@ -97,7 +97,7 @@ trace into `require`, event sourcing and CQRS into `record`. Neither step is ove
 this task *adds* content and must not push either past four screens — move material behind an
 expand-to-reveal rather than baselining it. Task 12 finishes the records.
 
-**Then the whole-branch review, and it is the point.** Doc and app together, 75 commits, never
+**Then the whole-branch review, and it is the point.** Doc and app together, 73 commits, never
 done for the port half. Three per-task reviews found eleven blocking defects and the rate did
 not fall off — the last task reviewed produced five.
 
