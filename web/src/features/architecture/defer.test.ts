@@ -1,15 +1,33 @@
 import { expect, test } from 'vitest'
 import { DEFERRED_ITEMS } from './defer'
 
+// "Not empty" was what this asserted, which every placeholder in the world
+// satisfies: replacing all seven `problem` fields with "x" kept it green. Each
+// field is a reviewed paragraph the extraction moved, so the assertion is that
+// each is still a paragraph, still finished, and still its own.
 test('the existing deferral list survived the extraction intact, since this moved data that was already reviewed', () => {
   expect(DEFERRED_ITEMS.length).toBeGreaterThan(0)
   expect(new Set(DEFERRED_ITEMS.map((i) => i.id)).size).toBe(
     DEFERRED_ITEMS.length,
   )
+
+  for (const field of ['summary', 'problem', 'notYet', 'costsToday'] as const) {
+    const texts = DEFERRED_ITEMS.map((i) => i[field].trim())
+    expect(
+      new Set(texts).size,
+      `two entries share a ${field}, so one of them is a stand-in`,
+    ).toBe(texts.length)
+  }
+
   for (const i of DEFERRED_ITEMS) {
-    expect(i.problem.trim().length, `${i.id} problem`).toBeGreaterThan(0)
-    expect(i.notYet.trim().length, `${i.id} notYet`).toBeGreaterThan(0)
-    expect(i.costsToday.trim().length, `${i.id} costsToday`).toBeGreaterThan(0)
+    expect(i.summary.trim().length, `${i.id} summary`).toBeGreaterThan(30)
+    for (const field of ['problem', 'notYet', 'costsToday'] as const) {
+      expect(i[field].trim().length, `${i.id} ${field}`).toBeGreaterThan(80)
+      expect(
+        i[field].trim(),
+        `${i.id} ${field} does not end as a finished sentence`,
+      ).toMatch(/[.?]$/)
+    }
   }
 })
 

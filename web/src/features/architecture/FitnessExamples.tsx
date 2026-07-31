@@ -1,5 +1,9 @@
 import { Callout, Card } from '@/components/ui'
-import { CHARACTERISTICS, FITNESS_EXAMPLES } from './characteristics'
+import {
+  CHARACTERISTICS,
+  FITNESS_EXAMPLES,
+  FITNESS_FUNCTION_NOT_NOW,
+} from './characteristics'
 
 /**
  * Source: docs/03-architecture.md, "What this system has to be".
@@ -12,9 +16,10 @@ import { CHARACTERISTICS, FITNESS_EXAMPLES } from './characteristics'
  * click would cost a reader the scan and buy back almost no height — and this
  * feature already carries five accordions with the same markup.
  *
- * The closing callout is the part that keeps this a note rather than a task.
- * The doc is explicit that standing up an import-graph linter before the first
- * table is the infrastructure the stage spends a section refusing.
+ * The closing callout is the part that keeps this a note rather than a task,
+ * and it renders `FITNESS_FUNCTION_NOT_NOW` rather than restating it: the two
+ * were hand-copied apart once already, which left the constant asserted and
+ * unread.
  *
  * A server component: nothing here is interactive.
  */
@@ -45,12 +50,7 @@ export function FitnessExamples() {
 
       <div className="border-t border-line bg-raised px-5 py-4">
         <Callout kind="info" title="A line in your notes now, a test in 06">
-          You have no code yet, and standing up an import-graph linter before
-          your first table is exactly the kind of infrastructure this stage
-          spends a section refusing. What belongs here is one line per
-          characteristic: <em>how would I know if this stopped being true?</em>{' '}
-          Writing the check is 06 — Testing&rsquo;s, once there is something to
-          check.
+          {FITNESS_FUNCTION_NOT_NOW}
         </Callout>
       </div>
     </Card>

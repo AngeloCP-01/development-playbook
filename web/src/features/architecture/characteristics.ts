@@ -164,7 +164,7 @@ export const TRACE_ROWS: TraceRow[] = [
   {
     characteristicId: 'availability',
     forces:
-      'A timeout on every external call, retries only where they are safe, and a decision about what still works when each dependency is down. The three answers have a name — graceful degradation — and none of them is code you write later.',
+      'A timeout on every external call, retries only where they are safe, and a decision about what still works when each dependency is down. That last one is graceful degradation, decided per feature; the first two are the vocabulary for producing it.',
     stepId: 'resilience',
     stepLabel: 'Resilience',
   },
@@ -185,7 +185,7 @@ export const TRACE_ROWS: TraceRow[] = [
   {
     characteristicId: 'security',
     forces:
-      'An authorization rule written per entity — often two patterns joined by *and*, not one pattern chosen for the whole system. The singular framing is the one that produces cross-team privilege escalation.',
+      'An authorization rule written per entity — often two patterns joined by an “and”, not one pattern chosen for the whole system. The singular framing is the one that produces cross-team privilege escalation.',
     stepId: 'access',
     stepLabel: 'Access',
   },
@@ -220,9 +220,24 @@ export const TRACE_ROWS: TraceRow[] = [
  * true. The third step is a note in this stage and a test in 06, and the doc is
  * explicit about why — standing up an import-graph linter before the first
  * table is the infrastructure this stage spends a section refusing.
+ *
+ * Two exports because the framing renders in two places: the claim opens the
+ * section in `Architecture.tsx`, the refusal closes `FitnessExamples`. It was
+ * one constant rendered nowhere and hand-copied into both, which left the test
+ * on it asserting a string no reader saw.
+ *
+ * The claim is split at its term rather than kept as one string: "fitness
+ * function" renders as an inline `<Term>`, and splitting there is what lets the
+ * sentence be single-sourced and still reach the glossary.
  */
-export const FITNESS_FUNCTION_NOTE =
-  'A characteristic that nothing checks is a characteristic you are hoping for. The name for the check is a fitness function: an automated test of a property of the system, rather than of what a function returns. Not now, though — you have no code yet. What belongs in this stage is one line per characteristic in your notes: how would I know if this stopped being true? Writing the check is 06 — Testing’s, once there is something to check.'
+export const FITNESS_FUNCTION_CLAIM = {
+  lead: 'A characteristic that nothing checks is a characteristic you are hoping for. The name for the check is a',
+  term: 'fitness function',
+  rest: ': an automated test of a property of the system, rather than of what a function returns. The answers are more ordinary than the term suggests.',
+} as const
+
+export const FITNESS_FUNCTION_NOT_NOW =
+  'Not now, though. You have no code yet, and standing up an import-graph linter before your first table is exactly the kind of infrastructure this stage spends a section refusing. What belongs in this stage is one line per characteristic in your notes: how would I know if this stopped being true? Writing the check is 06 — Testing’s, once there is something to check.'
 
 export type FitnessExample = {
   id: string

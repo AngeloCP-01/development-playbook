@@ -1,10 +1,13 @@
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
 import {
   CHARACTERISTICS,
   EXAMPLE_DECLINED,
   EXAMPLE_PICK,
   FITNESS_EXAMPLES,
-  FITNESS_FUNCTION_NOTE,
+  FITNESS_FUNCTION_CLAIM,
+  FITNESS_FUNCTION_NOT_NOW,
   MAX_PICKS,
   TRACE_ROWS,
   TRADES,
@@ -12,6 +15,9 @@ import {
 import { STEP_IDS } from './steps'
 
 const IDS = new Set(CHARACTERISTICS.map((c) => c.id))
+
+const source = (file: string) =>
+  readFileSync(fileURLToPath(new URL(file, import.meta.url)), 'utf8')
 
 test('ten candidates are offered, because the exercise is choosing from a list and not completing one', () => {
   expect(CHARACTERISTICS).toHaveLength(10)
@@ -62,11 +68,17 @@ test('every picked characteristic traces to a decision, which is the doc test th
     expect(traced, `${id} traces nowhere`).toContain(id)
 })
 
-test('every trace row points at a step the stepper actually has', () => {
+// The row renders as a link: `stepId` is the href and `stepLabel` is what the
+// link says, so a row needs both or it is a dead end on the page.
+test('every trace row points at a step the stepper actually has, and says which', () => {
   for (const r of TRACE_ROWS) {
     expect(STEP_IDS, `${r.characteristicId} points at ${r.stepId}`).toContain(
       r.stepId,
     )
+    expect(
+      r.stepLabel.trim().length,
+      `${r.characteristicId} has no step label`,
+    ).toBeGreaterThan(0)
   }
 })
 
@@ -105,6 +117,29 @@ test('the trace table covers all ten candidate characteristics, which was the do
   )
 })
 
+// The row used to read "The three answers have a name — graceful degradation"
+// directly after listing a timeout, a retry policy and the dependency-down
+// decision, which teaches that a timeout is graceful degradation. The doc
+// (docs/03-architecture.md, "Timeouts, retries and failing well") has it the
+// other way round: degradation is the per-feature outcome and the patterns are
+// the vocabulary for producing it. `trace` is five steps before `resilience`,
+// so this row is the first referent a reader gets, and it was the wrong one.
+test('where the trace names graceful degradation it names the per-feature decision, not the timeout and retry policy sitting beside it', () => {
+  const availability = TRACE_ROWS.find(
+    (r) => r.characteristicId === 'availability',
+  )
+  const naming = (availability?.forces ?? '')
+    .split(/(?<=\.)\s+/)
+    .filter((s) => /graceful degradation/i.test(s))
+
+  expect(naming, 'the availability row names it exactly once').toHaveLength(1)
+  expect(naming[0], 'named as the per-feature outcome').toMatch(/per feature/i)
+  expect(
+    naming[0],
+    'a timeout or a retry policy must not be what the name attaches to',
+  ).not.toMatch(/timeout|retr(y|ies|ying)/i)
+})
+
 test('every trace row names the decision the characteristic forces, since a characteristic that forces nothing is a label', () => {
   for (const r of TRACE_ROWS) {
     expect(
@@ -114,13 +149,38 @@ test('every trace row names the decision the characteristic forces, since a char
   }
 })
 
-test('every trace row points at a step that exists, since the row renders as a link', () => {
-  for (const r of TRACE_ROWS) {
-    expect(STEP_IDS, `${r.characteristicId} → ${r.stepId}`).toContain(r.stepId)
-    expect(
-      r.stepLabel.trim().length,
-      `${r.characteristicId} label`,
-    ).toBeGreaterThan(0)
+// The security row shipped "often two patterns joined by *and*", and
+// `TraceForward` renders `forces` as text, so the asterisks were on the page.
+// Scoped to this module: the same class exists in `scoring.ts` and
+// `contracts.ts` and is pre-existing there.
+test('no string in this module ships literal markdown, since every one of them renders as text and the reader would see the punctuation', () => {
+  const shipped: { where: string; text: string }[] = [
+    ...CHARACTERISTICS.map((c) => ({
+      where: `${c.id} meaning`,
+      text: c.meaning,
+    })),
+    ...TRADES.map((t, i) => ({ where: `trade ${i}`, text: t })),
+    ...EXAMPLE_DECLINED.map((d) => ({
+      where: `${d.id} because`,
+      text: d.because,
+    })),
+    ...TRACE_ROWS.map((r) => ({
+      where: `${r.characteristicId} forces`,
+      text: r.forces,
+    })),
+    ...FITNESS_EXAMPLES.flatMap((e) => [
+      { where: `${e.id} what`, text: e.what },
+      { where: `${e.id} defends`, text: e.defends },
+    ]),
+    {
+      where: 'the fitness claim',
+      text: Object.values(FITNESS_FUNCTION_CLAIM).join(' '),
+    },
+    { where: 'FITNESS_FUNCTION_NOT_NOW', text: FITNESS_FUNCTION_NOT_NOW },
+  ]
+
+  for (const { where, text } of shipped) {
+    expect(text, `${where} carries markdown`).not.toMatch(/[*`_]/)
   }
 })
 
@@ -129,11 +189,38 @@ test('every trace row points at a step that exists, since the row renders as a l
 // infrastructure this stage spends a section refusing". Porting it as a task
 // rather than as a note would invert the section it belongs to.
 test('fitness functions are framed as a note now and a test later, because standing up a linter before the first table is the infrastructure this stage refuses', () => {
-  expect(FITNESS_FUNCTION_NOTE).toMatch(/06|testing/i)
+  expect(FITNESS_FUNCTION_NOT_NOW).toMatch(/06|testing/i)
   expect(
-    FITNESS_FUNCTION_NOTE,
+    FITNESS_FUNCTION_NOT_NOW,
+    'the refusal is what makes it a note rather than a task',
+  ).toMatch(/import-graph linter/i)
+  expect(
+    FITNESS_FUNCTION_NOT_NOW,
     'what belongs in this stage is the line, not the check',
   ).toMatch(/one line|in your notes|how would I know/i)
+})
+
+// The framing shipped exported, asserted in this file, and rendered nowhere:
+// both halves had been hand-copied into JSX, so the test above asserted a
+// string no reader ever saw and deleting the callout left the suite green. A
+// data test cannot see whether anything renders a string, so this reads the two
+// render sites — the same trick `ddl-sync.test.ts` uses on the doc.
+test('both halves of the fitness-function framing render from the constant, since a string asserted here and copied into JSX is two strings that drift', () => {
+  const claimSite = source('./Architecture.tsx')
+  const notNowSite = source('./FitnessExamples.tsx')
+
+  expect(claimSite, 'the section intro must render the claim').toContain(
+    'FITNESS_FUNCTION_CLAIM',
+  )
+  expect(notNowSite, 'the callout must render the refusal').toContain(
+    'FITNESS_FUNCTION_NOT_NOW',
+  )
+  expect(claimSite, 'the claim is hand-copied into JSX again').not.toContain(
+    'a characteristic you are',
+  )
+  expect(notNowSite, 'the refusal is hand-copied into JSX again').not.toContain(
+    'import-graph linter',
+  )
 })
 
 test('the cheapest fitness example is the schema assertion, since it is three lines and needs no tooling decision', () => {

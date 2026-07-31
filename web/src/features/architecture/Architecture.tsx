@@ -6,6 +6,7 @@ import { Stepper, type Step } from '@/components/Stepper'
 import { type StepId } from './steps'
 import { References } from '@/components/References'
 import { SCHEMA_LINES } from './scoring'
+import { FITNESS_FUNCTION_CLAIM } from './characteristics'
 import {
   INDEX_LINES,
   INVOICE_SENDS_LINES,
@@ -182,12 +183,9 @@ const STEPS: (Step & { id: StepId })[] = [
         >
           <Prose>
             <p>
-              A characteristic that nothing checks is a characteristic you are
-              hoping for. The name for the check is a{' '}
-              <Term id="fitness-function">fitness function</Term>: an automated
-              test of a <em>property of the system</em>, rather than of what a
-              function returns. The answers are more ordinary than the term
-              suggests.
+              {FITNESS_FUNCTION_CLAIM.lead}{' '}
+              <Term id="fitness-function">{FITNESS_FUNCTION_CLAIM.term}</Term>
+              {FITNESS_FUNCTION_CLAIM.rest}
             </p>
           </Prose>
           <div className="mt-5">
