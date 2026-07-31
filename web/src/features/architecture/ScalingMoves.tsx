@@ -43,12 +43,12 @@ export function ScalingMoves() {
     <Card className="p-0">
       {precondition && (
         <div className="border-b border-line bg-raised px-5 py-4">
-          <p className="flex flex-wrap items-center gap-2">
+          <h3 className="flex flex-wrap items-center gap-2">
             <span className="font-medium">{precondition.name}</span>
-            <span className="t-label border border-brand px-1.5 py-0.5 text-brand">
+            <span className="border border-brand px-1.5 py-0.5 text-[11px] font-medium text-brand">
               the precondition
             </span>
-          </p>
+          </h3>
           <p className="mt-1.5 text-sm leading-6 text-muted">
             {precondition.what}
           </p>
@@ -74,8 +74,11 @@ export function ScalingMoves() {
                   aria-controls={panelId}
                   className="flex min-h-11 w-full items-center gap-3.5 px-5 py-3.5 text-left transition-colors duration-150 hover:bg-sunken lg:min-h-9"
                 >
-                  <span className="min-w-0 flex-1 font-medium">
-                    {move.name}
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-medium">{move.name}</span>
+                    <span className="mt-0.5 block text-sm text-subtle">
+                      {move.summary}
+                    </span>
                   </span>
                   <ChevronDown
                     className={`size-4 shrink-0 text-subtle transition-transform duration-150 ${open ? 'rotate-180' : ''}`}

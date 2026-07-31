@@ -130,6 +130,8 @@ export const STYLE_TRACE: StyleTrace[] = [
 export type ScalingMove = {
   id: string
   name: string
+  /** One line, read collapsed. PATTERNS.md asks for it and four siblings have it. */
+  summary: string
   what: string
   /** True for statelessness, which is not a peer move but what makes scale-out possible. */
   precondition?: boolean
@@ -154,6 +156,8 @@ export const SCALING_MOVES: ScalingMove[] = [
   {
     id: 'stateless',
     name: 'Statelessness',
+    summary:
+      'Any instance can serve any request, or none of the rest is available to you.',
     precondition: true,
     what: 'The application keeps no request state in its own memory — sessions live in a cookie, a table or a shared store, never a local variable. Any instance can then serve any request, which is what lets you run several copies at all, and what makes the serverless row possible, since the platform starts and stops instances whenever it likes.',
     catch:
@@ -162,6 +166,7 @@ export const SCALING_MOVES: ScalingMove[] = [
   {
     id: 'scale-up',
     name: 'Vertical scaling',
+    summary: 'A bigger machine. Simplest, and it runs out.',
     what: 'A bigger machine. Simpler, needs no statelessness, and eventually runs out of machine.',
     catch:
       'Vertical first is almost always right. The point of knowing the difference is that the other one is not something you bolt on later.',
@@ -169,27 +174,25 @@ export const SCALING_MOVES: ScalingMove[] = [
   {
     id: 'scale-out',
     name: 'Horizontal scaling',
+    summary: 'More machines. No ceiling, and one precondition.',
     what: 'More machines behind a load balancer. Effectively no ceiling.',
     catch:
       'Needs statelessness first, which is why that is the precondition above rather than a fourth option here.',
   },
   {
-    id: 'load-balancer',
-    name: 'A load balancer',
-    what: 'The thing in front of several instances that decides which one serves a request. It is what horizontal scaling is made of rather than a separate decision.',
-  },
-  {
     id: 'read-replicas',
     name: 'Read replicas',
+    summary: 'Spreads reads. Does nothing for writes.',
     what: 'Copies that spread read load. They do nothing for writes, because writes still go to one place.',
     catch:
-      'A replica is behind by some amount. That lag is where the eventual consistency from the concurrency step turns up in your own product rather than in theory — a user saves, gets redirected, reads from a replica, and does not see their own change.',
+      'A replica is behind by some amount. That lag is where eventual consistency stops being theory and turns up in your own product, which is why it is one of the two terms the races step ends on.',
   },
   {
     id: 'pooling',
     name: 'A connection pooler',
-    what: 'A Postgres instance accepts a limited number of simultaneous connections — often a couple of hundred, fewer on small plans. Serverless functions scale by starting more instances and each instance wants its own connection, so moderate-looking traffic exhausts the limit and new requests fail on connect rather than on anything you wrote. A pooler holds a small number of real connections and multiplexes everyone onto them. Managed providers ship one, and reaching for it is usually a connection-string change rather than an architecture change.',
+    summary: 'The one that bites on your first serverless deploy.',
+    what: 'A Postgres instance accepts a limited number of simultaneous connections — often a couple of hundred, fewer on small plans. Serverless functions scale by starting more instances and each instance wants its own connection, so moderate-looking traffic exhausts the limit and new requests fail on connect rather than on anything you wrote. That makes it a confusing first encounter: the application is fine, the database is fine, and the join between them is not. A pooler holds a small number of real connections and multiplexes everyone onto them, and reaching for one is usually a connection-string change rather than an architecture change.',
     catch:
-      'A pooler in transaction mode hands your connection to someone else between statements, which breaks anything relying on session state — prepared statements, session variables, advisory locks, and the SELECT … FOR UPDATE this stage teaches. Most clients have a flag for it. Read your provider’s note on the mode before assuming it is invisible.',
+      'A pooler in transaction mode hands your connection to someone else between transactions, which breaks anything relying on session state: prepared statements, session variables, advisory locks. Most clients have a flag for it. The reason to read your provider’s note on the mode before you get to the locking step is that the two interact — what you take inside a transaction is safe, and what you expected to outlive one is not.',
   },
 ]

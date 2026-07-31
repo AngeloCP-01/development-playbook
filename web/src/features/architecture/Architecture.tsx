@@ -298,7 +298,7 @@ const STEPS: (Step & { id: StepId })[] = [
   {
     id: 'shape',
     label: 'Shape',
-    hint: 'Know the options, then take the one your characteristics pick',
+    hint: 'The shapes on offer, and the one property that decides which are yours',
     content: (
       <div className="space-y-16">
         <Section eyebrow="The landscape" title="The shapes a system can take">
@@ -361,9 +361,8 @@ const STEPS: (Step & { id: StepId })[] = [
               scaling are not two settings of one dial.
             </p>
             <p>
-              Vertical first is almost always right. The point of knowing the
-              difference is that horizontal scaling is not something you bolt
-              on: it needs a property you either have or do not, decided now.
+              Vertical first is almost always right. The reason to know the
+              difference now rather than later is in the first row below.
             </p>
           </Prose>
           <div className="mt-5">
@@ -385,10 +384,11 @@ const STEPS: (Step & { id: StepId })[] = [
         >
           <Prose>
             <p>
-              That choice follows from the characteristics rather than from
-              taste. Run the same trace against yours. If it produces a
-              different answer than the next section, the next section is wrong
-              for your system, and you should be able to say why.
+              Teaching a modular monolith follows from the characteristics
+              rather than from taste. Run the same trace against yours. If it
+              produces a different answer than the next section, the next
+              section is wrong for your system, and you should be able to say
+              why.
             </p>
           </Prose>
           <div className="mt-5">
