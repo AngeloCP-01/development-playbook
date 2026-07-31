@@ -602,6 +602,15 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'It is why "we will split that out later" can be a plan instead of a hope. The alternative — a rewrite that has to reach parity before anyone can use it — is the failure mode it exists to avoid.',
   },
+  'system-design': {
+    name: 'System design',
+    see: '03-architecture',
+    short:
+      'Deciding what the pieces are, how they talk, and what the data looks like.',
+    full: 'The activity between knowing what a product must do and writing the code that does it: choose the qualities the system has to have, model the data, pick a deployment shape, draw what depends on what, and settle the interfaces and access rules. The phrase is most often heard as the name of an interview format, which follows roughly that sequence.',
+    soWhat:
+      'It is the same work this stage calls architecture, so a reader searching for one and finding the other has not taken a wrong turn. Worth knowing that the interview version usually adds capacity estimation, and that this stage deliberately keeps that light — sizing a system you cannot describe yet is the trap it spends a section refusing.',
+  },
   'architecture-characteristic': {
     name: 'Architecture characteristic (non-functional requirement)',
     see: '03-architecture',

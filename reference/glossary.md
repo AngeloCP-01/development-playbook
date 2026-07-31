@@ -141,6 +141,8 @@ drift apart.
 
 **Switching cost** — Learning a new tool, migrating data, changing habits, and the risk that the new thing is worse. It is paid by the user, not by you, and it is usually larger than builders estimate.
 
+**System design** — The activity between knowing what a product must do and writing the code that does it: choose the qualities the system has to have, model the data, pick a deployment shape, draw what depends on what, and settle the interfaces and access rules. The phrase is most often heard as the name of an interview format, which follows roughly that sequence. See [03 — Architecture](../docs/03-architecture.md).
+
 **TAM (Total Addressable Market)** — Total Addressable Market — every person or business who could conceivably buy this, if you had no competitors and perfect reach. Usually paired with SAM (the slice you could realistically serve) and SOM (the slice you could realistically win).
 
 **Timeout** — An explicit limit on how long you will wait for a network call before treating it as failed. Most HTTP clients and database drivers default to waiting indefinitely. See [03 — Architecture](../docs/03-architecture.md).

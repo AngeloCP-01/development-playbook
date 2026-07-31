@@ -14,6 +14,14 @@ This is the longest stage in the playbook, deliberately. It is built to be consu
 than read straight through. The work runs requirements → high-level design → low-level
 design; the numbering is the reading order, not a schedule.
 
+**If you came looking for "system design", it is here under another name.** The middle of this
+stage — from *What this system has to be* through *Authentication and authorization* — is that
+activity: choose the qualities, model the data, pick a shape, draw the dependencies, settle the
+interfaces and the access rules. The sections around it are the judgment about doing it at all:
+which decisions deserve the effort (1) and which to refuse (13), how one survives you (12), how
+to change one that is already running (9), and where an agent helps (14). That surrounding half
+is the part a textbook usually leaves out.
+
 | | Section | Answers |
 |---|---|---|
 | | [Sort decisions by reversibility](#sort-decisions-by-reversibility) | Which decisions deserve the thinking |
