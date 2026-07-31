@@ -1,10 +1,12 @@
 /**
  * Source: docs/03-architecture.md, "Design the database".
  *
- * The three SQL blocks the schema step shows beyond the invoices table, plus
- * the ER view that precedes all of them. Each block is an excerpt and assumes
- * the tables the domain model named already exist — they are not a migration
- * file, which is what the step says out loud.
+ * The three SQL blocks shown beyond the invoices table, plus the ER view that
+ * precedes all of them. They no longer live in one step — D-52 split the
+ * database material across `schema`, `indexes` and `tenancy` — so they are
+ * grouped here by what they are rather than by where they render. Each block
+ * is an excerpt and assumes the tables the domain model named already exist:
+ * they are not a migration file, which is what the stage says out loud.
  */
 
 import { type SchemaLine } from './scoring'

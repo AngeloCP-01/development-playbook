@@ -34,6 +34,9 @@ import { ResiliencePatterns } from './ResiliencePatterns'
 import { ERView } from './ERView'
 import { SchemaInspector } from './SchemaInspector'
 import { PartialUniqueIndex } from './PartialUniqueIndex'
+import { IsolationLevels } from './IsolationLevels'
+import { LockingStrategies } from './LockingStrategies'
+import { LockingChoice } from './LockingChoice'
 import { DeleteBehaviour } from './DeleteBehaviour'
 import { ContractCost } from './ContractCost'
 import { RouteShape } from './RouteShape'
@@ -722,7 +725,15 @@ const STEPS: (Step & { id: StepId })[] = [
             />
           </Figure>
         </Section>
-
+      </div>
+    ),
+  },
+  {
+    id: 'indexes',
+    label: 'Indexes',
+    hint: 'Two things you write as an index: an access path, and a rule',
+    content: (
+      <div className="space-y-16">
         <Section
           eyebrow="Answering real queries"
           title="Indexes come from the sketch, not from intuition"
@@ -730,7 +741,7 @@ const STEPS: (Step & { id: StepId })[] = [
           <Prose>
             <p>
               Write the queries first and add the index the query needs. Both of
-              these come from the system sketch two steps back: one from a
+              these come from the system sketch you drew earlier: one from a
               screen, one from the scheduled job. Indexes cost write time and
               disk, which is why &ldquo;index everything&rdquo; is not the
               answer and &ldquo;index nothing until it hurts&rdquo; is not
@@ -767,7 +778,15 @@ const STEPS: (Step & { id: StepId })[] = [
             <PartialUniqueIndex />
           </Figure>
         </Section>
-
+      </div>
+    ),
+  },
+  {
+    id: 'tenancy',
+    label: 'Tenancy',
+    hint: 'Who owns the row, and what happens when the owner goes',
+    content: (
+      <div className="space-y-16">
         <Section
           eyebrow="The two left implicit"
           title="Actors and tenancy are stored data too"
@@ -818,7 +837,15 @@ const STEPS: (Step & { id: StepId })[] = [
             <DeleteBehaviour />
           </Figure>
         </Section>
-
+      </div>
+    ),
+  },
+  {
+    id: 'concurrency',
+    label: 'Concurrency',
+    hint: 'What two writers, arriving at once, do to one row',
+    content: (
+      <div className="space-y-16">
         <Section
           eyebrow="Beyond one row"
           title="Some invariants no constraint can express"
@@ -833,6 +860,85 @@ const STEPS: (Step & { id: StepId })[] = [
               a rule stops being the database&rsquo;s job to guarantee and
               starts being yours to demarcate. The database will hold the line,
               but only around the boundary you draw.
+            </p>
+            <p>
+              How much one transaction sees of another is its{' '}
+              <Term id="isolation-level">isolation level</Term>, and the default
+              is not the strictest.
+            </p>
+          </Prose>
+          <Figure
+            n={19}
+            caption="The two levels worth knowing, answering the same three questions. The middle row is the section: both answer it identically, because the limit is not something read committed has and serializable fixes."
+          >
+            <IsolationLevels />
+          </Figure>
+        </Section>
+
+        <Section
+          eyebrow="The lost update"
+          title="Two approvals, and one of them disappears"
+        >
+          <Prose>
+            <p>
+              Two managers open the same claim. Both read it as pending. Both
+              approve. The second write silently overwrites the first, no
+              constraint was violated, and nothing anywhere records that a
+              decision was discarded. Two standard fixes, and both work by
+              carrying something <em>across</em> the two transactions rather
+              than tightening either one.
+            </p>
+          </Prose>
+          <Figure
+            n={20}
+            caption="Optimistic and pessimistic locking, with the statement each one turns on. The rule: optimistic when conflict is rare, pessimistic when it is expected — and with a person deciding in the middle, it is almost always the first."
+          >
+            <LockingStrategies />
+          </Figure>
+        </Section>
+      </div>
+    ),
+  },
+  {
+    id: 'races',
+    label: 'Races',
+    hint: 'Which mechanism stops which — and the one that stops none',
+    content: (
+      <div className="space-y-16">
+        <Section eyebrow="Your turn" title="Which mechanism stops which race?">
+          <Prose>
+            <p>
+              Three races, four mechanisms, and one of the four is the answer to
+              none of them. Commit before each verdict shows — the third is the
+              one worth getting wrong.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <LockingChoice />
+          </div>
+        </Section>
+
+        <Section
+          eyebrow="Two terms, not oversold"
+          title="What arrives with the second copy"
+        >
+          <Prose>
+            <p>
+              <Term id="cap-theorem">CAP</Term> says that when the network
+              between your nodes splits, you choose between refusing requests to
+              stay consistent and serving them while copies disagree. With one
+              database there is no partition to survive, so it is theory. It
+              becomes a real decision the moment you add a replica or a second
+              service that owns data.
+            </p>
+            <p>
+              <Term id="eventual-consistency">Eventual consistency</Term> is
+              what you get at that moment: copies agree in the end, not
+              immediately. Its everyday face is the read-after-write anomaly,
+              where a user saves, gets redirected, reads from a replica and does
+              not see their own change. That is why a read which must reflect a
+              just-finished write goes to the primary — a design decision rather
+              than a bug to fix later.
             </p>
           </Prose>
         </Section>
@@ -862,7 +968,7 @@ const STEPS: (Step & { id: StepId })[] = [
             </p>
           </Prose>
           <Figure
-            n={19}
+            n={21}
             caption="Three kinds of contract, sorted by who you can make move. Most solo projects live almost entirely in the first row, which is the argument for not building a public API until something needs one."
           >
             <ContractCost />
@@ -901,7 +1007,7 @@ const STEPS: (Step & { id: StepId })[] = [
             </p>
           </Prose>
           <Figure
-            n={20}
+            n={22}
             caption="Three paths compared on the same three questions rather than each arguing its own case. None is marked correct, because the trade genuinely differs by project — and the line under them is the part most projects get wrong."
           >
             <AuthPaths />
@@ -955,7 +1061,7 @@ const STEPS: (Step & { id: StepId })[] = [
             </p>
           </Prose>
           <Figure
-            n={21}
+            n={23}
             caption="Five headings, and what each is holding. The reasoning is the part that decays: the decision survives on its own, so in eight months only the record can say why it was made."
           >
             <ADRAnatomy />
