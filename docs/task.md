@@ -308,6 +308,12 @@ because it is updated when the doc moves rather than when a round closes.
 doc has stopped moving and the port has one stable target. Tally at that point: 5 sections fully
 ported, 8 partial, 1 (section 9, "Evolve the schema safely") not ported at all.
 
+**Two fixes already landed on this branch beyond the merge**, so the port does not have to
+redo them: the authorization exercise (`contracts.ts`) was scoring `role` alone as correct on
+the manager-approves-a-swap scenario, which is the framing that produces cross-team privilege
+escalation — now a checkbox conjunction, browser-verified; and the TOC and glossary now name
+**system design**, since the stage is called Architecture and nobody searches for that.
+
 W-3.1 was deliberately doc-only, so `docs/03-architecture.md` and
 `web/src/features/architecture/` now disagree about what the stage contains. That divergence
 is **TD-23**, and this round closes it.

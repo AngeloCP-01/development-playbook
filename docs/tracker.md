@@ -14,7 +14,11 @@ does not serve (D-37).
 by decision (**D-46**), so `web/src/features/architecture/` still mirrors the eight-subsection
 doc. That divergence is **TD-23** and `W-3.2` closes it.
 
-**W-3.1b's doc half is done** (`1db6344`…`3cd19c4`); its app port is the open remainder.
+**W-3.1b's doc half is done** (`1db6344`…`3cd19c4`). Its content, plus the whole doc, now lives
+on `feat/stage-03-app-port` — the doc branch was merged **into** the port rather than into
+`main` (**D-51**), so the port has one stable target and the new material gets ported once.
+**Nothing is merged to `main`.** Coverage is tracked continuously in `docs/stage-03-status.md`;
+at the last check that read 5 sections fully ported, 8 partial, 1 not ported.
 
 **How it was raised.** An architecture-completeness audit against standard
 practice found five clusters of widely-taught material missing from all eighteen docs
@@ -33,7 +37,7 @@ ticked for work deliberately deferred. **Pushed** — `origin/main` is at `249bd
 long-standing local-only backlog is cleared and CI has a real branch to run against.
 
 Quality gates remain live: prettier (skipping markdown, see the build note below), eslint at
-`--max-warnings 0`, **136 vitest tests across 11 files**, a **10-test audit suite sweeping 20
+`--max-warnings 0`, **205 vitest tests across 18 files**, a **10-test audit suite sweeping 20
 URLs** (stage 03's six step hashes added by hand — TD-12), lefthook, and CI. Everything
 since `82a980b` was local until 2026-07-29, when `main` was pushed and CI ran green on the
 stage 03 merge (`30426083363`). `main` and `origin/main` are in sync at `249bd9d`; the user
@@ -731,7 +735,8 @@ Opened deliberately by W-3.1 on 2026-07-29, which was scoped doc-only. This is a
 round chose, not one it discovered, and it is recorded so the choice is visible rather than
 silent — `CLAUDE.md` permits the doc/app duplication but not widening it unnoted.
 
-`docs/03-architecture.md` is thirteen subsections and 902 lines.
+`docs/03-architecture.md` is fourteen subsections and ~1,344 lines. Live coverage:
+`docs/stage-03-status.md`.
 `web/src/features/architecture/` is the six steps built in W-3 (reverse · model · constrain ·
 shape · decide · ai) against the eight-subsection doc that no longer exists.
 

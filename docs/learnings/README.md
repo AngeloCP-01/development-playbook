@@ -27,10 +27,14 @@ Naming: `<topic>-101.md`.
   reads only the doc, forbidden from filling gaps with its own knowledge, and tries to
   produce the real artifact. A beginner persona finds completeness defects; role personas
   answer "is it ready for audience X?" It caught two content defects in stage 02 and
-  settled its scope. Extended after stage 03's doc round, where the re-run found five gaps
-  **the round itself had introduced** — so the report is the middle of the round, not the
-  end, and the fix wave answering it needs its own pass. Read it before calling any stage
-  doc done.
+  settled its scope. Extended twice after stage 03. The second run found five gaps
+  **the round itself had introduced**, so the report is the middle of the round rather than
+  the end, and the fix wave answering it needs its own pass. The third run added the limit of
+  the method: it caught two defects only by **executing** the doc's SQL, in a section whose
+  prose lectures the reader about silent migration bugs — a backfill that corrupted every
+  single-word name, and a loop whose own "repeat until zero rows" comment was false. Reading
+  checks whether code says what you meant; running checks whether what you meant is true.
+  Read it before calling any stage doc done.
 - `decisions-need-tests-101.md` — why a recorded convention with no mechanical check decays
   at the speed of the next round. D-42 (cite headings, not line numbers) was written after
   an audit found 14 of 33 citations wrong, and four days later the next round on the same

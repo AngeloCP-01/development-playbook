@@ -99,5 +99,31 @@ problem to a section about diagrams.
 - It is cheap (one agent, minutes) and it reliably finds things the author cannot see. There
   is no reason to skip it for a document meant to teach.
 
-What it will not catch: voice drift across sections, whether the document is navigable, and
-anything in the fix wave that answers it. Those need separate passes.
+What it will not catch: voice drift across sections, whether the document is navigable,
+anything in the fix wave that answers it, and **whether the code in the document actually
+runs.** Those need separate passes.
+
+## The third run, and the limit of reading
+
+Run 3 on stage 03 found what the two before it had missed and what a careful re-read would
+not have: it started a PostgreSQL container and executed the SQL.
+
+Two defects came out of that, both in a section whose surrounding prose lectures the reader
+about *silent, plausible* migration bugs. A `substr(name, strpos(name, ' ') + 1)` backfill
+turned every single-word name into `last_name = first_name`, because `strpos` returns 0 for a
+mononym and `substr(name, 1)` returns the whole string. And the same statement's own comment —
+"repeat until it reports zero rows" — was false, because one null name re-matched the guard
+forever while still counting as updated.
+
+Neither is a syntax error. Both produce a wrong *result* from correct-looking code, which is
+the class of defect reading cannot find, because reading checks whether the code says what you
+meant and running checks whether what you meant is true.
+
+**So: "read the SQL as SQL" is not the same instruction as "run the SQL".** The first was in
+the plan and was followed. It was not enough. That became **D-50** — executable content in a
+document gets executed — and the cost of applying it is one `docker run` and about four
+minutes for a whole round's DDL.
+
+Worth noting this project already had the standard and dropped it: an earlier stage-03 review
+reassembled the doc's DDL and executed it against a real database. The lesson is less "adopt
+this" than "notice when a standard quietly stops being applied."

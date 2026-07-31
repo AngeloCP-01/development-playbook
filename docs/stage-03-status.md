@@ -4,11 +4,10 @@
 exists because this stage has now diverged from its own port twice, and both times the
 divergence was discovered rather than tracked.
 
-**Last verified:** 2026-07-30, on `feat/stage-03-app-port` at the merge of
-`feat/stage-03-standard-practices`.
+**Last verified:** 2026-07-31, on `feat/stage-03-app-port` at `293a4b8`.
 
-**Current state:** doc **14 sections / 1,336 lines**. App **9 steps**. Glossary **72 terms**.
-205 tests across 18 files. Every DDL block in the doc executed against PostgreSQL 17.
+**Current state:** doc **14 sections / 1344 lines**. App **9 steps**. Glossary **73 terms**.
+205 tests across 18 files. Lint and typecheck clean. Every DDL block in the doc executed against PostgreSQL 17.
 
 ---
 
@@ -84,6 +83,13 @@ Doc order. "Ported" means the app teaches the same thing, not merely that a comp
 From the third cold-reader run — full report in
 `docs/verification/cold-reader-stage-03-run3.md`:
 
+- [ ] **Capacity estimation is absent.** One hit for `capacity|back-of-envelope|QPS|throughput`
+      across the whole doc, and it is the phrase "write throughput" in a trade-off list. It is a
+      standard part of system design, so it passes D-49's filter — but the *heavy* version (size
+      a cache, plan for 10M users) is what "Designing for imagined scale" exists to refuse. The
+      light version earns its place and is what the index section already assumes without asking
+      for: roughly how much data will exist in a year, and how fast it arrives. Frame as "you
+      need one number, not a model", and place it near indexes rather than in its own section.
 - [ ] **G1** — the noun-derivation strike test rests on one example (`total` is not an entity).
       The entity-versus-verb half is now answered; the property-versus-entity half is not.
 - [ ] **G6** — the soft-delete *mechanic* is unspecified (column vs status vs archive table),

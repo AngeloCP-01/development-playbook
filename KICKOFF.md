@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   `stage-implementation-101.md` (the layout traps and verification checklist for building a
   stage)
 
-### Project state (as of 2026-07-30)
+### Project state (as of 2026-07-31)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -41,13 +41,11 @@ Before doing anything, read these for context:
   built stage has its `### AI in …` heading), `glossary.test.ts`, and — new in W-3.1 —
   `stage-03-structure.test.ts` (pins that doc's fourteen subsections in order) and
   `source-citations.test.ts` (D-42: bans line-number citations and resolves every heading one).
-- **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01, 02 and 03
-  are complete and interactive.** Stage 03 (Architecture) ships a 6-step stepper
-  (Reverse · Model · Constrain · Shape · Decide · AI plays), 9 figures, 4 judgment
-  exercises, an annotated-DDL inspector, and a domain worksheet that carries stage 02's
-  answers forward.
+- **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01 and 02 are complete and interactive; 03 is
+  mid-port on `feat/stage-03-app-port`** — 9 steps built against a doc that has since grown to
+  14 sections. See `docs/stage-03-status.md` for exactly what is and is not ported.
 - **Stage 03's doc is done; its app now lags it (TD-23).** W-3.1 closed **TD-18**, **TD-21** and **TD-22**, and **W-3.1b** closed **TD-25**'s doc half, in `docs/03-architecture.md`, which went from 8 subsections and 300 lines to
-  **14 subsections and 1,281 lines**, running requirements → HLD → LLD. The round was
+  **14 subsections and ~1,344 lines**, running requirements → HLD → LLD. The round was
   deliberately doc-only (**D-46**), so the app's six steps still mirror a doc that no longer
   exists. **Porting it is W-3.2 and it is the next round.** Note the app must mirror the
   *corrections* as well as the additions — `scoring.ts` holds the interrogation set, the DDL
@@ -66,7 +64,7 @@ Before doing anything, read these for context:
   `glossary.md`.
 - **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **136 vitest tests across 11 files**, a **10-test playwright
+  eslint at `--max-warnings 0`, **205 vitest tests across 18 files**, a **10-test playwright
   audit suite over 20 URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
   public (D-26).
 - **The audit suite does *not* sweep ready stages automatically.** `PAGES` in
@@ -76,45 +74,56 @@ Before doing anything, read these for context:
 - **Not deployed** (`W-5` open).
 - **Branch/push:** work happens on `feat/`|`fix/`|`docs/<date>-` branches, merged to `main`
   with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes.**
-  `main` and `origin/main` are in sync at `249bd9d`; the long-standing local-only backlog
-  was pushed on 2026-07-29 and **CI ran green on it** (`30426083363`, 2m15s).
+  `main` and `origin/main` are in sync at `249bd9d`, which CI ran green on
+  (`30426083363`). **Everything since is unmerged on `feat/stage-03-app-port`.**
 
 ### This round's scope
 
-**Decided: port stage 03's amended doc into the app — `W-3.2`, closing `TD-23`.** The previous
-round (`W-3.1`) rewrote the doc and deliberately left the app behind (**D-46**), so the two
-now disagree. This round closes that, and it is the larger half.
+**Continue `W-3.2` — finish porting stage 03 into the app, on `feat/stage-03-app-port`.**
 
-**Settle the step structure first.** `D-38` caps a dense stage at five content steps plus the
-AI step, and the doc no longer fits: fourteen subsections against the app's six steps. W-3.2
-supersedes D-38, and the superseding decision has to state a **new ceiling with a reason** —
-"stage 03 is special" is not one, because stage 04 will make the same argument.
+**Read `docs/stage-03-status.md` first.** It is the coverage map: every doc section against its
+app step, what is ported, what is partial, what is missing, and the remaining tasks. It is more
+current than any checklist here, because it is updated when the doc moves rather than when a
+round closes. At the last check: **5 sections fully ported, 8 partial, 1 not ported.**
 
-**Mirror the corrections, not just the additions.** This is the part that is easy to miss.
-`scoring.ts` carries the DDL annotations, the interrogation set and the reversibility lists,
-and W-3.1 changed all three: a fifth interrogation question about actor rights, indexes and a
-partial unique index and a `memberships` table in the DDL, and the reversibility test promoted
-out of the AI section into section 1. A port that only adds components leaves the app asserting
-things the doc has since corrected.
+**The doc has stopped moving.** `feat/stage-03-standard-practices` was merged *into* this
+branch (**D-51**) rather than into `main`, so there is one stable target and the new material
+gets ported once instead of twice. Nothing is on `main`; the branch is ~50 commits.
 
-**New content needing components:** architecture characteristics with the trace-forward table,
-the styles comparison, the system sketch and its three views, the sync/async decision, the ER
-view and indexes, API contracts. The 14 new terms are already in `terms.ts` (glossary 42 → 56)
-but not yet used inline — that wiring is this round's. **W-3.1b then added 16 more (72 total)** and a fourteenth section, so the port has more surface than the branch was scoped against.
+**Do these two first**, because they are cheap and they shape everything after:
 
-**Two cautions from W-3.1, both earned:**
+1. **Mirror the corrections, not just the additions.** This is the one that is invisible if
+   missed — the app currently *asserts things the doc has since retracted*. `scoring.ts`'s
+   interrogation set is 5 questions and the doc has 6; `schema-blocks.ts` needs `version`,
+   `deleted_at` and `invoice_sends`; the reversibility lists and DDL annotations both moved.
+2. **Settle the step count and supersede D-38 with a reason.** The app is at 9 steps against a
+   ceiling of 5 content + AI, and section 9 makes 10 likely. "Stage 03 is special" will not
+   hold — stage 04 will make the same argument.
 
-- **The cold-reader pass is a gate, not a formality.** Its re-run found five gaps the round had
-  *introduced*, including a Definition-of-done checkbox gated on idempotency that the doc never
-  taught. Budget for a fix wave after the report.
-- **Check `terms.ts` when fixing a concept** (**D-47**). `Authorization` was defined as
-  ownership — TD-18's blocking G3 defect verbatim — and three tracker entries plus a
-  cold-reader pass all missed it, because they were reading prose.
+Then the bulk: **section 9 ("Evolve the schema safely") has no app step at all**, and five
+clusters of new material need porting into the eight partial steps.
 
-**Watch the length.** The doc is 1,281 lines, 3.4× the next-longest stage, which is a recorded
-consequence of D-45 rather than an accident. Consultability scored 3/5 on the third run and was then fixed with eight subheadings and reworded TOC glosses; two misfilings were
-found and fixed. If the app port makes a step feel like a scroll, that is the same problem
-arriving in a second surface.
+**Already fixed on this branch, do not redo:** the authorization exercise was scoring `role`
+alone as correct on the manager-approves-a-swap scenario — the framing that produces cross-team
+privilege escalation — and is now a checkbox conjunction, browser-verified. The TOC and glossary
+now name **system design**, since the stage is called Architecture and nobody searches for that.
+
+**Before merge, non-negotiable:** a whole-branch review covering doc *and* app. The port half
+has never been reviewed — ~50 commits, ~11,000 lines — and the last review of this stage's app
+caught two blocking defects, including one where sighted and screen-reader users were told
+opposite things about the same diagram. Also add the new step hashes to `web/e2e/audit.spec.ts`
+by hand (**TD-12**): nothing fails if you forget, so a step can ship unaudited with the suite
+green.
+
+**Three cautions this stage has earned:**
+
+- **Executable content gets executed** (**D-50**). A whole-branch review found two defects in
+  the doc's SQL by running it — a backfill that corrupted every single-word name, and a loop
+  whose own "repeat until zero" comment was false. Reading had missed both. One `docker run`.
+- **The cold-reader pass is the middle of a round, not the end.** Every run so far has found
+  gaps the round itself introduced. Budget a fix wave, and verify the wave (**D-48**).
+- **Grep `terms.ts` when you fix a concept** (**D-47**). It has now carried the same defect as
+  the prose twice, because everyone checking was reading prose.
 
 ---
 
