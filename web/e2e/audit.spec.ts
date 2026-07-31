@@ -22,10 +22,13 @@ const PAGES = [
   '/stages/02-planning#write',
   '/stages/02-planning#horizon',
   '/stages/03-architecture#reverse',
+  '/stages/03-architecture#require',
   '/stages/03-architecture#model',
-  '/stages/03-architecture#constrain',
   '/stages/03-architecture#shape',
-  '/stages/03-architecture#decide',
+  '/stages/03-architecture#sketch',
+  '/stages/03-architecture#schema',
+  '/stages/03-architecture#contract',
+  '/stages/03-architecture#record',
   '/stages/03-architecture#ai',
 ]
 
@@ -257,4 +260,30 @@ test('the interrogation still explains itself after a wrong answer, since the re
   await expect(why).toBeVisible()
   await expect(why).not.toContainText('Not quite')
   expect((await why.innerText()).trim().length).toBeGreaterThan(80)
+})
+
+// ── the audit list audits what it claims to ────────────────────────────────
+
+/**
+ * `PAGES` is hand-written (TD-12), and its failure mode is silent: a hash that
+ * names no step does not error, it falls back to the first panel. So the suite
+ * stays green while auditing step one twice and never touching the steps that
+ * were added. That is not hypothetical — the stage 03 entries listed
+ * `#constrain` and `#decide` for weeks after both steps had been renamed away,
+ * which meant five of its nine steps had never been audited at all.
+ *
+ * This does not close TD-12; the list is still hand-maintained and forgetting
+ * to add a step still audits nothing. It closes the half that lies.
+ */
+test('every listed step hash lands on the step it names, since a dead hash falls back and audits step one twice', async ({
+  page,
+}) => {
+  for (const path of PAGES.filter((p) => p.includes('#'))) {
+    const id = path.split('#')[1]
+    await page.goto(path, { waitUntil: 'networkidle' })
+    await expect(
+      page.locator(`#panel-${id}`),
+      `${path} does not resolve to a step called "${id}"`,
+    ).toBeVisible()
+  }
 })
