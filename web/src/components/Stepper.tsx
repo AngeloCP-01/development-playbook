@@ -11,6 +11,15 @@ export type Step = {
 }
 
 /**
+ * Zero-padded to two digits and no further. The rail used a template literal
+ * with a hardcoded leading zero, which was correct only while D-38 kept every
+ * stage under ten steps.
+ */
+export function stepNumber(i: number): string {
+  return String(i + 1).padStart(2, '0')
+}
+
+/**
  * Interaction model is tabs (arrow-key roving focus, one panel at a time), with
  * step numbering as the visual treatment. The URL hash carries the active step
  * so a step is linkable and the browser back button walks the history.
@@ -125,7 +134,7 @@ export function Stepper({ steps }: { steps: Step[] }) {
                   {done ? (
                     <Check className="size-3" aria-hidden />
                   ) : (
-                    `0${i + 1}`
+                    stepNumber(i)
                   )}
                 </span>
                 <span className="whitespace-nowrap">{s.label}</span>
