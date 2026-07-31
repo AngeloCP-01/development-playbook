@@ -29,6 +29,7 @@ export const STEP_IDS = [
   'races',
   'evolve',
   'contract',
+  'access',
   'record',
   'ai',
 ] as const

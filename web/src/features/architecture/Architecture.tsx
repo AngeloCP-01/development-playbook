@@ -276,8 +276,8 @@ const STEPS: (Step & { id: StepId })[] = [
               which of your verbs are really things: an approval you will later
               want an actor and a timestamp for is a row, not a status flip. The
               remaining one, whether every actor has the same rights, is
-              answered in <em>Contract</em>, where the authorization pattern
-              gets chosen.
+              answered in <em>Access</em>, where the authorization pattern gets
+              chosen.
             </p>
             <p>
               If a relationship might run both ways later, say so here. Yes now
@@ -1029,7 +1029,7 @@ const STEPS: (Step & { id: StepId })[] = [
   {
     id: 'contract',
     label: 'Contract',
-    hint: 'Promises about shape, and who may do what to which record',
+    hint: 'What the API promises, and what a promise costs to change',
     content: (
       <div className="space-y-16">
         <Section eyebrow="The axis again" title="Design the API contracts">
@@ -1069,7 +1069,15 @@ const STEPS: (Step & { id: StepId })[] = [
             </p>
           </Prose>
         </Section>
-
+      </div>
+    ),
+  },
+  {
+    id: 'access',
+    label: 'Access',
+    hint: 'Who the caller is, and what they may do',
+    content: (
+      <div className="space-y-16">
         <Section
           eyebrow="The expensive one"
           title="Decide auth early, deliberately"
