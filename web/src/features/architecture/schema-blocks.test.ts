@@ -3,6 +3,7 @@ import {
   ER_EDGES,
   ER_ENTITIES,
   INDEX_LINES,
+  INVOICE_SENDS_LINES,
   PARTIAL_UNIQUE_LINES,
   TENANCY_LINES,
 } from './schema-blocks'
@@ -18,7 +19,7 @@ test('the partial index is partial, since a plain UNIQUE would forbid the second
   expect(sql).toMatch(/UNIQUE INDEX/)
 })
 
-test('the tenancy block carries the memberships table, which is the answer to the fifth interrogation question', () => {
+test('the tenancy block carries the memberships table, which is the answer to the actor-rights interrogation question', () => {
   const sql = TENANCY_LINES.map((l) => l.sql).join(' ')
   expect(sql).toMatch(/CREATE TABLE memberships/)
 })
@@ -45,11 +46,26 @@ test('the tenancy block puts the role on the membership and not on users, which 
   expect(elsewhere).not.toMatch(/\brole\b/)
 })
 
+test('the sends table is append-only in shape, since a row that can be updated is not the record the auditability trace row asked for', () => {
+  const sql = INVOICE_SENDS_LINES.map((l) => l.sql).join(' ')
+  expect(sql).toMatch(/CREATE TABLE invoice_sends/)
+  // The address is stored, not joined. Joining to the client would report where
+  // the invoice *would* go today, which is the opposite of what a send record is for.
+  expect(sql).toMatch(/sent_to\s+text NOT NULL/)
+  expect(sql).toMatch(/sent_at\s+timestamptz NOT NULL/)
+})
+
+test('the sends block says it is not event sourcing, because that is the conclusion a reader draws unprompted', () => {
+  const notes = INVOICE_SENDS_LINES.map((l) => l.note ?? '').join(' ')
+  expect(notes).toMatch(/event sourc/i)
+})
+
 test('every block annotates at least one line, or it is a code dump rather than an annotated artifact', () => {
   for (const [name, lines] of [
     ['indexes', INDEX_LINES],
     ['partial unique', PARTIAL_UNIQUE_LINES],
     ['tenancy', TENANCY_LINES],
+    ['invoice sends', INVOICE_SENDS_LINES],
   ] as const) {
     expect(
       lines.some((l) => l.note),
@@ -63,6 +79,7 @@ test('line ids are unique within each block, because selection is keyed by id', 
     ['indexes', INDEX_LINES],
     ['partial unique', PARTIAL_UNIQUE_LINES],
     ['tenancy', TENANCY_LINES],
+    ['invoice sends', INVOICE_SENDS_LINES],
   ] as const) {
     expect(new Set(lines.map((l) => l.id)).size, name).toBe(lines.length)
   }

@@ -221,6 +221,21 @@ test('the four constraints the doc calls out by name are all annotated', () => {
   }
 })
 
+test('the version and deleted_at lines each name the characteristic they trace to, since the doc’s point is that neither is a default', () => {
+  const version = SCHEMA_LINES.find((l) => l.id === 'version')
+  expect(version?.note, 'version is not annotated').toBeTruthy()
+  expect(version!.note).toMatch(/correctness/i)
+
+  const deleted = SCHEMA_LINES.find((l) => l.id === 'deleted-at')
+  expect(deleted?.note, 'deleted_at is not annotated').toBeTruthy()
+  expect(deleted!.note).toMatch(/auditability/i)
+})
+
+test('the deleted_at note names the tax it charges, because a soft delete that reads as free is the reason queries forget the filter', () => {
+  const deleted = SCHEMA_LINES.find((l) => l.id === 'deleted-at')
+  expect(deleted!.note).toMatch(/filter/i)
+})
+
 test('schema line ids are unique, because selection is keyed by id', () => {
   expect(new Set(SCHEMA_LINES.map((l) => l.id)).size).toBe(SCHEMA_LINES.length)
 })
@@ -256,8 +271,26 @@ test('every edge names the call it represents, since that is what the reader is 
   }
 })
 
-test('the model is interrogated with five questions, because the fifth is what decides whether a role is an entity, a column, or a relationship', () => {
-  expect(INTERROGATIONS).toHaveLength(5)
+test('the model is interrogated with six questions, because the doc added the entity-versus-event one and an app short of it teaches a retracted set', () => {
+  expect(INTERROGATIONS).toHaveLength(6)
+})
+
+test('the entity-versus-event question is asked before the actor-rights one, matching the order the doc walks a reader through', () => {
+  const ids = INTERROGATIONS.map((q) => q.id)
+  expect(ids.indexOf('approval-event')).toBeGreaterThan(-1)
+  expect(ids.indexOf('approval-event')).toBeLessThan(
+    ids.indexOf('actor-rights'),
+  )
+})
+
+test('an approval is judged a thing rather than a status flip, since a column holds the current value and not the act', () => {
+  expect(judgeInterrogation('approval-event', 'entity').correct).toBe(true)
+  expect(judgeInterrogation('approval-event', 'status').correct).toBe(false)
+})
+
+test('the entity-versus-event explanation names what a status flip throws away, because “who did it and when” is the whole test', () => {
+  const { why } = judgeInterrogation('approval-event', 'status')
+  expect(why).toMatch(/who did it and when/i)
 })
 
 test('the actor-rights question answers with the relationship, since a users.role column is one global answer to a question asked per team', () => {

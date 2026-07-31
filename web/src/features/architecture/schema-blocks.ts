@@ -10,6 +10,41 @@
 import { type SchemaLine } from './scoring'
 
 /**
+ * The other half of the auditability trace row. A `status` of `sent` records
+ * that an invoice was sent; it does not record when, to which address, or that
+ * it was sent twice. Those are facts about moments, which the interrogation
+ * says to store — so they get a table of their own, appended to and never
+ * updated.
+ */
+export const INVOICE_SENDS_LINES: SchemaLine[] = [
+  { id: 'sends-open', sql: 'CREATE TABLE invoice_sends (', indent: 0 },
+  {
+    id: 'sends-id',
+    sql: 'id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),',
+    indent: 1,
+  },
+  {
+    id: 'sends-invoice',
+    sql: 'invoice_id uuid NOT NULL REFERENCES invoices(id) ON DELETE RESTRICT,',
+    indent: 1,
+    note: 'RESTRICT again, for the reason it appears on invoices: a send record that outlives the invoice it describes answers nothing, and one that vanishes with it defeats the point of keeping it.',
+  },
+  {
+    id: 'sends-to',
+    sql: 'sent_to    text NOT NULL,          -- the address at the time, not a join to the client',
+    indent: 1,
+    note: 'Stored, not joined, and the comment is the whole lesson. A join to the client reports where the invoice would go today. What auditability needs is where it actually went on the 3rd — which is a fact about a moment, and the client record has since been edited.',
+  },
+  {
+    id: 'sends-at',
+    sql: 'sent_at    timestamptz NOT NULL DEFAULT now()',
+    indent: 1,
+    note: 'Append-only is the point: rows go in, nothing edits them, and “we sent it on the 3rd to the old address” stops being a reconstruction. Note what this is not — it is not event sourcing. The invoice’s current state still lives on invoices, and this table sits beside it rather than being the source it is derived from. That distinction is the one people talk themselves out of.',
+  },
+  { id: 'sends-close', sql: ');', indent: 0 },
+]
+
+/**
  * Indexes answer queries you actually run, so write the queries first. Both of
  * these come from the system sketch rather than from intuition: one from a
  * screen, one from the scheduled job.
@@ -112,7 +147,7 @@ export const TENANCY_LINES: SchemaLine[] = [
     id: 'memberships-role',
     sql: "  role    text NOT NULL CHECK (role IN ('member','manager')),",
     indent: 1,
-    note: 'The role lives on the relationship, not on the user. A person can manage one team and be an ordinary member of another, and a users.role column cannot say that. This is the answer to the fifth interrogation question, which is why that question is asked before the schema exists.',
+    note: 'The role lives on the relationship, not on the user. A person can manage one team and be an ordinary member of another, and a users.role column cannot say that. This is the answer to the actor-rights interrogation question, which is why that question is asked before the schema exists.',
   },
   {
     id: 'memberships-pk',

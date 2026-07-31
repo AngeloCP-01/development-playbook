@@ -781,7 +781,7 @@ written down, and the `UNIQUE (company_id, name)` beside it is the scoped-unique
 rule from the domain model applied to a tenant: two companies may both have a team
 called Kitchen.
 
-That is the answer to the fifth interrogation question, and it is why the question is asked
+That is the answer to the actor-rights interrogation question, and it is why the question is asked
 before the schema exists. A `role` column on `users` is the shape you regret: it is a single
 global answer to a question that is asked per team.
 

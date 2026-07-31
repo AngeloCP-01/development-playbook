@@ -176,6 +176,19 @@ export const INTERROGATIONS: Interrogation[] = [
     why: 'Per user. Two freelancers both issuing invoice 001 is normal and correct; a global constraint makes the second one fail for no reason a user could understand. Getting uniqueness scope wrong surfaces months later as a confusing constraint violation, which is why it belongs in the schema as UNIQUE (owner_id, number) rather than in a validation function.',
   },
   {
+    id: 'approval-event',
+    question: 'Is “approved” a thing, or something that happened to a thing?',
+    options: [
+      { id: 'status', label: 'A status on the row it applies to' },
+      {
+        id: 'entity',
+        label: 'A row of its own, with an actor and a timestamp',
+      },
+    ],
+    answer: 'entity',
+    why: 'A thing, almost always. The strike test earlier removes nouns that are really properties; this removes the opposite mistake, a verb that is really an entity. The question that decides it is whether you will later want to know who did it and when. If yes, it is an approval with an actor and a timestamp, and modelling it as a status flip throws that away irreversibly — a column holds the current value, not the act, so the row that said who approved and when never existed to be recovered. If no, it is a status. “Approved” is the usual case that goes both ways, and the answer is almost always that you will want to know.',
+  },
+  {
     id: 'actor-rights',
     question: 'Does every actor have the same rights over this entity?',
     options: [
@@ -330,10 +343,22 @@ export const SCHEMA_LINES: SchemaLine[] = [
     note: 'A fixed set of values, enforced where it cannot be bypassed. Note what is absent: “overdue”. It is computed from due_date and status, so it cannot drift out of agreement with the date it derives from.',
   },
   {
+    id: 'version',
+    sql: 'version      integer NOT NULL DEFAULT 0,',
+    indent: 1,
+    note: 'Correctness, traced from the characteristics table rather than habit. This is the optimistic-locking column: the write carries the version it read — UPDATE … WHERE id = $1 AND version = $2 — and zero rows updated means somebody got there first, so you tell the user instead of silently discarding their decision. Note what it is: version is stored data, so by this stage’s own test it is decide-now. Adding it later is an expand-contract sequence, not an afternoon.',
+  },
+  {
     id: 'created-at',
     sql: 'created_at   timestamptz NOT NULL DEFAULT now(),',
     indent: 1,
     note: 'timestamptz, not timestamp. The version without a time zone silently means “whatever the server thought local time was”, which stops being funny the first time you deploy to a different region.',
+  },
+  {
+    id: 'deleted-at',
+    sql: 'deleted_at   timestamptz,',
+    indent: 1,
+    note: 'Auditability, and the other column here that a characteristic chose. Null means live, a timestamp means gone-but-answerable — the soft delete the interrogation argued for. The cost is the one already named and it is real: every query must remember to filter, paid on every read forever. That is why this is decided per entity rather than adopted as a habit.',
   },
   {
     id: 'unique-number',

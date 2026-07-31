@@ -5,7 +5,11 @@ import { Term } from '@/components/Term'
 import { Stepper, type Step } from '@/components/Stepper'
 import { References } from '@/components/References'
 import { SCHEMA_LINES } from './scoring'
-import { INDEX_LINES, TENANCY_LINES } from './schema-blocks'
+import {
+  INDEX_LINES,
+  INVOICE_SENDS_LINES,
+  TENANCY_LINES,
+} from './schema-blocks'
 import { ReversibilityAxis } from './ReversibilityAxis'
 import { ReversibilityTable } from './ReversibilityTable'
 import { CharacteristicPicker } from './CharacteristicPicker'
@@ -632,6 +636,37 @@ const STEPS: Step[] = [
           >
             <SchemaInspector lines={SCHEMA_LINES} title="the invoices table" />
           </Figure>
+          <Prose>
+            <p>
+              Two of those columns are there because the characteristics chose
+              them, and it is worth naming which.{' '}
+              <code className="t-data">deleted_at</code> is auditability — the
+              soft delete this stage argued for, where a null means live and a
+              timestamp means gone-but-answerable.{' '}
+              <code className="t-data">version</code> is correctness — the
+              optimistic-locking column. Neither is a default; both trace back
+              to <em>Require</em>, and a schema that skipped them would be one
+              that agreed with the trace table in prose and disagreed with it in
+              SQL.
+            </p>
+            <p>
+              Auditability wants one more thing, and it is the other half of
+              that trace row. A status of <code className="t-data">sent</code>{' '}
+              records that an invoice was sent; it does not record <em>when</em>
+              , to <em>which address</em>, or that it was sent twice. Those are
+              facts about moments, which the interrogation says to store — so
+              they belong in a table of their own.
+            </p>
+          </Prose>
+          <Figure
+            n={14}
+            caption="Appended to and never updated, which is what makes it answer the question. The send address is stored rather than joined, because a join reports where the invoice would go today and the question was where it actually went."
+          >
+            <SchemaInspector
+              lines={INVOICE_SENDS_LINES}
+              title="the invoice_sends table"
+            />
+          </Figure>
         </Section>
 
         <Section
@@ -649,7 +684,7 @@ const STEPS: Step[] = [
             </p>
           </Prose>
           <Figure
-            n={14}
+            n={15}
             caption="Two indexes, each traced to the thing that asks for it. The second is partial, because the job never asks about drafts or paid invoices and a smaller index is a faster one."
           >
             <SchemaInspector lines={INDEX_LINES} title="the two indexes" />
@@ -672,7 +707,7 @@ const STEPS: Step[] = [
             </p>
           </Prose>
           <Figure
-            n={15}
+            n={16}
             caption="The race first, the index second. A plain UNIQUE (shift_id) would also forbid the second rejected claim, which is wrong — the condition is what makes the rule expressible at all."
           >
             <PartialUniqueIndex />
@@ -702,8 +737,8 @@ const STEPS: Step[] = [
             </p>
           </Prose>
           <Figure
-            n={16}
-            caption="The answer to the fifth interrogation question, written down. Roles live on the membership rather than on the user, because a person can manage one team and be an ordinary member of another."
+            n={17}
+            caption="The answer to the actor-rights interrogation question, written down. Roles live on the membership rather than on the user, because a person can manage one team and be an ordinary member of another."
           >
             <SchemaInspector lines={TENANCY_LINES} title="the tenancy tables" />
           </Figure>
@@ -723,7 +758,7 @@ const STEPS: Step[] = [
             </p>
           </Prose>
           <Figure
-            n={17}
+            n={18}
             caption="The same DELETE under two foreign-key policies. One quietly takes the invoices with it; the other refuses the statement outright. On financial records that is the difference between an error message and a loss you cannot reverse."
           >
             <DeleteBehaviour />
@@ -773,7 +808,7 @@ const STEPS: Step[] = [
             </p>
           </Prose>
           <Figure
-            n={18}
+            n={19}
             caption="Three kinds of contract, sorted by who you can make move. Most solo projects live almost entirely in the first row, which is the argument for not building a public API until something needs one."
           >
             <ContractCost />
@@ -812,7 +847,7 @@ const STEPS: Step[] = [
             </p>
           </Prose>
           <Figure
-            n={19}
+            n={20}
             caption="Three paths compared on the same three questions rather than each arguing its own case. None is marked correct, because the trade genuinely differs by project — and the line under them is the part most projects get wrong."
           >
             <AuthPaths />
@@ -866,7 +901,7 @@ const STEPS: Step[] = [
             </p>
           </Prose>
           <Figure
-            n={20}
+            n={21}
             caption="Five headings, and what each is holding. The reasoning is the part that decays: the decision survives on its own, so in eight months only the record can say why it was made."
           >
             <ADRAnatomy />
