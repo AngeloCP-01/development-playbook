@@ -287,3 +287,88 @@ test('every listed step hash lands on the step it names, since a dead hash falls
     ).toBeVisible()
   }
 })
+
+// ── D-52: a step holds one judgment, and its panel is not a scroll ─────────
+
+/**
+ * D-38 capped a dense stage at five content steps. Its stated reason was that
+ * "a stepper stops being navigable when a step is a scroll" — a claim about
+ * how much one panel holds, enforced by counting a different noun. The two
+ * pull opposite ways: fewer steps for the same content means heavier panels.
+ * Measured, stage 03's median panel was 5.3 screens against 2.4 and 2.5 for
+ * stages 01 and 02, while sitting inside a rule that only knew about counts.
+ *
+ * Four screens is taken from the measurements: 01 and 02 both have a
+ * next-heaviest panel at 3.2, so the threshold clears everything either stage
+ * has except one panel each.
+ */
+const PANEL_VIEWPORT = { width: 1024, height: 768 }
+const PANEL_SCREENS_MAX = 4.0
+
+/**
+ * Baselined, not exempt. Every entry is a panel the rule would fail, recorded
+ * with a reason so the exemption is a decision rather than an oversight.
+ *
+ * Stage 01 and 02's two are permanent for now: splitting them changes step
+ * hashes and reopens two reviewed stages. The rule applies to them the moment
+ * either is edited.
+ *
+ * Stage 03's are temporary debt, removed one at a time by the task that splits
+ * each panel. When this list is down to two entries, the reshape is done.
+ */
+const PANEL_EXCEPTIONS: Record<string, number> = {
+  '/stages/01-product-discovery#record': 6.7, // artifact gallery, one page by design
+  '/stages/02-planning#horizon': 5.6, // three horizon bands, compared side by side
+
+  // Temporary — D-52's reshape removes these.
+  // See docs/superpowers/plans/2026-07-31-step-panel-weight.md
+  '/stages/03-architecture#model': 6.0,
+  '/stages/03-architecture#shape': 7.1,
+  '/stages/03-architecture#sketch': 6.1,
+  '/stages/03-architecture#schema': 8.4,
+  '/stages/03-architecture#contract': 5.3,
+  '/stages/03-architecture#ai': 4.7,
+}
+
+/** Tolerance on the re-baseline check: panel height moves slightly with font
+ *  loading and scrollbar width, and a rule that fires on noise gets suppressed. */
+const REBASELINE_SLACK = 0.5
+
+test('no step panel exceeds four screens, because a step that is a scroll is two steps', async ({
+  page,
+}) => {
+  await page.setViewportSize(PANEL_VIEWPORT)
+  const failures: string[] = []
+
+  for (const path of PAGES.filter((p) => p.includes('#'))) {
+    const id = path.split('#')[1]
+    await page.goto(path, { waitUntil: 'networkidle' })
+    const height = await page
+      .locator(`#panel-${id}`)
+      .evaluate((el) => el.getBoundingClientRect().height)
+    const screens = height / PANEL_VIEWPORT.height
+    const baseline = PANEL_EXCEPTIONS[path]
+
+    if (baseline === undefined) {
+      if (screens > PANEL_SCREENS_MAX) {
+        failures.push(
+          `${path} is ${screens.toFixed(1)} screens, over the ${PANEL_SCREENS_MAX} limit. ` +
+            `Split it at a seam where the panel holds two judgments, or move elaboration ` +
+            `behind an expand-to-reveal (D-52).`,
+        )
+      }
+      continue
+    }
+
+    // A baselined panel that got better must say so, or the allowlist rots
+    // upward and becomes what D-38 was: a number nothing enforces.
+    if (screens < baseline - REBASELINE_SLACK) {
+      failures.push(
+        `${path} is now ${screens.toFixed(1)} screens against a baseline of ${baseline}. ` +
+          `Lower it in PANEL_EXCEPTIONS, or delete the entry if it is under ${PANEL_SCREENS_MAX}.`,
+      )
+    }
+  }
+
+  expect(failures.join('\n')).toBe('')
+})
