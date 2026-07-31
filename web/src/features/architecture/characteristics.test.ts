@@ -7,6 +7,7 @@ import {
   TRACE_ROWS,
   TRADES,
 } from './characteristics'
+import { STEP_IDS } from './steps'
 
 const IDS = new Set(CHARACTERISTICS.map((c) => c.id))
 
@@ -60,22 +61,22 @@ test('every picked characteristic traces to a decision, which is the doc test th
 })
 
 test('every trace row points at a step the stepper actually has', () => {
-  const steps = new Set([
-    'reverse',
-    'require',
-    'model',
-    'shape',
-    'sketch',
-    'schema',
-    'contract',
-    'record',
-    'ai',
-  ])
   for (const r of TRACE_ROWS) {
-    expect(steps, `${r.characteristicId} points at ${r.stepId}`).toContain(
+    expect(STEP_IDS, `${r.characteristicId} points at ${r.stepId}`).toContain(
       r.stepId,
     )
   }
+})
+
+// The hardcoded list this replaced could not fail when a step split: the row
+// kept naming a step that still existed while the decision it described had
+// moved. Deriving the list does not fix that either — nothing can tell a
+// reader's intent from a string — so this asserts the weaker thing honestly
+// and the split tasks carry the re-pointing as an explicit step.
+test('the id list is in rail order and has no duplicates, since it is what the trace links resolve against', () => {
+  expect(new Set(STEP_IDS).size).toBe(STEP_IDS.length)
+  expect(STEP_IDS[0]).toBe('reverse')
+  expect(STEP_IDS.at(-1)).toBe('ai')
 })
 
 test('the trades are stated, because the cap needs a reason and "pick fewer" is not one', () => {

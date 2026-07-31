@@ -3,6 +3,7 @@ import { Callout, Prose, Section } from '@/components/ui'
 import { Figure } from '@/components/Figure'
 import { Term } from '@/components/Term'
 import { Stepper, type Step } from '@/components/Stepper'
+import { type StepId } from './steps'
 import { References } from '@/components/References'
 import { SCHEMA_LINES } from './scoring'
 import {
@@ -41,7 +42,12 @@ import { ADRAnatomy } from './ADRAnatomy'
 import { DeferredList } from './DeferredList'
 import { AIArchitecturePlays } from './AIArchitecturePlays'
 
-const STEPS: Step[] = [
+/**
+ * Typed against `STEP_IDS` so a step whose id is not in that list is a compile
+ * error. The trace-forward links and the audit's `PAGES` both resolve against
+ * the same list, and they used to compare against private copies of it.
+ */
+const STEPS: (Step & { id: StepId })[] = [
   {
     id: 'reverse',
     label: 'Reverse',
