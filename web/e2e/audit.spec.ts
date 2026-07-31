@@ -23,6 +23,7 @@ const PAGES = [
   '/stages/02-planning#horizon',
   '/stages/03-architecture#reverse',
   '/stages/03-architecture#require',
+  '/stages/03-architecture#trace',
   '/stages/03-architecture#model',
   '/stages/03-architecture#worksheet',
   '/stages/03-architecture#shape',

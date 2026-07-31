@@ -15,6 +15,7 @@ import { ReversibilityAxis } from './ReversibilityAxis'
 import { ReversibilityTable } from './ReversibilityTable'
 import { CharacteristicPicker } from './CharacteristicPicker'
 import { TraceForward } from './TraceForward'
+import { FitnessExamples } from './FitnessExamples'
 import { DomainSketch } from './DomainSketch'
 import { ModelInterrogation } from './ModelInterrogation'
 import { DriftDiagram } from './DriftDiagram'
@@ -116,7 +117,7 @@ const STEPS: (Step & { id: StepId })[] = [
   {
     id: 'require',
     label: 'Require',
-    hint: 'What the system has to be, and what that forces',
+    hint: 'What the system has to be — three or four, not ten',
     content: (
       <div className="space-y-16">
         <Section eyebrow="The other half" title="What this system has to be">
@@ -146,7 +147,15 @@ const STEPS: (Step & { id: StepId })[] = [
             <CharacteristicPicker />
           </div>
         </Section>
-
+      </div>
+    ),
+  },
+  {
+    id: 'trace',
+    label: 'Trace',
+    hint: 'Each one has to force a decision — and you have to be able to check it',
+    content: (
+      <div className="space-y-16">
         <Section
           eyebrow="The test"
           title="A characteristic has to force something"
@@ -161,10 +170,29 @@ const STEPS: (Step & { id: StepId })[] = [
           </Prose>
           <Figure
             n={2}
-            caption="Three characteristics and the decision each one forces, with the step where that decision actually gets made. The link is the argument: a characteristic is not a label, it is the reason a later step goes the way it does."
+            caption="All ten candidates and the decision each one forces, with the step where that decision actually gets made. The link is the argument: a characteristic is not a label, it is the reason a later step goes the way it does — and a row you cannot fill is a characteristic you listed rather than chose."
           >
             <TraceForward />
           </Figure>
+        </Section>
+
+        <Section
+          eyebrow="One step further"
+          title="A trace is a claim, and claims rot"
+        >
+          <Prose>
+            <p>
+              A characteristic that nothing checks is a characteristic you are
+              hoping for. The name for the check is a{' '}
+              <Term id="fitness-function">fitness function</Term>: an automated
+              test of a <em>property of the system</em>, rather than of what a
+              function returns. The answers are more ordinary than the term
+              suggests.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <FitnessExamples />
+          </div>
         </Section>
       </div>
     ),
@@ -747,7 +775,7 @@ const STEPS: (Step & { id: StepId })[] = [
               timestamp means gone-but-answerable.{' '}
               <code className="t-data">version</code> is correctness — the
               optimistic-locking column. Neither is a default; both trace back
-              to <em>Require</em>, and a schema that skipped them would be one
+              to <em>Trace</em>, and a schema that skipped them would be one
               that agreed with the trace table in prose and disagreed with it in
               SQL.
             </p>
@@ -1231,13 +1259,11 @@ const STEPS: (Step & { id: StepId })[] = [
               applied to infrastructure rather than to features.
             </p>
             <p>
-              Two of the items below are worth knowing the boundary of.{' '}
-              <Term id="event-sourcing">Event sourcing</Term> is not an audit
-              table alongside normal rows: it is event sourcing only when the
-              log is the truth and the tables you query are derived from it. A
-              history of who approved what is an ordinary table and you should
-              keep it. <Term id="cqrs">CQRS</Term> travels with it and gets
-              deferred for the same reason.
+              Two of the items below are worth knowing the boundary of rather
+              than only the verdict, because people talk themselves into
+              thinking they are already doing them:{' '}
+              <Term id="event-sourcing">Event sourcing</Term> and{' '}
+              <Term id="cqrs">CQRS</Term>. Open those two.
             </p>
             <p>One item fails the test, and the list says which.</p>
           </Prose>

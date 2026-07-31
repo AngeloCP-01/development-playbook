@@ -3,6 +3,8 @@ import {
   CHARACTERISTICS,
   EXAMPLE_DECLINED,
   EXAMPLE_PICK,
+  FITNESS_EXAMPLES,
+  FITNESS_FUNCTION_NOTE,
   MAX_PICKS,
   TRACE_ROWS,
   TRADES,
@@ -87,4 +89,66 @@ test('the id list is in rail order and has no duplicates, since it is what the t
 test('the trades are stated, because the cap needs a reason and "pick fewer" is not one', () => {
   expect(TRADES.length).toBeGreaterThan(0)
   for (const t of TRADES) expect(t.trim().length).toBeGreaterThan(0)
+})
+
+// ── The widened trace, and fitness functions ───────────────────────────────
+
+// This was the doc round's actual deliverable: the section offers ten
+// candidates and supplied a three-row trace, so a reader who picked
+// availability, scalability or evolvability got the test with no material to
+// pass it. Ten rows against ten candidates is the thing that makes the section
+// honest rather than a vocabulary exercise.
+test('the trace table covers all ten candidate characteristics, which was the doc round’s actual deliverable', () => {
+  expect(TRACE_ROWS).toHaveLength(10)
+  expect(new Set(TRACE_ROWS.map((r) => r.characteristicId))).toEqual(
+    new Set(CHARACTERISTICS.map((c) => c.id)),
+  )
+})
+
+test('every trace row names the decision the characteristic forces, since a characteristic that forces nothing is a label', () => {
+  for (const r of TRACE_ROWS) {
+    expect(
+      r.forces.trim().length,
+      `${r.characteristicId} forces`,
+    ).toBeGreaterThan(30)
+  }
+})
+
+test('every trace row points at a step that exists, since the row renders as a link', () => {
+  for (const r of TRACE_ROWS) {
+    expect(STEP_IDS, `${r.characteristicId} → ${r.stepId}`).toContain(r.stepId)
+    expect(
+      r.stepLabel.trim().length,
+      `${r.characteristicId} label`,
+    ).toBeGreaterThan(0)
+  }
+})
+
+// The doc is emphatic that this stage does not build the check: "standing up an
+// import-graph linter before your first table is exactly the kind of
+// infrastructure this stage spends a section refusing". Porting it as a task
+// rather than as a note would invert the section it belongs to.
+test('fitness functions are framed as a note now and a test later, because standing up a linter before the first table is the infrastructure this stage refuses', () => {
+  expect(FITNESS_FUNCTION_NOTE).toMatch(/06|testing/i)
+  expect(
+    FITNESS_FUNCTION_NOTE,
+    'what belongs in this stage is the line, not the check',
+  ).toMatch(/one line|in your notes|how would I know/i)
+})
+
+test('the cheapest fitness example is the schema assertion, since it is three lines and needs no tooling decision', () => {
+  expect(FITNESS_EXAMPLES[0].what).toMatch(/constraint|schema/i)
+  for (const e of FITNESS_EXAMPLES) {
+    expect(e.defends.trim().length, `${e.id} defends`).toBeGreaterThan(0)
+    expect(e.what.trim().length, `${e.id} what`).toBeGreaterThan(0)
+  }
+})
+
+test('every fitness example defends a characteristic the picker actually offers, or it is an example of nothing', () => {
+  for (const e of FITNESS_EXAMPLES) {
+    expect(
+      CHARACTERISTICS.map((c) => c.id),
+      `${e.id} defends ${e.characteristicId}`,
+    ).toContain(e.characteristicId)
+  }
 })

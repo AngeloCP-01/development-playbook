@@ -161,4 +161,105 @@ export const TRACE_ROWS: TraceRow[] = [
     stepId: 'oneapp',
     stepLabel: 'One app',
   },
+  {
+    characteristicId: 'availability',
+    forces:
+      'A timeout on every external call, retries only where they are safe, and a decision about what still works when each dependency is down. The three answers have a name — graceful degradation — and none of them is code you write later.',
+    stepId: 'resilience',
+    stepLabel: 'Resilience',
+  },
+  {
+    characteristicId: 'scalability',
+    forces:
+      'Statelessness, so that more instances are an option at all, and a pooler between serverless functions and Postgres. The first is a property you have or do not; the second fails on connect rather than in anything you wrote.',
+    stepId: 'shape',
+    stepLabel: 'Shape',
+  },
+  {
+    characteristicId: 'evolvability',
+    forces:
+      'Expand-contract for anything stored, and boundaries that make a later split mechanical rather than archaeological. Both are cheap to adopt now and expensive to retrofit under traffic.',
+    stepId: 'evolve',
+    stepLabel: 'Evolve',
+  },
+  {
+    characteristicId: 'security',
+    forces:
+      'An authorization rule written per entity — often two patterns joined by *and*, not one pattern chosen for the whole system. The singular framing is the one that produces cross-team privilege escalation.',
+    stepId: 'access',
+    stepLabel: 'Access',
+  },
+  {
+    characteristicId: 'deployability',
+    forces:
+      'Migrations that are safe to run before the code that needs them, which is what makes a bad deploy a code rollback rather than a data loss.',
+    stepId: 'evolve',
+    stepLabel: 'Evolve',
+  },
+  {
+    characteristicId: 'latency',
+    forces:
+      'Indexes traced to real queries rather than to intuition, and synchronous work kept off the request path. The first is written in the schema; the second is the sync/async fork.',
+    stepId: 'indexes',
+    stepLabel: 'Indexes',
+  },
+  {
+    characteristicId: 'observability',
+    forces:
+      'Asynchronous work you can see the failures of, rather than only the successes. Choosing asynchronous buys a failure mode nobody is waiting on, and noticing it is 15 — Observability’s problem that starts here.',
+    stepId: 'flow',
+    stepLabel: 'Flow',
+  },
+]
+
+/**
+ * Source: docs/03-architecture.md, "What this system has to be".
+ *
+ * The doc's own framing, kept intact: a trace is a claim and claims rot, so the
+ * sequence is choose → trace → write down how you would know it stopped being
+ * true. The third step is a note in this stage and a test in 06, and the doc is
+ * explicit about why — standing up an import-graph linter before the first
+ * table is the infrastructure this stage spends a section refusing.
+ */
+export const FITNESS_FUNCTION_NOTE =
+  'A characteristic that nothing checks is a characteristic you are hoping for. The name for the check is a fitness function: an automated test of a property of the system, rather than of what a function returns. Not now, though — you have no code yet. What belongs in this stage is one line per characteristic in your notes: how would I know if this stopped being true? Writing the check is 06 — Testing’s, once there is something to check.'
+
+export type FitnessExample = {
+  id: string
+  /** The characteristic it defends. Must be one the picker offers. */
+  characteristicId: string
+  what: string
+  defends: string
+}
+
+/** Ordered cheapest first, which is the doc's own ordering and its point. */
+export const FITNESS_EXAMPLES: FitnessExample[] = [
+  {
+    id: 'schema-constraint',
+    characteristicId: 'correctness',
+    what: 'A plain test asserting that the constraint carrying your correctness rule still exists.',
+    defends:
+      'Three lines, no tooling decision, and it catches a migration that quietly dropped it. The cheapest useful one, which is why it is first.',
+  },
+  {
+    id: 'import-boundary',
+    characteristicId: 'evolvability',
+    what: 'A test that fails when one feature imports another feature’s internals.',
+    defends:
+      'The boundary rule enforced instead of agreed. Boundaries decay by exception, and an exception nobody sees is the whole failure mode.',
+  },
+  {
+    id: 'build-size',
+    characteristicId: 'latency',
+    what: 'A build-size budget.',
+    defends:
+      'A performance characteristic against the dependency somebody adds in eight months, which is a decision made by whoever is closest to it rather than by you.',
+  },
+  {
+    id: 'query-count',
+    characteristicId: 'latency',
+    what: 'A query-count assertion on a page that matters.',
+    defends:
+      'It is how an N+1 gets caught before a user finds it. The query count is a property of the system; no unit test of a function returns it.',
+  },
 ]
