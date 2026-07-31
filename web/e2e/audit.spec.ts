@@ -368,6 +368,20 @@ test('no step panel exceeds four screens, because a step that is a scroll is two
           `Lower it in PANEL_EXCEPTIONS, or delete the entry if it is under ${PANEL_SCREENS_MAX}.`,
       )
     }
+
+    // And a baselined panel that got worse must say so too. Without this the
+    // exemption is unbounded: the over-threshold check above only runs for
+    // panels with no entry, so a baselined panel could grow from 6 screens to
+    // 12 and stay green. The first review of this test caught that the
+    // mitigation was one-sided — an allowlist that cannot rot upward past its
+    // own number still has to not rot upward past the number it records.
+    if (screens > baseline + REBASELINE_SLACK) {
+      failures.push(
+        `${path} has grown to ${screens.toFixed(1)} screens against a baseline of ${baseline}. ` +
+          `A baselined panel is exempt from the ${PANEL_SCREENS_MAX} limit, not from review — ` +
+          `split it, or raise the baseline deliberately and say why.`,
+      )
+    }
   }
 
   expect(failures.join('\n')).toBe('')
