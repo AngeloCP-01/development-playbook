@@ -4,10 +4,11 @@
 exists because this stage has now diverged from its own port twice, and both times the
 divergence was discovered rather than tracked.
 
-**Last verified:** 2026-07-31, on `feat/stage-03-app-port` at `293a4b8`.
+**Last verified:** 2026-07-31, on `feat/stage-03-app-port`, after the corrections wave.
 
 **Current state:** doc **14 sections / 1344 lines**. App **9 steps**. Glossary **73 terms**.
-205 tests across 18 files. Lint and typecheck clean. Every DDL block in the doc executed against PostgreSQL 17.
+214 tests across 19 files, and an 11-test audit suite over 23 URLs. Lint and typecheck clean.
+Every DDL block in the doc executed against PostgreSQL 17.
 
 ---
 
@@ -34,12 +35,12 @@ Doc order. "Ported" means the app teaches the same thing, not merely that a comp
 |---|---|---|---|---|
 | 1 | Sort decisions by reversibility | `reverse` | ✅ | Axis figure + scored exercise. G14's test promoted here from the AI section |
 | 2 | What this system has to be | `require` | ⚠️ **partial** | Characteristics picker + trace exists. **Trace table went 3 → 10 rows and fitness functions were added after the port** |
-| 3 | Model the domain first | `model` | ⚠️ **partial** | Interrogation ported at 5 questions. **A 6th was added ("is this a thing, or something that happened to a thing?")** |
+| 3 | Model the domain first | `model` | ✅ **fixed** | Interrogation now at 6 questions; the entity-versus-event one sits before actor-rights, in doc order |
 | 4 | The shapes a system can take | `shape` | ⚠️ **partial** | Styles landscape ported. **Statelessness, horizontal/vertical, load balancing, read replicas added after** |
 | 5 | Start with one application | `shape` | ⚠️ **partial** | Split triggers ported. **Connection pooling added after** |
 | 6 | Boundaries inside the monolith | `shape` | ✅ | Boundary map, bounded context, the write-side rule |
 | 7 | Sketch the system | `sketch` | ⚠️ **partial** | Container view, data flow, sync/async, idempotency ported. **Resilience patterns — timeout, backoff+jitter, circuit breaker, graceful degradation — added after** |
-| 8 | Design the database | `schema` | ⚠️ **partial** | DDL inspector, ER view, indexes, partial unique index, tenancy ported. **Isolation levels, optimistic/pessimistic locking, CAP, eventual consistency, `version`, `deleted_at`, `invoice_sends` added after** |
+| 8 | Design the database | `schema` | ⚠️ **partial** | DDL inspector, ER view, indexes, partial unique index, tenancy ported. `version`, `deleted_at` and the `invoice_sends` block now mirrored and checked against the doc character-for-character. **Still missing: isolation levels, optimistic/pessimistic locking, CAP, eventual consistency** |
 | 9 | **Evolve the schema safely** | — | ❌ **not ported** | New section. Expand-contract, rolling deploys, backfill guards, `ALTER` lock safety, strangler fig. **No app step exists** |
 | 10 | Design the API contracts | `contract` | ✅ | Contract sort, verb-route problem |
 | 11 | Authentication and authorization | `contract` | ✅ **fixed** | Was teaching the singular framing and scoring `role` alone as correct. Now a checkbox conjunction, browser-verified |
@@ -47,7 +48,7 @@ Doc order. "Ported" means the app teaches the same thing, not merely that a comp
 | 13 | Defer aggressively | `record` | ⚠️ **partial** | Defer list + criterion + tenancy resolution ported. **Event sourcing / CQRS definitions added after** |
 | 14 | AI in architecture | `ai` | ⚠️ **partial** | Seven plays, five misleads ported. **Four plays and one mislead added after** |
 
-**Tally: 5 fully ported · 8 partial · 1 not ported.**
+**Tally: 6 fully ported · 7 partial · 1 not ported.**
 
 ---
 
@@ -61,16 +62,30 @@ Doc order. "Ported" means the app teaches the same thing, not merely that a comp
 - [ ] **Port the five clusters into the eight partial steps.** Resilience into `sketch`;
       isolation/locking into `schema`; statelessness/scaling/pooling into `shape`; fitness
       functions and the widened trace into `require`; event sourcing and CQRS into `record`.
-- [ ] **Mirror the corrections, not just the additions.** `scoring.ts` carries the
-      interrogation set (now 6 questions), the DDL annotations (now including `version` and
-      `deleted_at`) and the reversibility lists. `schema-blocks.ts` needs the new columns and
-      `invoice_sends`.
+- [x] **Mirror the corrections, not just the additions.** ✓ done 2026-07-31. The sixth
+      interrogation question, `version` and `deleted_at` on the invoices DDL, and the
+      `invoice_sends` block, rendered as Figure 14. `ddl-sync.test.ts` now holds both
+      `CREATE TABLE` blocks to the doc character-for-character, so this class of drift fails a
+      test instead of waiting for a reviewer — teeth-checked by changing `DEFAULT 0` to
+      `DEFAULT 1`, which failed that test and only that test.
+      **One correction claimed here did not exist:** the reversibility lists are byte-identical
+      to `main` apart from the new TOC row. `scoring.ts`'s `DECISIONS` needed nothing.
+      **One defect found while mirroring:** the doc, `schema-blocks.ts` and a Figure caption all
+      said "the answer to the fifth interrogation question" about actor-rights, which became the
+      sixth when W-3.1b inserted one before it. Fixed in all three by naming the question instead
+      of counting to it — D-47's pattern again, and the third time an ordinal in prose has gone
+      stale.
 - [ ] **Settle the step count once and supersede D-38 with a reason.** The app is at 9 steps
       against D-38's ceiling of 5 content + AI. Section 9 makes 10 likely. "Stage 03 is
       special" is not a reason — stage 04 will make the same argument.
-- [ ] **Add the new step hashes to `web/e2e/audit.spec.ts`.** `PAGES` is hand-written
-      (**TD-12**) and nothing fails if you forget, so a step can ship unaudited with the suite
-      green.
+- [x] **Add the new step hashes to `web/e2e/audit.spec.ts`.** ✓ done 2026-07-31, and it was
+      worse than "the new ones are missing": the list still named `#constrain` and `#decide`,
+      two steps renamed away in W-3, so those URLs fell back to step one and were audited twice
+      while `require`, `sketch`, `schema`, `contract` and `record` had never been audited at all
+      — with the suite green. Now nine real hashes, 23 URLs, 11/11 passing. A new assertion
+      holds every listed hash to resolving to the step it names, teeth-checked by putting
+      `#decide` back. **TD-12 stays open**: the list is still hand-written, and forgetting to add
+      a step still audits nothing. What closed is the half that lied.
 - [ ] **Whole-branch review, covering doc and app together.** The port half has never been
       reviewed — 31 commits, +9,446 lines, and the last review of this stage's app caught two
       blocking defects including one where sighted and screen-reader users were told opposite
