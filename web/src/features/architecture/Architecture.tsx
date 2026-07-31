@@ -1274,7 +1274,15 @@ const STEPS: (Step & { id: StepId })[] = [
             <AIArchitecturePlays />
           </div>
         </Section>
-
+      </div>
+    ),
+  },
+  {
+    id: 'traps',
+    label: 'Traps',
+    hint: 'The ways this stage goes wrong, and where to read further',
+    content: (
+      <div className="space-y-16">
         <Section eyebrow="Traps" title="Failure modes worth naming">
           <div className="space-y-3">
             <Callout

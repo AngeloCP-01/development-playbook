@@ -76,7 +76,12 @@ test('every trace row points at a step the stepper actually has', () => {
 test('the id list is in rail order and has no duplicates, since it is what the trace links resolve against', () => {
   expect(new Set(STEP_IDS).size).toBe(STEP_IDS.length)
   expect(STEP_IDS[0]).toBe('reverse')
-  expect(STEP_IDS.at(-1)).toBe('ai')
+  // The stage closes on its trap set and its reading list, which is how stage
+  // 02 closes too. This used to assert `ai` was last, which was true of this
+  // stage and never a rule — stage 02 puts its AI step fifth of seven. What
+  // D-35 requires is that the step exists, not where it sits.
+  expect(STEP_IDS).toContain('ai')
+  expect(STEP_IDS.at(-1)).toBe('traps')
 })
 
 test('the trades are stated, because the cap needs a reason and "pick fewer" is not one', () => {

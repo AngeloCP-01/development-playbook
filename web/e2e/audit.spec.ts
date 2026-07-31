@@ -41,6 +41,7 @@ const PAGES = [
   '/stages/03-architecture#access',
   '/stages/03-architecture#record',
   '/stages/03-architecture#ai',
+  '/stages/03-architecture#traps',
 ]
 
 const WIDTHS = [320, 768, 1024, 1440, 2560]
@@ -366,7 +367,6 @@ const PANEL_EXCEPTIONS: Record<string, number> = {
 
   // Temporary — D-52's reshape removes these.
   // See docs/superpowers/plans/2026-07-31-step-panel-weight.md
-  '/stages/03-architecture#ai': 4.7,
 }
 
 /** Tolerance on the re-baseline check: panel height moves slightly with font
