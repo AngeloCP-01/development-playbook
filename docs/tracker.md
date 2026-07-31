@@ -738,8 +738,14 @@ silent — `CLAUDE.md` permits the doc/app duplication but not widening it unnot
 
 `docs/03-architecture.md` is fourteen subsections and ~1,344 lines. Live coverage:
 `docs/stage-03-status.md`.
-`web/src/features/architecture/` is the six steps built in W-3 (reverse · model · constrain ·
-shape · decide · ai) against the eight-subsection doc that no longer exists.
+
+**Status 2026-07-31, mid-round.** `web/src/features/architecture/` is **21 steps**, up from the
+six built in W-3 and the ten it carried when this round opened. Four of the five clusters are
+ported — resilience, consistency and concurrency, safe schema evolution, statelessness and
+scaling — plus the AI section's two missing plays and sixth mislead, and section 9, which had
+no app step at all. **One cluster remains**: fitness functions with the widened ten-row trace,
+and the event-sourcing / CQRS definitions. This entry stays open until `docs/stage-03-status.md`
+shows no partial or unported rows *and* the whole-branch review has run.
 
 **Why the round took the debt rather than avoiding it.** Stage 03's app already sat at D-38's
 ceiling of five content steps plus the AI step, and the round added five sections. The port
@@ -843,6 +849,14 @@ these were found by checking rather than by reading.
 | `OpportunityTree` | Legend promised colour coding the nodes did not show | Screenshot review |
 | `DiscoveryFlow` | Component defined inside render — state reset every render | Lint |
 | Sidebar | Group labels were `<h2>` before the page `<h1>`, breaking the heading outline | Accessibility structure check |
+| `concurrency.ts` | Taught that two workers on a queue both get a row under `SELECT … FOR UPDATE`. That is `SKIP LOCKED` behaviour; at read committed the second worker re-evaluates the predicate after the first commits and gets **zero** rows | Per-task reviewer subagent, reasoning about Postgres semantics rather than reading the prose |
+| `styles.ts` | Claimed transaction-mode pooling breaks the `SELECT … FOR UPDATE` the stage teaches. It does not — the pooler holds one server connection for a whole transaction, so a row lock inside it is safe; the doc's three items are all *session*-scoped. The app therefore contradicted itself four steps apart, since `races` scores `FOR UPDATE` as the right answer | Same, and the same class: a factual claim about an external system, added beyond the doc, in the one clause the doc did not write |
+| `LockingChoice` / `concurrency.ts` | "SERIALIZABLE is the answer to none of these" — stronger than the doc and than Postgres, which aborts one writer in two of the three cases. The overstatement had been written into a test *name*, which is how it became durable | Reviewer checked the claim per case instead of accepting the framing |
+| `ResiliencePatterns` | One card told the reader graceful degradation is "always, and it costs nothing" and then that "building all four on day one is over-engineering" — the port had swapped it into the doc's four and kept the doc's closing sentence | Reviewer read the panel as a reader rather than as a diff |
+| `evolve.ts` | Applied the doc's rule about ***destructive*** migrations to the one purely additive step, while the same card rendered that rule with "destructive" intact four lines below | Reviewer traced the rule back to the doc's stated reason (rollback) rather than to its wording |
+| `ExpandContract` | All six checkboxes had the accessible name "I'd skip it", so a screen-reader user in focus mode got six identical controls with nothing tying them to a step | Reviewer compared against the component's own cited model, `AuthzPatterns` |
+| `LockingStrategies` | SQL blocks sat in a grid; grid children default to `min-width: auto`, so `overflow-x-auto` did nothing and the page scrolled sideways 204px at 320px | The audit suite, on the first run after the component landed |
+| `styles.test.ts`, ×2 | Two tests passed on strings asserting the **opposite** of their names — `/transaction mode\|session state\|advisory lock/` passes on "transaction mode is fine and breaks nothing" | Reviewer ran the regexes against counter-examples instead of reading them |
 | Palette | `--faint` at 2.99:1, accent at 4.11:1 — both below AA | Exhaustive contrast audit |
 | Home hero | "DEVELOPMENT" needed 333px in a 280px box at 320px wide | Responsive sweep |
 | `ProductDiscovery` | JSX dropped the space around inline `<Term>`, rendering "solution treeis" | DOM inspection after spotting it in a screenshot |
@@ -938,70 +952,79 @@ work, saving after each step": one agent's report persisted at 286 lines with it
 intact and the remaining sections explicitly marked OUTSTANDING, which made resumption cheap
 rather than a redo. This is now standard for reviewers as well as implementers.
 
+### A per-task read-only reviewer pays for itself; the same session cannot self-review
+
+Three reviewer subagents ran across tasks 5–9 of the D-52 round and returned **eleven blocking
+findings**, every one real on verification. Two were factual errors about Postgres — a `SELECT
+… FOR UPDATE` that was described doing what `SKIP LOCKED` does, and a pooler caveat that
+claimed transaction-mode pooling breaks a transactional lock. Both read plausibly, both sat in
+the one clause of an entry that the doc had not written, and both were in content the
+implementer had also written the test for. That is the shape of the defect a self-review cannot
+catch: the same reading that produced the claim produces the check.
+
+Two mechanical lessons came with it.
+
+**A test name is a claim, and it goes stale like one.** Four times on this branch a test's name
+promised more than its assertion — `/transaction mode|session state|advisory lock/` passes on
+"transaction mode is fine and breaks nothing". Twice the offending test had been cited in a
+commit body *as the fix*. The reviewer's method is the one that works: run the regex against a
+counter-example rather than reading it.
+
+**Most of the round's errors were still plan-authored.** Five of six tasks found the plan's
+brief wrong about the shape of the work — two seams that measured wrong, a compression lever
+that had been applied years earlier, a step-count assumption, and a play count taken from a
+status doc rather than from the doc. The plan was written by the same agent that wrote the
+spec, which is the same failure mode one level up.
+
 ---
 
 ## Next up
 
-**Recommendation: one round on stage 03's doc — TD-18, TD-21 and TD-22 together — before
-building stage 04.**
+**Recommendation: finish W-3.2 — Task 11, then the whole-branch review — before anything
+else.**
 
-Three entries, raised separately, one round. They are three views of the same document:
+The reasoning, rather than the assertion. The D-52 reshape is done and the port is one cluster
+short, so the cheap thing is to finish it while the material is in hand. What is *not* cheap,
+and is the actual reason to hold everything else, is the review.
 
-- **TD-18** is what a cold reader **could not finish** — 14 gaps, 3 blocking.
-- **TD-21** is what a reader finishes **without ever learning the vocabulary for** — the
-  styles landscape, DDD, the modular monolith taught unnamed.
-- **TD-22** is an **activity the stage never runs** — it produces a schema (low-level design)
-  with no high-level design above it to justify the shape.
+**The port half has never been reviewed as a whole.** It is seventy-four commits. The three
+per-task reviews that have run found eleven blocking defects between them, at a rate that did
+not fall off across tasks — the last task reviewed produced five. Two of those were wrong
+claims about Postgres in teaching material, which is the class this project exists to not ship.
+A per-task review sees one diff; nothing but a whole-branch pass catches a task whose output
+undermines another's, and this round has already produced one of those (a pooler caveat in
+`shape` contradicting the locking answer in `races`, four steps apart).
 
-They converge on one point. TD-22's non-functional-requirements step is the same artifact as
-TD-21's architecture characteristics, and it is also where TD-18's **G14** belongs — the
-reversibility test currently stranded in the AI section, framed as a prompt for a model rather
-than the rule the stage turns on. One step resolves a piece of all three. Splitting the work
-means opening the same document and the same components three times.
+**Then stage 04.** Not before: stage 03 is the reference implementation everything after it
+copies, and it is currently a stage whose doc and app agree in most places and whose agreement
+has been checked in none of them end to end.
 
-**Sequence them TD-22 → TD-21 → TD-18.** TD-22 probably changes the stage's step structure,
-so it has to be settled before the other two are designed against it: if an HLD step lands
-between Model and Constrain, the app's six steps and nine figures both change shape, and any
-work done on the assumption of the current structure gets redone.
+Two things worth deciding at the same time, both surfaced by this round rather than planned:
 
-
-
-The reasoning, rather than the assertion. Stage 03's app is finished and verified; the doc
-underneath it is not. Three of the fourteen gaps are blocking for a reader using the stage as
-intended — the DoD makes "authorization pattern decided" an exit condition and the doc offers
-only one pattern; "indexes" is a required artifact that appears nowhere else in the document;
-races are named as the reason to push constraints into the database and no tool is given that
-expresses a conditional uniqueness rule. A reader who follows the stage honestly cannot
-finish it.
-
-Three things make this more urgent than another stage:
-
-1. **The app mirrors the doc**, so several fixes are two-file changes (G2 adds an
-   interrogation question, G14 moves a sentence that is currently in the AI section into the
-   reversibility section — both are ported into `scoring.ts`). That coupling gets more
-   expensive, not less, as stages accumulate.
-2. **The cold-reader pass is cheap and it works.** It found in one run what four rounds of
-   review on stage 02 did not (D-32). Acting on the first stage where it produced blocking
-   findings sets the precedent that it is a gate rather than a formality.
-3. **Stage 03 is the solutions architect's home** (D-37) — the audience the playbook
-   currently serves worst. Shipping it with an unsatisfiable exit condition undercuts the
-   claim that stage 02 legitimately defers architecture to it.
-
-Against that: the gaps are pre-existing, the stage is genuinely usable, and building stage 04
-would keep W-3's momentum. That is a real argument, and it loses mainly on point 1 — the
-coupling.
+- **Five accordions in one feature share the same markup** (`DeferredList`, `DeploymentStyles`,
+  `ResiliencePatterns`, `EvolutionNotes`, `ScalingMoves`). Each was written to match the last,
+  which is the right call per task and the wrong one five times. A `RevealList` component is a
+  clean standalone refactor, and it is easier before stage 04 copies the pattern a sixth time.
+- **The step rail holds twenty-one steps** and stopped fitting at 1440px somewhere around
+  twelve. It scrolls inside its own container, so nothing fails, and D-52 deliberately says
+  nothing about count — but "the rail is navigable" was the premise D-38 was defending, and
+  no rule now checks it.
 
 **Also open, in rough order:**
 
 - **`W-5` (deploy)** — unblocked, and would turn the audit suite into a real post-deployment
   check rather than a local one. Stronger now than it was: three stages are finished, so the
   "deploy matters less while the app has one finished stage" reasoning has expired.
-- **`TD-17`** (no component-test harness) — the cheapest remaining way to raise the floor,
-  and it gets more valuable with every stage that adds components nothing can render-test.
-- **`TD-16`** (placeholder contrast) — a real AA failure on instructional text, plus the
-  audit blind spot that hid it. Fix both halves together.
-- **`TD-12`** (audit `PAGES` hand-maintained) — now cost a manual step in two consecutive
-  stage builds.
+- **`TD-17`** (no component-test harness) — the cheapest remaining way to raise the floor, and
+  it gets more valuable with every stage that adds components nothing can render-test. This
+  round added eight, and the one behaviour that *is* covered end to end — an exercise still
+  explaining itself after a wrong answer — is covered by two hand-written playwright tests
+  because there is nowhere else to put it.
+- **`TD-16`** (placeholder contrast) — a real AA failure on instructional text, plus the audit
+  blind spot that hid it. Fix both halves together.
+- **`TD-12`** (audit `PAGES` hand-maintained) — **eleven hashes added by hand this round**, one
+  per new step. A dead hash fails; a missing one still audits nothing, which is the half that
+  matters now that adding steps is routine.
 - **`P-6`** — the remaining conventions to fold into the stage docs.
 
 Carry into whichever round is next:
@@ -1012,3 +1035,10 @@ Carry into whichever round is next:
   stage whose doc lacks the `### AI in <stage>` heading. Stage 03's doc did not have one.
 - **`PATTERNS.md` gained "annotated artifact"** (D-41) — reach for it for config files,
   workflow YAML and migrations, not just schemas.
+- **A step name in prose is a citation.** Five stale ones shipped on this branch, each found by
+  grep and none by a test: `steps.ts` makes a nonexistent id a compile error and can say
+  nothing about a name written in a sentence. Grep for step names whenever a step splits.
+- **Count the doc, do not trust the brief.** Two ports this round were specified against counts
+  that were wrong by the time they were read. Where the count is checkable, check it in a test
+  against the doc itself — `evolve.test.ts` and `ai-plays.test.ts` both do.
+
