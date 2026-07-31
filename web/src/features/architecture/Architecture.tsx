@@ -210,7 +210,7 @@ const STEPS: (Step & { id: StepId })[] = [
         <Section eyebrow="Your turn" title="Interrogate the model">
           <Prose>
             <p>
-              A sketch like the one above looks finished long before it is. Five
+              A sketch like the one above looks finished long before it is. Six
               questions put to it now will surface the errors that are otherwise
               found by a migration eighteen months in. Answer each before the
               reasoning shows.
@@ -218,8 +218,7 @@ const STEPS: (Step & { id: StepId })[] = [
             <p>
               The reasoning appears whichever way you answered, because the
               defensible answer is worth less than the argument for it — and one
-              of these five genuinely depends on a product you have not
-              described.
+              of them genuinely depends on a product you have not described.
             </p>
           </Prose>
           <div className="mt-5">
@@ -249,17 +248,27 @@ const STEPS: (Step & { id: StepId })[] = [
             <DriftDiagram />
           </Figure>
         </Section>
-
+      </div>
+    ),
+  },
+  {
+    id: 'worksheet',
+    label: 'Worksheet',
+    hint: 'The same questions, asked about your own product',
+    content: (
+      <div className="space-y-16">
         <Section eyebrow="The artifact" title="Write down your own domain">
           <Prose>
             <p>
-              Four of those five questions turn on the thing you are actually
+              All but one of those questions turn on the thing you are actually
               building. What are the nouns; what should be computed rather than
               stored; what happens on delete, entity by entity — a{' '}
               <Term id="soft-delete">soft delete</Term> keeps the row and taxes
               every query afterwards, so it is a trade to make deliberately
-              rather than a default. Last, what must be unique and in what
-              scope. The fifth, whether every actor has the same rights, is
+              rather than a default. What must be unique, and in what scope. And
+              which of your verbs are really things: an approval you will later
+              want an actor and a timestamp for is a row, not a status flip. The
+              remaining one, whether every actor has the same rights, is
               answered in <em>Contract</em>, where the authorization pattern
               gets chosen.
             </p>

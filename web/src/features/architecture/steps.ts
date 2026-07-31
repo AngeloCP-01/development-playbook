@@ -17,6 +17,7 @@ export const STEP_IDS = [
   'reverse',
   'require',
   'model',
+  'worksheet',
   'shape',
   'sketch',
   'schema',

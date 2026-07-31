@@ -24,6 +24,7 @@ const PAGES = [
   '/stages/03-architecture#reverse',
   '/stages/03-architecture#require',
   '/stages/03-architecture#model',
+  '/stages/03-architecture#worksheet',
   '/stages/03-architecture#shape',
   '/stages/03-architecture#sketch',
   '/stages/03-architecture#schema',
@@ -322,7 +323,6 @@ const PANEL_EXCEPTIONS: Record<string, number> = {
 
   // Temporary — D-52's reshape removes these.
   // See docs/superpowers/plans/2026-07-31-step-panel-weight.md
-  '/stages/03-architecture#model': 6.0,
   '/stages/03-architecture#shape': 7.1,
   '/stages/03-architecture#sketch': 6.1,
   '/stages/03-architecture#schema': 8.4,
