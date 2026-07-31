@@ -298,7 +298,7 @@ these clusters — so this round is what makes that section honest.
 09 (linked, not taught); observability with 15; threat modelling and secrets with 08; table
 partitioning and sharding are named as the thing you do not need and not taught.
 
-### W-3.2 — Port stage 03's doc round into the app ◐ *(in progress — see `feat/stage-03-app-port`)*
+### W-3.2 — Port stage 03's doc round into the app ◐ *(in progress — `feat/stage-03-app-port`, 61 commits, D-52 reshape at task 5 of 12)*
 
 **Live coverage map: `docs/stage-03-status.md`.** Section by section, doc against app, with the
 remaining tasks. Read it before picking up this round — it is more current than this checklist,
@@ -318,23 +318,31 @@ W-3.1 was deliberately doc-only, so `docs/03-architecture.md` and
 `web/src/features/architecture/` now disagree about what the stage contains. That divergence
 is **TD-23**, and this round closes it.
 
-The doc went from eight subsections to thirteen and from 300 lines to 902. The app is still
-the six steps built in W-3: reverse · model · constrain · shape · decide · ai.
+The doc is 14 subsections and ~1,344 lines. The app is **10 steps**: reverse · require ·
+model · worksheet · shape · sketch · schema · contract · record · ai. (An earlier version of
+this checklist said "the six steps built in W-3: reverse · model · constrain · shape · decide ·
+ai" — `constrain` and `decide` had not existed for weeks by the time anyone read it.)
 
-- [ ] **Decide the new step structure first.** Five content steps is D-38's ceiling and the
-      doc no longer fits inside it. This round supersedes D-38 with the shape the doc proved,
-      and the superseding decision states the new ceiling and why — not "stage 03 is special"
-- [ ] **New content needing components**: architecture characteristics with the trace-forward
-      table, the styles comparison, the system sketch with its three views, the sync/async
-      decision, the database section's ER view and indexes, API contracts
-- [ ] **Mirror the corrections, not just the additions** — `scoring.ts` holds the DDL
-      annotations, the interrogation set and the reversibility lists, all of which changed.
-      The interrogation set gained a fifth question; the DDL gained indexes, a partial unique
-      index, and the `memberships` table
-- [ ] **`terms.ts` already has the 14 new terms** (glossary 42 → 56, shipped in W-3.1). They
-      are defined but not yet used inline by any component, which is the wiring this round does
-- [ ] Re-run the audit suite — new step hashes need adding to `e2e/audit.spec.ts` by hand
-      (TD-12), and the 320px overflow check matters for the ASCII diagrams and the wide tables
+- [x] **Decide the new step structure first.** ✓ 2026-07-31. **D-52** supersedes D-38: a step
+      holds one judgment and its panel stays under four screens at 1024×768; count follows
+      content. D-38 capped the wrong quantity — its own reason was about panel weight, and
+      capping the count makes panels heavier. Measurement settled it, and also showed D-38 had
+      already been broken by stage 02 without a recorded deviation
+- [x] **Mirror the corrections, not just the additions** ✓ 2026-07-31 — the sixth interrogation
+      question, `version` and `deleted_at` on the invoices DDL, and the `invoice_sends` block.
+      `ddl-sync.test.ts` now holds both `CREATE TABLE` blocks to the doc character-for-character
+- [ ] **Finish the D-52 reshape — Tasks 5–12** of
+      `docs/superpowers/plans/2026-07-31-step-panel-weight.md`. Progress is countable:
+      `PANEL_EXCEPTIONS` in `e2e/audit.spec.ts` holds 7 entries, each task deletes its own, and
+      **two entries means done**
+- [ ] **Port section 9, "Evolve the schema safely"** — still the only doc section with no app
+      step at all
+- [ ] **Port the remaining clusters**: resilience into `sketch`, isolation and locking into
+      `schema`, scaling and pooling into `shape`, fitness functions and the widened trace into
+      `require`, event sourcing and CQRS into `record`, four more plays into `ai`
+- [ ] **`terms.ts`** — grep it whenever a concept is ported (D-47), then `pnpm gen:glossary`
+- [ ] New step hashes go into `e2e/audit.spec.ts` by hand (TD-12). A *dead* hash now fails;
+      a *missing* one still audits nothing
 - [ ] Close **TD-23** when doc and app agree again
 
 #### AI-plays coverage, per stage

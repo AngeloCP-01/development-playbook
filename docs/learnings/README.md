@@ -50,3 +50,13 @@ Naming: `<topic>-101.md`.
   `oklab()` with a regex instead of rasterizing it, and passing green over surfaces it
   never looked at. Each has happened here. Read it before changing a token in response to
   a contrast number.
+- `rules-measure-the-wrong-thing-101.md` — what superseding D-38 taught: a rule can be right
+  about what it cares about and wrong about what it counts. D-38 capped a stage's step count,
+  reasoning that "a stepper stops being navigable when a step is a scroll" — a claim about
+  panel weight, enforced by counting panels, which for fixed content moves the opposite way.
+  It had also already been broken by stage 02 without a recorded deviation, so the project
+  carried two disagreeing numbers for two stages. Measuring settled it: stage 03's *median*
+  panel was 5.3 screens against 2.4 and 2.5 elsewhere, the stage with the most steps also
+  having the heaviest panels. Includes the test that both bounds an allowlist and stops it
+  rotting, and the half-mitigation a reviewer caught in the first version of it. Read it
+  before writing any rule with a number in it.
