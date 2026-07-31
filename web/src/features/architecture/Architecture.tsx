@@ -20,6 +20,7 @@ import { ModelInterrogation } from './ModelInterrogation'
 import { DriftDiagram } from './DriftDiagram'
 import { DomainWorksheet } from './DomainWorksheet'
 import { DeploymentStyles } from './DeploymentStyles'
+import { ScalingMoves } from './ScalingMoves'
 import { InternalOrganisation } from './InternalOrganisation'
 import { YourCharacteristics } from './YourCharacteristics'
 import { OneAppCosts } from './OneAppCosts'
@@ -345,6 +346,40 @@ const STEPS: (Step & { id: StepId })[] = [
         </Section>
 
         <Section
+          eyebrow="The property that decides"
+          title="One thing makes the table above available to you"
+        >
+          <Prose>
+            <p>
+              An application is <Term id="statelessness">stateless</Term> when
+              it keeps no request state in its own memory. Any instance can then
+              serve any request, which is what lets you run several copies — and
+              what makes the serverless row possible at all, since the platform
+              starts and stops instances whenever it likes. It is also what the
+              table means by scaling independently, so it is worth saying how:{' '}
+              <Term id="horizontal-scaling">vertical and horizontal</Term>{' '}
+              scaling are not two settings of one dial.
+            </p>
+            <p>
+              Vertical first is almost always right. The point of knowing the
+              difference is that horizontal scaling is not something you bolt
+              on: it needs a property you either have or do not, decided now.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <ScalingMoves />
+          </div>
+        </Section>
+      </div>
+    ),
+  },
+  {
+    id: 'oneapp',
+    label: 'One app',
+    hint: 'Derive the default for yourself, then the four reasons to leave it',
+    content: (
+      <div className="space-y-16">
+        <Section
           eyebrow="Your turn"
           title="Run the trace against your own three"
         >
@@ -360,7 +395,6 @@ const STEPS: (Step & { id: StepId })[] = [
             <YourCharacteristics />
           </div>
         </Section>
-
         <Section eyebrow="The default" title="Start with one application">
           <Prose>
             <p>
@@ -397,7 +431,15 @@ const STEPS: (Step & { id: StepId })[] = [
             <SplitTrigger />
           </div>
         </Section>
-
+      </div>
+    ),
+  },
+  {
+    id: 'boundaries',
+    label: 'Boundaries',
+    hint: 'Seams that make a later split mechanical rather than archaeological',
+    content: (
+      <div className="space-y-16">
         <Section
           eyebrow="Inside one application"
           title="Boundaries you keep honest"

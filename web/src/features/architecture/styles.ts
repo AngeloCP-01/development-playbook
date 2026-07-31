@@ -126,3 +126,70 @@ export const STYLE_TRACE: StyleTrace[] = [
       'Is easier where every write goes through one place, which is an argument for the boundaries in the next section rather than against them.',
   },
 ]
+
+export type ScalingMove = {
+  id: string
+  name: string
+  what: string
+  /** True for statelessness, which is not a peer move but what makes scale-out possible. */
+  precondition?: boolean
+  /** The part that is not in the name, and that costs someone an afternoon. */
+  catch?: string
+}
+
+/**
+ * Source: docs/03-architecture.md, "The shapes a system can take" and "Start
+ * with one application".
+ *
+ * Statelessness leads and is marked rather than listed, because the doc is
+ * explicit that it decides whether the deployment table is available to you at
+ * all: an in-memory session cache works perfectly on one machine and breaks the
+ * moment there are two.
+ *
+ * Pooling is here rather than with the deployment styles because it is the edge
+ * a reader following this playbook meets first, and it is the one that fails on
+ * connect rather than in anything they wrote.
+ */
+export const SCALING_MOVES: ScalingMove[] = [
+  {
+    id: 'stateless',
+    name: 'Statelessness',
+    precondition: true,
+    what: 'The application keeps no request state in its own memory — sessions live in a cookie, a table or a shared store, never a local variable. Any instance can then serve any request, which is what lets you run several copies at all, and what makes the serverless row possible, since the platform starts and stops instances whenever it likes.',
+    catch:
+      'An in-memory session cache works perfectly on one machine and breaks the moment there are two. It is a property you either have or do not, and it is decided now.',
+  },
+  {
+    id: 'scale-up',
+    name: 'Vertical scaling',
+    what: 'A bigger machine. Simpler, needs no statelessness, and eventually runs out of machine.',
+    catch:
+      'Vertical first is almost always right. The point of knowing the difference is that the other one is not something you bolt on later.',
+  },
+  {
+    id: 'scale-out',
+    name: 'Horizontal scaling',
+    what: 'More machines behind a load balancer. Effectively no ceiling.',
+    catch:
+      'Needs statelessness first, which is why that is the precondition above rather than a fourth option here.',
+  },
+  {
+    id: 'load-balancer',
+    name: 'A load balancer',
+    what: 'The thing in front of several instances that decides which one serves a request. It is what horizontal scaling is made of rather than a separate decision.',
+  },
+  {
+    id: 'read-replicas',
+    name: 'Read replicas',
+    what: 'Copies that spread read load. They do nothing for writes, because writes still go to one place.',
+    catch:
+      'A replica is behind by some amount. That lag is where the eventual consistency from the concurrency step turns up in your own product rather than in theory — a user saves, gets redirected, reads from a replica, and does not see their own change.',
+  },
+  {
+    id: 'pooling',
+    name: 'A connection pooler',
+    what: 'A Postgres instance accepts a limited number of simultaneous connections — often a couple of hundred, fewer on small plans. Serverless functions scale by starting more instances and each instance wants its own connection, so moderate-looking traffic exhausts the limit and new requests fail on connect rather than on anything you wrote. A pooler holds a small number of real connections and multiplexes everyone onto them. Managed providers ship one, and reaching for it is usually a connection-string change rather than an architecture change.',
+    catch:
+      'A pooler in transaction mode hands your connection to someone else between statements, which breaks anything relying on session state — prepared statements, session variables, advisory locks, and the SELECT … FOR UPDATE this stage teaches. Most clients have a flag for it. Read your provider’s note on the mode before assuming it is invisible.',
+  },
+]

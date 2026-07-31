@@ -158,7 +158,7 @@ export const TRACE_ROWS: TraceRow[] = [
     characteristicId: 'cheap-to-run',
     forces:
       'One application and one database, with no queue until something demands one. It also rules out microservices, whose cost is paid per service regardless of load.',
-    stepId: 'shape',
-    stepLabel: 'Shape',
+    stepId: 'oneapp',
+    stepLabel: 'One app',
   },
 ]

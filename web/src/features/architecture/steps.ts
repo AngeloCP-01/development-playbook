@@ -19,6 +19,8 @@ export const STEP_IDS = [
   'model',
   'worksheet',
   'shape',
+  'oneapp',
+  'boundaries',
   'sketch',
   'flow',
   'resilience',

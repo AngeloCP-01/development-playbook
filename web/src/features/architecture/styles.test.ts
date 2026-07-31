@@ -5,6 +5,7 @@ import {
   DEPLOYMENT_STYLES,
   ORGANISATION_QUESTION,
   ORGANISATION_STYLES,
+  SCALING_MOVES,
   STYLE_TRACE,
 } from './styles'
 
@@ -52,4 +53,52 @@ test('every trace row names a real characteristic, so styles.ts and characterist
 
 test('the trace covers three characteristics, matching the example pick it is derived from', () => {
   expect(STYLE_TRACE).toHaveLength(3)
+})
+
+// ── D-52 / TD-23: the scaling cluster the doc grew after the port ──────────
+
+test('scaling names both axes and the precondition, since scaling out without statelessness is the thing that does not work', () => {
+  const ids = SCALING_MOVES.map((m) => m.id)
+  expect(ids).toContain('stateless')
+  expect(ids).toContain('scale-up')
+  expect(ids).toContain('scale-out')
+})
+
+test('statelessness is marked as the precondition rather than a peer, because more instances is not an option without it', () => {
+  const stateless = SCALING_MOVES.find((m) => m.id === 'stateless')
+  expect(stateless?.precondition).toBe(true)
+  expect(SCALING_MOVES.filter((m) => m.precondition)).toHaveLength(1)
+})
+
+test('the serverless-to-Postgres pooling edge is carried, since it is the one that bites a solo developer on their first deploy', () => {
+  const pooling = SCALING_MOVES.find((m) => m.id === 'pooling')
+  expect(pooling).toBeDefined()
+  expect(pooling?.what).toMatch(/pool/i)
+})
+
+// The doc names this caveat specifically because the stage teaches
+// SELECT … FOR UPDATE, and a pooler in transaction mode breaks anything
+// relying on session state. Now that locking is its own step, dropping the
+// caveat would leave two steps quietly contradicting each other.
+test('pooling carries the transaction-mode caveat, since this stage teaches the session-state feature it breaks', () => {
+  const pooling = SCALING_MOVES.find((m) => m.id === 'pooling')
+  expect(pooling?.catch).toMatch(
+    /transaction mode|session state|advisory lock/i,
+  )
+})
+
+test('read replicas say what they do not do, because "spreads load" without "writes still go to one place" is how people reach for one to fix a write problem', () => {
+  const replicas = SCALING_MOVES.find((m) => m.id === 'read-replicas')
+  expect(replicas?.what).toMatch(/write/i)
+  expect(
+    replicas?.catch,
+    'replica lag is where eventual consistency stops being theory',
+  ).toMatch(/lag|behind/i)
+})
+
+test('every move says what it is, so none of them is a name on a list', () => {
+  for (const m of SCALING_MOVES) {
+    expect(m.name.trim().length, `${m.id} name`).toBeGreaterThan(0)
+    expect(m.what.trim().length, `${m.id} what`).toBeGreaterThan(0)
+  }
 })
