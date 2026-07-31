@@ -386,10 +386,11 @@ pattern library on the hardest stage.
 | Order | Stage | Why this one next |
 |---|---|---|
 | ~~1~~ ✓ | 02 Product Planning | **Done.** Complete + interactive + audience-validated (D-37: developer-complete; PM/SA are scope boundaries). Proved `web/PATTERNS.md`, the carry-forward chain, and the AI-plays pattern transfer. |
-| ~~2~~ ✓ | 03 Architecture | **App done; doc has open gaps (TD-18).** Densest stage, nine figures, six steps. Stress-tested the pattern library and produced one new row (annotated artifact). The cold-reader pass then found the *doc* underneath it is incomplete for a beginner — see the recommendation below. |
-| **3 (next, recommended)** | — | **Close stage 03's doc gaps (TD-18)** before building another stage. Three are blocking for a reader using the stage as intended, and the app mirrors the doc, so every fix is a two-file change that gets more expensive as more stages copy the pattern. |
-| 4 | 15 Observability | Unfamiliar ground; benefits most from figures |
-| 5 | 16 Incident Management | Procedural, so a stepper fits naturally |
+| ~~2~~ ✓ | 03 Architecture | **Doc done; app one cluster short (TD-23).** The densest stage by a distance: 14 doc sections, 21 app steps, 24 figures. TD-18, TD-21, TD-22 and TD-25's doc half all closed on it. Stress-tested the pattern library and produced two new rows (annotated artifact, and the panel-weight rule that replaced the step-count ceiling). |
+| ~~3~~ ✓ | — | **Stage 03's doc gaps closed** across W-3.1, W-3.1b and three cold-reader runs. |
+| **4 (next)** | — | **Finish W-3.2** — Task 11, then the whole-branch review covering doc and app together. The review is the blocker, not the port: 75 commits, never reviewed as a whole, and the three per-task reviews found eleven blocking defects between them. |
+| 5 | 15 Observability | Unfamiliar ground; benefits most from figures |
+| 6 | 16 Incident Management | Procedural, so a stepper fits naturally |
 | 6 | 13 Production Deployment | Expand/migrate/contract needs a visual |
 | — | remainder | 04–12, 14, 17, 18 |
 

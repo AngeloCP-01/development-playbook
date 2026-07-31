@@ -4,18 +4,23 @@
 exists because this stage has now diverged from its own port twice, and both times the
 divergence was discovered rather than tracked.
 
-**Last verified:** 2026-07-31, on `feat/stage-03-app-port` at `abaa6e2`, four tasks into the
+**Last verified:** 2026-07-31, on `feat/stage-03-app-port` at `dfae055`, ten tasks into the
 D-52 round.
 
-**Current state:** doc **14 sections / 1344 lines**. App **10 steps**. Glossary **73 terms**.
-217 tests across 20 files, and a 12-test audit suite over 24 URLs. Lint and typecheck clean.
+**Current state:** doc **14 sections / 1344 lines**. App **21 steps**. Glossary **73 terms**.
+266 tests across 23 files, and a 13-test audit suite over 35 URLs. Lint and typecheck clean.
 Every DDL block in the doc executed against PostgreSQL 17.
 
-**The reshape is mid-flight.** D-52 replaced D-38's step-count ceiling with a panel-weight rule,
-and stage 03 is being re-cut to satisfy it. Progress is countable: `PANEL_EXCEPTIONS` in
-`web/e2e/audit.spec.ts` holds **7 entries**, two permanent and five stage-03 debt, and each
-remaining task deletes its own. **Two entries means done.** The ledger at
+**The reshape is done.** D-52 replaced D-38's step-count ceiling with a panel-weight rule, and
+stage 03 has been re-cut to satisfy it. `PANEL_EXCEPTIONS` in `web/e2e/audit.spec.ts` is back
+to its **two permanent entries**, which was the plan's stated exit condition. Every panel
+measures under four screens; the heaviest is `model` at 3.7 and the median is 2.7, against a
+median of 5.3 before the round. The ledger at
 `.superpowers/sdd/2026-07-31-step-panel-weight/progress.md` is the authority on what has run.
+
+**Twenty-one steps was not a target.** Every split was forced by a measurement, and several
+landed one step later than the plan proposed because the plan's seam measured wrong. Count
+follows content is what D-52 says; this is what it produced for the densest of the eighteen.
 
 ---
 
@@ -41,21 +46,24 @@ Doc order. "Ported" means the app teaches the same thing, not merely that a comp
 | # | Doc section | App step | Ported | Notes |
 |---|---|---|---|---|
 | 1 | Sort decisions by reversibility | `reverse` | ✅ | Axis figure + scored exercise. G14's test promoted here from the AI section |
-| 2 | What this system has to be | `require` | ⚠️ **partial** | Characteristics picker + trace exists. **Trace table went 3 → 10 rows and fitness functions were added after the port** |
-| 3 | Model the domain first | `model` | ✅ **fixed** | Interrogation now at 6 questions; the entity-versus-event one sits before actor-rights, in doc order |
-| 4 | The shapes a system can take | `shape` | ⚠️ **partial** | Styles landscape ported. **Statelessness, horizontal/vertical, load balancing, read replicas added after** |
-| 5 | Start with one application | `shape` | ⚠️ **partial** | Split triggers ported. **Connection pooling added after** |
-| 6 | Boundaries inside the monolith | `shape` | ✅ | Boundary map, bounded context, the write-side rule |
-| 7 | Sketch the system | `sketch` | ⚠️ **partial** | Container view, data flow, sync/async, idempotency ported. **Resilience patterns — timeout, backoff+jitter, circuit breaker, graceful degradation — added after** |
-| 8 | Design the database | `schema` | ⚠️ **partial** | DDL inspector, ER view, indexes, partial unique index, tenancy ported. `version`, `deleted_at` and the `invoice_sends` block now mirrored and checked against the doc character-for-character. **Still missing: isolation levels, optimistic/pessimistic locking, CAP, eventual consistency** |
-| 9 | **Evolve the schema safely** | — | ❌ **not ported** | New section. Expand-contract, rolling deploys, backfill guards, `ALTER` lock safety, strangler fig. **No app step exists** |
+| 2 | What this system has to be | `require` | ⚠️ **partial** | Characteristics picker + trace exists. **Still missing: fitness functions, and the trace table's widening from 3 rows to all 10 candidates.** The last cluster, and the only one left |
+| 3 | Model the domain first | `model` · `worksheet` | ✅ **fixed** | Interrogation at 6 questions, in doc order. Split on measurement: deriving the nouns and writing your own domain down are two acts |
+| 4 | The shapes a system can take | `shape` | ✅ | Styles landscape, and statelessness lifted out as the precondition it is rather than a peer. Vertical/horizontal, load balancing and read replicas ported |
+| 5 | Start with one application | `oneapp` | ✅ | Split triggers, and the serverless-to-Postgres pooling edge with its transaction-mode caveat |
+| 6 | Boundaries inside the monolith | `boundaries` | ✅ | Boundary map, bounded context, the write-side rule |
+| 7 | Sketch the system | `sketch` · `flow` · `resilience` | ✅ | Container view; the flow and the sync/async fork it poses; idempotency; and the four resilience patterns — timeout, backoff+jitter, circuit breaker, graceful degradation — with bulkhead named and not taught |
+| 8 | Design the database | `schema` · `indexes` · `tenancy` · `concurrency` · `races` | ✅ | The heaviest section in the stage, cut five ways on measurement. DDL inspector, ER view, indexes, partial unique index, tenancy, delete behaviour; then isolation levels, both locking strategies, and the cross-row trap as a scored exercise. CAP and eventual consistency named without being oversold |
+| 9 | **Evolve the schema safely** | `evolve` | ✅ | Was the only section with no step at all. The six-step sequence as a guess-then-reveal on which two get skipped; the pre-launch exemption as the panel's opening; the backfill held to the doc character-for-character by a test |
 | 10 | Design the API contracts | `contract` | ✅ | Contract sort, verb-route problem |
-| 11 | Authentication and authorization | `contract` | ✅ **fixed** | Was teaching the singular framing and scoring `role` alone as correct. Now a checkbox conjunction, browser-verified |
+| 11 | Authentication and authorization | `access` | ✅ **fixed** | Was teaching the singular framing and scoring `role` alone as correct. Now a checkbox conjunction, browser-verified. Split out of `contract`: what the API promises and who may invoke it are different decisions |
 | 12 | Write the ADRs | `record` | ✅ | ADR anatomy, one-per-independently-reversible-thing |
-| 13 | Defer aggressively | `record` | ⚠️ **partial** | Defer list + criterion + tenancy resolution ported. **Event sourcing / CQRS definitions added after** |
-| 14 | AI in architecture | `ai` | ⚠️ **partial** | Seven plays, five misleads ported. **Four plays and one mislead added after** |
+| 13 | Defer aggressively | `record` | ⚠️ **partial** | Defer list + criterion + tenancy resolution ported. **Still missing: the event sourcing / CQRS definitions.** Ships with the section-2 cluster |
+| 14 | AI in architecture | `ai` | ✅ | Nine plays and six misleads, which is what the doc has — the brief said eleven and four-new, and both were wrong. A test now counts the doc's own bullets and a second holds the app's order to it |
+| — | Traps + further reading | `traps` | ✅ | Not a doc section; the stage's closing set, which is how stage 02 closes too. Left in the AI panel until this round only because that panel was last |
 
-**Tally: 6 fully ported · 7 partial · 1 not ported.**
+**Tally: 12 fully ported · 2 partial · 0 unported.** The two partials are one cluster —
+fitness functions with the widened trace, and the deferred-concept definitions — which is
+Task 11 of the plan.
 
 ---
 
@@ -63,15 +71,18 @@ Doc order. "Ported" means the app teaches the same thing, not merely that a comp
 
 ### Blocking the branch merge
 
-- [ ] **Port section 9, "Evolve the schema safely."** No step exists. Needs the six-step
-      sequence as an interactive artifact, and it is the strongest candidate for a
-      guess-then-reveal (which step do people skip?) — the answer is 2 and 5.
-- [ ] **Port the five clusters into the eight partial steps.** Resilience into `sketch`;
-      isolation/locking into `schema`; statelessness/scaling/pooling into `shape`; fitness
-      functions and the widened trace into `require`; event sourcing and CQRS into `record`.
+- [x] **Port section 9, "Evolve the schema safely."** ✓ 2026-07-31 — the `evolve` step, 3.3
+      screens on its first measurement. Guess-then-reveal on which two of the six get skipped;
+      the answer is 2 and 5, and the exercise asks the question the verdict grades rather than
+      asking for a confession and scoring a prediction.
+- [x] **Port four of the five clusters.** ✓ 2026-07-31 — resilience into `resilience`,
+      isolation and locking into `concurrency`/`races`, statelessness/scaling/pooling into
+      `shape`, and the AI section's two missing plays and sixth mislead into `ai`.
+- [ ] **Port the last cluster** — fitness functions and the widened ten-row trace into
+      `require`, event sourcing and CQRS into `record`. Task 11 of the plan.
 - [x] **Mirror the corrections, not just the additions.** ✓ done 2026-07-31. The sixth
       interrogation question, `version` and `deleted_at` on the invoices DDL, and the
-      `invoice_sends` block, rendered as Figure 14. `ddl-sync.test.ts` now holds both
+      `invoice_sends` block, rendered as a figure. `ddl-sync.test.ts` now holds both
       `CREATE TABLE` blocks to the doc character-for-character, so this class of drift fails a
       test instead of waiting for a reviewer — teeth-checked by changing `DEFAULT 0` to
       `DEFAULT 1`, which failed that test and only that test.
@@ -84,26 +95,27 @@ Doc order. "Ported" means the app teaches the same thing, not merely that a comp
       stale.
 - [x] **Settle the step count once and supersede D-38 with a reason.** ✓ done 2026-07-31.
       **D-52**: a step holds one judgment and its panel stays under four screens at 1024×768;
-      count follows content. D-38 capped the wrong quantity — its own reason was about panel
-      weight, and capping the count makes panels heavier. Measurement settled it: stage 03's
-      median panel was 5.3 screens against 2.4 and 2.5 for stages 01 and 02. D-38 had also
-      already been exceeded without a recorded deviation, by stage 02. Spec and plan at
-      `docs/superpowers/{specs,plans}/2026-07-31-step-panel-weight*`; **still to be written
-      into the tracker and PATTERNS.md** (plan Task 12).
+      count follows content. Measurement settled it: stage 03's median panel was 5.3 screens
+      against 2.4 and 2.5 for stages 01 and 02, and D-38 had already been exceeded without a
+      recorded deviation, by stage 02. Written into `docs/tracker.md` and `web/PATTERNS.md`.
 - [x] **Add the new step hashes to `web/e2e/audit.spec.ts`.** ✓ done 2026-07-31, and it was
       worse than "the new ones are missing": the list still named `#constrain` and `#decide`,
       two steps renamed away in W-3, so those URLs fell back to step one and were audited twice
-      while `require`, `sketch`, `schema`, `contract` and `record` had never been audited at all
-      — with the suite green. Now nine real hashes, 23 URLs, 11/11 passing. A new assertion
-      holds every listed hash to resolving to the step it names, teeth-checked by putting
-      `#decide` back. **TD-12 stays open**: the list is still hand-written, and forgetting to add
-      a step still audits nothing. What closed is the half that lied.
-- [ ] **Whole-branch review, covering doc and app together.** The port half has never been
-      reviewed — 31 commits, +9,446 lines, and the last review of this stage's app caught two
-      blocking defects including one where sighted and screen-reader users were told opposite
-      things.
-- [ ] **Re-run the audit suite.** The ASCII diagrams and wide tables are the 320px overflow
-      risk; the new checkbox group in `AuthzPatterns` needs a contrast and touch-target pass.
+      while five real steps had never been audited at all — with the suite green. A new
+      assertion holds every listed hash to resolving to the step it names, teeth-checked by
+      putting `#decide` back. Eleven further hashes were added by hand as the reshape ran.
+      **TD-12 stays open**: the list is still hand-written, and forgetting to add a step still
+      audits nothing. What closed is the half that lied.
+- [x] **Re-run the audit suite.** ✓ Runs on every task. 13 tests over 35 URLs: overflow
+      320–2560, touch targets, WCAG AA in both themes, zero console errors, the panel-weight
+      rule, hash resolution, and two guess-then-reveal contracts. It caught a real defect this
+      round — SQL blocks in a grid could not scroll, because a grid child defaults to
+      `min-width: auto`, so the page scrolled sideways 204px at 320px.
+- [ ] **Whole-branch review, covering doc and app together.** Still the load-bearing one. The
+      port half has never had it — **75 commits** now. Three per-task reviews have run and
+      found **eleven blocking defects** between them, at a rate that did not fall off: the last
+      task reviewed produced five. Two were factual errors about Postgres that read plausibly
+      and that no test could have caught until the tests were rewritten.
 
 ### Known gaps in the doc, recorded not fixed
 
@@ -156,11 +168,13 @@ Not gaps — boundaries doing their job. Do not "fix" these here.
 | # | What it settles |
 |---|---|
 | **D-37** | Audience is solo-but-production-grade; stage 03 is the solutions architect's home |
-| **D-38** | Five content steps + AI is a dense-stage ceiling — **now exceeded, needs superseding** |
+| ~~**D-38**~~ | Five content steps + AI was a dense-stage ceiling — **superseded by D-52** |
+| **D-52** | A step holds one judgment and its panel stays under four screens at 1024×768; count follows content. Enforced by measurement in `audit.spec.ts`, not recorded |
 | **D-42** | Cite headings, never line numbers. Enforced by `source-citations.test.ts` |
 | **D-44** | Teach the styles trade-off without changing the recommendation |
 | **D-45** | Full HLD/LLD treatment, accepting the length |
 | **D-46** | W-3.1 shipped doc-only — **superseded in practice; doc and port now merge as one unit** |
+| **D-51** | The doc is the source of truth for ported content; reconstructing it from memory is what produced a security defect here |
 | **D-47** | Grep `terms.ts` when fixing a concept; it is a place defects hide |
 | **D-48** | A round's fix wave gets its own verification pass |
 | **D-49** | Completeness beats length for this stage; standard practice is the filter |
@@ -177,4 +191,7 @@ Not gaps — boundaries doing their job. Do not "fix" these here.
 | Cold reader, run 3 (post-W-3.1b) | 2 clusters actionable first pass, 3 partial. Found a security defect open across all three runs |
 | Whole-branch review, W-3.1 | Ready with fixes — 6 blocking, incl. unrunnable SQL and a ticked-but-undone checklist item |
 | Whole-branch review, W-3.1b | Not ready — 5 blocking, incl. a false serializable claim and a backfill that corrupted mononyms. Found by **executing** the SQL |
+| Per-task review, D-52 tasks 5–6 | 3 blocking: a `FOR UPDATE` described doing what `SKIP LOCKED` does; an overclaim against SERIALIZABLE enshrined in a test name; a card asserting a thing and its negation |
+| Per-task review, D-52 tasks 7–8 | 3 blocking: the retracted overclaim surviving in the step hint; the *destructive*-migration rule applied to an additive step; six checkboxes sharing one accessible name |
+| Per-task review, D-52 task 9 | 5 blocking: a false claim that transaction-mode pooling breaks a transactional lock, which the stage's own locking step contradicts; a stale step pointer; two tests passing on strings asserting the opposite of their names; a missing summary line; a stale hint |
 | Whole-branch review, combined branch | **Not yet run. Required before merge.** |
