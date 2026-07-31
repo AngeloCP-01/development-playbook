@@ -18,9 +18,11 @@ import { EXPAND_CONTRACT_STEPS } from './evolve'
  * reader to recite the order, and every step explains itself afterwards whether
  * or not it was picked.
  *
- * No count is enforced on the selection. Requiring "pick two" would give the
- * answer away, and a reader who would skip four steps has said something worth
- * showing them.
+ * The count is enforced, and the copy says it. An earlier version asked which
+ * steps "you" would skip and then scored an exact set match against 2 and 5,
+ * which marked the honest answer wrong and asked a confession while grading a
+ * prediction. The panel had also already given the count away twice. Naming it
+ * costs nothing the exercise was still holding.
  */
 
 export function ExpandContract() {
@@ -46,10 +48,12 @@ export function ExpandContract() {
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-sm font-medium">
-            Which of these would you skip on a rename you had done before?
+            Two of these six look redundant, and they are the two that get
+            skipped. Which two?
           </p>
           <p className="text-sm text-subtle">
-            Six deploys for one column. Two of them feel redundant.
+            Six deploys for one column. Every step explains itself once you
+            commit.
           </p>
         </div>
         {done && (
@@ -90,6 +94,7 @@ export function ExpandContract() {
                   type="button"
                   role="checkbox"
                   aria-checked={picked}
+                  aria-label={`Skip step ${s.n}, ${s.title}`}
                   disabled={done}
                   onClick={() => toggle(s.n)}
                   className={[
@@ -126,15 +131,21 @@ export function ExpandContract() {
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <button
             type="button"
+            disabled={draft.length !== answer.length}
             onClick={() => setCommitted(draft)}
-            className="min-h-11 border border-brand bg-brand px-4 text-sm font-medium text-brand-fg transition-opacity duration-150 hover:opacity-90 lg:min-h-9"
+            className={[
+              'min-h-11 border px-4 text-sm font-medium transition-opacity duration-150 lg:min-h-9',
+              draft.length === answer.length
+                ? 'border-brand bg-brand text-brand-fg hover:opacity-90'
+                : 'cursor-not-allowed border-line bg-raised text-subtle opacity-60',
+            ].join(' ')}
           >
             Commit
           </button>
           <span className="text-sm text-subtle" aria-live="polite">
-            {draft.length === 0
-              ? 'Or commit having skipped none.'
-              : `${draft.length} selected.`}
+            {draft.length === answer.length
+              ? 'Two selected.'
+              : `Pick ${answer.length}. ${draft.length} selected.`}
           </span>
         </div>
       )}

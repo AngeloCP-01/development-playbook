@@ -26,7 +26,7 @@ export const EXPAND_CONTRACT_STEPS: ExpandContractStep[] = [
     title: 'Expand',
     what: 'Add the new column, nullable. Nothing reads it yet.',
     ifSkipped:
-      'There is nowhere for the next step to write. Adding a nullable column is one of the instant operations, so this is the cheap half of the sequence — the expensive half is adding it in the same deploy as the code that needs it.',
+      'There is nowhere for the next step to write. This is also the step that costs least: adding a nullable column is one of the operations that is instant rather than a table scan under a lock, which is not true of every change you might make here.',
   },
   {
     n: 2,
@@ -63,7 +63,7 @@ export const EXPAND_CONTRACT_STEPS: ExpandContractStep[] = [
     title: 'Contract',
     what: 'Drop it.',
     ifSkipped:
-      'Nothing breaks, which is why this one gets left. You keep a column that nothing reads and nothing writes, and the next person to read the schema cannot tell that from one that matters.',
+      'Nothing breaks, which is why this one does get left — and why it is not one of the two. You keep a column that nothing reads and nothing writes, and the next person to read the schema cannot tell it from one that matters. That is a tidiness cost rather than an outage, which is the whole difference between this step and 2 and 5.',
   },
 ]
 
@@ -112,13 +112,20 @@ export const EVOLUTION_NOTES: EvolutionNote[] = [
     title: 'Both guards in the backfill are load-bearing',
     summary:
       'The naive version is broken, and neither failure announces itself.',
-    body: 'Without "name IS NOT NULL", a row with a null name matches the guard forever — split_part(NULL, …) is null, so first_name stays null, the row re-matches, and the statement keeps reporting one row updated. “Repeat until zero” never terminates. Without the CASE, a mononym breaks: strpos returns 0 for a name with no space, substr(name, 1) returns the whole string, and every single-word name ends up with last_name equal to first_name. The lesson rather than the footnote: the data you are migrating contains cases your splitting rule was not written for. Run the SELECT half first and look at what comes back. An unguarded backfill does not error when re-run — it reverts corrections, which is the worst class of migration bug: silent, plausible, and invisible until somebody notices their edit did not stick.',
+    body: 'Without "name IS NOT NULL", a row with a null name matches the guard forever — split_part(NULL, …) is null, so first_name stays null, the row re-matches, and the statement keeps reporting one row updated. “Repeat until zero” never terminates. Without the CASE, a mononym breaks: strpos returns 0 for a name with no space, substr(name, 1) returns the whole string, and every single-word name ends up with last_name equal to first_name. The lesson rather than the footnote: the data you are migrating contains cases your splitting rule was not written for. Run the SELECT half first and look at what comes back. The batch size is a judgement rather than a constant — large enough to finish, small enough that one statement is not holding rows for long; a thousand is a reasonable place to start, and the number only matters on tables big enough that you would notice. An unguarded backfill does not error when re-run — it reverts corrections, which is the worst class of migration bug: silent, plausible, and invisible until somebody notices their edit did not stick.',
   },
   {
     id: 'alter-lock',
     title: 'Some ALTER TABLE statements are an outage',
     summary: 'Adding a nullable column is instant. A bare SET NOT NULL is not.',
     body: 'Some ALTER TABLE statements take a lock that blocks reads and writes for as long as they run, and on a large table that is an outage rather than a migration. A bare SET NOT NULL scans the whole table under that lock. The safe route is a NOT VALID check constraint, then VALIDATE CONSTRAINT, which does not block writes, then SET NOT NULL. Check your database’s documentation for which operations are instant before running one against a table with rows in it: the answer changes between versions, and it is the difference between a deploy and an incident.',
+  },
+  {
+    id: 'same-shape',
+    title: 'The same shape covers more than renames',
+    summary:
+      'And it stops at the point where this becomes another stage’s job.',
+    body: 'Splitting one column into two, tightening a nullable column to NOT NULL, changing a type, extracting a table: all of them are expand, migrate, contract, with reads moving in the middle. Where it stops being this stage’s job is worth being exact about, because the two halves have different rules — deciding the shape of a safe change is architecture and belongs here; running it, where migrations live, how they are ordered against a deploy, and what happens when one fails halfway, belongs to 13 — Production Deployment. The same split this stage already uses for authentication and for contracts.',
   },
   {
     id: 'strangler-fig',

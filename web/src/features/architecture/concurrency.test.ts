@@ -49,13 +49,21 @@ test('serializable names the retry path as its cost, since that is code you did 
   expect(s?.costs).toMatch(/retry/i)
 })
 
-test('both levels give the same answer to what they cannot relate, because the limit is not something read committed has and serializable fixes', () => {
+// Figure 19's caption claims both levels answer this identically, so this
+// asserts that rather than asserting each one separately and calling it the
+// same thing — which is what the first version did, with this same name.
+test('both levels name the limit as sitting across transactions rather than inside one, which is what the figure caption claims about them', () => {
+  const [rc, ser] = ISOLATION_LEVELS
   for (const l of ISOLATION_LEVELS) {
-    expect(l.cannot.trim().length, `${l.id} cannot`).toBeGreaterThan(0)
-    expect(
-      l.cannot,
-      `${l.id} does not say the limit is across transactions`,
-    ).toMatch(/transaction|person|human/i)
+    expect(l.cannot.trim().length, `${l.id} cannot`).toBeGreaterThan(40)
+  }
+  expect(rc.cannot).toMatch(/earlier transaction|another transaction/i)
+  expect(ser.cannot).toMatch(/two separate transactions|another transaction/i)
+  // Neither may present the limit as something the other one fixes.
+  for (const l of ISOLATION_LEVELS) {
+    expect(l.cannot, `${l.id} offers itself as the fix`).not.toMatch(
+      /unlike|whereas|serializable fixes|solves this/i,
+    )
   }
 })
 
@@ -117,7 +125,7 @@ test('each strategy carries the statement it turns on, since that is what the pa
 test('the pessimistic case is same-row contention rather than a work queue, because a bare FOR UPDATE does not hand the second reader the next row', () => {
   const hotRow = CONCURRENCY_CASES.find((c) => c.answer === 'pessimistic')
   expect(hotRow?.scenario).not.toMatch(/queue|next unprocessed|next row/i)
-  expect(hotRow?.why).toMatch(/same|that row|re-read/i)
+  expect(hotRow?.why).toMatch(/re-read|that row/i)
 })
 
 // The trap the doc is emphatic about. A reader who has just learned optimistic

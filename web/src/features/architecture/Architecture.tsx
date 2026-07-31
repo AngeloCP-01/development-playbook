@@ -905,16 +905,18 @@ const STEPS: (Step & { id: StepId })[] = [
   {
     id: 'races',
     label: 'Races',
-    hint: 'Which mechanism stops which — and the one that stops none',
+    hint: 'Which mechanism stops which, and which one is never the reach',
     content: (
       <div className="space-y-16">
         <Section eyebrow="Your turn" title="Which mechanism stops which race?">
           <Prose>
             <p>
               Three races, four mechanisms, and one of the four is never the
-              tool you reach for — not because it would fail, but because of
-              what it costs and what it cannot see. Commit before each verdict
-              shows; the third is the one worth getting wrong.
+              tool you reach for: in one of these it cannot help at all, and in
+              the other two it would work while costing you a retry path and
+              seeing nothing a writer does outside the transaction. Commit
+              before each verdict shows; the third is the one worth getting
+              wrong.
             </p>
           </Prose>
           <div className="mt-5">

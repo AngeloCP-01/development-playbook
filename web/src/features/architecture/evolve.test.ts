@@ -22,7 +22,19 @@ test('steps two and five are the skipped ones, because those are the two with no
 test('every step says what breaks if it is skipped, since the sequence without its failure modes is a checklist', () => {
   for (const s of EXPAND_CONTRACT_STEPS) {
     expect(s.ifSkipped.trim().length, `step ${s.n} ifSkipped`).toBeGreaterThan(
-      0,
+      60,
+    )
+  }
+})
+
+// The two that look redundant are the two whose explanation has to do work,
+// and both explanations rest on the same fact: a deploy is a rollover, so for
+// a while both versions of the code are serving traffic. An explanation that
+// does not reach that fact has not explained why the step is not redundant.
+test('the two skipped steps both explain themselves by the rollover, because that is the only reason either one is not redundant', () => {
+  for (const s of EXPAND_CONTRACT_STEPS.filter((x) => x.commonlySkipped)) {
+    expect(s.ifSkipped, `step ${s.n} does not reach the rollover`).toMatch(
+      /rollover|instances|both serving/i,
     )
   }
 })
@@ -36,7 +48,11 @@ test('step numbers are contiguous from one, because the order is the whole conte
 // traffic has to say out loud that it is not needed before there is any. An app
 // that teaches the six steps without the exemption teaches ceremony.
 test('the pre-launch exemption is carried, since the stage refuses imagined scale everywhere else and would be teaching ceremony without it', () => {
-  expect(PRE_LAUNCH_EXEMPTION).toMatch(/one statement|pre-launch|nobody/i)
+  // Both halves, not either: the exemption is "before there is traffic" AND
+  // "it is one statement". An alternation passed on the word "nobody" alone.
+  expect(PRE_LAUNCH_EXEMPTION).toMatch(/one statement/i)
+  expect(PRE_LAUNCH_EXEMPTION).toMatch(/nobody is using|pre-launch/i)
+  expect(PRE_LAUNCH_EXEMPTION).toMatch(/adopt it/i)
 })
 
 test('the four notes beyond the sequence are carried, because the sequence alone does not tell you what a deploy is or what to do about ALTER', () => {
@@ -45,6 +61,7 @@ test('the four notes beyond the sequence are carried, because the sequence alone
     'rollover',
     'backfill-guards',
     'alter-lock',
+    'same-shape',
     'strangler-fig',
   ])
   for (const n of EVOLUTION_NOTES) {
