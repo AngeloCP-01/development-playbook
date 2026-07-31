@@ -27,6 +27,7 @@ export const STEP_IDS = [
   'tenancy',
   'concurrency',
   'races',
+  'evolve',
   'contract',
   'record',
   'ai',

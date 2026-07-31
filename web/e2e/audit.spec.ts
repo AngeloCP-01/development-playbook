@@ -34,6 +34,7 @@ const PAGES = [
   '/stages/03-architecture#tenancy',
   '/stages/03-architecture#concurrency',
   '/stages/03-architecture#races',
+  '/stages/03-architecture#evolve',
   '/stages/03-architecture#contract',
   '/stages/03-architecture#record',
   '/stages/03-architecture#ai',

@@ -37,6 +37,9 @@ import { PartialUniqueIndex } from './PartialUniqueIndex'
 import { IsolationLevels } from './IsolationLevels'
 import { LockingStrategies } from './LockingStrategies'
 import { LockingChoice } from './LockingChoice'
+import { ExpandContract } from './ExpandContract'
+import { EvolutionNotes } from './EvolutionNotes'
+import { BACKFILL_SQL, PRE_LAUNCH_EXEMPTION } from './evolve'
 import { DeleteBehaviour } from './DeleteBehaviour'
 import { ContractCost } from './ContractCost'
 import { RouteShape } from './RouteShape'
@@ -947,6 +950,83 @@ const STEPS: (Step & { id: StepId })[] = [
     ),
   },
   {
+    id: 'evolve',
+    label: 'Evolve',
+    hint: 'Changing stored data once there is traffic on it',
+    content: (
+      <div className="space-y-16">
+        <Section
+          eyebrow="The one it never taught"
+          title="Evolve the schema safely"
+        >
+          <Prose>
+            <p>
+              This stage has said four times that stored data is the expensive
+              kind. What it has not said is what you do when you have to change
+              it anyway, which you will, because the schema you designed was
+              designed with the understanding you had on the first day. That is
+              not an argument for getting it right first time. It is an argument
+              for knowing the technique, because the technique turns an
+              expensive change into a tedious one.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <Callout
+              kind="info"
+              title="First, when you do not need any of this"
+            >
+              {PRE_LAUNCH_EXEMPTION}
+            </Callout>
+          </div>
+        </Section>
+
+        <Section eyebrow="Your turn" title="Six deploys to rename one column">
+          <Prose>
+            <p>
+              <Term id="expand-contract">Expand-contract</Term>, also called
+              parallel change. Once there is traffic, renaming a column looks
+              like one statement and is actually six deploys, each of which is
+              safe on its own. Two of the six feel redundant and are the two
+              that get skipped — decide which before you find out.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <ExpandContract />
+          </div>
+        </Section>
+
+        <Section
+          eyebrow="The statement itself"
+          title="A backfill has to be safe to run twice"
+        >
+          <Prose>
+            <p>
+              Idempotency, arriving where it bites hardest. Step 2&rsquo;s code
+              is already writing the new columns for anyone who saves, and some
+              of those people have since corrected a name the split would have
+              got wrong — so the backfill must skip rows that already have a
+              value, and run in batches so it never holds a long lock.
+            </p>
+          </Prose>
+          <Figure
+            n={21}
+            caption="Splitting users.name into first_name and last_name. Both guards in the inner select are there because the naive version is broken, and neither failure announces itself — one corrupts every single-word name, the other means &ldquo;repeat until zero rows&rdquo; never terminates."
+          >
+            <pre
+              tabIndex={0}
+              className="overflow-x-auto border border-line bg-sunken px-4 py-4 font-mono text-[12px] leading-6 text-fg"
+            >
+              {BACKFILL_SQL}
+            </pre>
+          </Figure>
+          <div className="mt-6">
+            <EvolutionNotes />
+          </div>
+        </Section>
+      </div>
+    ),
+  },
+  {
     id: 'contract',
     label: 'Contract',
     hint: 'Promises about shape, and who may do what to which record',
@@ -969,7 +1049,7 @@ const STEPS: (Step & { id: StepId })[] = [
             </p>
           </Prose>
           <Figure
-            n={21}
+            n={22}
             caption="Three kinds of contract, sorted by who you can make move. Most solo projects live almost entirely in the first row, which is the argument for not building a public API until something needs one."
           >
             <ContractCost />
@@ -1008,7 +1088,7 @@ const STEPS: (Step & { id: StepId })[] = [
             </p>
           </Prose>
           <Figure
-            n={22}
+            n={23}
             caption="Three paths compared on the same three questions rather than each arguing its own case. None is marked correct, because the trade genuinely differs by project — and the line under them is the part most projects get wrong."
           >
             <AuthPaths />
@@ -1062,7 +1142,7 @@ const STEPS: (Step & { id: StepId })[] = [
             </p>
           </Prose>
           <Figure
-            n={23}
+            n={24}
             caption="Five headings, and what each is holding. The reasoning is the part that decays: the decision survives on its own, so in eight months only the record can say why it was made."
           >
             <ADRAnatomy />
