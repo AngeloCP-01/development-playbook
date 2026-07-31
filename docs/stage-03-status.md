@@ -4,11 +4,18 @@
 exists because this stage has now diverged from its own port twice, and both times the
 divergence was discovered rather than tracked.
 
-**Last verified:** 2026-07-31, on `feat/stage-03-app-port`, after the corrections wave.
+**Last verified:** 2026-07-31, on `feat/stage-03-app-port` at `abaa6e2`, four tasks into the
+D-52 round.
 
-**Current state:** doc **14 sections / 1344 lines**. App **9 steps**. Glossary **73 terms**.
-214 tests across 19 files, and an 11-test audit suite over 23 URLs. Lint and typecheck clean.
+**Current state:** doc **14 sections / 1344 lines**. App **10 steps**. Glossary **73 terms**.
+217 tests across 20 files, and a 12-test audit suite over 24 URLs. Lint and typecheck clean.
 Every DDL block in the doc executed against PostgreSQL 17.
+
+**The reshape is mid-flight.** D-52 replaced D-38's step-count ceiling with a panel-weight rule,
+and stage 03 is being re-cut to satisfy it. Progress is countable: `PANEL_EXCEPTIONS` in
+`web/e2e/audit.spec.ts` holds **7 entries**, two permanent and five stage-03 debt, and each
+remaining task deletes its own. **Two entries means done.** The ledger at
+`.superpowers/sdd/2026-07-31-step-panel-weight/progress.md` is the authority on what has run.
 
 ---
 
@@ -75,9 +82,14 @@ Doc order. "Ported" means the app teaches the same thing, not merely that a comp
       sixth when W-3.1b inserted one before it. Fixed in all three by naming the question instead
       of counting to it — D-47's pattern again, and the third time an ordinal in prose has gone
       stale.
-- [ ] **Settle the step count once and supersede D-38 with a reason.** The app is at 9 steps
-      against D-38's ceiling of 5 content + AI. Section 9 makes 10 likely. "Stage 03 is
-      special" is not a reason — stage 04 will make the same argument.
+- [x] **Settle the step count once and supersede D-38 with a reason.** ✓ done 2026-07-31.
+      **D-52**: a step holds one judgment and its panel stays under four screens at 1024×768;
+      count follows content. D-38 capped the wrong quantity — its own reason was about panel
+      weight, and capping the count makes panels heavier. Measurement settled it: stage 03's
+      median panel was 5.3 screens against 2.4 and 2.5 for stages 01 and 02. D-38 had also
+      already been exceeded without a recorded deviation, by stage 02. Spec and plan at
+      `docs/superpowers/{specs,plans}/2026-07-31-step-panel-weight*`; **still to be written
+      into the tracker and PATTERNS.md** (plan Task 12).
 - [x] **Add the new step hashes to `web/e2e/audit.spec.ts`.** ✓ done 2026-07-31, and it was
       worse than "the new ones are missing": the list still named `#constrain` and `#decide`,
       two steps renamed away in W-3, so those URLs fell back to step one and were audited twice
