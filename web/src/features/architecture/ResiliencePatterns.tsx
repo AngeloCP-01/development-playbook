@@ -109,12 +109,15 @@ export function ResiliencePatterns() {
       </ul>
 
       <p className="border-t border-line bg-raised px-5 py-4 text-sm leading-6 text-muted">
-        There is a fifth name worth knowing and not building:{' '}
+        One more name, worth knowing and not building:{' '}
         <strong className="font-medium text-fg">bulkhead</strong>, isolating
         resource pools so one saturated dependency cannot consume every thread.
         Real, and rarely earning its keep inside a single application. Building
-        all four above around three third-party calls on day one is the same
-        instinct as reaching for microservices, wearing different clothes.
+        a timeout, retries, a breaker and a bulkhead around three third-party
+        calls on day one is the same instinct as reaching for microservices,
+        wearing different clothes — which is a claim about the machinery, not
+        about the last row above. Deciding what still works without each
+        dependency costs nothing and is the point of having drawn the diagram.
       </p>
     </Card>
   )

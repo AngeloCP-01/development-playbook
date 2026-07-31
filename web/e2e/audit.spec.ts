@@ -269,6 +269,39 @@ test('the interrogation still explains itself after a wrong answer, since the re
   expect((await why.innerText()).trim().length).toBeGreaterThan(80)
 })
 
+/**
+ * The same contract, on the exercise most likely to lose it. `#races` exists to
+ * be answered wrong — a reader who has just met optimistic locking picks it for
+ * the cross-row case — so a regression that shows the reasoning only on a
+ * correct answer would remove the teaching from precisely the reader it was
+ * written for. The check above covered `#model` alone, which is why this is a
+ * second test rather than a wider selector: the two exercises are different
+ * components and the shared rule is the thing being asserted.
+ */
+test('the locking exercise explains itself after a wrong answer too, since its wrong answer is the one the step was built for', async ({
+  page,
+}) => {
+  await page.goto('/stages/03-architecture#races', { waitUntil: 'networkidle' })
+
+  const row = page.locator('li').filter({
+    has: page.getByRole('radiogroup', {
+      name: /two different claims on the same shift/,
+    }),
+  })
+
+  await row.getByRole('radio', { name: 'Optimistic locking' }).click()
+
+  await expect(row.getByText('Not quite')).toBeVisible()
+
+  const paragraphs = row.locator('[aria-live="polite"] p')
+  await expect(paragraphs).toHaveCount(2)
+
+  const why = paragraphs.last()
+  await expect(why).toBeVisible()
+  await expect(why).toContainText('constraint')
+  expect((await why.innerText()).trim().length).toBeGreaterThan(80)
+})
+
 // ── the audit list audits what it claims to ────────────────────────────────
 
 /**

@@ -86,9 +86,17 @@ export type Mechanism = {
 
 /**
  * The four things a reader could reach for. `serializable` is on the list and
- * is the answer to nothing: the doc calls believing it handles the next problem
- * "a specific and comfortable way to ship it anyway", and an exercise that does
- * not offer the comfortable answer cannot catch anyone holding it.
+ * is never what a case answers with, which is a narrower claim than "it would
+ * not work": Postgres's SSI really would abort one of the two writers in the
+ * hot-row case, and in the cross-row case too where the transaction performs
+ * the check the doc describes. What it does not do is any of it for free, or at
+ * all against a writer that never performs the read.
+ *
+ * It is offered because the doc calls believing it handles the next problem "a
+ * specific and comfortable way to ship it anyway", and an exercise that does
+ * not offer the comfortable answer cannot catch anyone holding it. Each case
+ * says why it is not the tool rather than leaving the reader marked wrong and
+ * told nothing.
  */
 export const MECHANISMS: Mechanism[] = [
   { id: 'optimistic', label: 'Optimistic locking' },
@@ -114,18 +122,18 @@ export const CONCURRENCY_CASES: ConcurrencyCase[] = [
     why: 'The lost update: the second write silently overwrites the first, no constraint was violated, and nothing records that a decision was discarded. No isolation level catches this, serializable included — page load and click are two separate transactions with a person in the gap, and an isolation level can only relate a read and a write inside the same one. A version carried across both is what notices.',
   },
   {
-    id: 'queue',
+    id: 'hot-row',
     scenario:
-      'Two background workers wake at the same second and both take the next unprocessed row off the same table. The work between reading the row and marking it taken is a few milliseconds.',
+      'Two checkout requests reach the same inventory row in the same moment. Each reads the count, subtracts one, and writes it back, a few milliseconds apart, with nobody deciding anything in between.',
     answer: 'pessimistic',
-    why: 'Conflict is likely rather than rare, and the gap between the read and the write is short and has no person in it — which is exactly the shape pessimistic locking is for. The second worker waits a few milliseconds and takes the next row. Optimistic locking would work and would make every collision a wasted round trip.',
+    why: 'Conflict is likely rather than rare, the gap between the read and the write is short, and there is no person in it — the shape pessimistic locking is for. SELECT … FOR UPDATE makes the second request wait for the first to commit and then re-read that row, so it subtracts from the count that is actually there. Optimistic locking is also correct here and would turn most of those collisions into a rejected write the caller has to retry, which is the whole of the rule: optimistic when conflict is rare, pessimistic when it is expected. A stricter isolation level would also abort one of the two, and you would still be writing the retry path a lock has just saved you.',
   },
   {
     id: 'cross-row',
     scenario:
       'Two managers approve two different claims on the same shift. The shift is only allowed one approved claim.',
     answer: 'constraint',
-    why: 'Neither lock helps: they are different rows, both versions match, both writes succeed, and the version column is silent because nothing about either row changed underneath it. A rule that spans rows needs a constraint, not a lock — here the partial unique index the stage has already built. Then handle its failure: a violation arrives as a database error rather than as zero rows updated, so catch it by constraint name and turn it into the message the optimistic path would have produced. Left uncaught it is a 500 served to a manager who did nothing wrong.',
+    why: 'Neither lock helps: they are different rows, both versions match, both writes succeed, and the version column is silent because nothing about either row changed underneath it. A rule that spans rows needs a constraint, not a lock — here the partial unique index the stage has already built. A stricter isolation level is not the answer either, for a reason worth keeping: it can only relate transactions that actually perform the read, so a script or an endpoint that inserts without checking first walks straight past it. A constraint holds no matter who writes. Then handle its failure: a violation arrives as a database error rather than as zero rows updated, so catch it by constraint name and turn it into the message the optimistic path would have produced. Left uncaught it is a 500 served to a manager who did nothing wrong.',
   },
 ]
 

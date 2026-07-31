@@ -49,9 +49,13 @@ test('serializable names the retry path as its cost, since that is code you did 
   expect(s?.costs).toMatch(/retry/i)
 })
 
-test('every isolation level says what it cannot see, because the limit is the whole lesson: no level relates two transactions with a person between them', () => {
+test('both levels give the same answer to what they cannot relate, because the limit is not something read committed has and serializable fixes', () => {
   for (const l of ISOLATION_LEVELS) {
     expect(l.cannot.trim().length, `${l.id} cannot`).toBeGreaterThan(0)
+    expect(
+      l.cannot,
+      `${l.id} does not say the limit is across transactions`,
+    ).toMatch(/transaction|person|human/i)
   }
 })
 
@@ -63,15 +67,57 @@ test('the exercise runs three cases with three different answers, so the reader 
 // "Setting SERIALIZABLE and believing the next problem is handled is a
 // specific and comfortable way to ship it anyway." An exercise that never
 // offers the comfortable wrong answer cannot catch anyone believing it.
-test('a stricter isolation level is on offer in every case and is the answer to none, which is the belief the doc says people ship on', () => {
+//
+// The claim is deliberately narrow. SSI would abort one writer in two of these
+// three cases, so "it would not work" would be false; what is true is that it
+// is never the tool the answer names, and every case has to say why rather
+// than mark the reader wrong and move on.
+test('a stricter isolation level is offered and is never what a case answers with, and every case says why rather than leaving it unexplained', () => {
   expect(MECHANISMS.map((m) => m.id)).toContain('serializable')
   expect(CONCURRENCY_CASES.map((c) => c.answer)).not.toContain('serializable')
+  for (const c of CONCURRENCY_CASES) {
+    expect(
+      c.why,
+      `${c.id} never says what a stricter isolation level does here`,
+    ).toMatch(/isolation level|serializable/i)
+  }
 })
 
-test('every mechanism on offer is one the stage has already taught, since an exercise is not the place to meet a name for the first time', () => {
+test('the mechanisms on offer are exactly the four the stage has taught, since an exercise is not the place to meet a name for the first time', () => {
+  expect(MECHANISMS.map((m) => m.id)).toEqual([
+    'optimistic',
+    'pessimistic',
+    'serializable',
+    'constraint',
+  ])
   for (const m of MECHANISMS) {
     expect(m.label.trim().length, `${m.id} label`).toBeGreaterThan(0)
   }
+})
+
+// The statement is the lesson rather than "put a version on the row", and the
+// component says so out loud. Asserting the prose around a statement while
+// leaving the statement itself unasserted is how a wrong one ships: an earlier
+// version of the pessimistic case described SKIP LOCKED behaviour while
+// quoting a bare FOR UPDATE, and nothing here could see it.
+test('each strategy carries the statement it turns on, since that is what the panel claims the lesson is', () => {
+  const o = LOCKING_STRATEGIES.find((s) => s.id === 'optimistic')
+  expect(o?.sql).toMatch(/version = version \+ 1/)
+  expect(o?.sql, 'the WHERE clause is the whole mechanism').toMatch(
+    /version = \$2/,
+  )
+  const p = LOCKING_STRATEGIES.find((s) => s.id === 'pessimistic')
+  expect(p?.sql).toMatch(/FOR UPDATE/)
+})
+
+// The queue shape needs SKIP LOCKED to behave the way a queue reads, and
+// neither the doc nor this stage teaches it. So the pessimistic case must not
+// be a queue: under a bare FOR UPDATE at read committed the second worker
+// blocks, re-evaluates, finds the row no longer matches, and gets nothing.
+test('the pessimistic case is same-row contention rather than a work queue, because a bare FOR UPDATE does not hand the second reader the next row', () => {
+  const hotRow = CONCURRENCY_CASES.find((c) => c.answer === 'pessimistic')
+  expect(hotRow?.scenario).not.toMatch(/queue|next unprocessed|next row/i)
+  expect(hotRow?.why).toMatch(/same|that row|re-read/i)
 })
 
 // The trap the doc is emphatic about. A reader who has just learned optimistic

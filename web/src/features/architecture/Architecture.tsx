@@ -328,7 +328,7 @@ const STEPS: (Step & { id: StepId })[] = [
               components announce that something happened rather than calling
               the next step directly. It is not a deployment shape — a single
               application can be event-driven inside. The decision that leads
-              there is posed in <em>Sketch</em>, where it is concrete.
+              there is posed in <em>Flow</em>, where it is concrete.
             </p>
             <p>
               What this stage teaches is a{' '}
@@ -674,7 +674,7 @@ const STEPS: (Step & { id: StepId })[] = [
         >
           <Prose>
             <p>
-              Every answer from the last step is a rule, and a rule is only
+              Every answer from the interrogation is a rule, and a rule is only
               worth what enforces it. Application code has bugs, gets bypassed
               by migration scripts and one-off fixes, and races with itself
               under concurrent writes. A{' '}
@@ -908,9 +908,10 @@ const STEPS: (Step & { id: StepId })[] = [
         <Section eyebrow="Your turn" title="Which mechanism stops which race?">
           <Prose>
             <p>
-              Three races, four mechanisms, and one of the four is the answer to
-              none of them. Commit before each verdict shows — the third is the
-              one worth getting wrong.
+              Three races, four mechanisms, and one of the four is never the
+              tool you reach for — not because it would fail, but because of
+              what it costs and what it cannot see. Commit before each verdict
+              shows; the third is the one worth getting wrong.
             </p>
           </Prose>
           <div className="mt-5">
