@@ -4,21 +4,23 @@
 exists because this stage has now diverged from its own port twice, and both times the
 divergence was discovered rather than tracked.
 
-**Last verified:** 2026-07-31, on `feat/stage-03-app-port` at `dfae055`, ten tasks into the
-D-52 round.
+**Last verified:** 2026-07-31, on `feat/stage-03-app-port` at `9798286`, all twelve tasks of
+the D-52 round done — the whole-branch review is still outstanding.
 
-**Current state:** doc **14 sections / 1344 lines**. App **21 steps**. Glossary **73 terms**.
-266 tests across 23 files, and a 13-test audit suite over 35 URLs. Lint and typecheck clean.
+**Current state:** doc **14 sections / 1344 lines**. App **22 steps**. Glossary **73 terms**.
+277 tests across 24 files, and a 13-test audit suite over 36 URLs. Lint and typecheck clean.
 Every DDL block in the doc executed against PostgreSQL 17.
 
 **The reshape is done.** D-52 replaced D-38's step-count ceiling with a panel-weight rule, and
 stage 03 has been re-cut to satisfy it. `PANEL_EXCEPTIONS` in `web/e2e/audit.spec.ts` is back
-to its **two permanent entries**, which was the plan's stated exit condition. Every panel
-measures under four screens; the heaviest is `model` at 3.7 and the median is 2.7, against a
-median of 5.3 before the round. The ledger at
-`.superpowers/sdd/2026-07-31-step-panel-weight/progress.md` is the authority on what has run.
+to its **two permanent entries**, which was the plan's stated exit condition, and the
+panel-weight test passes against all 22 steps — nothing over four screens, `trace` included.
+Task 11 changed the panel measurements last taken (`model` heaviest at 3.7, 2.7 median before
+`require` split); a fresh table over all 22 panels belongs to the whole-branch review, not this
+file. The ledger at `.superpowers/sdd/2026-07-31-step-panel-weight/progress.md` is the
+authority on what has run.
 
-**Twenty-one steps was not a target.** Every split was forced by a measurement, and several
+**Twenty-two steps was not a target.** Every split was forced by a measurement, and several
 landed one step later than the plan proposed because the plan's seam measured wrong. Count
 follows content is what D-52 says; this is what it produced for the densest of the eighteen.
 
@@ -46,7 +48,7 @@ Doc order. "Ported" means the app teaches the same thing, not merely that a comp
 | # | Doc section | App step | Ported | Notes |
 |---|---|---|---|---|
 | 1 | Sort decisions by reversibility | `reverse` | ✅ | Axis figure + scored exercise. G14's test promoted here from the AI section |
-| 2 | What this system has to be | `require` | ⚠️ **partial** | Characteristics picker + trace exists. **Still missing: fitness functions, and the trace table's widening from 3 rows to all 10 candidates.** The last cluster, and the only one left |
+| 2 | What this system has to be | `require` · `trace` | ✅ | Characteristics picker in `require`; the widened ten-row trace and fitness functions split out into `trace` on measurement (`require` alone ran 4.7 screens). Each trace row now points at the step that makes its decision |
 | 3 | Model the domain first | `model` · `worksheet` | ✅ **fixed** | Interrogation at 6 questions, in doc order. Split on measurement: deriving the nouns and writing your own domain down are two acts |
 | 4 | The shapes a system can take | `shape` | ✅ | Styles landscape, and statelessness lifted out as the precondition it is rather than a peer. Vertical/horizontal, load balancing and read replicas ported |
 | 5 | Start with one application | `oneapp` | ✅ | Split triggers, and the serverless-to-Postgres pooling edge with its transaction-mode caveat |
@@ -57,13 +59,13 @@ Doc order. "Ported" means the app teaches the same thing, not merely that a comp
 | 10 | Design the API contracts | `contract` | ✅ | Contract sort, verb-route problem |
 | 11 | Authentication and authorization | `access` | ✅ **fixed** | Was teaching the singular framing and scoring `role` alone as correct. Now a checkbox conjunction, browser-verified. Split out of `contract`: what the API promises and who may invoke it are different decisions |
 | 12 | Write the ADRs | `record` | ✅ | ADR anatomy, one-per-independently-reversible-thing |
-| 13 | Defer aggressively | `record` | ⚠️ **partial** | Defer list + criterion + tenancy resolution ported. **Still missing: the event sourcing / CQRS definitions.** Ships with the section-2 cluster |
+| 13 | Defer aggressively | `record` | ✅ | Defer list + criterion + tenancy resolution, plus event sourcing and CQRS — CQRS as the seventh deferral-list item the port had dropped, event sourcing with the audit-table boundary the doc argues (an audit table alongside normal rows is not event sourcing) |
 | 14 | AI in architecture | `ai` | ✅ | Nine plays and six misleads, which is what the doc has — the brief said eleven and four-new, and both were wrong. A test now counts the doc's own bullets and a second holds the app's order to it |
 | — | Traps + further reading | `traps` | ✅ | Not a doc section; the stage's closing set, which is how stage 02 closes too. Left in the AI panel until this round only because that panel was last |
 
-**Tally: 12 fully ported · 2 partial · 0 unported.** The two partials are one cluster —
-fitness functions with the widened trace, and the deferred-concept definitions — which is
-Task 11 of the plan.
+**Tally: 14 fully ported · 0 partial · 0 unported.** The last cluster — fitness functions with
+the widened trace, and the deferred-concept definitions — closed in `9798286`, Task 11 of the
+plan.
 
 ---
 
@@ -78,8 +80,9 @@ Task 11 of the plan.
 - [x] **Port four of the five clusters.** ✓ 2026-07-31 — resilience into `resilience`,
       isolation and locking into `concurrency`/`races`, statelessness/scaling/pooling into
       `shape`, and the AI section's two missing plays and sixth mislead into `ai`.
-- [ ] **Port the last cluster** — fitness functions and the widened ten-row trace into
-      `require`, event sourcing and CQRS into `record`. Task 11 of the plan.
+- [x] **Port the last cluster.** ✓ `9798286`. Fitness functions and the widened ten-row trace
+      split into a new `trace` step (`require` alone measured 4.7 screens); event sourcing and
+      CQRS into `record`. Task 11 of the plan.
 - [x] **Mirror the corrections, not just the additions.** ✓ done 2026-07-31. The sixth
       interrogation question, `version` and `deleted_at` on the invoices DDL, and the
       `invoice_sends` block, rendered as a figure. `ddl-sync.test.ts` now holds both
@@ -106,16 +109,17 @@ Task 11 of the plan.
       putting `#decide` back. Eleven further hashes were added by hand as the reshape ran.
       **TD-12 stays open**: the list is still hand-written, and forgetting to add a step still
       audits nothing. What closed is the half that lied.
-- [x] **Re-run the audit suite.** ✓ Runs on every task. 13 tests over 35 URLs: overflow
+- [x] **Re-run the audit suite.** ✓ Runs on every task. 13 tests over 36 URLs: overflow
       320–2560, touch targets, WCAG AA in both themes, zero console errors, the panel-weight
       rule, hash resolution, and two guess-then-reveal contracts. It caught a real defect this
       round — SQL blocks in a grid could not scroll, because a grid child defaults to
       `min-width: auto`, so the page scrolled sideways 204px at 320px.
-- [ ] **Whole-branch review, covering doc and app together.** Still the load-bearing one. The
-      port half has never had it — **73 commits** now. Three per-task reviews have run and
-      found **eleven blocking defects** between them, at a rate that did not fall off: the last
-      task reviewed produced five. Two were factual errors about Postgres that read plausibly
-      and that no test could have caught until the tests were rewritten.
+- [ ] **Whole-branch review, covering doc and app together.** Still the load-bearing one, and
+      now the only thing left. The port half has never had it — **76 commits** once this record
+      lands. Three per-task reviews have run and found **eleven blocking defects** between them,
+      at a rate that did not fall off: the last task reviewed produced five. Two were factual
+      errors about Postgres that read plausibly and that no test could have caught until the
+      tests were rewritten.
 
 ### Known gaps in the doc, recorded not fixed
 

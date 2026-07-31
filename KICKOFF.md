@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   `stage-implementation-101.md` (the layout traps and verification checklist for building a
   stage)
 
-### Project state (as of 2026-07-31, after the D-52 round's first ten tasks)
+### Project state (as of 2026-07-31, after all twelve tasks of the D-52 round; whole-branch review outstanding)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -43,17 +43,19 @@ Before doing anything, read these for context:
   `ddl-sync.test.ts` plus `evolve.test.ts`, which hold three SQL blocks in the app to the doc
   character-for-character.
 - **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01 and 02 are
-  complete and interactive; 03 is on `feat/stage-03-app-port` at 21 steps**, every panel under
+  complete and interactive; 03 is on `feat/stage-03-app-port` at 22 steps**, every panel under
   four screens. See `docs/stage-03-status.md` for section-by-section coverage — it is the map,
   and it is current.
-- **The D-52 reshape is done.** `PANEL_EXCEPTIONS` in `web/e2e/audit.spec.ts` is back to its
-  two permanent entries, which was the exit condition. Stage 03's median panel went 5.3 → 2.7
-  screens. **Twenty-one steps was not a target**: every split was forced by a measurement, and
-  several landed one section later than the plan proposed because the plan's seam measured
-  wrong.
-- **Stage 03's port is one cluster short of complete (TD-23).** Fitness functions with the
-  widened ten-row trace into `require`, and the event-sourcing / CQRS definitions into
-  `record`. That is Task 11 of twelve; Task 12 is the remaining records.
+- **The D-52 reshape is done, and D-52 stands in place of D-38** (superseded, kept struck
+  through for the record). `PANEL_EXCEPTIONS` in `web/e2e/audit.spec.ts` is back to its two
+  permanent entries, which was the exit condition. **Twenty-two steps was not a target**: every
+  split was forced by a measurement, and several landed one section later than the plan proposed
+  because the plan's seam measured wrong.
+- **Stage 03's port content is complete.** Task 11 (`9798286`) closed the last cluster —
+  fitness functions with the widened ten-row trace, split into a new `trace` step, and the
+  event-sourcing / CQRS definitions in `record`. **TD-23 stays open**, not because content is
+  missing but because its own closing condition also requires the whole-branch review, which
+  has not run — that review is what Task 12 hands off to.
 - **The cold-reader method is load-bearing, not a formality.** Budget a fix wave after every
   pass; the first report is not the end of the round (D-48).
 - **A per-task reviewer subagent is now the standard** (see `docs/tracker.md`, "Process
@@ -68,38 +70,38 @@ Before doing anything, read these for context:
   `glossary.md`.
 - **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **266 vitest tests across 23 files**, a **13-test playwright
-  audit suite over 35 URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
+  eslint at `--max-warnings 0`, **277 vitest tests across 24 files**, a **13-test playwright
+  audit suite over 36 URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
   public (D-26).
 - **`PAGES` in `web/e2e/audit.spec.ts` is still hand-written** (**TD-12**), so adding a step
-  means editing that array by hand — eleven times this round. A dead hash now fails; a missing
+  means editing that array by hand — twelve times this round. A dead hash now fails; a missing
   one still audits nothing, which is the half that matters now.
 - **Not deployed** (`W-5` open).
 - **Branch/push:** work happens on `feat/`|`fix/`|`docs/<date>-` branches, merged to `main`
   with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes.**
   `main` and `origin/main` are in sync at **`eeb16f1`**. **Everything since is unmerged on
-  `feat/stage-03-app-port`, which is 73 commits ahead.**
+  `feat/stage-03-app-port`, which is 76 commits ahead.**
 
 ### This round's scope
 
-**Resume the D-52 round at Task 11 of 12**, on `feat/stage-03-app-port`.
+**The D-52 round's twelve tasks are done**, on `feat/stage-03-app-port`. What is left is not
+another task — it is the whole-branch review, which the plan always named as the point of the
+round rather than a formality after it.
 
 **Read these two first, in this order:**
 
 1. `.superpowers/sdd/2026-07-31-step-panel-weight/progress.md` — the ledger. Every task, its
    commits, every deviation from the plan and why. It is git-ignored scratch, so read it before
    running anything that cleans the tree.
-2. `docs/superpowers/plans/2026-07-31-step-panel-weight.md` — the plan. **Tasks 1–10 are done.
-   Start at Task 11.** Its spec is `docs/superpowers/specs/2026-07-31-step-panel-weight-design.md`.
+2. `docs/superpowers/plans/2026-07-31-step-panel-weight.md` — the plan. **All twelve tasks are
+   done.** Its spec is `docs/superpowers/specs/2026-07-31-step-panel-weight-design.md`, and the
+   plan's own Verification section is the checklist for what comes next.
 
-**What is left.** Task 11 ports the last cluster: fitness functions and the widened ten-row
-trace into `require`, event sourcing and CQRS into `record`. Neither step is over threshold, so
-this task *adds* content and must not push either past four screens — move material behind an
-expand-to-reveal rather than baselining it. Task 12 finishes the records.
-
-**Then the whole-branch review, and it is the point.** Doc and app together, 73 commits, never
-done for the port half. Three per-task reviews found eleven blocking defects and the rate did
-not fall off — the last task reviewed produced five.
+**What is left.** The whole-branch review, doc and app together — 76 commits, never done for
+the port half. Three per-task reviews found eleven blocking defects and the rate did not fall
+off — the last task reviewed produced five. Two of those eleven were factual errors about
+Postgres in teaching material, which is the class of mistake a per-task review catches and a
+casual read does not.
 
 **Five things this round has taught, all of which cost time to learn:**
 

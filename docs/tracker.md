@@ -65,6 +65,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-07-31 | W-3.2 | Stage 03's **app port**, closing TD-23's content gap and TD-25's app half. `web/src/features/architecture/` went from the **ten** steps `W-3.1` left it at (that round was doc-only, D-46) to **22**, mirroring all 14 doc subsections across **24** numbered figures. Ships **D-52** in place of D-38 (struck through, not edited): a step holds one judgment and its panel stays under four screens at 1024×768, enforced by `web/e2e/audit.spec.ts` rather than recorded, with `PANEL_EXCEPTIONS` back down to its two permanent baselines (`01#record` 6.7, `02#horizon` 5.6) | 75 commits, `c1a03b4`…`9798286`. **277/277** vitest across **24** files; **13/13** playwright audit over **36** URLs, including the new panel-weight test — no panel over threshold. Lint, typecheck and `format:check` clean. Three per-task reviewer subagents (tasks 5–9) returned **eleven blocking findings**, all verified real, including two factual errors about Postgres in teaching material — a `FOR UPDATE` described doing what `SKIP LOCKED` does, and an overclaim that transaction-mode pooling breaks a transactional lock — fixed in `4bc60aa`, `79b88b7` and `687a042` | **The whole-branch review has not run** — 76 commits once this record lands, never reviewed as a whole, at a per-task defect rate that did not fall off (the last task reviewed produced five). Also open, surfaced but not fixed this round: a `RevealList` component to de-duplicate five accordions sharing one markup, and the step rail's own fit past ~12 entries at 1440px |
 | 2026-07-21 | P-0 | README index, `reference/stack.md`, `reference/glossary.md` | 17 terms; versions checked against `npm view` that day | Search; per-stage frontmatter |
 | 2026-07-21 | P-1 | Stages 04, 11, 12, 13, 14 | Template held under real config content — the reason this group went first | — |
 | 2026-07-21 | P-2 | Stages 05, 06, 07, 09, 10 | — | — |
@@ -739,13 +740,14 @@ silent — `CLAUDE.md` permits the doc/app duplication but not widening it unnot
 `docs/03-architecture.md` is fourteen subsections and ~1,344 lines. Live coverage:
 `docs/stage-03-status.md`.
 
-**Status 2026-07-31, mid-round.** `web/src/features/architecture/` is **21 steps**, up from the
-six built in W-3 and the ten it carried when this round opened. Four of the five clusters are
-ported — resilience, consistency and concurrency, safe schema evolution, statelessness and
-scaling — plus the AI section's two missing plays and sixth mislead, and section 9, which had
-no app step at all. **One cluster remains**: fitness functions with the widened ten-row trace,
-and the event-sourcing / CQRS definitions. This entry stays open until `docs/stage-03-status.md`
-shows no partial or unported rows *and* the whole-branch review has run.
+**Status 2026-07-31, content done, review outstanding.** `web/src/features/architecture/` is **22 steps**,
+up from the six built in W-3 and the ten it carried when this round opened. All five clusters
+are ported — resilience, consistency and concurrency, safe schema evolution, statelessness and
+scaling, and (closing in `9798286`) fitness functions with the widened ten-row trace and the
+event-sourcing / CQRS definitions — plus the AI section's two missing plays and sixth mislead,
+and section 9, which had no app step at all. `docs/stage-03-status.md` now shows no partial or
+unported rows. **This entry stays open regardless**, because the whole-branch review has not
+run, and that is the second half of its own closing condition.
 
 **Why the round took the debt rather than avoiding it.** Stage 03's app already sat at D-38's
 ceiling of five content steps plus the AI step, and the round added five sections. The port
@@ -759,8 +761,9 @@ section. A port that only adds components would leave the app stating things the
 corrected.
 
 **Closes with:** **W-3.2**, which supersedes D-38 with the shape the doc proved. The 14 new
-terms already in `terms.ts` are defined but not yet used inline, which is the wiring that
-round does.
+terms `terms.ts` already carried from the doc round are wired in as each concept was ported
+(`fitness-function` inline in `trace`, for one); CQRS and event sourcing stay named rather
+than taught, which is D-49's call and not debt.
 
 ### TD-19 — Scored radiogroups have no roving tabindex · **Medium**
 
@@ -980,20 +983,20 @@ spec, which is the same failure mode one level up.
 
 ## Next up
 
-**Recommendation: finish W-3.2 — Task 11, then the whole-branch review — before anything
-else.**
+**Recommendation: finish W-3.2's whole-branch review before anything else.**
 
-The reasoning, rather than the assertion. The D-52 reshape is done and the port is one cluster
-short, so the cheap thing is to finish it while the material is in hand. What is *not* cheap,
-and is the actual reason to hold everything else, is the review.
+The reasoning, rather than the assertion. All twelve tasks of the D-52 round are done — the
+reshape, and now the last content cluster (fitness functions, the widened trace, event
+sourcing and CQRS, `9798286`). There is no port left to finish first; reviewing now is not
+jumping ahead of anything.
 
-**The port half has never been reviewed as a whole.** It is seventy-four commits. The three
-per-task reviews that have run found eleven blocking defects between them, at a rate that did
-not fall off across tasks — the last task reviewed produced five. Two of those were wrong
-claims about Postgres in teaching material, which is the class this project exists to not ship.
-A per-task review sees one diff; nothing but a whole-branch pass catches a task whose output
-undermines another's, and this round has already produced one of those (a pooler caveat in
-`shape` contradicting the locking answer in `races`, four steps apart).
+**The port half has never been reviewed as a whole.** It is 76 commits once this record lands.
+The three per-task reviews that have run found eleven blocking defects between them, at a rate
+that did not fall off across tasks — the last task reviewed produced five. Two of those were
+wrong claims about Postgres in teaching material, which is the class this project exists to
+not ship. A per-task review sees one diff; nothing but a whole-branch pass catches a task whose
+output undermines another's, and this round has already produced one of those (a pooler caveat
+in `shape` contradicting the locking answer in `races`, four steps apart).
 
 **Then stage 04.** Not before: stage 03 is the reference implementation everything after it
 copies, and it is currently a stage whose doc and app agree in most places and whose agreement
@@ -1005,7 +1008,7 @@ Two things worth deciding at the same time, both surfaced by this round rather t
   `ResiliencePatterns`, `EvolutionNotes`, `ScalingMoves`). Each was written to match the last,
   which is the right call per task and the wrong one five times. A `RevealList` component is a
   clean standalone refactor, and it is easier before stage 04 copies the pattern a sixth time.
-- **The step rail holds twenty-one steps** and stopped fitting at 1440px somewhere around
+- **The step rail holds twenty-two steps** and stopped fitting at 1440px somewhere around
   twelve. It scrolls inside its own container, so nothing fails, and D-52 deliberately says
   nothing about count — but "the rail is navigable" was the premise D-38 was defending, and
   no rule now checks it.
@@ -1022,7 +1025,7 @@ Two things worth deciding at the same time, both surfaced by this round rather t
   because there is nowhere else to put it.
 - **`TD-16`** (placeholder contrast) — a real AA failure on instructional text, plus the audit
   blind spot that hid it. Fix both halves together.
-- **`TD-12`** (audit `PAGES` hand-maintained) — **eleven hashes added by hand this round**, one
+- **`TD-12`** (audit `PAGES` hand-maintained) — **twelve hashes added by hand this round**, one
   per new step. A dead hash fails; a missing one still audits nothing, which is the half that
   matters now that adding steps is routine.
 - **`P-6`** — the remaining conventions to fold into the stage docs.
