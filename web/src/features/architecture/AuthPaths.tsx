@@ -6,8 +6,10 @@ import { Card } from '@/components/ui'
 import { Term } from '@/components/Term'
 
 /**
- * Source: docs/03-architecture.md, "Authentication and authorization", the three auth paths, plus the
- * authorization line at :159-161.
+ * Source: docs/03-architecture.md, "Authentication and authorization" — the
+ * three auth paths, and the paragraph that hands off to the authorization
+ * patterns below. (The citation used to end in a line range, which D-42 bans;
+ * it had drifted by seven hundred lines.)
  *
  * Tab shape structurally follows `discovery/Toolkit.tsx` (`role="tablist"` /
  * `role="tab"` / `role="tabpanel"`), but Toolkit has no keyboard handling to
@@ -150,9 +152,10 @@ export function AuthPaths() {
 
       <p className="border-t border-line bg-sunken px-4 py-3.5 text-sm leading-6 text-muted sm:px-5">
         Whichever path you pick, the part people get wrong is not authentication
-        but <Term id="authorization">authorization</Term> — proving the record
-        belongs to the caller. Decide the pattern now and apply it uniformly.
-        See{' '}
+        but <Term id="authorization">authorization</Term>: deciding whether this
+        caller may do this thing to this record. None of these three tabs
+        settles it — that is the question below. Where the check physically goes
+        is{' '}
         <Link href="/stages/05-development" className="text-brand">
           05 — Development
         </Link>

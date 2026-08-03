@@ -210,10 +210,10 @@ test('at least five lines are annotated, so the inspector has something to inspe
 })
 
 test('the four constraints the doc calls out by name are all annotated', () => {
-  // docs/03-architecture.md, "Design the database" names three of these (cents, CHECK, RESTRICT)
-  // and :74 names the fourth (uniqueness scope). If a future
-  // edit drops one, the inspector silently stops teaching the thing the prose
-  // promises it teaches.
+  // docs/03-architecture.md, "Design the database" names three of these (cents,
+  // CHECK, RESTRICT); "Model the domain first" names the fourth, uniqueness
+  // scope, in its interrogation questions. If a future edit drops one, the
+  // inspector silently stops teaching the thing the prose promises it teaches.
   for (const id of [
     'amount-cents',
     'status-check',

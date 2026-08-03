@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
 import {
   AUTHZ_PATTERNS,
@@ -7,6 +9,9 @@ import {
   ROUTE_ANSWERS,
   scoreAuthz,
 } from './contracts'
+
+const source = (file: string) =>
+  readFileSync(fileURLToPath(new URL(file, import.meta.url)), 'utf8')
 
 test('three contracts are sorted, because the sort is the decision and one row is not a sort', () => {
   expect(CONTRACT_ROWS).toHaveLength(3)
@@ -152,4 +157,27 @@ test('nothing this module renders ships literal markdown, since the asterisks re
   for (const { where, text } of shipped) {
     expect(text, `${where} carries markdown`).not.toMatch(/\*/)
   }
+})
+
+// `AuthzPatterns` renders about a hundred pixels below `AuthPaths`, and its
+// whole subject is that there are three patterns and the mistake is assuming
+// there is only one. The closer above it defined authorization as "proving the
+// record belongs to the caller" — which is ownership, one of the three — and
+// then told the reader to decide the pattern and apply it uniformly, which is
+// the framing characteristics.ts names as what produces cross-team privilege
+// escalation. The line predates this branch; bd018a9 fixed the exercise and
+// left the prose answering it wrongly in advance.
+test('the auth-paths closer introduces the authorization exercise rather than pre-empting it with one of its three answers', () => {
+  const prose = source('./AuthPaths.tsx')
+  expect(
+    prose,
+    'ownership offered as the definition of authorization',
+  ).not.toMatch(/belongs to the caller/i)
+  expect(
+    prose,
+    'one pattern applied uniformly is the framing the exercise exists to break',
+  ).not.toMatch(/apply it uniformly|decide the pattern/i)
+  expect(prose, 'the doc\u2019s own definition is the one to use').toMatch(
+    /may do this thing to this record/i,
+  )
 })
