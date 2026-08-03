@@ -59,3 +59,40 @@ test('stage 03 "The work" carries its fourteen subsections in order', () => {
   )
   expect(headings).toEqual(EXPECTED)
 })
+
+// I4: the doc grew three traps in this round — the retry, the destructive
+// migration and the replica read — and all three were the trap for a cluster
+// this round ported. The app kept rendering nine. Nothing could see it: the
+// traps are JSX rather than data, so the same drift that `ai-plays.test.ts`
+// catches by counting the doc's own bullets was invisible here.
+//
+// Order is asserted too, not just the count, because the traps run in the order
+// the stage teaches their subjects and a set comparison would let them shuffle.
+const APP = fileURLToPath(
+  new URL('../features/architecture/Architecture.tsx', import.meta.url),
+)
+
+/**
+ * The app writes British spellings where the doc writes American ones
+ * ("Agonising", "organisational"). That is a deliberate house choice, not
+ * drift, so the comparison normalises it rather than pinning either spelling.
+ */
+const anglicise = (s: string) => s.toLowerCase().replace(/z/g, 's').trim()
+
+test('the app renders every trap the doc names, in the doc’s order, since a trap the port drops is one nobody is warned about', () => {
+  const md = readFileSync(DOC, 'utf8')
+  const section = md.slice(md.indexOf('\n## Traps'))
+  const inDoc = [...section.matchAll(/^\*\*(.+?)\.?\*\*/gm)].map((m) => m[1])
+  expect(
+    inDoc.length,
+    'the doc’s Traps section parsed to nothing',
+  ).toBeGreaterThan(0)
+
+  const app = readFileSync(APP, 'utf8')
+  const step = app.slice(app.indexOf("id: 'traps'"))
+  const inApp = [
+    ...step.matchAll(/kind="trap"[\s\S]{0,160}?title="([^"]+)"/g),
+  ].map((m) => m[1])
+
+  expect(inApp.map(anglicise)).toEqual(inDoc.map(anglicise))
+})

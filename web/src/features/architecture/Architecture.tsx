@@ -1318,6 +1318,25 @@ const STEPS: (Step & { id: StepId })[] = [
               a preference you will not be able to defend the first time it is
               questioned, including by yourself.
             </Callout>
+            <Callout
+              kind="trap"
+              title="Retrying a write that is not idempotent"
+            >
+              The retry is the bug, not the failure it was answering. Two
+              charges, one purchase, and a customer who is right to be annoyed.
+            </Callout>
+            <Callout
+              kind="trap"
+              title="A destructive migration in the same deploy as the code that needs it"
+            >
+              When the deploy goes wrong the fix you want is a code rollback,
+              and a dropped column is not one.
+            </Callout>
+            <Callout kind="trap" title="Reading your own write from a replica">
+              The user saves, gets redirected, and their change is missing. It
+              is not a race you can retry your way out of — reads that must
+              reflect a just-finished write go to the primary.
+            </Callout>
             <Callout kind="trap" title="Designing for imagined scale">
               Building for a million users you do not have costs complexity
               today for benefits that will probably never arrive. If they do
