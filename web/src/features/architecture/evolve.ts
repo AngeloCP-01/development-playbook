@@ -96,7 +96,7 @@ export type EvolutionNote = {
 }
 
 /**
- * The four things the six-step list does not carry on its own. Behind an
+ * The six things the six-step list does not carry on its own. Behind an
  * expand-to-reveal in the panel: each is a paragraph, and a reader who already
  * knows what a rolling deploy is should not have to scroll past one.
  */
@@ -113,6 +113,12 @@ export const EVOLUTION_NOTES: EvolutionNote[] = [
     summary:
       'The naive version is broken, and neither failure announces itself.',
     body: 'Without "name IS NOT NULL", a row with a null name matches the guard forever — split_part(NULL, …) is null, so first_name stays null, the row re-matches, and the statement keeps reporting one row updated. “Repeat until zero” never terminates. Without the CASE, a mononym breaks: strpos returns 0 for a name with no space, substr(name, 1) returns the whole string, and every single-word name ends up with last_name equal to first_name. The lesson rather than the footnote: the data you are migrating contains cases your splitting rule was not written for. Run the SELECT half first and look at what comes back. The batch size is a judgement rather than a constant — large enough to finish, small enough that one statement is not holding rows for long; a thousand is a reasonable place to start, and the number only matters on tables big enough that you would notice. An unguarded backfill does not error when re-run — it reverts corrections, which is the worst class of migration bug: silent, plausible, and invisible until somebody notices their edit did not stick.',
+  },
+  {
+    id: 'batch-loop',
+    title: 'The loop itself, since “repeat” is not a mechanism',
+    summary: 'Run it until the row count comes back zero — and drop OFFSET.',
+    body: 'Run the statement, read the row count it reports, and run it again until it reports zero rows. On a small table that is the whole technique. On a large one, OFFSET stops being free: it re-scans every row it skips, so each batch is slower than the last. Iterate by key instead — remember the highest id you touched and start the next batch above it. The guard that makes the loop terminate is already in the statement; this is only how you drive it.',
   },
   {
     id: 'alter-lock',

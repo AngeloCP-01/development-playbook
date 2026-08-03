@@ -55,11 +55,12 @@ test('the pre-launch exemption is carried, since the stage refuses imagined scal
   expect(PRE_LAUNCH_EXEMPTION).toMatch(/adopt it/i)
 })
 
-test('the four notes beyond the sequence are carried, because the sequence alone does not tell you what a deploy is or what to do about ALTER', () => {
+test('the six notes beyond the sequence are carried, because the sequence alone does not tell you what a deploy is, how to drive the backfill, or what to do about ALTER', () => {
   const ids = EVOLUTION_NOTES.map((n) => n.id)
   expect(ids).toEqual([
     'rollover',
     'backfill-guards',
+    'batch-loop',
     'alter-lock',
     'same-shape',
     'strangler-fig',
@@ -96,4 +97,21 @@ test('both guards survive in whatever the app renders, since each one is load-be
   expect(BACKFILL_SQL).toMatch(/first_name IS NULL/)
   expect(BACKFILL_SQL).toMatch(/name IS NOT NULL/)
   expect(BACKFILL_SQL).toMatch(/LIMIT 1000/)
+})
+
+// The doc gave the batch size and both guards and stopped before the loop, so
+// "repeat until it reports zero rows" told a reader what to achieve and not
+// how — the eighth gap, from the run-3 report rather than the status file.
+test('the batch loop is carried, since a backfill that says "repeat" and not "how" is not a procedure', () => {
+  const note = EVOLUTION_NOTES.find((n) => n.id === 'batch-loop')
+  expect(note, 'no batch-loop note').toBeDefined()
+  expect(note?.body).toMatch(/zero rows/i)
+})
+
+test('the loop names keyset iteration over OFFSET, which is the part that stops being free on a large table', () => {
+  const note = EVOLUTION_NOTES.find((n) => n.id === 'batch-loop')
+  expect(note?.body, 'OFFSET must be named as the thing to avoid').toMatch(
+    /offset/i,
+  )
+  expect(note?.body).toMatch(/keyset|highest id|greater than the last/i)
 })

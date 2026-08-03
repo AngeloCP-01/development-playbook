@@ -984,6 +984,13 @@ The batch size is a judgement rather than a constant — large enough to finish,
 one statement is not holding rows for long. A thousand is a reasonable place to start and the
 number only matters on tables big enough that you would notice.
 
+**And the loop itself, since "repeat" is not a mechanism.** Run the statement, read the row
+count it reports, and run it again until it reports zero rows. On a small table that is the
+whole technique. On a large one, stop paginating with `OFFSET` — it re-scans every row it
+skips, so each batch is slower than the last — and iterate by key instead: remember the
+highest `id` you touched and start the next batch above it. The guard that makes the loop
+terminate is already in the statement above; this is only how you drive it.
+
 The rule that makes this worth the ceremony: **never ship a destructive migration in the same
 deploy as the code that needs it.** If a deploy goes wrong you want the fix to be a code
 rollback, and a dropped column is not something you can roll back. Steps 2 and 5 are the ones
