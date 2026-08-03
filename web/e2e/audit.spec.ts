@@ -134,6 +134,25 @@ test('interactive elements are at least 44px tall below lg', async ({
     // <Term> inside a collapsed TeamNotes stayed unmeasured.
     await openExpandables(page)
     const small = await page.evaluate(() => {
+      /** Inline in a sentence: somewhere between the target and the `p` or
+       *  `li` holding it, there is running text beside it. `Term` wraps itself
+       *  in a span, so the text is a level or two up rather than a direct
+       *  sibling — an accordion control never finds any, because its heading
+       *  and its row hold nothing but the control. */
+      const inlineInSentence = (el: Element) => {
+        const sentence = el.closest('p, li')
+        if (!sentence) return false
+        let node: Element | null = el
+        while (node && node !== sentence) {
+          const beside = [...(node.parentElement?.childNodes ?? [])].some(
+            (n) => n.nodeType === 3 && (n.textContent ?? '').trim().length > 0,
+          )
+          if (beside) return true
+          node = node.parentElement
+        }
+        return false
+      }
+
       const inScroller = (el: Element) => {
         let e = el.parentElement
         while (e) {
@@ -158,13 +177,23 @@ test('interactive elements are at least 44px tall below lg', async ({
             !inScroller(el) &&
             // WCAG 2.5.8 exempts targets sitting inline in a sentence — their
             // size is constrained by the surrounding text's line-height. This
-            // covers <Term> buttons inside prose. The earlier ad-hoc sweep
-            // masked these by excluding aria-controls wholesale, which would
-            // also have exempted accordions; this exemption is the honest one.
-            // `li` as well as `p`: a sentence in a list is still a sentence,
-            // and the check only started meeting those once it began expanding
-            // the accordions that hold them.
-            !el.closest('p, li')
+            // covers <Term> buttons inside prose, and `li` as well as `p`
+            // because a sentence in a list is still a sentence.
+            //
+            // But "inside a sentence element" is not "inline in a sentence". A
+            // bare `p, li` exempted 880 elements to excuse one — including 74
+            // accordion controls and 67 exercise radios and checkboxes, which
+            // are list-wrapped by construction. That is the same hole the
+            // earlier aria-controls exemption had, which this comment used to
+            // disown while reproducing it.
+            //
+            // Role does not separate them either: `Term` is itself a
+            // disclosure, so excluding `aria-expanded` re-gates the very
+            // buttons this exemption exists for. What actually distinguishes
+            // them is whether the control sits *among text* — a `Term` has
+            // sentence either side of it, while an accordion control is the
+            // only thing its heading or row contains.
+            !inlineInSentence(el)
           )
         })
         .map((el) =>
