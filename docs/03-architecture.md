@@ -559,8 +559,20 @@ yours, what happens when it is down?
   inconvenience rather than data loss. That is only true because the row is the source of
   truth, which is a design property worth having noticed.
 
-Three questions, three answers, one of which is a genuine piece of work you would otherwise
-have discovered in production. That is the return on a diagram.
+- **Scheduled job not running** — the sweep is a box on this diagram and it is yours, which is
+  exactly why it gets skipped: nothing external broke. But a job that does not run fails
+  silently and looks identical to a job with nothing to do, and for a reminder that is a
+  missed email while for a rota it is a no-show at 6am. The answer is not code, it is deciding
+  what the maximum tolerable silence is and arranging to hear about it —
+  [15 — Observability](15-observability.md)'s to build, this stage's to decide.
+- **Postgres down** — nothing works, and that is the honest answer rather than a failure of
+  the exercise. Every box above degrades to something; this one does not, which is what
+  "single point of failure" means concretely and why the deferral list keeps it to one
+  database rather than hiding it behind a second.
+
+Five questions, five answers, one of which is a genuine piece of work you would otherwise
+have discovered in production, and two of which are the boxes people skip because they are
+their own. That is the return on a diagram.
 
 **If you take the second option, decide the cadence with it.** "Record the intent and send
 later" is not a design until you say how much later, and the answer comes from the promise
@@ -657,8 +669,25 @@ The three forms, since you will meet the names:
   by `(invoice_id, line_no)`, storing the client's name is the violation: it depends on the
   invoice alone, so half the key is carrying it.
 - **Third normal form** — no column depending on another non-key column. Storing both
-  `client_id` and `client_address` on an invoice is the violation, and it is the one the
-  working rule above is really about.
+  `client_id` and the client's *current* address on an invoice is the violation, and it is
+  the one the working rule above is really about.
+
+**And the exception, because this stage has already told you to break it.** "Store it when it
+is a fact about a moment" — the tax rate applied, the price at the time, the address it went
+to — is a deliberate third-normal-form violation, and the two rules only look like they
+disagree because they are about different rows. **A moment-fact belongs on the row that
+records the moment, not on the aggregate.** That is why `sent_to` sits on `invoice_sends`
+rather than on `invoices`: on the send row it is the whole point, and on the invoice it would
+be a copy of the client that rots. If you find yourself putting a moment-fact on an entity
+that has a lifetime, the missing thing is usually an event table.
+
+**The tenant key is the other deliberate violation, and a bigger one.** Carried on every table
+that holds tenant data, it depends on the parent row rather than on the key — on a hierarchy
+deeper than one level (company → venue → shift → claim) that is textbook third normal form
+broken on purpose, four times. It is worth it: a query that has to join four tables to prove a
+row belongs to you is a query that will eventually forget to, and the failure mode of
+forgetting is showing one customer another customer's data. Denormalise where the alternative
+is a join you cannot afford to get wrong.
 
 Third is the one worth aiming at. Past it the forms get stricter and the returns get thinner,
 and you would be reaching for them to satisfy a definition rather than to fix something.
@@ -809,11 +838,18 @@ tool is a **partial unique index**:
 
 ```sql
 CREATE UNIQUE INDEX one_approved_claim_per_shift
-  ON claims (shift_id) WHERE status = 'approved';
+  ON claims (shift_id) WHERE status = 'approved' AND deleted_at IS NULL;
 ```
 
 Without it, the usual approach is to check for an existing approval and then insert — which
 two concurrent requests both pass, both believing they were first.
+
+**The second clause is not decoration, and it is the one that gets left out.** If the table
+soft-deletes, a deleted approved row still occupies the uniqueness slot: approve the wrong
+person, delete the claim, and now nobody can be approved for that shift — the constraint
+holding against a row no query can see. **Every partial unique index on a soft-deleting table
+needs `AND deleted_at IS NULL`**, and this is where the two decisions you made separately
+meet.
 
 #### Actors, roles and the tenant key
 

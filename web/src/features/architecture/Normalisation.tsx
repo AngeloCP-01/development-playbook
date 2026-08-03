@@ -71,6 +71,16 @@ export function Normalisation() {
                   <p className="mt-1 text-sm leading-6 text-muted">
                     {form.violation}
                   </p>
+                  {form.exception && (
+                    <div className="mt-3">
+                      <p className="t-label text-blueprint">
+                        Where this stage breaks it on purpose
+                      </p>
+                      <p className="mt-1 text-sm leading-6 text-muted">
+                        {form.exception}
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </li>

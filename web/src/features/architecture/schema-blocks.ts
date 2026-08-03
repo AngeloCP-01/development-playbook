@@ -92,9 +92,9 @@ export const PARTIAL_UNIQUE_LINES: SchemaLine[] = [
   },
   {
     id: 'where',
-    sql: "  ON claims (shift_id) WHERE status = 'approved';",
+    sql: "  ON claims (shift_id) WHERE status = 'approved' AND deleted_at IS NULL;",
     indent: 1,
-    note: 'The condition is what makes the rule expressible. Without it, the usual approach is to check for an existing approval and then insert — which two concurrent requests both pass, both believing they were first. That is the race the database was supposed to be holding the line on.',
+    note: 'The condition is what makes the rule expressible. Without it, the usual approach is to check for an existing approval and then insert — which two concurrent requests both pass, both believing they were first. That is the race the database was supposed to be holding the line on. The second clause is the one that gets left out: on a soft-deleting table a deleted approved row still occupies the uniqueness slot, so approving the wrong person and deleting the claim locks that shift forever, against a row no query can see.',
   },
 ]
 

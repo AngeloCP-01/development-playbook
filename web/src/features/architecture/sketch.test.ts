@@ -24,8 +24,18 @@ test('every external system answers what happens when it is down, which is the o
   }
 })
 
-test('there are four external systems, matching the four answers the doc works through', () => {
+test('there are four external systems, and six boxes that are not yours — the two extra being the ones a reader skips', () => {
   expect(SKETCH_NODES.filter((n) => n.kind === 'external')).toHaveLength(4)
+  const notYours = SKETCH_NODES.filter(
+    (n) => n.kind !== 'yours' && n.kind !== 'actor',
+  )
+  expect(notYours).toHaveLength(6)
+  for (const n of notYours) {
+    expect(
+      n.whenDown?.trim().length ?? 0,
+      `${n.id} has no down-case`,
+    ).toBeGreaterThan(0)
+  }
 })
 
 test('the sketch is more than the application and its database, which is the objection the section answers', () => {
@@ -144,7 +154,7 @@ test('backoff carries jitter and says why, since retrying in lockstep is the fai
 //
 // Both directions on purpose: a guard that only catches drift one way is half
 // a guard.
-test('every external the doc answers a down-case for is a node here, and every node here is one the doc answers for', () => {
+test('every box the doc answers a down-case for is a node here, and every node that is not yours is one the doc answers for', () => {
   const md = readFileSync(
     fileURLToPath(
       new URL('../../../../docs/03-architecture.md', import.meta.url),
@@ -155,10 +165,19 @@ test('every external the doc answers a down-case for is a node here, and every n
     md.indexOf('### Sketch the system'),
     md.indexOf('### Design the database'),
   )
-  const docNames = [...section.matchAll(/^- \*\*(.+?) down\*\*/gm)]
+  // "For each box that is not yours, what happens when it is down?" — so the
+  // set is every node except the application and the user, not just the
+  // third-party ones. The scheduled job and the database are the two that get
+  // skipped precisely because they are yours, which is what cold-reader run 4
+  // found.
+  const docNames = [
+    ...section.matchAll(/^- \*\*(.+?) (?:down|not running)\*\*/gm),
+  ]
     .map((m) => m[1].trim().toLowerCase())
     .sort()
-  const appNames = SKETCH_NODES.filter((n) => n.kind === 'external')
+  const appNames = SKETCH_NODES.filter(
+    (n) => n.kind !== 'yours' && n.kind !== 'actor',
+  )
     .map((n) => n.name.trim().toLowerCase())
     .sort()
   expect(

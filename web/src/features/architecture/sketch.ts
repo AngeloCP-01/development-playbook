@@ -45,6 +45,8 @@ export const SKETCH_NODES: SketchNode[] = [
     kind: 'store',
     does: 'Holds every row, and is the source of truth for all of it. That last part is a design property, and the blob-storage answer below depends on it.',
     edge: 'app reads and writes, over a pooled connection',
+    whenDown:
+      'Nothing works, and that is the honest answer rather than a failure of the exercise. Every other box degrades to something; this one does not, which is what “single point of failure” means concretely — and why the deferral list keeps you to one database rather than hiding the problem behind a second.',
   },
   {
     id: 'payments',
@@ -88,6 +90,8 @@ export const SKETCH_NODES: SketchNode[] = [
     kind: 'scheduled',
     does: 'Runs daily, looks for sent invoices past their due date, and emails a reminder. It sends; it does not write a status. “Overdue” is computed, per the interrogation in Model.',
     edge: 'runs on a schedule; see 11 — CI/CD for where it lives',
+    whenDown:
+      'It is yours, which is exactly why this box gets skipped: nothing external broke. But a job that does not run fails silently and looks identical to a job with nothing to do. For a reminder that is a missed email; for a rota it is a no-show at 6am. The answer is not code — it is deciding the maximum tolerable silence and arranging to hear about it, which 15 — Observability builds and this stage decides.',
   },
 ]
 

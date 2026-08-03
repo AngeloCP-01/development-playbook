@@ -28,3 +28,19 @@ test('every violation is stated against the invoicing example rather than in the
     expect(f.violation, `${f.id} violation is abstract`).toMatch(invoicing)
   }
 })
+
+// Cold-reader run 4 found the doc giving opposite verdicts on the same column
+// of the same example: "store it when it is a fact about a moment — the address
+// it shipped to" against 3NF's "storing client_id and the client's address on
+// an invoice is the violation". The resolution was latent in invoice_sends and
+// never stated. A form that this stage deliberately breaks has to say so where
+// the reader meets the rule, or the reader has two sanctioned rules and no
+// tie-break.
+test('third normal form carries the exceptions this stage deliberately makes, since a reader who meets only the rule cannot resolve them', () => {
+  const third = NORMAL_FORMS.find((f) => f.id === '3nf')
+  expect(third?.exception, 'no exception stated').toBeDefined()
+  expect(third?.exception, 'the moment-fact rule').toMatch(
+    /moment|invoice_sends|sent_to/i,
+  )
+  expect(third?.exception, 'the tenant key').toMatch(/tenant key/i)
+})
