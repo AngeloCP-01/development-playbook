@@ -62,6 +62,47 @@ function ratio(a: number[], b: number[]) {
   return (hi + 0.05) / (lo + 0.05)
 }
 
+/**
+ * Open every expandable inside the current step panel, so the checks below see
+ * revealed surfaces rather than the collapsed shell.
+ *
+ * This used to be one line — `button[aria-controls]`, clicked in a single
+ * `forEach`. Two things were wrong with it. `Stepper` puts `aria-controls` on
+ * all 22 rail tabs and the rail precedes the panel in DOM order, so the loop
+ * walked the tabs first; each tab click unmounted the panel, and the accordion
+ * buttons captured in the static NodeList were detached before the loop reached
+ * them. Measured on `#trace`: 11 expandables before the loop, 0 opened, and the
+ * page left sitting on `#traps`. Across the 36 entries the sweep opened five
+ * expandables in total.
+ *
+ * So: scoped to `[role=tabpanel]`, which excludes the rail; re-queried between
+ * passes, because a click that opens an accordion reveals more of them; and
+ * marked, because clicking a closed button in a single-open group closes its
+ * sibling and an unmarked re-query oscillates instead of terminating. The pass
+ * cap is a backstop, not the exit condition.
+ *
+ * After: 108 expandables opened, and the contrast sweep collects 867 distinct
+ * colour pairs against 717.
+ */
+async function openExpandables(page: import('@playwright/test').Page) {
+  for (let pass = 0; pass < 6; pass++) {
+    const opened = await page.evaluate(() => {
+      const closed = [
+        ...document.querySelectorAll<HTMLButtonElement>(
+          '[role=tabpanel] button[aria-expanded="false"]:not([data-audit-opened])',
+        ),
+      ]
+      for (const b of closed) {
+        b.setAttribute('data-audit-opened', '')
+        b.click()
+      }
+      return closed.length
+    })
+    if (!opened) return
+    await page.waitForTimeout(60)
+  }
+}
+
 // ── overflow ───────────────────────────────────────────────────────────────
 
 for (const width of WIDTHS) {
@@ -88,6 +129,10 @@ test('interactive elements are at least 44px tall below lg', async ({
   await page.setViewportSize({ width: 390, height: 844 })
   for (const path of PAGES) {
     await page.goto(path, { waitUntil: 'networkidle' })
+    // A target that is only reachable behind an accordion is still a target.
+    // This check never expanded anything either, which is how a sub-44px
+    // <Term> inside a collapsed TeamNotes stayed unmeasured.
+    await openExpandables(page)
     const small = await page.evaluate(() => {
       const inScroller = (el: Element) => {
         let e = el.parentElement
@@ -116,7 +161,10 @@ test('interactive elements are at least 44px tall below lg', async ({
             // covers <Term> buttons inside prose. The earlier ad-hoc sweep
             // masked these by excluding aria-controls wholesale, which would
             // also have exempted accordions; this exemption is the honest one.
-            !el.closest('p')
+            // `li` as well as `p`: a sentence in a list is still a sentence,
+            // and the check only started meeting those once it began expanding
+            // the accordions that hold them.
+            !el.closest('p, li')
           )
         })
         .map((el) =>
@@ -141,12 +189,8 @@ for (const scheme of ['light', 'dark'] as const) {
 
     for (const path of PAGES) {
       await page.goto(path, { waitUntil: 'networkidle' })
-      // Term definition panels are surfaces too; open them all first.
-      await page.evaluate(() =>
-        document
-          .querySelectorAll<HTMLButtonElement>('button[aria-controls]')
-          .forEach((b) => b.click()),
-      )
+      // Term definition panels and accordion bodies are surfaces too.
+      await openExpandables(page)
       await page.waitForTimeout(150)
 
       const rows = await page.evaluate(() => {
