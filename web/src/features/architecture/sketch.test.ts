@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
 import {
   C4_LEVELS,
@@ -22,8 +24,8 @@ test('every external system answers what happens when it is down, which is the o
   }
 })
 
-test('there are three external systems, matching the three answers the doc works through', () => {
-  expect(SKETCH_NODES.filter((n) => n.kind === 'external')).toHaveLength(3)
+test('there are four external systems, matching the four answers the doc works through', () => {
+  expect(SKETCH_NODES.filter((n) => n.kind === 'external')).toHaveLength(4)
 })
 
 test('the sketch is more than the application and its database, which is the objection the section answers', () => {
@@ -132,4 +134,36 @@ test('backoff carries jitter and says why, since retrying in lockstep is the fai
   const backoff = RESILIENCE_PATTERNS.find((p) => p.id === 'backoff-jitter')
   expect(backoff?.what).toMatch(/jitter/i)
   expect(backoff?.failure).toMatch(/same moment|lockstep|thunder|synchron/i)
+})
+
+// The container view exists in two places — the doc's ASCII diagram and this
+// app's node list — and they drifted for a whole round before anyone noticed
+// the app was a dependency short. Counting the doc's own down-case list is the
+// cheapest guard that survives an edit to either side, and it is the shape
+// ddl-sync.test.ts and ai-plays.test.ts already use for hand-ported content.
+//
+// Both directions on purpose: a guard that only catches drift one way is half
+// a guard.
+test('every external the doc answers a down-case for is a node here, and every node here is one the doc answers for', () => {
+  const md = readFileSync(
+    fileURLToPath(
+      new URL('../../../../docs/03-architecture.md', import.meta.url),
+    ),
+    'utf8',
+  )
+  const section = md.slice(
+    md.indexOf('### Sketch the system'),
+    md.indexOf('### Design the database'),
+  )
+  const docNames = [...section.matchAll(/^- \*\*(.+?) down\*\*/gm)]
+    .map((m) => m[1].trim().toLowerCase())
+    .sort()
+  const appNames = SKETCH_NODES.filter((n) => n.kind === 'external')
+    .map((n) => n.name.trim().toLowerCase())
+    .sort()
+  expect(
+    docNames.length,
+    'the doc answers no down-cases at all',
+  ).toBeGreaterThan(0)
+  expect(appNames).toEqual(docNames)
 })

@@ -74,6 +74,15 @@ export const SKETCH_NODES: SketchNode[] = [
       'An inconvenience rather than data loss, because PDFs are regenerable from the invoice row. That is only true because the row is the source of truth, which is a design property worth having noticed rather than assumed.',
   },
   {
+    id: 'auth',
+    name: 'Auth provider',
+    kind: 'external',
+    does: 'Signs people in, and holds the identity every other box on this diagram is acting on behalf of. Whether it is a managed service or a library inside your own application is the decision Access makes; either way it is a dependency, and drawing it is how you find that out.',
+    edge: 'app redirects → provider; provider returns a session',
+    whenDown:
+      'Nobody new can sign in. Whether the people already using the system keep working is not luck: a session in a cookie or a shared store outlives the provider being unreachable, and one held in instance memory does not — which is the statelessness decision from Shape. This is the dependency most systems meet in production, because it is the one nobody draws.',
+  },
+  {
     id: 'scheduled',
     name: 'Scheduled job',
     kind: 'scheduled',

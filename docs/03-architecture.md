@@ -450,13 +450,13 @@ The container view of the invoicing app, which is the one that pays for itself:
               │                  ▼
   ┌───────┐   │         ┌──────────────────┐        ┌────────────┐
   │ User  ├───┼────────►│  Next.js app      │───────►│  Postgres  │
-  └───────┘   │         └────┬────────┬────┘        └────────────┘
-              │              │        │
-              │      send    │        │  render + store
-              │              ▼        ▼
-              │      ┌────────────┐  ┌────────────┐
-              └──────┤   Email    │  │Blob storage│
-                     └────────────┘  └────────────┘
+  └───────┘   │         └──┬───┬────────┬──┘        └────────────┘
+              │            │   │        │
+              │  sign in   │   │  send  │  render + store
+              │            ▼   ▼        ▼
+              │  ┌──────────────┐  ┌────────────┐  ┌────────────┐
+              └──┤ Auth provider│  │   Email    │  │Blob storage│
+                 └──────────────┘  └────────────┘  └────────────┘
 
   ┌──────────────────┐
   │ Scheduled job    │───► emails a reminder for sent invoices past due_date
@@ -466,7 +466,7 @@ The container view of the invoicing app, which is the one that pays for itself:
 ```
 
 The deployment view, for this system, is close enough to the same picture that drawing it
-separately would be padding: one application on one platform, one managed database, three
+separately would be padding: one application on one platform, one managed database, four
 third-party services reached over HTTPS. Say that rather than producing a second diagram out
 of obligation. It stops being true the moment anything runs on its own schedule or its own
 hardware, and then the view earns its place.
@@ -549,6 +549,12 @@ yours, what happens when it is down?
 - **Email provider down** — the invoice must not be lost because the send failed. Either
   retry, or record the intent and send later. This one is a decision, and the diagram is what
   forced it.
+- **Auth provider down** — nobody new can sign in. Whether the people already using the system
+  keep working is not luck, it is the statelessness decision from
+  [The shapes a system can take](#the-shapes-a-system-can-take): a session in a cookie or a
+  shared store outlives the provider being unreachable, and one held in instance memory does
+  not. This is the dependency whose down-case most systems meet in production, because it is
+  the one nobody draws.
 - **Blob storage down** — PDFs are regenerable from the invoice row, so this is an
   inconvenience rather than data loss. That is only true because the row is the source of
   truth, which is a design property worth having noticed.
