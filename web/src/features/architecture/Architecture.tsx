@@ -818,10 +818,19 @@ const STEPS: (Step & { id: StepId })[] = [
         >
           <Prose>
             <p>
-              Write the queries first and add the index the query needs. Both of
-              these come from the system sketch you drew earlier: one from a
-              screen, one from the scheduled job. Indexes cost write time and
-              disk, which is why &ldquo;index everything&rdquo; is not the
+              One number first: how much data will exist in a year, and how fast
+              does it arrive? Ten thousand invoices is a table where no index is
+              load-bearing; ten million is a table where the missing one is an
+              outage. You cannot judge an index without saying which of the two
+              you are — and one sentence about your own product is the whole
+              exercise. Sizing a cache or projecting to ten million users is the
+              imagined scale this stage refuses.
+            </p>
+            <p>
+              Then write the queries first and add the index the query needs.
+              Both of these come from the system sketch you drew earlier: one
+              from a screen, one from the scheduled job. Indexes cost write time
+              and disk, which is why &ldquo;index everything&rdquo; is not the
               answer and &ldquo;index nothing until it hurts&rdquo; is not
               either.
             </p>

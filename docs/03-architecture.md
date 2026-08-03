@@ -715,6 +715,16 @@ on the expensive list from the top of this stage:
 
 #### Indexes
 
+**First, one number: how much data will exist in a year, and how fast does it arrive?** Not a
+model — a number you can say out loud. Ten thousand invoices is a table where every query is
+fast and no index is load-bearing; ten million is a table where the missing one is an outage.
+You cannot judge an index without saying which of the two you are indexing for, and the
+honest answer is usually one sentence about your own product.
+
+This is the light version on purpose. Sizing a cache, projecting to ten million users, or
+building a spreadsheet of requests per second is the imagined scale this stage spends a
+section refusing. One number, revisited when it turns out to be wrong.
+
 **Indexes answer queries you actually run**, so write the queries first and add the index the
 query needs. Two, for this schema:
 
