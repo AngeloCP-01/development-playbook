@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
 import { NORMAL_FORMS } from './normal-forms'
 
@@ -43,4 +45,31 @@ test('third normal form carries the exceptions this stage deliberately makes, si
     /moment|invoice_sends|sent_to/i,
   )
   expect(third?.exception, 'the tenant key').toMatch(/tenant key/i)
+})
+
+// Counting the tenant-key violations from the tenant itself reads one too many.
+// In company → venue → shift → claim, `venues.company_id` is an ordinary
+// foreign key to its own parent and violates nothing; the denormalisation
+// starts one level lower, at shifts, and there are two of them in that chain,
+// not three. The doc and this data file carried the same ambiguous count, and a
+// commit body derived "four times" from it.
+test('the tenant-key exception counts the violations from the first child down, since the child’s own foreign key to its parent is not one', () => {
+  const third = NORMAL_FORMS.find((f) => f.id === '3nf')
+  const doc = readFileSync(
+    fileURLToPath(
+      new URL('../../../../docs/03-architecture.md', import.meta.url),
+    ),
+    'utf8',
+  ).replace(/\s+/g, ' ')
+  for (const [where, text] of [
+    ['normal-forms.ts', third?.exception ?? ''],
+    ['the doc', doc],
+  ] as const) {
+    expect(text, `${where} counts from the tenant itself`).not.toMatch(
+      /once per level below the first[,. ]/i,
+    )
+    expect(text, `${where} does not say where the violations start`).toMatch(
+      /below the first child|starts at the grandchild|shifts and claims/i,
+    )
+  }
 })

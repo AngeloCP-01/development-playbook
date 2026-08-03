@@ -203,3 +203,19 @@ test('the auth-paths closer introduces the authorization exercise rather than pr
     /may do this thing to this record/i,
   )
 })
+
+// The webhook's mechanism is "insert the event id first, then do the work, in
+// one transaction" — chosen because the work reaches outside the database. A
+// pull's work usually *is* the write, so the mechanism that fits is the other
+// one: make the write itself repeatable. The row said "exactly as the webhook
+// does", which points the reader at the wrong half of the pair and at a
+// transaction shape that does not apply.
+test('the pull row attributes upsert to the repeatable-write mechanism, not to the webhook’s insert-first-then-work', () => {
+  const pull = CONTRACT_ROWS.find((r) => r.id === 'pull')
+  expect(pull?.why, 'still points at the webhook').not.toMatch(
+    /exactly as the webhook|as the webhook does/i,
+  )
+  expect(pull?.why, 'no mechanism named').toMatch(
+    /second of the two|repeatable|second mechanism/i,
+  )
+})

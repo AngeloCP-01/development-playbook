@@ -30,6 +30,7 @@ import { SplitTrigger } from './SplitTrigger'
 import { BoundaryMap } from './BoundaryMap'
 import { TeamNotes } from './TeamNotes'
 import { SystemSketch } from './SystemSketch'
+import { SKETCH_CAPTION, SYNC_ASYNC_RULE } from './sketch'
 import { DataFlow } from './DataFlow'
 import { SyncAsync } from './SyncAsync'
 import { IdempotencyBlock } from './IdempotencyBlock'
@@ -614,10 +615,7 @@ const STEPS: (Step & { id: StepId })[] = [
               on the page and mean opposite things about your thinking.
             </p>
           </Prose>
-          <Figure
-            n={8}
-            caption="The container view. Four of the six boxes are not yours, which is the whole argument for drawing it — select an external one to see what it does and what happens when it is down."
-          >
+          <Figure n={8} caption={SKETCH_CAPTION}>
             <SystemSketch />
           </Figure>
           <div className="mt-6">
@@ -667,8 +665,7 @@ const STEPS: (Step & { id: StepId })[] = [
                 event-driven architecture
               </Term>
               , and it has real consequences on each branch. The rule that
-              catches people: for anything you <em>receive</em>, you do not get
-              to choose.
+              catches people: <em>{SYNC_ASYNC_RULE.toLowerCase()}</em>.
             </p>
           </Prose>
           <Figure

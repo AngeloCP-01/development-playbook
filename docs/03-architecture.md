@@ -432,8 +432,9 @@ application and one database, the diagram is two boxes and a line, and drawing i
 nobody anything.
 
 The objection is right about the application and wrong about the system. **Your application
-is one box. Your system is not.** The invoicing example takes payments, sends email, renders
-and stores PDFs, and needs something to notice when an invoice has gone past its due date.
+is one box. Your system is not.** The invoicing example signs people in, takes
+payments, sends email, renders and stores PDFs, and needs something to notice when an invoice
+has gone past its due date.
 None of those is code you wrote, all of them fail on their own schedule, and every one is a
 decision you have already made without writing it down.
 
@@ -512,7 +513,7 @@ and it has real consequences on each branch:
 | Fails by | The callee being down or slow | The message being lost, delayed, or delivered twice |
 | Needs | A timeout and a retry policy | **Idempotency**, and somewhere to put what failed |
 
-The rule that catches people: **for anything you receive, you do not get to choose.** A
+The rule that catches people: **for anything pushed at you, you do not get to choose.** A
 payment webhook is asynchronous because somebody else decided it is, it will be delivered
 twice eventually, and step 5 above has to be safe when that happens. That is what idempotency
 means, and it is not optional on a payment flow.
@@ -551,8 +552,8 @@ Choose synchronous by default for work you initiate. Reach for asynchronous when
 genuinely should not wait, and accept that you have bought a failure mode you now have to
 watch — which is [15 — Observability](15-observability.md)'s problem, and it starts here.
 
-**Then ask the question that makes the whole sketch worth drawing:** for each box that is not
-yours, what happens when it is down?
+**Then ask the question that makes the whole sketch worth drawing:** for each box on this
+diagram, what happens when it is down?
 
 - **Payment provider down** — invoices still send; payment reconciles late. Survivable, and
   it needs no code.
@@ -568,7 +569,6 @@ yours, what happens when it is down?
 - **Blob storage down** — PDFs are regenerable from the invoice row, so this is an
   inconvenience rather than data loss. That is only true because the row is the source of
   truth, which is a design property worth having noticed.
-
 - **Scheduled job not running** — the sweep is a box on this diagram and it is yours, which is
   exactly why it gets skipped: nothing external broke. But a job that does not run fails
   silently and looks identical to a job with nothing to do, and for a reminder that is a
@@ -627,7 +627,7 @@ worth having because these four cover almost everything:
 
 **For most calls the right answer is a timeout and nothing else.** Retries earn their place
 where the call is idempotent and the failure is plausibly transient. A breaker earns its place
-after you have watched something fail repeatedly. Building all four around three third-party
+after you have watched something fail repeatedly. Building all four around four third-party
 calls on day one is the same instinct as reaching for microservices, wearing different clothes.
 
 **What is deliberately not here.** Full high-level design practice comes with a system
@@ -689,13 +689,16 @@ to — is a deliberate third-normal-form violation, and the two rules only look 
 disagree because they are about different rows. **A moment-fact belongs on the row that
 records the moment, not on the aggregate.** That is why `sent_to` sits on `invoice_sends`
 rather than on `invoices`: on the send row it is the whole point, and on the invoice it would
-be a copy of the client that rots. If you find yourself putting a moment-fact on an entity
-that has a lifetime, the missing thing is usually an event table.
+be a copy of the client that rots. The test is not whether the entity has a lifetime — an invoice
+has one, and the tax rate applied to it still belongs on the invoice. It is whether there can
+be **more than one such moment**: one issuance means the invoice row is the moment row, and
+many sends mean the sends need a row each.
 
 **The tenant key is the other deliberate violation, and a bigger one.** Carried on every table
 that holds tenant data, it depends on the parent row rather than on the key — on a hierarchy
 deeper than one level (company → venue → shift → claim) that is textbook third normal form
-broken on purpose, once per level below the first. It is worth it: a query that has to join four tables to prove a
+broken on purpose — not at venues, whose `company_id` is an ordinary foreign key to its own
+parent, but at every level below the first child: shifts and claims, so twice in that chain. It is worth it: a query that has to join four tables to prove a
 row belongs to you is a query that will eventually forget to, and the failure mode of
 forgetting is showing one customer another customer's data. Denormalise where the alternative
 is a join you cannot afford to get wrong.
@@ -1078,11 +1081,18 @@ one statement is not holding rows for long. A thousand is a reasonable place to 
 number only matters on tables big enough that you would notice.
 
 **And the loop itself, since "repeat" is not a mechanism.** Run the statement, read the row
-count it reports, and run it again until it reports zero rows. On a small table that is the
-whole technique. On a large one, stop paginating with `OFFSET` — it re-scans every row it
-skips, so each batch is slower than the last — and iterate by key instead: remember the
-highest `id` you touched and start the next batch above it. The guard that makes the loop
-terminate is already in the statement above; this is only how you drive it.
+count it reports, and run it again until it reports zero rows. That is the whole technique,
+and the reason it is that simple is worth seeing: **the guard is what makes the batches
+work.** Because the inner select takes only rows where `first_name IS NULL`, every pass
+permanently removes its own rows from the candidate set, so the next pass finds a smaller one.
+You re-run the identical statement each time.
+
+**Which means: do not paginate it.** Not with `OFFSET`, and not by remembering the highest
+`id` you touched — both are answers to a question this loop does not ask, and the second one
+loses data. The statement has no `ORDER BY`, so `LIMIT 1000` returns an arbitrary thousand
+matching rows; recording the largest `id` among them and starting the next batch above it
+skips every unmigrated row below it, permanently, and the loop still reports zero and looks
+finished. If you find yourself reaching for a cursor here, the guard is missing.
 
 The rule that makes this worth the ceremony: **never ship a destructive migration in the same
 deploy as the code that needs it.** If a deploy goes wrong you want the fix to be a code
@@ -1147,8 +1157,12 @@ tells you when it changed, so staleness is yours and the cadence question from t
 applies to reading rather than to sending. But **idempotency is not optional here either, and
 it is easier to miss because nothing arrives to remind you**: a nightly pull re-reads an
 overlapping window every run, and since no one is retrying for you, the retry is yours — which
-is duplicate delivery by your own hand. Give the source's own identifier a unique constraint
-and upsert on it, exactly as the webhook does with its event id. Then validate at the boundary
+is duplicate delivery by your own hand. Give the source's own identifier a unique constraint and
+upsert on it — and note this is the *second* of the two mechanisms above, not the webhook's.
+The webhook inserts its event id first and does the work in the same transaction, because its
+work reaches outside the database and must not happen twice. A pull's work usually *is* the
+write, so making the write itself repeatable is enough. Reach for the webhook's mechanism the
+moment reading also sends something. Then validate at the boundary
 like anything else crossing in, and decide what happens when the source is late or malformed,
 because it will be.
 
@@ -1411,7 +1425,7 @@ build less than the model offers. It has no stake in maintaining what it propose
 
 - [ ] Characteristics chosen, and each one traced to a decision it forced
 - [ ] Architecture style named, with the alternatives rejected and the reason for each
-- [ ] System sketched, with what happens when each box that is not yours is down — including the scheduled work and the database
+- [ ] System sketched, with what happens when each box on it is down — including the scheduled work and the database
 - [ ] Integration style decided per external call, and anything received is idempotent
 - [ ] A timeout on every external call, and a stated answer for each dependency being down
 - [ ] Concurrent-edit strategy decided where two people can act on one row

@@ -2,7 +2,12 @@
 
 import { useState } from 'react'
 import { Card } from '@/components/ui'
-import { SKETCH_NODES, type SketchNode } from './sketch'
+import {
+  SKETCH_INTRO,
+  SKETCH_NODES,
+  SKETCH_PAYOFF,
+  type SketchNode,
+} from './sketch'
 
 /**
  * Source: docs/03-architecture.md, "Sketch the system".
@@ -85,10 +90,7 @@ export function SystemSketch() {
         })}
       </div>
 
-      <p className="mt-4 text-sm leading-6 text-muted">
-        Four of these six boxes are not yours. Select one to see what it does
-        and, for the external ones, what happens when it is down.
-      </p>
+      <p className="mt-4 text-sm leading-6 text-muted">{SKETCH_INTRO}</p>
 
       <div
         aria-live="polite"
@@ -121,11 +123,7 @@ export function SystemSketch() {
       </div>
 
       <p className="mt-4 border-t border-line pt-4 text-sm leading-6 text-muted">
-        Six boxes that are not yours, six answers, one of which is a genuine
-        piece of work you would otherwise have discovered in production — and
-        two of which get skipped, one because it is yours and one because it is
-        somebody else&rsquo;s problem right up until it is not. That is the
-        return on a diagram.
+        {SKETCH_PAYOFF}
       </p>
     </Card>
   )

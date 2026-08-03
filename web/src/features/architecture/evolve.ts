@@ -117,8 +117,8 @@ export const EVOLUTION_NOTES: EvolutionNote[] = [
   {
     id: 'batch-loop',
     title: 'The loop itself, since “repeat” is not a mechanism',
-    summary: 'Run it until the row count comes back zero — and drop OFFSET.',
-    body: 'Run the statement, read the row count it reports, and run it again until it reports zero rows. On a small table that is the whole technique. On a large one, OFFSET stops being free: it re-scans every row it skips, so each batch is slower than the last. Iterate by key instead — remember the highest id you touched and start the next batch above it. The guard that makes the loop terminate is already in the statement; this is only how you drive it.',
+    summary: 'Run it until the count comes back zero. Do not paginate it.',
+    body: 'Run the statement, read the row count it reports, and run it again until it reports zero rows. That is the whole technique, and why it is that simple is worth seeing: the guard is what makes the batches work. Because the inner select takes only rows where first_name IS NULL, every pass permanently removes its own rows from the candidate set, so the next pass finds a smaller one and you re-run the identical statement. Which means: do not paginate it — not with OFFSET, and not by remembering the highest id you touched. The statement has no ORDER BY, so LIMIT 1000 returns an arbitrary thousand matching rows; recording the largest id among them and resuming above it skips every unmigrated row below it, permanently, while the loop still reports zero and looks finished. If you are reaching for a cursor here, the guard is missing.',
   },
   {
     id: 'alter-lock',

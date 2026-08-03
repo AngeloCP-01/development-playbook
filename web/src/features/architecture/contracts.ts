@@ -38,7 +38,7 @@ export const CONTRACT_ROWS: ContractRow[] = [
     id: 'pull',
     contract: 'Data you pull or import',
     cost: 'not-yours',
-    why: 'A nightly pull from somebody’s system, a CSV somebody uploads, an export you read on a schedule. They own the shape; you own the cadence — which is the half a webhook takes away from you. Idempotency is not optional here either, and it is easier to miss because nothing arrives to remind you: a nightly pull re-reads an overlapping window, and since nobody is retrying for you, the retry is yours — which is duplicate delivery by your own hand. Give the source’s own identifier a unique constraint and upsert on it, exactly as the webhook does with its event id. Nobody tells you when it changed, either, so staleness is yours too.',
+    why: 'A nightly pull from somebody’s system, a CSV somebody uploads, an export you read on a schedule. They own the shape; you own the cadence — which is the half a webhook takes away from you. Idempotency is not optional here either, and it is easier to miss because nothing arrives to remind you: a nightly pull re-reads an overlapping window, and since nobody is retrying for you, the retry is yours — which is duplicate delivery by your own hand. Give the source’s own identifier a unique constraint and upsert on it — the second of the two mechanisms, not the webhook’s. The webhook inserts its event id first and does the work in the same transaction, because its work reaches outside the database; a pull’s work usually is the write, so making the write itself repeatable is enough. Reach for the webhook’s mechanism the moment reading also sends something. Nobody tells you when it changed, either, so staleness is yours too.',
   },
 ]
 

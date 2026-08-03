@@ -95,6 +95,33 @@ export const SKETCH_NODES: SketchNode[] = [
   },
 ]
 
+/**
+ * The three sentences that count the boxes: the panel's opening line, the
+ * figure caption above it, and the payoff line below. They live here rather
+ * than in the components because each of them had drifted to a hand-counted
+ * "six" against a list of eight, in three places at once — and because the
+ * payoff is a sentence the doc also carries, which `sketch.test.ts` now checks
+ * character for character.
+ */
+export const SKETCH_INTRO =
+  'Four of these eight boxes are somebody else’s, which is most of the argument for drawing it at all. Select a box to see what it does and, for the six that can be down on you, what happens when they are.'
+
+export const SKETCH_CAPTION =
+  'The container view. Four of the eight boxes are somebody else’s, which is the whole argument for drawing it — select one to see what it does and what happens when it is down.'
+
+/**
+ * The rule the sync/async fork turns on, stated in one place because both the
+ * step's prose and the callout inside `SyncAsync` say it. "Receive" was the
+ * word here and it is wrong: a synchronous request is also received, and you
+ * do get to choose its shape. What removes the choice is being pushed at on
+ * somebody else's schedule.
+ */
+export const SYNC_ASYNC_RULE =
+  'For anything pushed at you, you do not get to choose'
+
+export const SKETCH_PAYOFF =
+  'Six questions, six answers, one of which is a genuine piece of work you would otherwise have discovered in production — and two of which are the boxes that get skipped, one because it is yours and one because it is somebody else’s problem right up until it is not. That is the return on a diagram.'
+
 export type C4Level = {
   id: string
   name: string

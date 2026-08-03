@@ -1,5 +1,5 @@
 import { Callout, Card } from '@/components/ui'
-import { SYNC_ASYNC_ROWS } from './sketch'
+import { SYNC_ASYNC_ROWS, SYNC_ASYNC_RULE } from './sketch'
 
 /**
  * Source: docs/03-architecture.md, "Sketch the system".
@@ -42,10 +42,7 @@ export function SyncAsync() {
       </ul>
 
       <div className="mt-4">
-        <Callout
-          kind="warn"
-          title="For anything you receive, you do not get to choose"
-        >
+        <Callout kind="warn" title={SYNC_ASYNC_RULE}>
           A payment webhook is asynchronous because somebody else decided it is.
           It will be delivered twice eventually, and the write it triggers has
           to be safe when that happens. Choose synchronous by default for work

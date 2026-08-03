@@ -6,9 +6,27 @@ import {
   FLOW_STEPS,
   PROCESSED_EVENTS_LINES,
   RESILIENCE_PATTERNS,
+  SKETCH_CAPTION,
+  SKETCH_INTRO,
   SKETCH_NODES,
+  SKETCH_PAYOFF,
   SYNC_ASYNC_ROWS,
+  SYNC_ASYNC_RULE,
 } from './sketch'
+
+const WORDS = [
+  'zero',
+  'one',
+  'two',
+  'three',
+  'four',
+  'five',
+  'six',
+  'seven',
+  'eight',
+  'nine',
+  'ten',
+]
 
 // The whole return on drawing the sketch is the question it forces: for each
 // box that is not yours, what happens when it is down? A node that ships with
@@ -24,7 +42,46 @@ test('every external system answers what happens when it is down, which is the o
   }
 })
 
-test('there are four external systems, and six boxes that are not yours — the two extra being the ones a reader skips', () => {
+// Three separate sentences — the panel's opening line, its closing line, and
+// the figure caption — each quoted a hand-counted "six boxes" while the
+// diagram rendered eight, and the closing line called all six "not yours" in
+// the same breath as explaining that one of them gets skipped *because* it is
+// yours. Hand-counted prose about a list is drift waiting to happen, so the
+// sentences live in the data file beside the list and the counts are checked
+// against it.
+test('the sentences around the sketch count the boxes the diagram actually renders, since a hand-counted number drifts the moment a node is added', () => {
+  const total = WORDS[SKETCH_NODES.length]
+  const external =
+    WORDS[SKETCH_NODES.filter((n) => n.kind === 'external').length]
+  const downCases = WORDS[SKETCH_NODES.filter((n) => n.whenDown?.trim()).length]
+
+  expect(SKETCH_INTRO.toLowerCase(), 'intro miscounts').toContain(
+    `${external} of these ${total} boxes`,
+  )
+  expect(SKETCH_CAPTION.toLowerCase(), 'caption miscounts').toContain(
+    `${external} of the ${total} boxes`,
+  )
+  expect(SKETCH_PAYOFF.toLowerCase(), 'payoff miscounts').toContain(
+    `${downCases} questions, ${downCases} answers`,
+  )
+})
+
+// The doc's own payoff line is the source. The port had drifted into calling
+// the database and the scheduled job "not yours", which contradicts the two
+// skipped-box explanations in the same sentence.
+test('the payoff line reads the same in the doc and the port, since this is the sentence that contradicted itself', () => {
+  const md = readFileSync(
+    fileURLToPath(
+      new URL('../../../../docs/03-architecture.md', import.meta.url),
+    ),
+    'utf8',
+  )
+  const plain = (s: string) =>
+    s.replace(/[’‘]/g, "'").replace(/\s+/g, ' ').trim()
+  expect(plain(md)).toContain(plain(SKETCH_PAYOFF))
+})
+
+test('there are four external systems, and six boxes with a down-case — the two extra being your own database and your own job, which is why they get skipped', () => {
   expect(SKETCH_NODES.filter((n) => n.kind === 'external')).toHaveLength(4)
   const notYours = SKETCH_NODES.filter(
     (n) => n.kind !== 'yours' && n.kind !== 'actor',
@@ -36,6 +93,63 @@ test('there are four external systems, and six boxes that are not yours — the 
       `${n.id} has no down-case`,
     ).toBeGreaterThan(0)
   }
+})
+
+// The sentence that motivates the whole section enumerates what the system does
+// beyond your code, and the reader takes it as the list. It named four things
+// against a diagram that draws five, and the missing one was auth — added to
+// the sketch in a later round without the sentence being revisited. A reader
+// who is told the list and then shown a longer one distrusts the shorter.
+test('the sentence that motivates the sketch names every box the diagram then draws, since the reader takes that sentence as the list', () => {
+  const md = readFileSync(
+    fileURLToPath(
+      new URL('../../../../docs/03-architecture.md', import.meta.url),
+    ),
+    'utf8',
+  )
+  const start = md.indexOf('Your system is not.')
+  const end = md.indexOf('None of those', start)
+  expect(start, 'the motivating claim has been reworded away').toBeGreaterThan(
+    0,
+  )
+  expect(end, 'the sentence after it has been reworded away').toBeGreaterThan(
+    start,
+  )
+  const sentence = md.slice(start, end)
+  // What each box contributes to that sentence. The application and the user
+  // are not in it by design — the sentence is about what your system does that
+  // is not your code.
+  const CONTRIBUTION: Record<string, RegExp> = {
+    payments: /payment/i,
+    email: /email/i,
+    blob: /PDF/i,
+    auth: /signs? .*in|authenticat/i,
+    scheduled: /due date|overdue/i,
+    postgres: /store|hold|row/i,
+  }
+  for (const n of SKETCH_NODES) {
+    const want = CONTRIBUTION[n.id]
+    if (!want) continue
+    expect(sentence, `${n.id} is drawn but not in the sentence`).toMatch(want)
+  }
+})
+
+// A blank line between two items of the down-case list makes it a loose list,
+// so markdown wraps every item in a paragraph and the one bullet after the gap
+// renders with different spacing from the six above it.
+test('the down-case list has no blank line between its items, since one gap re-spaces the whole list', () => {
+  const md = readFileSync(
+    fileURLToPath(
+      new URL('../../../../docs/03-architecture.md', import.meta.url),
+    ),
+    'utf8',
+  )
+  const start = md.indexOf('- **Payment provider down**')
+  const end = md.indexOf('Six questions, six answers', start)
+  expect(start, 'the list has been reworded away').toBeGreaterThan(0)
+  expect(end, 'the payoff line has been reworded away').toBeGreaterThan(start)
+  const section = md.slice(start, end)
+  expect(section, 'blank line inside the list').not.toMatch(/\n\n- \*\*/)
 })
 
 test('the sketch is more than the application and its database, which is the objection the section answers', () => {
@@ -73,6 +187,31 @@ test('the flow crosses both integration styles, which is what makes it the flow 
   const kinds = new Set(FLOW_STEPS.map((s) => s.kind))
   expect(kinds).toContain('sync')
   expect(kinds).toContain('async')
+})
+
+// "Receive" also describes a synchronous request somebody makes to you, which
+// you very much do get to choose the shape of. The property that removes the
+// choice is that it is pushed at you on somebody else's schedule — so the doc
+// says "pushed at", and the port said "receive" in two places.
+test('the rule that catches people reads the same in the doc and the port, since “receive” also describes a synchronous request', () => {
+  const md = readFileSync(
+    fileURLToPath(
+      new URL('../../../../docs/03-architecture.md', import.meta.url),
+    ),
+    'utf8',
+  )
+  expect(md.toLowerCase()).toContain(SYNC_ASYNC_RULE.toLowerCase())
+  for (const file of ['./SyncAsync.tsx', './Architecture.tsx']) {
+    const src = readFileSync(
+      fileURLToPath(new URL(file, import.meta.url)),
+      'utf8',
+    )
+    expect(
+      src,
+      `${file} restates the rule instead of importing it`,
+    ).not.toMatch(/you (?:receive|get)[^,]*, you do not get to choose/i)
+    expect(src, `${file} does not use the rule`).toContain('SYNC_ASYNC_RULE')
+  }
 })
 
 test('the sync/async comparison answers four questions on both sides', () => {
@@ -185,4 +324,28 @@ test('every box the doc answers a down-case for is a node here, and every node t
     'the doc answers no down-cases at all',
   ).toBeGreaterThan(0)
   expect(appNames).toEqual(docNames)
+})
+
+// The bullet list is prose; the ASCII container diagram above it is the drawing
+// the section is actually about, and nothing checked it. A box deleted from the
+// diagram and left in the list stayed green — which is how the app came to draw
+// an auth provider the diagram had, and the sentence beneath it did not.
+test('every node is drawn in the doc’s container diagram too, not only answered for in the list beneath it', () => {
+  const md = readFileSync(
+    fileURLToPath(
+      new URL('../../../../docs/03-architecture.md', import.meta.url),
+    ),
+    'utf8',
+  )
+  const start = md.indexOf('The container view of the invoicing app')
+  const open = md.indexOf('```', start)
+  const diagram = md.slice(open, md.indexOf('```', open + 3))
+  expect(diagram.length, 'no fenced diagram found').toBeGreaterThan(100)
+  for (const n of SKETCH_NODES) {
+    // The boxes are hand-aligned, so a name too wide for its box is drawn
+    // shorter: "Email provider" is the box labelled "Email". Match the part
+    // that identifies it and let the qualifier be optional.
+    const key = n.name.replace(/ (provider|storage|app|job)$/i, '')
+    expect(diagram, `${n.id} is a node but not a box`).toContain(key)
+  }
 })
