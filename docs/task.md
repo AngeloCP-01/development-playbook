@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03 done; 16 remain)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03 done; 15 remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☐ |
 
@@ -125,7 +125,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02 and 03 done; 16 remain)*
+### W-3 — Stages 02–18 interactive ◐ *(02 and 03 done; 15 remain)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -298,7 +298,7 @@ these clusters — so this round is what makes that section honest.
 09 (linked, not taught); observability with 15; threat modelling and secrets with 08; table
 partitioning and sharding are named as the thing you do not need and not taught.
 
-### W-3.2 — Port stage 03's doc round into the app ◐ *(content done, whole-branch review outstanding — `feat/stage-03-app-port`, 78 commits, twelve tasks of the D-52 round done)*
+### W-3.2 — Port stage 03's doc round into the app ☑ *(content done, whole-branch review run and its findings fixed — `feat/stage-03-app-port`, 88 commits, unmerged)*
 
 **Live coverage map: `docs/stage-03-status.md`.** Section by section, doc against app, with the
 remaining tasks. Read it before picking up this round — it is more current than this checklist,
@@ -359,14 +359,16 @@ which is why `trace` exists as its own step.
       not run. Two candidates were deliberately **not** added ("backfill", "rolling deploy"):
       both are defined in place, and the glossary is generated from `terms.ts`, so an entry
       the doc does not carry would be inventing reference content rather than porting it
-- [x] New step hashes added to `e2e/audit.spec.ts` by hand (TD-12) — twelve of them this
-      round, one per new step. A *dead* hash now fails; a *missing* one still audits nothing,
-      which is the half TD-12 still names
-- [ ] **Whole-branch review before merge**, doc and app together. Still the load-bearing one,
-      and now the only thing left: the port half has never had it, and the three per-task
-      reviews run so far found fourteen blocking defects between them — including two factual
-      errors about Postgres that read
-      plausibly and that no test could have caught until the tests were rewritten
+- [x] New step hashes added to `e2e/audit.spec.ts` by hand (TD-12) — **thirteen** of them this
+      round, taking stage 03's entries from nine to twenty-two. A *dead* hash now fails; a
+      *missing* one still audits nothing, which is the half TD-12 still names
+- [x] **Whole-branch review before merge**, doc and app together. ✓ 2026-08-03 — seven
+      blocking findings, two minors promoted for being reader-visible and introduced by this
+      branch, sixteen deferred. The four per-task reviews before it had found fourteen blocking
+      defects between them, including two factual errors about Postgres that read plausibly and
+      that no test could have caught until the tests were rewritten; the branch pass then found
+      that the contrast and touch-target gates were opening five expandables across 36 pages
+      and reporting a clean sweep
 - [ ] Close **TD-23** when doc and app agree again
 
 #### AI-plays coverage, per stage
@@ -379,7 +381,7 @@ plan"; architecture's, testing's and so on will each have their own). Status:
 |---|---|---|---|
 | 01 Product Discovery | ☑ | ☑ | Doc `### AI in discovery` backfilled; TD-15 closed |
 | 02 Product Planning | ☑ | ☑ | Done: 7th step + `### AI in planning` |
-| 03 Architecture | ☑ | ☑ | `### AI in architecture` + a 6th step. The doc had **no** AI section — the round had to write one before it could mirror it, which is why `stage-metadata.test.ts` now fails any stage whose doc lacks the heading |
+| 03 Architecture | ☑ | ☑ | `### AI in architecture`, its own step — the 21st of 22 after the D-52 reshape, and the 6th when it was written. The doc had **no** AI section — the round had to write one before it could mirror it, which is why `stage-metadata.test.ts` now fails any stage whose doc lacks the heading |
 | 04–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
 
 Suggested order. Revised 2026-07-24 (D-27): the first pass ranked purely by teaching
@@ -389,9 +391,9 @@ pattern library on the hardest stage.
 | Order | Stage | Why this one next |
 |---|---|---|
 | ~~1~~ ✓ | 02 Product Planning | **Done.** Complete + interactive + audience-validated (D-37: developer-complete; PM/SA are scope boundaries). Proved `web/PATTERNS.md`, the carry-forward chain, and the AI-plays pattern transfer. |
-| ~~2~~ ✓ | 03 Architecture | **Doc and app content agree; TD-23 stays open for the whole-branch review.** The densest stage by a distance: 14 doc sections, 22 app steps, 24 figures. TD-18, TD-21, TD-22 and TD-25's doc half all closed on it. Stress-tested the pattern library and produced two new rows (annotated artifact, and the panel-weight rule that replaced the step-count ceiling). |
+| ~~2~~ ✓ | 03 Architecture | **Doc and app content agree; the whole-branch review has run, and TD-23 now waits only on the merge.** The densest stage by a distance: 14 doc sections, 22 app steps, 24 figures. TD-18, TD-21, TD-22 and TD-25's doc half all closed on it. Stress-tested the pattern library and produced two new rows (annotated artifact, and the panel-weight rule that replaced the step-count ceiling). |
 | ~~3~~ ✓ | — | **Stage 03's doc gaps closed** across W-3.1, W-3.1b and three cold-reader runs. |
-| **4 (next)** | — | **Finish W-3.2** — the whole-branch review covering doc and app together. The port is done; the review is the remaining blocker: 78 commits, never reviewed as a whole, and the four per-task reviews found fourteen blocking defects between them. |
+| **4 (next)** | — | **Merge W-3.2.** The port is done and the whole-branch review has run: 88 commits, seven blocking findings from the branch pass on top of fourteen from the four per-task reviews, all fixed. What is left is the merge decision, not more work. |
 | 5 | 15 Observability | Unfamiliar ground; benefits most from figures |
 | 6 | 16 Incident Management | Procedural, so a stepper fits naturally |
 | 6 | 13 Production Deployment | Expand/migrate/contract needs a visual |

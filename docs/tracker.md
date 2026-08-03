@@ -3,22 +3,21 @@
 **Purpose:** the log. What actually shipped, what was decided and why, and what
 debt was taken on. Scope and planning live in [task.md](task.md).
 
-**Last updated:** 2026-07-29
+**Last updated:** 2026-08-03
 **Current phase:** W-3 — stages 01, 02 and **03 (Architecture)** are interactive. Stage 03 is
 the densest stage and the **solutions architect's home** — the audience stage 02 feeds but
 does not serve (D-37).
 
-**The position has inverted: stage 03's doc is now done, and the app lags it.** `W-3.1` closed
-**TD-18**, **TD-21** and **TD-22**, taking `docs/03-architecture.md` from 8 subsections and
-300 lines to **13 and 902**, running requirements → HLD → LLD. The round was scoped doc-only
-by decision (**D-46**), so `web/src/features/architecture/` still mirrors the eight-subsection
-doc. That divergence is **TD-23** and `W-3.2` closes it.
+**Stage 03's doc and its port are now level, and unmerged.** `W-3.1` closed **TD-18**,
+**TD-21** and **TD-22**, taking `docs/03-architecture.md` to **14 subsections and 1,346
+lines**, running requirements → HLD → LLD. `W-3.2` then ported it: `web/features/architecture/`
+holds **22 steps** against those 14 subsections, which is what closes TD-23's content half.
 
-**W-3.1b's doc half is done** (`1db6344`…`3cd19c4`). Its content, plus the whole doc, now lives
-on `feat/stage-03-app-port` — the doc branch was merged **into** the port rather than into
-`main` (**D-51**), so the port has one stable target and the new material gets ported once.
+**W-3.1b's doc half is done** (`1db6344`…`3cd19c4`). Its content, plus the whole doc, lives on
+`feat/stage-03-app-port` — the doc branch was merged **into** the port rather than into `main`
+(**D-51**), so the port has one stable target and the new material gets ported once.
 **Nothing is merged to `main`.** Coverage is tracked continuously in `docs/stage-03-status.md`;
-at the last check that read 5 sections fully ported, 8 partial, 1 not ported.
+that now reads all 14 sections ported.
 
 **How it was raised.** An architecture-completeness audit against standard
 practice found five clusters of widely-taught material missing from all eighteen docs
@@ -26,9 +25,10 @@ practice found five clusters of widely-taught material missing from all eighteen
 statelessness and scaling, and fitness functions. Scope call is **D-49** — completeness beats
 length for this stage, standard practice only.
 
-**`W-3.2` is in flight, not queued.** The app port is being built on
-`feat/stage-03-app-port` — 31 commits, spec plus a 24-task plan, a nine-step stage, +9,446
-lines — so it lands first and `W-3.1b` follows it.
+**`W-3.2` is done and awaiting merge.** The port sits on `feat/stage-03-app-port`, a
+twenty-two-step stage, and its whole-branch review has run — seven blocking findings, all
+fixed. Commit counts and test counts belong in the W-3.2 row below, where they are re-derived
+against the tree rather than restated here.
 
 **Merged.** `feat/stage-03-architecture` landed on `main` as `249bd9d` (`--no-ff`, 47 commits,
 branch deleted) after a whole-branch review that returned *Ready with fixes* — six blocking
@@ -37,8 +37,8 @@ ticked for work deliberately deferred. **Pushed** — `origin/main` is at `249bd
 long-standing local-only backlog is cleared and CI has a real branch to run against.
 
 Quality gates remain live: prettier (skipping markdown, see the build note below), eslint at
-`--max-warnings 0`, **205 vitest tests across 18 files**, a **10-test audit suite sweeping 20
-URLs** (stage 03's six step hashes added by hand — TD-12), lefthook, and CI. Everything
+`--max-warnings 0`, **286 vitest tests across 24 files**, a **14-test audit suite sweeping 36
+URLs** (stage 03's twenty-two step hashes added by hand — TD-12), lefthook, and CI. Everything
 since `82a980b` was local until 2026-07-29, when `main` was pushed and CI ran green on the
 stage 03 merge (`30426083363`). `main` and `origin/main` are in sync at `249bd9d`; the user
 handles pushes.
@@ -65,7 +65,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
-| 2026-07-31 | W-3.2 | Stage 03's **app port**, closing TD-23's content gap and TD-25's app half. `web/src/features/architecture/` went from the **ten** steps `W-3.1` left it at (that round was doc-only, D-46) to **22**, mirroring all 14 doc subsections across **24** numbered figures. Ships **D-52** in place of D-38 (struck through, not edited): a step holds one judgment and its panel stays under four screens at 1024×768, enforced by `web/e2e/audit.spec.ts` rather than recorded, with `PANEL_EXCEPTIONS` back down to its two permanent baselines (`01#record` 6.7, `02#horizon` 5.6) | 78 commits, `c1a03b4`…`d840cd1`. **279/279** vitest across **24** files; **13/13** playwright audit over **36** URLs, including the new panel-weight test — no panel over threshold. Lint, typecheck and `format:check` clean. Four per-task reviewer subagents (tasks 5–9 and 11) returned **fourteen blocking findings**, all verified real, including two factual errors about Postgres in teaching material — a `FOR UPDATE` described doing what `SKIP LOCKED` does, and an overclaim that transaction-mode pooling breaks a transactional lock — fixed in `4bc60aa`, `79b88b7` and `687a042`. The fourth review (task 11) caught a third: a trace row that named a timeout "graceful degradation", contradicting the definition the stage's own resilience step gives — fixed in `dcfe1ae` and `d840cd1` | **The whole-branch review has not run** — 78 commits once this record lands, never reviewed as a whole, at a per-task defect rate that did not fall off (the last task reviewed produced five). Also open, surfaced but not fixed this round: a `RevealList` component to de-duplicate five accordions sharing one markup, and the step rail's own fit past ~12 entries at 1440px |
+| 2026-08-03 | W-3.2 | Stage 03's **app port**, closing TD-23's content gap and TD-25's app half. `web/src/features/architecture/` went from the **six** steps `W-3` shipped — `W-3.1` was doc-only (D-46) and left the app untouched — to **22**, mirroring all 14 doc subsections across **24** numbered figures. Ships **D-52** in place of D-38 (struck through, not edited): a step holds one judgment and its panel stays under four screens at 1024×768, enforced by `web/e2e/audit.spec.ts` rather than recorded, with `PANEL_EXCEPTIONS` back down to its two permanent baselines (`01#record` 6.7, `02#horizon` 5.6) | **88 commits** counted against the tree as this record landed, `c1a03b4`…HEAD. **286/286** vitest across **24** files; **14/14** playwright audit over **36** URLs, including the panel-weight test — no panel over threshold. Lint, typecheck and `format:check` clean. Four per-task reviewer subagents (tasks 5–9 and 11) returned **fourteen blocking findings**, all verified real, including two factual errors about Postgres in teaching material — a `FOR UPDATE` described doing what `SKIP LOCKED` does (`4bc60aa`), and an overclaim that transaction-mode pooling breaks a transactional lock (`687a042`). Task 11's review caught a third: a trace row that named a timeout "graceful degradation", contradicting the definition the stage's own resilience step gives (`dcfe1ae`). The **whole-branch review then produced seven blocking findings of its own**, so the defect rate did not fall off: the last task reviewed produced three and the whole-branch pass produced seven. Its headline was that the branch's own verification claim was hollow — the contrast and touch-target gates walked the step rail instead of the panel and opened five expandables across 36 pages, so every page was checked on its stage's last step with nothing revealed (`e058333`; corrected, 108 expandables and 867 colour pairs against 717, zero failures in either theme) | Sixteen minors from the whole-branch review, deferred with the reviewer's provenance rather than fixed. Also open, surfaced but not fixed this round: a `RevealList` component to de-duplicate five accordions sharing one markup, and the step rail's own fit past ~12 entries at 1440px |
 | 2026-07-21 | P-0 | README index, `reference/stack.md`, `reference/glossary.md` | 17 terms; versions checked against `npm view` that day | Search; per-stage frontmatter |
 | 2026-07-21 | P-1 | Stages 04, 11, 12, 13, 14 | Template held under real config content — the reason this group went first | — |
 | 2026-07-21 | P-2 | Stages 05, 06, 07, 09, 10 | — | — |
@@ -279,8 +279,8 @@ rename there is a wide diff for no behaviour change), so `DESIGN.md` should adop
 `web/e2e/audit.spec.ts` hard-codes each step hash to sweep (`#done`, `#cut`, …). Every new
 `ready` stage must add its hashes by hand, and nothing fails if they drift from the stages
 actually live — a stage could ship unaudited and the suite would still pass green. First
-flagged as a W-4 minor; stage 02 added six hashes by hand, and **stage 03 added six more by
-hand** (20 URLs now). Raised to Medium because it has now cost a manual step in every stage
+flagged as a W-4 minor; stage 02 added six hashes by hand, and **stage 03 added thirteen more
+by hand** as its reshape ran, taking its own entries from nine to twenty-two (36 URLs now). Raised to Medium because it has now cost a manual step in every stage
 build, and `KICKOFF.md` asserted the opposite — that the suite "sweeps every ready stage's
 step hashes" — which is exactly the kind of trusted-but-false claim that lets a stage ship
 unaudited. That line is corrected.
@@ -737,17 +737,18 @@ Opened deliberately by W-3.1 on 2026-07-29, which was scoped doc-only. This is a
 round chose, not one it discovered, and it is recorded so the choice is visible rather than
 silent — `CLAUDE.md` permits the doc/app duplication but not widening it unnoted.
 
-`docs/03-architecture.md` is fourteen subsections and ~1,344 lines. Live coverage:
+`docs/03-architecture.md` is fourteen subsections and 1,346 lines. Live coverage:
 `docs/stage-03-status.md`.
 
-**Status 2026-07-31, content done, review outstanding.** `web/src/features/architecture/` is **22 steps**,
-up from the six built in W-3 and the ten it carried when this round opened. All five clusters
-are ported — resilience, consistency and concurrency, safe schema evolution, statelessness and
-scaling, and (closing in `9798286`) fitness functions with the widened ten-row trace and the
-event-sourcing / CQRS definitions — plus the AI section's two missing plays and sixth mislead,
-and section 9, which had no app step at all. `docs/stage-03-status.md` now shows no partial or
-unported rows. **This entry stays open regardless**, because the whole-branch review has not
-run, and that is the second half of its own closing condition.
+**Status 2026-08-03, content done and the review run.** `web/src/features/architecture/` is
+**22 steps**, up from the six built in W-3 and the nine it carried when this round opened. All
+five clusters are ported — resilience, consistency and concurrency, safe schema evolution,
+statelessness and scaling, and (closing in `9798286`) fitness functions with the widened
+ten-row trace and the event-sourcing / CQRS definitions — plus the AI section's two missing
+plays and sixth mislead, and section 9, which had no app step at all. `docs/stage-03-status.md`
+now shows no partial or unported rows, and the whole-branch review has run and its blocking
+findings are fixed. **What this entry now waits on is the merge**, which is what makes the two
+halves agree on `main` rather than on a branch.
 
 **Why the round took the debt rather than avoiding it.** Stage 03's app already sat at D-38's
 ceiling of five content steps plus the AI step, and the round added five sections. The port
@@ -755,7 +756,8 @@ therefore needs a step structure that did not exist until the prose settled, and
 against a moving target means doing it twice. The reasoning is in the spec's Non-goals.
 
 **It is not only additions.** `scoring.ts` holds the DDL annotations, the interrogation set
-and the reversibility lists, and all three changed: a fifth interrogation question, indexes
+and the reversibility lists, and all three changed: the actor-rights interrogation question —
+recorded here as "a fifth" and now the sixth, since W-3.1b inserted one before it — indexes
 and a partial unique index in the DDL, and the reversibility test promoted out of the AI
 section. A port that only adds components would leave the app stating things the doc has
 corrected.
@@ -983,20 +985,23 @@ spec, which is the same failure mode one level up.
 
 ## Next up
 
-**Recommendation: finish W-3.2's whole-branch review before anything else.**
+**Recommendation: merge W-3.2, then decide between W-5 and TD-17.**
 
-The reasoning, rather than the assertion. All twelve tasks of the D-52 round are done — the
-reshape, and now the last content cluster (fitness functions, the widened trace, event
-sourcing and CQRS, `9798286`). There is no port left to finish first; reviewing now is not
-jumping ahead of anything.
+The reasoning, rather than the assertion. All twelve tasks of the D-52 round are done, and so
+is the whole-branch review the round was pointed at. Nothing is left to build on this branch.
 
-**The port half has never been reviewed as a whole.** It is 78 commits once this record lands.
-The four per-task reviews that have run found fourteen blocking defects between them, at a rate
-that did not fall off across tasks — the last task reviewed produced five. Two of those were
-wrong claims about Postgres in teaching material, which is the class this project exists to
-not ship. A per-task review sees one diff; nothing but a whole-branch pass catches a task whose
-output undermines another's, and this round has already produced one of those (a pooler caveat
-in `shape` contradicting the locking answer in `races`, four steps apart).
+**The whole-branch review earned its place, again.** Four per-task reviews found fourteen
+blocking defects; the whole-branch pass then found seven more, so the rate did not fall off —
+the last task reviewed produced three and the branch pass produced seven. A per-task review
+sees one diff; only a whole-branch pass catches a task whose output undermines another's, and
+this round produced two of those: a pooler caveat in `shape` contradicting the locking answer
+in `races` four steps apart, and a doc paragraph still carrying the error its own port had
+been corrected for.
+
+**The finding worth carrying past this stage** is that a verification gate can be green and
+measuring almost nothing. The contrast sweep clicked `button[aria-controls]`, which `Stepper`
+puts on all 22 rail tabs; the loop walked the rail, unmounted the panel, and opened five
+expandables across 36 pages while reporting a clean sweep of both themes.
 
 **Then stage 04.** Not before: stage 03 is the reference implementation everything after it
 copies, and it is currently a stage whose doc and app agree in most places and whose agreement
@@ -1025,8 +1030,8 @@ Two things worth deciding at the same time, both surfaced by this round rather t
   because there is nowhere else to put it.
 - **`TD-16`** (placeholder contrast) — a real AA failure on instructional text, plus the audit
   blind spot that hid it. Fix both halves together.
-- **`TD-12`** (audit `PAGES` hand-maintained) — **twelve hashes added by hand this round**, one
-  per new step. A dead hash fails; a missing one still audits nothing, which is the half that
+- **`TD-12`** (audit `PAGES` hand-maintained) — **thirteen hashes added by hand this round**,
+  one per new step. A dead hash fails; a missing one still audits nothing, which is the half that
   matters now that adding steps is routine.
 - **`P-6`** — the remaining conventions to fold into the stage docs.
 
@@ -1038,8 +1043,8 @@ Carry into whichever round is next:
   stage whose doc lacks the `### AI in <stage>` heading. Stage 03's doc did not have one.
 - **`PATTERNS.md` gained "annotated artifact"** (D-41) — reach for it for config files,
   workflow YAML and migrations, not just schemas.
-- **A step name in prose is a citation.** Five stale ones shipped on this branch, each found by
-  grep and none by a test: `steps.ts` makes a nonexistent id a compile error and can say
+- **A step name in prose is a citation.** Seven stale ones shipped on this branch, by the
+  round ledger's own count, each found by grep and none by a test: `steps.ts` makes a nonexistent id a compile error and can say
   nothing about a name written in a sentence. Grep for step names whenever a step splits.
 - **Count the doc, do not trust the brief.** Two ports this round were specified against counts
   that were wrong by the time they were read. Where the count is checkable, check it in a test

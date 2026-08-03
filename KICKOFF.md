@@ -25,13 +25,13 @@ Before doing anything, read these for context:
 - `README.md` — the playbook's own index and its central claim
 - `web/AGENTS.md` — this Next.js version postdates your training data; read
   `node_modules/next/dist/docs/` before writing framework code
-- `docs/learnings/README.md` — five guides written after rounds that cost real time. Two are
+- `docs/learnings/README.md` — six guides written after rounds that cost real time. Two are
   directly relevant to W-3.2: `decisions-need-tests-101.md` — this round *did* supersede D-38,
   and that guide is about what makes a recorded decision actually hold, which D-38 did not — and
   `stage-implementation-101.md` (the layout traps and verification checklist for building a
   stage)
 
-### Project state (as of 2026-07-31, after all twelve tasks of the D-52 round; whole-branch review outstanding)
+### Project state (as of 2026-08-03, after the D-52 round's twelve tasks, the whole-branch review, and its fix wave)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -60,7 +60,8 @@ Before doing anything, read these for context:
   pass; the first report is not the end of the round (D-48).
 - **A per-task reviewer subagent is now the standard** (see `docs/tracker.md`, "Process
   observations"). Four have run on this round and found **fourteen blocking defects**, including
-  two factual errors about Postgres in teaching material. **The same session cannot self-review**
+  two factual errors about Postgres in teaching material; the whole-branch review then found
+  **seven more**, so the rate did not fall off. **The same session cannot self-review**
   — the reading that produced the claim produces the check. Implement inline, dispatch reviewers.
 - **Every stage carries an "AI plays" section** (D-35), in both doc and app.
   `stage-metadata.test.ts` **fails any stage whose doc lacks the `### AI in <stage>` heading**.
@@ -70,23 +71,22 @@ Before doing anything, read these for context:
   `glossary.md`.
 - **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **279 vitest tests across 24 files**, a **13-test playwright
+  eslint at `--max-warnings 0`, **286 vitest tests across 24 files**, a **14-test playwright
   audit suite over 36 URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
   public (D-26).
 - **`PAGES` in `web/e2e/audit.spec.ts` is still hand-written** (**TD-12**), so adding a step
-  means editing that array by hand — twelve times this round. A dead hash now fails; a missing
+  means editing that array by hand — thirteen times this round. A dead hash now fails; a missing
   one still audits nothing, which is the half that matters now.
 - **Not deployed** (`W-5` open).
 - **Branch/push:** work happens on `feat/`|`fix/`|`docs/<date>-` branches, merged to `main`
   with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes.**
   `main` and `origin/main` are in sync at **`eeb16f1`**. **Everything since is unmerged on
-  `feat/stage-03-app-port`, which is 78 commits ahead.**
+  `feat/stage-03-app-port`, which is 88 commits ahead.**
 
 ### This round's scope
 
-**The D-52 round's twelve tasks are done**, on `feat/stage-03-app-port`. What is left is not
-another task — it is the whole-branch review, which the plan always named as the point of the
-round rather than a formality after it.
+**The D-52 round's twelve tasks are done and so is the whole-branch review**, on
+`feat/stage-03-app-port`. What is left is the merge decision, not another task.
 
 **Read these two first, in this order:**
 
@@ -97,11 +97,14 @@ round rather than a formality after it.
    done.** Its spec is `docs/superpowers/specs/2026-07-31-step-panel-weight-design.md`, and the
    plan's own Verification section is the checklist for what comes next.
 
-**What is left.** The whole-branch review, doc and app together — 78 commits, never done for
-the port half. Four per-task reviews found fourteen blocking defects and the rate did not fall
-off — the last task reviewed produced five. Two of those eleven were factual errors about
-Postgres in teaching material, which is the class of mistake a per-task review catches and a
-casual read does not.
+**What is left.** The merge — 88 commits, doc and app as one unit (D-51). The whole-branch
+review has run and returned **seven blocking findings**, plus two minors promoted for being
+reader-visible and introduced by this branch, and sixteen deferred to the tracker. All nine are
+fixed. Four per-task reviews had found **fourteen** before it, and the rate did not fall off:
+the last task reviewed, Task 11, produced three, and the branch pass then produced seven. Two of
+those fourteen were factual errors about Postgres in teaching material, which is the class of
+mistake a per-task review catches and a casual read does not — and the branch pass caught the
+class above that, a green verification gate measuring almost nothing.
 
 **Five things this round has taught, all of which cost time to learn:**
 
@@ -112,13 +115,14 @@ casual read does not.
   measurement, not the edit** — re-cut and re-measure rather than assuming the seam is right.
 - **A panel that measures 4.0 against a limit of 4.0 has not passed.** It passes today and
   fails on the next font change. Cut again.
-- **A step name in prose is a citation and it stales silently.** Five shipped on this branch,
+- **A step name in prose is a citation and it stales silently.** Seven shipped on this branch,
   each found by grep and none by a test: `steps.ts` makes a nonexistent *id* a compile error and
   can say nothing about a name written in a sentence. Grep for step names whenever a step
   splits, and re-point `TRACE_ROWS[].stepId` — that one finally fired for real in Task 9.
-- **A test name is a claim, and it goes stale like one.** Four times a test's name promised more
-  than its assertion; twice the offending test had been cited in a commit body as the fix.
-  Verify by running the regex against a counter-example, not by reading it.
+- **A test name is a claim, and it goes stale like one.** Four times during the round, and four
+  more found by the whole-branch review; twice the offending test had been cited in a commit
+  body as the fix. Verify by running the regex against a counter-example, not by reading it —
+  the four the review found were each run against one before being rewritten.
 - **Count the doc; do not trust the brief.** Where a count is checkable, check it in a test
   against the doc itself — `evolve.test.ts` and `ai-plays.test.ts` both do now.
 

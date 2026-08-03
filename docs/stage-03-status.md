@@ -4,11 +4,12 @@
 exists because this stage has now diverged from its own port twice, and both times the
 divergence was discovered rather than tracked.
 
-**Last verified:** 2026-07-31, on `feat/stage-03-app-port` at `9798286`, all twelve tasks of
-the D-52 round done — the whole-branch review is still outstanding.
+**Last verified:** 2026-08-03, on `feat/stage-03-app-port` at `e058333` — all twelve tasks of
+the D-52 round done, the whole-branch review run, and its seven blocking findings plus two
+promoted minors fixed.
 
-**Current state:** doc **14 sections / 1344 lines**. App **22 steps**. Glossary **73 terms**.
-279 tests across 24 files, and a 13-test audit suite over 36 URLs. Lint and typecheck clean.
+**Current state:** doc **14 sections / 1346 lines**. App **22 steps**. Glossary **73 terms**.
+286 tests across 24 files, and a 14-test audit suite over 36 URLs. Lint and typecheck clean.
 Every DDL block in the doc executed against PostgreSQL 17.
 
 **The reshape is done.** D-52 replaced D-38's step-count ceiling with a panel-weight rule, and
@@ -106,20 +107,29 @@ plan.
       two steps renamed away in W-3, so those URLs fell back to step one and were audited twice
       while five real steps had never been audited at all — with the suite green. A new
       assertion holds every listed hash to resolving to the step it names, teeth-checked by
-      putting `#decide` back. Eleven further hashes were added by hand as the reshape ran.
+      putting `#decide` back. **Thirteen further hashes were added by hand** as the reshape ran
+      — the stage-03 entries went from nine to twenty-two.
       **TD-12 stays open**: the list is still hand-written, and forgetting to add a step still
       audits nothing. What closed is the half that lied.
-- [x] **Re-run the audit suite.** ✓ Runs on every task. 13 tests over 36 URLs: overflow
+- [x] **Re-run the audit suite.** ✓ Runs on every task. **14 tests over 36 URLs**: overflow
       320–2560, touch targets, WCAG AA in both themes, zero console errors, the panel-weight
-      rule, hash resolution, and two guess-then-reveal contracts. It caught a real defect this
-      round — SQL blocks in a grid could not scroll, because a grid child defaults to
-      `min-width: auto`, so the page scrolled sideways 204px at 320px.
-- [ ] **Whole-branch review, covering doc and app together.** Still the load-bearing one, and
-      now the only thing left. The port half has never had it — **78 commits** once this record
-      lands. Four per-task reviews have run and found **fourteen blocking defects** between them,
-      at a rate that did not fall off: the last task reviewed produced five. Two were factual
-      errors about Postgres that read plausibly and that no test could have caught until the
-      tests were rewritten.
+      rule, hash resolution, two guess-then-reveal contracts, and the authz Reset check the fix
+      wave added. It caught a real defect this round — SQL blocks in a grid could not scroll,
+      because a grid child defaults to `min-width: auto`, so the page scrolled sideways 204px at
+      320px. **The fix wave also found that two of these checks were measuring almost nothing:**
+      the expandable sweep walked the rail tabs instead of the panel, so across all 36 entries it
+      opened five expandables and every page was contrast-checked on its stage's last step with
+      nothing revealed. Corrected, it opens 108 and collects 867 distinct colour pairs against
+      717 — with zero failures in either theme.
+- [x] **Whole-branch review, covering doc and app together.** ✓ 2026-08-03. It was the
+      load-bearing one and it earned the name: **seven blocking findings**, two minors promoted
+      because they were reader-visible and introduced by this branch, and sixteen minors deferred
+      to the tracker. The headline was that the branch's own verification claim was hollow — the
+      contrast gate opened five expandables across 36 pages. Four per-task reviews had run before
+      it and found **fourteen blocking defects** between them, at a rate that did not fall off:
+      the last task reviewed, Task 11, produced three, and the whole-branch review then produced
+      seven. Two of the fourteen were factual errors about Postgres that read plausibly and that
+      no test could have caught until the tests were rewritten.
 
 ### Known gaps in the doc, recorded not fixed
 
@@ -198,4 +208,5 @@ Not gaps — boundaries doing their job. Do not "fix" these here.
 | Per-task review, D-52 tasks 5–6 | 3 blocking: a `FOR UPDATE` described doing what `SKIP LOCKED` does; an overclaim against SERIALIZABLE enshrined in a test name; a card asserting a thing and its negation |
 | Per-task review, D-52 tasks 7–8 | 3 blocking: the retracted overclaim surviving in the step hint; the *destructive*-migration rule applied to an additive step; six checkboxes sharing one accessible name |
 | Per-task review, D-52 task 9 | 5 blocking: a false claim that transaction-mode pooling breaks a transactional lock, which the stage's own locking step contradicts; a stale step pointer; two tests passing on strings asserting the opposite of their names; a missing summary line; a stale hint |
-| Whole-branch review, combined branch | **Not yet run. Required before merge.** |
+| Per-task review, D-52 task 11 | 3 blocking, 4 minor: a trace row naming a timeout "graceful degradation" against the definition the stage's own resilience step gives; a constant exported, tested and rendered nowhere while the prose beside it was hand-copied twice; a CQRS test asserting three words the topic cannot avoid |
+| Whole-branch review, combined branch | **Ready with fixes** — 7 blocking, 18 minor. The contrast and touch-target gates opened five expandables across 36 pages, so the branch's headline verification claim was measuring the collapsed shell; three of the doc's twelve traps were never ported; the doc's pooler caveat still carried the error its port had already fixed; four more tests could not fail for the reason their names gave. Seven fixed plus two promoted minors; sixteen minors deferred |
