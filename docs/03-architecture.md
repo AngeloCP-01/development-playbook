@@ -700,6 +700,23 @@ The cost of `deleted_at` is the one already named: **every query must remember t
 That is a real tax, paid on every read forever, and it is why the decision is per entity rather
 than a habit.
 
+**There are three mechanics, and the DDL above shows one.** A nullable `deleted_at` timestamp
+is the default: it records *when*, which is what auditability actually asked for, and it stays
+out of the way of every other column. A **status enum** with a `deleted` member is the common
+alternative and usually the wrong one — it conflates a lifecycle the row already has (draft,
+sent, paid) with whether the row exists at all, so the row can only be one thing at a time and
+"deleted, and previously paid" stops being expressible. An **archive table** earns its place
+when volume is the problem rather than history: moving old rows out keeps the live table small,
+and it costs you every query that wants both.
+
+**Then the half that bites, which is not the column.** A filter that every query has to
+remember is one that some query will forget — usually a report, months later, quietly counting
+rows nobody deleted on purpose. Discipline is not the mechanism. Put the filter somewhere
+structural: a view the application reads instead of the table, or a single accessor every query
+goes through. Which of those, and where it lives, is
+[05 — Development](05-development.md)'s; that the filter cannot be optional is this stage's,
+because it follows from the column you just added.
+
 **Auditability wants one more thing, and it is the other half of that trace row.** A status of
 `sent` records that an invoice was sent; it does not record *when*, *to which address*, or that
 it was sent twice. Those are facts about moments, which the interrogation above says to store —

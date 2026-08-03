@@ -45,6 +45,7 @@ import { ExpandContract } from './ExpandContract'
 import { EvolutionNotes } from './EvolutionNotes'
 import { BACKFILL_SQL, PRE_LAUNCH_EXEMPTION } from './evolve'
 import { DeleteBehaviour } from './DeleteBehaviour'
+import { SoftDelete } from './SoftDelete'
 import { ContractCost } from './ContractCost'
 import { RouteShape } from './RouteShape'
 import { AuthPaths } from './AuthPaths'
@@ -963,6 +964,17 @@ const STEPS: (Step & { id: StepId })[] = [
           >
             <DeleteBehaviour />
           </Figure>
+          <Prose>
+            <p>
+              Soft delete is the same decision seen from the other side, and it
+              has three mechanics rather than one. The column is the easy part;
+              what it costs you is a filter on every read forever, and a filter
+              everyone has to remember is one somebody forgets.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <SoftDelete />
+          </div>
         </Section>
       </div>
     ),
