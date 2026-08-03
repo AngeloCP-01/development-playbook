@@ -353,11 +353,13 @@ encounter: the application is fine, the database is fine, and the join between t
 
 The fix is a **pooler** between the two, holding a small number of real connections and
 multiplexing everyone onto them. Managed Postgres providers ship one, and reaching for it is usually a
-connection-string change rather than an architecture change. One caveat, because this stage
-teaches `SELECT … FOR UPDATE` further down: a pooler in *transaction* mode hands your
-connection to someone else between statements, which breaks anything relying on session state —
-prepared statements, session variables, advisory locks. Most clients have a flag for it. Read
-your provider's note on the mode before assuming it is invisible.
+connection-string change rather than an architecture change. One caveat, because the pooler is
+the thing you will reach for first and the mode is a setting nobody reads: a pooler in
+*transaction* mode hands your connection to someone else between transactions, which breaks
+anything relying on session state — prepared statements, session variables, advisory locks.
+What you take inside a transaction is safe, including the `SELECT … FOR UPDATE` this stage
+teaches further down; what you expected to outlive one is not. Most clients have a flag for it.
+Read your provider's note on the mode before assuming it is invisible.
 
 This does not weaken the recommendation. One application and one database is still right. It is
 the difference between a default that works and a default you understand — and this is the part

@@ -96,3 +96,32 @@ test('the app renders every trap the doc names, in the doc’s order, since a tr
 
   expect(inApp.map(anglicise)).toEqual(inDoc.map(anglicise))
 })
+
+// I3: 687a042 corrected this claim in the app and added a test forbidding the
+// old one (`styles.test.ts`, the pooling catch). The doc half was never
+// corrected, which left the source of truth less accurate than its port. This
+// is the doc-side twin of that assertion.
+//
+// The fact: in transaction-mode pooling the server connection is held for the
+// whole transaction and returned at commit, so a row lock taken inside
+// BEGIN…COMMIT is safe. Handing the connection over BETWEEN STATEMENTS is
+// statement pooling, a different mode. What transaction pooling costs you is
+// session-scoped state.
+test('the doc’s pooler caveat describes transaction pooling rather than statement pooling, and does not blame it for the lock the stage teaches later', () => {
+  const md = readFileSync(DOC, 'utf8')
+  const start = md.indexOf('The fix is a **pooler**')
+  expect(start, 'the pooler paragraph moved or was reworded').not.toBe(-1)
+  const para = md.slice(start, md.indexOf('\n\n', start))
+
+  expect(
+    para,
+    'the connection is returned at commit, not between statements',
+  ).not.toMatch(/between statements/i)
+  expect(para, 'what transaction mode costs is session state').toMatch(
+    /session state/i,
+  )
+  expect(
+    para,
+    'SELECT … FOR UPDATE inside a transaction survives transaction pooling',
+  ).not.toMatch(/breaks[^.]*for update|for update[^.]*breaks/i)
+})
