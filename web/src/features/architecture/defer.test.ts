@@ -31,10 +31,13 @@ test('the existing deferral list survived the extraction intact, since this move
   }
 })
 
-// The doc lists CQRS as one of the things that passes the deferral test, and
-// the port had six of its seven. It is not a separate "named but not taught"
-// set — it is a row in the same list, deferred for a reason of its own.
-test('all seven of the doc’s deferrals are carried, since a list missing one teaches a test the reader cannot apply to it', () => {
+// The doc lists six things that pass the deferral test, then one that fails it
+// — multi-tenancy, which the last test in this file pins. Seven rows, six
+// deferrals. CQRS was the one the port was missing, and it is a row in the same
+// list rather than a separate "named but not taught" set, because that is what
+// the doc makes it: an item that passes the test, deferred for a reason of its
+// own.
+test('all seven of the doc’s rows are carried, since a list missing one teaches a test the reader cannot apply to it', () => {
   const ids = DEFERRED_ITEMS.map((i) => i.id)
   expect(ids).toContain('event-sourcing')
   expect(ids).toContain('cqrs')
@@ -53,9 +56,27 @@ test('event sourcing carries the boundary, because an audit table alongside norm
   ).toMatch(/audit table|history of who approved/i)
 })
 
+// `/separate|read|write/i` could not fail: "Event sourcing: storing every
+// change as the source of truth, read back by replay." passes it on the word
+// "read", and those are three of the commonest words in the topic. What
+// distinguishes CQRS is two models, one per direction — so assert that, and
+// assert that the definition is not event sourcing's. The relation between them
+// is real and belongs in `notYet`, which is what the second half checks.
 test('the CQRS entry does not fold event sourcing into itself, which is the conflation the doc separates', () => {
   const cqrs = DEFERRED_ITEMS.find((i) => i.id === 'cqrs')
-  expect(cqrs?.problem).toMatch(/separate|read|write/i)
+  const problem = cqrs?.problem ?? ''
+
+  expect(
+    problem.match(/\bmodels?\b/gi) ?? [],
+    'two models is the idea; one model is not CQRS',
+  ).toHaveLength(2)
+  expect(problem, 'the model you write through').toMatch(/\bwrit(e|ing)\b/i)
+  expect(problem, 'the model you read through').toMatch(/\bread(ing)?\b/i)
+  expect(
+    problem,
+    'the definition of CQRS is not the definition of event sourcing',
+  ).not.toMatch(/event.sourc/i)
+
   expect(
     cqrs?.notYet,
     'it travels with event sourcing rather than being it',

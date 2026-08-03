@@ -4,10 +4,11 @@
  * Extracted from `DeferredList.tsx` so the set can be checked without a
  * component harness, matching `scoring.ts`, `styles.ts` and `ai-plays.ts`.
  *
- * Seven entries, which is the doc's list. The port had six: CQRS was the one
- * missing, and it is a row here rather than a separate "named but not taught"
- * set, because that is what the doc makes it — an item that passes the deferral
- * test, deferred for a reason of its own.
+ * Seven entries, which is the doc's list: six that pass the deferral test and
+ * one that fails it. The port had six of the seven — CQRS was missing, and it
+ * is a row here rather than a separate "named but not taught" set, because that
+ * is what the doc makes it: an item that passes the test, deferred for a reason
+ * of its own.
  *
  * The closing claim — "each of these solves a real problem, none of them solves
  * a problem you have yet" — stays as the list's footer prose rather than
