@@ -413,6 +413,6 @@ export const BOUNDARY_EDGES: BoundaryEdge[] = [
     to: 'billing',
     call: 'db.update(invoices).set({ status: “paid” }).where(...)',
     legal: false,
-    why: 'The same violation as the read below it, and the one people forget, because a boundary tends to get policed on the way in and not on the way out. Writing another module’s table means billing’s invariants — what a valid status transition is, what else has to change with it — now live in two places, and only one of them is the module that owns them. Approving a shift swap has the same shape: it changes rows the approval flow does not own, so it goes through the owning feature’s function or the boundary exists only in the folder names.',
+    why: 'The same violation as the read above it, and the one people forget, because a boundary tends to get policed on the way in and not on the way out. Writing another module’s table means billing’s invariants — what a valid status transition is, what else has to change with it — now live in two places, and only one of them is the module that owns them. Approving a shift swap has the same shape: it changes rows the approval flow does not own, so it goes through the owning feature’s function or the boundary exists only in the folder names.',
   },
 ]

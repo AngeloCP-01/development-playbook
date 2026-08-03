@@ -505,7 +505,7 @@ const STEPS: (Step & { id: StepId })[] = [
           </Prose>
           <Figure
             n={7}
-            caption="Three calls between three modules, where only the shape of the call decides whether it is allowed. Reaching straight into another module&rsquo;s table works, is shorter, and is the move that turns a monolith into a ball of mud."
+            caption="Four calls between three modules, where only the shape of the call decides whether it is allowed. Reaching straight into another module&rsquo;s table works, is shorter, and is the move that turns a monolith into a ball of mud &mdash; on the way out as much as on the way in."
           >
             <BoundaryMap />
           </Figure>

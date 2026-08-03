@@ -11,13 +11,13 @@ import { BOUNDARY_EDGES, BOUNDARY_MODULES, type BoundaryEdge } from './scoring'
  * click-node-plus-detail-panel shape; `SchemaInspector` (this stage) for
  * using a click-select with no wrong answer rather than a scored radiogroup.
  *
- * Ships as a labelled list of the three calls, not an arrow diagram. Three
+ * Ships as a labelled list of the four calls, not an arrow diagram. Four
  * edges between three boxes is thin enough content that a diagram earns its
  * complexity, and at 320px an arrow's direction is the first thing to
  * become illegible — exactly the property this component cannot let a
- * reader guess at, since the one rule here is which of three calls is not
- * allowed. A list reflows for free and keeps every edge's legality as text
- * that survives any width.
+ * reader guess at, since the rule here is which two of the four calls are
+ * not allowed. A list reflows for free and keeps every edge's legality as
+ * text that survives any width.
  *
  * Legality is carried three ways, deliberately redundant: the row's border
  * colour, a visible "Allowed" / "Not allowed" badge, and the button's

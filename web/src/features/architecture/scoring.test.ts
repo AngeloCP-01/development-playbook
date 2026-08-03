@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
 import {
   BOUNDARY_EDGES,
@@ -11,6 +13,9 @@ import {
   SPLIT_CANDIDATES,
   scoreSplit,
 } from './scoring'
+
+const source = (file: string) =>
+  readFileSync(fileURLToPath(new URL(file, import.meta.url)), 'utf8')
 
 test('the table carries six decisions, matching the exercise the stage describes', () => {
   expect(DECISIONS).toHaveLength(6)
@@ -351,4 +356,47 @@ test('every edge names modules the map actually draws, since an edge to nowhere 
     expect(BOUNDARY_MODULES, `${e.id} from`).toContain(e.from)
     expect(BOUNDARY_MODULES, `${e.id} to`).toContain(e.to)
   }
+})
+
+// The write edge was added after the figure was captioned, and the caption kept
+// saying three. A reader counting rows against the caption finds an extra one
+// and has to decide which to trust. This catches the next one the same way: any
+// prose in either file that puts a number in front of "calls" or "edges" has to
+// agree with the array the component maps over.
+const WORD_COUNT: Record<string, number> = {
+  one: 1,
+  two: 2,
+  three: 3,
+  four: 4,
+  five: 5,
+  six: 6,
+}
+
+test('no prose around the boundary map counts a number of calls the map does not render', () => {
+  for (const file of ['./Architecture.tsx', './BoundaryMap.tsx']) {
+    const text = source(file)
+    // `[\s*]+` so a count wrapped across a JSDoc line still matches.
+    for (const m of text.matchAll(
+      /\b(one|two|three|four|five|six)\b[\s*]+(calls|edges)\b/gi,
+    )) {
+      expect(WORD_COUNT[m[1].toLowerCase()], `${file}: “${m[0]}”`).toBe(
+        BOUNDARY_EDGES.length,
+      )
+    }
+  }
+})
+
+// `BoundaryMap` renders `BOUNDARY_EDGES` in array order, so "the read below it"
+// is a direction, not a phrase — and it points at empty space when the read is
+// listed first.
+test('the write edge points at the read in the direction the list actually renders it', () => {
+  const ids = BOUNDARY_EDGES.map((e) => e.id)
+  const write = BOUNDARY_EDGES.find((e) => e.id === 'clients-writes-invoices')
+  const readFirst =
+    ids.indexOf('clients-queries-invoices') <
+    ids.indexOf('clients-writes-invoices')
+
+  expect(write?.why).toMatch(
+    readFirst ? /the read above it/ : /the read below it/,
+  )
 })
