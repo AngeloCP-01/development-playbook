@@ -81,7 +81,7 @@ Before doing anything, read these for context:
 - **Branch/push:** work happens on `feat/`|`fix/`|`docs/<date>-` branches, merged to `main`
   with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes.**
   `main` and `origin/main` are in sync at **`eeb16f1`**. **Everything since is unmerged on
-  `feat/stage-03-app-port`, which is 88 commits ahead.**
+  `feat/stage-03-app-port`, which is 90 commits ahead.**
 
 ### This round's scope
 
@@ -97,7 +97,7 @@ Before doing anything, read these for context:
    done.** Its spec is `docs/superpowers/specs/2026-07-31-step-panel-weight-design.md`, and the
    plan's own Verification section is the checklist for what comes next.
 
-**What is left.** The merge — 88 commits, doc and app as one unit (D-51). The whole-branch
+**What is left.** The merge — 90 commits, doc and app as one unit (D-51). The whole-branch
 review has run and returned **seven blocking findings**, plus two minors promoted for being
 reader-visible and introduced by this branch, and sixteen deferred to the tracker. All nine are
 fixed. Four per-task reviews had found **fourteen** before it, and the rate did not fall off:

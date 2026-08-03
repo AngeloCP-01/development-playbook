@@ -4,9 +4,9 @@
 exists because this stage has now diverged from its own port twice, and both times the
 divergence was discovered rather than tracked.
 
-**Last verified:** 2026-08-03, on `feat/stage-03-app-port` at `e058333` — all twelve tasks of
-the D-52 round done, the whole-branch review run, and its seven blocking findings plus two
-promoted minors fixed.
+**Last verified:** 2026-08-03, on `feat/stage-03-app-port` at `2734fb4` — all twelve tasks of
+the D-52 round done, the whole-branch review run, its seven blocking findings plus two promoted
+minors fixed, and the scoped re-review clean at 0 open.
 
 **Current state:** doc **14 sections / 1346 lines**. App **22 steps**. Glossary **73 terms**.
 286 tests across 24 files, and a 14-test audit suite over 36 URLs. Lint and typecheck clean.
@@ -209,4 +209,5 @@ Not gaps — boundaries doing their job. Do not "fix" these here.
 | Per-task review, D-52 tasks 7–8 | 3 blocking: the retracted overclaim surviving in the step hint; the *destructive*-migration rule applied to an additive step; six checkboxes sharing one accessible name |
 | Per-task review, D-52 task 9 | 5 blocking: a false claim that transaction-mode pooling breaks a transactional lock, which the stage's own locking step contradicts; a stale step pointer; two tests passing on strings asserting the opposite of their names; a missing summary line; a stale hint |
 | Per-task review, D-52 task 11 | 3 blocking, 4 minor: a trace row naming a timeout "graceful degradation" against the definition the stage's own resilience step gives; a constant exported, tested and rendered nowhere while the prose beside it was hand-copied twice; a CQRS test asserting three words the topic cannot avoid |
+| Scoped re-review of the fix wave | **All nine addressed, 0 open — ready to merge.** Reproduced every measurement from an independent harness and teeth-checked with different injections than the fix used: a constructed thirteenth trap, a fifth boundary edge, a 1.2–1.5:1 colour on leaves reachable only inside an expanded disclosure, and each stale assertion's counter-example planted in the real data and run against the real test file. Raised one Important non-blocking finding of its own (the touch-target exemption widened to excuse one element and exempted 880), fixed in `2734fb4` |
 | Whole-branch review, combined branch | **Ready with fixes** — 7 blocking, 18 minor. The contrast and touch-target gates opened five expandables across 36 pages, so the branch's headline verification claim was measuring the collapsed shell; three of the doc's twelve traps were never ported; the doc's pooler caveat still carried the error its port had already fixed; four more tests could not fail for the reason their names gave. Seven fixed plus two promoted minors; sixteen minors deferred |

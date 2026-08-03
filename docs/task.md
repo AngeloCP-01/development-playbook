@@ -298,7 +298,7 @@ these clusters — so this round is what makes that section honest.
 09 (linked, not taught); observability with 15; threat modelling and secrets with 08; table
 partitioning and sharding are named as the thing you do not need and not taught.
 
-### W-3.2 — Port stage 03's doc round into the app ☑ *(content done, whole-branch review run and its findings fixed — `feat/stage-03-app-port`, 88 commits, unmerged)*
+### W-3.2 — Port stage 03's doc round into the app ☑ *(content done, whole-branch review run and its findings fixed — `feat/stage-03-app-port`, 90 commits, unmerged)*
 
 **Live coverage map: `docs/stage-03-status.md`.** Section by section, doc against app, with the
 remaining tasks. Read it before picking up this round — it is more current than this checklist,
@@ -393,7 +393,7 @@ pattern library on the hardest stage.
 | ~~1~~ ✓ | 02 Product Planning | **Done.** Complete + interactive + audience-validated (D-37: developer-complete; PM/SA are scope boundaries). Proved `web/PATTERNS.md`, the carry-forward chain, and the AI-plays pattern transfer. |
 | ~~2~~ ✓ | 03 Architecture | **Doc and app content agree; the whole-branch review has run, and TD-23 now waits only on the merge.** The densest stage by a distance: 14 doc sections, 22 app steps, 24 figures. TD-18, TD-21, TD-22 and TD-25's doc half all closed on it. Stress-tested the pattern library and produced two new rows (annotated artifact, and the panel-weight rule that replaced the step-count ceiling). |
 | ~~3~~ ✓ | — | **Stage 03's doc gaps closed** across W-3.1, W-3.1b and three cold-reader runs. |
-| **4 (next)** | — | **Merge W-3.2.** The port is done and the whole-branch review has run: 88 commits, seven blocking findings from the branch pass on top of fourteen from the four per-task reviews, all fixed. What is left is the merge decision, not more work. |
+| **4 (next)** | — | **Merge W-3.2.** The port is done and the whole-branch review has run: 90 commits, seven blocking findings from the branch pass on top of fourteen from the four per-task reviews, all fixed. What is left is the merge decision, not more work. |
 | 5 | 15 Observability | Unfamiliar ground; benefits most from figures |
 | 6 | 16 Incident Management | Procedural, so a stepper fits naturally |
 | 6 | 13 Production Deployment | Expand/migrate/contract needs a visual |

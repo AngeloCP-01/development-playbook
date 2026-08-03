@@ -65,7 +65,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
-| 2026-08-03 | W-3.2 | Stage 03's **app port**, closing TD-23's content gap and TD-25's app half. `web/src/features/architecture/` went from the **six** steps `W-3` shipped — `W-3.1` was doc-only (D-46) and left the app untouched — to **22**, mirroring all 14 doc subsections across **24** numbered figures. Ships **D-52** in place of D-38 (struck through, not edited): a step holds one judgment and its panel stays under four screens at 1024×768, enforced by `web/e2e/audit.spec.ts` rather than recorded, with `PANEL_EXCEPTIONS` back down to its two permanent baselines (`01#record` 6.7, `02#horizon` 5.6) | **88 commits** counted against the tree as this record landed, `c1a03b4`…HEAD. **286/286** vitest across **24** files; **14/14** playwright audit over **36** URLs, including the panel-weight test — no panel over threshold. Lint, typecheck and `format:check` clean. Four per-task reviewer subagents (tasks 5–9 and 11) returned **fourteen blocking findings**, all verified real, including two factual errors about Postgres in teaching material — a `FOR UPDATE` described doing what `SKIP LOCKED` does (`4bc60aa`), and an overclaim that transaction-mode pooling breaks a transactional lock (`687a042`). Task 11's review caught a third: a trace row that named a timeout "graceful degradation", contradicting the definition the stage's own resilience step gives (`dcfe1ae`). The **whole-branch review then produced seven blocking findings of its own**, so the defect rate did not fall off: the last task reviewed produced three and the whole-branch pass produced seven. Its headline was that the branch's own verification claim was hollow — the contrast and touch-target gates walked the step rail instead of the panel and opened five expandables across 36 pages, so every page was checked on its stage's last step with nothing revealed (`e058333`; corrected, 108 expandables and 867 colour pairs against 717, zero failures in either theme) | Sixteen minors from the whole-branch review, deferred with the reviewer's provenance rather than fixed. Also open, surfaced but not fixed this round: a `RevealList` component to de-duplicate five accordions sharing one markup, and the step rail's own fit past ~12 entries at 1440px |
+| 2026-08-03 | W-3.2 | Stage 03's **app port**, closing TD-23's content gap and TD-25's app half. `web/src/features/architecture/` went from the **six** steps `W-3` shipped — `W-3.1` was doc-only (D-46) and left the app untouched — to **22**, mirroring all 14 doc subsections across **24** numbered figures. Ships **D-52** in place of D-38 (struck through, not edited): a step holds one judgment and its panel stays under four screens at 1024×768, enforced by `web/e2e/audit.spec.ts` rather than recorded, with `PANEL_EXCEPTIONS` back down to its two permanent baselines (`01#record` 6.7, `02#horizon` 5.6) | **90 commits** counted against the tree as this record landed, `c1a03b4`…HEAD. **286/286** vitest across **24** files; **14/14** playwright audit over **36** URLs, including the panel-weight test — no panel over threshold. Lint, typecheck and `format:check` clean. Four per-task reviewer subagents (tasks 5–9 and 11) returned **fourteen blocking findings**, all verified real, including two factual errors about Postgres in teaching material — a `FOR UPDATE` described doing what `SKIP LOCKED` does (`4bc60aa`), and an overclaim that transaction-mode pooling breaks a transactional lock (`687a042`).  **Then the whole-branch review**, whose three headline findings no per-task review could have seen: the contrast gate (below), the `access` step teaching the singular authorization framing 100px above the exercise that corrects it (`97554b7`), and the *doc* still describing transaction pooling incorrectly after the app had been fixed, so the merge would have shipped a source of truth less accurate than its port (`70ddefe`). Fixed one commit per finding, `57a44d9`…`c080be1`, then `2734fb4`. **Scoped re-review: all nine addressed, 0 open, ready to merge** — it reproduced every measurement from an independent harness and teeth-checked with different injections than the fix used. Task 11's review caught a third: a trace row that named a timeout "graceful degradation", contradicting the definition the stage's own resilience step gives (`dcfe1ae`). The **whole-branch review then produced seven blocking findings of its own**, so the defect rate did not fall off: the last task reviewed produced three and the whole-branch pass produced seven. Its headline was that the branch's own verification claim was hollow — the contrast and touch-target gates walked the step rail instead of the panel and opened five expandables across 36 pages, so every page was checked on its stage's last step with nothing revealed (`e058333`; corrected, 108 expandables and 867 colour pairs against 717, zero failures in either theme) | Sixteen minors from the whole-branch review, deferred with the reviewer's provenance rather than fixed. **TD-26** carries the three further ways the audit can be green about a surface it never evaluates, all found while fixing the first. Also open: a `RevealList` component to de-duplicate five accordions sharing one markup; the step rail's own fit past ~12 entries at 1440px, which is the half of D-38 that D-52 dropped without saying so; and nine glossary terms defined and never wrapped, because the names live in data strings where JSX cannot go — a pattern decision, not a patch |
 | 2026-07-21 | P-0 | README index, `reference/stack.md`, `reference/glossary.md` | 17 terms; versions checked against `npm view` that day | Search; per-stage frontmatter |
 | 2026-07-21 | P-1 | Stages 04, 11, 12, 13, 14 | Template held under real config content — the reason this group went first | — |
 | 2026-07-21 | P-2 | Stages 05, 06, 07, 09, 10 | — | — |
@@ -287,6 +287,47 @@ unaudited. That line is corrected.
 
 **Closes with:** derive `PAGES` from `STAGES.filter(s => s.ready)` crossed with each
 stage's step ids, so the sweep tracks the ready set automatically.
+
+### TD-26 — The audit suite is green about surfaces it never evaluates · **High**
+
+Opened 2026-08-03 by the whole-branch review of `feat/stage-03-app-port`, which found the
+contrast gate had been measuring **one surface per stage** since it was written. It opened
+expandables by clicking every `button[aria-controls]`; `Stepper` puts `aria-controls` on all
+22 rail tabs, so the loop walked the rail and unmounted the panel it was about to measure.
+Measured on `#trace`: before, tab `03 Trace` with 11 expandables; after, tab `22 Traps` with
+**0 expandables and 0 open**. Every one of the 36 audited URLs was checked on its stage's last
+step with nothing expanded.
+
+Fixed in `e058333` — the sweep went from **5 expandables and 717 colour pairs to 108 and 867**
+across the 36 URLs, and surfaced no real failures in either theme, so the claim was true and
+simply unearned. `2734fb4` then narrowed the touch-target exemption that fix had widened: it
+had gone from `p` to `p, li`, exempting 880 elements to excuse one, including 74 accordion
+controls and 67 exercise radios. Role could not separate them — `Term` is itself a disclosure —
+so the check now asks whether the target sits among running text. Exempt went 152 → 14 over
+five representative pages, re-gating 138, all of which pass.
+
+**What is still open, and why this is an entry rather than a closed line.** Three further ways
+the same suite can be green about something it never looked at, all found while fixing the
+first:
+
+- The contrast collector **skips any element that has element children**, so a colour set on a
+  container is only ever measured through its leaves. A container-level failure with
+  correctly-coloured children is invisible.
+- `openExpandables` **cannot exhaust a single-open accordion group** — clicking one closes the
+  last — leaving ~28 buttons closed across 36 pages, almost all in stages 01 and 02.
+- `AuthPaths`' inner tabs use `aria-selected` rather than `aria-expanded`, so **two of its three
+  auth panels are never contrast-checked**. Same class, different attribute.
+
+**Why High.** "Contrast AA across every distinct pair, both themes, all steps" is this repo's
+headline verification claim (`CLAUDE.md`), quoted in the tracker, in `KICKOFF.md` and in every
+stage's completion evidence. A gate that lies is worse than no gate, because the claim gets
+made on its behalf. The first instance shipped for three stages before anything caught it, and
+what caught it was a reviewer reading the selector rather than the results.
+
+**Closes with:** a test of the test — assert the sweep opens a known count of expandables on a
+known page, so the next selector change that silently stops opening things fails rather than
+passes quietly. Related: **TD-17** (no component-test harness) is the reason this class has to
+be caught in e2e at all.
 
 ### TD-16 — Worksheet placeholder text fails AA, and the audit suite cannot see it · **High** *(was Medium)*
 
