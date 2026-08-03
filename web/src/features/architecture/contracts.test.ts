@@ -17,6 +17,19 @@ test('four contracts are sorted, because the sort is the decision and one row is
   expect(CONTRACT_ROWS).toHaveLength(4)
 })
 
+// Three costs across four rows: the pull row shares `not-yours` with the
+// webhook, which is the point — both are somebody else's shape. The sort is
+// still what the section teaches, so the spread has to survive a fifth row
+// being added carelessly.
+test('the sort still spreads across all three costs, since a table where every row costs the same teaches nothing', () => {
+  expect(new Set(CONTRACT_ROWS.map((r) => r.cost)).size).toBe(3)
+  expect(
+    CONTRACT_ROWS.filter((r) => r.cost === 'not-yours')
+      .map((r) => r.id)
+      .sort(),
+  ).toEqual(['pull', 'webhook'])
+})
+
 // Cold-reader run 4 stalled here: its shifts table is sourced from the
 // restaurant's existing rota system by a nightly pull. That is received data
 // whose shape it does not own, it is not a webhook, nobody pushes it, and the

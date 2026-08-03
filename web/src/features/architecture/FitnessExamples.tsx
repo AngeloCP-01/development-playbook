@@ -8,9 +8,11 @@ import {
 /**
  * Source: docs/03-architecture.md, "What this system has to be".
  *
- * Four examples, cheapest first, which is the doc's ordering and its argument:
- * the answers are more ordinary than the term suggests, and the cheapest is a
- * three-line assertion about your own schema.
+ * Six examples, cheapest first within each characteristic. The argument is
+ * the doc's: the answers are more ordinary than the term suggests, and the
+ * cheapest is a three-line assertion about your own schema. Two of the six
+ * cover the characteristics this stage's own worked example picks, which the
+ * first four did not — and one of those two refuses to be a test at all.
  *
  * Not an accordion. Each entry is two short lines, so hiding them behind a
  * click would cost a reader the scan and buy back almost no height — and this

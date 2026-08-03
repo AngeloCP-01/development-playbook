@@ -727,8 +727,8 @@ const STEPS: (Step & { id: StepId })[] = [
         >
           <Prose>
             <p>
-              The three answers you clicked through in the container view have a
-              name: <Term id="graceful-degradation">graceful degradation</Term>,
+              The answers you clicked through in the container view have a name:{' '}
+              <Term id="graceful-degradation">graceful degradation</Term>,
               deciding per feature what still works when a dependency does not.
               There is a small standard vocabulary for producing them, and it is
               worth having because these cover almost everything — but the

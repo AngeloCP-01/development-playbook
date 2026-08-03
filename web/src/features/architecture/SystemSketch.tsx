@@ -20,7 +20,7 @@ import { SKETCH_NODES, type SketchNode } from './sketch'
  *
  * Selecting an external node answers two questions, not one. What it does is
  * ordinary documentation; what happens when it is down is the decision the
- * diagram exists to force, and one of the three answers is real work you would
+ * diagram exists to force, and one of the answers is real work you would
  * otherwise meet in production.
  *
  * External nodes are marked with a dashed border as well as a group heading,
@@ -121,8 +121,10 @@ export function SystemSketch() {
       </div>
 
       <p className="mt-4 border-t border-line pt-4 text-sm leading-6 text-muted">
-        Three external systems, three answers, one of which is a genuine piece
-        of work you would otherwise have discovered in production. That is the
+        Six boxes that are not yours, six answers, one of which is a genuine
+        piece of work you would otherwise have discovered in production — and
+        two of which get skipped, one because it is yours and one because it is
+        somebody else&rsquo;s problem right up until it is not. That is the
         return on a diagram.
       </p>
     </Card>

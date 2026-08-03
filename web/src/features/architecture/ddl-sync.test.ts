@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
 import { SCHEMA_LINES } from './scoring'
-import { INVOICE_SENDS_LINES } from './schema-blocks'
+import { INVOICE_SENDS_LINES, PARTIAL_UNIQUE_LINES } from './schema-blocks'
 
 // The app's stage content is hand-ported (CLAUDE.md), and TD-23 is what that
 // costs: the doc moved twice and the port kept asserting the superseded
@@ -46,4 +46,35 @@ test('the invoices block in the app is the invoices block in the doc, character 
 test('the invoice_sends block in the app is the invoice_sends block in the doc, character for character', () => {
   const md = readFileSync(DOC, 'utf8')
   expect(render(INVOICE_SENDS_LINES)).toBe(ddlBlock(md, 'invoice_sends'))
+})
+
+// The partial-index block is out of the character-for-character scope above,
+// for a real reason: the app rewords its `--` comments. But that left the one
+// clause a fix wave called "would have cost somebody a production incident"
+// with no guard at all — reverting `AND deleted_at IS NULL` on either side kept
+// the suite green, and the two could drift apart silently.
+//
+// So this asserts the predicate rather than the block: both sides carry both
+// halves of the condition. Wording stays free; the rule does not.
+test('the partial unique index carries both halves of its predicate in the doc and the app, since dropping the second one locks a shift forever', () => {
+  const md = readFileSync(DOC, 'utf8')
+  const docBlock = [...md.matchAll(/```sql\n([\s\S]*?)```/g)]
+    .map((m) => m[1])
+    .find((b) => b.includes('one_approved_claim_per_shift'))
+  expect(docBlock, 'the doc has no partial unique index block').toBeDefined()
+
+  const appBlock = PARTIAL_UNIQUE_LINES.map((l) => l.sql).join('\n')
+
+  for (const [where, sql] of [
+    ['doc', docBlock!],
+    ['app', appBlock],
+  ] as const) {
+    expect(sql, `${where}: the conditional half is missing`).toMatch(
+      /WHERE status = 'approved'/,
+    )
+    expect(
+      sql,
+      `${where}: a soft-deleted approved row still holds the slot without this`,
+    ).toMatch(/deleted_at IS NULL/)
+  }
 })

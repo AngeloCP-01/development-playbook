@@ -263,5 +263,13 @@ test('the one that cannot be a test says so, since refusing honestly is what thi
   const cost = FITNESS_EXAMPLES.find(
     (e) => e.characteristicId === 'cheap-to-run',
   )
-  expect(cost?.what).toMatch(/not a test|no test|bill|reminder|calendar/i)
+  // The alternation used to include bill|reminder|calendar, which passes on
+  // "a test asserting the monthly bill stays under fifty dollars" — precisely
+  // the invented assertion this entry exists to refuse. Match the refusal.
+  expect(cost?.what, 'it has to refuse, not merely mention money').toMatch(
+    /not a test|no test/i,
+  )
+  expect(cost?.defends, 'and say why there is nothing to assert').toMatch(
+    /not in your repository|lives on a bill|nothing to assert/i,
+  )
 })

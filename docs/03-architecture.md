@@ -580,9 +580,10 @@ yours, what happens when it is down?
   "single point of failure" means concretely and why the deferral list keeps it to one
   database rather than hiding it behind a second.
 
-Five questions, five answers, one of which is a genuine piece of work you would otherwise
-have discovered in production, and two of which are the boxes people skip because they are
-their own. That is the return on a diagram.
+Six questions, six answers, one of which is a genuine piece of work you would otherwise have
+discovered in production — and two of which are the boxes that get skipped, one because it is
+yours and one because it is somebody else's problem right up until it is not. That is the
+return on a diagram.
 
 **If you take the second option, decide the cadence with it.** "Record the intent and send
 later" is not a design until you say how much later, and the answer comes from the promise
@@ -595,7 +596,7 @@ requires is this stage's, because it is a property of the design rather than of 
 
 #### Timeouts, retries and failing well
 
-Those three answers have a name: **graceful degradation**, deciding per feature what still
+Those answers have a name: **graceful degradation**, deciding per feature what still
 works when a dependency does not. And there is a small standard vocabulary for producing them,
 worth having because these four cover almost everything:
 
@@ -694,7 +695,7 @@ that has a lifetime, the missing thing is usually an event table.
 **The tenant key is the other deliberate violation, and a bigger one.** Carried on every table
 that holds tenant data, it depends on the parent row rather than on the key — on a hierarchy
 deeper than one level (company → venue → shift → claim) that is textbook third normal form
-broken on purpose, four times. It is worth it: a query that has to join four tables to prove a
+broken on purpose, once per level below the first. It is worth it: a query that has to join four tables to prove a
 row belongs to you is a query that will eventually forget to, and the failure mode of
 forgetting is showing one customer another customer's data. Denormalise where the alternative
 is a join you cannot afford to get wrong.
@@ -857,9 +858,17 @@ two concurrent requests both pass, both believing they were first.
 **The second clause is not decoration, and it is the one that gets left out.** If the table
 soft-deletes, a deleted approved row still occupies the uniqueness slot: approve the wrong
 person, delete the claim, and now nobody can be approved for that shift — the constraint
-holding against a row no query can see. **Every partial unique index on a soft-deleting table
-needs `AND deleted_at IS NULL`**, and this is where the two decisions you made separately
-meet.
+holding against a row no query can see. This is where two decisions you made separately meet,
+and neither one looks wrong on its own.
+
+**The wider rule, because the index is only half of it: every uniqueness rule on a
+soft-deleting table has to say what it thinks a deleted row is.** For a partial index that is
+one more clause. For a plain `UNIQUE` constraint it is not, because a constraint cannot carry
+a `WHERE` — the `invoices` table above has both `deleted_at` and `UNIQUE (owner_id, number)`,
+so soft-deleting an invoice burns its number forever. That may be exactly what you want for
+invoice numbers, and it is plainly wrong for something a user retries. Where it is wrong, the
+fix is to drop the constraint and create a partial unique index in its place; where it is
+right, write down that you decided it, because the next person will read it as an oversight.
 
 #### Actors, roles and the tenant key
 
@@ -1133,12 +1142,15 @@ That is idempotency, and it is worked through in
 **The last row is the one most products actually have, and it is easy to miss because nothing
 arrives to make you notice it.** A nightly pull from somebody's system, a CSV somebody
 uploads, an export you read on a schedule — received data whose shape you do not own and whose
-*timing you do*. It differs from a webhook in both directions: nobody will deliver it twice,
-so idempotency is not forced on you, but nobody will tell you when it changed either, so
-staleness is now yours and the cadence question from the sketch applies to reading rather than
-to sending. Validate it at the boundary like anything else crossing in, and decide what
-happens when the source is late or malformed — because it will be, and unlike a webhook there
-is no retry coming.
+*timing you do*. It differs from a webhook in one direction and not the other. Nobody
+tells you when it changed, so staleness is yours and the cadence question from the sketch
+applies to reading rather than to sending. But **idempotency is not optional here either, and
+it is easier to miss because nothing arrives to remind you**: a nightly pull re-reads an
+overlapping window every run, and since no one is retrying for you, the retry is yours — which
+is duplicate delivery by your own hand. Give the source's own identifier a unique constraint
+and upsert on it, exactly as the webhook does with its event id. Then validate at the boundary
+like anything else crossing in, and decide what happens when the source is late or malformed,
+because it will be.
 
 **A contract here means one callable surface with a shape somebody depends on** — a route, or
 an exported function another feature calls. Not every internal helper. If it crosses a
@@ -1399,7 +1411,7 @@ build less than the model offers. It has no stake in maintaining what it propose
 
 - [ ] Characteristics chosen, and each one traced to a decision it forced
 - [ ] Architecture style named, with the alternatives rejected and the reason for each
-- [ ] System sketched, with what happens when each external dependency is down
+- [ ] System sketched, with what happens when each box that is not yours is down — including the scheduled work and the database
 - [ ] Integration style decided per external call, and anything received is idempotent
 - [ ] A timeout on every external call, and a stated answer for each dependency being down
 - [ ] Concurrent-edit strategy decided where two people can act on one row

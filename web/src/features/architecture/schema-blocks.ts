@@ -94,7 +94,7 @@ export const PARTIAL_UNIQUE_LINES: SchemaLine[] = [
     id: 'where',
     sql: "  ON claims (shift_id) WHERE status = 'approved' AND deleted_at IS NULL;",
     indent: 1,
-    note: 'The condition is what makes the rule expressible. Without it, the usual approach is to check for an existing approval and then insert — which two concurrent requests both pass, both believing they were first. That is the race the database was supposed to be holding the line on. The second clause is the one that gets left out: on a soft-deleting table a deleted approved row still occupies the uniqueness slot, so approving the wrong person and deleting the claim locks that shift forever, against a row no query can see.',
+    note: 'The condition is what makes the rule expressible. Without it, the usual approach is to check for an existing approval and then insert — which two concurrent requests both pass, both believing they were first. That is the race the database was supposed to be holding the line on. The second clause is the one that gets left out: on a soft-deleting table a deleted approved row still occupies the uniqueness slot, so approving the wrong person and deleting the claim locks that shift forever, against a row no query can see. The wider rule is that every uniqueness rule on a soft-deleting table has to say what it thinks a deleted row is — and a plain UNIQUE constraint cannot, because it takes no WHERE. The invoices table above has both deleted_at and UNIQUE (owner_id, number), so soft-deleting an invoice burns its number. Right for invoice numbers, wrong for anything a user retries; where it is wrong, drop the constraint and create a partial unique index instead.',
   },
 ]
 

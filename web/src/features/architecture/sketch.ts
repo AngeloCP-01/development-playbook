@@ -255,7 +255,7 @@ export const RESILIENCE_PATTERNS: ResiliencePattern[] = [
     summary: 'One box being down should cost one feature, not the product.',
     failure:
       'One dependency being down takes the whole product down, because nothing ever decided which features actually needed it. The invoice cannot be sent because the PDF cannot be rendered, and nobody chose that.',
-    what: 'The name for what the three answers in the container view already are: deciding, per feature, what still works when a dependency does not. It is the outcome the other three patterns are in service of.',
+    what: 'The name for what the answers in the container view already are: deciding, per feature, what still works when a dependency does not. It is the outcome the other three patterns are in service of.',
     earnsItsPlace:
       'Always, and it costs nothing but the decision — you make it by answering the failure question for each box, which you have already done.',
   },
