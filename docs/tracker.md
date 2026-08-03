@@ -288,6 +288,49 @@ unaudited. That line is corrected.
 **Closes with:** derive `PAGES` from `STAGES.filter(s => s.ready)` crossed with each
 stage's step ids, so the sweep tracks the ready set automatically.
 
+### TD-27 — The second `pnpm test:e2e` of a session measures a stale build · **High**
+
+Opened 2026-08-03, during the doc-gaps round, and it invalidated that round's own verification
+until it was found.
+
+`web/playwright.config.ts` sets `reuseExistingServer: !process.env.CI` against a
+`pnpm build && pnpm start -p 3100` command. The first run of a session builds and starts a
+server; **every subsequent run reuses that server without rebuilding**. A session that runs the
+suite after each of eight tasks measures the first task's build eight times.
+
+This is not a bug in Playwright — it is the documented behaviour of that flag, and reusing a
+server is what makes local iteration fast. The defect is that nothing says so at the point of
+use, and the failure is silent and green: the suite passes, the numbers look plausible, and
+they describe a tree that no longer exists.
+
+**What it cost, measured.** A server had been up for 97 minutes. Panel weights read through it
+against the true values once it was killed:
+
+| Panel | Through the stale server | Actual |
+|---|---|---|
+| `model` | 3.7 | **4.0 — over threshold** |
+| `schema` | 3.6 | **4.3 — over threshold** |
+| `sketch` | 2.3 | 2.5 |
+| `evolve` | 3.4 | 3.6 |
+| `indexes` | 1.9 | 2.2 |
+
+Two panels had been over D-52's limit for five tasks while the gate reported them passing. Both
+were fixed once the numbers were real.
+
+**How it was found**, which is the part worth keeping: not by the suite, but by probing whether
+the built page actually contained the component that had just been added
+(`"First normal form"` → `false`) while the panel test was green. The same move that found
+TD-26 — check what the tool loaded, not what it reported.
+
+**Closes with:** either `reuseExistingServer: false` locally, accepting a rebuild per run, or a
+freshness assertion in the suite itself — read a build id or a known-new string and fail if the
+served tree predates the working tree. The second is better, because it also catches the case
+where someone left `pnpm start` running by hand.
+
+**Related:** TD-26 is the same family — a gate green about something it never evaluated — and
+between them they cost this branch two false verification claims. Neither was caught by a test;
+both were caught by asking what the tool actually did.
+
 ### TD-26 — The audit suite is green about surfaces it never evaluates · **High**
 
 Opened 2026-08-03 by the whole-branch review of `feat/stage-03-app-port`, which found the
