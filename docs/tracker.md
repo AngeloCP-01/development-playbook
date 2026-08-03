@@ -8,7 +8,7 @@ debt was taken on. Scope and planning live in [task.md](task.md).
 the densest stage and the **solutions architect's home** — the audience stage 02 feeds but
 does not serve (D-37).
 
-**Stage 03's doc and its port are now level, and unmerged.** `W-3.1` closed **TD-18**,
+**Stage 03's doc and its port are level, and merged.** `W-3.1` closed **TD-18**,
 **TD-21** and **TD-22**, taking `docs/03-architecture.md` to **14 subsections**; the doc-gaps
 round and two fix waves since have taken it to **1,507 lines**, running requirements → HLD → LLD. `W-3.2` then ported it: `web/features/architecture/`
 holds **22 steps** against those 14 subsections, which is what closes TD-23's content half.
@@ -16,7 +16,8 @@ holds **22 steps** against those 14 subsections, which is what closes TD-23's co
 **W-3.1b's doc half is done** (`1db6344`…`3cd19c4`). Its content, plus the whole doc, lives on
 `feat/stage-03-app-port` — the doc branch was merged **into** the port rather than into `main`
 (**D-51**), so the port has one stable target and the new material gets ported once.
-**Nothing is merged to `main`.** Coverage is tracked continuously in `docs/stage-03-status.md`;
+**`feat/stage-03-app-port` landed on `main` as `790b3e4`** (`--no-ff`, 106 commits, branch
+deleted), doc and port as one unit. Coverage is tracked continuously in `docs/stage-03-status.md`;
 that now reads all 14 sections ported.
 
 **How it was raised.** An architecture-completeness audit against standard
@@ -25,8 +26,7 @@ practice found five clusters of widely-taught material missing from all eighteen
 statelessness and scaling, and fitness functions. Scope call is **D-49** — completeness beats
 length for this stage, standard practice only.
 
-**`W-3.2` is done and awaiting merge.** The port sits on `feat/stage-03-app-port`, a
-twenty-two-step stage, and its whole-branch review has run — seven blocking findings, all
+**`W-3.2` and `W-3.3` are merged.** The port is a twenty-two-step stage, and its whole-branch review has run — seven blocking findings, all
 fixed. `W-3.3` then closed the eight doc gaps that review and run 3 had recorded, and a
 **fourth cold-reader run returned COMPLETE** — the first run to do so. A whole-branch
 re-review found five more Important findings, all fixed. Commit counts and test counts belong
@@ -42,8 +42,10 @@ Quality gates remain live: prettier (skipping markdown, see the build note below
 `--max-warnings 0`, **313 vitest tests across 26 files**, a **14-test audit suite sweeping 36
 URLs** (stage 03's twenty-two step hashes added by hand — TD-12), lefthook, and CI. Everything
 since `82a980b` was local until 2026-07-29, when `main` was pushed and CI ran green on the
-stage 03 merge (`30426083363`). `main` and `origin/main` are in sync at `249bd9d`; the user
-handles pushes.
+stage 03 merge (`30426083363`). `main` is now **107 commits ahead of `origin/main`** at
+`790b3e4`: the stage 03 merge is local only, and the user handles pushes.
+`origin/feat/stage-03-app-port` also still exists on the remote, three commits behind what was
+merged, and can be deleted once `main` is pushed.
 
 **The gate proved itself.** CI's first real run went red on a genuine bug — `PageProps`
 is generated into `.next/types/`, so typechecking before building fails on a clean
@@ -813,7 +815,7 @@ before, to avoid porting twice — sound reasoning on a wrong premise, since `W-
 31 commits and a built nine-step stage in a parallel session when this was written. The
 double-port cost is accepted and folded into W-3.1b rather than deferred to a third round.
 
-### TD-23 — Stage 03's doc and app now disagree about what the stage contains · **High**
+### ~~TD-23~~ — Stage 03's doc and app now disagree about what the stage contains · **CLOSED 2026-08-03**
 
 > **Coverage is now tracked in `docs/stage-03-status.md`** — section by section, doc against
 > app, with the remaining port tasks listed. This entry stays open until that file shows no
@@ -824,7 +826,7 @@ Opened deliberately by W-3.1 on 2026-07-29, which was scoped doc-only. This is a
 round chose, not one it discovered, and it is recorded so the choice is visible rather than
 silent — `CLAUDE.md` permits the doc/app duplication but not widening it unnoted.
 
-`docs/03-architecture.md` is fourteen subsections and 1,346 lines. Live coverage:
+`docs/03-architecture.md` is fourteen subsections and 1,507 lines. Live coverage:
 `docs/stage-03-status.md`.
 
 **Status 2026-08-03, content done and the review run.** `web/src/features/architecture/` is
@@ -833,9 +835,14 @@ five clusters are ported — resilience, consistency and concurrency, safe schem
 statelessness and scaling, and (closing in `9798286`) fitness functions with the widened
 ten-row trace and the event-sourcing / CQRS definitions — plus the AI section's two missing
 plays and sixth mislead, and section 9, which had no app step at all. `docs/stage-03-status.md`
-now shows no partial or unported rows, and the whole-branch review has run and its blocking
-findings are fixed. **What this entry now waits on is the merge**, which is what makes the two
-halves agree on `main` rather than on a branch.
+now shows no partial or unported rows, and both whole-branch passes have run with every
+finding fixed.
+
+**CLOSED 2026-08-03 by the merge.** `feat/stage-03-app-port` landed on `main` as `790b3e4`
+(`--no-ff`, 106 commits, branch deleted), doc and port as one unit per D-51 — which is what
+makes the two halves agree on `main` rather than on a branch. The gate was re-run on the merged
+result before the branch was deleted: 313/313 across 26 files, 14/14 audit over 36 URLs, lint,
+typecheck and format clean. Not pushed.
 
 **Why the round took the debt rather than avoiding it.** Stage 03's app already sat at D-38's
 ceiling of five content steps plus the AI step, and the round added five sections. The port

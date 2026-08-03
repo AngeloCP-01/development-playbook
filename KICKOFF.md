@@ -85,14 +85,18 @@ Before doing anything, read these for context:
 - **Not deployed** (`W-5` open).
 - **Branch/push:** work happens on `feat/`|`fix/`|`docs/<date>-` branches, merged to `main`
   with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes.**
-  `main` and `origin/main` are in sync at **`eeb16f1`**. **Everything since is unmerged on
-  `feat/stage-03-app-port`, which is 106 commits ahead** (91 files, +20k/−0.5k).
+  **Stage 03 is merged**: `feat/stage-03-app-port` landed on `main` as **`790b3e4`**
+  (`--no-ff`, 106 commits, 91 files, +20k/−0.5k, branch deleted). **Not pushed** —
+  `origin/main` is still at `eeb16f1`, so `main` is **107 commits ahead of the remote**, and
+  `origin/feat/stage-03-app-port` still exists three commits behind what was merged.
 
 ### This round's scope
 
-**Everything on `feat/stage-03-app-port` is done**: the D-52 round's twelve tasks, W-3.3's
-eight doc gaps, cold-reader run 4 and its fix wave, and the whole-branch re-review's five
-Important findings. What is left is the merge decision, not another task.
+**Stage 03 is done and merged.** The D-52 round's twelve tasks, W-3.3's eight doc gaps,
+cold-reader run 4 and its fix wave, and the whole-branch re-review's five Important findings
+all landed on `main` as `790b3e4` (`--no-ff`, 106 commits, branch deleted). **TD-23 is
+closed.** The next round is a new stage — 15 Observability is the recommended one — or `W-5`,
+the deploy. Nothing below blocks either; it is history worth carrying.
 
 **Read these two first, in this order:**
 
@@ -103,7 +107,7 @@ Important findings. What is left is the merge decision, not another task.
    done.** Its spec is `docs/superpowers/specs/2026-07-31-step-panel-weight-design.md`, and the
    plan's own Verification section is the checklist for what comes next.
 
-**What is left.** The merge — 106 commits, doc and app as one unit (D-51). The whole-branch
+**What that merge carried.** 106 commits, doc and app as one unit (D-51). The whole-branch
 review has run and returned **seven blocking findings**, plus two minors promoted for being
 reader-visible and introduced by this branch, and sixteen deferred to the tracker. All nine are
 fixed. Four per-task reviews had found **fourteen** before it, and the rate did not fall off:
