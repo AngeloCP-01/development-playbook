@@ -642,6 +642,21 @@ longer than the working rule, which is: **if changing one fact means updating tw
 model is wrong.** A client's address stored on every invoice is not a shortcut, it is four
 hundred rows that will disagree the first time someone moves.
 
+The three forms, since you will meet the names:
+
+- **First normal form** — one value per cell; no lists, no comma-separated anything. A list
+  of tags in a `tags` column is the violation, and it is the one that looks harmless until
+  you have to query it.
+- **Second normal form** — no column depending on part of a composite key. On a table keyed
+  by `(invoice_id, line_no)`, storing the client's name is the violation: it depends on the
+  invoice alone, so half the key is carrying it.
+- **Third normal form** — no column depending on another non-key column. Storing both
+  `client_id` and `client_address` on an invoice is the violation, and it is the one the
+  working rule above is really about.
+
+Third is the one worth aiming at. Past it the forms get stricter and the returns get thinner,
+and you would be reaching for them to satisfy a definition rather than to fix something.
+
 Denormalise deliberately, later, when you have measured a query that needs it — and
 [09 — Performance Optimization](09-performance-optimization.md) is where that measurement
 belongs. Denormalising because it seemed easier at the time is how data rots.

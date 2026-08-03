@@ -419,8 +419,17 @@ test('the strike test states the rule that generalises, since one worked example
   expect(model, 'the model step does not state the rule').toMatch(
     /point at it on its own|point at this on its own/i,
   )
+  // The second case sits in `worksheet` rather than `model`: it is where the
+  // reader applies the test to their own nouns, and `model` had no panel
+  // headroom for it. The two steps are adjacent, so the reader meets the rule
+  // and then the borderline case in order — but the rule must not ship without
+  // a case that is not the one that motivated it.
+  const modelAndWorksheet = source.slice(
+    source.indexOf("id: 'model'"),
+    source.indexOf("id: 'shape'"),
+  )
   expect(
-    model,
+    modelAndWorksheet,
     'the rule needs a case that is not the one that motivated it',
   ).toMatch(/address/i)
 })

@@ -36,6 +36,7 @@ import { IdempotencyBlock } from './IdempotencyBlock'
 import { ResiliencePatterns } from './ResiliencePatterns'
 import { ERView } from './ERView'
 import { SchemaInspector } from './SchemaInspector'
+import { Normalisation } from './Normalisation'
 import { PartialUniqueIndex } from './PartialUniqueIndex'
 import { IsolationLevels } from './IsolationLevels'
 import { LockingStrategies } from './LockingStrategies'
@@ -233,11 +234,7 @@ const STEPS: (Step & { id: StepId })[] = [
               </strong>{' '}
               An entity has an identity you refer to later — you fetch it, link
               to it, attach something to it. A property only ever describes the
-              row it sits on. A shipping address on an order is the harder case
-              and the same answer: columns, until somebody wants to reuse it
-              across orders, at which point it acquires an identity and becomes
-              an entity — and that change is a migration rather than an
-              afternoon.
+              row it sits on.
             </p>
             <p>
               Working in nouns first is not a formality. A relationship you can
@@ -318,6 +315,13 @@ const STEPS: (Step & { id: StepId })[] = [
               remaining one, whether every actor has the same rights, is
               answered in <em>Access</em>, where the authorization pattern gets
               chosen.
+            </p>
+            <p>
+              The strike test earns its keep on the borderline nouns, which is
+              where you are now. A shipping address on an order is the harder
+              case and the same answer: columns, until somebody wants to reuse
+              it across orders — at which point it acquires an identity and
+              becomes an entity, which is a migration rather than an afternoon.
             </p>
             <p>
               If a relationship might run both ways later, say so here. Yes now
@@ -835,7 +839,7 @@ const STEPS: (Step & { id: StepId })[] = [
   {
     id: 'indexes',
     label: 'Indexes',
-    hint: 'Two things you write as an index: an access path, and a rule',
+    hint: 'How far to normalise, and the two things you write as an index',
     content: (
       <div className="space-y-16">
         <Section
@@ -844,7 +848,17 @@ const STEPS: (Step & { id: StepId })[] = [
         >
           <Prose>
             <p>
-              One number first: how much data will exist in a year, and how fast
+              How far to normalise, first, because it decides what there is to
+              index: if changing one fact means updating two rows, the model is
+              wrong. The three normal forms are the formal names for that rule.
+            </p>
+          </Prose>
+          <div className="mb-8 mt-5">
+            <Normalisation />
+          </div>
+          <Prose>
+            <p>
+              Then one number: how much data will exist in a year, and how fast
               does it arrive? Ten thousand invoices is a table where no index is
               load-bearing; ten million is a table where the missing one is an
               outage. You cannot judge an index without saying which of the two
