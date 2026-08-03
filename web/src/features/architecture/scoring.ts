@@ -19,6 +19,38 @@ export type Decision = {
   why: string
 }
 
+export type TestQuestion = {
+  id: string
+  question: string
+  note: string
+}
+
+/**
+ * Source: docs/03-architecture.md, "Sort decisions by reversibility".
+ *
+ * The test the reader applies to their own decisions rather than looking them
+ * up. It sat in the AI section until W-3.1 promoted it here, which is where it
+ * belongs: the exercise below is six worked examples of this test, and without
+ * it the exercise teaches the answers instead of the method.
+ */
+export const REVERSIBILITY_TEST: TestQuestion[] = [
+  {
+    id: 'what-changes',
+    question: 'What would have to change?',
+    note: 'Name the files, the tables and the deploys. A decision you cannot describe the reversal of is one you have not thought about yet, which is a different problem.',
+  },
+  {
+    id: 'call-sites',
+    question: 'How many call sites touch it?',
+    note: 'A real signal, with one trap in it. Logging calls are everywhere and still cheap, because nothing reads them back. Count what depends on the shape, not what mentions the name.',
+  },
+  {
+    id: 'stored-data',
+    question: 'Is any of it stored data?',
+    note: 'This one dominates the other two. Code is refactorable; data has to be migrated, and a migration runs against rows that already exist, written by a version of the system you no longer have.',
+  },
+]
+
 /** Source: docs/03-architecture.md, "Sort decisions by reversibility". "How expensive is this to undo?" */
 export const DECISIONS: Decision[] = [
   {
@@ -111,7 +143,7 @@ export const INTERROGATIONS: Interrogation[] = [
       { id: 'computed', label: 'Computed from due_date and status' },
     ],
     answer: 'computed',
-    why: 'Computed. If it is stored, something has to update it — a cron job, a trigger, a write on read — and the day that something misses a run, the column disagrees with the date it was derived from. Computed from due_date < now() AND status = ‘sent’, it is always correct and cannot drift. Storing derived state is one of the most common sources of data that disagrees with itself.',
+    why: 'Computed. If it is stored, something has to update it — a cron job, a trigger, a write on read — and the day that something misses a run, the column disagrees with the date it was derived from. Computed from due_date < now() AND status = ‘sent’, it is always correct and cannot drift. The general form is worth more than this answer: compute it when it is a pure function of data you already hold, and store it when it is a fact about a moment — the tax rate applied when the invoice was sent, the price at the time of purchase, the address it shipped to. Those look derivable and are not, because the thing they would derive from has since changed.',
   },
   {
     id: 'invoice-delete',
@@ -121,7 +153,7 @@ export const INTERROGATIONS: Interrogation[] = [
       { id: 'soft', label: 'Mark it deleted and keep the row' },
     ],
     answer: 'soft',
-    why: 'Soft delete, or an immutable ledger. A hard delete loses history you may be legally required to keep; a soft delete keeps it at the cost of every query remembering to filter. For financial records that trade is worth making, because “where did that invoice go” is a much worse conversation than a slightly more complex query.',
+    why: 'Soft delete, or an immutable ledger. The heuristic is wider than money: keep anything somebody will later ask “where did that go?” about. Financial records obviously, but also cancelled bookings, withdrawn requests, and users who left — each of those is a row whose absence is itself a question someone eventually needs answered. Pay the filtering cost where that is true, and hard delete where it genuinely is not, because a soft delete taxes every query that follows it.',
   },
   {
     id: 'client-owners',
@@ -142,6 +174,30 @@ export const INTERROGATIONS: Interrogation[] = [
     ],
     answer: 'per-owner',
     why: 'Per user. Two freelancers both issuing invoice 001 is normal and correct; a global constraint makes the second one fail for no reason a user could understand. Getting uniqueness scope wrong surfaces months later as a confusing constraint violation, which is why it belongs in the schema as UNIQUE (owner_id, number) rather than in a validation function.',
+  },
+  {
+    id: 'approval-event',
+    question: 'Is “approved” a thing, or something that happened to a thing?',
+    options: [
+      { id: 'status', label: 'A status on the row it applies to' },
+      {
+        id: 'entity',
+        label: 'A row of its own, with an actor and a timestamp',
+      },
+    ],
+    answer: 'entity',
+    why: 'A thing, almost always. The strike test earlier removes nouns that are really properties; this removes the opposite mistake, a verb that is really an entity. The question that decides it is whether you will later want to know who did it and when. If yes, it is an approval with an actor and a timestamp, and modelling it as a status flip throws that away irreversibly — a column holds the current value, not the act, so the row that said who approved and when never existed to be recovered. If no, it is a status. “Approved” is the usual case that goes both ways, and the answer is almost always that you will want to know.',
+  },
+  {
+    id: 'actor-rights',
+    question: 'Does every actor have the same rights over this entity?',
+    options: [
+      { id: 'entity', label: 'No — “Manager” is its own entity' },
+      { id: 'column', label: 'No — a role column on users' },
+      { id: 'membership', label: 'No — a role on the membership' },
+    ],
+    answer: 'membership',
+    why: 'The role belongs on the relationship. A users.role column is a single global answer to a question that gets asked per team: a person can manage one team and be an ordinary member of another, and the column cannot say that. Making “Manager” its own entity is worse, because it duplicates the person. Ask this before the schema exists and you get a memberships table with the role on it; ask it afterwards and you get a migration. It is also the question that decides which authorization pattern applies to this entity, which is why ownership is not the only one.',
   },
 ]
 
@@ -248,7 +304,7 @@ export const SCHEMA_LINES: SchemaLine[] = [
     id: 'pk',
     sql: 'id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),',
     indent: 1,
-    note: 'A generated uuid rather than a sequence. Nothing about an invoice’s identity is guessable from it, and two databases can generate ids without coordinating.',
+    note: 'A choice, not a default. A uuid can be generated without a round trip to the database and gives away nothing when it appears in a URL. The alternative, bigserial, is smaller and faster to join on — but it publishes how many rows you have and how fast they arrive, to anyone who can see two of your ids.',
   },
   {
     id: 'owner-fk',
@@ -274,7 +330,12 @@ export const SCHEMA_LINES: SchemaLine[] = [
     indent: 1,
     note: 'Money as integer cents. A float cannot represent 0.10 exactly, so totals drift by a cent in ways nobody can reproduce. The CHECK stops a negative amount at the door rather than in a validation function a script can bypass.',
   },
-  { id: 'due-date', sql: 'due_date     date NOT NULL,', indent: 1 },
+  {
+    id: 'due-date',
+    sql: 'due_date     date NOT NULL,',
+    indent: 1,
+    note: 'date here, timestamptz below, and the difference is not pedantry. A due date is a calendar day and means the same thing to a reader in any timezone. A creation time is an instant and does not. Getting these backwards produces off-by-one-day bugs that appear only for users in other timezones, which is to say never on your machine.',
+  },
   {
     id: 'status-check',
     sql: "status       text NOT NULL CHECK (status IN ('draft','sent','paid')),",
@@ -282,10 +343,22 @@ export const SCHEMA_LINES: SchemaLine[] = [
     note: 'A fixed set of values, enforced where it cannot be bypassed. Note what is absent: “overdue”. It is computed from due_date and status, so it cannot drift out of agreement with the date it derives from.',
   },
   {
+    id: 'version',
+    sql: 'version      integer NOT NULL DEFAULT 0,',
+    indent: 1,
+    note: 'Correctness, traced from the characteristics table rather than habit. This is the optimistic-locking column: the write carries the version it read — UPDATE … WHERE id = $1 AND version = $2 — and zero rows updated means somebody got there first, so you tell the user instead of silently discarding their decision. Note what it is: version is stored data, so by this stage’s own test it is decide-now. Adding it later is an expand-contract sequence, not an afternoon.',
+  },
+  {
     id: 'created-at',
     sql: 'created_at   timestamptz NOT NULL DEFAULT now(),',
     indent: 1,
     note: 'timestamptz, not timestamp. The version without a time zone silently means “whatever the server thought local time was”, which stops being funny the first time you deploy to a different region.',
+  },
+  {
+    id: 'deleted-at',
+    sql: 'deleted_at   timestamptz,',
+    indent: 1,
+    note: 'Auditability, and the other column here that a characteristic chose. Null means live, a timestamp means gone-but-answerable — the soft delete the interrogation argued for. The cost is the one already named and it is real: every query must remember to filter, paid on every read forever. That is why this is decided per entity rather than adopted as a habit.',
   },
   {
     id: 'unique-number',
@@ -333,5 +406,13 @@ export const BOUNDARY_EDGES: BoundaryEdge[] = [
     call: 'db.select().from(invoices).where(eq(invoices.clientId, id))',
     legal: false,
     why: 'The one move that turns a monolith into a ball of mud. It works, it is shorter, and it silently makes billing’s table part of clients’ public interface — so the next change to the invoice schema breaks a module that never mentioned invoices. Keeping this rule is what makes extracting a service later a mechanical job rather than an archaeology project.',
+  },
+  {
+    id: 'clients-writes-invoices',
+    from: 'clients',
+    to: 'billing',
+    call: 'db.update(invoices).set({ status: “paid” }).where(...)',
+    legal: false,
+    why: 'The same violation as the read above it, and the one people forget, because a boundary tends to get policed on the way in and not on the way out. Writing another module’s table means billing’s invariants — what a valid status transition is, what else has to change with it — now live in two places, and only one of them is the module that owns them. Approving a shift swap has the same shape: it changes rows the approval flow does not own, so it goes through the owning feature’s function or the boundary exists only in the folder names.',
   },
 ]

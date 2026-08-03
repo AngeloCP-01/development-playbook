@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
 import {
   BOUNDARY_EDGES,
@@ -5,11 +7,15 @@ import {
   DECISIONS,
   INTERROGATIONS,
   judgeInterrogation,
+  REVERSIBILITY_TEST,
   scoreReversibility,
   SCHEMA_LINES,
   SPLIT_CANDIDATES,
   scoreSplit,
 } from './scoring'
+
+const source = (file: string) =>
+  readFileSync(fileURLToPath(new URL(file, import.meta.url)), 'utf8')
 
 test('the table carries six decisions, matching the exercise the stage describes', () => {
   expect(DECISIONS).toHaveLength(6)
@@ -75,16 +81,6 @@ test('unknown ids are ignored rather than counted, so stale answers cannot infla
 
 test('an empty run scores zero rather than dividing by nothing', () => {
   expect(scoreReversibility({})).toEqual({ answered: 0, correct: 0 })
-})
-
-test('four questions, matching the four the doc asks of a domain model', () => {
-  expect(INTERROGATIONS).toHaveLength(4)
-})
-
-test('every question offers exactly two options, because a third would be padding', () => {
-  for (const q of INTERROGATIONS) {
-    expect(q.options, `${q.id} option count`).toHaveLength(2)
-  }
 })
 
 test('every question’s answer is one of its own options, so the right answer is reachable', () => {
@@ -214,10 +210,10 @@ test('at least five lines are annotated, so the inspector has something to inspe
 })
 
 test('the four constraints the doc calls out by name are all annotated', () => {
-  // docs/03-architecture.md, "Design the database" names three of these (cents, CHECK, RESTRICT)
-  // and :74 names the fourth (uniqueness scope). If a future
-  // edit drops one, the inspector silently stops teaching the thing the prose
-  // promises it teaches.
+  // docs/03-architecture.md, "Design the database" names three of these (cents,
+  // CHECK, RESTRICT); "Model the domain first" names the fourth, uniqueness
+  // scope, in its interrogation questions. If a future edit drops one, the
+  // inspector silently stops teaching the thing the prose promises it teaches.
   for (const id of [
     'amount-cents',
     'status-check',
@@ -228,6 +224,21 @@ test('the four constraints the doc calls out by name are all annotated', () => {
     expect(line, `${id} missing from the schema block`).toBeDefined()
     expect(line!.note, `${id} is not annotated`).toBeTruthy()
   }
+})
+
+test('the version and deleted_at lines each name the characteristic they trace to, since the doc’s point is that neither is a default', () => {
+  const version = SCHEMA_LINES.find((l) => l.id === 'version')
+  expect(version?.note, 'version is not annotated').toBeTruthy()
+  expect(version!.note).toMatch(/correctness/i)
+
+  const deleted = SCHEMA_LINES.find((l) => l.id === 'deleted-at')
+  expect(deleted?.note, 'deleted_at is not annotated').toBeTruthy()
+  expect(deleted!.note).toMatch(/auditability/i)
+})
+
+test('the deleted_at note names the tax it charges, because a soft delete that reads as free is the reason queries forget the filter', () => {
+  const deleted = SCHEMA_LINES.find((l) => l.id === 'deleted-at')
+  expect(deleted!.note).toMatch(/filter/i)
 })
 
 test('schema line ids are unique, because selection is keyed by id', () => {
@@ -245,10 +256,11 @@ test('every edge runs between declared modules, so the map cannot draw a danglin
   }
 })
 
-test('exactly one edge is illegal, and it is the cross-table query', () => {
+test('the boundary rule applies to writes as much as reads, so there are now two illegal edges', () => {
   const illegal = BOUNDARY_EDGES.filter((e) => !e.legal)
-  expect(illegal).toHaveLength(1)
-  expect(illegal[0].id).toBe('clients-queries-invoices')
+  expect(illegal).toHaveLength(2)
+  expect(illegal.map((e) => e.id)).toContain('clients-queries-invoices')
+  expect(illegal.map((e) => e.id)).toContain('clients-writes-invoices')
 })
 
 test('legality is data, not styling, so a screen reader gets the same information as a sighted reader', () => {
@@ -262,4 +274,162 @@ test('every edge names the call it represents, since that is what the reader is 
   for (const e of BOUNDARY_EDGES) {
     expect(e.call.trim().length, `${e.id} call`).toBeGreaterThan(0)
   }
+})
+
+test('the model is interrogated with six questions, because the doc added the entity-versus-event one and an app short of it teaches a retracted set', () => {
+  expect(INTERROGATIONS).toHaveLength(6)
+})
+
+test('the entity-versus-event question is asked before the actor-rights one, matching the order the doc walks a reader through', () => {
+  const ids = INTERROGATIONS.map((q) => q.id)
+  expect(ids.indexOf('approval-event')).toBeGreaterThan(-1)
+  expect(ids.indexOf('approval-event')).toBeLessThan(
+    ids.indexOf('actor-rights'),
+  )
+})
+
+test('an approval is judged a thing rather than a status flip, since a column holds the current value and not the act', () => {
+  expect(judgeInterrogation('approval-event', 'entity').correct).toBe(true)
+  expect(judgeInterrogation('approval-event', 'status').correct).toBe(false)
+})
+
+test('the entity-versus-event explanation names what a status flip throws away, because “who did it and when” is the whole test', () => {
+  const { why } = judgeInterrogation('approval-event', 'status')
+  expect(why).toMatch(/who did it and when/i)
+})
+
+test('the actor-rights question answers with the relationship, since a users.role column is one global answer to a question asked per team', () => {
+  expect(judgeInterrogation('actor-rights', 'membership').correct).toBe(true)
+  expect(judgeInterrogation('actor-rights', 'column').correct).toBe(false)
+  expect(judgeInterrogation('actor-rights', 'entity').correct).toBe(false)
+})
+
+test('every interrogation offers at least two options, since a question with one answer is not a judgment', () => {
+  for (const q of INTERROGATIONS) {
+    expect(q.options.length, `${q.id} has too few options`).toBeGreaterThan(1)
+  }
+})
+
+test('the reversibility test has three questions, which is what makes it a test rather than an instinct', () => {
+  expect(REVERSIBILITY_TEST).toHaveLength(3)
+})
+
+test('the last question is the stored-data one, because the doc says it dominates the other two', () => {
+  expect(REVERSIBILITY_TEST.at(-1)?.id).toBe('stored-data')
+})
+
+test('every test question explains itself, since the questions alone read as a checklist', () => {
+  for (const q of REVERSIBILITY_TEST) {
+    expect(q.note.trim().length, `${q.id} has no note`).toBeGreaterThan(0)
+  }
+})
+
+test('the due_date line is annotated, because date versus timestamptz is one of the two lines the doc argues about', () => {
+  const line = SCHEMA_LINES.find((l) => l.id === 'due-date')
+  expect(line?.note?.trim().length ?? 0).toBeGreaterThan(0)
+})
+
+test('the primary-key note names the alternative it rejected, so the choice reads as a choice', () => {
+  const line = SCHEMA_LINES.find((l) => l.id === 'pk')
+  expect(line?.note).toMatch(/bigserial/)
+})
+
+test('every annotated line is inside the table body, since the CREATE and the closing paren have nothing to teach', () => {
+  for (const line of SCHEMA_LINES) {
+    if (line.note) expect(line.indent, `${line.id} is annotated`).toBe(1)
+  }
+})
+
+test('the boundary map shows a write crossing a boundary, which is the half of the rule that gets forgotten', () => {
+  const write = BOUNDARY_EDGES.find((e) => e.id === 'clients-writes-invoices')
+  expect(write).toBeDefined()
+  expect(write?.legal).toBe(false)
+})
+
+test('the map is not all-illegal or all-legal, so the shape of the call is what decides and not the pairing', () => {
+  expect(BOUNDARY_EDGES.filter((e) => e.legal).length).toBeGreaterThan(0)
+  expect(BOUNDARY_EDGES.filter((e) => !e.legal).length).toBeGreaterThan(1)
+})
+
+test('every edge names modules the map actually draws, since an edge to nowhere renders as a dangling line', () => {
+  for (const e of BOUNDARY_EDGES) {
+    expect(BOUNDARY_MODULES, `${e.id} from`).toContain(e.from)
+    expect(BOUNDARY_MODULES, `${e.id} to`).toContain(e.to)
+  }
+})
+
+// The write edge was added after the figure was captioned, and the caption kept
+// saying three. A reader counting rows against the caption finds an extra one
+// and has to decide which to trust. This catches the next one the same way: any
+// prose in either file that puts a number in front of "calls" or "edges" has to
+// agree with the array the component maps over.
+const WORD_COUNT: Record<string, number> = {
+  one: 1,
+  two: 2,
+  three: 3,
+  four: 4,
+  five: 5,
+  six: 6,
+}
+
+test('no prose around the boundary map counts a number of calls the map does not render', () => {
+  for (const file of ['./Architecture.tsx', './BoundaryMap.tsx']) {
+    const text = source(file)
+    // `[\s*]+` so a count wrapped across a JSDoc line still matches.
+    for (const m of text.matchAll(
+      /\b(one|two|three|four|five|six)\b[\s*]+(calls|edges)\b/gi,
+    )) {
+      expect(WORD_COUNT[m[1].toLowerCase()], `${file}: “${m[0]}”`).toBe(
+        BOUNDARY_EDGES.length,
+      )
+    }
+  }
+})
+
+// `BoundaryMap` renders `BOUNDARY_EDGES` in array order, so "the read below it"
+// is a direction, not a phrase — and it points at empty space when the read is
+// listed first.
+test('the write edge points at the read in the direction the list actually renders it', () => {
+  const ids = BOUNDARY_EDGES.map((e) => e.id)
+  const write = BOUNDARY_EDGES.find((e) => e.id === 'clients-writes-invoices')
+  const readFirst =
+    ids.indexOf('clients-queries-invoices') <
+    ids.indexOf('clients-writes-invoices')
+
+  expect(write?.why).toMatch(
+    readFirst ? /the read above it/ : /the read below it/,
+  )
+})
+
+// G1, open across three cold-reader runs. The strike test rested on one
+// example — "total is not an entity" — which is a verdict on our noun, not a
+// test a reader can run on theirs. The rule lives in the strike-test paragraph
+// in the doc, not in the interrogation set, so this asserts the app's
+// strike-test prose rather than adding a seventh question the doc does not
+// have. The interrogation count test is what caught that: the doc has six.
+test('the strike test states the rule that generalises, since one worked example is a verdict on our noun and not a test for theirs', () => {
+  const source = readFileSync(
+    fileURLToPath(new URL('./Architecture.tsx', import.meta.url)),
+    'utf8',
+  )
+  const model = source.slice(
+    source.indexOf("id: 'model'"),
+    source.indexOf("id: 'worksheet'"),
+  )
+  expect(model, 'the model step does not state the rule').toMatch(
+    /point at it on its own|point at this on its own/i,
+  )
+  // The second case sits in `worksheet` rather than `model`: it is where the
+  // reader applies the test to their own nouns, and `model` had no panel
+  // headroom for it. The two steps are adjacent, so the reader meets the rule
+  // and then the borderline case in order — but the rule must not ship without
+  // a case that is not the one that motivated it.
+  const modelAndWorksheet = source.slice(
+    source.indexOf("id: 'model'"),
+    source.indexOf("id: 'shape'"),
+  )
+  expect(
+    modelAndWorksheet,
+    'the rule needs a case that is not the one that motivated it',
+  ).toMatch(/address/i)
 })

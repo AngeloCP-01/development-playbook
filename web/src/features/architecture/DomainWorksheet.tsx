@@ -12,19 +12,24 @@ import {
 import { ArchCarryForward, type SeedField } from './ArchCarryForward'
 
 /**
- * The stage's persisted output: the four interrogation questions turned on the
- * reader's own domain, plus the decisions that earned an ADR.
+ * The stage's persisted output: four of the five interrogation questions turned
+ * on the reader's own domain, plus the decisions that earned an ADR. The fifth
+ * — whether every actor has the same rights over an entity — is not a field
+ * here, because the doc has its answer land in the authorization pattern
+ * instead (docs/03-architecture.md, "Authentication and authorization"). Adding
+ * a fifth field would also change the persisted `DomainSheet` shape under
+ * readers who already have answers saved.
  *
  * Structurally `PlanWorksheet` (planning) — same key shape, same counter, same
  * copy/clear behaviour — under its own storage key so the two stages never
  * collide.
  *
  * The hints deliberately ask the question rather than answer it. This sheet
- * sits in the same panel as `ModelInterrogation`, which scores those same four
- * questions on the doc's invoice domain, so a hint that said "compute it, do
- * not store it" would hand the reader the verdict for an exercise they have
- * not committed to yet. The placeholders are drawn from a different domain for
- * the same reason.
+ * sits in the same panel as `ModelInterrogation`, which scores all five of those
+ * questions on the doc's invoice domain, so a hint that said "compute it, do not
+ * store it" would hand the reader the verdict for an exercise they have not
+ * committed to yet. The placeholders are drawn from a different domain for the
+ * same reason.
  */
 
 type Field = {

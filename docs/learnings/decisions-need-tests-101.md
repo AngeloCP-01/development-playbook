@@ -23,7 +23,7 @@ up in a diff; a line number changes when anyone inserts a paragraph three sectio
 Two citations were converted by hand as demonstration, and a follow-up commit repaired two
 more that had staled.
 
-Then the next round on the same branch took that document from 300 lines to 898.
+Then the next round on the same branch took that document from 300 lines to 902.
 
 **All 18 remaining citations staled.** Including the two that had just been repaired. The only
 two that survived were the two that had been converted to headings — D-42's own argument,
@@ -90,6 +90,35 @@ silently violable** — file conventions, naming, cross-references, generated fi
 sync.
 
 The tell: if you can write the violation as a grep, write it as a test instead.
+
+## The same failure, one layer up: verifying the wrong invariant
+
+The guide above is about a decision with no check. There is a sharper version where the check
+exists, runs, passes, and was measuring something that did not matter.
+
+Stage 03's doc round ran in parallel with the port of that same doc into the app. Before
+starting, the branches were checked for file overlap. There was none — the doc round touched
+`docs/03-architecture.md` and `terms.ts`, the port touched `web/src/features/architecture/`. On
+that basis the conclusion was "zero conflict risk", and it was reported that way.
+
+The merge was in fact clean. The conclusion was still wrong, because **the port's data files are
+the doc's content in another form.** That is what a port is. So editing the doc always changes
+what the port owes, no matter which files each branch happens to touch. The check answered "will
+git need me to resolve anything" when the question was "will these two things still agree".
+
+What it cost: the app shipped an authorization exercise whose answer key taught the exact framing
+a whole-branch review had already found produces cross-team privilege escalation. The doc was
+fixed; its copy in `contracts.ts` was not, and nothing flagged the gap because the branches were
+"disjoint".
+
+**The general shape.** When a check passes, ask what it would have caught. `git merge-tree` can
+tell you two branches merge; it cannot tell you they mean the same thing. Mechanical
+independence and semantic independence are different properties, and only one of them has a
+command.
+
+The rule that came out of it is **D-51** — a stage's doc and its port never run concurrently,
+and they merge as one unit — plus a continuously updated coverage map
+(`docs/stage-03-status.md`) rather than discovering divergence at review time. Twice was enough.
 
 ## Related
 

@@ -52,11 +52,22 @@ const files = sourceFiles(SRC).map((path) => ({
   text: readFileSync(path, 'utf8'),
 }))
 
-test('no source citation uses a line number (D-42)', () => {
+// Two shapes, because only the first one was banned and the second one shipped.
+// `AuthPaths.tsx` cited a heading and then added "plus the authorization line
+// at" followed by a bare colon and a range — which the pattern above walks
+// straight past, because the colon is not touching the filename. That range had
+// drifted by roughly seven hundred lines by the time anyone read it, and a
+// second one was sitting in scoring.test.ts. A detached colon-and-digits is a
+// line citation whatever it is attached to, so both shapes are collected here.
+//
+// Written without an example of the banned form on purpose: this file is one of
+// the files the sweep reads.
+test('no source citation uses a line number, attached to the filename or not (D-42)', () => {
   const offenders = files.flatMap(({ path, text }) =>
-    [...text.matchAll(/docs\/\d{2}-[a-z-]+\.md:\d+(-\d+)?/g)].map(
-      (m) => `${path} → ${m[0]}`,
-    ),
+    [
+      ...text.matchAll(/docs\/\d{2}-[a-z-]+\.md:\d+(-\d+)?/g),
+      ...text.matchAll(/\s:\d+(-\d+)?\b/g),
+    ].map((m) => `${path} → ${m[0].trim()}`),
   )
   expect(offenders, 'cite the heading instead — see D-42').toEqual([])
 })

@@ -39,17 +39,29 @@ Shared components. Reuse these; do not re-invent them per stage.
 
 ### `Stepper` — `src/components/Stepper.tsx`
 
-Splits a stage into 4–6 steps, one panel visible at a time. The active step lives in the
+Splits a stage into steps, one panel visible at a time. The active step lives in the
 URL hash, so a step is deep-linkable and the browser back button walks between them.
 Arrow keys move between steps; visited steps get a check. Pass a `Step[]`
 (`{ id, label, hint, content }`).
 
 Use it for every stage. Group the doc's sections into steps by phase, not by length.
 
-Every stage carries one further **"AI plays"** step beyond the 4–6 — the "where agents help
-and where they mislead" pattern from stage 01, tuned to that stage's work — so a built
-stage runs to 7 (stage 02 is the reference). The 4–6 governs _content_ steps; the AI step
-is standard, not drift (D-35). It also appears in the doc as an `### AI in <stage>`
+**How many steps: the rule is about the panel, not the count (D-52).** A step holds **one
+judgment**, and its panel does not exceed **four screens at 1024×768**. The count follows
+from that. Four to six content steps is the typical result and a useful sanity check, but it
+is not a ceiling — a stage whose doc is genuinely fourteen sections will exceed it and should.
+
+This replaces D-38, which capped the count at five content steps. That capped the wrong
+quantity: the reason given was that a step should not be a scroll, and fewer steps for the
+same content makes panels heavier. `web/e2e/audit.spec.ts` measures every panel and fails
+anything over the threshold, so this is checked rather than remembered.
+
+When a panel is over: **split it** at a seam where it holds two judgments, or **compress it**
+by moving elaboration behind an expand-to-reveal. Never by teaching less.
+
+Every stage carries one further **"AI plays"** step beyond the content steps — the "where
+agents help and where they mislead" pattern from stage 01, tuned to that stage's work. The
+AI step is standard, not drift (D-35). It also appears in the doc as an `### AI in <stage>`
 subsection inside "The work".
 
 ### `Figure` — `src/components/Figure.tsx`
@@ -195,7 +207,8 @@ Non-negotiable, and the reason the stage feels consistent rather than a pile of 
 The mechanics (see `CLAUDE.md` for the file-by-file trace):
 
 1. Read the stage's markdown doc. Its sections and its "Traps" block are the raw material.
-2. Group sections into 4–6 `Step`s by phase.
+2. Group sections into `Step`s by phase — one judgment per step, each panel under four
+   screens (D-52). Four to six is the usual answer, not a limit.
 3. For each section, pick a pattern from the table above. Prose is the fallback, not the
    default — if a section is only prose, ask what the reader could _do_ with it instead.
 4. Wrap every diagram in `Figure`; number them across the stage.

@@ -25,97 +25,132 @@ Before doing anything, read these for context:
 - `README.md` — the playbook's own index and its central claim
 - `web/AGENTS.md` — this Next.js version postdates your training data; read
   `node_modules/next/dist/docs/` before writing framework code
-- `docs/learnings/README.md` — five guides written after rounds that cost real time. Two are
-  directly relevant to W-3.2: `decisions-need-tests-101.md` (this round supersedes D-38, and
-  that guide is about what makes a recorded decision actually hold) and
+- `docs/learnings/README.md` — six guides written after rounds that cost real time. Two are
+  directly relevant to W-3.2: `decisions-need-tests-101.md` — this round *did* supersede D-38,
+  and that guide is about what makes a recorded decision actually hold, which D-38 did not — and
   `stage-implementation-101.md` (the layout traps and verification checklist for building a
   stage)
 
-### Project state (as of 2026-07-29)
+### Project state (as of 2026-08-03, after the D-52 round, the eight doc gaps, cold-reader run 4, and the whole-branch re-review)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
   figures quoted in the tracker came from **ad-hoc P-4 scripts that no longer exist** (TD-5).
   They are not committed tests and nothing re-runs them. Do not cite them as having passed.
   What *is* enforced: `stage-metadata.test.ts` (each doc's H1 matches `stages.ts`, and every
-  built stage has its `### AI in …` heading), `glossary.test.ts`, and — new in W-3.1 —
-  `stage-03-structure.test.ts` (pins that doc's thirteen subsections in order) and
-  `source-citations.test.ts` (D-42: bans line-number citations and resolves every heading one).
-- **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01, 02 and 03
-  are complete and interactive.** Stage 03 (Architecture) ships a 6-step stepper
-  (Reverse · Model · Constrain · Shape · Decide · AI plays), 9 figures, 4 judgment
-  exercises, an annotated-DDL inspector, and a domain worksheet that carries stage 02's
-  answers forward.
-- **Stage 03's doc is done; its app now lags it (TD-23).** W-3.1 closed **TD-18**, **TD-21**
-  and **TD-22** in `docs/03-architecture.md`, which went from 8 subsections and 300 lines to
-  **13 subsections and 898 lines**, running requirements → HLD → LLD. The round was
-  deliberately doc-only (**D-46**), so the app's six steps still mirror a doc that no longer
-  exists. **Porting it is W-3.2 and it is the next round.** Note the app must mirror the
-  *corrections* as well as the additions — `scoring.ts` holds the interrogation set, the DDL
-  annotations and the reversibility lists, and all three changed.
-- **The cold-reader method is now load-bearing, not a formality.** The re-run on the amended
-  stage 03 scored 9 of 14 gaps closed and found five the round had *introduced*, including a
-  Definition-of-done checkbox gated on idempotency that the doc never taught. Budget for a
-  fix wave after every cold-reader pass; the first report is not the end of the round.
+  built stage has its `### AI in …` heading), `glossary.test.ts`, `stage-03-structure.test.ts`
+  (pins that doc's fourteen subsections in order), `source-citations.test.ts` (D-42), and
+  `ddl-sync.test.ts` plus `evolve.test.ts`, which hold three SQL blocks in the app to the doc
+  character-for-character.
+- **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01 and 02 are
+  complete and interactive; 03 is on `feat/stage-03-app-port` at 22 steps**, every panel under
+  four screens. See `docs/stage-03-status.md` for section-by-section coverage — it is the map,
+  and it is current.
+- **The D-52 reshape is done, and D-52 stands in place of D-38** (superseded, kept struck
+  through for the record). `PANEL_EXCEPTIONS` in `web/e2e/audit.spec.ts` is back to its two
+  permanent entries, which was the exit condition. **Twenty-two steps was not a target**: every
+  split was forced by a measurement, and several landed one section later than the plan proposed
+  because the plan's seam measured wrong.
+- **Stage 03's port content is complete, and so are its eight recorded doc gaps** (W-3.3).
+  The doc is at **1,507 lines / 14 sections**; the app is still 22 steps, because every gap
+  landed inside an existing panel under the four-screen rule and three went behind
+  expand-to-reveal (D-49). **TD-23 stays open** on the merge alone — both whole-branch passes
+  have now run and every finding is fixed.
+- **Cold-reader run 4 returned COMPLETE** — the first of four runs to do so
+  (`docs/verification/cold-reader-stage-03-run4.md`). Two findings were recorded as deferred
+  rather than fixed, and they are content decisions waiting on a call: 2NF is unviolatable
+  under the `uuid` primary keys every DDL in this stage uses, and the archive table gives no
+  volume threshold.
+- **The cold-reader method is load-bearing, not a formality.** Budget a fix wave after every
+  pass; the first report is not the end of the round (D-48).
+- **A per-task reviewer subagent is now the standard** (see `docs/tracker.md`, "Process
+  observations"). Four have run on this round and found **fourteen blocking defects**, including
+  two factual errors about Postgres in teaching material; the whole-branch review then found
+  **seven more**, so the rate did not fall off. **The same session cannot self-review**
+  — the reading that produced the claim produces the check. Implement inline, dispatch reviewers.
 - **Every stage carries an "AI plays" section** (D-35), in both doc and app.
-  `stage-metadata.test.ts` now **fails any stage whose doc lacks the `### AI in <stage>`
-  heading**, because stage 03's doc turned out not to have one and the round had to write it
-  before it could mirror it. Do not assume a stage doc already has its AI section — check.
+  `stage-metadata.test.ts` **fails any stage whose doc lacks the `### AI in <stage>` heading**.
 - **Glossary + metadata are single-sourced** (D-36, TD-2/TD-3 closed): terms live in
   `web/src/lib/terms.ts`, `reference/glossary.md` is generated from it (`pnpm gen:glossary`),
   and a title sync test guards each doc's H1 against `stages.ts`. Never hand-edit
   `glossary.md`.
 - **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **136 vitest tests across 11 files**, a **10-test playwright
-  audit suite over 20 URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
+  eslint at `--max-warnings 0`, **313 vitest tests across 26 files**, a **14-test playwright
+  audit suite over 36 URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
   public (D-26).
-- **The audit suite does *not* sweep ready stages automatically.** `PAGES` in
-  `web/e2e/audit.spec.ts` is a hand-written list of step hashes (**TD-12**). Adding a stage
-  means editing that array by hand; nothing fails if you forget, so a stage can ship
-  unaudited with the suite still green. An earlier version of this kickoff claimed otherwise.
+- **`PAGES` in `web/e2e/audit.spec.ts` is still hand-written** (**TD-12**), so adding a step
+  means editing that array by hand — thirteen times this round. A dead hash now fails; a missing
+  one still audits nothing, which is the half that matters now.
 - **Not deployed** (`W-5` open).
 - **Branch/push:** work happens on `feat/`|`fix/`|`docs/<date>-` branches, merged to `main`
   with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes.**
-  `main` and `origin/main` are in sync at `249bd9d`; the long-standing local-only backlog
-  was pushed on 2026-07-29 and **CI ran green on it** (`30426083363`, 2m15s).
+  `main` and `origin/main` are in sync at **`eeb16f1`**. **Everything since is unmerged on
+  `feat/stage-03-app-port`, which is 106 commits ahead** (91 files, +20k/−0.5k).
 
 ### This round's scope
 
-**Decided: port stage 03's amended doc into the app — `W-3.2`, closing `TD-23`.** The previous
-round (`W-3.1`) rewrote the doc and deliberately left the app behind (**D-46**), so the two
-now disagree. This round closes that, and it is the larger half.
+**Everything on `feat/stage-03-app-port` is done**: the D-52 round's twelve tasks, W-3.3's
+eight doc gaps, cold-reader run 4 and its fix wave, and the whole-branch re-review's five
+Important findings. What is left is the merge decision, not another task.
 
-**Settle the step structure first.** `D-38` caps a dense stage at five content steps plus the
-AI step, and the doc no longer fits: thirteen subsections against the app's six steps. W-3.2
-supersedes D-38, and the superseding decision has to state a **new ceiling with a reason** —
-"stage 03 is special" is not one, because stage 04 will make the same argument.
+**Read these two first, in this order:**
 
-**Mirror the corrections, not just the additions.** This is the part that is easy to miss.
-`scoring.ts` carries the DDL annotations, the interrogation set and the reversibility lists,
-and W-3.1 changed all three: a fifth interrogation question about actor rights, indexes and a
-partial unique index and a `memberships` table in the DDL, and the reversibility test promoted
-out of the AI section into section 1. A port that only adds components leaves the app asserting
-things the doc has since corrected.
+1. `.superpowers/sdd/2026-07-31-step-panel-weight/progress.md` — the ledger. Every task, its
+   commits, every deviation from the plan and why. It is git-ignored scratch, so read it before
+   running anything that cleans the tree.
+2. `docs/superpowers/plans/2026-07-31-step-panel-weight.md` — the plan. **All twelve tasks are
+   done.** Its spec is `docs/superpowers/specs/2026-07-31-step-panel-weight-design.md`, and the
+   plan's own Verification section is the checklist for what comes next.
 
-**New content needing components:** architecture characteristics with the trace-forward table,
-the styles comparison, the system sketch and its three views, the sync/async decision, the ER
-view and indexes, API contracts. The 14 new terms are already in `terms.ts` (glossary 42 → 56)
-but not yet used inline — that wiring is this round's.
+**What is left.** The merge — 106 commits, doc and app as one unit (D-51). The whole-branch
+review has run and returned **seven blocking findings**, plus two minors promoted for being
+reader-visible and introduced by this branch, and sixteen deferred to the tracker. All nine are
+fixed. Four per-task reviews had found **fourteen** before it, and the rate did not fall off:
+the last task reviewed, Task 11, produced three, and the branch pass then produced seven. Two of
+those fourteen were factual errors about Postgres in teaching material, which is the class of
+mistake a per-task review catches and a casual read does not — and the branch pass caught the
+class above that, a green verification gate measuring almost nothing.
 
-**Two cautions from W-3.1, both earned:**
+**The re-review's headline is worth carrying forward as a method, not a fact.** Its I1 was a
+backfill instruction that told the reader to paginate a `WHERE col IS NULL` loop by remembering
+the highest id touched. It reads as careful advice. Run it and the guard has already removed
+the rows the cursor is skipping past: **5000 of 5000 rows silently unmigrated, reported as
+success**. Nothing but execution finds that — which is D-50 arriving a second time, on
+*behaviour* rather than on syntax.
 
-- **The cold-reader pass is a gate, not a formality.** Its re-run found five gaps the round had
-  *introduced*, including a Definition-of-done checkbox gated on idempotency that the doc never
-  taught. Budget for a fix wave after the report.
-- **Check `terms.ts` when fixing a concept** (**D-47**). `Authorization` was defined as
-  ownership — TD-18's blocking G3 defect verbatim — and three tracker entries plus a
-  cold-reader pass all missed it, because they were reading prose.
+**Five things this round has taught, all of which cost time to learn:**
 
-**Watch the length.** The doc is 898 lines, 2.4× the next-longest stage, which is a recorded
-consequence of D-45 rather than an accident. Consultability scored 4/5 and two misfilings were
-found and fixed. If the app port makes a step feel like a scroll, that is the same problem
-arriving in a second surface.
+- **The plan is wrong about the shape of the work more often than the implementation is.**
+  Five of six tasks found a brief that did not match the tree: two seams that measured wrong, a
+  compression lever already applied years earlier, a step-count assumption, and a play count
+  taken from a status doc rather than from the doc. **The exit condition of a split is the
+  measurement, not the edit** — re-cut and re-measure rather than assuming the seam is right.
+- **A panel that measures 4.0 against a limit of 4.0 has not passed.** It passes today and
+  fails on the next font change. Cut again.
+- **A step name in prose is a citation and it stales silently.** Seven shipped on this branch,
+  each found by grep and none by a test: `steps.ts` makes a nonexistent *id* a compile error and
+  can say nothing about a name written in a sentence. Grep for step names whenever a step
+  splits, and re-point `TRACE_ROWS[].stepId` — that one finally fired for real in Task 9.
+- **A test name is a claim, and it goes stale like one.** Four times during the round, and four
+  more found by the whole-branch review; twice the offending test had been cited in a commit
+  body as the fix. Verify by running the regex against a counter-example, not by reading it —
+  the four the review found were each run against one before being rewritten.
+- **Count the doc; do not trust the brief.** Where a count is checkable, check it in a test
+  against the doc itself — `evolve.test.ts`, `ai-plays.test.ts` and now `sketch.test.ts` all do.
+- **Prose that counts a list belongs beside the list.** Three sentences hand-counted "six boxes"
+  against a diagram of eight, in three files, and one of them contradicted itself in its own
+  second clause. They now live in `sketch.ts` next to `SKETCH_NODES` with the counts derived in
+  test — the same move `terms.ts` made for the glossary.
+
+**Two cautions this stage earned earlier and still holds:**
+
+- **Executable content gets executed** (**D-50**). Reading missed two defects in the doc's SQL
+  that one `docker run` found.
+- **Grep `terms.ts` when you fix a concept** (**D-47**), then `pnpm gen:glossary`. Never
+  hand-edit `reference/glossary.md`. Every term this round needed already existed; two
+  candidates were deliberately not added, because the glossary is generated and an entry the
+  doc does not carry would be invention rather than porting.
 
 ---
 

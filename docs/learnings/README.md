@@ -27,18 +27,36 @@ Naming: `<topic>-101.md`.
   reads only the doc, forbidden from filling gaps with its own knowledge, and tries to
   produce the real artifact. A beginner persona finds completeness defects; role personas
   answer "is it ready for audience X?" It caught two content defects in stage 02 and
-  settled its scope. Extended after stage 03's doc round, where the re-run found five gaps
-  **the round itself had introduced** — so the report is the middle of the round, not the
-  end, and the fix wave answering it needs its own pass. Read it before calling any stage
-  doc done.
+  settled its scope. Extended twice after stage 03. The second run found five gaps
+  **the round itself had introduced**, so the report is the middle of the round rather than
+  the end, and the fix wave answering it needs its own pass. The third run added the limit of
+  the method: it caught two defects only by **executing** the doc's SQL, in a section whose
+  prose lectures the reader about silent migration bugs — a backfill that corrupted every
+  single-word name, and a loop whose own "repeat until zero rows" comment was false. Reading
+  checks whether code says what you meant; running checks whether what you meant is true.
+  Read it before calling any stage doc done.
 - `decisions-need-tests-101.md` — why a recorded convention with no mechanical check decays
   at the speed of the next round. D-42 (cite headings, not line numbers) was written after
   an audit found 14 of 33 citations wrong, and four days later the next round on the same
   branch staled all 18 that remained — including two that had just been repaired. The two
   that survived were the two already converted. Read it whenever you are about to write
-  "from now on we will…" in the tracker.
+  "from now on we will…" in the tracker. Extended with the sharper version of the same
+  failure: a check that runs, passes, and measures the wrong invariant — two branches were
+  confirmed to have no files in common and that was reported as "zero conflict risk", when the
+  question was whether they still meant the same thing. It cost an app shipping the security
+  defect its own doc had just fixed.
 - `contrast-checkers-lie.md` — the three ways a colour audit reports a failure that is not
   there: reading `getComputedStyle` while a `transition-colors` is still running, parsing
   `oklab()` with a regex instead of rasterizing it, and passing green over surfaces it
   never looked at. Each has happened here. Read it before changing a token in response to
   a contrast number.
+- `rules-measure-the-wrong-thing-101.md` — what superseding D-38 taught: a rule can be right
+  about what it cares about and wrong about what it counts. D-38 capped a stage's step count,
+  reasoning that "a stepper stops being navigable when a step is a scroll" — a claim about
+  panel weight, enforced by counting panels, which for fixed content moves the opposite way.
+  It had also already been broken by stage 02 without a recorded deviation, so the project
+  carried two disagreeing numbers for two stages. Measuring settled it: stage 03's *median*
+  panel was 5.3 screens against 2.4 and 2.5 elsewhere, the stage with the most steps also
+  having the heaviest panels. Includes the test that both bounds an allowlist and stops it
+  rotting, and the half-mitigation a reviewer caught in the first version of it. Read it
+  before writing any rule with a number in it.

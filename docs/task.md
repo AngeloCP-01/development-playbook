@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03 done; 16 remain)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03 done; 15 remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☐ |
 
@@ -125,7 +125,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02 and 03 done; 16 remain)*
+### W-3 — Stages 02–18 interactive ◐ *(02 and 03 done; 15 remain)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -234,29 +234,164 @@ designing TD-21 or TD-18 against the current six steps risks redoing that work.
       describe the eight-subsection doc
 - [x] Re-run the cold-reader pass afterwards on the amended doc, and record what it finds
 
-### W-3.2 — Port stage 03's doc round into the app ☐ *(next)*
+### W-3.1b — Stage 03 completeness: resilience, consistency, evolution ◐ *(doc done 2026-07-30; app port pending W-3.2)*
+
+Closes **TD-25**. An architecture-completeness audit against standard practice found that five
+clusters of widely-taught material are absent from **all eighteen docs**, not merely deferred
+to a later stage. Scope call is **D-49**: completeness beats length for this stage, and the
+content stays to standard, widely-used practice rather than reaching for the exotic.
+
+**Runs after W-3.2.** This was originally scoped to run *before* the port, on the reasoning
+that amending the doc again would mean porting twice. That reasoning was sound and the premise
+was wrong: `W-3.2` was already substantially built in a parallel session by the time this round
+was scoped — 31 commits, a nine-step stage, +9,446 lines — so the port is the thing in flight
+and this round follows it. **The double-port cost is therefore real and accepted**: this
+round's new content needs its own port pass afterwards, and that pass should be folded into the
+W-3.1b round rather than left as a third one.
+
+**The tell that ties them together:** the characteristics section offers a **ten-item candidate
+list** and supplies a **three-row trace table**. A reader who picks availability, scalability
+or evolvability gets the test with no material to pass it. The missing seven map onto exactly
+these clusters — so this round is what makes that section honest.
+
+- [x] **Resilience patterns** — timeout, retry with exponential backoff and jitter, circuit
+      breaker, graceful degradation. Extends "Sketch the system", which already asks *"what
+      happens when each dependency is down?"* and answers with no patterns. Name bulkhead
+      without teaching it; it rarely earns its place solo
+- [x] **Consistency and concurrency** — CAP named, eventual consistency as a term rather than
+      an adverb, isolation levels (Postgres defaults to read committed, and what serializable
+      buys), **optimistic locking** via a version column, pessimistic via `SELECT … FOR
+      UPDATE`. Extends "Design the database", which currently says "use a transaction" and
+      stops. Closes the hole the cold reader left open in G5. A version column is stored data,
+      so it is decide-now by the stage's own axis
+- [x] **Safe schema evolution** — **expand-contract / parallel change**, and **strangler fig**
+      for the service split the stage says to defer. Likely its own section, because it is a
+      distinct activity: the stage's whole thesis is that stored data is expensive to reverse,
+      and it never teaches how to change stored data safely. Names the cost, not the technique
+- [x] **Statelessness and scaling mechanics** — statelessness (which is what *makes* the
+      serverless style the stage teaches work), horizontal versus vertical, load balancing,
+      read replicas, and **connection pooling** — the last matters concretely here, since
+      serverless plus Postgres is the stack the playbook prescribes and pooling is its
+      best-known failure mode. Extends the styles and one-application sections
+- [x] **Fitness functions** — evolutionary architecture's idea that a characteristic should be
+      automatically checked rather than hoped for. Extends "What this system has to be" and
+      closes its loop. ~~This project already practises it … so the example is in the repo~~ **✗ approach abandoned
+      during the round.** The cold reader found the repo-drawn examples were an appeal to
+      infrastructure the reader does not have, so all three were removed and the work deferred
+      to stage 06. See the TD-25 closure
+- [x] **Widen the characteristics trace table** past three rows, so the ten-item candidate list
+      stops promising more than the stage delivers
+- [x] Expect **one new `###` section** (schema evolution); the rest extend existing sections.
+      `stage-03-structure.test.ts` pins the thirteen headings and must be updated in the same
+      commit as any structural change, with the teeth check re-run
+- [ ] ⏳ **Port this round's content into the app as part of this round** — blocked until `feat/stage-03-app-port` merges, not as a third pass.
+      W-3.2 will have just built a nine-step stage against the current doc; adding a section
+      and extending five others means new components plus edits to `styles.ts`, `sketch.ts`,
+      `schema-blocks.ts` and `contracts.ts`, all of which W-3.2 introduces
+- [x] Glossary terms for every new concept (`terms.ts` → `pnpm gen:glossary`), and **grep
+      `terms.ts` before writing prose** per D-47
+- [x] Cold-reader re-run on the amended doc, same shift-swap product; **budget a fix wave
+      after it and verify the wave itself** (D-48)
+- [x] `humanizer:humanizer` pass (D-20); consultability check, which the cold reader cannot do
+
+**Deliberately out of scope**, so the round does not sprawl: caching *patterns* stay with stage
+09 (linked, not taught); observability with 15; threat modelling and secrets with 08; table
+partitioning and sharding are named as the thing you do not need and not taught.
+
+
+### W-3.3 — Close stage 03's eight recorded doc gaps ☑ *(done 2026-08-03, on `feat/stage-03-app-port`)*
+
+The residue of three rounds, recorded rather than fixed at the time and closed here as one
+unit: normal forms named and never defined; soft delete shown as one mechanic with no choice
+posed, and its filter half missing entirely; the tenancy tables; the partial unique index,
+which is the only way to express "at most one approved claim per shift"; the third-party-call
+cadence; the pull-import contract row; and the auth box the container diagram never drew.
+
+Doc **1,346 → 1,507 lines**. App still **22 steps** — every gap landed inside an existing
+panel under D-52's four-screen rule, three of them behind expand-to-reveal (D-49), so closing
+eight gaps cost no new steps.
+
+**Cold-reader run 4 returned COMPLETE** (`docs/verification/cold-reader-stage-03-run4.md`),
+the first of the four runs to do so. Its fix wave took a D-48 verification pass against a live
+PostgreSQL 17 cluster, and the whole-branch **re-review** then found five Important findings —
+the headline being a backfill instruction that silently skipped every row it was meant to
+migrate. See the W-3.3 row in [tracker.md](tracker.md) for the evidence.
+
+**Deferred, recorded not fixed:** M5 (2NF is unviolatable under the `uuid` primary keys every
+DDL here uses — a content decision about the worked example, not a patch) and M6 (the archive
+table's volume threshold).
+
+### W-3.2 — Port stage 03's doc round into the app ☑ *(content done, whole-branch review run and its findings fixed — `feat/stage-03-app-port`, 106 commits, unmerged)*
+
+**Live coverage map: `docs/stage-03-status.md`.** Section by section, doc against app, with the
+remaining tasks. Read it before picking up this round — it is more current than this checklist,
+because it is updated when the doc moves rather than when a round closes.
+
+`feat/stage-03-standard-practices` was merged **into** this branch on 2026-07-30 (D-51), so the
+doc has stopped moving and the port has one stable target. Tally at that point: 5 sections fully
+ported, 8 partial, 1 (section 9, "Evolve the schema safely") not ported at all.
+
+**Two fixes already landed on this branch beyond the merge**, so the port does not have to
+redo them: the authorization exercise (`contracts.ts`) was scoring `role` alone as correct on
+the manager-approves-a-swap scenario, which is the framing that produces cross-team privilege
+escalation — now a checkbox conjunction, browser-verified; and the TOC and glossary now name
+**system design**, since the stage is called Architecture and nobody searches for that.
 
 W-3.1 was deliberately doc-only, so `docs/03-architecture.md` and
 `web/src/features/architecture/` now disagree about what the stage contains. That divergence
 is **TD-23**, and this round closes it.
 
-The doc went from eight subsections to thirteen and from 300 lines to 898. The app is still
-the six steps built in W-3: reverse · model · constrain · shape · decide · ai.
+The doc is 14 subsections and ~1,344 lines. The app is **22 steps**: reverse · require · trace ·
+model · worksheet · shape · oneapp · boundaries · sketch · flow · resilience · schema ·
+indexes · tenancy · concurrency · races · evolve · contract · access · record · ai · traps.
+(Two earlier versions of this checklist named step sets that had not existed for weeks. The
+count moves every task now, so `web/src/features/architecture/steps.ts` is the answer and this
+line is a snapshot.)
 
-- [ ] **Decide the new step structure first.** Five content steps is D-38's ceiling and the
-      doc no longer fits inside it. This round supersedes D-38 with the shape the doc proved,
-      and the superseding decision states the new ceiling and why — not "stage 03 is special"
-- [ ] **New content needing components**: architecture characteristics with the trace-forward
-      table, the styles comparison, the system sketch with its three views, the sync/async
-      decision, the database section's ER view and indexes, API contracts
-- [ ] **Mirror the corrections, not just the additions** — `scoring.ts` holds the DDL
-      annotations, the interrogation set and the reversibility lists, all of which changed.
-      The interrogation set gained a fifth question; the DDL gained indexes, a partial unique
-      index, and the `memberships` table
-- [ ] **`terms.ts` already has the 14 new terms** (glossary 42 → 56, shipped in W-3.1). They
-      are defined but not yet used inline by any component, which is the wiring this round does
-- [ ] Re-run the audit suite — new step hashes need adding to `e2e/audit.spec.ts` by hand
-      (TD-12), and the 320px overflow check matters for the ASCII diagrams and the wide tables
+**Twenty-two is not a target and was not chosen.** Every split was forced by a measurement:
+the panel came out over four screens, so it was cut at a seam where it held two judgments.
+D-52 says count follows content, and this is what that produced for the densest of the
+eighteen stages — `require` itself measured 4.7 screens with the widened trace still in it,
+which is why `trace` exists as its own step.
+
+- [x] **Decide the new step structure first.** ✓ 2026-07-31. **D-52** supersedes D-38: a step
+      holds one judgment and its panel stays under four screens at 1024×768; count follows
+      content. D-38 capped the wrong quantity — its own reason was about panel weight, and
+      capping the count makes panels heavier. Measurement settled it, and also showed D-38 had
+      already been broken by stage 02 without a recorded deviation
+- [x] **Mirror the corrections, not just the additions** ✓ 2026-07-31 — the sixth interrogation
+      question, `version` and `deleted_at` on the invoices DDL, and the `invoice_sends` block.
+      `ddl-sync.test.ts` now holds both `CREATE TABLE` blocks to the doc character-for-character
+- [x] **The D-52 reshape is done** ✓ 2026-07-31. `PANEL_EXCEPTIONS` is back to its **two
+      permanent entries**, which was the plan's stated exit condition. Every stage-03 panel
+      measures under four screens; the heaviest is `model` at 3.7. Tasks 1–10 of
+      `docs/superpowers/plans/2026-07-31-step-panel-weight.md`
+- [x] **Port section 9, "Evolve the schema safely"** ✓ 2026-07-31 — the `evolve` step. The
+      six-step sequence as a guess-then-reveal on which two get skipped (2 and 5), the
+      pre-launch exemption as the panel's opening rather than a footnote, and the backfill
+      held to the doc character-for-character by a test, because that statement was wrong
+      twice and both defects were found by running it (D-50)
+- [x] **Port four of the five clusters** ✓ 2026-07-31 — resilience into `resilience`,
+      isolation and locking into `concurrency`/`races`, scaling and pooling into `shape`,
+      two more AI plays and the sixth mislead into `ai`
+- [x] **Port the last cluster** ✓ 2026-07-31, `9798286` — fitness functions and the widened
+      ten-row trace split out into a new `trace` step, event sourcing and CQRS into `record`.
+      Task 11
+- [x] **`terms.ts` grepped on every ported concept** (D-47) ✓ — every term the four clusters
+      needed already existed from the doc round, so nothing was added and `gen:glossary` did
+      not run. Two candidates were deliberately **not** added ("backfill", "rolling deploy"):
+      both are defined in place, and the glossary is generated from `terms.ts`, so an entry
+      the doc does not carry would be inventing reference content rather than porting it
+- [x] New step hashes added to `e2e/audit.spec.ts` by hand (TD-12) — **thirteen** of them this
+      round, taking stage 03's entries from nine to twenty-two. A *dead* hash now fails; a
+      *missing* one still audits nothing, which is the half TD-12 still names
+- [x] **Whole-branch review before merge**, doc and app together. ✓ 2026-08-03 — seven
+      blocking findings, two minors promoted for being reader-visible and introduced by this
+      branch, sixteen deferred. The four per-task reviews before it had found fourteen blocking
+      defects between them, including two factual errors about Postgres that read plausibly and
+      that no test could have caught until the tests were rewritten; the branch pass then found
+      that the contrast and touch-target gates were opening five expandables across 36 pages
+      and reporting a clean sweep
 - [ ] Close **TD-23** when doc and app agree again
 
 #### AI-plays coverage, per stage
@@ -269,7 +404,7 @@ plan"; architecture's, testing's and so on will each have their own). Status:
 |---|---|---|---|
 | 01 Product Discovery | ☑ | ☑ | Doc `### AI in discovery` backfilled; TD-15 closed |
 | 02 Product Planning | ☑ | ☑ | Done: 7th step + `### AI in planning` |
-| 03 Architecture | ☑ | ☑ | `### AI in architecture` + a 6th step. The doc had **no** AI section — the round had to write one before it could mirror it, which is why `stage-metadata.test.ts` now fails any stage whose doc lacks the heading |
+| 03 Architecture | ☑ | ☑ | `### AI in architecture`, its own step — the 21st of 22 after the D-52 reshape, and the 6th when it was written. The doc had **no** AI section — the round had to write one before it could mirror it, which is why `stage-metadata.test.ts` now fails any stage whose doc lacks the heading |
 | 04–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
 
 Suggested order. Revised 2026-07-24 (D-27): the first pass ranked purely by teaching
@@ -279,10 +414,11 @@ pattern library on the hardest stage.
 | Order | Stage | Why this one next |
 |---|---|---|
 | ~~1~~ ✓ | 02 Product Planning | **Done.** Complete + interactive + audience-validated (D-37: developer-complete; PM/SA are scope boundaries). Proved `web/PATTERNS.md`, the carry-forward chain, and the AI-plays pattern transfer. |
-| ~~2~~ ✓ | 03 Architecture | **App done; doc has open gaps (TD-18).** Densest stage, nine figures, six steps. Stress-tested the pattern library and produced one new row (annotated artifact). The cold-reader pass then found the *doc* underneath it is incomplete for a beginner — see the recommendation below. |
-| **3 (next, recommended)** | — | **Close stage 03's doc gaps (TD-18)** before building another stage. Three are blocking for a reader using the stage as intended, and the app mirrors the doc, so every fix is a two-file change that gets more expensive as more stages copy the pattern. |
-| 4 | 15 Observability | Unfamiliar ground; benefits most from figures |
-| 5 | 16 Incident Management | Procedural, so a stepper fits naturally |
+| ~~2~~ ✓ | 03 Architecture | **Doc and app content agree; the whole-branch review has run, and TD-23 now waits only on the merge.** The densest stage by a distance: 14 doc sections, 22 app steps, 24 figures. TD-18, TD-21, TD-22 and TD-25's doc half all closed on it. Stress-tested the pattern library and produced two new rows (annotated artifact, and the panel-weight rule that replaced the step-count ceiling). |
+| ~~3~~ ✓ | — | **Stage 03's doc gaps closed** across W-3.1, W-3.1b, W-3.3 and four cold-reader runs — run 4 returned **COMPLETE**, the first to do so. |
+| **4 (next)** | — | **Merge W-3.2 + W-3.3.** The port is done and both whole-branch passes have run: 106 commits, seven blocking findings from the first branch pass and five Important from the re-review, on top of fourteen from the per-task reviews — all fixed. Two minors (M5, M6) are recorded as deferred content decisions. What is left is the merge decision, not more work. |
+| 5 | 15 Observability | Unfamiliar ground; benefits most from figures |
+| 6 | 16 Incident Management | Procedural, so a stepper fits naturally |
 | 6 | 13 Production Deployment | Expand/migrate/contract needs a visual |
 | — | remainder | 04–12, 14, 17, 18 |
 

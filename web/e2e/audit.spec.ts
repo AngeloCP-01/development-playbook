@@ -22,11 +22,27 @@ const PAGES = [
   '/stages/02-planning#write',
   '/stages/02-planning#horizon',
   '/stages/03-architecture#reverse',
+  '/stages/03-architecture#require',
+  '/stages/03-architecture#trace',
   '/stages/03-architecture#model',
-  '/stages/03-architecture#constrain',
+  '/stages/03-architecture#worksheet',
   '/stages/03-architecture#shape',
-  '/stages/03-architecture#decide',
+  '/stages/03-architecture#oneapp',
+  '/stages/03-architecture#boundaries',
+  '/stages/03-architecture#sketch',
+  '/stages/03-architecture#flow',
+  '/stages/03-architecture#resilience',
+  '/stages/03-architecture#schema',
+  '/stages/03-architecture#indexes',
+  '/stages/03-architecture#tenancy',
+  '/stages/03-architecture#concurrency',
+  '/stages/03-architecture#races',
+  '/stages/03-architecture#evolve',
+  '/stages/03-architecture#contract',
+  '/stages/03-architecture#access',
+  '/stages/03-architecture#record',
   '/stages/03-architecture#ai',
+  '/stages/03-architecture#traps',
 ]
 
 const WIDTHS = [320, 768, 1024, 1440, 2560]
@@ -44,6 +60,47 @@ function luminance([r, g, b]: number[]) {
 function ratio(a: number[], b: number[]) {
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x)
   return (hi + 0.05) / (lo + 0.05)
+}
+
+/**
+ * Open every expandable inside the current step panel, so the checks below see
+ * revealed surfaces rather than the collapsed shell.
+ *
+ * This used to be one line — `button[aria-controls]`, clicked in a single
+ * `forEach`. Two things were wrong with it. `Stepper` puts `aria-controls` on
+ * all 22 rail tabs and the rail precedes the panel in DOM order, so the loop
+ * walked the tabs first; each tab click unmounted the panel, and the accordion
+ * buttons captured in the static NodeList were detached before the loop reached
+ * them. Measured on `#trace`: 11 expandables before the loop, 0 opened, and the
+ * page left sitting on `#traps`. Across the 36 entries the sweep opened five
+ * expandables in total.
+ *
+ * So: scoped to `[role=tabpanel]`, which excludes the rail; re-queried between
+ * passes, because a click that opens an accordion reveals more of them; and
+ * marked, because clicking a closed button in a single-open group closes its
+ * sibling and an unmarked re-query oscillates instead of terminating. The pass
+ * cap is a backstop, not the exit condition.
+ *
+ * After: 108 expandables opened, and the contrast sweep collects 867 distinct
+ * colour pairs against 717.
+ */
+async function openExpandables(page: import('@playwright/test').Page) {
+  for (let pass = 0; pass < 6; pass++) {
+    const opened = await page.evaluate(() => {
+      const closed = [
+        ...document.querySelectorAll<HTMLButtonElement>(
+          '[role=tabpanel] button[aria-expanded="false"]:not([data-audit-opened])',
+        ),
+      ]
+      for (const b of closed) {
+        b.setAttribute('data-audit-opened', '')
+        b.click()
+      }
+      return closed.length
+    })
+    if (!opened) return
+    await page.waitForTimeout(60)
+  }
 }
 
 // ── overflow ───────────────────────────────────────────────────────────────
@@ -72,7 +129,30 @@ test('interactive elements are at least 44px tall below lg', async ({
   await page.setViewportSize({ width: 390, height: 844 })
   for (const path of PAGES) {
     await page.goto(path, { waitUntil: 'networkidle' })
+    // A target that is only reachable behind an accordion is still a target.
+    // This check never expanded anything either, which is how a sub-44px
+    // <Term> inside a collapsed TeamNotes stayed unmeasured.
+    await openExpandables(page)
     const small = await page.evaluate(() => {
+      /** Inline in a sentence: somewhere between the target and the `p` or
+       *  `li` holding it, there is running text beside it. `Term` wraps itself
+       *  in a span, so the text is a level or two up rather than a direct
+       *  sibling — an accordion control never finds any, because its heading
+       *  and its row hold nothing but the control. */
+      const inlineInSentence = (el: Element) => {
+        const sentence = el.closest('p, li')
+        if (!sentence) return false
+        let node: Element | null = el
+        while (node && node !== sentence) {
+          const beside = [...(node.parentElement?.childNodes ?? [])].some(
+            (n) => n.nodeType === 3 && (n.textContent ?? '').trim().length > 0,
+          )
+          if (beside) return true
+          node = node.parentElement
+        }
+        return false
+      }
+
       const inScroller = (el: Element) => {
         let e = el.parentElement
         while (e) {
@@ -97,10 +177,23 @@ test('interactive elements are at least 44px tall below lg', async ({
             !inScroller(el) &&
             // WCAG 2.5.8 exempts targets sitting inline in a sentence — their
             // size is constrained by the surrounding text's line-height. This
-            // covers <Term> buttons inside prose. The earlier ad-hoc sweep
-            // masked these by excluding aria-controls wholesale, which would
-            // also have exempted accordions; this exemption is the honest one.
-            !el.closest('p')
+            // covers <Term> buttons inside prose, and `li` as well as `p`
+            // because a sentence in a list is still a sentence.
+            //
+            // But "inside a sentence element" is not "inline in a sentence". A
+            // bare `p, li` exempted 880 elements to excuse one — including 74
+            // accordion controls and 67 exercise radios and checkboxes, which
+            // are list-wrapped by construction. That is the same hole the
+            // earlier aria-controls exemption had, which this comment used to
+            // disown while reproducing it.
+            //
+            // Role does not separate them either: `Term` is itself a
+            // disclosure, so excluding `aria-expanded` re-gates the very
+            // buttons this exemption exists for. What actually distinguishes
+            // them is whether the control sits *among text* — a `Term` has
+            // sentence either side of it, while an accordion control is the
+            // only thing its heading or row contains.
+            !inlineInSentence(el)
           )
         })
         .map((el) =>
@@ -125,12 +218,8 @@ for (const scheme of ['light', 'dark'] as const) {
 
     for (const path of PAGES) {
       await page.goto(path, { waitUntil: 'networkidle' })
-      // Term definition panels are surfaces too; open them all first.
-      await page.evaluate(() =>
-        document
-          .querySelectorAll<HTMLButtonElement>('button[aria-controls]')
-          .forEach((b) => b.click()),
-      )
+      // Term definition panels and accordion bodies are surfaces too.
+      await openExpandables(page)
       await page.waitForTimeout(150)
 
       const rows = await page.evaluate(() => {
@@ -257,4 +346,199 @@ test('the interrogation still explains itself after a wrong answer, since the re
   await expect(why).toBeVisible()
   await expect(why).not.toContainText('Not quite')
   expect((await why.innerText()).trim().length).toBeGreaterThan(80)
+})
+
+/**
+ * The same contract, on the exercise most likely to lose it. `#races` exists to
+ * be answered wrong — a reader who has just met optimistic locking picks it for
+ * the cross-row case — so a regression that shows the reasoning only on a
+ * correct answer would remove the teaching from precisely the reader it was
+ * written for. The check above covered `#model` alone, which is why this is a
+ * second test rather than a wider selector: the two exercises are different
+ * components and the shared rule is the thing being asserted.
+ */
+test('the locking exercise explains itself after a wrong answer too, since its wrong answer is the one the step was built for', async ({
+  page,
+}) => {
+  await page.goto('/stages/03-architecture#races', { waitUntil: 'networkidle' })
+
+  const row = page.locator('li').filter({
+    has: page.getByRole('radiogroup', {
+      name: /two different claims on the same shift/,
+    }),
+  })
+
+  await row.getByRole('radio', { name: 'Optimistic locking' }).click()
+
+  await expect(row.getByText('Not quite')).toBeVisible()
+
+  const paragraphs = row.locator('[aria-live="polite"] p')
+  await expect(paragraphs).toHaveCount(2)
+
+  const why = paragraphs.last()
+  await expect(why).toBeVisible()
+  await expect(why).toContainText('constraint')
+  expect((await why.innerText()).trim().length).toBeGreaterThan(80)
+})
+
+/**
+ * `AuthzPatterns` keeps the multi-answer scenarios' uncommitted selection in a
+ * second piece of state, so Reset has two things to clear and cleared one. The
+ * visible result is a group that reports itself unanswered — no score line, the
+ * Commit button back — with two boxes still `aria-checked="true"`, which is a
+ * lie to a screen reader as well as a stale tick on the page.
+ */
+test('reset clears the uncommitted draft as well as the committed answers, since a group that presents itself as unanswered must not have boxes ticked', async ({
+  page,
+}) => {
+  await page.goto('/stages/03-architecture#access', {
+    waitUntil: 'networkidle',
+  })
+
+  const multi = page.locator('li').filter({
+    has: page.getByRole('group', { name: /Select both patterns/ }),
+  })
+  const role = multi.getByRole('checkbox', { name: 'Role', exact: true })
+  const membership = multi.getByRole('checkbox', {
+    name: 'Membership',
+    exact: true,
+  })
+
+  await role.click()
+  await membership.click()
+  await expect(role).toHaveAttribute('aria-checked', 'true')
+
+  // A different scenario, committed, is what puts Reset on screen — the draft
+  // above is deliberately still uncommitted when it is pressed.
+  await page
+    .locator('li')
+    .filter({
+      has: page.getByRole('radiogroup', { name: /own draft invoice/ }),
+    })
+    .getByRole('radio', { name: 'Ownership', exact: true })
+    .click()
+
+  await page.getByRole('button', { name: 'Reset' }).click()
+
+  await expect(role).toHaveAttribute('aria-checked', 'false')
+  await expect(membership).toHaveAttribute('aria-checked', 'false')
+})
+
+// ── the audit list audits what it claims to ────────────────────────────────
+
+/**
+ * `PAGES` is hand-written (TD-12), and its failure mode is silent: a hash that
+ * names no step does not error, it falls back to the first panel. So the suite
+ * stays green while auditing step one twice and never touching the steps that
+ * were added. That is not hypothetical — the stage 03 entries listed
+ * `#constrain` and `#decide` for weeks after both steps had been renamed away,
+ * which meant five of its nine steps had never been audited at all.
+ *
+ * This does not close TD-12; the list is still hand-maintained and forgetting
+ * to add a step still audits nothing. It closes the half that lies.
+ */
+test('every listed step hash lands on the step it names, since a dead hash falls back and audits step one twice', async ({
+  page,
+}) => {
+  for (const path of PAGES.filter((p) => p.includes('#'))) {
+    const id = path.split('#')[1]
+    await page.goto(path, { waitUntil: 'networkidle' })
+    await expect(
+      page.locator(`#panel-${id}`),
+      `${path} does not resolve to a step called "${id}"`,
+    ).toBeVisible()
+  }
+})
+
+// ── D-52: a step holds one judgment, and its panel is not a scroll ─────────
+
+/**
+ * D-38 capped a dense stage at five content steps. Its stated reason was that
+ * "a stepper stops being navigable when a step is a scroll" — a claim about
+ * how much one panel holds, enforced by counting a different noun. The two
+ * pull opposite ways: fewer steps for the same content means heavier panels.
+ * Measured, stage 03's median panel was 5.3 screens against 2.4 and 2.5 for
+ * stages 01 and 02, while sitting inside a rule that only knew about counts.
+ *
+ * Four screens is taken from the measurements: 01 and 02 both have a
+ * next-heaviest panel at 3.2, so the threshold clears everything either stage
+ * has except one panel each.
+ */
+const PANEL_VIEWPORT = { width: 1024, height: 768 }
+const PANEL_SCREENS_MAX = 4.0
+
+/**
+ * Baselined, not exempt. Every entry is a panel the rule would fail, recorded
+ * with a reason so the exemption is a decision rather than an oversight.
+ *
+ * Stage 01 and 02's two are permanent for now: splitting them changes step
+ * hashes and reopens two reviewed stages. The rule applies to them the moment
+ * either is edited.
+ *
+ * Stage 03's are temporary debt, removed one at a time by the task that splits
+ * each panel. When this list is down to two entries, the reshape is done.
+ */
+const PANEL_EXCEPTIONS: Record<string, number> = {
+  '/stages/01-product-discovery#record': 6.7, // artifact gallery, one page by design
+  '/stages/02-planning#horizon': 5.6, // three horizon bands, compared side by side
+
+  // Temporary — D-52's reshape removes these.
+  // See docs/superpowers/plans/2026-07-31-step-panel-weight.md
+}
+
+/** Tolerance on the re-baseline check: panel height moves slightly with font
+ *  loading and scrollbar width, and a rule that fires on noise gets suppressed. */
+const REBASELINE_SLACK = 0.5
+
+test('no step panel exceeds four screens, because a step that is a scroll is two steps', async ({
+  page,
+}) => {
+  await page.setViewportSize(PANEL_VIEWPORT)
+  const failures: string[] = []
+
+  for (const path of PAGES.filter((p) => p.includes('#'))) {
+    const id = path.split('#')[1]
+    await page.goto(path, { waitUntil: 'networkidle' })
+    const height = await page
+      .locator(`#panel-${id}`)
+      .evaluate((el) => el.getBoundingClientRect().height)
+    const screens = height / PANEL_VIEWPORT.height
+    const baseline = PANEL_EXCEPTIONS[path]
+
+    if (baseline === undefined) {
+      if (screens > PANEL_SCREENS_MAX) {
+        failures.push(
+          `${path} is ${screens.toFixed(1)} screens, over the ${PANEL_SCREENS_MAX} limit. ` +
+            `Split it at a seam where the panel holds two judgments, or move elaboration ` +
+            `behind an expand-to-reveal (D-52).`,
+        )
+      }
+      continue
+    }
+
+    // A baselined panel that got better must say so, or the allowlist rots
+    // upward and becomes what D-38 was: a number nothing enforces.
+    if (screens < baseline - REBASELINE_SLACK) {
+      failures.push(
+        `${path} is now ${screens.toFixed(1)} screens against a baseline of ${baseline}. ` +
+          `Lower it in PANEL_EXCEPTIONS, or delete the entry if it is under ${PANEL_SCREENS_MAX}.`,
+      )
+    }
+
+    // And a baselined panel that got worse must say so too. Without this the
+    // exemption is unbounded: the over-threshold check above only runs for
+    // panels with no entry, so a baselined panel could grow from 6 screens to
+    // 12 and stay green. The first review of this test caught that the
+    // mitigation was one-sided — an allowlist that cannot rot upward past its
+    // own number still has to not rot upward past the number it records.
+    if (screens > baseline + REBASELINE_SLACK) {
+      failures.push(
+        `${path} has grown to ${screens.toFixed(1)} screens against a baseline of ${baseline}. ` +
+          `A baselined panel is exempt from the ${PANEL_SCREENS_MAX} limit, not from review — ` +
+          `split it, or raise the baseline deliberately and say why.`,
+      )
+    }
+  }
+
+  expect(failures.join('\n')).toBe('')
 })
