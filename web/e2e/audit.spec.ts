@@ -308,6 +308,49 @@ test('the locking exercise explains itself after a wrong answer too, since its w
   expect((await why.innerText()).trim().length).toBeGreaterThan(80)
 })
 
+/**
+ * `AuthzPatterns` keeps the multi-answer scenarios' uncommitted selection in a
+ * second piece of state, so Reset has two things to clear and cleared one. The
+ * visible result is a group that reports itself unanswered — no score line, the
+ * Commit button back — with two boxes still `aria-checked="true"`, which is a
+ * lie to a screen reader as well as a stale tick on the page.
+ */
+test('reset clears the uncommitted draft as well as the committed answers, since a group that presents itself as unanswered must not have boxes ticked', async ({
+  page,
+}) => {
+  await page.goto('/stages/03-architecture#access', {
+    waitUntil: 'networkidle',
+  })
+
+  const multi = page.locator('li').filter({
+    has: page.getByRole('group', { name: /Select both patterns/ }),
+  })
+  const role = multi.getByRole('checkbox', { name: 'Role', exact: true })
+  const membership = multi.getByRole('checkbox', {
+    name: 'Membership',
+    exact: true,
+  })
+
+  await role.click()
+  await membership.click()
+  await expect(role).toHaveAttribute('aria-checked', 'true')
+
+  // A different scenario, committed, is what puts Reset on screen — the draft
+  // above is deliberately still uncommitted when it is pressed.
+  await page
+    .locator('li')
+    .filter({
+      has: page.getByRole('radiogroup', { name: /own draft invoice/ }),
+    })
+    .getByRole('radio', { name: 'Ownership', exact: true })
+    .click()
+
+  await page.getByRole('button', { name: 'Reset' }).click()
+
+  await expect(role).toHaveAttribute('aria-checked', 'false')
+  await expect(membership).toHaveAttribute('aria-checked', 'false')
+})
+
 // ── the audit list audits what it claims to ────────────────────────────────
 
 /**

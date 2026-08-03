@@ -70,7 +70,13 @@ export function AuthzPatterns() {
             </span>
             <button
               type="button"
-              onClick={() => setAnswers({})}
+              onClick={() => {
+                setAnswers({})
+                // Drafts too: a multi-answer scenario whose selection was never
+                // committed keeps it here, and leaving it behind ticks boxes in
+                // a group that has just told the reader it is unanswered.
+                setDrafts({})
+              }}
               className="flex min-h-11 items-center gap-1.5 border border-line px-2.5 text-xs text-muted transition-colors duration-150 hover:bg-sunken hover:text-fg lg:min-h-9"
             >
               <RotateCcw className="size-3.5" aria-hidden />
