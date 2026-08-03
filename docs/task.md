@@ -298,7 +298,7 @@ these clusters — so this round is what makes that section honest.
 09 (linked, not taught); observability with 15; threat modelling and secrets with 08; table
 partitioning and sharding are named as the thing you do not need and not taught.
 
-### W-3.2 — Port stage 03's doc round into the app ◐ *(content done, whole-branch review outstanding — `feat/stage-03-app-port`, 76 commits, twelve tasks of the D-52 round done)*
+### W-3.2 — Port stage 03's doc round into the app ◐ *(content done, whole-branch review outstanding — `feat/stage-03-app-port`, 78 commits, twelve tasks of the D-52 round done)*
 
 **Live coverage map: `docs/stage-03-status.md`.** Section by section, doc against app, with the
 remaining tasks. Read it before picking up this round — it is more current than this checklist,
@@ -364,7 +364,7 @@ which is why `trace` exists as its own step.
       which is the half TD-12 still names
 - [ ] **Whole-branch review before merge**, doc and app together. Still the load-bearing one,
       and now the only thing left: the port half has never had it, and the three per-task
-      reviews run so far found eleven blocking defects between them — including two factual
+      reviews run so far found fourteen blocking defects between them — including two factual
       errors about Postgres that read
       plausibly and that no test could have caught until the tests were rewritten
 - [ ] Close **TD-23** when doc and app agree again
@@ -391,7 +391,7 @@ pattern library on the hardest stage.
 | ~~1~~ ✓ | 02 Product Planning | **Done.** Complete + interactive + audience-validated (D-37: developer-complete; PM/SA are scope boundaries). Proved `web/PATTERNS.md`, the carry-forward chain, and the AI-plays pattern transfer. |
 | ~~2~~ ✓ | 03 Architecture | **Doc and app content agree; TD-23 stays open for the whole-branch review.** The densest stage by a distance: 14 doc sections, 22 app steps, 24 figures. TD-18, TD-21, TD-22 and TD-25's doc half all closed on it. Stress-tested the pattern library and produced two new rows (annotated artifact, and the panel-weight rule that replaced the step-count ceiling). |
 | ~~3~~ ✓ | — | **Stage 03's doc gaps closed** across W-3.1, W-3.1b and three cold-reader runs. |
-| **4 (next)** | — | **Finish W-3.2** — the whole-branch review covering doc and app together. The port is done; the review is the remaining blocker: 76 commits, never reviewed as a whole, and the three per-task reviews found eleven blocking defects between them. |
+| **4 (next)** | — | **Finish W-3.2** — the whole-branch review covering doc and app together. The port is done; the review is the remaining blocker: 78 commits, never reviewed as a whole, and the four per-task reviews found fourteen blocking defects between them. |
 | 5 | 15 Observability | Unfamiliar ground; benefits most from figures |
 | 6 | 16 Incident Management | Procedural, so a stepper fits naturally |
 | 6 | 13 Production Deployment | Expand/migrate/contract needs a visual |

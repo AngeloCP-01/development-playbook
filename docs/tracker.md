@@ -65,7 +65,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
-| 2026-07-31 | W-3.2 | Stage 03's **app port**, closing TD-23's content gap and TD-25's app half. `web/src/features/architecture/` went from the **ten** steps `W-3.1` left it at (that round was doc-only, D-46) to **22**, mirroring all 14 doc subsections across **24** numbered figures. Ships **D-52** in place of D-38 (struck through, not edited): a step holds one judgment and its panel stays under four screens at 1024×768, enforced by `web/e2e/audit.spec.ts` rather than recorded, with `PANEL_EXCEPTIONS` back down to its two permanent baselines (`01#record` 6.7, `02#horizon` 5.6) | 75 commits, `c1a03b4`…`9798286`. **277/277** vitest across **24** files; **13/13** playwright audit over **36** URLs, including the new panel-weight test — no panel over threshold. Lint, typecheck and `format:check` clean. Three per-task reviewer subagents (tasks 5–9) returned **eleven blocking findings**, all verified real, including two factual errors about Postgres in teaching material — a `FOR UPDATE` described doing what `SKIP LOCKED` does, and an overclaim that transaction-mode pooling breaks a transactional lock — fixed in `4bc60aa`, `79b88b7` and `687a042` | **The whole-branch review has not run** — 76 commits once this record lands, never reviewed as a whole, at a per-task defect rate that did not fall off (the last task reviewed produced five). Also open, surfaced but not fixed this round: a `RevealList` component to de-duplicate five accordions sharing one markup, and the step rail's own fit past ~12 entries at 1440px |
+| 2026-07-31 | W-3.2 | Stage 03's **app port**, closing TD-23's content gap and TD-25's app half. `web/src/features/architecture/` went from the **ten** steps `W-3.1` left it at (that round was doc-only, D-46) to **22**, mirroring all 14 doc subsections across **24** numbered figures. Ships **D-52** in place of D-38 (struck through, not edited): a step holds one judgment and its panel stays under four screens at 1024×768, enforced by `web/e2e/audit.spec.ts` rather than recorded, with `PANEL_EXCEPTIONS` back down to its two permanent baselines (`01#record` 6.7, `02#horizon` 5.6) | 78 commits, `c1a03b4`…`d840cd1`. **279/279** vitest across **24** files; **13/13** playwright audit over **36** URLs, including the new panel-weight test — no panel over threshold. Lint, typecheck and `format:check` clean. Four per-task reviewer subagents (tasks 5–9 and 11) returned **fourteen blocking findings**, all verified real, including two factual errors about Postgres in teaching material — a `FOR UPDATE` described doing what `SKIP LOCKED` does, and an overclaim that transaction-mode pooling breaks a transactional lock — fixed in `4bc60aa`, `79b88b7` and `687a042`. The fourth review (task 11) caught a third: a trace row that named a timeout "graceful degradation", contradicting the definition the stage's own resilience step gives — fixed in `dcfe1ae` and `d840cd1` | **The whole-branch review has not run** — 78 commits once this record lands, never reviewed as a whole, at a per-task defect rate that did not fall off (the last task reviewed produced five). Also open, surfaced but not fixed this round: a `RevealList` component to de-duplicate five accordions sharing one markup, and the step rail's own fit past ~12 entries at 1440px |
 | 2026-07-21 | P-0 | README index, `reference/stack.md`, `reference/glossary.md` | 17 terms; versions checked against `npm view` that day | Search; per-stage frontmatter |
 | 2026-07-21 | P-1 | Stages 04, 11, 12, 13, 14 | Template held under real config content — the reason this group went first | — |
 | 2026-07-21 | P-2 | Stages 05, 06, 07, 09, 10 | — | — |
@@ -957,7 +957,7 @@ rather than a redo. This is now standard for reviewers as well as implementers.
 
 ### A per-task read-only reviewer pays for itself; the same session cannot self-review
 
-Three reviewer subagents ran across tasks 5–9 of the D-52 round and returned **eleven blocking
+Four reviewer subagents ran across tasks 5–9 and 11 of the D-52 round and returned **fourteen blocking
 findings**, every one real on verification. Two were factual errors about Postgres — a `SELECT
 … FOR UPDATE` that was described doing what `SKIP LOCKED` does, and a pooler caveat that
 claimed transaction-mode pooling breaks a transactional lock. Both read plausibly, both sat in
@@ -990,8 +990,8 @@ reshape, and now the last content cluster (fitness functions, the widened trace,
 sourcing and CQRS, `9798286`). There is no port left to finish first; reviewing now is not
 jumping ahead of anything.
 
-**The port half has never been reviewed as a whole.** It is 76 commits once this record lands.
-The three per-task reviews that have run found eleven blocking defects between them, at a rate
+**The port half has never been reviewed as a whole.** It is 78 commits once this record lands.
+The four per-task reviews that have run found fourteen blocking defects between them, at a rate
 that did not fall off across tasks — the last task reviewed produced five. Two of those were
 wrong claims about Postgres in teaching material, which is the class this project exists to
 not ship. A per-task review sees one diff; nothing but a whole-branch pass catches a task whose

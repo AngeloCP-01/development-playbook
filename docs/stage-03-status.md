@@ -8,7 +8,7 @@ divergence was discovered rather than tracked.
 the D-52 round done — the whole-branch review is still outstanding.
 
 **Current state:** doc **14 sections / 1344 lines**. App **22 steps**. Glossary **73 terms**.
-277 tests across 24 files, and a 13-test audit suite over 36 URLs. Lint and typecheck clean.
+279 tests across 24 files, and a 13-test audit suite over 36 URLs. Lint and typecheck clean.
 Every DDL block in the doc executed against PostgreSQL 17.
 
 **The reshape is done.** D-52 replaced D-38's step-count ceiling with a panel-weight rule, and
@@ -115,8 +115,8 @@ plan.
       round — SQL blocks in a grid could not scroll, because a grid child defaults to
       `min-width: auto`, so the page scrolled sideways 204px at 320px.
 - [ ] **Whole-branch review, covering doc and app together.** Still the load-bearing one, and
-      now the only thing left. The port half has never had it — **76 commits** once this record
-      lands. Three per-task reviews have run and found **eleven blocking defects** between them,
+      now the only thing left. The port half has never had it — **78 commits** once this record
+      lands. Four per-task reviews have run and found **fourteen blocking defects** between them,
       at a rate that did not fall off: the last task reviewed produced five. Two were factual
       errors about Postgres that read plausibly and that no test could have caught until the
       tests were rewritten.

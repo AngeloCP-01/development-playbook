@@ -59,7 +59,7 @@ Before doing anything, read these for context:
 - **The cold-reader method is load-bearing, not a formality.** Budget a fix wave after every
   pass; the first report is not the end of the round (D-48).
 - **A per-task reviewer subagent is now the standard** (see `docs/tracker.md`, "Process
-  observations"). Three have run on this round and found **eleven blocking defects**, including
+  observations"). Four have run on this round and found **fourteen blocking defects**, including
   two factual errors about Postgres in teaching material. **The same session cannot self-review**
   — the reading that produced the claim produces the check. Implement inline, dispatch reviewers.
 - **Every stage carries an "AI plays" section** (D-35), in both doc and app.
@@ -70,7 +70,7 @@ Before doing anything, read these for context:
   `glossary.md`.
 - **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **277 vitest tests across 24 files**, a **13-test playwright
+  eslint at `--max-warnings 0`, **279 vitest tests across 24 files**, a **13-test playwright
   audit suite over 36 URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
   public (D-26).
 - **`PAGES` in `web/e2e/audit.spec.ts` is still hand-written** (**TD-12**), so adding a step
@@ -80,7 +80,7 @@ Before doing anything, read these for context:
 - **Branch/push:** work happens on `feat/`|`fix/`|`docs/<date>-` branches, merged to `main`
   with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes.**
   `main` and `origin/main` are in sync at **`eeb16f1`**. **Everything since is unmerged on
-  `feat/stage-03-app-port`, which is 76 commits ahead.**
+  `feat/stage-03-app-port`, which is 78 commits ahead.**
 
 ### This round's scope
 
@@ -97,8 +97,8 @@ round rather than a formality after it.
    done.** Its spec is `docs/superpowers/specs/2026-07-31-step-panel-weight-design.md`, and the
    plan's own Verification section is the checklist for what comes next.
 
-**What is left.** The whole-branch review, doc and app together — 76 commits, never done for
-the port half. Three per-task reviews found eleven blocking defects and the rate did not fall
+**What is left.** The whole-branch review, doc and app together — 78 commits, never done for
+the port half. Four per-task reviews found fourteen blocking defects and the rate did not fall
 off — the last task reviewed produced five. Two of those eleven were factual errors about
 Postgres in teaching material, which is the class of mistake a per-task review catches and a
 casual read does not.
