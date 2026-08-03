@@ -227,6 +227,19 @@ const STEPS: (Step & { id: StepId })[] = [
               the questions matter more than the sketch.
             </p>
             <p>
+              The test that generalises, since one example is not a rule:{' '}
+              <strong className="font-medium text-fg">
+                would you ever need to point at this on its own?
+              </strong>{' '}
+              An entity has an identity you refer to later — you fetch it, link
+              to it, attach something to it. A property only ever describes the
+              row it sits on. A shipping address on an order is the harder case
+              and the same answer: columns, until somebody wants to reuse it
+              across orders, at which point it acquires an identity and becomes
+              an entity — and that change is a migration rather than an
+              afternoon.
+            </p>
+            <p>
               Working in nouns first is not a formality. A relationship you can
               say out loud is a relationship you can argue with; the same
               relationship expressed as a foreign key is already a decision

@@ -176,6 +176,15 @@ every noun in them. Strike the ones that are a property of another noun — an i
 *total* is not an entity, it is a column, and possibly not even that. What survives is the
 candidate list.
 
+**The test that generalises, because one example is not a rule: would you ever need to point
+at this on its own?** An entity has an identity you refer to later — you fetch it, link to
+it, attach something to it. A property only ever describes the row it sits on. *Total* fails
+twice over, being both derivable from the line items and never addressed. A shipping address
+on an order is the harder case and the same answer: it is columns, until somebody wants to
+reuse it across orders or ship to it from an address book, at which point it acquires an
+identity and becomes an entity — and that change is a migration rather than an afternoon,
+which is why the question is worth asking now rather than later.
+
 It will be wrong on the first pass. The interrogation below is what corrects it, which is
 why the questions matter more than the sketch.
 

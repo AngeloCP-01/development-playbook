@@ -400,3 +400,27 @@ test('the write edge points at the read in the direction the list actually rende
     readFirst ? /the read above it/ : /the read below it/,
   )
 })
+
+// G1, open across three cold-reader runs. The strike test rested on one
+// example — "total is not an entity" — which is a verdict on our noun, not a
+// test a reader can run on theirs. The rule lives in the strike-test paragraph
+// in the doc, not in the interrogation set, so this asserts the app's
+// strike-test prose rather than adding a seventh question the doc does not
+// have. The interrogation count test is what caught that: the doc has six.
+test('the strike test states the rule that generalises, since one worked example is a verdict on our noun and not a test for theirs', () => {
+  const source = readFileSync(
+    fileURLToPath(new URL('./Architecture.tsx', import.meta.url)),
+    'utf8',
+  )
+  const model = source.slice(
+    source.indexOf("id: 'model'"),
+    source.indexOf("id: 'worksheet'"),
+  )
+  expect(model, 'the model step does not state the rule').toMatch(
+    /point at it on its own|point at this on its own/i,
+  )
+  expect(
+    model,
+    'the rule needs a case that is not the one that motivated it',
+  ).toMatch(/address/i)
+})
