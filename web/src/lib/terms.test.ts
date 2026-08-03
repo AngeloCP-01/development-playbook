@@ -72,3 +72,16 @@ test('stage 03 vocabulary is defined, since the stage introduces words the playb
 test('authorization is defined against authentication, because conflating them is the mistake the stage names', () => {
   expect(getTerm('authorization')?.full).toMatch(/authentication/i)
 })
+
+// `Term` renders `full` as plain JSX (src/components/Term.tsx), so emphasis
+// written as markdown arrives as asterisks in the panel. The generated
+// reference/glossary.md is the only place the markup would have meant anything,
+// and a definition that reads wrong on the page to read right in a file it is
+// generated into has the trade backwards.
+test('no term definition ships literal markdown emphasis, since the panel renders it as text', () => {
+  for (const [id, t] of Object.entries(TERMS)) {
+    expect(t.name, `${id}.name`).not.toMatch(/\*/)
+    expect(t.short, `${id}.short`).not.toMatch(/\*/)
+    expect(t.full, `${id}.full`).not.toMatch(/\*/)
+  }
+})

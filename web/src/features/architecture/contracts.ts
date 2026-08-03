@@ -154,7 +154,7 @@ export const AUTHZ_SCENARIOS: AuthzScenario[] = [
     id: 'own-feed',
     scenario: 'A user reads their own notification feed',
     answer: ['ownership'],
-    why: 'Ownership again, and deliberately: it is the answer for two of these four because that is the honest ratio in most products. The lesson is not that ownership is wrong, it is that it is not the only one — and that a rule is written per entity, sometimes with two patterns joined by *and*.',
+    why: 'Ownership again, and deliberately: it is the answer for two of these four because that is the honest ratio in most products. The lesson is not that ownership is wrong, it is that it is not the only one — and that a rule is written per entity, sometimes with two patterns joined by an “and”.',
   },
 ]
 

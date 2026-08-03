@@ -120,3 +120,36 @@ test('scoring ignores ids it does not know, so stale storage cannot inflate a sc
     correct: 0,
   })
 })
+
+// `AuthzPatterns` renders every one of these as plain JSX, so an asterisk meant
+// as emphasis arrives as punctuation. This module's instance was introduced by
+// bd018a9 on this branch; the same class in `scoring.ts` predates it and is
+// scoped out here rather than swept in silently.
+test('nothing this module renders ships literal markdown, since the asterisks reach the page as punctuation', () => {
+  const shipped: { where: string; text: string }[] = [
+    ...CONTRACT_ROWS.flatMap((r) => [
+      { where: `${r.id} contract`, text: r.contract },
+      { where: `${r.id} why`, text: r.why },
+    ]),
+    ...ROUTE_ANSWERS.flatMap((a) => [
+      { where: `${a.id} name`, text: a.name },
+      { where: `${a.id} body`, text: a.body },
+    ]),
+    ...CONTRACT_DECISIONS.flatMap((d) => [
+      { where: `${d.id} name`, text: d.name },
+      { where: `${d.id} body`, text: d.body },
+    ]),
+    ...AUTHZ_PATTERNS.flatMap((p) => [
+      { where: `${p.id} question`, text: p.question },
+      { where: `${p.id} holdsFor`, text: p.holdsFor },
+    ]),
+    ...AUTHZ_SCENARIOS.flatMap((s) => [
+      { where: `${s.id} scenario`, text: s.scenario },
+      { where: `${s.id} why`, text: s.why },
+    ]),
+  ]
+
+  for (const { where, text } of shipped) {
+    expect(text, `${where} carries markdown`).not.toMatch(/\*/)
+  }
+})

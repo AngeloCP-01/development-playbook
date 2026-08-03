@@ -151,8 +151,11 @@ test('every trace row names the decision the characteristic forces, since a char
 
 // The security row shipped "often two patterns joined by *and*", and
 // `TraceForward` renders `forces` as text, so the asterisks were on the page.
-// Scoped to this module: the same class exists in `scoring.ts` and
-// `contracts.ts` and is pre-existing there.
+// Scoped to this module. `contracts.ts` had the same class and now sweeps for
+// it itself — it was introduced on this branch too (bd018a9), not pre-existing,
+// which is what an earlier version of this comment claimed. `terms.ts` sweeps
+// for it as well. The instance left in `scoring.ts` genuinely does predate the
+// branch and is deferred.
 test('no string in this module ships literal markdown, since every one of them renders as text and the reader would see the punctuation', () => {
   const shipped: { where: string; text: string }[] = [
     ...CHARACTERISTICS.map((c) => ({
