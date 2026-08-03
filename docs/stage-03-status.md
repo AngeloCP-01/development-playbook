@@ -4,13 +4,15 @@
 exists because this stage has now diverged from its own port twice, and both times the
 divergence was discovered rather than tracked.
 
-**Last verified:** 2026-08-03, on `feat/stage-03-app-port` at `2734fb4` — all twelve tasks of
-the D-52 round done, the whole-branch review run, its seven blocking findings plus two promoted
-minors fixed, and the scoped re-review clean at 0 open.
+**Last verified:** 2026-08-03, on `feat/stage-03-app-port` at `5afbe09` — the D-52 round, the
+eight recorded doc gaps, cold-reader run 4 and its fix wave, the D-48 verification pass, and
+the whole-branch re-review's five Important findings all closed.
 
-**Current state:** doc **14 sections / 1346 lines**. App **22 steps**. Glossary **73 terms**.
-286 tests across 24 files, and a 14-test audit suite over 36 URLs. Lint and typecheck clean.
-Every DDL block in the doc executed against PostgreSQL 17.
+**Current state:** doc **14 sections / 1507 lines**. App **22 steps**. Glossary **73 terms**.
+313 tests across 26 files, and a 14-test audit suite over 36 URLs. Lint and typecheck clean.
+Every DDL block in the doc executed against PostgreSQL 17, and the backfill loop's *behaviour*
+executed too — the re-review's I1 was a correctness bug no amount of reading would have caught,
+found only by running the wrong instruction against 5000 rows and counting what it skipped.
 
 **The reshape is done.** D-52 replaced D-38's step-count ceiling with a panel-weight rule, and
 stage 03 has been re-cut to satisfy it. `PANEL_EXCEPTIONS` in `web/e2e/audit.spec.ts` is back
@@ -211,3 +213,6 @@ Not gaps — boundaries doing their job. Do not "fix" these here.
 | Per-task review, D-52 task 11 | 3 blocking, 4 minor: a trace row naming a timeout "graceful degradation" against the definition the stage's own resilience step gives; a constant exported, tested and rendered nowhere while the prose beside it was hand-copied twice; a CQRS test asserting three words the topic cannot avoid |
 | Scoped re-review of the fix wave | **All nine addressed, 0 open — ready to merge.** Reproduced every measurement from an independent harness and teeth-checked with different injections than the fix used: a constructed thirteenth trap, a fifth boundary edge, a 1.2–1.5:1 colour on leaves reachable only inside an expanded disclosure, and each stale assertion's counter-example planted in the real data and run against the real test file. Raised one Important non-blocking finding of its own (the touch-target exemption widened to excuse one element and exempted 880), fixed in `2734fb4` |
 | Whole-branch review, combined branch | **Ready with fixes** — 7 blocking, 18 minor. The contrast and touch-target gates opened five expandables across 36 pages, so the branch's headline verification claim was measuring the collapsed shell; three of the doc's twelve traps were never ported; the doc's pooler caveat still carried the error its port had already fixed; four more tests could not fail for the reason their names gave. Seven fixed plus two promoted minors; sixteen minors deferred |
+| Cold reader, run 4 (post-gaps) | **COMPLETE** — the first run to reach that verdict. 4 stalls, 8 guesses. C1–C3, S1, S3, S4 and the partial-index/soft-delete interaction acted on in the fix wave |
+| D-48 verification pass of the fix wave | Built a live Postgres cluster and ran what the wave had only asserted. Confirmed the partial-index and soft-delete claims; found nothing new |
+| Whole-branch **re-review** | **Ready with fixes** — 5 Important, 12 minor. I1 was a backfill instruction that silently skipped every row it was meant to migrate; I4 was three sentences hand-counting six boxes against a diagram of eight. All five fixed in `5afbe09` with six minors; M5 and M6 recorded as deferred |

@@ -298,7 +298,30 @@ these clusters — so this round is what makes that section honest.
 09 (linked, not taught); observability with 15; threat modelling and secrets with 08; table
 partitioning and sharding are named as the thing you do not need and not taught.
 
-### W-3.2 — Port stage 03's doc round into the app ☑ *(content done, whole-branch review run and its findings fixed — `feat/stage-03-app-port`, 90 commits, unmerged)*
+
+### W-3.3 — Close stage 03's eight recorded doc gaps ☑ *(done 2026-08-03, on `feat/stage-03-app-port`)*
+
+The residue of three rounds, recorded rather than fixed at the time and closed here as one
+unit: normal forms named and never defined; soft delete shown as one mechanic with no choice
+posed, and its filter half missing entirely; the tenancy tables; the partial unique index,
+which is the only way to express "at most one approved claim per shift"; the third-party-call
+cadence; the pull-import contract row; and the auth box the container diagram never drew.
+
+Doc **1,346 → 1,507 lines**. App still **22 steps** — every gap landed inside an existing
+panel under D-52's four-screen rule, three of them behind expand-to-reveal (D-49), so closing
+eight gaps cost no new steps.
+
+**Cold-reader run 4 returned COMPLETE** (`docs/verification/cold-reader-stage-03-run4.md`),
+the first of the four runs to do so. Its fix wave took a D-48 verification pass against a live
+PostgreSQL 17 cluster, and the whole-branch **re-review** then found five Important findings —
+the headline being a backfill instruction that silently skipped every row it was meant to
+migrate. See the W-3.3 row in [tracker.md](tracker.md) for the evidence.
+
+**Deferred, recorded not fixed:** M5 (2NF is unviolatable under the `uuid` primary keys every
+DDL here uses — a content decision about the worked example, not a patch) and M6 (the archive
+table's volume threshold).
+
+### W-3.2 — Port stage 03's doc round into the app ☑ *(content done, whole-branch review run and its findings fixed — `feat/stage-03-app-port`, 106 commits, unmerged)*
 
 **Live coverage map: `docs/stage-03-status.md`.** Section by section, doc against app, with the
 remaining tasks. Read it before picking up this round — it is more current than this checklist,
@@ -392,8 +415,8 @@ pattern library on the hardest stage.
 |---|---|---|
 | ~~1~~ ✓ | 02 Product Planning | **Done.** Complete + interactive + audience-validated (D-37: developer-complete; PM/SA are scope boundaries). Proved `web/PATTERNS.md`, the carry-forward chain, and the AI-plays pattern transfer. |
 | ~~2~~ ✓ | 03 Architecture | **Doc and app content agree; the whole-branch review has run, and TD-23 now waits only on the merge.** The densest stage by a distance: 14 doc sections, 22 app steps, 24 figures. TD-18, TD-21, TD-22 and TD-25's doc half all closed on it. Stress-tested the pattern library and produced two new rows (annotated artifact, and the panel-weight rule that replaced the step-count ceiling). |
-| ~~3~~ ✓ | — | **Stage 03's doc gaps closed** across W-3.1, W-3.1b and three cold-reader runs. |
-| **4 (next)** | — | **Merge W-3.2.** The port is done and the whole-branch review has run: 90 commits, seven blocking findings from the branch pass on top of fourteen from the four per-task reviews, all fixed. What is left is the merge decision, not more work. |
+| ~~3~~ ✓ | — | **Stage 03's doc gaps closed** across W-3.1, W-3.1b, W-3.3 and four cold-reader runs — run 4 returned **COMPLETE**, the first to do so. |
+| **4 (next)** | — | **Merge W-3.2 + W-3.3.** The port is done and both whole-branch passes have run: 106 commits, seven blocking findings from the first branch pass and five Important from the re-review, on top of fourteen from the per-task reviews — all fixed. Two minors (M5, M6) are recorded as deferred content decisions. What is left is the merge decision, not more work. |
 | 5 | 15 Observability | Unfamiliar ground; benefits most from figures |
 | 6 | 16 Incident Management | Procedural, so a stepper fits naturally |
 | 6 | 13 Production Deployment | Expand/migrate/contract needs a visual |

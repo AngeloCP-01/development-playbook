@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   `stage-implementation-101.md` (the layout traps and verification checklist for building a
   stage)
 
-### Project state (as of 2026-08-03, after the D-52 round's twelve tasks, the whole-branch review, and its fix wave)
+### Project state (as of 2026-08-03, after the D-52 round, the eight doc gaps, cold-reader run 4, and the whole-branch re-review)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -51,11 +51,16 @@ Before doing anything, read these for context:
   permanent entries, which was the exit condition. **Twenty-two steps was not a target**: every
   split was forced by a measurement, and several landed one section later than the plan proposed
   because the plan's seam measured wrong.
-- **Stage 03's port content is complete.** Task 11 (`9798286`) closed the last cluster —
-  fitness functions with the widened ten-row trace, split into a new `trace` step, and the
-  event-sourcing / CQRS definitions in `record`. **TD-23 stays open**, not because content is
-  missing but because its own closing condition also requires the whole-branch review, which
-  has not run — that review is what Task 12 hands off to.
+- **Stage 03's port content is complete, and so are its eight recorded doc gaps** (W-3.3).
+  The doc is at **1,507 lines / 14 sections**; the app is still 22 steps, because every gap
+  landed inside an existing panel under the four-screen rule and three went behind
+  expand-to-reveal (D-49). **TD-23 stays open** on the merge alone — both whole-branch passes
+  have now run and every finding is fixed.
+- **Cold-reader run 4 returned COMPLETE** — the first of four runs to do so
+  (`docs/verification/cold-reader-stage-03-run4.md`). Two findings were recorded as deferred
+  rather than fixed, and they are content decisions waiting on a call: 2NF is unviolatable
+  under the `uuid` primary keys every DDL in this stage uses, and the archive table gives no
+  volume threshold.
 - **The cold-reader method is load-bearing, not a formality.** Budget a fix wave after every
   pass; the first report is not the end of the round (D-48).
 - **A per-task reviewer subagent is now the standard** (see `docs/tracker.md`, "Process
@@ -71,7 +76,7 @@ Before doing anything, read these for context:
   `glossary.md`.
 - **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **286 vitest tests across 24 files**, a **14-test playwright
+  eslint at `--max-warnings 0`, **313 vitest tests across 26 files**, a **14-test playwright
   audit suite over 36 URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
   public (D-26).
 - **`PAGES` in `web/e2e/audit.spec.ts` is still hand-written** (**TD-12**), so adding a step
@@ -81,12 +86,13 @@ Before doing anything, read these for context:
 - **Branch/push:** work happens on `feat/`|`fix/`|`docs/<date>-` branches, merged to `main`
   with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes.**
   `main` and `origin/main` are in sync at **`eeb16f1`**. **Everything since is unmerged on
-  `feat/stage-03-app-port`, which is 90 commits ahead.**
+  `feat/stage-03-app-port`, which is 106 commits ahead** (91 files, +20k/−0.5k).
 
 ### This round's scope
 
-**The D-52 round's twelve tasks are done and so is the whole-branch review**, on
-`feat/stage-03-app-port`. What is left is the merge decision, not another task.
+**Everything on `feat/stage-03-app-port` is done**: the D-52 round's twelve tasks, W-3.3's
+eight doc gaps, cold-reader run 4 and its fix wave, and the whole-branch re-review's five
+Important findings. What is left is the merge decision, not another task.
 
 **Read these two first, in this order:**
 
@@ -97,7 +103,7 @@ Before doing anything, read these for context:
    done.** Its spec is `docs/superpowers/specs/2026-07-31-step-panel-weight-design.md`, and the
    plan's own Verification section is the checklist for what comes next.
 
-**What is left.** The merge — 90 commits, doc and app as one unit (D-51). The whole-branch
+**What is left.** The merge — 106 commits, doc and app as one unit (D-51). The whole-branch
 review has run and returned **seven blocking findings**, plus two minors promoted for being
 reader-visible and introduced by this branch, and sixteen deferred to the tracker. All nine are
 fixed. Four per-task reviews had found **fourteen** before it, and the rate did not fall off:
@@ -105,6 +111,13 @@ the last task reviewed, Task 11, produced three, and the branch pass then produc
 those fourteen were factual errors about Postgres in teaching material, which is the class of
 mistake a per-task review catches and a casual read does not — and the branch pass caught the
 class above that, a green verification gate measuring almost nothing.
+
+**The re-review's headline is worth carrying forward as a method, not a fact.** Its I1 was a
+backfill instruction that told the reader to paginate a `WHERE col IS NULL` loop by remembering
+the highest id touched. It reads as careful advice. Run it and the guard has already removed
+the rows the cursor is skipping past: **5000 of 5000 rows silently unmigrated, reported as
+success**. Nothing but execution finds that — which is D-50 arriving a second time, on
+*behaviour* rather than on syntax.
 
 **Five things this round has taught, all of which cost time to learn:**
 
@@ -124,7 +137,11 @@ class above that, a green verification gate measuring almost nothing.
   body as the fix. Verify by running the regex against a counter-example, not by reading it —
   the four the review found were each run against one before being rewritten.
 - **Count the doc; do not trust the brief.** Where a count is checkable, check it in a test
-  against the doc itself — `evolve.test.ts` and `ai-plays.test.ts` both do now.
+  against the doc itself — `evolve.test.ts`, `ai-plays.test.ts` and now `sketch.test.ts` all do.
+- **Prose that counts a list belongs beside the list.** Three sentences hand-counted "six boxes"
+  against a diagram of eight, in three files, and one of them contradicted itself in its own
+  second clause. They now live in `sketch.ts` next to `SKETCH_NODES` with the counts derived in
+  test — the same move `terms.ts` made for the glossary.
 
 **Two cautions this stage earned earlier and still holds:**
 
