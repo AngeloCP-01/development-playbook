@@ -681,6 +681,19 @@ const STEPS: (Step & { id: StepId })[] = [
               decision, which is why it belongs in this stage rather than in
               implementation. Two mechanisms cover almost everything.
             </p>
+            <p>
+              The other half of the email answer needs the same care. If you
+              record the intent and send later, <em>how much later</em> is part
+              of the design, and it comes from the promise the feature made
+              rather than from a default: a daily sweep serves an invoice
+              reminder and fails a shift confirmed at 9pm for 6am, on identical
+              code. Where the job runs and what happens when a run fails belongs
+              to{' '}
+              <Link href="/stages/11-ci-cd" className="text-brand">
+                11 — CI/CD
+              </Link>
+              ; choosing the cadence belongs here.
+            </p>
           </Prose>
           <Figure
             n={11}

@@ -547,6 +547,15 @@ yours, what happens when it is down?
 Three questions, three answers, one of which is a genuine piece of work you would otherwise
 have discovered in production. That is the return on a diagram.
 
+**If you take the second option, decide the cadence with it.** "Record the intent and send
+later" is not a design until you say how much later, and the answer comes from the promise
+the feature made rather than from a default. A daily sweep is right for an invoice reminder
+and wrong for a shift confirmed at 9pm for 6am — same mechanism, same code, and one of the
+two is a broken feature. Where that job runs, how it is scheduled and what happens when a run
+fails belong to [11 — CI/CD](11-ci-cd.md) and
+[13 — Production Deployment](13-production-deployment.md); choosing the cadence the promise
+requires is this stage's, because it is a property of the design rather than of the pipeline.
+
 #### Timeouts, retries and failing well
 
 Those three answers have a name: **graceful degradation**, deciding per feature what still
