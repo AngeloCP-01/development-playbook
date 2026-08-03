@@ -34,6 +34,12 @@ export const CONTRACT_ROWS: ContractRow[] = [
     cost: 'not-yours',
     why: 'Somebody else owns the shape and you adapt. You inherit its delivery behaviour along with it: it will arrive twice eventually, and handling it has to be safe when it does. That is idempotency, worked through in the resilience step where the payment flow makes it concrete.',
   },
+  {
+    id: 'pull',
+    contract: 'Data you pull or import',
+    cost: 'not-yours',
+    why: 'A nightly pull from somebody’s system, a CSV somebody uploads, an export you read on a schedule. They own the shape; you own the cadence — which is the opposite half of the webhook. Nobody will deliver it twice, so idempotency is not forced on you, but nobody will tell you when it changed either, so staleness is yours. Decide what happens when the source is late or malformed, because unlike a webhook there is no retry coming.',
+  },
 ]
 
 export type RouteAnswer = {

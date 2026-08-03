@@ -161,6 +161,16 @@ in eight months; a query-count assertion, which is how an N+1 gets caught before
 it. Each of those is a small amount of tooling research, and none is worth doing before the
 characteristic it defends is real.
 
+**Two of the three this stage picked need naming too, because a rule that only works on the
+easy characteristics is not a rule.** *Auditability* is checkable in the schema: revoke update
+and delete on the append-only table from the application's role, and the fitness function is a
+test asserting that grant is still absent — the day somebody adds an `UPDATE` path, it fails
+rather than quietly rewriting history. *Cheap to run* is the honest refusal: there is no test
+for it, because the number lives on a bill and not in your repository. A calendar reminder to
+look at that bill once a month is the mechanism, and saying so is better than inventing an
+assertion that checks nothing — **a characteristic whose check is "look at it deliberately"
+is still checked; one whose check is a test that cannot fail is not.**
+
 So the section is a sequence, not a list: **choose a characteristic, trace it to a decision, and
 write down how you would know if the decision stopped holding.** The first two happen here. The
 third gets built when there is code under it.
@@ -1113,11 +1123,22 @@ decision belongs here rather than in implementation.
 | An internal server action or function | Cheap | One codebase, and the compiler finds every caller |
 | A public API someone else calls | Expensive | You do not know who depends on it and cannot make them move |
 | A webhook you receive | Not yours to change | Somebody else owns the shape; you adapt |
+| Data you pull or import | Not yours to change, but the timing is | They own the shape, you own when you ask and what you do with what arrives |
 
 A webhook is the row worth pausing on, because you inherit its delivery behaviour along with
 its shape: **it will arrive twice eventually, and handling it has to be safe when it does.**
 That is idempotency, and it is worked through in
 [Sketch the system](#sketch-the-system) above, where the payment flow makes it concrete.
+
+**The last row is the one most products actually have, and it is easy to miss because nothing
+arrives to make you notice it.** A nightly pull from somebody's system, a CSV somebody
+uploads, an export you read on a schedule — received data whose shape you do not own and whose
+*timing you do*. It differs from a webhook in both directions: nobody will deliver it twice,
+so idempotency is not forced on you, but nobody will tell you when it changed either, so
+staleness is now yours and the cadence question from the sketch applies to reading rather than
+to sending. Validate it at the boundary like anything else crossing in, and decide what
+happens when the source is late or malformed — because it will be, and unlike a webhook there
+is no retry coming.
 
 **A contract here means one callable surface with a shape somebody depends on** — a route, or
 an exported function another feature calls. Not every internal helper. If it crosses a

@@ -13,12 +13,21 @@ import {
 const source = (file: string) =>
   readFileSync(fileURLToPath(new URL(file, import.meta.url)), 'utf8')
 
-test('three contracts are sorted, because the sort is the decision and one row is not a sort', () => {
-  expect(CONTRACT_ROWS).toHaveLength(3)
+test('four contracts are sorted, because the sort is the decision and one row is not a sort', () => {
+  expect(CONTRACT_ROWS).toHaveLength(4)
 })
 
-test('the three costs are all different, so the row you are in is what changes the answer', () => {
-  expect(new Set(CONTRACT_ROWS.map((r) => r.cost)).size).toBe(3)
+// Cold-reader run 4 stalled here: its shifts table is sourced from the
+// restaurant's existing rota system by a nightly pull. That is received data
+// whose shape it does not own, it is not a webhook, nobody pushes it, and the
+// table had no row for it — so the reader transferred the webhook machinery by
+// choice rather than by instruction.
+test('data you pull is its own row, since received-and-not-pushed had no shape and is most integrations', () => {
+  const pull = CONTRACT_ROWS.find((r) => r.id === 'pull')
+  expect(pull, 'no row for data you pull or import').toBeDefined()
+  expect(pull?.why, 'the cadence is yours where a webhook’s is not').toMatch(
+    /cadence|when you ask|you decide/i,
+  )
 })
 
 test('the webhook row is not yours to change, which is the row that carries idempotency in with it', () => {

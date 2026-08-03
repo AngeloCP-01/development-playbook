@@ -242,3 +242,26 @@ test('every fitness example defends a characteristic the picker actually offers,
     ).toContain(e.characteristicId)
   }
 })
+
+// Cold-reader run 4's only hard stall. The stage requires "one line per
+// characteristic on how you would know if it stopped holding", and its examples
+// covered correctness, evolvability and latency — while the worked example
+// picks auditability and cheap-to-run, neither of which had one. The reader
+// wrote proxies it said it had no confidence in. A stated refusal is usable;
+// an absence is not.
+test('the examples cover the characteristics this stage’s own worked example picks, or it does not survive its own requirement', () => {
+  const covered = new Set(FITNESS_EXAMPLES.map((e) => e.characteristicId))
+  for (const id of EXAMPLE_PICK) {
+    expect(
+      covered,
+      `${id} is picked by the worked example and has no fitness line`,
+    ).toContain(id)
+  }
+})
+
+test('the one that cannot be a test says so, since refusing honestly is what this stage does elsewhere', () => {
+  const cost = FITNESS_EXAMPLES.find(
+    (e) => e.characteristicId === 'cheap-to-run',
+  )
+  expect(cost?.what).toMatch(/not a test|no test|bill|reminder|calendar/i)
+})

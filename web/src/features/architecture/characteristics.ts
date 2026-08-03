@@ -257,6 +257,20 @@ export const FITNESS_EXAMPLES: FitnessExample[] = [
       'Three lines, no tooling decision, and it catches a migration that quietly dropped it. The cheapest useful one, which is why it is first.',
   },
   {
+    id: 'append-only-grant',
+    characteristicId: 'auditability',
+    what: 'A test asserting the application’s database role still has no UPDATE or DELETE grant on the append-only table.',
+    defends:
+      'Auditability, in the schema rather than in a convention. Revoke the grants once; the day somebody adds a path that rewrites history, this fails instead of the history quietly changing.',
+  },
+  {
+    id: 'cost-is-not-a-test',
+    characteristicId: 'cheap-to-run',
+    what: 'Not a test — a calendar reminder to look at the bill once a month.',
+    defends:
+      'Cheap to run, honestly. The number lives on a bill and not in your repository, so there is nothing to assert. A characteristic whose check is “look at it deliberately” is still checked; one whose check is an assertion that cannot fail is not, and inventing the second is worse than admitting the first.',
+  },
+  {
     id: 'import-boundary',
     characteristicId: 'evolvability',
     what: 'A test that fails when one feature imports another feature’s internals.',
