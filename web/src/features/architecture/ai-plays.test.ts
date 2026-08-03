@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
 import { AI_MISLEADS, AI_PLAYS, AI_TOOLS } from './ai-plays'
+import { EXPAND_CONTRACT_STEPS } from './evolve'
 
 // The plan's brief says eleven plays, from `docs/stage-03-status.md`'s note
 // that the doc grew four after the port. The doc has nine. The port has seven,
@@ -62,9 +63,33 @@ test('the plays where the doc names the judgment half carry it, since that half 
   }
 })
 
+// An alternation of three loose fragments passed on "It never drops a step, so
+// the old value is safe" — the opposite claim. The play has to name the step by
+// number, say what the step does, and say that the model drops it; and the
+// number is checked against the sequence rather than typed twice, so renumbering
+// `EXPAND_CONTRACT_STEPS` fails here instead of leaving the play pointing at the
+// wrong step.
 test('the expand-contract play names the step the model drops, which is the whole reason to check its order', () => {
+  const stop = EXPAND_CONTRACT_STEPS.find((s) =>
+    /stop writing the old/i.test(s.what),
+  )
+  expect(
+    stop,
+    'the sequence has a stop-writing-the-old-column step',
+  ).toBeDefined()
+
   const play = AI_PLAYS.find((p) => p.id === 'expand-contract-order')
-  expect(play?.youJudge).toMatch(/stops writing the old|step 5|old value/i)
+  expect(play?.youJudge, 'named by number').toMatch(
+    new RegExp(`step ${stop!.n}\\b`, 'i'),
+  )
+  expect(
+    play?.youJudge,
+    'and by what it does, since a number alone is not checkable',
+  ).toMatch(/stops writing the old value/i)
+  expect(
+    play?.youJudge,
+    'the play warns that a step goes missing, it does not reassure that none does',
+  ).toMatch(/(tends to|often|likely to|will) drop/i)
 })
 
 test('the three named tools survive the move out of the component', () => {

@@ -51,18 +51,30 @@ test('serializable names the retry path as its cost, since that is code you did 
 
 // Figure 19's caption claims both levels answer this identically, so this
 // asserts that rather than asserting each one separately and calling it the
-// same thing — which is what the first version did, with this same name.
-test('both levels name the limit as sitting across transactions rather than inside one, which is what the figure caption claims about them', () => {
+// same thing — which is what the first version did, with this same name. The
+// second version shared `another transaction` across both alternations, which
+// meant one sentence satisfied both sides and the check could not tell the two
+// levels apart: "it serialises against another transaction completely, so the
+// lost update cannot happen under it" passed as either level's `cannot`. So
+// each level is now held to its own words, and the guard covers the phrasing
+// that presents a level as the fix without naming it.
+test('each level names its own limit as one sitting across transactions rather than inside one, which is what the figure caption claims about them', () => {
   const [rc, ser] = ISOLATION_LEVELS
   for (const l of ISOLATION_LEVELS) {
     expect(l.cannot.trim().length, `${l.id} cannot`).toBeGreaterThan(40)
   }
-  expect(rc.cannot).toMatch(/earlier transaction|another transaction/i)
-  expect(ser.cannot).toMatch(/two separate transactions|another transaction/i)
-  // Neither may present the limit as something the other one fixes.
+  expect(
+    rc.cannot,
+    'read committed’s limit is the transaction that has already ended',
+  ).toMatch(/earlier transaction/i)
+  expect(
+    ser.cannot,
+    'serializable’s is the pair with a person between them',
+  ).toMatch(/two separate transactions/i)
+  // Neither may present the limit as something a level fixes.
   for (const l of ISOLATION_LEVELS) {
-    expect(l.cannot, `${l.id} offers itself as the fix`).not.toMatch(
-      /unlike|whereas|serializable fixes|solves this/i,
+    expect(l.cannot, `${l.id} offers a level as the fix`).not.toMatch(
+      /unlike|whereas|serializable fixes|solves this|cannot happen under|is handled|takes care of/i,
     )
   }
 })
@@ -122,10 +134,28 @@ test('each strategy carries the statement it turns on, since that is what the pa
 // neither the doc nor this stage teaches it. So the pessimistic case must not
 // be a queue: under a bare FOR UPDATE at read committed the second worker
 // blocks, re-evaluates, finds the row no longer matches, and gets nothing.
+//
+// The `why` half was the half that could not fail: `/re-read|that row/i`
+// passes on "makes the second request skip that row entirely and take the next
+// one, which is how a work queue behaves", which is the exact sentence 4bc60aa
+// was fixing. The queue check has to cover the reasoning as well as the
+// scenario, and the wait-then-re-read has to be asserted as a phrase rather
+// than as two words that happen to appear.
+const QUEUE_BEHAVIOUR =
+  /queue|skips? (that|the) row|next (row|one|unprocessed)/i
+
 test('the pessimistic case is same-row contention rather than a work queue, because a bare FOR UPDATE does not hand the second reader the next row', () => {
   const hotRow = CONCURRENCY_CASES.find((c) => c.answer === 'pessimistic')
-  expect(hotRow?.scenario).not.toMatch(/queue|next unprocessed|next row/i)
-  expect(hotRow?.why).toMatch(/re-read|that row/i)
+  expect(hotRow?.scenario, 'the scenario is a queue').not.toMatch(
+    QUEUE_BEHAVIOUR,
+  )
+  expect(hotRow?.why, 'the reasoning describes a queue').not.toMatch(
+    QUEUE_BEHAVIOUR,
+  )
+  expect(
+    hotRow?.why,
+    'the second reader waits and re-reads the row it blocked on',
+  ).toMatch(/re-reads? (that|the same) row/i)
 })
 
 // The trap the doc is emphatic about. A reader who has just learned optimistic
@@ -137,10 +167,23 @@ test('the two-claims-on-one-shift case answers with the constraint, not with eit
   expect(crossRow?.why).toMatch(/spans rows|cross-row|different rows/i)
 })
 
+// Ruling it out is the claim, so the assertion has to be about the ruling-out.
+// `/isolation|serializable|same transaction/i` passed on "Use SERIALIZABLE
+// isolation here and the problem is handled", which is the belief this case
+// exists to take away.
 test('the human-in-the-gap case rules out isolation rather than choosing between locks, because that is the belief the doc says people ship on', () => {
   const gap = CONCURRENCY_CASES.find((c) => c.id === 'human-gap')
   expect(gap?.answer).toBe('optimistic')
-  expect(gap?.why).toMatch(/isolation|serializable|same transaction/i)
+  expect(gap?.why, 'no level catches it is the lesson').toMatch(
+    /no isolation level catches this/i,
+  )
+  expect(
+    gap?.why,
+    'and the strictest one has to be named, since it is the one reached for',
+  ).toMatch(/serializable included/i)
+  expect(gap?.why, 'nothing here may read as raise the level').not.toMatch(
+    /(use|set|setting|raising|switch to) serializable|serializable (handles|fixes|solves|is the answer)/i,
+  )
 })
 
 test('every case explains itself whichever way it was answered, since the reasoning is the lesson and not the reward', () => {
