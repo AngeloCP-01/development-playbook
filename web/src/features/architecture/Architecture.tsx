@@ -588,6 +588,13 @@ const STEPS: (Step & { id: StepId })[] = [
               enough that you keep re-deriving how it fits together; code is
               what your editor already draws. Draw two diagrams, not four.
             </p>
+            <p>
+              The deployment view is declined here, and declining it is the
+              decision: one application on one platform, with the container view
+              already carrying it. Write that down rather than leaving a gap — a
+              view you decided not to draw and a view you forgot look identical
+              on the page and mean opposite things about your thinking.
+            </p>
           </Prose>
           <Figure
             n={8}

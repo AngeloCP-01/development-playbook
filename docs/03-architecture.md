@@ -462,6 +462,11 @@ third-party services reached over HTTPS. Say that rather than producing a second
 of obligation. It stops being true the moment anything runs on its own schedule or its own
 hardware, and then the view earns its place.
 
+Record that as a decision rather than leaving it as an absence: *no deployment view — one
+application on one platform, and the container view already carries it.* A view you decided
+not to draw and a view you forgot look identical on the page and mean opposite things about
+your thinking.
+
 **One data flow, drawn end to end.** Pick the flow that crosses the most boundaries, because
 that is where the design decisions hide:
 
