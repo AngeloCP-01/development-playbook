@@ -218,3 +218,34 @@ The mechanics (see `CLAUDE.md` for the file-by-file trace):
 
 A stage is done when a reader could learn the topic from it cold — clicking, guessing,
 and reading definitions — without already knowing the vocabulary.
+
+---
+
+## When a component gets a render test
+
+Vitest runs two projects: `unit` (node, `*.test.ts`) and `dom` (jsdom, `*.test.tsx`). The
+file extension picks the environment, so a render test is `Component.test.tsx` beside
+`Component.tsx` and needs no configuration.
+
+**The rule: a component that derives what it displays from data, rather than displaying
+the data directly, gets a render test.**
+
+Written against the failure it prevents. A data test proves the function returns the right
+answer; it says nothing about whether the component shows it. Both green, and the reader
+still sees nothing — which is how a passing suite ships a broken lesson.
+
+Three shapes that qualify:
+
+- **A conditional render of something a data test guarantees.** The interrogation's
+  reasoning is returned on both branches and asserted in `scoring.test.ts`. Gating it on
+  `correct` in the component passes every data test and hides it from the readers who most
+  need it.
+- **A module-private helper.** `fieldName()` in `SchemaInspector` is not exported, so the
+  render is its only surface.
+- **An accessible name assembled in the component.** `BoundaryMap` once hardcoded
+  "allowed" into a name while the visible badge derived from the data — a sighted reader
+  and a screen-reader user were told opposite things, and nothing failed.
+
+What does not need one: a component that renders a prop as text, a layout wrapper, a
+component whose whole behaviour is already covered by the audit suite driving the real
+page.

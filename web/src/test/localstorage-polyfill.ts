@@ -1,16 +1,20 @@
 /**
- * vitest.config.ts runs the suite under the `node` environment, so there is no
- * `window`, `localStorage`, or `Storage` global. discovery-sheet.test.ts needs all
- * three, including a real `Storage` constructor, since it spies on
- * `Storage.prototype`.
+ * The `unit` vitest project runs under the `node` environment, so there is no
+ * `window`, `localStorage`, or `Storage` global. `discovery-sheet.test.ts` and
+ * `architecture-sheet.test.ts` need all three, including a real `Storage`
+ * constructor, since they spy on `Storage.prototype`.
  *
- * Pulling in jsdom or happy-dom for one test file would add a dependency this
- * project deliberately doesn't carry. This is the minimal Web Storage polyfill the
- * suite actually exercises: an in-memory, per-process store with the five methods
+ * jsdom IS available in this repository — the `dom` project uses it for
+ * `*.test.tsx` render tests. This polyfill survives that change because both
+ * importers test `lib/` modules rather than components, so moving them into the
+ * `dom` project would mean renaming a module test to `.test.tsx` to buy a DOM it
+ * does not otherwise need. This is the minimal Web Storage polyfill the suite
+ * actually exercises: an in-memory, per-process store with the five methods
  * `Storage` defines.
  *
- * Imported for its side effects only by discovery-sheet.test.ts — deliberately not
- * wired into setupFiles, so no other suite inherits a global `window`.
+ * Imported for its side effects only, and deliberately not wired into
+ * `setupFiles`, so no other suite in the `unit` project inherits a global
+ * `window`.
  */
 
 class MemoryStorage {
