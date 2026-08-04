@@ -38,7 +38,8 @@ starting a new project rather than trusting this file blindly.
 | End-to-end tests | Playwright | 1.61+ | Run against a real build, not the dev server. |
 | Linting | ESLint (`eslint-config-next`) | 9.x | Next ships and maintains the config, and the react-hooks rule family has caught real bugs here that younger linters miss. Gate at `--max-warnings 0` — eslint exits 0 on warnings otherwise. |
 | Formatting | Prettier | 3.x | Paired with `eslint-config-prettier` so the two never argue. |
-| Git hooks | Lefthook | 1.x | Fast, single binary, config in one YAML file. |
+| Component tests | Testing Library + jsdom | RTL 16.x / jsdom 30.x | Only for components with real logic, per [06 — Testing](../docs/06-testing.md). Runs as a second Vitest project so unit tests keep their `node` environment and pay nothing for the DOM. |
+| Git hooks | Lefthook | 2.x | Fast, single binary, config in one YAML file. |
 
 ## Operations
 
