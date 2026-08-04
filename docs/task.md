@@ -59,7 +59,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
 | **W-3** | Stages 02–18 interactive | ◐ *(02, 03 done; 15 remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
-| **W-5** | Deploy | ☐ |
+| **W-5** | Deploy | ◐ *(repo side done; awaiting Vercel Root Directory + first deploy)* |
 
 ### Dependency map
 
@@ -450,12 +450,19 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
       confirm Actions fails — **TD-10**
 - [x] Fix or document whatever the suite reveals
 
-### W-5 — Deploy ☐
+### W-5 — Deploy ◐ *(repo side done 2026-08-04; awaiting first deploy)*
 
-- [ ] `vercel link`; confirm Node version matches local
-- [ ] Preview deploy per pull request
+- [x] Node version pinned where Vercel reads it — `engines.node` in `web/package.json`.
+      `.nvmrc` reaches local and CI only, which left the one host that serves users unpinned
+- [x] `metadataBase`, `sitemap.ts` (19 URLs, derived from `STAGES`) and `robots.ts`
+- [x] Five `create-next-app` assets deleted from `public/`, with a test so they cannot return
+- [ ] **Set Root Directory to `web` in the Vercel project** — the build fails without it, and
+      there is no in-repo equivalent
+- [ ] Preview deploy per pull request *(automatic once the project is connected)*
 - [ ] Production deploy
-- [ ] Post-deployment verification per `docs/14`
+- [ ] Post-deployment verification per `docs/14` — **deliberately not started.** The audit suite
+      assumes a local server on `:3100` (`playwright.config.ts`), and retargeting it at a
+      deployed URL cannot be written until a deployment exists to point at
 
 ---
 
