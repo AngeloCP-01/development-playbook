@@ -21,23 +21,32 @@ function filesUnder(dir: string): string[] {
 // file nobody references is either dead weight or a missing reference, and
 // both are worth failing over.
 //
-// favicon.ico is exempt: it lives in `app/`, not `public/`, and is claimed by
-// filename convention rather than by an import. Anything genuinely referenced
-// only by convention belongs in this list with a reason, not silently.
+// favicon.ico lives in `app/`, not `public/`, so it is outside this check
+// entirely — mentioning it is documentation, not an exemption mechanism.
+//
+// The review found two ways this passed when it should not have. This file is
+// itself under `src/`, so naming an asset in a comment here satisfied the
+// search — dropping a `favicon.ico` into `public/` went green purely because
+// the word appears above. And a bare substring matched a filename mentioned in
+// any prose at all. So: this file is excluded from the corpus, and the match
+// requires a path separator, which is how an asset is actually referenced.
 test('every file in public/ is referenced by the app, since an asset nobody asks for is either dead weight or a missing reference', () => {
   const publicDir = join(WEB, 'public')
   const assets = filesUnder(publicDir).map((f) => f.slice(publicDir.length + 1))
   if (assets.length === 0) return
 
+  const self = fileURLToPath(import.meta.url)
   const source = [
     ...filesUnder(join(WEB, 'src')),
     ...filesUnder(join(WEB, 'e2e')),
   ]
-    .filter((f) => /\.(ts|tsx|css|mjs)$/.test(f))
+    .filter((f) => f !== self && /\.(ts|tsx|css|mjs)$/.test(f))
     .map((f) => readFileSync(f, 'utf8'))
     .join('\n')
 
   for (const asset of assets) {
-    expect(source, `public/${asset} is referenced nowhere`).toContain(asset)
+    expect(source, `public/${asset} is referenced nowhere`).toContain(
+      `/${asset}`,
+    )
   }
 })

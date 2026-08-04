@@ -76,7 +76,7 @@ Before doing anything, read these for context:
   `glossary.md`.
 - **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **328 vitest tests across 32 files** in two projects — `unit`
+  eslint at `--max-warnings 0`, **331 vitest tests across 33 files** in two projects — `unit`
   (node, data invariants) and `dom` (jsdom, render tests, `*.test.tsx`) — a **14-test playwright
   audit suite over 36 URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
   public (D-26).
@@ -85,9 +85,12 @@ Before doing anything, read these for context:
   one still audits nothing, which is the half that matters now.
 - **Not deployed yet, but the repo is ready for it** (`W-5`, 2026-08-04). `engines.node` pins
   the Node version Vercel reads, `metadataBase` is set, and `sitemap.ts` / `robots.ts` cover the
-  19 public URLs. **The one blocker is a dashboard setting**: the Vercel project
-  (`acp-development-playbook`) needs Root Directory `web`, because the app is not at the repo
-  root. `NEXT_PUBLIC_SITE_URL` overrides the origin without a code change.
+  19 public URLs. **Two things stand between this and a live site**, and only one is a dashboard
+  setting: the Vercel project (`acp-development-playbook`) needs Root Directory `web`, because
+  the app is not at the repo root. The other was found by review and is already fixed — pnpm
+  runs `prepare` on every install, `lefthook install` exits 1 without a `.git`, and Vercel's
+  build environment has none, so the install step died before Root Directory was ever consulted.
+  `NEXT_PUBLIC_SITE_URL` overrides the origin without a code change.
 - **Branch/push:** work happens on `feat/`|`fix/`|`docs/<date>-` branches, merged to `main`
   with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes.**
   **Stage 03 is merged and pushed**: `feat/stage-03-app-port` landed on `main` as

@@ -37,8 +37,16 @@ test('every sitemap entry is an absolute URL under this origin, since a relative
 test('robots allows indexing rather than forbidding it, which is the failure nobody notices for a month', () => {
   const rules = robots().rules
   const rule = Array.isArray(rules) ? rules[0] : rules
-  expect(rule.allow).toBe('/')
-  expect(rule.disallow ?? '').not.toBe('/')
+
+  // `allow` and `disallow` are each `string | string[]` in MetadataRoute.Robots,
+  // and Next's serializer flattens either spelling to the same output. Asserting
+  // the string form only meant `disallow: ['/']` shipped green — the exact
+  // failure this test names, in the shape the type explicitly permits.
+  const list = (v: string | string[] | undefined) =>
+    v === undefined ? [] : Array.isArray(v) ? v : [v]
+
+  expect(list(rule.allow)).toContain('/')
+  expect(list(rule.disallow)).not.toContain('/')
 })
 
 test('robots points crawlers at the sitemap, since an unlinked sitemap is one nothing fetches', () => {

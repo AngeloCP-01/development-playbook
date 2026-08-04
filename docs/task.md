@@ -456,6 +456,8 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
       `.nvmrc` reaches local and CI only, which left the one host that serves users unpinned
 - [x] `metadataBase`, `sitemap.ts` (19 URLs, derived from `STAGES`) and `robots.ts`
 - [x] Five `create-next-app` assets deleted from `public/`, with a test so they cannot return
+- [x] `prepare` hook made safe for a checkout with no `.git` — found by review, and it would
+      have failed the Vercel install step before Root Directory was ever read
 - [ ] **Set Root Directory to `web` in the Vercel project** — the build fails without it, and
       there is no in-repo equivalent
 - [ ] Preview deploy per pull request *(automatic once the project is connected)*
