@@ -86,10 +86,12 @@ Before doing anything, read these for context:
 - **Not deployed** (`W-5` open).
 - **Branch/push:** work happens on `feat/`|`fix/`|`docs/<date>-` branches, merged to `main`
   with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes.**
-  **Stage 03 is merged**: `feat/stage-03-app-port` landed on `main` as **`790b3e4`**
-  (`--no-ff`, 106 commits, 91 files, +20k/−0.5k, branch deleted). **Not pushed** —
-  `origin/main` is still at `eeb16f1`, so `main` is **107 commits ahead of the remote**, and
-  `origin/feat/stage-03-app-port` still exists three commits behind what was merged.
+  **Stage 03 is merged and pushed**: `feat/stage-03-app-port` landed on `main` as
+  **`790b3e4`** (`--no-ff`, 106 commits, 91 files, +20k/−0.5k, branch deleted), and
+  `origin/main` is at `2f42753`. **TD-17's harness is merged and not yet pushed** (`99f60cd`),
+  so `main` is **7 commits ahead of the remote**. Two merged branches still sit on the remote
+  and can be deleted: `origin/feat/stage-03-app-port` and
+  `origin/feat/stage-03-standard-practices`.
 
 ### This round's scope
 

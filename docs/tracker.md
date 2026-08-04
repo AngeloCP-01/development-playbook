@@ -43,10 +43,11 @@ Quality gates remain live: prettier (skipping markdown, see the build note below
 invariants) and `dom` (jsdom, render tests) — a **14-test audit suite sweeping 36
 URLs** (stage 03's twenty-two step hashes added by hand — TD-12), lefthook, and CI. Everything
 since `82a980b` was local until 2026-07-29, when `main` was pushed and CI ran green on the
-stage 03 merge (`30426083363`). `main` is now **107 commits ahead of `origin/main`** at
-`790b3e4`: the stage 03 merge is local only, and the user handles pushes.
-`origin/feat/stage-03-app-port` also still exists on the remote, three commits behind what was
-merged, and can be deleted once `main` is pushed.
+stage 03 merge (`30426083363`). The stage 03 merge (`790b3e4`) and TD-23's close were **pushed on 2026-08-04**;
+`origin/main` is at `2f42753`. `main` is now **7 commits ahead** — the TD-17 spec, plan, four
+implementation commits and the merge `99f60cd` — and the user handles pushes. Two merged
+branches still exist on the remote and can be deleted: `origin/feat/stage-03-app-port` (three
+commits behind what was merged) and `origin/feat/stage-03-standard-practices`.
 
 **The gate proved itself.** CI's first real run went red on a genuine bug — `PageProps`
 is generated into `.next/types/`, so typechecking before building fails on a clean
