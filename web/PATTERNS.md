@@ -214,7 +214,11 @@ The mechanics (see `CLAUDE.md` for the file-by-file trace):
 4. Wrap every diagram in `Figure`; number them across the stage.
 5. Add `terms.ts` entries for jargon the stage introduces, and wrap first appearances.
 6. Close on a `Callout kind="trap"` set, the way stage 01 does.
-7. Run the three verification passes and the `humanizer:humanizer` prose pass.
+7. Add a `*.test.tsx` render test for any component that derives what it displays from
+   data rather than displaying it directly — see "When a component gets a render test"
+   below, which exists because a data test and a component that ignores the data are both
+   green and together wrong.
+8. Run the three verification passes and the `humanizer:humanizer` prose pass.
 
 A stage is done when a reader could learn the topic from it cold — clicking, guessing,
 and reading definitions — without already knowing the vocabulary.
@@ -243,8 +247,9 @@ Three shapes that qualify:
 - **A module-private helper.** `fieldName()` in `SchemaInspector` is not exported, so the
   render is its only surface.
 - **An accessible name assembled in the component.** `BoundaryMap` once hardcoded
-  "allowed" into a name while the visible badge derived from the data — a sighted reader
-  and a screen-reader user were told opposite things, and nothing failed.
+  "allowed" into a name while only the visible badge derived from the data, so flipping the
+  data would have told a sighted reader and a screen-reader user opposite things, with
+  nothing failing. A per-task review caught that one; a render test is what catches the next.
 
 What does not need one: a component that renders a prop as text, a layout wrapper, a
 component whose whole behaviour is already covered by the audit suite driving the real

@@ -111,16 +111,16 @@ touching UI are expected to clear:
 - **Responsive** — 320→2560px, no horizontal overflow, no sub-44px touch target below `lg`
 - **Console** — zero errors in a clean browser context
 
+These checks live in `web/e2e/audit.spec.ts` and run in CI. Two cautions learned
+the hard way: a checker reporting mass failures is usually the checker (a link audit
+once reported 124 false breaks), and colour parsers must handle `oklab()` — Tailwind
+emits it for alpha backgrounds.
+
 A component that derives what it displays from data — a conditional render, a
 module-private helper, an accessible name assembled from parts — also gets a `*.test.tsx`
 render test. `web/PATTERNS.md` states the rule and why. A passing data test plus a
 component that ignores the data is green and wrong, and that combination is what TD-17
 was opened for.
-
-These checks live in `web/e2e/audit.spec.ts` and run in CI. Two cautions learned
-the hard way: a checker reporting mass failures is usually the checker (a link audit
-once reported 124 false breaks), and colour parsers must handle `oklab()` — Tailwind
-emits it for alpha backgrounds.
 
 ## Git conventions
 

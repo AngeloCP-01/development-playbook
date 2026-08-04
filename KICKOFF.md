@@ -76,7 +76,7 @@ Before doing anything, read these for context:
   `glossary.md`.
 - **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **315 vitest tests across 28 files** in two projects — `unit`
+  eslint at `--max-warnings 0`, **320 vitest tests across 29 files** in two projects — `unit`
   (node, data invariants) and `dom` (jsdom, render tests, `*.test.tsx`) — a **14-test playwright
   audit suite over 36 URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
   public (D-26).

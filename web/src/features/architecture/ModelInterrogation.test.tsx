@@ -27,3 +27,21 @@ test('shows the reasoning after a wrong answer, since an exercise that explains 
   const why = judgeInterrogation(question.id, wrong!.id).why
   expect(screen.getByText(why)).toBeDefined()
 })
+
+// Found by the whole-branch review, and the harness's first real customer: the
+// panel said "Five questions" while INTERROGATIONS held six, having gained one
+// when the doc did. A data test cannot see this — `scoring.test.ts` asserts the
+// length and is perfectly happy — and neither can the audit suite, which never
+// reads the sentence. It is the exact shape the render harness was built for.
+test('counts the questions it actually renders, since a hand-written number in prose goes stale the moment the list grows', () => {
+  const WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven']
+  render(<ModelInterrogation />)
+
+  const expected = WORDS[INTERROGATIONS.length]
+  const blurb = screen.getByText(/questions that surface design errors/i)
+  expect(blurb.textContent?.toLowerCase()).toContain(`${expected} questions`)
+
+  // And the list really does render that many, so the sentence is checked
+  // against the DOM rather than against the data it was already copied from.
+  expect(screen.getAllByRole('radiogroup')).toHaveLength(INTERROGATIONS.length)
+})
