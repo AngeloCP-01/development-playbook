@@ -25,5 +25,8 @@ export default defineConfig({
   retries: 2,
   use: {
     baseURL: process.env.PROD_URL ?? 'https://acp-dev-playbook.vercel.app',
+    // A red run here is the hardest kind to reproduce — the target is remote
+    // and its state is transient. Costs nothing on the green path.
+    trace: 'retain-on-failure',
   },
 })

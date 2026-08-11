@@ -16,10 +16,15 @@ import { expect, test } from '@playwright/test'
  * suite agree with the repo instead of checking the deployment.
  */
 
-/** The origin under test, without a trailing slash. */
+/**
+ * The scheme-and-host under test. `new URL().origin` rather than trimming a
+ * trailing slash: the trimming version claimed to return an origin and did not,
+ * so `PROD_URL=https://host/base` produced assertion messages describing a URL
+ * the request never went to.
+ */
 function origin(baseURL: string | undefined): string {
   if (!baseURL) throw new Error('no baseURL configured')
-  return baseURL.replace(/\/$/, '')
+  return new URL(baseURL).origin
 }
 
 test(
@@ -30,8 +35,16 @@ test(
     expect(res.status(), 'robots.txt did not return 200').toBe(200)
 
     const body = await res.text()
-    expect(body).toMatch(/Allow:\s*\//i)
-    expect(body).not.toMatch(/Disallow:\s*\/\s*$/im)
+    // Anchored, and deliberately so. `/Allow:\s*\//i` was satisfied by the
+    // substring inside `Disallow: /admin`, so this check passed against a
+    // robots.txt carrying no Allow directive at all — decorative, in a suite
+    // whose whole rule is that each check earns its place.
+    expect(body, 'no site-wide Allow: / directive').toMatch(
+      /^Allow:\s*\/\s*$/im,
+    )
+    expect(body, 'the site is disallowed wholesale').not.toMatch(
+      /^Disallow:\s*\/\s*$/im,
+    )
     expect(
       body,
       `robots.txt does not name ${origin(baseURL)} — NEXT_PUBLIC_SITE_URL is probably wrong or unset`,
@@ -54,9 +67,15 @@ test(
     // being generated; a rise means something is being advertised twice.
     expect(locs, `sitemap lists ${locs.length} URLs`).toHaveLength(19)
     for (const loc of locs) {
-      expect(loc, `${loc} is not on ${origin(baseURL)}`).toContain(
+      const u = new URL(loc)
+      // Exact, not `toContain`. A substring match admits a longer hostname
+      // (`…vercel.app.example.com`), and — worse — it admits the doubled slash
+      // that NEXT_PUBLIC_SITE_URL with a trailing slash produces, which is
+      // precisely the env-var mistake this suite exists to catch.
+      expect(u.origin, `${loc} is not on ${origin(baseURL)}`).toBe(
         origin(baseURL),
       )
+      expect(u.pathname, `${loc} has a doubled slash`).not.toMatch(/\/\//)
     }
   },
 )
@@ -79,7 +98,10 @@ test(
     for (const loc of locs) {
       // GET rather than HEAD: a host that answers 405 to HEAD would fail this
       // for a reason that has nothing to do with the page existing.
-      const r = await request.get(loc)
+      // maxRedirects: 0 because "resolves" has to mean "is served at the URL
+      // the sitemap advertises" — a 308 to somewhere else is a defect the
+      // default redirect-following would hide.
+      const r = await request.get(loc, { maxRedirects: 0 })
       if (r.status() !== 200) broken.push(`${r.status()} ${loc}`)
     }
     expect(broken, broken.join('\n')).toEqual([])
