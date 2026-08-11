@@ -85,3 +85,35 @@ test(
     expect(broken, broken.join('\n')).toEqual([])
   },
 )
+
+test(
+  'the home page and a stage page render through the real layout, which is docs/14’s minute-zero check automated',
+  { tag: '@smoke' },
+  async ({ page }) => {
+    await page.goto('/', { waitUntil: 'networkidle' })
+    await expect(page).toHaveTitle(/Development Playbook/)
+
+    await page.goto('/stages/03-architecture', { waitUntil: 'networkidle' })
+    // The title template lives in the root layout, so this failing means the
+    // page returned something other than a fully rendered document.
+    await expect(page).toHaveTitle('03. Architecture · Development Playbook')
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+  },
+)
+
+test(
+  'the deployed site logs no console errors, where fonts and assets come from the real network rather than a local server',
+  { tag: '@smoke' },
+  async ({ page }) => {
+    const errors: string[] = []
+    page.on('pageerror', (e) => errors.push(e.message.slice(0, 120)))
+    page.on('console', (m) => {
+      if (m.type() === 'error') errors.push(m.text().slice(0, 120))
+    })
+
+    for (const path of ['/', '/stages/03-architecture']) {
+      await page.goto(path, { waitUntil: 'networkidle' })
+    }
+    expect(errors, errors.join('\n')).toEqual([])
+  },
+)
