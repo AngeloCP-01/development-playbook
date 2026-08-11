@@ -1,5 +1,6 @@
 # Stage 03 — implementation status
 
+test
 **What this is:** the coverage map for stage 03, doc against app, section by section. It
 exists because this stage has now diverged from its own port twice, and both times the
 divergence was discovered rather than tracked.
@@ -10,7 +11,7 @@ the whole-branch re-review's five Important findings all closed.
 
 **Current state:** doc **14 sections / 1507 lines**. App **22 steps**. Glossary **73 terms**.
 313 tests across 26 files, and a 14-test audit suite over 36 URLs. Lint and typecheck clean.
-Every DDL block in the doc executed against PostgreSQL 17, and the backfill loop's *behaviour*
+Every DDL block in the doc executed against PostgreSQL 17, and the backfill loop's _behaviour_
 executed too — the re-review's I1 was a correctness bug no amount of reading would have caught,
 found only by running the wrong instruction against 5000 rows and counting what it skipped.
 
@@ -36,7 +37,7 @@ rather than generated (`CLAUDE.md`). That duplication is accepted; what is not a
 widening it silently. It widened twice:
 
 - **W-3.1** rewrote the doc after the app was built → TD-23.
-- **W-3.1b** rewrote the doc *while* the port was in flight → the port's data files ended up
+- **W-3.1b** rewrote the doc _while_ the port was in flight → the port's data files ended up
   encoding a superseded doc, including one security-relevant defect.
 
 The rule that came out of it: **a stage's doc and its port never run concurrently, and they
@@ -48,23 +49,23 @@ merge as one unit.** This file is how that stays visible.
 
 Doc order. "Ported" means the app teaches the same thing, not merely that a component exists.
 
-| # | Doc section | App step | Ported | Notes |
-|---|---|---|---|---|
-| 1 | Sort decisions by reversibility | `reverse` | ✅ | Axis figure + scored exercise. G14's test promoted here from the AI section |
-| 2 | What this system has to be | `require` · `trace` | ✅ | Characteristics picker in `require`; the widened ten-row trace and fitness functions split out into `trace` on measurement (`require` alone ran 4.7 screens). Each trace row now points at the step that makes its decision |
-| 3 | Model the domain first | `model` · `worksheet` | ✅ **fixed** | Interrogation at 6 questions, in doc order. Split on measurement: deriving the nouns and writing your own domain down are two acts |
-| 4 | The shapes a system can take | `shape` | ✅ | Styles landscape, and statelessness lifted out as the precondition it is rather than a peer. Vertical/horizontal, load balancing and read replicas ported |
-| 5 | Start with one application | `oneapp` | ✅ | Split triggers, and the serverless-to-Postgres pooling edge with its transaction-mode caveat |
-| 6 | Boundaries inside the monolith | `boundaries` | ✅ | Boundary map, bounded context, the write-side rule |
-| 7 | Sketch the system | `sketch` · `flow` · `resilience` | ✅ | Container view; the flow and the sync/async fork it poses; idempotency; and the four resilience patterns — timeout, backoff+jitter, circuit breaker, graceful degradation — with bulkhead named and not taught |
-| 8 | Design the database | `schema` · `indexes` · `tenancy` · `concurrency` · `races` | ✅ | The heaviest section in the stage, cut five ways on measurement. DDL inspector, ER view, indexes, partial unique index, tenancy, delete behaviour; then isolation levels, both locking strategies, and the cross-row trap as a scored exercise. CAP and eventual consistency named without being oversold |
-| 9 | **Evolve the schema safely** | `evolve` | ✅ | Was the only section with no step at all. The six-step sequence as a guess-then-reveal on which two get skipped; the pre-launch exemption as the panel's opening; the backfill held to the doc character-for-character by a test |
-| 10 | Design the API contracts | `contract` | ✅ | Contract sort, verb-route problem |
-| 11 | Authentication and authorization | `access` | ✅ **fixed** | Was teaching the singular framing and scoring `role` alone as correct. Now a checkbox conjunction, browser-verified. Split out of `contract`: what the API promises and who may invoke it are different decisions |
-| 12 | Write the ADRs | `record` | ✅ | ADR anatomy, one-per-independently-reversible-thing |
-| 13 | Defer aggressively | `record` | ✅ | Defer list + criterion + tenancy resolution, plus event sourcing and CQRS — CQRS as the seventh deferral-list item the port had dropped, event sourcing with the audit-table boundary the doc argues (an audit table alongside normal rows is not event sourcing) |
-| 14 | AI in architecture | `ai` | ✅ | Nine plays and six misleads, which is what the doc has — the brief said eleven and four-new, and both were wrong. A test now counts the doc's own bullets and a second holds the app's order to it |
-| — | Traps + further reading | `traps` | ✅ | Not a doc section; the stage's closing set, which is how stage 02 closes too. Left in the AI panel until this round only because that panel was last |
+| #   | Doc section                      | App step                                                   | Ported       | Notes                                                                                                                                                                                                                                                                                                     |
+| --- | -------------------------------- | ---------------------------------------------------------- | ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Sort decisions by reversibility  | `reverse`                                                  | ✅           | Axis figure + scored exercise. G14's test promoted here from the AI section                                                                                                                                                                                                                               |
+| 2   | What this system has to be       | `require` · `trace`                                        | ✅           | Characteristics picker in `require`; the widened ten-row trace and fitness functions split out into `trace` on measurement (`require` alone ran 4.7 screens). Each trace row now points at the step that makes its decision                                                                               |
+| 3   | Model the domain first           | `model` · `worksheet`                                      | ✅ **fixed** | Interrogation at 6 questions, in doc order. Split on measurement: deriving the nouns and writing your own domain down are two acts                                                                                                                                                                        |
+| 4   | The shapes a system can take     | `shape`                                                    | ✅           | Styles landscape, and statelessness lifted out as the precondition it is rather than a peer. Vertical/horizontal, load balancing and read replicas ported                                                                                                                                                 |
+| 5   | Start with one application       | `oneapp`                                                   | ✅           | Split triggers, and the serverless-to-Postgres pooling edge with its transaction-mode caveat                                                                                                                                                                                                              |
+| 6   | Boundaries inside the monolith   | `boundaries`                                               | ✅           | Boundary map, bounded context, the write-side rule                                                                                                                                                                                                                                                        |
+| 7   | Sketch the system                | `sketch` · `flow` · `resilience`                           | ✅           | Container view; the flow and the sync/async fork it poses; idempotency; and the four resilience patterns — timeout, backoff+jitter, circuit breaker, graceful degradation — with bulkhead named and not taught                                                                                            |
+| 8   | Design the database              | `schema` · `indexes` · `tenancy` · `concurrency` · `races` | ✅           | The heaviest section in the stage, cut five ways on measurement. DDL inspector, ER view, indexes, partial unique index, tenancy, delete behaviour; then isolation levels, both locking strategies, and the cross-row trap as a scored exercise. CAP and eventual consistency named without being oversold |
+| 9   | **Evolve the schema safely**     | `evolve`                                                   | ✅           | Was the only section with no step at all. The six-step sequence as a guess-then-reveal on which two get skipped; the pre-launch exemption as the panel's opening; the backfill held to the doc character-for-character by a test                                                                          |
+| 10  | Design the API contracts         | `contract`                                                 | ✅           | Contract sort, verb-route problem                                                                                                                                                                                                                                                                         |
+| 11  | Authentication and authorization | `access`                                                   | ✅ **fixed** | Was teaching the singular framing and scoring `role` alone as correct. Now a checkbox conjunction, browser-verified. Split out of `contract`: what the API promises and who may invoke it are different decisions                                                                                         |
+| 12  | Write the ADRs                   | `record`                                                   | ✅           | ADR anatomy, one-per-independently-reversible-thing                                                                                                                                                                                                                                                       |
+| 13  | Defer aggressively               | `record`                                                   | ✅           | Defer list + criterion + tenancy resolution, plus event sourcing and CQRS — CQRS as the seventh deferral-list item the port had dropped, event sourcing with the audit-table boundary the doc argues (an audit table alongside normal rows is not event sourcing)                                         |
+| 14  | AI in architecture               | `ai`                                                       | ✅           | Nine plays and six misleads, which is what the doc has — the brief said eleven and four-new, and both were wrong. A test now counts the doc's own bullets and a second holds the app's order to it                                                                                                        |
+| —   | Traps + further reading          | `traps`                                                    | ✅           | Not a doc section; the stage's closing set, which is how stage 02 closes too. Left in the AI panel until this round only because that panel was last                                                                                                                                                      |
 
 **Tally: 14 fully ported · 0 partial · 0 unported.** The last cluster — fitness functions with
 the widened trace, and the deferred-concept definitions — closed in `9798286`, Task 11 of the
@@ -140,14 +141,14 @@ From the third cold-reader run — full report in
 
 - [ ] **Capacity estimation is absent.** One hit for `capacity|back-of-envelope|QPS|throughput`
       across the whole doc, and it is the phrase "write throughput" in a trade-off list. It is a
-      standard part of system design, so it passes D-49's filter — but the *heavy* version (size
+      standard part of system design, so it passes D-49's filter — but the _heavy_ version (size
       a cache, plan for 10M users) is what "Designing for imagined scale" exists to refuse. The
       light version earns its place and is what the index section already assumes without asking
       for: roughly how much data will exist in a year, and how fast it arrives. Frame as "you
       need one number, not a model", and place it near indexes rather than in its own section.
 - [ ] **G1** — the noun-derivation strike test rests on one example (`total` is not an entity).
       The entity-versus-verb half is now answered; the property-versus-entity half is not.
-- [ ] **G6** — the soft-delete *mechanic* is unspecified (column vs status vs archive table),
+- [ ] **G6** — the soft-delete _mechanic_ is unspecified (column vs status vs archive table),
       and nothing says how queries stop forgetting the filter.
 - [ ] **Normalisation is named, not taught.** 1NF/2NF/3NF appear in one line. The option this
       round was scoped against promised `(1NF-3NF)`; what shipped is the practical rule plus
@@ -167,52 +168,52 @@ From the third cold-reader run — full report in
 
 Not gaps — boundaries doing their job. Do not "fix" these here.
 
-| Topic | Owner |
-|---|---|
-| Caching patterns (cache-aside, invalidation, TTL) | 09 — Performance Optimization |
-| Observability, alerting, error budgets | 15 — Observability |
-| Threat modelling, secrets management | 08 — Security Audit |
-| Running migrations in a pipeline | 13 — Production Deployment |
-| ADR format, length, status field, location | 10 — Documentation (D-39, G9) |
-| Authorization *enforcement* (where the check goes) | 05 — Development |
-| Sharding, table partitioning, event-sourced CQRS | Named, not taught (D-49) |
+| Topic                                              | Owner                         |
+| -------------------------------------------------- | ----------------------------- |
+| Caching patterns (cache-aside, invalidation, TTL)  | 09 — Performance Optimization |
+| Observability, alerting, error budgets             | 15 — Observability            |
+| Threat modelling, secrets management               | 08 — Security Audit           |
+| Running migrations in a pipeline                   | 13 — Production Deployment    |
+| ADR format, length, status field, location         | 10 — Documentation (D-39, G9) |
+| Authorization _enforcement_ (where the check goes) | 05 — Development              |
+| Sharding, table partitioning, event-sourced CQRS   | Named, not taught (D-49)      |
 
 ---
 
 ## Decisions governing this stage
 
-| # | What it settles |
-|---|---|
-| **D-37** | Audience is solo-but-production-grade; stage 03 is the solutions architect's home |
-| ~~**D-38**~~ | Five content steps + AI was a dense-stage ceiling — **superseded by D-52** |
-| **D-52** | A step holds one judgment and its panel stays under four screens at 1024×768; count follows content. Enforced by measurement in `audit.spec.ts`, not recorded |
-| **D-42** | Cite headings, never line numbers. Enforced by `source-citations.test.ts` |
-| **D-44** | Teach the styles trade-off without changing the recommendation |
-| **D-45** | Full HLD/LLD treatment, accepting the length |
-| **D-46** | W-3.1 shipped doc-only — **superseded in practice; doc and port now merge as one unit** |
-| **D-51** | The doc is the source of truth for ported content; reconstructing it from memory is what produced a security defect here |
-| **D-47** | Grep `terms.ts` when fixing a concept; it is a place defects hide |
-| **D-48** | A round's fix wave gets its own verification pass |
-| **D-49** | Completeness beats length for this stage; standard practice is the filter |
-| **D-50** | Executable content gets executed, not read |
+| #            | What it settles                                                                                                                                               |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **D-37**     | Audience is solo-but-production-grade; stage 03 is the solutions architect's home                                                                             |
+| ~~**D-38**~~ | Five content steps + AI was a dense-stage ceiling — **superseded by D-52**                                                                                    |
+| **D-52**     | A step holds one judgment and its panel stays under four screens at 1024×768; count follows content. Enforced by measurement in `audit.spec.ts`, not recorded |
+| **D-42**     | Cite headings, never line numbers. Enforced by `source-citations.test.ts`                                                                                     |
+| **D-44**     | Teach the styles trade-off without changing the recommendation                                                                                                |
+| **D-45**     | Full HLD/LLD treatment, accepting the length                                                                                                                  |
+| **D-46**     | W-3.1 shipped doc-only — **superseded in practice; doc and port now merge as one unit**                                                                       |
+| **D-51**     | The doc is the source of truth for ported content; reconstructing it from memory is what produced a security defect here                                      |
+| **D-47**     | Grep `terms.ts` when fixing a concept; it is a place defects hide                                                                                             |
+| **D-48**     | A round's fix wave gets its own verification pass                                                                                                             |
+| **D-49**     | Completeness beats length for this stage; standard practice is the filter                                                                                     |
+| **D-50**     | Executable content gets executed, not read                                                                                                                    |
 
 ---
 
 ## Verification history
 
-| Pass | Result |
-|---|---|
-| Cold reader, run 1 (pre-W-3.1) | 14 gaps, 3 blocking → TD-18 |
-| Cold reader, run 2 (post-W-3.1) | 9 closed, 3 partial, G9 deferred. Found 5 gaps the round introduced |
-| Cold reader, run 3 (post-W-3.1b) | 2 clusters actionable first pass, 3 partial. Found a security defect open across all three runs |
-| Whole-branch review, W-3.1 | Ready with fixes — 6 blocking, incl. unrunnable SQL and a ticked-but-undone checklist item |
-| Whole-branch review, W-3.1b | Not ready — 5 blocking, incl. a false serializable claim and a backfill that corrupted mononyms. Found by **executing** the SQL |
-| Per-task review, D-52 tasks 5–6 | 3 blocking: a `FOR UPDATE` described doing what `SKIP LOCKED` does; an overclaim against SERIALIZABLE enshrined in a test name; a card asserting a thing and its negation |
-| Per-task review, D-52 tasks 7–8 | 3 blocking: the retracted overclaim surviving in the step hint; the *destructive*-migration rule applied to an additive step; six checkboxes sharing one accessible name |
-| Per-task review, D-52 task 9 | 5 blocking: a false claim that transaction-mode pooling breaks a transactional lock, which the stage's own locking step contradicts; a stale step pointer; two tests passing on strings asserting the opposite of their names; a missing summary line; a stale hint |
-| Per-task review, D-52 task 11 | 3 blocking, 4 minor: a trace row naming a timeout "graceful degradation" against the definition the stage's own resilience step gives; a constant exported, tested and rendered nowhere while the prose beside it was hand-copied twice; a CQRS test asserting three words the topic cannot avoid |
-| Scoped re-review of the fix wave | **All nine addressed, 0 open — ready to merge.** Reproduced every measurement from an independent harness and teeth-checked with different injections than the fix used: a constructed thirteenth trap, a fifth boundary edge, a 1.2–1.5:1 colour on leaves reachable only inside an expanded disclosure, and each stale assertion's counter-example planted in the real data and run against the real test file. Raised one Important non-blocking finding of its own (the touch-target exemption widened to excuse one element and exempted 880), fixed in `2734fb4` |
-| Whole-branch review, combined branch | **Ready with fixes** — 7 blocking, 18 minor. The contrast and touch-target gates opened five expandables across 36 pages, so the branch's headline verification claim was measuring the collapsed shell; three of the doc's twelve traps were never ported; the doc's pooler caveat still carried the error its port had already fixed; four more tests could not fail for the reason their names gave. Seven fixed plus two promoted minors; sixteen minors deferred |
-| Cold reader, run 4 (post-gaps) | **COMPLETE** — the first run to reach that verdict. 4 stalls, 8 guesses. C1–C3, S1, S3, S4 and the partial-index/soft-delete interaction acted on in the fix wave |
-| D-48 verification pass of the fix wave | Built a live Postgres cluster and ran what the wave had only asserted. Confirmed the partial-index and soft-delete claims; found nothing new |
-| Whole-branch **re-review** | **Ready with fixes** — 5 Important, 12 minor. I1 was a backfill instruction that silently skipped every row it was meant to migrate; I4 was three sentences hand-counting six boxes against a diagram of eight. All five fixed in `5afbe09` with six minors; M5 and M6 recorded as deferred |
+| Pass                                   | Result                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Cold reader, run 1 (pre-W-3.1)         | 14 gaps, 3 blocking → TD-18                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| Cold reader, run 2 (post-W-3.1)        | 9 closed, 3 partial, G9 deferred. Found 5 gaps the round introduced                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| Cold reader, run 3 (post-W-3.1b)       | 2 clusters actionable first pass, 3 partial. Found a security defect open across all three runs                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| Whole-branch review, W-3.1             | Ready with fixes — 6 blocking, incl. unrunnable SQL and a ticked-but-undone checklist item                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| Whole-branch review, W-3.1b            | Not ready — 5 blocking, incl. a false serializable claim and a backfill that corrupted mononyms. Found by **executing** the SQL                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| Per-task review, D-52 tasks 5–6        | 3 blocking: a `FOR UPDATE` described doing what `SKIP LOCKED` does; an overclaim against SERIALIZABLE enshrined in a test name; a card asserting a thing and its negation                                                                                                                                                                                                                                                                                                                                                                                              |
+| Per-task review, D-52 tasks 7–8        | 3 blocking: the retracted overclaim surviving in the step hint; the _destructive_-migration rule applied to an additive step; six checkboxes sharing one accessible name                                                                                                                                                                                                                                                                                                                                                                                               |
+| Per-task review, D-52 task 9           | 5 blocking: a false claim that transaction-mode pooling breaks a transactional lock, which the stage's own locking step contradicts; a stale step pointer; two tests passing on strings asserting the opposite of their names; a missing summary line; a stale hint                                                                                                                                                                                                                                                                                                    |
+| Per-task review, D-52 task 11          | 3 blocking, 4 minor: a trace row naming a timeout "graceful degradation" against the definition the stage's own resilience step gives; a constant exported, tested and rendered nowhere while the prose beside it was hand-copied twice; a CQRS test asserting three words the topic cannot avoid                                                                                                                                                                                                                                                                      |
+| Scoped re-review of the fix wave       | **All nine addressed, 0 open — ready to merge.** Reproduced every measurement from an independent harness and teeth-checked with different injections than the fix used: a constructed thirteenth trap, a fifth boundary edge, a 1.2–1.5:1 colour on leaves reachable only inside an expanded disclosure, and each stale assertion's counter-example planted in the real data and run against the real test file. Raised one Important non-blocking finding of its own (the touch-target exemption widened to excuse one element and exempted 880), fixed in `2734fb4` |
+| Whole-branch review, combined branch   | **Ready with fixes** — 7 blocking, 18 minor. The contrast and touch-target gates opened five expandables across 36 pages, so the branch's headline verification claim was measuring the collapsed shell; three of the doc's twelve traps were never ported; the doc's pooler caveat still carried the error its port had already fixed; four more tests could not fail for the reason their names gave. Seven fixed plus two promoted minors; sixteen minors deferred                                                                                                  |
+| Cold reader, run 4 (post-gaps)         | **COMPLETE** — the first run to reach that verdict. 4 stalls, 8 guesses. C1–C3, S1, S3, S4 and the partial-index/soft-delete interaction acted on in the fix wave                                                                                                                                                                                                                                                                                                                                                                                                      |
+| D-48 verification pass of the fix wave | Built a live Postgres cluster and ran what the wave had only asserted. Confirmed the partial-index and soft-delete claims; found nothing new                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| Whole-branch **re-review**             | **Ready with fixes** — 5 Important, 12 minor. I1 was a backfill instruction that silently skipped every row it was meant to migrate; I4 was three sentences hand-counting six boxes against a diagram of eight. All five fixed in `5afbe09` with six minors; M5 and M6 recorded as deferred                                                                                                                                                                                                                                                                            |
