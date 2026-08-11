@@ -153,6 +153,25 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
 **Branches** are `feat/<kebab-topic>` or `fix/<kebab-topic>`, no ticket numbers.
 `docs/<date>-<topic>` branches carry a date in the slug; `feat`/`fix` do not.
 
+### `main` is production — the branch you may not merge to
+
+Since 2026-08-11 the site is live from `main` (https://acp-dev-playbook.vercel.app), so a
+push to `main` is a deploy. The flow that follows from that:
+
+```
+feat/… · fix/… · chore/… · docs/…   ──merge──>   develop   ──user only──>   main
+```
+
+- **Work branches merge to `develop`.** Never to `main`, whatever the change is and however
+  safe it looks. A records-only edit deploys exactly as hard as a feature.
+- **`main` is the user's.** You may **open a pull request** to `main`; you may not merge it,
+  and you may not push to it. The user handles that promotion.
+- **Ask before every merge, including into `develop`.** Having a plan approved is not
+  approval to merge the branch that came out of it — integration is a separate decision, and
+  it is the user's each time.
+
+Everything below applies to a merge into `develop` exactly as it did to `main`.
+
 **Merges use `--no-ff`** — never squash, never rebase. The merge subject is hand-written
 and carries meaning, because history should show what shipped as one unit:
 

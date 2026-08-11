@@ -95,8 +95,11 @@ Before doing anything, read these for context:
 - **Still open under W-5:** post-deployment verification per `docs/14`. The audit suite assumes
   a local server on `:3100`, so retargeting it at the deployed URL is its own slice — and it is
   what turns 14 local checks into a real post-deployment gate.
-- **Branch/push:** work happens on `feat/`|`fix/`|`docs/<date>-` branches, merged to `main`
-  with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes.**
+- **Branch/push:** work happens on `feat/`|`fix/`|`chore/`|`docs/<date>-` branches, merged
+  with `--no-ff` and a hand-written subject, never squashed. **Since 2026-08-11 `main` is
+  production** — the site deploys from it — so work branches merge to **`develop`** and never
+  to `main`. You may open a PR to `main`; the user merges it. **Ask before every merge**,
+  including into `develop`. **The user handles pushes.**
   **Stage 03 is merged and pushed**: `feat/stage-03-app-port` landed on `main` as
   **`790b3e4`** (`--no-ff`, 106 commits, 91 files, +20k/−0.5k, branch deleted), and
   `origin/main` is at `2f42753`. **TD-17's harness is merged and not yet pushed** (`99f60cd`),
