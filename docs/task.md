@@ -417,9 +417,10 @@ pattern library on the hardest stage.
 | ~~2~~ ✓ | 03 Architecture | **Doc and app content agree; the whole-branch review has run, and TD-23 now waits only on the merge.** The densest stage by a distance: 14 doc sections, 22 app steps, 24 figures. TD-18, TD-21, TD-22 and TD-25's doc half all closed on it. Stress-tested the pattern library and produced two new rows (annotated artifact, and the panel-weight rule that replaced the step-count ceiling). |
 | ~~3~~ ✓ | — | **Stage 03's doc gaps closed** across W-3.1, W-3.1b, W-3.3 and four cold-reader runs — run 4 returned **COMPLETE**, the first to do so. |
 | ~~4~~ ✓ | — | **W-3.2 + W-3.3 merged** to `main` as `790b3e4` (`--no-ff`, 106 commits, branch deleted). Gate re-run on the merged result: 313/313, 14/14 audit, lint, typecheck and format clean. **Not pushed** — the user handles that. |
-| **5 (next)** | 15 Observability | Unfamiliar ground; benefits most from figures. TD-23 is closed, so stage 03 no longer blocks anything. |
-| 6 | 16 Incident Management | Procedural, so a stepper fits naturally |
-| 6 | 13 Production Deployment | Expand/migrate/contract needs a visual |
+| ~~5~~ ✓ | — | **W-5 complete** — live at https://acp-dev-playbook.vercel.app, verified by `pnpm test:prod`. Every `W-` milestone except W-3 is now closed. |
+| **6 (next)** | **04 or 15 — undecided** | This table has said 15 since it was written: unfamiliar ground, benefits most from figures. `docs/tracker.md` argues **04**, because stage 03 is the reference implementation everything after it copies, and across three rounds the defects landed in that template rather than in content. **A call about what the playbook is for, not a technical one** — recorded as open rather than silently resolved. |
+| 7 | 16 Incident Management | Procedural, so a stepper fits naturally |
+| 7 | 13 Production Deployment | Expand/migrate/contract needs a visual |
 | — | remainder | 04–12, 14, 17, 18 |
 
 **~~Settle before stage 03:~~ ✓ resolved 2026-07-27 (D-36).** TD-2 and TD-3 are closed:
