@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Archivo, Newsreader, JetBrains_Mono } from 'next/font/google'
 import { Sidebar } from '@/components/Sidebar'
+import { SITE_URL } from '@/lib/site'
 import './globals.css'
 
 const archivo = Archivo({
@@ -23,6 +24,10 @@ const jetbrains = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
+  // Without this, Next cannot resolve absolute URLs for canonical links or
+  // social cards, and says so at build time. It is the one metadata field a
+  // deploy actually requires.
+  metadataBase: new URL(SITE_URL),
   title: {
     default: 'Development Playbook',
     template: '%s · Development Playbook',

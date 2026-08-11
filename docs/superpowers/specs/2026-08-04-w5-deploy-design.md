@@ -125,8 +125,11 @@ New tests, all data-layer under the `unit` project:
 
 ## Verification
 
-1. `pnpm build` — succeeds, and emits **no `metadataBase` warning**, which is the build-time
-   signal that the base URL landed.
+1. `pnpm build` — succeeds. **CORRECTED AFTER REVIEW: "no `metadataBase` warning" is not a
+   signal.** Next emits that warning only from `resolveAndValidateImage`, gated on a relative
+   image URL needing resolution — and Open Graph is a non-goal here, so there are no images and
+   the warning cannot fire either way. A build with `metadataBase` deleted is equally quiet.
+   `deploy-config.test.ts` asserts the field directly instead, and teeth-checks by deleting it.
 2. `pnpm test`, `pnpm lint`, `pnpm typecheck`, `pnpm format:check` — clean.
 3. `pnpm test:e2e` — 14/14, with `:3100` killed first (TD-27).
 4. The built output contains `sitemap.xml` and `robots.txt`, and the sitemap lists 19 URLs. Read
@@ -153,6 +156,13 @@ New tests, all data-layer under the `unit` project:
 
 - **Root Directory unset** — the build fails with an unhelpful "no Next.js version detected".
   Named first in the handoff for that reason.
+- **CORRECTED AFTER REVIEW.** This section originally named Root Directory as the single most
+  likely cause of a first-deploy failure. It was not even the first: `package.json`'s
+  `prepare` script ran `lefthook install`, which exits 1 outside a git repository, and Vercel's
+  build environment excludes `.git`. `pnpm install` runs `prepare`, so the deploy failed at the
+  install step — before Root Directory was consulted at all. Fixed with `|| true`, and guarded
+  by a test. The lesson is the one this spec's own Verification section got wrong: enumerating
+  deploy blockers from reading is not the same as enumerating them from running.
 - **The `.vercel.app` origin is a guess.** It follows Vercel's default naming from the project
   name the user gave, but the real URL is visible only after the first deploy. If it differs, the
   fix is one env var, and the sitemap test will not catch it — no test can, since the correct

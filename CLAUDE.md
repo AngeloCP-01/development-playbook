@@ -8,7 +8,7 @@ All app commands run from `web/`:
 
 ```bash
 pnpm dev          # dev server on :3200 (Turbopack) — 3000 is left free for other projects
-pnpm build        # production build; prerenders all 22 routes
+pnpm build        # production build; prerenders every page, plus /robots.txt and /sitemap.xml
 pnpm lint         # eslint --max-warnings 0
 pnpm format       # prettier --write (format:check is what CI runs)
 pnpm test         # vitest — two projects: `unit` (node, data invariants), `dom` (jsdom, render tests)
