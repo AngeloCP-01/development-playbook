@@ -71,6 +71,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-08-11 | — | **TD-16 closed: worksheet placeholders reach AA, and the audit can see them.** The `/70` opacity dropped from all three worksheets — `--faint` was already tuned to 4.80:1 light / 7.93:1 dark, and the call site was discarding it. The audit's colour handling switched from parsing to **rasterising**, which fixes two blind spots at once: `oklab()` values were being skipped rather than checked (Tailwind emits oklab for every alpha modifier), and placeholders were never sampled at all because the sweep keyed off `el.textContent` and an empty field has none | The suite now reproduces the hand-measured numbers independently — **2.77:1 light, 4.44:1 dark** on all three worksheets — and nothing else fails on 36 pages in either theme. RED before the fix, GREEN after, teeth-checked by restoring `/70` on one worksheet and confirming only that page failed. 331/331 unit, 14/14 audit, lint, typecheck, format clean | Alpha-colour *backgrounds* are still resolved by the old parser, so an `oklab()` background still walks up to an opaque ancestor rather than being composited. No failure depends on it today; recorded rather than fixed. `docs/14` post-deployment verification still open |
 | 2026-08-11 | W-5 (live) | **Deployed.** `https://acp-dev-playbook.vercel.app`. The repo side was done on 2026-08-04; getting a live site took three dashboard problems the repository could not express and this round did not predict — the project was connected to a placeholder repository, its Framework Preset was *Other*, and Root Directory was unset | Verified against the running site rather than the dashboard: `/robots.txt` returns `Allow: /` and names the sitemap; `/sitemap.xml` carries **19** `<loc>` entries on the real origin; `/stages/03-architecture` renders with the `%s · Development Playbook` title template applied. CI green on `main`. **The guessed origin was wrong** — `acp-dev-playbook`, not `acp-development-playbook` — which `NEXT_PUBLIC_SITE_URL` corrected in production before it reached anyone; the fallback in `site.ts` is now the verified value | **Post-deployment verification per `docs/14` still open**, and now unblocked for the first time: the audit suite assumes a local server on `:3100`, so pointing it at a deployed URL is its own slice. No CSP, no Open Graph, no custom domain |
 | 2026-08-04 | W-5 (repo side) | **Deploy preparation.** `engines.node` pins the version Vercel actually reads — `.nvmrc` reaches local and CI only, so the one host that serves users was unpinned. One `SITE_URL` feeds `metadataBase`, `sitemap.ts` and `robots.ts`, because a deploy round that writes an origin into three files has built the drift it exists to prevent. Sitemap derives its 19 URLs from `STAGES`. Five `create-next-app` SVGs deleted from `public/`, unreferenced since W-0 — the directory itself is now gone | 3 commits `b9088c4`…`d15c1dd`. **331 tests across 33 files**, lint, typecheck, `format:check` clean, `pnpm build` with **no `metadataBase` warning** and `/robots.txt` + `/sitemap.xml` in the route table. Generated output read rather than inferred: `.next/server/app/sitemap.xml.body` carries exactly **19** `<loc>` entries, `robots.txt.body` reads `Allow: /` and names the sitemap. **audit 14/14** against a fresh build with `:3100` killed first (TD-27). Nine teeth checks in total, each failing alone — a trailing slash on the origin, a stage dropped from the sitemap, `Disallow: /` in both its string and array spellings, a probe file in `public/`, a `favicon.ico` in `public/`, an unguarded `prepare`, a wrong `engines.node`, and `metadataBase` deleted | **Deployed 2026-08-11** at `https://acp-dev-playbook.vercel.app` — see the W-5 (live) row above for what the deploy itself cost. Root Directory `web` was the blocker this round predicted. **A whole-branch review found the round had missed an earlier blocker entirely**: `prepare: lefthook install` exits 1 without a `.git`, Vercel's build environment has none, and pnpm runs `prepare` on every install — so the deploy would have failed at the install step, before Root Directory mattered. Fixed with `|| true` and guarded. The same review found the recorded `metadataBase` evidence vacuous: the build warning it cited fires only for relative Open Graph images, which this app deliberately has none of, so it could not fail either way. **No CSP**: the theme script runs via `dangerouslySetInnerHTML` before first paint, so a policy needs a nonce or hash and a wrong one ships a blank page — its own change, with its own verification. **No Open Graph or OG image**, scoped out. **No post-deployment verification**: the audit suite assumes `:3100` and cannot be retargeted until a deployment exists |
 | 2026-08-04 | — | **Component test harness (TD-17).** `vitest.config.ts` split into two projects — `unit` (node, `*.test.ts`) and `dom` (jsdom, `*.test.tsx`) — so the extension picks the environment rather than a per-file docblock somebody has to remember; `extends: true` is what carries the `@/*` alias into both. Three dev dependencies (`jsdom`, `@testing-library/react`, `@testing-library/dom`); `jest-dom` and `@vitejs/plugin-react` deliberately not added. A written convention in `web/PATTERNS.md` and `CLAUDE.md` says which components get one | 4 commits `83ed997`…HEAD. **320 tests across 29 files** (was 313/26), lint, typecheck and `format:check` clean, `pnpm gen:glossary` re-run with `reference/glossary.md` byte-identical, e2e still 14/14. Both render tests **teeth-checked by injecting the defect they exist to catch** — gating the interrogation's reasoning on `correct`, and making `fieldName` return its argument unchanged — each failing alone out of the full suite and reverted. RED for the harness itself was real: the `.tsx` file matched no `include` glob until the config changed. **A whole-branch review then found the harness's first real customer on the same branch**: `ModelInterrogation` told readers “Five questions” while rendering six, having gained one when the doc did — a data test asserts the length and is perfectly happy, and the audit suite never reads the sentence. Fixed test-first. The review also raised two blocking record defects (the tracker header contradicting the row below it; three dependencies landing with no `reference/stack.md` entry) and eight minors, all closed here except two recorded deferrals | No backfill across stage 03's remaining components; the three Playwright stand-ins in `audit.spec.ts` stay, since deleting a real-browser check on the strength of an hour-old jsdom one has no evidence behind it. `matchMedia` is still unstubbed — jsdom does not implement it, and the first component that needs one adds it to `src/test/setup.ts`. **Two findings deferred rather than fixed:** `jsdom@30` declares `engines: node ^22.22.2`, and this machine runs 22.19.0 while `.nvmrc` pins the floating major `22` — nothing enforces it and all 320 tests pass, but the repo now carries a dependency whose floor its own dev Node misses, and bumping `.nvmrc` changes an environment rather than a file, so it is the user's call. And the six render-testable components stage 03 already ships are still uncovered — the backfill non-goal stands |
@@ -382,7 +383,7 @@ known page, so the next selector change that silently stops opening things fails
 passes quietly. Related: ~~**TD-17**~~ (closed 2026-08-04) was the reason this class had to
 be caught in e2e at all.
 
-### TD-16 — Worksheet placeholder text fails AA, and the audit suite cannot see it · **High** *(was Medium)*
+### ~~TD-16~~ — Worksheet placeholder text fails AA, and the audit suite cannot see it · **CLOSED 2026-08-11**
 
 All three worksheets — `discovery/Worksheet.tsx:161`, `planning/PlanWorksheet.tsx:179`,
 `architecture/DomainWorksheet.tsx:165` — carry the identical class
@@ -426,6 +427,30 @@ Shipping anyway was the right call (stages 01 and 02 already ship under the same
 spot, so holding stage 03 alone to the letter of the standard would be arbitrary rather
 than principled), but "CI is green" should not be read as "the gate cleared" for this class
 of failure until the blind spot itself closes.
+
+**CLOSED 2026-08-11.** Both halves, as this entry required. The class string dropped its
+`/70`, and that alone clears AA — `--faint` had already been tuned to exactly **4.80:1** on
+`--sunk` in light and sits at **7.93:1** in dark, so the token was never the problem; the
+opacity at the call site was throwing away contrast that had been deliberately bought.
+
+The blind spot was two bugs, not one. `audit.spec.ts` keyed off `el.textContent`, and an
+empty `<textarea>` has none — so placeholders were never sampled. And its colour parser
+*rejected* every `oklab()` value while a comment above it claimed to resolve oklab "via the
+browser itself", so any alpha colour went unchecked rather than checked. Tailwind emits
+oklab for every alpha modifier, which made the effective rule: add an opacity and leave the
+audit.
+
+Both are fixed by rasterising — paint the background, paint the colour over it, read the
+pixel — which resolves any colour space and composites alpha in one step, and refuses to
+guess when the browser rejects a colour rather than reporting the background as the
+foreground. `docs/learnings/contrast-checkers-lie.md` had described this exact technique a
+round earlier, including the snippet; the suite stayed blind anyway, which is worth
+remembering about written-down knowledge.
+
+The audit now reproduces this entry's hand-measured numbers independently: **2.77:1 light**
+and **4.44:1 dark**, on all three worksheets, and nothing else on 36 pages fails in either
+theme. **The verification standard's letter is now met** — the caveat above about
+`feat/stage-03-architecture` not clearing its own gate no longer applies to any branch.
 
 ### ~~TD-17~~ — No component-test harness, so a class of regression is ungated · **CLOSED 2026-08-04**
 
@@ -1151,8 +1176,9 @@ Two things worth deciding at the same time, both surfaced by this round rather t
   remaining way to raise the floor, and it paid on the same branch: the whole-branch review
   found the interrogation panel telling readers "Five questions" while rendering six, which is
   the defect class the harness exists to catch, in the component it was built around.
-- **`TD-16`** (placeholder contrast) — a real AA failure on instructional text, plus the audit
-  blind spot that hid it. Fix both halves together.
+- ~~**`TD-16`**~~ (placeholder contrast) — **closed 2026-08-11**, both halves. The blind spot
+  turned out to be two: placeholders had no text node to sample, and every `oklab()` colour was
+  skipped rather than checked. Rasterising fixed both.
 - **`TD-12`** (audit `PAGES` hand-maintained) — **thirteen hashes added by hand this round**,
   one per new step. A dead hash fails; a missing one still audits nothing, which is the half that
   matters now that adding steps is routine.
