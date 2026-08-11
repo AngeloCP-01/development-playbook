@@ -59,7 +59,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
 | **W-3** | Stages 02–18 interactive | ◐ *(02, 03 done; 15 remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
-| **W-5** | Deploy | ☑ *(live 2026-08-11; post-deployment verification deferred)* |
+| **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 
 ### Dependency map
 
@@ -450,7 +450,7 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
       confirm Actions fails — **TD-10**
 - [x] Fix or document whatever the suite reveals
 
-### W-5 — Deploy ☑ *(live 2026-08-11 at https://acp-dev-playbook.vercel.app)*
+### W-5 — Deploy ☑ *(live 2026-08-11 at https://acp-dev-playbook.vercel.app; verified by `pnpm test:prod`)*
 
 - [x] Node version pinned where Vercel reads it — `engines.node` in `web/package.json`.
       `.nvmrc` reaches local and CI only, which left the one host that serves users unpinned
@@ -472,9 +472,12 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
 - [x] **Production deploy** — live and verified: `/robots.txt` reads `Allow: /` and names the
       sitemap, `/sitemap.xml` carries 19 `<loc>` entries on the real origin, and
       `/stages/03-architecture` renders with the title template applied
-- [ ] Post-deployment verification per `docs/14` — **deliberately not started.** The audit suite
-      assumes a local server on `:3100` (`playwright.config.ts`), and retargeting it at a
-      deployed URL cannot be written until a deployment exists to point at
+- [x] **Post-deployment verification per `docs/14`** — `pnpm test:prod` runs five `@smoke`
+      checks against the deployed site: `robots.txt` and `sitemap.xml` carry the live origin,
+      all 19 advertised URLs resolve, the home and a stage page render through the real
+      layout, and the edge logs no console errors. Scoped to what a local build cannot do —
+      contrast and overflow stay in `audit.spec.ts`, because the bytes CI checked are the
+      bytes Vercel serves
 
 ---
 
