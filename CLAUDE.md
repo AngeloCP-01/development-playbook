@@ -13,11 +13,16 @@ pnpm lint         # eslint --max-warnings 0
 pnpm format       # prettier --write (format:check is what CI runs)
 pnpm test         # vitest — two projects: `unit` (node, data invariants), `dom` (jsdom, render tests)
 pnpm test:e2e     # playwright audit suite against a production build on :3100
+pnpm test:prod    # playwright @smoke checks against the DEPLOYED site (docs/14)
 pnpm typecheck    # next typegen && tsc --noEmit
 ```
 
 Lefthook runs format+lint on commit and typecheck+test on push. CI
 (`.github/workflows/ci.yml`) is the same gate cheapest-first, plus the audit suite.
+
+`pnpm test:prod` is **not** part of that gate. It checks the deployed site, so a green run
+says nothing about the working tree and a red one may have nothing to do with local changes.
+Run it after a promotion to `main`.
 
 ## Two deliverables, one body of content
 

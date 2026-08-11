@@ -92,9 +92,10 @@ Before doing anything, read these for context:
   `web`**, **Framework Preset Next.js** (it was *Other*, whose output directory is `public` —
   which this round had deleted), and the **connected repository**, which pointed at a
   placeholder. See `docs/learnings/deploying-101.md` before deploying anything else.
-- **Still open under W-5:** post-deployment verification per `docs/14`. The audit suite assumes
-  a local server on `:3100`, so retargeting it at the deployed URL is its own slice — and it is
-  what turns 14 local checks into a real post-deployment gate.
+- **W-5 is complete.** `pnpm test:prod` verifies the deployment itself — five `@smoke` checks
+  covering what CI structurally cannot: the env-var-dependent `robots.txt` and `sitemap.xml`,
+  whether the 19 advertised URLs resolve, and the real edge's console. It is **not** part of the
+  pre-merge gate; run it after a promotion to `main`.
 - **Branch/push:** work happens on `feat/`|`fix/`|`chore/`|`docs/<date>-` branches, merged
   with `--no-ff` and a hand-written subject, never squashed. **Since 2026-08-11 `main` is
   production** — the site deploys from it — so work branches merge to **`develop`** and never

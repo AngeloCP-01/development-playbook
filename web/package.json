@@ -10,6 +10,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:e2e": "playwright test",
+    "test:prod": "playwright test --config=playwright.prod.ts",
     "gen:glossary": "vitest run src/lib/glossary.test.ts --update",
     "prepare": "lefthook install || true",
     "format": "prettier --write .",
