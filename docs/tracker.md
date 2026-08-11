@@ -305,6 +305,37 @@ unaudited. That line is corrected.
 **Closes with:** derive `PAGES` from `STAGES.filter(s => s.ready)` crossed with each
 stage's step ids, so the sweep tracks the ready set automatically.
 
+### TD-28 — Stage 04's deploy section is wrong, and this repo proved it · **High**
+
+`docs/04-project-setup.md`'s **§8 Connect Vercel** reads:
+
+> *"In project settings, confirm the Node version matches `.nvmrc`."*
+
+Vercel does not read `.nvmrc`. Its Node version comes from the project setting, overridden by
+`engines.node` in `package.json`. A reader following that sentence pins local and CI, believes
+they have pinned the host, and has not — which is the exact drift `reference/stack.md:19` calls
+"a recurring source of 'works locally' bugs".
+
+Three more omissions in the same section, all of which broke this project's own first deploy
+on 2026-08-11 before any of the advice in §8 became relevant:
+
+- **`prepare` scripts fail on a build host.** pnpm runs `prepare` on every install,
+  `lefthook install` exits 1 outside a git repository, and Vercel's build environment has no
+  `.git`. The install step dies first. Husky has the identical failure for the identical
+  reason, so this is not a lefthook footnote.
+- **Root Directory** is unmentioned, and an app in a subdirectory does not build without it.
+- **Framework Preset** is unmentioned. A project created against an empty repository guesses,
+  and `Other`'s output directory is `public` — which produces an error naming a symptom two
+  steps from its cause.
+
+**Why it is High rather than Medium.** The stage docs are the product, this section is
+advice a reader acts on, and acting on it costs a day. It is also the one stage this
+repository can check against itself: `docs/learnings/deploying-101.md` is the corrected
+version, written from what actually happened.
+
+**Closes with:** the stage 04 round, which is scoped as a doc-correction phase *before* the
+port rather than a port alone — see the Next up section.
+
 ### TD-27 — The second `pnpm test:e2e` of a session measures a stale build · **High**
 
 Opened 2026-08-03, during the doc-gaps round, and it invalidated that round's own verification
@@ -1136,13 +1167,37 @@ spec, which is the same failure mode one level up.
 
 ## Next up
 
-**Recommendation (2026-08-11): every `W-` milestone except `W-3` is closed — the next round
-is a stage, and which one is an open question.** `docs/task.md`'s order table says
-**15 — Observability**; this file argues **04**, because stage 03 is the reference
-implementation everything after it copies. The evidence that accumulated since both were
-written favours 04: across three rounds the defects landed in the *template* — duplicated
-accordions, no render-test coverage, prose miscounting its own data — rather than in the
-content. Not decided; it is a call about what the playbook is for.
+**Recommendation (2026-08-11): stage 04 — Project Setup, next. Decided.**
+
+The deciding evidence was neither of the two arguments that had been sitting in the records.
+Reading `docs/04-project-setup.md` to compare it against 15 turned up that its **§8 Connect
+Vercel is factually wrong** — it tells the reader to match the Node version to `.nvmrc`, which
+Vercel does not read — and silent on the three things that actually broke this project's first
+deploy. That is **TD-28**, and it reframes the choice: not "port 04" against "port 15", but
+*fix a doc that misleads* against *port a doc that is fine but unexercised*.
+
+Three reasons it wins on this project's own standards:
+
+1. **It is checkable.** The verification standard here is checking against something real, and
+   every strong round this month came from executing something — Postgres, the live site, a
+   controlled origin. Stage 04 can be checked against *this repository*, which is a project
+   that was set up, deployed, and broken in instructive ways. Stage 15 has no backend, no
+   Sentry and no metrics to check against; it would be the most speculative stage yet, and the
+   cold-reader method would have the least purchase on it.
+2. **The material is fresh and it cost something.** `docs/learnings/deploying-101.md` was
+   written the same day, from scars rather than memory.
+3. **It exercises the template while it is fresh.** Three rounds running, the defects landed in
+   the template rather than the content. Stage 04 is where TD-16's fix, the render-test
+   convention and the panel-weight rule find out whether they transfer.
+
+**Shape of the round, decided up front rather than discovered halfway: a doc-correction phase
+before the port.** Stage 03's round was a port of prose that was already right. This one is not.
+
+**The case for 15, recorded because it is real and lost anyway.** `docs/14` defers Sentry,
+error rates and latency baselines to it, so there is a dangling dependency; and "unfamiliar
+ground" is a genuine argument for reader value. It loses because unfamiliar also means
+research-heavy with nothing to ground it against, and stage 03 — also unfamiliar — cost 106
+commits and four cold-reader runs.
 
 Two earlier recommendations are kept below as written rather than edited, per the decisions
 convention. Both are superseded: W-3.2 merged, TD-17 closed, W-5 complete.

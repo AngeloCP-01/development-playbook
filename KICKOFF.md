@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   `stage-implementation-101.md` (the layout traps and verification checklist for building a
   stage)
 
-### Project state (as of 2026-08-03, after the D-52 round, the eight doc gaps, cold-reader run 4, and the whole-branch re-review)
+### Project state (as of 2026-08-11 — stage 03 merged, the site live and self-verifying, TD-16 and TD-17 closed)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -42,10 +42,10 @@ Before doing anything, read these for context:
   (pins that doc's fourteen subsections in order), `source-citations.test.ts` (D-42), and
   `ddl-sync.test.ts` plus `evolve.test.ts`, which hold three SQL blocks in the app to the doc
   character-for-character.
-- **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01 and 02 are
-  complete and interactive; 03 is on `feat/stage-03-app-port` at 22 steps**, every panel under
-  four screens. See `docs/stage-03-status.md` for section-by-section coverage — it is the map,
-  and it is current.
+- **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01, 02 and 03 are
+  complete, interactive and merged**; 03 is 22 steps with every panel under four screens.
+  Fifteen stages remain, which is all that is left of `W-3` and of the project. See
+  `docs/stage-03-status.md` for section-by-section coverage of 03.
 - **The D-52 reshape is done, and D-52 stands in place of D-38** (superseded, kept struck
   through for the record). `PANEL_EXCEPTIONS` in `web/e2e/audit.spec.ts` is back to its two
   permanent entries, which was the exit condition. **Twenty-two steps was not a target**: every
@@ -54,8 +54,8 @@ Before doing anything, read these for context:
 - **Stage 03's port content is complete, and so are its eight recorded doc gaps** (W-3.3).
   The doc is at **1,507 lines / 14 sections**; the app is still 22 steps, because every gap
   landed inside an existing panel under the four-screen rule and three went behind
-  expand-to-reveal (D-49). **TD-23 stays open** on the merge alone — both whole-branch passes
-  have now run and every finding is fixed.
+  expand-to-reveal (D-49). **TD-23 is closed** — it always waited on the merge rather than
+  on content, and `790b3e4` is that merge.
 - **Cold-reader run 4 returned COMPLETE** — the first of four runs to do so
   (`docs/verification/cold-reader-stage-03-run4.md`). Two findings were recorded as deferred
   rather than fixed, and they are content decisions waiting on a call: 2NF is unviolatable
@@ -108,38 +108,45 @@ Before doing anything, read these for context:
   and can be deleted: `origin/feat/stage-03-app-port` and
   `origin/feat/stage-03-standard-practices`.
 
-### This round's scope
+### Next round's scope: stage 04 — Project Setup
 
-**Stage 03 is done and merged.** The D-52 round's twelve tasks, W-3.3's eight doc gaps,
-cold-reader run 4 and its fix wave, and the whole-branch re-review's five Important findings
-all landed on `main` as `790b3e4` (`--no-ff`, 106 commits, branch deleted). **TD-23 is
-closed.** The next round is a new stage — 15 Observability is the recommended one — or `W-5`,
-the deploy. Nothing below blocks either; it is history worth carrying.
+**Decided 2026-08-11**, against the order table's earlier answer of 15 — Observability. The
+reasoning is in `docs/tracker.md`'s Next up section and is worth reading before starting,
+because it also sets the round's shape.
 
-**Read these two first, in this order:**
+**This round is not shaped like stage 03's.** That one ported prose that was already right.
+This one starts with a **doc-correction phase**, because `docs/04-project-setup.md` is wrong
+where it matters most — **TD-28**. Its §8 tells the reader to match Vercel's Node version to
+`.nvmrc`, which Vercel does not read, and says nothing about Root Directory, Framework Preset,
+or `prepare` scripts failing on a host with no `.git`. All three broke this project's first
+deploy on 2026-08-11, before any of §8's advice became relevant.
 
-1. `.superpowers/sdd/2026-07-31-step-panel-weight/progress.md` — the ledger. Every task, its
-   commits, every deviation from the plan and why. It is git-ignored scratch, so read it before
-   running anything that cleans the tree.
-2. `docs/superpowers/plans/2026-07-31-step-panel-weight.md` — the plan. **All twelve tasks are
-   done.** Its spec is `docs/superpowers/specs/2026-07-31-step-panel-weight-design.md`, and the
-   plan's own Verification section is the checklist for what comes next.
+**Read these first, in this order:**
 
-**What that merge carried.** 106 commits, doc and app as one unit (D-51). The whole-branch
-review has run and returned **seven blocking findings**, plus two minors promoted for being
-reader-visible and introduced by this branch, and sixteen deferred to the tracker. All nine are
-fixed. Four per-task reviews had found **fourteen** before it, and the rate did not fall off:
-the last task reviewed, Task 11, produced three, and the branch pass then produced seven. Two of
-those fourteen were factual errors about Postgres in teaching material, which is the class of
-mistake a per-task review catches and a casual read does not — and the branch pass caught the
-class above that, a green verification gate measuring almost nothing.
+1. `docs/learnings/deploying-101.md` — the corrected version of what stage 04 §8 should say,
+   written the day it was learned. This is the round's raw material.
+2. `docs/tracker.md`, **TD-28** — the defect, stated precisely.
+3. `web/PATTERNS.md` — the interaction patterns, and the render-test rule added with TD-17.
+   Read before building any stage.
+4. `docs/learnings/stage-implementation-101.md` — the layout traps and the verification
+   checklist for building a stage.
 
-**The re-review's headline is worth carrying forward as a method, not a fact.** Its I1 was a
-backfill instruction that told the reader to paginate a `WHERE col IS NULL` loop by remembering
-the highest id touched. It reads as careful advice. Run it and the guard has already removed
-the rows the cursor is skipping past: **5000 of 5000 rows silently unmigrated, reported as
-success**. Nothing but execution finds that — which is D-50 arriving a second time, on
-*behaviour* rather than on syntax.
+**Why 04 and not 15, in one line:** stage 04 is checkable against this repository, which is a
+project that was set up, deployed and broken in instructive ways; stage 15 has no backend, no
+Sentry and no metrics to check against, and this repo's standard is checking against something
+real rather than asserting.
+
+**What stage 03's round cost, as a calibration:** 106 commits, four cold-reader runs, fourteen
+blocking findings across per-task reviews and seven more from the whole-branch pass. Stage 04
+is a third of the doc's length and has no equivalent of the database material, so expect
+smaller — but expect the review to find something, because it has every time.
+
+**The method that keeps paying, stated as a method rather than a war story.** Twice this month
+a recorded piece of evidence turned out to be a check that could not fail: a `metadataBase`
+build warning that only fires for a feature this app deliberately lacks, and a `robots.txt`
+regex that matched the substring inside `Disallow:`. Neither would have been caught by running
+the suite again. **The teeth check is what separates evidence from decoration**, and in both
+cases the assertion that turned out decorative was the one nobody teeth-checked.
 
 **Five things this round has taught, all of which cost time to learn:**
 
