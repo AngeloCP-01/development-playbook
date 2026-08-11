@@ -223,15 +223,41 @@ for (const scheme of ['light', 'dark'] as const) {
       await page.waitForTimeout(150)
 
       const rows = await page.evaluate(() => {
-        // Resolve any CSS colour (incl. oklab) to rgb via the browser itself —
-        // regex-parsing oklab() produced a false 1.34:1 once. See
-        // docs/learnings/stage-implementation-101.md.
+        // This comment used to claim the parser resolved oklab "via the browser
+        // itself". It did not — it *rejected* oklab and returned null, so every
+        // such colour was skipped rather than checked. Tailwind emits oklab for
+        // any alpha colour, so the rule was: add an opacity and leave the audit.
+        //
+        // Rasterising is the honest version of what the comment promised. Paint
+        // the background, paint the colour over it, read the pixel: the browser
+        // resolves whatever colour space it likes and composites the alpha in
+        // the same step, and what comes back is what the eye receives. It is
+        // also the technique TD-16 was originally measured with by hand.
+        const raster = (color: string, bg: number[]) => {
+          const cv = document.createElement('canvas')
+          cv.width = cv.height = 1
+          const ctx = cv.getContext('2d', { willReadFrequently: true })!
+          ctx.fillStyle = `rgb(${bg[0]},${bg[1]},${bg[2]})`
+          ctx.fillRect(0, 0, 1, 1)
+          const before = ctx.fillStyle
+          ctx.fillStyle = color
+          // On a colour the browser cannot parse, fillStyle keeps its previous
+          // value — which would silently report the background as the
+          // foreground and pass at 1:1. Refuse to guess instead.
+          if (ctx.fillStyle === before && color !== `rgb(${bg.join(', ')}`)
+            return null
+          ctx.fillRect(0, 0, 1, 1)
+          const d = ctx.getImageData(0, 0, 1, 1).data
+          return [d[0], d[1], d[2]]
+        }
+
         const parse = (c: string) => {
           const m = (c.match(/-?[\d.]+/g) || []).map(Number)
           return m.length >= 3 && !/okl|lab|lch/.test(c)
             ? { rgb: m.slice(0, 3), a: m[3] ?? 1 }
             : null
         }
+
         const out: {
           fg: number[]
           bg: number[]
@@ -240,6 +266,40 @@ for (const scheme of ['light', 'dark'] as const) {
           sample: string
         }[] = []
         const seen = new Set<string>()
+
+        const bgUnder = (start: Element): number[] | null => {
+          let e: Element | null = start
+          while (e) {
+            const c = parse(getComputedStyle(e).backgroundColor)
+            if (c && c.a > 0.5) return c.rgb
+            e = e.parentElement
+          }
+          return null
+        }
+
+        // Placeholders are text, and the loop below cannot see them: it keys
+        // off `el.textContent`, and an empty field has none. They are also the
+        // worst thing to lose, because in this app the placeholder carries the
+        // worked example — it shows the reader what a good answer looks like.
+        for (const el of document.querySelectorAll('input, textarea')) {
+          const ph = (el as HTMLInputElement).placeholder
+          if (!ph) continue
+          const cs = getComputedStyle(el, '::placeholder')
+          const bg = bgUnder(el)
+          if (!bg) continue
+          const rgb = raster(cs.color, bg)
+          if (!rgb) continue
+          const key = `ph|${rgb}|${bg}|${Math.round(parseFloat(cs.fontSize))}`
+          if (seen.has(key)) continue
+          seen.add(key)
+          out.push({
+            fg: rgb,
+            bg,
+            size: parseFloat(cs.fontSize),
+            weight: parseInt(cs.fontWeight) || 400,
+            sample: `placeholder: ${ph.slice(0, 20)}`,
+          })
+        }
         for (const el of document.querySelectorAll('*')) {
           const t = el.textContent?.trim()
           if (!t || t.length < 3 || el.children.length) continue
@@ -250,24 +310,15 @@ for (const scheme of ['light', 'dark'] as const) {
             +cs.opacity < 0.5
           )
             continue
-          const fg = parse(cs.color)
-          if (!fg) continue
-          let e: Element | null = el
-          let bg: number[] | null = null
-          while (e) {
-            const c = parse(getComputedStyle(e).backgroundColor)
-            if (c && c.a > 0.5) {
-              bg = c.rgb
-              break
-            }
-            e = e.parentElement
-          }
+          const bg = bgUnder(el)
           if (!bg) continue
-          const key = `${fg.rgb}|${bg}|${Math.round(parseFloat(cs.fontSize))}`
+          const rgb = raster(cs.color, bg)
+          if (!rgb) continue
+          const key = `${rgb}|${bg}|${Math.round(parseFloat(cs.fontSize))}`
           if (seen.has(key)) continue
           seen.add(key)
           out.push({
-            fg: fg.rgb,
+            fg: rgb,
             bg,
             size: parseFloat(cs.fontSize),
             weight: parseInt(cs.fontWeight) || 400,

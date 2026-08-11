@@ -94,9 +94,19 @@ const [r, g, b] = ctx.getImageData(2, 2, 1, 1).data // real sRGB
 Assigning to `fillStyle` and reading the *string* back does **not** work — Chromium echoes
 `oklab()` unchanged. Only the rasterized pixel is trustworthy.
 
-The committed suite dodges this differently, by skipping any colour it cannot parse
-(`!/okl|lab|lch/.test(c)`). That is honest but it means alpha colours go **unchecked**
-rather than checked. Know which of the two you are doing.
+The committed suite used to dodge this differently, by skipping any colour it could not
+parse (`!/okl|lab|lch/.test(c)`). That is honest but it means alpha colours go **unchecked**
+rather than checked, and the comment above it claimed the opposite — that it resolved oklab
+"via the browser itself".
+
+**That gap was live for a round after this guide described it.** Tailwind emits oklab for
+*any* alpha colour, so the rule the suite actually enforced was: add an opacity and leave the
+audit. Three worksheets shipped placeholders at 2.75:1 that way, against a `--faint` token
+deliberately tuned to 4.80:1 — the dilution happened at the call site and nothing looked.
+
+Closed 2026-08-11 (**TD-16**): the suite now rasterises, using the snippet above, and refuses
+to guess when `fillStyle` rejects a colour rather than silently reporting the background as
+the foreground. Writing the trap down is not the same as closing it.
 
 ---
 
@@ -120,6 +130,13 @@ colours, the score line — is therefore never sampled either.
 **A passing checker is evidence about what it looked at, and silent about the rest.** When
 you add a surface that appears only after an interaction, or that has no text node, assume
 the gate does not cover it until you have proved otherwise.
+
+Placeholders were the sharpest case of "no text node": the sweep keyed off `el.textContent`,
+and an empty field has none, so seventeen fields across three worksheets were never sampled
+in either theme. They are also the worst ones to lose here, because in this app the
+placeholder *is* the worked example — it shows the reader what a good answer looks like.
+`input, textarea` are now sampled explicitly through `getComputedStyle(el, '::placeholder')`
+(**TD-16**).
 
 ---
 

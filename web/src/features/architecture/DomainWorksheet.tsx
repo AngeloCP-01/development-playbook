@@ -167,7 +167,7 @@ export function DomainWorksheet() {
                 onChange={(e) =>
                   setValue({ ...value, [f.key]: e.target.value })
                 }
-                className="w-full resize-y border border-line bg-sunken px-3.5 py-2.5 text-[15px] leading-6 text-fg transition-colors duration-150 placeholder:text-subtle/70 hover:border-line-strong focus:border-brand focus:outline-none focus-visible:outline-2 focus-visible:outline-brand"
+                className="w-full resize-y border border-line bg-sunken px-3.5 py-2.5 text-[15px] leading-6 text-fg transition-colors duration-150 placeholder:text-subtle hover:border-line-strong focus:border-brand focus:outline-none focus-visible:outline-2 focus-visible:outline-brand"
               />
             </div>
           )
