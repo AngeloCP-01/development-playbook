@@ -167,6 +167,13 @@ New tests, all data-layer under the `unit` project:
   name the user gave, but the real URL is visible only after the first deploy. If it differs, the
   fix is one env var, and the sitemap test will not catch it — no test can, since the correct
   value is external knowledge.
+
+  **MATERIALISED 2026-08-11.** The assigned origin is `acp-dev-playbook.vercel.app`, not
+  `acp-development-playbook.vercel.app` — Vercel did not derive the hostname from the project
+  name the way this section assumed. `NEXT_PUBLIC_SITE_URL` corrected production before any
+  user saw it, which is the mitigation working as designed; the fallback has since been set to
+  the verified value. The risk was correctly identified and correctly mitigated, and the
+  guess was still wrong — which is the argument for the env var having existed at all.
 - **Deleting `public/` assets is irreversible in effect if something references them at runtime
   by string.** The grep covers `web/src` and `web/e2e`; a reference built by string concatenation
   would evade it. Reviewed as low: the files are `create-next-app` scaffolding and this app has

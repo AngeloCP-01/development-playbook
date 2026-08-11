@@ -59,7 +59,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
 | **W-3** | Stages 02–18 interactive | ◐ *(02, 03 done; 15 remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
-| **W-5** | Deploy | ◐ *(repo side done; awaiting Vercel Root Directory + first deploy)* |
+| **W-5** | Deploy | ☑ *(live 2026-08-11; post-deployment verification deferred)* |
 
 ### Dependency map
 
@@ -450,7 +450,7 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
       confirm Actions fails — **TD-10**
 - [x] Fix or document whatever the suite reveals
 
-### W-5 — Deploy ◐ *(repo side done 2026-08-04; awaiting first deploy)*
+### W-5 — Deploy ☑ *(live 2026-08-11 at https://acp-dev-playbook.vercel.app)*
 
 - [x] Node version pinned where Vercel reads it — `engines.node` in `web/package.json`.
       `.nvmrc` reaches local and CI only, which left the one host that serves users unpinned
@@ -458,10 +458,20 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
 - [x] Five `create-next-app` assets deleted from `public/`, with a test so they cannot return
 - [x] `prepare` hook made safe for a checkout with no `.git` — found by review, and it would
       have failed the Vercel install step before Root Directory was ever read
-- [ ] **Set Root Directory to `web` in the Vercel project** — the build fails without it, and
-      there is no in-repo equivalent
-- [ ] Preview deploy per pull request *(automatic once the project is connected)*
-- [ ] Production deploy
+- [x] **Root Directory set to `web`** in the Vercel project — no in-repo equivalent
+- [x] **Framework Preset set to Next.js.** Not planned for, and not discoverable from the
+      repository: the project had been created against a placeholder repo with nothing to
+      detect, so it defaulted to *Other*, whose Output Directory is `public` — a directory this
+      round had just deleted. The build failed with `No Output Directory named "public" found`,
+      which names the symptom and not the cause
+- [x] **Connected to the right repository.** It was pointed at `AngeloCP-01/acp-development-playbook`,
+      a placeholder holding one unrelated commit, while the work lives in
+      `AngeloCP-01/development-playbook`. Three green production builds of the wrong repo looked
+      exactly like success
+- [x] Preview deploy per pull request *(automatic, now that the project is connected)*
+- [x] **Production deploy** — live and verified: `/robots.txt` reads `Allow: /` and names the
+      sitemap, `/sitemap.xml` carries 19 `<loc>` entries on the real origin, and
+      `/stages/03-architecture` renders with the title template applied
 - [ ] Post-deployment verification per `docs/14` — **deliberately not started.** The audit suite
       assumes a local server on `:3100` (`playwright.config.ts`), and retargeting it at a
       deployed URL cannot be written until a deployment exists to point at

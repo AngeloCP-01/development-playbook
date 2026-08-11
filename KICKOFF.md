@@ -83,14 +83,18 @@ Before doing anything, read these for context:
 - **`PAGES` in `web/e2e/audit.spec.ts` is still hand-written** (**TD-12**), so adding a step
   means editing that array by hand — thirteen times this round. A dead hash now fails; a missing
   one still audits nothing, which is the half that matters now.
-- **Not deployed yet, but the repo is ready for it** (`W-5`, 2026-08-04). `engines.node` pins
-  the Node version Vercel reads, `metadataBase` is set, and `sitemap.ts` / `robots.ts` cover the
-  19 public URLs. **Two things stand between this and a live site**, and only one is a dashboard
-  setting: the Vercel project (`acp-development-playbook`) needs Root Directory `web`, because
-  the app is not at the repo root. The other was found by review and is already fixed — pnpm
-  runs `prepare` on every install, `lefthook install` exits 1 without a `.git`, and Vercel's
-  build environment has none, so the install step died before Root Directory was ever consulted.
-  `NEXT_PUBLIC_SITE_URL` overrides the origin without a code change.
+- **Deployed** (`W-5`, live 2026-08-11): **https://acp-dev-playbook.vercel.app**, verified
+  against the running site — `/robots.txt`, a 19-URL `/sitemap.xml`, and stage pages rendering
+  with the title template. The Vercel project is `acp-development-playbook`; the **assigned
+  origin is `acp-dev-playbook`**, which is not derivable from the project name and was guessed
+  wrong once. `NEXT_PUBLIC_SITE_URL` is set in Vercel and overrides `src/lib/site.ts`.
+  Three dashboard settings were needed and none is expressible in the repo: **Root Directory
+  `web`**, **Framework Preset Next.js** (it was *Other*, whose output directory is `public` —
+  which this round had deleted), and the **connected repository**, which pointed at a
+  placeholder. See `docs/learnings/deploying-101.md` before deploying anything else.
+- **Still open under W-5:** post-deployment verification per `docs/14`. The audit suite assumes
+  a local server on `:3100`, so retargeting it at the deployed URL is its own slice — and it is
+  what turns 14 local checks into a real post-deployment gate.
 - **Branch/push:** work happens on `feat/`|`fix/`|`docs/<date>-` branches, merged to `main`
   with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes.**
   **Stage 03 is merged and pushed**: `feat/stage-03-app-port` landed on `main` as
