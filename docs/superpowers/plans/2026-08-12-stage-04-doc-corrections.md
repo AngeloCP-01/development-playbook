@@ -553,9 +553,18 @@ Find:
 Replace with:
 
 ```
-- `.prettierrc`, `eslint.config.mjs`, `tsconfig.json`, `lefthook.yml`, `.nvmrc`, `.env.example`
-- `package.json` pinning `engines.node` and carrying a guarded `prepare` script
+- `.prettierrc`, `eslint.config.mjs`, `tsconfig.json`, `lefthook.yml`, `.nvmrc`, `.npmrc`, `.env.example`
+- `package.json` pinning `engines.node`, a guarded `prepare` script, and the `typecheck`
+  and `test` scripts the hooks and CI call
 ```
+
+**Three artifacts arrive here from earlier tasks and are easy to miss**, because each was added by a task that edited a different section: `.npmrc` (Task 2 Step 3, carrying `engine-strict=true`), and the `typecheck` / `test` scripts plus vitest (Task 3 Step 2). Before writing this list, grep the doc for what it now tells the reader to create, rather than working from this plan's memory of it:
+
+```bash
+grep -nE '^\s*(echo|pnpm add|pnpm create)' docs/04-project-setup.md
+```
+
+Every file or dependency that command reveals should appear in Artifacts or be a deliberate omission you can name.
 
 - [ ] **Step 3: Grep the whole doc for surviving instances of the corrected claim**
 
