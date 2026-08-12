@@ -380,6 +380,42 @@ Three sections, ten minutes:
 
 That last line matters more than it looks. See [10 — Documentation](10-documentation.md).
 
+### AI in project setup
+
+Setup is the stage where an agent is most useful and most confidently wrong, and the split
+is clean: it is good at files you commit and blind to everything else. Every config here is
+text it can write, read back, and check. The settings that most often break a first deploy
+are not text, are not in your repository, and nothing you run locally can see them.
+
+Where it earns its place:
+
+- **Generate the config, then make it prove itself** (a skill). Scaffolds, `tsconfig`
+  flags, a `lefthook.yml`, a CI workflow — all text, all conventional, all fast. Have it
+  run each one rather than describe it. A workflow file that has never been pushed is a
+  guess with syntax highlighting.
+- **Derive `.env.example` from the schema** (a saved command). `src/lib/env.ts` already
+  lists every variable. Generating the example from it keeps your only configuration
+  documentation honest, because two files cannot drift when one is produced from the other.
+- **Port conventions from your last project** (memory). `claude-mem` answers "what did I
+  set up last time, and why". Setup is the most repeated stage in a career and the one
+  people most often rebuild from nothing.
+- **Read the docs for the version you installed** (an MCP). context7 over training memory.
+  Scaffolding tools change flags between minor versions, and an agent confidently passing a
+  removed flag produces an error two steps from its cause.
+- **Break the gate on purpose** (a saved command). Have it push a deliberately failing
+  commit and confirm CI goes red. This is the check people skip because it feels like
+  theatre, and it is the only thing separating a gate from a green badge.
+
+Named tools: `context7` for version-accurate docs, `claude-mem` for prior setups, and
+Superpowers' `verification-before-completion` for the "prove it" half of every item above.
+
+What none of this replaces: the dashboard. Root Directory, Framework Preset and the
+connected repository live in a web UI no agent reads, and this playbook's own first deploy
+was blocked by all three while every local check stayed green. An agent will happily debug
+the error message and cannot see the setting that caused it. Nor will it tell you that a
+green build is the wrong repository — that takes one command and a decision to be
+suspicious, and suspicion does not delegate.
+
 ---
 
 ## Artifacts
