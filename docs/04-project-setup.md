@@ -320,10 +320,40 @@ On a private one it saves and silently never fires. Confirm your plan enforces i
 pnpm add -g vercel && vercel link
 ```
 
-In project settings, confirm the Node version matches `.nvmrc`. Push a branch and open a
-pull request — you should get a preview URL. Verify that before writing any features; a
-broken deploy pipeline is far easier to debug against a scaffold than against a
-half-built app.
+Three project settings decide whether this builds, and **none of them can live in your
+repository**. That is the part worth internalising: everything else in this stage is a file
+you commit and can diff. These live in a dashboard, and the only signal that one is wrong
+is the error it produces.
+
+| Setting | Set it to | What you see when it is wrong |
+|---|---|---|
+| **Root Directory** | the folder holding `package.json` | `No Next.js version detected` |
+| **Framework Preset** | Next.js | `No Output Directory named "public" found after the Build completed` |
+| **Node.js Version** | the major in `engines.node` | nothing at all. It builds, on the wrong runtime |
+
+The Framework Preset error is the one that misleads. It reads as "you deleted something you
+needed"; it means the preset is `Other`, whose default output directory is `public`. A
+project created against an empty repository has nothing to detect, so Vercel guesses, and
+it guesses `Other`. With the Next.js preset the output is `.next` and a `public/` directory
+is optional.
+
+**Then check what it built, not whether it built.** A deployment list tells you a build
+succeeded. It does not tell you which repository it succeeded on, and a green build of the
+wrong repo is indistinguishable from a green build of yours at a glance. Take the commit
+SHA off the deployment and ask your own repository about it:
+
+```bash
+git cat-file -t 79ef7a7    # a commit you can see  → "commit"
+                           # anything else         → "Not a valid object name"
+```
+
+Now push a branch and open a pull request. You should get a preview URL — load it, because
+a green checkmark is not the check. Fetch one real page and confirm it renders. If you have
+configured a canonical URL anywhere, fetch `/robots.txt` too: it prints the origin the build
+actually used, so one request tells you whether the value you set is the value that shipped.
+
+Verify all of this before writing any features. A broken deploy pipeline is far easier to
+debug against a scaffold than against a half-built app.
 
 ### 9. Error tracking
 
