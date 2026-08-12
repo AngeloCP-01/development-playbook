@@ -385,7 +385,11 @@ That last line matters more than it looks. See [10 — Documentation](10-documen
 ## Artifacts
 
 - Repository with the feature-first `src/` structure
-- `.prettierrc`, `eslint.config.mjs`, `tsconfig.json`, `lefthook.yml`, `.nvmrc`, `.env.example`
+- `.prettierrc`, `eslint.config.mjs`, `tsconfig.json`, `lefthook.yml`, `.nvmrc`, `.npmrc`,
+  `.env.example`
+- `package.json` pinning `engines.node` and `packageManager`, a guarded `prepare` script,
+  and the `typecheck`, `test`, `lint`, `format`, and `format:check` scripts the hooks and
+  CI call
 - `src/lib/env.ts` validating configuration at boot
 - `.github/workflows/ci.yml` with branch protection enforcing it
 - A Vercel project producing preview URLs per pull request
@@ -402,7 +406,9 @@ That last line matters more than it looks. See [10 — Documentation](10-documen
 - [ ] Branch protection blocks merging when CI is red
 - [ ] A deliberate error appears in Sentry with readable TypeScript stack traces
 - [ ] `pnpm build` succeeds locally
-- [ ] Node version is identical in `.nvmrc`, CI, and Vercel settings
+- [ ] Node version is pinned in the file each environment reads — `.nvmrc` for local
+      shells and CI, `engines.node` for the host
+- [ ] The deployed commit SHA exists in your repository (`git cat-file -t <sha>`)
 
 ---
 
