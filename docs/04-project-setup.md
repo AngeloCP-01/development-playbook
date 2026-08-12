@@ -197,10 +197,23 @@ Install the test runner now, even with nothing to test yet:
 pnpm add -D vitest
 ```
 
-Add `"test": "vitest run"`. What to put in the tests is [06 — Testing](06-testing.md); the
-point here is that the gate you are about to wire has something real to call. A pipeline
-step naming a command nobody installed fails on its first run, and the failure looks like
-a broken pipeline rather than a missing dependency.
+Add:
+
+```json
+{
+  "scripts": { "test": "vitest run --passWithNoTests" }
+}
+```
+
+What to put in the tests is [06 — Testing](06-testing.md); the point here is that the gate
+you are about to wire has something real to call. A pipeline step naming a command nobody
+installed fails on its first run, and the failure looks like a broken pipeline rather than
+a missing dependency.
+
+`--passWithNoTests` is there because you have no tests yet and will not until
+[06 — Testing](06-testing.md). Without it `vitest run` exits 1 on an empty suite, so your
+first push fails on a hook that is working correctly — which teaches the reader to bypass
+the hook, the one habit this section exists to prevent.
 
 ### 6. Git hooks
 
