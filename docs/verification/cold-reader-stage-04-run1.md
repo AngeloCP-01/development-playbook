@@ -15,6 +15,9 @@ of `fix/stage-04-doc-corrections`.
   reading the body, then checked itself against the body. Raw output:
   `cold-reader-consultability-raw.md`. Ran clean first try; no retry needed.
 
+Both raw outputs are scratch — read here for synthesis, not committed, and not a path a
+later reader can follow.
+
 **This is a classification record, not a fix.** Nothing in `docs/04-project-setup.md`
 changed while writing this. Task 8 works from the prioritised list at the end.
 
@@ -63,29 +66,39 @@ does not hold: `vercel link` links a local directory to a Vercel *project* — i
 Git integration that produces a preview URL per pull request. A reader who runs `vercel
 link`, follows the three-row table exactly, and opens a pull request gets no preview URL
 and nothing on the page telling them why, even though the second `## Definition of done`
-box requires exactly that outcome.
+box requires exactly that outcome. This does not rest on the cold reader's inference alone
+— `docs/learnings/deploying-101.md` opens its own three-settings list with exactly this
+failure: "the project was connected to the wrong repository," found only because "the
+Deployments tab showed three green production builds" and the giveaway was reading a commit
+SHA off the deployment. The reversal stands on this project's own record, not one agent's
+read of the doc.
 
-The doc also contradicts itself on this, which the reviewer's framing missed: `### 8.
-Connect Vercel`'s table names three settings — Root Directory, Framework Preset, Node.js
-Version — while `### AI in project setup`, added in the same commit, names a different
-three: "Root Directory, Framework Preset and *the connected repository* live in a web UI no
+The doc also contradicts itself on this, which the reviewer's framing missed — and, checked
+against `develop`, both halves of the contradiction are this branch's own work, not one
+round meeting an older one: `### 8. Connect Vercel`'s settings table came from `2da6eea`
+(Task 4); `### AI in project setup`, naming a different three, came from `15599a6` (Task 6),
+two tasks later, not the same commit. Neither section existed in `develop` before this
+branch. §8's table names Root Directory, Framework Preset, Node.js Version; the AI section
+names "Root Directory, Framework Preset and *the connected repository* live in a web UI no
 agent reads, and this playbook's own first deploy was blocked by all three." Two lists of
-three, on one page, agreeing on two items and disagreeing on the one that actually produces
-the preview URL the Definition of done requires. Defect.
+three, both written on this branch, agreeing on two items and disagreeing on the one that
+actually produces the preview URL the Definition of done requires. Defect, and round-caused
+in the same sense Q2's consultability miss is below — not an old flaw the cold reader
+happened to find.
 
 ### NON-BLOCKING → reclassified, not just re-counted
 
 Twenty items is too many to fix and too many to discard; the point of separating them is
-lost either way. Below is the full reclassification. Ten are dropped from the fix list
-entirely — three because they are this doc correctly deferring a decision (boundary), seven
+lost either way. Below is the full reclassification. Nine are dropped from the fix list
+entirely — two because they are this doc correctly deferring a decision (boundary), seven
 because this branch's own execution evidence disproves them, they cause no functional harm,
 or they are self-correcting to the point of not changing what a reader does. The remaining
-ten carry forward, folded into fewer, larger fix items where they share one root cause.
+eleven carry forward, folded into fewer, larger fix items where they share one root cause.
 
 | # | Finding | Verdict | Why |
 |---|---|---|---|
 | N1 | `create-next-app` still prompts; the doc lists no answers | **Disproven** | `stage-04-doc-execution.md` §1 ran the exact command: "Using defaults for unprovided options... every flag the doc names was accepted with no interactive prompt." The cold reader's assumption, checked against a real run, does not hold. |
-| N2 | `packageManager` version deferred to `reference/stack.md` | **Boundary** | By design. `reference/stack.md` states its own reason to exist: "If a stage doc contains a version number, that is a bug in the stage doc — the number belongs here." Duplicating the pnpm version in 04 is exactly what the project decided not to do. |
+| N2 | §1 says "Use the actual pnpm version from `reference/stack.md`" and then hands the reader `corepack use pnpm@latest` | **Defect** | Kept — misclassified as boundary in an earlier pass of this record. Whether §1 should *print* a version number is a boundary question and `reference/stack.md` correctly owns that ("If a stage doc contains a version number, that is a bug in the stage doc"). But N2's actual finding is narrower: the sentence names `reference/stack.md` as the source of truth and its own next line hands the reader a command that does not read that file — `@latest` is not "the actual pnpm version from `reference/stack.md`," it is whatever npm currently tags latest. Same shape as B1 and N16: the paragraph and its own command disagree. Currently latent, not live — `stack.md` pins `10.x` and latest is `10.33` at the time of this run, so no reader has hit a real mismatch yet — but the fix is one command and costs no duplicated number: `corepack use pnpm@10`, the major named in `stack.md`, not a pin. |
 | N3 | `format` / `format:check` script bodies never shown, though CI calls `format:check` by name | **Defect** | Kept — folded into fix item 4 below. |
 | N4 | No `.prettierignore`, absent from `## Artifacts` | **Defect** | Kept — same root cause as N3/N5. |
 | N5 | `.prettierrc` disagrees with what `create-next-app` just wrote, and no step reformats the scaffold | **Defect** | Kept — same root cause as N3/N4; together they mean the reader's first CI run goes red on files they never touched. |
@@ -105,11 +118,14 @@ ten carry forward, folded into fewer, larger fix items where they share one root
 | N19 | `### 10. Write the README before the code` requires "how to roll back", and no section in the doc teaches a rollback mechanism | **Defect** | Kept. |
 | N20 | `echo "engine-strict=true" >> .npmrc` is written before confirming local Node matches the pin, so a subsequent `pnpm add` can fail | **Dropped — self-correcting** | The cold reader's own assessment: "The error is legible, so this is mild." A wrong-major `pnpm add` failure names the mismatch directly; reordering one line does not change what the reader does next. |
 
-**Ten dropped, ten kept.** Of the ten dropped: three are boundary (N2, N9, N13 — version
+**Nine dropped, eleven kept.** Of the nine dropped: two are boundary (N9, N13 — version
 pinning and a reader's own risk decision, both already handled correctly elsewhere), and
-seven are non-actionable at this stage's grain — four of those seven (N1, N8, N11, N18)
-are dropped because this branch's own execution-run evidence already disproves them, not
-because they were never real.
+seven are non-actionable at this stage's grain. Of those seven, four (N1, N6, N8, N11) are
+dropped because this branch's own execution-run evidence already disproves them — not
+because they were never real — and N18's drop rests on a different source: this
+repository's own `CLAUDE.md` and `web/package.json`, not the execution-run file, which
+never ran `next typegen`. N10 and N20 are dropped on neither ground — they are read-only
+judgments that the gap, real or not, would not change what a reader does.
 
 ### BOUNDARY — the cold reader's own list, confirmed
 
@@ -120,22 +136,32 @@ the database decision itself → the entry criteria's own procedure, and CODEOWN
 `CONTRIBUTING.md` → "Scaling to a team") is not reproduced item-by-item here — the cold
 reader already stated each with its destination and reasoning, and restating a coherent
 list is not the point of this record. None of the eight is folded into Task 8's work.
-Confirmed correct on inspection; nothing here is padding.
+Confirmed correct on inspection; nothing here is padding. Two more join this list from the
+NON-BLOCKING reclassification above — N9 and N13 — for ten boundaries total against this
+run's fourteen defects (B1–B3 plus the eleven kept NON-BLOCKING items).
 
 ---
 
 ## Consultability: 3/5, and one of the two misses is this branch's own doing
 
-Method: `stage-04-headings-only.txt`, three questions answered from headings alone before
+Method: `stage-04-headings-only.txt`, questions answered from headings alone before
 reading the body, then checked against it.
+
+**The instrument grew from the brief's three questions to five.** The brief asked for
+three and a score out of 3; the dispatch asked five (Q4 and Q5 below were not requested)
+and the raw report scores 3/5. That deviation is defensible — stage 03's precedent run
+scored 4/5 on five questions, and cutting to three here would make the two runs harder to
+compare — but 3/5 is not the instrument the brief specified, so it is recorded rather than
+presented as the requested result. On the brief's own three questions (Q1–Q3 below), the
+result is **1 HIT, 1 MISS, 1 NEAR** — no clean fraction, because NEAR is not a binary hit.
 
 | Q | Question | Predicted | Actual | Verdict |
 |---|---|---|---|---|
-| 1 | Deploy fails with `No Output Directory named "public"` — which section? | `### 8. Connect Vercel` | `### 8. Connect Vercel` | **HIT** |
-| 2 | Which file controls the host's Node version? | `### 8. Connect Vercel` | `### 1. Scaffold` | **MISS** |
-| 3 | How do you know the CI gate actually fires, not just shows green? | `### 7. CI, on day one` | Split across `## Traps` and `## Definition of done` | **NEAR** |
-| 4 | Teammate's git hooks aren't running — where? | `### 6. Git hooks` | `### 6. Git hooks` | **HIT** |
-| 5 | What must be finished before this stage starts? | `## Entry criteria` | `## Entry criteria` | **HIT** |
+| 1 (brief) | Deploy fails with `No Output Directory named "public"` — which section? | `### 8. Connect Vercel` | `### 8. Connect Vercel` | **HIT** |
+| 2 (brief) | Which file controls the host's Node version? | `### 8. Connect Vercel` | `### 1. Scaffold` | **MISS** |
+| 3 (brief) | How do you know the CI gate actually fires, not just shows green? | `### 7. CI, on day one` | Split across `## Traps` and `## Definition of done` | **NEAR** |
+| 4 (added) | Teammate's git hooks aren't running — where? | `### 6. Git hooks` | `### 6. Git hooks` | **HIT** |
+| 5 (added) | What must be finished before this stage starts? | `## Entry criteria` | `## Entry criteria` | **HIT** |
 
 **Q2's MISS was caused by this round, not inherited.** Checked against the pre-branch text
 (`git show develop:docs/04-project-setup.md`): `### 8. Connect Vercel` used to say "confirm
@@ -204,8 +230,13 @@ section by heading (D-42) and what would close it.
    no server/client boundary. One sentence — server modules only — prevents a real
    secret-leak failure mode in this framework.
 
-8. **`### 7. CI, on day one` (N12).** State that the required status check's name is `verify`
-   — the workflow's job id — rather than leaving a reader to infer it from the YAML.
+8. **`### 7. CI, on day one` (N12, plus Q3's findability gap).** State that the required
+   status check's name is `verify` — the workflow's job id — rather than leaving a reader
+   to infer it from the YAML. While this entry is already editing §7: add one
+   cross-reference from here to the `## Traps` entry carrying the actual teeth check
+   ("push a broken commit once and watch it go red"), so a reader asking "how do I know
+   the gate really works" is pointed at the answer instead of stopping at branch
+   protection and assuming enforcement is the same as verification.
 
 9. **`### 6. Git hooks` (N7).** Widen the `pre-commit` globs (or note the gap deliberately)
    so `.md`, `.yml`, and `.js`/`.jsx` — including `README.md`, this stage's own required
@@ -216,3 +247,16 @@ section by heading (D-42) and what would close it.
     Scaffold` by name ("set in `### 1. Scaffold`") so a reader who opens `### 8` first for a
     Node-version problem is redirected in one sentence instead of backtracking unguided.
     Lowest priority: this is a navigation cost, not an incorrect instruction.
+
+11. **`### 10. Write the README before the code` (N19).** The section requires the README
+    to say "how it reaches production and how to roll back," and nothing in the document
+    teaches a rollback mechanism — a beginner cannot produce this stage's own `## Artifacts`
+    entry from this stage's text. The material already exists in this project's own
+    record: `docs/learnings/deploying-101.md` — in the Vercel dashboard, promote the last
+    known-good production deployment. One sentence, sourced rather than invented, closes it.
+
+12. **`### 1. Scaffold` (N2).** "Use the actual pnpm version from `reference/stack.md`" is
+    followed by `corepack use pnpm@latest`, which does not read that file and is not
+    necessarily that version. Replace with `corepack use pnpm@10` — the major
+    `reference/stack.md` currently names — so the sentence and its own command agree
+    without printing a version number the file doesn't already own.
