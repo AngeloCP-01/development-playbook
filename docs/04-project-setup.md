@@ -48,10 +48,15 @@ Add the constraint to `package.json` as well:
 
 ```json
 {
-  "engines": { "node": ">=22 <23" },
+  "engines": { "node": "22.x" },
   "packageManager": "pnpm@<current>"
 }
 ```
+
+Write it as a major, `"22.x"`, not a range. `22.x` is the form Vercel's own docs show and
+the form this project's own `web/package.json` uses; a range is not documented as
+supported, and this field is the one thing the host actually reads, so it is not the place
+to improvise a format.
 
 `engines.node` does two jobs. It is what Vercel reads, overriding the Node version set in
 the project's own dashboard — the job that matters in production. And it makes pnpm
@@ -329,7 +334,7 @@ is the error it produces.
 |---|---|---|
 | **Root Directory** | the folder holding `package.json` | `No Next.js version detected` |
 | **Framework Preset** | Next.js | `No Output Directory named "public" found after the Build completed` |
-| **Node.js Version** | the major in `engines.node` | nothing at all. It builds, on the wrong runtime |
+| **Node.js Version** | the major in `engines.node`, which overrides it | nothing at all — unpinned, it builds on Vercel's default major |
 
 The Framework Preset error is the one that misleads. It reads as "you deleted something you
 needed"; it means the preset is `Other`, whose default output directory is `public`. A
