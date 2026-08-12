@@ -35,14 +35,16 @@ cd my-app
 in `src/` and leaves the root for configuration — worth it once the root accumulates a
 dozen config files.
 
-Pin the Node version so local, CI, and Vercel agree:
+Pin the Node version in both places, because no single file reaches every environment:
 
 ```bash
 echo "22" > .nvmrc
 ```
 
-Add the matching constraint to `package.json`, which makes pnpm refuse to install on the
-wrong major rather than failing mysteriously later:
+`.nvmrc` is what `nvm` and `fnm` read locally, and what GitHub Actions reads through
+`node-version-file`. It stops there. Your host does not read it.
+
+Add the constraint to `package.json` as well:
 
 ```json
 {
@@ -50,6 +52,22 @@ wrong major rather than failing mysteriously later:
   "packageManager": "pnpm@<current>"
 }
 ```
+
+`engines.node` does two jobs. It is what Vercel reads, overriding the Node version set in
+the project's own dashboard — the job that matters in production. And it makes pnpm
+complain on the wrong major, though only if you ask it to:
+
+```bash
+echo "engine-strict=true" >> .npmrc
+```
+
+Without that line pnpm prints `WARN Unsupported engine` and installs anyway, exit 0 — a
+warning in CI log noise is not a gate. With it, the install fails on the wrong major,
+which is what you wanted when you wrote the constraint.
+
+The general rule is worth more than either file: **for each environment that runs your
+code, find the file that environment reads.** A version file being popular does not make
+it universal, and the environment nothing pins is usually the one serving users.
 
 Use the actual pnpm version from [reference/stack.md](../reference/stack.md) — `corepack
 use pnpm@latest` writes it for you.

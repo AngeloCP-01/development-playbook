@@ -16,7 +16,7 @@ starting a new project rather than trusting this file blindly.
 | Framework | Next.js (App Router) | 16.x | Server Components remove most of the client/server data plumbing that used to dominate a codebase. |
 | UI library | React | 19.x | Comes with Next 16. |
 | Language | TypeScript | 7.x | The Go-based compiler. Typecheck on a large codebase went from tens of seconds to low single digits, which is what makes typecheck-on-every-commit practical. |
-| Runtime | Node.js | 22 LTS | Match this in CI, in Docker, and in Vercel project settings. Version drift between the three is a recurring source of "works locally" bugs. |
+| Runtime | Node.js | 22 LTS | Pin it in the file each environment reads: `.nvmrc` for local shells and CI, `engines.node` in `package.json` for Vercel, which reads neither `.nvmrc` nor your workflow. Drift between them is a recurring source of "works locally" bugs. |
 | Package manager | pnpm | 10.x | Strict `node_modules` layout means undeclared dependencies fail locally instead of in CI. |
 | Hosting | Vercel | — | The framework and the platform are built by the same people; the integration is the point. |
 
