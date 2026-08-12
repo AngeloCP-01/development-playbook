@@ -425,10 +425,12 @@ Replace with:
 - [ ] **Step 3: Grep the whole doc for surviving instances of the corrected claim**
 
 ```bash
-grep -n "matches \`.nvmrc\`\|identical in\|Vercel settings" docs/04-project-setup.md
+grep -nF -e 'matches `.nvmrc`' -e 'identical in' -e 'Vercel settings' docs/04-project-setup.md
 ```
 
 Expected: no hits. Any hit is the same error in a third place.
+
+Use `grep -nF -e ...`, not a double-quoted pattern: backticks inside `"…"` are command substitution in both bash and zsh, so `grep "matches \`.nvmrc\`"` runs `.nvmrc` as a command and searches for the wrong string. It would report "no hits" while never having looked.
 
 - [ ] **Step 4: Commit**
 
@@ -718,9 +720,9 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ## Verification (after all tasks)
 
 - [ ] `cd web && pnpm vitest run` — full suite green, count recorded and compared against 331/33 baseline
-- [ ] `cd web && pnpm lint && pnpm typecheck` — clean (Task 6 touches a test file)
+- [ ] `cd web && pnpm lint && pnpm typecheck && pnpm format:check` — clean. `format:check` matters for exactly one file on this branch, `src/lib/stage-metadata.test.ts` from Task 6; **it says nothing about the markdown**, which `web/.prettierignore` excludes via `*.md`. Prettier reports success on an empty match set, so "format:check passed" is not evidence about any doc changed here
 - [ ] `pnpm gen:glossary` re-run; `reference/glossary.md` byte-identical unless a term genuinely changed
-- [ ] `grep -n "matches \`.nvmrc\`" docs/04-project-setup.md` returns nothing
+- [ ] `grep -nF -e 'matches `.nvmrc`' docs/04-project-setup.md` returns nothing (single quotes: backticks in a double-quoted pattern are command substitution)
 - [ ] Every factual claim added to §1, §6 and §8 traces to a line of real output in `docs/verification/stage-04-doc-execution.md`
 - [ ] Cold-reader defects all closed or explicitly deferred with a reason, per finding
 - [ ] Whole-branch review complete, blocking findings fixed
