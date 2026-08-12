@@ -194,7 +194,41 @@ Use the actual pnpm version from [reference/stack.md](../reference/stack.md) —
 use pnpm@latest` writes it for you.
 ```
 
-- [ ] **Step 3: Correct the Runtime row in `reference/stack.md`**
+- [ ] **Step 3: Correct the "pnpm refuses to install" claim (Task 1 finding, WRONG)**
+
+Task 1 tested this directly by setting `"node": ">=99 <100"` and running install:
+
+```
+ WARN  Unsupported engine: wanted: {"node":">=99 <100"} (current: {"node":"v22.19.0"})
+Done in 416ms using pnpm v10.33.0
+$ echo $?   →   0
+```
+
+pnpm does not refuse. `engines` is advisory unless `.npmrc` sets `engine-strict=true`, which the doc never instructs. Find:
+
+```
+Add the constraint to `package.json` as well:
+```
+
+and after the JSON block, fold this into the paragraph written in Step 2 so the claim is true:
+
+```
+`engines.node` does two jobs. It is what Vercel reads, overriding the Node version set in
+the project's own dashboard — the job that matters in production. And it makes pnpm
+complain on the wrong major, though only if you ask it to:
+
+```bash
+echo "engine-strict=true" >> .npmrc
+```
+
+Without that line pnpm prints `WARN Unsupported engine` and installs anyway, exit 0 — a
+warning in CI log noise is not a gate. With it, the install fails on the wrong major,
+which is what you wanted when you wrote the constraint.
+```
+
+Delete the "makes pnpm refuse to install on the wrong major rather than failing mysteriously later" clause wherever it survives from Step 1's edit. Add `.npmrc` to the Artifacts list in Task 5.
+
+- [ ] **Step 4: Correct the Runtime row in `reference/stack.md`**
 
 Find, in the **Core** table:
 
@@ -208,7 +242,7 @@ Replace with:
 | Runtime | Node.js | 22 LTS | Pin it in the file each environment reads: `.nvmrc` for local shells and CI, `engines.node` in `package.json` for Vercel, which reads neither `.nvmrc` nor your workflow. Drift between them is a recurring source of "works locally" bugs. |
 ```
 
-- [ ] **Step 4: Verify nothing else in the repo repeats the old claim**
+- [ ] **Step 5: Verify nothing else in the repo repeats the old claim**
 
 ```bash
 grep -rn "\.nvmrc" docs/ reference/ | grep -v "docs/verification\|docs/learnings\|docs/tracker\|docs/task"
@@ -216,7 +250,7 @@ grep -rn "\.nvmrc" docs/ reference/ | grep -v "docs/verification\|docs/learnings
 
 Expected: hits only in `docs/04-project-setup.md` §1 and §7's CI snippet (where `node-version-file: '.nvmrc'` is correct) and `docs/11-ci-cd.md` (same, correct). Any other hit asserting `.nvmrc` reaches a host is a finding — record it, do not silently widen scope.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 6: Commit**
 
 ```bash
 git add docs/04-project-setup.md reference/stack.md
@@ -232,16 +266,18 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 
 ---
 
-### Task 3: Add the `prepare` script to §6, with its guard
+### Task 3: Make §5, §6 and §7 produce a project whose own gates run
 
 **Files:**
-- Modify: `docs/04-project-setup.md`, "### 6. Git hooks"
+- Modify: `docs/04-project-setup.md`, sections "### 4. TypeScript settings", "### 5. Environment variables, validated at boot", "### 6. Git hooks", "### 7. CI, on day one"
 
 **Interfaces:**
-- Consumes: Task 1 Step 7's exit codes as the evidence for the claim.
-- Produces: the `prepare` script that Task 5's Definition of done adds a checkbox for.
+- Consumes: Task 1 Step 7's exit codes, and Task 1's §5/§6/§7 findings.
+- Produces: the `prepare` script and the `typecheck` / `test` scripts that Task 5's Definition of done adds checkboxes for.
 
-The defect is subtler than TD-28 states. TD-28 says an unguarded `prepare` breaks the host. The doc has **no `prepare` script at all**, so it cannot warn about a trap it never walks the reader into, and it also leaves hooks installed on exactly one machine. Both halves are the fix.
+**Scope widened after Task 1, on the user's call.** Task 1 found that §6's pre-push hook and §7's CI workflow both invoke commands stage 04 never creates, so a reader who follows the doc literally gets a hook and a pipeline that fail on their first run. Three sections share one defect: **the doc tells you to run something it never gave you.** They are fixed together because splitting them would leave the doc self-inconsistent between commits.
+
+TD-28's own framing was also incomplete here. It says an unguarded `prepare` breaks the host; the doc has **no `prepare` script at all**, so it cannot warn about a trap it never walks the reader into, and it leaves hooks installed on exactly one machine.
 
 - [ ] **Step 1: Insert after the `lefthook.yml` block, before "Format on commit, verify on push."**
 
@@ -263,7 +299,85 @@ Husky fails identically for the identical reason, so this is a property of `prep
 rather than a lefthook footnote.
 ```
 
-- [ ] **Step 2: Add the matching trap**
+- [ ] **Step 2: Add the scripts §6 and §7 assume (Task 1 findings, WRONG)**
+
+Task 1 ran the doc's own pre-push hook against a scaffold built only from the doc:
+
+```
+$ pnpm exec lefthook run pre-push
+┃  test ❯      ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command "vitest" not found
+┃  typecheck ❯ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command "typecheck" not found
+$ echo $?  →  1
+```
+
+`create-next-app` ships `dev`, `build`, `start`, `lint` and nothing else. §7's CI runs `pnpm typecheck`, `pnpm vitest run` and `pnpm format:check` against the same gap.
+
+**The call, made because the doc's own thesis requires it:** stage 04 adds the scripts and the test runner rather than trimming its gate. Its Traps block calls "adding CI later" the most expensive mistake on the page, and its Definition of done asks the reader to watch CI fail on a broken commit — which they cannot reach if CI fails for an unrelated reason first. Stage 06 owns what to *write* in tests; stage 04 owns the runner existing.
+
+In "### 4. TypeScript settings", after the `noUncheckedIndexedAccess` paragraph, add:
+
+```
+Add the script CI and your hooks will call:
+
+```json
+{
+  "scripts": { "typecheck": "tsc --noEmit" }
+}
+```
+
+On a Next.js project make it `next typegen && tsc --noEmit` — route types are generated,
+not written, so a bare `tsc` passes locally off a stale build and fails on a clean checkout.
+```
+
+At the end of "### 5. Environment variables, validated at boot", after the `.env.example` paragraph, add:
+
+```
+Install the test runner now, even with nothing to test yet:
+
+```bash
+pnpm add -D vitest
+```
+
+Add `"test": "vitest run"`. What to put in the tests is [06 — Testing](06-testing.md); the
+point here is that the gate you are about to wire has something real to call. A pipeline
+step naming a command nobody installed fails on its first run, and the failure looks like
+a broken pipeline rather than a missing dependency.
+```
+
+Then correct §6's `lefthook.yml` and §7's `ci.yml` so both call `pnpm test` rather than `pnpm vitest run` — the script indirection is the point, since it is what lets the runner change without editing two gates.
+
+- [ ] **Step 3: Correct §5's deprecated Zod call (Task 1 finding, STALE)**
+
+Task 1 confirmed `z.string().url()` compiles and validates correctly, and that the installed Zod 4 marks it deprecated in its shipped types: `/** @deprecated Use `z.url()` instead. */`. In the `src/lib/env.ts` block, replace both occurrences:
+
+```ts
+  DATABASE_URL: z.url(),
+  NEXT_PUBLIC_APP_URL: z.url(),
+```
+
+`z.string().min(32)` stays as it is — `.min()` carries no deprecation.
+
+- [ ] **Step 4: Bump §7's action pins (Task 1 finding, STALE)**
+
+Task 1 checked the GitHub releases API rather than assuming. All three `v4` tags still resolve, so nothing is broken; a reader copying them starts two majors behind for no reason.
+
+```yaml
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+```
+
+**Verify each tag resolves before writing it** — do not copy these from this plan on trust:
+
+```bash
+for r in actions/checkout pnpm/action-setup actions/setup-node; do
+  echo -n "$r: "; curl -s "https://api.github.com/repos/$r/releases/latest" | grep -o '"tag_name": "[^"]*"'
+done
+```
+
+Use the majors that command actually reports. If one disagrees with this plan, the command is right and the plan is stale.
+
+- [ ] **Step 5: Add the matching trap**
 
 In the "## Traps" block, after **"Not testing that CI actually fails."**, insert:
 
@@ -273,20 +387,41 @@ CI and stops. If the environment that actually serves users is not pinned by a f
 environment reads, it is not pinned — and the failure is silent, because it builds.
 ```
 
-- [ ] **Step 3: Verify the claim is stated as executed, not asserted**
+- [ ] **Step 6: Verify every claim is stated as executed, not asserted**
 
-Re-read the inserted paragraph against Task 1 Step 7's recorded exit codes. Every factual clause (`exits 1`, `CI=1` and `VERCEL=1` change nothing, `|| true` returns 0) must correspond to a line of real output in `docs/verification/stage-04-doc-execution.md`. If one does not, either run it or cut the clause.
+Re-read everything this task inserted against `docs/verification/stage-04-doc-execution.md`. Each factual clause must correspond to a line of real output there: the `prepare` exit codes (1, 1 under `CI=1 VERCEL=1`, 0 guarded), the `WARN Unsupported engine` line, the two `ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL` failures, the Zod `@deprecated` grep, and the action-tag versions from Step 4's own `curl`. If a clause has no output behind it, either run it or cut it.
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 7: Re-run the doc's gates against the scratch scaffold**
+
+The point of this task is that the doc now produces a project whose gates run. Prove it rather than asserting it — in the Task 1 scaffold, apply this task's edits and run:
+
+```bash
+pnpm exec lefthook run pre-push; echo "pre-push exit=$?"
+```
+
+Expected: exit 0, both `typecheck` and `test` resolving. **This is the teeth check for the whole task**: before the edits it exited 1 with two "not found" errors, and if it still does, the correction did not work. Paste both runs.
+
+- [ ] **Step 8: Commit**
 
 ```bash
 git add docs/04-project-setup.md
-git commit -m "docs(setup): add the prepare script the hooks section never had
+git commit -m "docs(setup): the doc told you to run three things it never gave you
 
-Without one, hooks exist only where somebody ran the install command. With an
-unguarded one, pnpm install exits 1 on every build host. The doc had neither,
-so it could not warn about a trap it never walked the reader into. Both halves
-land together, and the exit codes are recorded rather than asserted.
+The prepare script was absent entirely, so hooks existed only where someone
+ran the install command — and an unguarded one exits 1 on every build host.
+Pre-push and CI both called typecheck and vitest, neither of which stage 04
+creates: lefthook run pre-push exited 1 with two 'not found' errors against a
+scaffold built from nothing but this document.
+
+Stage 04 now adds the scripts and the runner rather than trimming its gate.
+Its own Traps block calls adding CI later the most expensive mistake on the
+page, and its Definition of done asks the reader to watch CI fail on a broken
+commit — unreachable if CI fails for an unrelated reason first. Stage 06 still
+owns what to write in tests.
+
+Also z.string().url() to z.url(), deprecated in the installed Zod 4, and the
+action pins forward two majors. Both verified against the tool rather than
+assumed.
 
 Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 ```
