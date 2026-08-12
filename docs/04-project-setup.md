@@ -153,6 +153,18 @@ its first teeth check.
 first week. It forces you to handle the case where an array index or record key is
 missing — which is the actual runtime behavior, not a pedantic hypothetical.
 
+Add the script CI and your hooks will call:
+
+```json
+{
+  "scripts": { "typecheck": "tsc --noEmit" }
+}
+```
+
+On a Next.js project make it `next typegen && tsc --noEmit` — route types are generated,
+not written, so a bare `tsc` passes locally off a stale build and fails on a clean
+checkout.
+
 ### 5. Environment variables, validated at boot
 
 Untyped `process.env` access is a runtime crash waiting for production. Validate once, at
@@ -163,10 +175,10 @@ startup:
 import { z } from 'zod'
 
 const schema = z.object({
-  DATABASE_URL: z.string().url(),
+  DATABASE_URL: z.url(),
   SESSION_SECRET: z.string().min(32),
   NODE_ENV: z.enum(['development', 'test', 'production']),
-  NEXT_PUBLIC_APP_URL: z.string().url(),
+  NEXT_PUBLIC_APP_URL: z.url(),
 })
 
 export const env = schema.parse(process.env)
@@ -178,6 +190,17 @@ request handler three weeks later.
 
 Commit `.env.example` with every key and no values. It is the only documentation of
 required configuration that stays current, because the app stops booting when it drifts.
+
+Install the test runner now, even with nothing to test yet:
+
+```bash
+pnpm add -D vitest
+```
+
+Add `"test": "vitest run"`. What to put in the tests is [06 — Testing](06-testing.md); the
+point here is that the gate you are about to wire has something real to call. A pipeline
+step naming a command nobody installed fails on its first run, and the failure looks like
+a broken pipeline rather than a missing dependency.
 
 ### 6. Git hooks
 
@@ -206,8 +229,24 @@ pre-push:
     typecheck:
       run: pnpm typecheck
     test:
-      run: pnpm vitest run
+      run: pnpm test
 ```
+
+Hooks installed by that command exist only on the machine that ran it. Add a `prepare`
+script so a fresh clone gets them too:
+
+```json
+{
+  "scripts": { "prepare": "lefthook install || true" }
+}
+```
+
+The `|| true` is not defensive clutter. pnpm runs `prepare` on every install, `lefthook
+install` exits 1 outside a git repository, and build hosts check out your source without a
+`.git`. Unguarded, `pnpm install` fails on the host and the deploy dies at the install
+step, before it reaches anything you configured. Neither `CI=1` nor `VERCEL=1` changes it.
+Husky fails identically for the identical reason, so this is a property of `prepare`
+rather than a lefthook footnote.
 
 Format on commit, verify on push. Keep the full test suite out of `pre-commit` — a hook
 slow enough to be annoying is a hook people bypass with `--no-verify`, and then you have
@@ -228,15 +267,15 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with: { node-version-file: '.nvmrc', cache: 'pnpm' }
       - run: pnpm install --frozen-lockfile
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
-      - run: pnpm vitest run
+      - run: pnpm test
       - run: pnpm build
 ```
 
@@ -324,6 +363,10 @@ errors and the rules stay strict.
 **Not testing that CI actually fails.** Green checkmarks on a workflow that silently
 skips tests are worse than no CI, because you trust them. Push a broken commit once and
 watch it go red.
+
+**Pinning the version your host does not read.** `.nvmrc` reaches your machine and your
+CI and stops. If the environment that actually serves users is not pinned by a file that
+environment reads, it is not pinned — and the failure is silent, because it builds.
 
 **Structuring by layer.** `components/`, `hooks/`, `utils/` looks tidy in week one. By
 month three, one feature change touches four folders and nobody can tell which utils are
