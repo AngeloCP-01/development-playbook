@@ -130,9 +130,20 @@ Append `eslint-config-prettier/flat` last in `eslint.config.mjs`, and add `forma
 `format:check` scripts. One tool lints, one tool formats, and neither owns the other's
 job.
 
-Gate lint at **`--max-warnings 0`**. ESLint exits 0 on warnings, so without it an unused
-variable sails through both hooks and CI — this playbook's own gate let one through on
-its first teeth check.
+Gate lint at **`--max-warnings 0`**, in the script itself rather than only where it gets
+called:
+
+```json
+{
+  "scripts": { "lint": "eslint --max-warnings 0" }
+}
+```
+
+ESLint exits 0 on warnings, so without it an unused variable sails through both hooks and
+CI — this playbook's own gate let one through on its first teeth check. `create-next-app`
+ships `"lint": "eslint"` with no such flag, and CI's `pnpm lint` step calls that script
+directly rather than passing the flag itself, so the flag has to live in the script for
+CI to inherit it.
 
 ### 4. TypeScript settings
 
@@ -157,18 +168,23 @@ Add the script CI and your hooks will call:
 
 ```json
 {
-  "scripts": { "typecheck": "tsc --noEmit" }
+  "scripts": { "typecheck": "next typegen && tsc --noEmit" }
 }
 ```
 
-On a Next.js project make it `next typegen && tsc --noEmit` — route types are generated,
-not written, so a bare `tsc` passes locally off a stale build and fails on a clean
-checkout.
+Route types are generated, not written, so a bare `tsc --noEmit` passes locally off a
+stale build and fails on a clean checkout — every reader of this page is on Next.js, since
+§1 scaffolds with `create-next-app`. Off Next.js, drop `next typegen &&` and use bare
+`tsc --noEmit`.
 
 ### 5. Environment variables, validated at boot
 
 Untyped `process.env` access is a runtime crash waiting for production. Validate once, at
 startup:
+
+```bash
+pnpm add zod
+```
 
 ```ts
 // src/lib/env.ts
@@ -213,7 +229,9 @@ a missing dependency.
 `--passWithNoTests` is there because you have no tests yet and will not until
 [06 — Testing](06-testing.md). Without it `vitest run` exits 1 on an empty suite, so your
 first push fails on a hook that is working correctly — which teaches the reader to bypass
-the hook, the one habit this section exists to prevent.
+the hook, the one habit this section exists to prevent. Drop the flag once 06 gives you
+real tests. Left in place after that, a test file quietly excluded by a broken glob passes
+green forever — the exact failure the Traps entry below warns about.
 
 ### 6. Git hooks
 
