@@ -6,8 +6,36 @@ network reachable (npm registry and GitHub both resolved). Nothing in this run a
 the four corrections the rest of this branch makes — it only records what actually
 happened when the doc's own commands ran.
 
-**Score: 6 CURRENT · 3 STALE · 3 WRONG · 4 not executed (require interactive auth or are
+**Score: 6 CURRENT · 2 STALE · 3 WRONG · 4 not executed (require interactive auth or are
 not runnable claims).**
+
+Derived by extracting the verdict cell of every data row in the table below, not
+hand-counted. Every data row starts with `| §`, so the extraction doesn't depend on line
+numbers and stays re-runnable even if this file is edited again — re-run it to check the
+score line above still agrees with the table:
+
+```
+$ grep '^| §' docs/verification/stage-04-doc-execution.md \
+  | awk -F'|' '{n=NF-1; v=$n; gsub(/^ +| +$/,"",v); print v}' \
+  | sort | uniq -c
+   6 CURRENT
+   2 STALE
+   2 WRONG
+   1 WRONG (same root cause as §6 pre-push)
+   2 not executable, no verdict
+   1 not executed — interactive login
+   1 package half CURRENT, wizard not executed — interactive org login
+$ grep -c '^| §' docs/verification/stage-04-doc-execution.md
+15
+```
+
+`uniq -c` groups by exact text, so the §7 CI row's longer WRONG cell ("WRONG (same root
+cause as §6 pre-push)") counts separately from the other two WRONG cells — all three are
+WRONG (2 + 1 = 3). The last four lines are the §2/§8/§9/§10 rows, none of which is
+CURRENT/STALE/WRONG: two are non-executable prose, and two are Vercel/Sentry rows this
+doc treats as one not-executed bucket even though the Sentry row's package half is
+CURRENT (package half CURRENT, wizard not executed — interactive org login). That's
+4 rows in that bucket. 6 + 2 + 3 + 4 = 15, matching the 15 rows in the table.
 
 ## Summary
 
@@ -92,12 +120,15 @@ $ echo $?
 0
 ```
 
-pnpm does not refuse. It prints a `WARN` line and installs anyway, exit 0. This is pnpm's
-long-standing default — `engines` is advisory unless `engine-strict=true` is set in
-`.npmrc`, which the doc never mentions adding. **Verdict: WRONG**, not stale — nothing
-suggests this ever behaved differently. To make the doc's claim true, it needs either
-`engine-strict=true` in `.npmrc` or to drop the "refuse to install" framing and say what
-actually happens (a warning, easy to miss in CI log noise).
+pnpm does not refuse. It prints a `WARN` line and installs anyway, exit 0. In this
+installed pnpm (10.33.0), `engines` is advisory unless `engine-strict=true` is set in
+`.npmrc` — and stage 04's own instructions never add that setting. **Verdict: WRONG**,
+not stale: the call rests on the doc's own text, not on any claim about what pnpm used to
+do. As documented — `engines` block with no `engine-strict`, nothing else — the "refuse to
+install" behavior was never going to happen, on any pnpm version, because the doc never
+turns strict mode on. To make the claim true, it needs either `engine-strict=true` in
+`.npmrc` or to drop the "refuse to install" framing and say what actually happens (a
+warning, easy to miss in CI log noise).
 
 The Node-version pin itself is fine: `.nvmrc` writes cleanly, and the local Node
 (v22.19.0) satisfies `>=22 <23` once the range is realistic.
