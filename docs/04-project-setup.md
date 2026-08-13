@@ -519,8 +519,10 @@ wrong repo is indistinguishable from a green build of yours at a glance. Take th
 SHA off the deployment and ask your own repository about it:
 
 ```bash
-git cat-file -t 79ef7a7    # a commit you can see  → "commit"
-                           # anything else         → "Not a valid object name"
+git cat-file -t <sha>      # a commit you can see  → "commit"
+                           # anything else         → "Not a valid object name", which is
+                           #                         the answer 79ef7a7 gave in the
+                           #                         incident deploying-101.md records
 ```
 
 Now push a branch and open a pull request. You should get a preview URL — and if none
