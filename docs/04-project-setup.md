@@ -554,6 +554,15 @@ Three sections, ten minutes:
 
 That last line matters more than it looks. See [10 — Documentation](10-documentation.md).
 
+Rolling back is the half of it this stage has not handed you, and a README is the wrong
+place to discover you do not know it. On Vercel the command is `vercel rollback`, which
+returns production to the previous deployment; `vercel ls` and `vercel promote <url>` pick
+a specific one instead, though on the Hobby plan the previous deployment is the only one
+you are allowed to go back to. Put the command in the README, not a description of it.
+[13 — Production Deployment](13-production-deployment.md) owns this properly, including
+the case that breaks it: a deploy that also migrated the database does not roll back with
+the code.
+
 ### AI in project setup
 
 Setup is the stage where an agent is most useful and most confidently wrong, and the split
