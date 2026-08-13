@@ -2,8 +2,9 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ChevronDown, Check, Copy } from 'lucide-react'
-import { Card } from '@/components/ui'
+import { Check, Copy } from 'lucide-react'
+import { RevealList } from '@/components/RevealList'
+import { RevealFacet } from '@/components/RevealFacet'
 import { Term } from '@/components/Term'
 
 /**
@@ -22,6 +23,15 @@ import { Term } from '@/components/Term'
  * below fills in the same hypothetical call — choosing Auth.js over rolling
  * a session store or paying a managed provider — so the two pieces read as
  * one exercise instead of two unrelated widgets.
+ *
+ * Built on `RevealList`; state, markup and the chevron now live there. Of
+ * each row's two label+paragraph blocks, only "What it is for" becomes a
+ * `RevealFacet` — its label and body classes match `RevealFacet` byte for
+ * byte. "Filled in, for the auth decision above" keeps its own markup:
+ * its body paragraph is `text-fg`, but `RevealFacet` hardcodes `text-muted`
+ * for every tone's body text with no override, and `--color-fg`/
+ * `--color-muted` are different tokens — converting it would dim the worked
+ * example from ink to graphite, a real color change, not a wash.
  */
 
 type Part = {
@@ -90,19 +100,7 @@ function blankTemplate(): string {
 }
 
 export function ADRAnatomy() {
-  const [openIds, setOpenIds] = useState<Set<string>>(new Set())
   const [copied, setCopied] = useState(false)
-
-  const toggle = (id: string) =>
-    setOpenIds((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) {
-        next.delete(id)
-      } else {
-        next.add(id)
-      }
-      return next
-    })
 
   const copy = async () => {
     try {
@@ -116,92 +114,57 @@ export function ADRAnatomy() {
   }
 
   return (
-    <Card className="p-0">
-      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-line px-5 py-4">
-        <p className="text-sm leading-6 text-muted">
-          Five parts to an <Term id="adr">ADR</Term>. Each one below expands to
-          what it is for, and how it reads once filled in for the auth decision
-          compared above.
+    <RevealList
+      idPrefix="adr"
+      header={
+        <div className="flex flex-wrap items-start justify-between gap-3 border-b border-line px-5 py-4">
+          <p className="text-sm leading-6 text-muted">
+            Five parts to an <Term id="adr">ADR</Term>. Each one below expands
+            to what it is for, and how it reads once filled in for the auth
+            decision compared above.
+          </p>
+          <button
+            type="button"
+            onClick={copy}
+            className="flex min-h-11 shrink-0 items-center gap-2 border border-line px-3.5 text-sm text-muted transition-colors duration-150 hover:bg-sunken hover:text-fg lg:min-h-9"
+          >
+            {copied ? (
+              <Check className="size-4 text-brand" aria-hidden />
+            ) : (
+              <Copy className="size-4" aria-hidden />
+            )}
+            {copied ? 'Copied' : 'Copy blank template'}
+          </button>
+          <span aria-live="polite" className="sr-only">
+            {copied ? 'Blank ADR template copied to clipboard' : ''}
+          </span>
+        </div>
+      }
+      rows={PARTS.map((part) => ({
+        id: part.id,
+        title: part.heading,
+        body: (
+          <>
+            <RevealFacet label="What it is for">{part.purpose}</RevealFacet>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-blueprint">
+                Filled in, for the auth decision above
+              </p>
+              <p className="mt-1 text-sm leading-6 text-fg">{part.worked}</p>
+            </div>
+          </>
+        ),
+      }))}
+      footer={
+        <p className="border-t border-line bg-raised px-5 py-4 text-sm leading-6 text-muted">
+          The format above is one reasonable shape. The rationale for it, and
+          where ADRs live once you have more than a few, is covered in{' '}
+          <Link href="/stages/10-documentation" className="text-brand">
+            10 — Documentation
+          </Link>
+          .
         </p>
-        <button
-          type="button"
-          onClick={copy}
-          className="flex min-h-11 shrink-0 items-center gap-2 border border-line px-3.5 text-sm text-muted transition-colors duration-150 hover:bg-sunken hover:text-fg lg:min-h-9"
-        >
-          {copied ? (
-            <Check className="size-4 text-brand" aria-hidden />
-          ) : (
-            <Copy className="size-4" aria-hidden />
-          )}
-          {copied ? 'Copied' : 'Copy blank template'}
-        </button>
-        <span aria-live="polite" className="sr-only">
-          {copied ? 'Blank ADR template copied to clipboard' : ''}
-        </span>
-      </div>
-
-      <ul className="divide-y divide-line">
-        {PARTS.map((part) => {
-          const open = openIds.has(part.id)
-          const panelId = `adr-${part.id}`
-          return (
-            <li key={part.id}>
-              <h3>
-                <button
-                  type="button"
-                  onClick={() => toggle(part.id)}
-                  aria-expanded={open}
-                  aria-controls={panelId}
-                  className="flex min-h-11 w-full items-center gap-3.5 px-5 py-3.5 text-left transition-colors duration-150 hover:bg-sunken lg:min-h-9"
-                >
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-medium text-fg">
-                      {part.heading}
-                    </span>
-                  </span>
-                  <ChevronDown
-                    className={`size-4 shrink-0 text-subtle transition-transform duration-150 ${open ? 'rotate-180' : ''}`}
-                    aria-hidden
-                  />
-                </button>
-              </h3>
-
-              {open && (
-                <div
-                  id={panelId}
-                  className="space-y-3 border-t border-line bg-sunken px-5 py-4"
-                >
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-subtle">
-                      What it is for
-                    </p>
-                    <p className="mt-1 text-sm leading-6 text-muted">
-                      {part.purpose}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-blueprint">
-                      Filled in, for the auth decision above
-                    </p>
-                    <p className="mt-1 text-sm leading-6 text-fg">
-                      {part.worked}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </li>
-          )
-        })}
-      </ul>
-
-      <p className="border-t border-line bg-raised px-5 py-4 text-sm leading-6 text-muted">
-        The format above is one reasonable shape. The rationale for it, and
-        where ADRs live once you have more than a few, is covered in{' '}
-        <Link href="/stages/10-documentation" className="text-brand">
-          10 — Documentation
-        </Link>
-        .
-      </p>
-    </Card>
+      }
+    />
   )
 }
