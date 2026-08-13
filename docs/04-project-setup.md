@@ -87,8 +87,8 @@ opens a pull request to get a preview URL.
 gh repo create my-app --private --source=. --remote=origin --push
 ```
 
-Private or public is your call, but it is not only a privacy question — see §7 for what
-branch protection can and cannot enforce on a private repo under GitHub Free.
+Private or public is your call, and it decides more than privacy. See §7 for what branch
+protection can and cannot enforce on a private repo under GitHub Free.
 
 Without the `gh` CLI, create an **empty** repository in GitHub's web UI — no README, no
 `.gitignore`, no license, since anything it adds is a commit you now have to merge — then:
@@ -128,11 +128,11 @@ src/
 ```
 
 `src/db/` is the one folder in that tree that is conditional. The entry criteria said that
-if you were unsure, you do not need a database yet — and if that was your answer, do not
-create it. An empty `db/` holding a `schema.ts` that describes nothing is the structural
-version of §5's required `DATABASE_URL`: a placeholder that looks like a decision and is
-not one. It arrives in the commit that adds the client, alongside uncommenting
-`DATABASE_URL` in the schema.
+if you were unsure, you do not need a database yet. If that was your answer, do not create
+it. An empty `db/` holding a `schema.ts` that describes nothing is the structural version
+of §5's required `DATABASE_URL`: a placeholder that looks like a decision and is not one.
+It arrives in the commit that adds the client, alongside uncommenting `DATABASE_URL` in
+the schema.
 
 The organizing principle is **feature-first, not layer-first**. A `components/`,
 `hooks/`, `utils/` split means every feature change touches four distant folders. A
@@ -164,9 +164,9 @@ pnpm add -D prettier eslint-config-prettier
 ```
 
 Append `eslint-config-prettier/flat` last in `eslint.config.mjs`. One tool lints, one tool
-formats, and neither owns the other's job. Then add the two scripts — CI calls
-`format:check` by name in §7, so it has to exist and it has to check the same files the
-one you run yourself writes:
+formats, and neither owns the other's job. Then add the two scripts. CI calls
+`format:check` by name in §7, so it has to exist, and it has to check the same files that
+the one you run yourself writes:
 
 ```json
 {
@@ -185,11 +185,11 @@ That `.` is the whole repository, which is why the next file matters.
 pnpm-lock.yaml
 ```
 
-Shorter than you expect, because Prettier reads `.gitignore` as well as `.prettierignore`
-— `.next/` and `node_modules/` are already excluded by the `.gitignore`
-`create-next-app` wrote. What is left is the case `.gitignore` cannot cover: a file that is
-generated *and* committed. The lockfile is the one every project has. Reformatting it
-changes a file you do not own and is never what you meant.
+Shorter than you expect, because Prettier reads `.gitignore` as well as `.prettierignore`.
+`.next/` and `node_modules/` are already excluded by the `.gitignore` `create-next-app`
+wrote. What is left is the case `.gitignore` cannot cover: a file that is generated *and*
+committed. The lockfile is the one every project has. Reformatting it changes a file you
+do not own and is never what you meant.
 
 Now run it once over the scaffold, before wiring CI in §7:
 
@@ -303,8 +303,8 @@ openssl rand -base64 32      # paste after SESSION_SECRET= in .env.local
 dev`, `production` for `pnpm build`), and pinning it yourself is how you end up with a dev
 server that believes it is in production.
 
-That pair — a schema of keys you can actually set, and an example file someone can copy
-— is what makes the first Definition of done reachable. A fresh clone, `pnpm install`,
+That pair, a schema of keys you can actually set and an example file someone can copy, is
+what makes the first Definition of done reachable. A fresh clone, `pnpm install`,
 `cp`, one `openssl rand`, `pnpm dev`, and a page renders, with no database anywhere.
 `.env.example` stays the only documentation of required configuration that does not rot,
 because the app stops booting when it drifts.
@@ -423,14 +423,14 @@ pnpm add -g vercel && vercel link
 ```
 
 That maps this directory to a Vercel project, and that is all it does. It does not
-connect the project to the repository you pushed in §1 — the Git connection is a separate
+connect the project to the repository you pushed in §1. The Git connection is a separate
 setting, and it is the one that builds every push and comments a preview URL on your pull
 requests. Set it in the project's **Settings → Git**.
 
 Three project settings decide whether this builds, and what it builds, and **none of them
 can live in your repository**. That is the part worth internalising: everything else in
 this stage is a file you commit and can diff. These live in a dashboard, and the only
-signal that one is wrong is the error it produces — where there is one.
+signal that one is wrong is the error it produces, where there is one.
 
 | Setting | Set it to | What you see when it is wrong |
 |---|---|---|
@@ -443,7 +443,7 @@ repository is the one with no error message attached, which is why it is listed 
 
 **Node.js Version** is a fourth field in the same dashboard and the exception worth naming:
 it is the only one your repository can reach. `engines.node`, set in `### 1. Scaffold`,
-overrides whatever the dashboard holds — so you set it in `package.json` and leave the
+overrides whatever the dashboard holds, so you set it in `package.json` and leave the
 dashboard alone. Pinned in neither, there is no error to read:
 it builds, on Vercel's default major, which is not necessarily yours.
 
@@ -483,7 +483,7 @@ pnpm add @sentry/nextjs && pnpm dlx @sentry/wizard@latest -i nextjs
 **The auth token is the half the wizard cannot finish for you.** Source maps are uploaded
 during the build by Sentry's bundler plugin, which takes the token from `SENTRY_AUTH_TOKEN`
 in the *build's* environment, falling back to a `.env.sentry-build-plugin` file in the
-working directory — which is where the wizard writes it, and which must stay uncommitted.
+working directory, which is where the wizard writes it and which must stay uncommitted.
 So the one environment that builds what your users run has no token. Add
 `SENTRY_AUTH_TOKEN` to the Vercel project's environment variables for Preview and
 Production, or install Sentry's Vercel integration, which sets it for you.
@@ -492,7 +492,7 @@ Get this wrong and nothing goes red. The plugin logs `No auth token provided. Wi
 upload source maps.` and the build succeeds, exactly like §8's green build of the wrong
 repository, and you find out months later reading a minified stack trace at 2am.
 
-So prove it the way §7 proves the CI gate — by breaking something on purpose:
+So prove it the way §7 proves the CI gate, by breaking something on purpose:
 
 ```ts
 // src/app/api/debug/boom/route.ts — temporary, delete after
