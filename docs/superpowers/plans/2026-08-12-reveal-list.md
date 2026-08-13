@@ -723,7 +723,9 @@ Expected: 14/14. The `:3100` kill is not optional (TD-27); a reused server measu
 
 - [ ] **Step 3: Look at it**
 
-Load `/stages/03-architecture#defer` in both themes and confirm the badge sits beside the title, the row still reads as one item, and the title does not wrap awkwardly at 320px. This is the one step in the plan a test cannot do.
+Load `/stages/03-architecture#record` in both themes and confirm the badge sits beside the title, the row still reads as one item, and the title does not wrap awkwardly at 320px. This is the one step in the plan a test cannot do.
+
+**The hash is `#record`, not `#defer`.** This plan said `#defer` until Task 6's verification tried it: there is no `defer` step id — `steps.ts` renders `DeferredList` inside `record`. A dead hash falls back to step 1 silently, which is the exact failure `audit.spec.ts`'s "every listed step hash lands on the step it names" test exists to catch, and it is why that test is worth having. Anyone reading a step name in prose should check it against `STEP_IDS` rather than trusting it.
 
 - [ ] **Step 4: Commit, naming the change in the subject**
 
