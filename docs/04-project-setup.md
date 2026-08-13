@@ -381,16 +381,30 @@ On a private one it saves and silently never fires. Confirm your plan enforces i
 pnpm add -g vercel && vercel link
 ```
 
-Three project settings decide whether this builds, and **none of them can live in your
-repository**. That is the part worth internalising: everything else in this stage is a file
-you commit and can diff. These live in a dashboard, and the only signal that one is wrong
-is the error it produces.
+That maps this directory to a Vercel project, and that is all it does. It does not connect
+the project to the repository you pushed in §1 — the Git connection is a separate setting,
+and it is the one that builds every push and comments a preview URL on your pull requests.
+Set it in the project's **Settings → Git**.
+
+Three project settings decide whether this builds, and what it builds, and **none of them
+can live in your repository**. That is the part worth internalising: everything else in
+this stage is a file you commit and can diff. These live in a dashboard, and the only
+signal that one is wrong is the error it produces — where there is one.
 
 | Setting | Set it to | What you see when it is wrong |
 |---|---|---|
+| **Connected Repository** | the repo you pushed in §1, under Settings → Git | no preview URL on your pull request — or green production builds of a repository that is not yours |
 | **Root Directory** | the folder holding `package.json` | `No Next.js version detected` |
 | **Framework Preset** | Next.js | `No Output Directory named "public" found after the Build completed` |
-| **Node.js Version** | the major in `engines.node`, which overrides it | nothing at all — unpinned, it builds on Vercel's default major |
+
+Those three are the ones that blocked this playbook's own first deploy, and the connected
+repository is the one with no error message attached, which is why it is listed first.
+
+**Node.js Version** is a fourth field in the same dashboard and the exception worth naming:
+it is the only one your repository can reach. `engines.node`, set in `### 1. Scaffold`,
+overrides whatever the dashboard holds — so you set it in `package.json` and leave the
+dashboard alone. Pinned in neither, there is no error to read:
+it builds, on Vercel's default major, which is not necessarily yours.
 
 The Framework Preset error is the one that misleads. It reads as "you deleted something you
 needed"; it means the preset is `Other`, whose default output directory is `public`. A
@@ -408,8 +422,10 @@ git cat-file -t 79ef7a7    # a commit you can see  → "commit"
                            # anything else         → "Not a valid object name"
 ```
 
-Now push a branch and open a pull request. You should get a preview URL — load it, because
-a green checkmark is not the check. Fetch one real page and confirm it renders. If you have
+Now push a branch and open a pull request. You should get a preview URL — and if none
+appears at all, the Git connection is the first thing to look at, not the build, because a
+project with no repository attached has nothing to build and says so nowhere. Load the URL,
+because a green checkmark is not the check. Fetch one real page and confirm it renders. If you have
 configured a canonical URL anywhere, fetch `/robots.txt` too: it prints the origin the build
 actually used, so one request tells you whether the value you set is the value that shipped.
 
