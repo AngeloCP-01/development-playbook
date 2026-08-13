@@ -196,21 +196,52 @@ pnpm add zod
 import { z } from 'zod'
 
 const schema = z.object({
-  DATABASE_URL: z.url(),
+  // Always required, whatever you are building.
   SESSION_SECRET: z.string().min(32),
-  NODE_ENV: z.enum(['development', 'test', 'production']),
   NEXT_PUBLIC_APP_URL: z.url(),
+  NODE_ENV: z.enum(['development', 'test', 'production']),
+  // Depends on the database decision in the entry criteria. If the answer was "no",
+  // leave this commented out and uncomment it in the same commit that adds the client.
+  // DATABASE_URL: z.url(),
 })
 
 export const env = schema.parse(process.env)
 ```
 
-Import `env` everywhere instead of `process.env`. A missing variable now fails the build
+Import `env` everywhere instead of `process.env`. A missing variable now fails at boot
 with a clear message naming the variable, rather than surfacing as `undefined` in a
 request handler three weeks later.
 
-Commit `.env.example` with every key and no values. It is the only documentation of
-required configuration that stays current, because the app stops booting when it drifts.
+Which is exactly why the schema only lists keys you can supply *today*. It is a gate, not
+a wishlist: every key in it has to have a value before anything boots, so a key for a
+database you have not chosen yet locks you out of your own dev server. If the entry
+criteria's database answer was "no", the commented-out line above is the whole idiom —
+`.optional()` works too, but it invites `env.DATABASE_URL` to be typed `string | undefined`
+in code that will one day require it.
+
+Then give the keys values. `.env.example` is committed and holds no secrets; `.env.local`
+is the one the app reads and `.gitignore` already excludes it:
+
+```
+# .env.example — copy to .env.local and fill in the blanks
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+SESSION_SECRET=              # openssl rand -base64 32
+```
+
+```bash
+cp .env.example .env.local
+openssl rand -base64 32      # paste after SESSION_SECRET= in .env.local
+```
+
+`NODE_ENV` is deliberately absent from both files: Next sets it (`development` for `pnpm
+dev`, `production` for `pnpm build`), and pinning it yourself is how you end up with a dev
+server that believes it is in production.
+
+That pair — a schema of keys you can actually set, and an example file someone can copy —
+is what makes the first Definition of done reachable. A fresh clone, `pnpm install`, `cp`,
+one `openssl rand`, `pnpm dev`, and a page renders, with no database anywhere. `.env.example`
+stays the only documentation of required configuration that does not rot, because the app
+stops booting when it drifts.
 
 Install the test runner now, even with nothing to test yet:
 
@@ -436,7 +467,8 @@ suspicious, and suspicion does not delegate.
 
 ## Definition of done
 
-- [ ] `pnpm install && pnpm dev` works from a fresh clone with only `.env.example` as a guide
+- [ ] A fresh clone reaches a running app with `.env.example` as the only guide: `pnpm
+      install`, `cp .env.example .env.local`, fill in the blanks it names, `pnpm dev`
 - [ ] A pull request produces a preview URL automatically
 - [ ] CI fails on a deliberately broken commit (test it — do not assume it)
 - [ ] Branch protection blocks merging when CI is red
