@@ -74,12 +74,12 @@ The general rule is worth more than either file: **for each environment that run
 code, find the file that environment reads.** A version file being popular does not make
 it universal, and the environment nothing pins is usually the one serving users.
 
-Use the actual pnpm version from [reference/stack.md](../reference/stack.md) — `corepack
-use pnpm@10` writes it for you, resolving that file's major to whatever 10.x is current and
-pinning it into `packageManager` with a hash. Not `pnpm@latest`, which is whatever npm tags
-today and has no idea what `reference/stack.md` says; the two agree right up until the day
-a new major ships, and then the command quietly stops doing what the sentence above it
-promised.
+`corepack use pnpm@latest` resolves the current release and writes it into
+`packageManager` with a hash, which is the pin you want.
+[reference/stack.md](../reference/stack.md) names a floor, not a pin — the playbook
+assumes "this major or later" — so if `latest` hands you a newer major than that file
+lists, you are where you should be and the file is what needs re-reading. Do not pin
+backwards to match it.
 
 **Then give it a remote.** `create-next-app` has already run `git init` and made the first
 commit, on `main` — that branch name comes from the scaffold, not from your git config,

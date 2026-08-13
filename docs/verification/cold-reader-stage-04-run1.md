@@ -282,12 +282,14 @@ Written after Task 8b finished entries 7–12. Task 8a took 1–6; its detail is
 | 9 | `### 6. Git hooks` (N7) | **Closed** | Format glob widened to what `prettier --check .` covers, lint glob to `.js`/`.jsx`/`.cjs`. Verified both ways in the scaffold: with the globs as printed lefthook reported `format (skip) no files for inspection`, exited green, and left three files that `format:check` then rejected. |
 | 10 | `### 8. Connect Vercel`, findability (Q2) | **Closed, no edit** | Already satisfied by entry 3. `### 8`'s Node.js Version paragraph reads "`engines.node`, set in `### 1. Scaffold`" — the clause this entry asked for, verbatim. Adding a second pointer would have been its own small defect, so it was verified and left alone. |
 | 11 | `### 10. Write the README before the code` (N19) | **Closed, source corrected** | The entry cites `docs/learnings/deploying-101.md` for rollback material. That file has none — no hit for rollback, roll back or promote across 139 lines. The real home is `docs/13-production-deployment.md`'s own `### Rollback`, which is a stage doc and therefore linkable. Commands checked against Vercel CLI 58.10.0 and the current CLI docs. |
-| 12 | `### 1. Scaffold` (N2) | **Closed, and it was live** | This record called N2 "currently latent, not live — `stack.md` pins `10.x` and latest is 10.33 at the time of this run". No longer true. Run today, `corepack use pnpm@latest` writes `pnpm@11.21.0` against `stack.md`'s `10.x`. pnpm 11 shipped between the cold read and the fix, so a reader following the page was already pinning an unnamed major. |
+| 12 | `### 1. Scaffold` (N2) | **Closed, after one reversal** | Fixed twice. The execution run found `corepack use pnpm@latest` now writes `pnpm@11.21.0` against `stack.md`'s `10.x`, since pnpm 11 shipped between the cold read and the fix, and the first fix escalated N2 from latent to live and swapped the command to `corepack use pnpm@10`. Review reversed that, correctly: `reference/stack.md` states its versions are "**floors, not pins** — the playbook assumes 'this major version or later'", and that "if a stage doc contains a version number, that is a bug in the stage doc". Under its own rules `@latest` writing pnpm 11 is compliant and `@10` was the deviation — it pins a floor, rots when `stack.md` moves, and prints a major the referenced file forbids. `@latest` restored; the defect was always the sentence ("use the actual pnpm version from `reference/stack.md`", promising something the command does not do), and the sentence is what now describes floor semantics instead. |
 
 **Twelve closed, none partial, none deferred.** Two entries were corrected rather than
 implemented as written (4 and 11), one closed by verification rather than an edit (10), and
-two had their premise overturned by running the thing (7 and 12) — in 7's case reducing the
-severity, in 12's case raising it.
+two had their premise overturned by running the thing (7 and 12). Entry 7's execution
+reduced its severity and that held. Entry 12's raised it, and review then reversed both the
+escalation and the fix, against `reference/stack.md`'s floor rule — recorded in the row
+above rather than quietly rewritten, because the wrong call is part of what happened.
 
 Ten boundary items stand untouched, as classified above: the completeness run's own eight,
 plus N9 and N13.
