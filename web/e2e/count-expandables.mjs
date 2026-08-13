@@ -38,6 +38,7 @@ const urls = [...block[1].matchAll(/'([^']*\/[^']*)'/g)].map((m) => m[1])
 const browser = await chromium.launch()
 const page = await browser.newPage()
 const perPage = []
+const allIds = new Set()
 let total = 0
 
 for (const url of urls) {
@@ -59,6 +60,18 @@ for (const url of urls) {
     if (opened > 200) throw new Error(`runaway open loop on ${url}`)
   }
 
+  // The panel ids these disclosures control. A migration that renames one is
+  // invisible to the count — the same number of rows still renders — and
+  // invisible to the audit, which hand-lists step hashes and never sees a
+  // disclosure's own id. Collected here so one run catches both.
+  for (const id of await page.evaluate(() =>
+    [...document.querySelectorAll('[role=tabpanel] button[aria-controls]')].map(
+      (b) => b.getAttribute('aria-controls'),
+    ),
+  )) {
+    if (id) allIds.add(id)
+  }
+
   perPage.push(`${String(opened).padStart(3)}  ${url}`)
   total += opened
 }
@@ -67,5 +80,11 @@ console.log(perPage.join('\n'))
 console.log('-'.repeat(48))
 console.log(`URLs:  ${urls.length}`)
 console.log(`Total: ${total}`)
+console.log(`Ids:   ${allIds.size}`)
+
+if (process.env.AUDIT_IDS) {
+  console.log('-'.repeat(48))
+  console.log([...allIds].sort().join('\n'))
+}
 
 await browser.close()

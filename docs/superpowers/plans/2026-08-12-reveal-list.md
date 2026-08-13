@@ -14,7 +14,7 @@
 - **Commit trailer**, every commit: `Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>`
 - **Conventional Commits.** Scopes here: `web`, `a11y`, `tracker`, `patterns`.
 - **The iron law.** No production code without a failing test first. Both new components get a `.test.tsx` before they exist.
-- **Tailwind cannot see dynamically built class names.** `text-${tone}` is purged and renders unstyled. Every colour class must appear as a complete literal string in the source. This is why `RevealFacet` carries a static tone map, and why it earns a render test.
+- **Tailwind cannot see dynamically built class names.** `text-${tone}` is purged and renders unstyled. Every colour class must appear as a complete literal string in the source. This is why `RevealFacet` carries a static tone map. **It is not why the render test exists** — corrected during Task 1: the map and the interpolation emit byte-identical `className` strings, so no jsdom assertion can tell them apart, and the defect lives only in compiled CSS. `RevealFacet.source.test.ts` is what catches it, plus lint's `no-unused-vars` for the shallow case.
 - **React 19 forbids setState in an effect body.** `RevealList` holds state in `useState` only; no effect reads or writes it.
 - **File extension picks the test environment.** `*.test.tsx` runs in `dom` (jsdom), `*.test.ts` in `unit` (node). No per-file configuration.
 - **`fireEvent`, not `element.click()`.** RTL wraps the dispatch in `act()`; a bare `.click()` does not, and the assertion runs before React commits.
@@ -462,10 +462,14 @@ Expected: PASS, clean. Paste the counts.
 - [ ] **Step 3: Verify the panel ids are unchanged**
 
 ```bash
-cd web && pnpm build && grep -o 'evolution-[a-z-]*' .next/server/app/stages/03-architecture.html | sort -u | head
+cd web && lsof -ti:3100 | xargs kill -9
+pnpm build && pnpm start -p 3100 &
+AUDIT_IDS=1 node e2e/count-expandables.mjs | tail -40
 ```
 
-Expected: the same ids as before the change. Ids are hand-listed in `web/e2e/audit.spec.ts`; a silently renamed one audits nothing.
+Expected: **140 expandables, 107 ids**, and this caller's ids unchanged.
+
+**Do not grep the built HTML for these ids — that check cannot fail.** These accordions live in non-default `Stepper` panels, so the static HTML carries only the RSC flight payload for them and never the rendered ids. Verified on 2026-08-13: `grep` for `evolution-`, `deferred-`, `style-`, `resilience-` and `scaling-` returns **zero** in the built HTML, before and after any migration. `count-expandables.mjs` drives a real browser, which is why it sees them.
 
 - [ ] **Step 4: Commit**
 
@@ -624,11 +628,12 @@ export function DeploymentStyles() {
 The badge sits inside the button, so it is part of the control's accessible name. Check the built page:
 
 ```bash
-cd web && pnpm build && \
-  grep -o "what this stage teaches" .next/server/app/stages/03-architecture.html | wc -l
+cd web && lsof -ti:3100 | xargs kill -9
+pnpm build && pnpm start -p 3100 &
+node -e "import('@playwright/test').then(async ({chromium})=>{const b=await chromium.launch();const p=await b.newPage();await p.goto('http://localhost:3100/stages/03-architecture#shape',{waitUntil:'networkidle'});console.log('badge occurrences:',await p.locator('text=what this stage teaches').count());await b.close()})"
 ```
 
-Expected: 1. Use `grep -o | wc -l`, not `grep -c`: the built HTML is one line, so `grep -c` returns 1 whether the badge appears once or five times. Zero means the badge stopped rendering, which no data test would catch.
+Expected: 1. **Do not grep the built HTML** — this accordion is in a non-default `Stepper` panel, so its rendered markup is not in the static file and the grep returns zero either way. Zero from the browser check means the badge stopped rendering, which no data test would catch.
 
 - [ ] **Step 3: Run the suite and commit**
 
@@ -803,11 +808,12 @@ Note: `move.what` stays a bare paragraph rather than becoming a `RevealFacet`, b
 - [ ] **Step 2: Confirm the precondition is not a row**
 
 ```bash
-cd web && pnpm build && \
-  grep -o "the precondition" .next/server/app/stages/03-architecture.html | wc -l
+cd web && lsof -ti:3100 | xargs kill -9
+pnpm build && pnpm start -p 3100 &
+node -e "import('@playwright/test').then(async ({chromium})=>{const b=await chromium.launch();const p=await b.newPage();await p.goto('http://localhost:3100/stages/03-architecture#shape',{waitUntil:'networkidle'});console.log('precondition count:',await p.locator('text=the precondition').count());console.log('inside a button:',await p.locator('button:has-text(\"the precondition\")').count());await b.close()})"
 ```
 
-Expected: 1 (`grep -o | wc -l`, for the same reason as Task 5), and it must not appear inside a `<button>`. If the precondition became a row, the section now teaches the misreading its header comment says it exists to prevent.
+Expected: **1 occurrence, and 0 inside a button.** **Do not grep the built HTML** — non-default `Stepper` panel, so the grep returns zero either way. If the precondition became a row, the section now teaches the misreading its header comment says it exists to prevent. If the precondition became a row, the section now teaches the misreading its header comment says it exists to prevent.
 
 - [ ] **Step 3: Run the suite and commit**
 
