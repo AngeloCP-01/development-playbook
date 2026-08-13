@@ -87,7 +87,12 @@ which still defaults to `master`. What it cannot do is create the repository on 
 everything downstream assumes one exists: §7 enables branch protection on `main`, §8
 opens a pull request to get a preview URL.
 
+Everything you have edited since is still uncommitted — `.nvmrc`, `.npmrc`,
+`engines.node`, `packageManager` — and that first commit predates all of it. Commit before
+you push, or the repository you create holds the scaffold and none of your pins:
+
 ```bash
+git add -A && git commit -m "chore: pin node and pnpm"
 gh repo create my-app --private --source=. --remote=origin --push
 ```
 
@@ -484,8 +489,8 @@ repository is the one with no error message attached, which is why it is listed 
 **Node.js Version** is a fourth field in the same dashboard and the exception worth naming:
 it is the only one your repository can reach. `engines.node`, set in `### 1. Scaffold`,
 overrides whatever the dashboard holds, so you set it in `package.json` and leave the
-dashboard alone. Pinned in neither, there is no error to read:
-it builds, on Vercel's default major, which is not necessarily yours.
+dashboard alone. Pinned in neither place, there is no error to read at all: the build
+succeeds on Vercel's default major, which is not necessarily yours.
 
 The Framework Preset error is the one that misleads. It reads as "you deleted something you
 needed"; it means the preset is `Other`, whose default output directory is `public`. A
