@@ -20,7 +20,7 @@
 - **React 19 forbids setState in an effect body.** `RevealList` holds state in `useState` only; no effect reads or writes it.
 - **File extension picks the test environment.** `*.test.tsx` runs in `dom` (jsdom), `*.test.ts` in `unit` (node). No per-file configuration.
 - **`fireEvent`, not `element.click()`.** RTL wraps the dispatch in `act()`; a bare `.click()` does not, and the assertion runs before React commits.
-- **One deliberate visual change, declared rather than smuggled:** `DeferredList`'s "fails the test" badge moves from below the row title to beside it, matching `DeploymentStyles`. See Task 6.
+- **Two deliberate visual changes, both declared rather than smuggled.** `DeferredList`'s "fails the test" badge moves from below the row title to beside it, matching `DeploymentStyles` (Task 6). `ContractCost`'s cost chip moves the same way, for the same reason and by the same precedent (Task 9). **This constraint said "one" until Task 9** — the scope-extension table claimed `ContractCost` had no badge, derived by grep rather than by reading the file, and the file's own header comment calls it "the cost badge". The table was wrong and the file was right.
 - **Kill `:3100` before every `pnpm test:e2e`** (TD-27). A reused server measures the previous build and reports it as green.
 
 ## File Structure
