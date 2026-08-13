@@ -260,3 +260,34 @@ section by heading (D-42) and what would close it.
     necessarily that version. Replace with `corepack use pnpm@10` — the major
     `reference/stack.md` currently names — so the sentence and its own command agree
     without printing a version number the file doesn't already own.
+
+---
+
+## Close-out: all twelve entries
+
+Written after Task 8b finished entries 7–12. Task 8a took 1–6; its detail is in
+`.superpowers/sdd/2026-08-12-stage-04-doc-corrections/task-8a-report.md`, 8b's in
+`task-8b-report.md`. Nothing on the boundary list was touched by either half.
+
+| # | Section | State | Note |
+|---|---|---|---|
+| 1 | `### 5. Environment variables, validated at boot` + first `## Definition of done` box | **Closed** | Schema split into always-required and database-dependent; the missing "give the keys values" step added. Definition-of-done box rewritten, since the old one was never reachable. |
+| 2 | GitHub repository, remote and first push | **Closed** | Placed at the end of `### 1. Scaffold` rather than as a new numbered section before `### 7`, deliberately: renumbering would have invalidated entries 8–11, which cite section numbers. |
+| 3 | `### 8. Connect Vercel` table + `### AI in project setup` | **Closed** | Connected Repository added; the table became "settings the repository cannot express", which moved Node.js Version into prose below it. Both "three settings" lists now agree. |
+| 4 | `### 3. Linting and formatting` | **Closed, one ask corrected** | Script bodies printed, `pnpm format` run over the scaffold, `.prettierignore` added. The entry asked for `.next/` in that file; Prettier reads `.gitignore` too, so writing it would have taught something false. Lockfile only. |
+| 5 | `### 9. Error tracking` | **Closed** | Token location for a Vercel build stated, and a route-that-throws verification added, matching §7's teeth check. Sentry's own side not executed — no account on the machine. |
+| 6 | `### 2. Set the folder structure` | **Closed** | `src/db/` marked conditional in the tree and tied to §5's commented-out `DATABASE_URL`. |
+| 7 | `### 5. Environment variables, validated at boot` (N17) | **Closed, premise corrected** | Built and loaded in a browser rather than reasoned about. N17 called it a secret leak; it is not one — Next never hands a non-public variable to the client. The real cost is that `pnpm build` passes, the server-rendered HTML is correct, and the page dies on hydration, so every gate this stage wires stays green. Both escape routes were run. |
+| 8 | `### 7. CI, on day one` (N12 + Q3) | **Closed** | Required check named (`verify`, the job id, not the workflow's `name: CI`), and §7 now points at the `## Traps` teeth check instead of leaving a reader at branch protection. One further addition was dropped for lack of evidence: that GitHub only offers a check name after it has reported once. Two passes over GitHub's branch-protection docs did not support it. |
+| 9 | `### 6. Git hooks` (N7) | **Closed** | Format glob widened to what `prettier --check .` covers, lint glob to `.js`/`.jsx`/`.cjs`. Verified both ways in the scaffold: with the globs as printed lefthook reported `format (skip) no files for inspection`, exited green, and left three files that `format:check` then rejected. |
+| 10 | `### 8. Connect Vercel`, findability (Q2) | **Closed, no edit** | Already satisfied by entry 3. `### 8`'s Node.js Version paragraph reads "`engines.node`, set in `### 1. Scaffold`" — the clause this entry asked for, verbatim. Adding a second pointer would have been its own small defect, so it was verified and left alone. |
+| 11 | `### 10. Write the README before the code` (N19) | **Closed, source corrected** | The entry cites `docs/learnings/deploying-101.md` for rollback material. That file has none — no hit for rollback, roll back or promote across 139 lines. The real home is `docs/13-production-deployment.md`'s own `### Rollback`, which is a stage doc and therefore linkable. Commands checked against Vercel CLI 58.10.0 and the current CLI docs. |
+| 12 | `### 1. Scaffold` (N2) | **Closed, and it was live** | This record called N2 "currently latent, not live — `stack.md` pins `10.x` and latest is 10.33 at the time of this run". No longer true. Run today, `corepack use pnpm@latest` writes `pnpm@11.21.0` against `stack.md`'s `10.x`. pnpm 11 shipped between the cold read and the fix, so a reader following the page was already pinning an unnamed major. |
+
+**Twelve closed, none partial, none deferred.** Two entries were corrected rather than
+implemented as written (4 and 11), one closed by verification rather than an edit (10), and
+two had their premise overturned by running the thing (7 and 12) — in 7's case reducing the
+severity, in 12's case raising it.
+
+Ten boundary items stand untouched, as classified above: the completeness run's own eight,
+plus N9 and N13.
