@@ -1020,6 +1020,45 @@ be slowed by team material; present because the doc has it and the app is not al
 quietly hold less than the doc. `TeamNotes` is the shared component — do not re-invent it
 per stage. Stages 04–18 now copy a convention instead of choosing a precedent.
 
+### TD-29 — The Vercel rollback commands now live in two stage docs · **Low**
+
+`docs/04-project-setup.md`'s **§10 Write the README before the code** and
+`docs/13-production-deployment.md`'s **§Rollback** both print `vercel rollback`,
+`vercel ls` and `vercel promote`. Opened by the fix wave on
+`fix/stage-04-doc-corrections`: §10 needed a rollback mechanism to make its own README
+artifact producible (cold-reader N19), and 13 is where the material properly lives, so §10
+gives the command and links onward.
+
+The duplication is deliberate and small. What makes it debt is that **only one copy carries
+the Hobby-plan caveat** — that `vercel rollback` will only return to the *previous*
+production deployment, which is why `promote` exists as the way further back. §10 has it
+because its reader is on the free plan by default; 13 does not. Two prints of the same
+command, one of which is missing the constraint that decides whether it works, is the
+`.nvmrc`/`engines.node` shape at lower stakes.
+
+Closes by either putting the caveat in 13 as well, or cutting §10 to a pure cross-reference
+once a reader arriving at §10 can be trusted to follow it. Not resolved on the branch that
+opened it, because 13 is outside stage 04's scope and editing it there would widen a fix
+wave that had already grown past its plan.
+
+### TD-30 — Stage 04's §5 installs Vitest under an env-variables heading · **Low**
+
+`### 5. Environment variables, validated at boot` ends by running `pnpm add -D vitest`,
+adding the `test` script, and explaining `--passWithNoTests` — roughly a fifth of the
+section, about neither environment variables nor booting.
+
+Pre-existing, and it read as a reasonable aside when §5 was short. The fix wave on
+`fix/stage-04-doc-corrections` roughly tripled the section (the required/optional key split,
+the `.env.example` step, the client-boundary limit), and the tail now reads as though it
+were appended to whatever section happened to be last. The reader consulting §5 for an env
+question scrolls past a test runner to reach it.
+
+Closes by giving the test-runner install its own numbered section, or folding it into §7,
+which is the gate that calls `pnpm test` and the reason it is installed this early at all.
+Renumbering is the cost, and it is why this was not done inline: entries 8–11 of the
+cold-reader list cite `### 7`, `### 8` and `### 10` by number, and renumbering mid-wave
+would have invalidated the brief the next agent was working from.
+
 ---
 
 ## Bugs found and fixed
