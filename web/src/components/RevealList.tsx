@@ -20,7 +20,14 @@ import { Card } from '@/components/ui'
 
 export type RevealRow = {
   id: string
-  title: string
+  /**
+   * A plain string is wrapped in this component's own `font-medium` span, as
+   * before. A caller that needs a pre-styled title — a different size, a mix
+   * of weights — can pass a `ReactNode` instead; it renders as-is, with no
+   * wrapper forced around it, the same way `badge` and `body` already work.
+   * `AIArchitecturePlays`' 14px claim text is the motivating case (Task 13).
+   */
+  title: ReactNode
   /** Rendered beside the title, not below it. See `DeferredList`'s migration note. */
   badge?: ReactNode
   summary?: string
@@ -71,7 +78,11 @@ export function RevealList({
                 >
                   <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-center gap-2">
-                      <span className="font-medium">{row.title}</span>
+                      {typeof row.title === 'string' ? (
+                        <span className="font-medium">{row.title}</span>
+                      ) : (
+                        row.title
+                      )}
                       {row.badge}
                     </span>
                     {row.summary && (

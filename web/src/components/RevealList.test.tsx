@@ -96,6 +96,28 @@ test('renders no badge for a row that does not carry one, even when a sibling ro
   expect(within(secondRow).queryByText('fails the test')).toBeNull()
 })
 
+// `title` was widened from `string` to `ReactNode` (Task 15) so a caller that
+// needs a differently-sized or pre-styled title — `AIArchitecturePlays`' 14px
+// claim text was the motivating case — can pass its own element through the
+// slot, the same way `badge` and `body` already do. `RevealList` wraps a
+// *string* title in its own `font-medium` span (unchanged, for the ten
+// existing callers); a caller-supplied element is rendered as-is, with no
+// extra wrapper forced around it, since a caller passing its own sized node
+// is expected to own its own styling, not inherit one more ancestor it can't
+// remove.
+test('renders a ReactNode title as-is, without wrapping it in a second font-medium span', () => {
+  render(
+    <RevealList
+      rows={[{ ...rows[0], title: <em>Custom title</em> }, rows[1]]}
+      idPrefix="t"
+    />,
+  )
+  const firstRow = screen.getByRole('button', { name: /Custom title/ })
+  const titleNode = within(firstRow).getByText('Custom title')
+  expect(titleNode.tagName).toBe('EM')
+  expect(titleNode.closest('span.font-medium')).toBeNull()
+})
+
 // `summary` is optional (Task 9b): `ContractCost` and two of the five
 // unmigrated accordions have no summary line at all. Before this, an absent
 // summary still rendered `<span className="mt-0.5 block text-sm
