@@ -315,10 +315,11 @@ what makes the first Definition of done reachable. A fresh clone, `pnpm install`
 because the app stops booting when it drifts.
 
 **One limit on "everywhere": server modules only, never a `'use client'` file.** The
-browser has no `process.env`. Next substitutes static `process.env.NEXT_PUBLIC_*` reads in
-client code and nothing else, and `schema.parse(process.env)` is not a static read, so the
-client gets an empty object and every key fails at once — including `NEXT_PUBLIC_APP_URL`,
-which is usually why someone imported `env` there to begin with.
+browser's `process.env` is a shim, not your environment. Next substitutes static
+`process.env.NEXT_PUBLIC_*` reads in client code and nothing else, and
+`schema.parse(process.env)` is not a static read, so the client gets an empty object and
+every key fails at once — including `NEXT_PUBLIC_APP_URL`, which is usually why someone
+imported `env` there to begin with.
 
 The failure shape is the part worth knowing. `pnpm build` succeeds, the server-rendered
 HTML is correct, and the page dies on hydration with a `ZodError` in the browser console
@@ -506,7 +507,10 @@ Now push a branch and open a pull request. You should get a preview URL — and 
 appears at all, the Git connection is the first thing to look at, not the build, because a
 project with no repository attached has nothing to build and says so nowhere. Load the
 URL, because a green checkmark is not the check. Fetch one real page and confirm it
-renders. If you have configured a canonical URL anywhere, fetch `/robots.txt` too: it
+renders, then open it in a browser with the console visible. A fetch returns the server's
+HTML, which stays correct even when the page dies on hydration — the failure §5 describes
+for a client component importing `env`, and the reason fetching alone cannot find it. If
+you have configured a canonical URL anywhere, fetch `/robots.txt` too: it
 prints the origin the build actually used, so one request tells you whether the value you
 set is the value that shipped.
 
