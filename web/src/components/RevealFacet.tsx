@@ -5,10 +5,21 @@ import type { ReactNode } from 'react'
  * were written out longhand across five components in the architecture
  * feature before this existed.
  *
- * The tone map is not ceremony. Tailwind scans source for complete class
- * strings, so `text-${tone}` survives typecheck and lint and renders with no
- * colour at all — a defect no data test can see, which is why this component
- * carries a render test asserting the emitted class.
+ * `TONE_CLASS` is a static map, not a template literal, because Tailwind's
+ * build-time scanner only keeps a class it can see written out whole in
+ * source. `text-${tone}` survives typecheck and lint and compiles to a class
+ * attribute Tailwind never generated a rule for, so it renders with no
+ * colour — but that failure lives entirely in the compiled CSS, and jsdom
+ * renders no CSS at all. So neither render test below can see it: the map
+ * and the interpolation produce byte-identical `className` strings for
+ * every tone, since each tone's name is, by construction, the exact suffix
+ * of its own class. `RevealFacet.source.test.ts` is what actually catches
+ * this — it reads this file's own text, the same thing Tailwind reads, and
+ * checks each tone's class is still present as a complete literal.
+ *
+ * The two render tests below guard something real but different: that a
+ * tone reaches the DOM as a class at all, and that an unspecified tone
+ * falls back to `subtle` rather than to no colour.
  */
 
 type Tone = 'blueprint' | 'warn' | 'go' | 'danger' | 'subtle'
