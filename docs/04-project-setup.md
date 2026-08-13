@@ -472,9 +472,35 @@ debug against a scaffold than against a half-built app.
 pnpm add @sentry/nextjs && pnpm dlx @sentry/wizard@latest -i nextjs
 ```
 
-Confirm source map upload is working by triggering a deliberate error in a preview deploy
-and checking that the Sentry stack trace shows your TypeScript, not minified bundle
-output. Untested error tracking generally turns out to be broken exactly when you need it.
+**The auth token is the half the wizard cannot finish for you.** Source maps are uploaded
+during the build by Sentry's bundler plugin, which takes the token from `SENTRY_AUTH_TOKEN`
+in the *build's* environment, falling back to a `.env.sentry-build-plugin` file in the
+working directory — which is where the wizard writes it, and which must stay uncommitted.
+So the one environment that builds what your users run has no token. Add
+`SENTRY_AUTH_TOKEN` to the Vercel project's environment variables for Preview and
+Production, or install Sentry's Vercel integration, which sets it for you.
+
+Get this wrong and nothing goes red. The plugin logs `No auth token provided. Will not
+upload source maps.` and the build succeeds, exactly like §8's green build of the wrong
+repository, and you find out months later reading a minified stack trace at 2am.
+
+So prove it the way §7 proves the CI gate — by breaking something on purpose:
+
+```ts
+// src/app/api/debug/boom/route.ts — temporary, delete after
+export function GET() {
+  throw new Error('Sentry smoke test')
+}
+```
+
+Push it on a branch, open `/api/debug/boom` on the preview URL, then read the issue in
+Sentry. The frame should name `route.ts` and the line you wrote. If it names a hashed
+chunk under `.next/`, the upload did not happen and the token is the first thing to check.
+Delete the route once you have your answer, and label the commit so it cannot quietly
+become permanent: `chore(TEMP): route that throws, to verify Sentry source maps (revert
+after)`.
+
+Untested error tracking generally turns out to be broken exactly when you need it.
 
 ### 10. Write the README before the code
 
