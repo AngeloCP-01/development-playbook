@@ -449,10 +449,10 @@ That last step runs your own modules, so §5's schema parses inside the build. T
 anything imports `env`, this workflow needs a value for every key the schema marks required
 — `SESSION_SECRET` and `NEXT_PUBLIC_APP_URL`. Add both as repository secrets under
 **Settings → Secrets and variables → Actions** and pass them to the `pnpm build` step's
-`env:`. Until that first import the workflow is green whether or not you did, which is the
-worst version of wrong: the gate breaks on a commit that has nothing to do with it. This is
-the same shape as the repository §1 now creates and the Git connection §8 now sets — a step
-everything downstream assumes and no step instructs.
+`env:`. Until that first import the workflow is green whether or not you did, so the gate
+breaks on a commit that has nothing to do with it. It is the same shape as the repository
+in §1 and the Git connection in §8: a step everything downstream assumes and no step
+instructs.
 
 Then enable branch protection on `main` requiring this check. The name to require is
 **`verify`**, the job id in the workflow above: GitHub reports a check under the job's own
@@ -508,10 +508,10 @@ is optional.
 
 While you are in the dashboard, give this project the same two keys §7 gave CI:
 `SESSION_SECRET` and `NEXT_PUBLIC_APP_URL`, under **Settings → Environment Variables**, for
-Preview and Production both. `NEXT_PUBLIC_APP_URL` is the only value on this page you cannot
-copy from your `.env.local` — `http://localhost:3000` is the local value and nothing else,
-and a preview deployment does not share an origin with production. A build here reads
-nothing from your machine, and §9 has the same problem for its own token.
+Preview and Production both. `NEXT_PUBLIC_APP_URL` is the one to think about rather than
+copy across: `http://localhost:3000` is the local value and nothing else, and a preview
+deployment does not share an origin with production. A build here reads nothing from your
+machine, and §9 has the same problem for its own token.
 
 **Then check what it built, not whether it built.** A deployment list tells you a build
 succeeded. It does not tell you which repository it succeeded on, and a green build of the
