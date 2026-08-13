@@ -427,9 +427,20 @@ jobs:
       - run: pnpm build
 ```
 
-Then enable branch protection on `main` requiring this check. An unenforced gate is
-decoration — and on GitHub Free, branch protection is only enforced on *public* repos.
-On a private one it saves and silently never fires. Confirm your plan enforces it.
+Then enable branch protection on `main` requiring this check. The name to require is
+**`verify`**, the job id in the workflow above: GitHub reports a check under the job's own
+`name:` when it has one and under the job id otherwise. The `name: CI` on the first line
+names the *workflow*, not the check, and it is the one most people reach for.
+
+An unenforced gate is decoration — and on GitHub Free, branch protection is only enforced
+on *public* repos. On a private one it saves and silently never fires. Confirm your plan
+enforces it.
+
+Enforcement is not verification, and stopping at the first is the common mistake. Branch
+protection proves the gate is attached. It proves nothing about whether the gate can fail,
+which is a separate check with its own method: the `## Traps` entry "Not testing that CI
+actually fails" below, which is to push a broken commit once and watch it go red. Do that
+while the only thing that can break is a scaffold.
 
 ### 8. Connect Vercel
 
