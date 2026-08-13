@@ -30,3 +30,18 @@ test('every tone class is written out as a complete literal in RevealFacet.tsx, 
   const missing = TONES.filter((tone) => !SOURCE.includes(`text-${tone}`))
   expect(missing).toEqual([])
 })
+
+// `BODY_TONE_CLASS` (Task 15) is the same shape of map for the same reason —
+// `text-${bodyTone}` would be just as invisible to Tailwind's scanner as
+// `text-${tone}` above, and just as unable to fail a className-content
+// render test, since `muted`/`fg` are each the literal suffix of their own
+// class too. Covered separately from `TONES` because it is a distinct map
+// in the source, not an extension of it.
+const BODY_TONES = ['muted', 'fg']
+
+test('every body tone class is written out as a complete literal in RevealFacet.tsx, for the same reason as the label tones above', () => {
+  const missing = BODY_TONES.filter(
+    (bodyTone) => !SOURCE.includes(`text-${bodyTone}`),
+  )
+  expect(missing).toEqual([])
+})

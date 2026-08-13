@@ -32,13 +32,30 @@ const TONE_CLASS: Record<Tone, string> = {
   subtle: 'text-subtle',
 }
 
+/**
+ * The body paragraph's colour. `muted` is the default and reproduces every
+ * existing caller's rendered output byte-for-byte. `fg` exists for
+ * `ADRAnatomy`'s worked-example block (Task 14): its body is full ink, not
+ * muted graphite — genuinely different tokens in both themes, not a
+ * near-match. Same static-map shape as `TONE_CLASS`, for the same reason:
+ * `text-${bodyTone}` would survive typecheck and lint and ship unstyled.
+ */
+type BodyTone = 'muted' | 'fg'
+
+const BODY_TONE_CLASS: Record<BodyTone, string> = {
+  muted: 'text-muted',
+  fg: 'text-fg',
+}
+
 export function RevealFacet({
   label,
   tone = 'subtle',
+  bodyTone = 'muted',
   children,
 }: {
   label: string
   tone?: Tone
+  bodyTone?: BodyTone
   children: ReactNode
 }) {
   return (
@@ -48,7 +65,9 @@ export function RevealFacet({
       >
         {label}
       </p>
-      <p className="mt-1 text-sm leading-6 text-muted">{children}</p>
+      <p className={`mt-1 text-sm leading-6 ${BODY_TONE_CLASS[bodyTone]}`}>
+        {children}
+      </p>
     </div>
   )
 }

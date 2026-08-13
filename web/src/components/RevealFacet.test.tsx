@@ -20,3 +20,28 @@ test('falls back to subtle rather than to no colour, so an unspecified tone is s
   render(<RevealFacet label="What it is">body text</RevealFacet>)
   expect(screen.getByText('What it is').className).toContain('text-subtle')
 })
+
+// Task 14 found one of `ADRAnatomy`'s two facet-shaped blocks uses `text-fg`
+// for its body while `RevealFacet` hardcoded `text-muted` with no override —
+// genuinely different tokens in both themes. `bodyTone` closes that gap.
+// Default must stay byte-identical to what every existing caller already
+// gets, so this asserts the *exact* className, not a substring — a stray
+// extra class here would be a regression the `toContain` checks above
+// wouldn't catch.
+test('defaults the body to the exact class it has always rendered, so existing callers are untouched', () => {
+  render(<RevealFacet label="What it is for">body text</RevealFacet>)
+  expect(screen.getByText('body text').className).toBe(
+    'mt-1 text-sm leading-6 text-muted',
+  )
+})
+
+test('renders the body in the fg tone when bodyTone="fg" is passed, closing the ADRAnatomy gap', () => {
+  render(
+    <RevealFacet label="Filled in" bodyTone="fg">
+      body text
+    </RevealFacet>,
+  )
+  expect(screen.getByText('body text').className).toBe(
+    'mt-1 text-sm leading-6 text-fg',
+  )
+})
