@@ -75,7 +75,11 @@ code, find the file that environment reads.** A version file being popular does 
 it universal, and the environment nothing pins is usually the one serving users.
 
 Use the actual pnpm version from [reference/stack.md](../reference/stack.md) — `corepack
-use pnpm@latest` writes it for you.
+use pnpm@10` writes it for you, resolving that file's major to whatever 10.x is current and
+pinning it into `packageManager` with a hash. Not `pnpm@latest`, which is whatever npm tags
+today and has no idea what `reference/stack.md` says; the two agree right up until the day
+a new major ships, and then the command quietly stops doing what the sentence above it
+promised.
 
 **Then give it a remote.** `create-next-app` has already run `git init` and made the first
 commit, on `main` — that branch name comes from the scaffold, not from your git config,
