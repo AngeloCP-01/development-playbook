@@ -365,11 +365,11 @@ pre-commit:
   parallel: true
   commands:
     format:
-      glob: '*.{ts,tsx,mjs,css,json}'
+      glob: '*.{ts,tsx,js,jsx,mjs,cjs,css,json,md,yml,yaml}'
       run: pnpm exec prettier --write {staged_files}
       stage_fixed: true
     lint:
-      glob: '*.{ts,tsx,mjs}'
+      glob: '*.{ts,tsx,js,jsx,mjs,cjs}'
       run: pnpm exec eslint --max-warnings 0 {staged_files}
 
 pre-push:
@@ -379,6 +379,14 @@ pre-push:
     test:
       run: pnpm test
 ```
+
+The format glob is wider than it first looks like it needs to be, and it matches what CI's
+`prettier --check .` covers on purpose. The shorter list is the one most people write, and
+it produces a hook that reports success on a commit CI then rejects: a file outside the
+glob is not checked and not fixed, and lefthook prints `format (skip) no files for
+inspection` and exits green. `README.md` is the likeliest one to slip through, and it is
+this stage's own required artifact. The lint glob stays narrower, since ESLint has nothing
+to say about Markdown or YAML.
 
 Hooks installed by that command exist only on the machine that ran it. Add a `prepare`
 script so a fresh clone gets them too:
