@@ -405,7 +405,8 @@ plan"; architecture's, testing's and so on will each have their own). Status:
 | 01 Product Discovery | ☑ | ☑ | Doc `### AI in discovery` backfilled; TD-15 closed |
 | 02 Product Planning | ☑ | ☑ | Done: 7th step + `### AI in planning` |
 | 03 Architecture | ☑ | ☑ | `### AI in architecture`, its own step — the 21st of 22 after the D-52 reshape, and the 6th when it was written. The doc had **no** AI section — the round had to write one before it could mirror it, which is why `stage-metadata.test.ts` now fails any stage whose doc lacks the heading |
-| 04–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
+| 04 Project Setup | ☑ | ☐ | `### AI in project setup` was written test-first during the doc-correction round: `stage-metadata.test.ts` failed with `04-project-setup has no "### AI in ..." subsection` before the section existed, and the teeth check renamed the heading to `### AI for project setup` to confirm the assertion could still fail. The app step arrives with the port |
+| 05–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
 
 Suggested order. Revised 2026-07-24 (D-27): the first pass ranked purely by teaching
 value and put 02 fifth. That ignored the reader's journey and the risk of proving the
@@ -418,7 +419,7 @@ pattern library on the hardest stage.
 | ~~3~~ ✓ | — | **Stage 03's doc gaps closed** across W-3.1, W-3.1b, W-3.3 and four cold-reader runs — run 4 returned **COMPLETE**, the first to do so. |
 | ~~4~~ ✓ | — | **W-3.2 + W-3.3 merged** to `main` as `790b3e4` (`--no-ff`, 106 commits, branch deleted). Gate re-run on the merged result: 313/313, 14/14 audit, lint, typecheck and format clean. **Not pushed** — the user handles that. |
 | ~~5~~ ✓ | — | **W-5 complete** — live at https://acp-dev-playbook.vercel.app, verified by `pnpm test:prod`. Every `W-` milestone except W-3 is now closed. |
-| **6 (next)** | **04 Project Setup** | **Decided 2026-08-11**, against this table's earlier answer of 15. Reading 04 to compare the two found its Vercel section factually wrong — it says to match the Node version to `.nvmrc`, which Vercel does not read — and silent on the three things that broke this project's own first deploy (**TD-28**). So the round is *fix a doc that misleads* rather than *port a doc that is fine*, and it is the one stage checkable against this repository. **Scoped as a doc-correction phase before the port.** 15's case is recorded in `docs/tracker.md`'s Next up; it lost on having nothing to ground it against. |
+| **6 (in progress)** | **04 Project Setup** | **Decided 2026-08-11**, against this table's earlier answer of 15. Reading 04 to compare the two found its Vercel section factually wrong — it says to match the Node version to `.nvmrc`, which Vercel does not read — and silent on the three things that broke this project's own first deploy (**TD-28**). So the round is *fix a doc that misleads* rather than *port a doc that is fine*, and it is the one stage checkable against this repository. **Scoped as a doc-correction phase before the port.** 15's case is recorded in `docs/tracker.md`'s Next up; it lost on having nothing to ground it against. **Doc phase complete 2026-08-13** on `fix/stage-04-doc-corrections`, unmerged: 323 → 690 lines, TD-28 closed, **31 defects against the four TD-28 named**. `RevealList` and the port are still outstanding — see W-3.4. |
 | 7 | 16 Incident Management | Procedural, so a stepper fits naturally |
 | 7 | 13 Production Deployment | Expand/migrate/contract needs a visual |
 | — | remainder | 04–12, 14, 17, 18 |
@@ -435,6 +436,42 @@ overwrite. A shared cross-stage store was rejected as premature (it would make s
 migration target and fix a schema before stages 03–18 have said what they need). The chain
 extends: the reader's own "Not in v1" entries become the items they triage in the horizon
 step. Verified end-to-end in a live browser.
+
+### W-3.4 — Stage 04's doc-correction phase ◐ *(doc done 2026-08-13 on `fix/stage-04-doc-corrections`, unmerged; port not started)*
+
+The first round in this project shaped as a correction rather than a port, per **D-53**.
+Stage 03's rounds ported prose that was already right; `docs/04-project-setup.md` was wrong
+where a reader acts on it, which is what **TD-28** recorded and considerably understated.
+
+Evidence for everything below is in `docs/tracker.md`'s row for this round. The short
+version: TD-28 named four defects, all in `### 8. Connect Vercel`, and the round closed
+**31** across every numbered section. Three instruments ran in sequence and each caught what
+the previous one could not — reading the doc, executing every runnable block of it, and
+handing the corrected doc to a cold reader with a task to finish.
+
+- [x] **Execute the doc before correcting it** (**D-50**) ✓ `docs/verification/stage-04-doc-execution.md`.
+      Fifteen claims scored, and the five defects it found that reading had missed were folded
+      into Tasks 2 and 3 by the user's scope call rather than deferred
+- [x] **Correct §1, §6, §7, §8, the Definition of done and Artifacts** ✓ — including the
+      `prepare` script the doc never added, the `typecheck` and test scripts its own gates
+      called, and the three settings a repository cannot express
+- [x] **`reference/stack.md` names the file each environment reads** ✓ (**D-55**) — one clause
+      on the Node row, which is the generalisation TD-28's headline defect rests on
+- [x] **`### AI in project setup`, written test-first** ✓ — real RED from
+      `stage-metadata.test.ts`, teeth-checked, suite 331 → **332 across 33 files**
+- [x] **Cold-reader run 1, before the port rather than after** ✓ (**D-54**)
+      `docs/verification/cold-reader-stage-04-run1.md`. Completeness returned three blocking
+      findings; consultability scored **3/5**, and one of its two misses was traced to this
+      round's own correction rather than assumed inherited
+- [x] **Fix wave, all twelve prioritised entries closed** ✓ — three of them not as specified,
+      and one reversed on review and recorded as reversed (**D-56**)
+- [x] **Whole-branch review of the fix wave** ✓ — eight findings, all addressed
+- [ ] **`RevealList`** — five stage-03 accordions sharing one markup, extracted before stage 04
+      becomes the sixth caller. Its own branch, independent of the port
+- [ ] **The port.** `04-project-setup` is `ready: false` and absent from `STAGE_CONTENT`, so
+      the route still renders "sheet not drawn". **W-3 is not advanced by this round**
+- [ ] **Merge.** The branch is unmerged and unpushed; merging into `develop` is the user's call,
+      asked for separately
 
 ### W-4 — Quality gates ☑
 
