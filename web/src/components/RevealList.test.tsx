@@ -65,3 +65,22 @@ test('renders header and footer slots outside the row list, since three callers 
   expect(screen.getByText('the precondition')).toBeDefined()
   expect(screen.getByText('the closing claim')).toBeDefined()
 })
+
+// `badge` is a conditional render: nothing enforces that a row carrying one
+// actually shows it, or that a row without one stays clean. Task 5's review
+// found this field entirely untested — a badge that silently stopped
+// rendering would leave both the data test and this component green.
+test('renders a row badge when the row carries one, since a silently dropped badge would still pass every data test', () => {
+  render(
+    <RevealList
+      rows={[{ ...rows[0], badge: <span>fails the test</span> }, rows[1]]}
+      idPrefix="t"
+    />,
+  )
+  expect(screen.getByText('fails the test')).toBeDefined()
+})
+
+test('renders no badge for a row that does not carry one', () => {
+  render(<RevealList rows={rows} idPrefix="t" />)
+  expect(screen.queryByText('fails the test')).toBeNull()
+})
