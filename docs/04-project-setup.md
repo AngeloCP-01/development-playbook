@@ -77,6 +77,31 @@ it universal, and the environment nothing pins is usually the one serving users.
 Use the actual pnpm version from [reference/stack.md](../reference/stack.md) — `corepack
 use pnpm@latest` writes it for you.
 
+**Then give it a remote.** `create-next-app` has already run `git init` and made the first
+commit, on `main` — that branch name comes from the scaffold, not from your git config,
+which still defaults to `master`. What it cannot do is create the repository on GitHub, and
+everything downstream assumes one exists: §7 enables branch protection on `main`, §8 opens a
+pull request to get a preview URL.
+
+```bash
+gh repo create my-app --private --source=. --remote=origin --push
+```
+
+Private or public is your call, but it is not only a privacy question — see §7 for what
+branch protection can and cannot enforce on a private repo under GitHub Free.
+
+Without the `gh` CLI, create an **empty** repository in GitHub's web UI — no README, no
+`.gitignore`, no license, since anything it adds is a commit you now have to merge — then:
+
+```bash
+git remote add origin git@github.com:<you>/my-app.git
+git push -u origin main
+```
+
+Either way, `git log --oneline` on GitHub and locally should now show the same first commit.
+That is the thing §8 later asks you to check about a *deployment*, and it is worth being in
+the habit before a dashboard is involved.
+
 ### 2. Set the folder structure
 
 Decide this now. Retrofitting structure is a large, boring, error-prone refactor that
