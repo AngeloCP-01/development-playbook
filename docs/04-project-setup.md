@@ -35,24 +35,81 @@ cd my-app
 in `src/` and leaves the root for configuration — worth it once the root accumulates a
 dozen config files.
 
-Pin the Node version so local, CI, and Vercel agree:
+Pin the Node version in both places, because no single file reaches every environment:
 
 ```bash
 echo "22" > .nvmrc
 ```
 
-Add the matching constraint to `package.json`, which makes pnpm refuse to install on the
-wrong major rather than failing mysteriously later:
+`.nvmrc` is what `nvm` and `fnm` read locally, and what GitHub Actions reads through
+`node-version-file`. It stops there. Your host does not read it.
+
+Add the constraint to `package.json` as well:
 
 ```json
 {
-  "engines": { "node": ">=22 <23" },
+  "engines": { "node": "22.x" },
   "packageManager": "pnpm@<current>"
 }
 ```
 
-Use the actual pnpm version from [reference/stack.md](../reference/stack.md) — `corepack
-use pnpm@latest` writes it for you.
+Write it as a major, `"22.x"`, not a range. `22.x` is the form Vercel's own docs show and
+the form this project's own `web/package.json` uses; a range is not documented as
+supported, and this field is the one thing the host actually reads, so it is not the place
+to improvise a format.
+
+`engines.node` does two jobs. It is what Vercel reads, overriding the Node version set in
+the project's own dashboard — the job that matters in production. And it makes pnpm
+complain on the wrong major, though only if you ask it to:
+
+```bash
+echo "engine-strict=true" >> .npmrc
+```
+
+Without that line pnpm prints `WARN Unsupported engine` and installs anyway, exit 0 — a
+warning in CI log noise is not a gate. With it, the install fails on the wrong major,
+which is what you wanted when you wrote the constraint.
+
+The general rule is worth more than either file: **for each environment that runs your
+code, find the file that environment reads.** A version file being popular does not make
+it universal, and the environment nothing pins is usually the one serving users.
+
+`corepack use pnpm@latest` resolves the current release and writes it into
+`packageManager` with a hash, which is the pin you want.
+[reference/stack.md](../reference/stack.md) names a floor, not a pin — the playbook
+assumes "this major or later" — so if `latest` hands you a newer major than that file
+lists, you are where you should be and the file is what needs re-reading. Do not pin
+backwards to match it.
+
+**Then give it a remote.** `create-next-app` has already run `git init` and made the first
+commit, on `main` — that branch name comes from the scaffold, not from your git config,
+which still defaults to `master`. What it cannot do is create the repository on GitHub, and
+everything downstream assumes one exists: §7 enables branch protection on `main`, §8
+opens a pull request to get a preview URL.
+
+Everything you have edited since is still uncommitted — `.nvmrc`, `.npmrc`,
+`engines.node`, `packageManager` — and that first commit predates all of it. Commit before
+you push, or the repository you create holds the scaffold and none of your pins:
+
+```bash
+git add -A && git commit -m "chore: pin node and pnpm"
+gh repo create my-app --private --source=. --remote=origin --push
+```
+
+Private or public is your call, and it decides more than privacy. See §7 for what branch
+protection can and cannot enforce on a private repo under GitHub Free.
+
+Without the `gh` CLI, create an **empty** repository in GitHub's web UI — no README, no
+`.gitignore`, no license, since anything it adds is a commit you now have to merge — then:
+
+```bash
+git remote add origin git@github.com:<you>/my-app.git
+git push -u origin main
+```
+
+Either way, `git log --oneline` on GitHub and locally should now show the same first commit.
+That is the thing §8 later asks you to check about a *deployment*, and it is worth being in
+the habit before a dashboard is involved.
 
 ### 2. Set the folder structure
 
@@ -73,11 +130,18 @@ src/
       schema.ts           # Zod schemas
       billing.test.ts
   components/ui/          # generic, reusable, feature-agnostic
-  lib/                    # cross-cutting: db client, auth, utils
-  db/
+  lib/                    # cross-cutting: auth, utils, env, the db client if there is one
+  db/                     # only if the entry criteria's database answer was yes
     schema.ts
     migrations/
 ```
+
+`src/db/` is the one folder in that tree that is conditional. The entry criteria said that
+if you were unsure, you do not need a database yet. If that was your answer, do not create
+it. An empty `db/` holding a `schema.ts` that describes nothing is the structural version
+of a `DATABASE_URL` you have no value for: a placeholder that looks like a decision and is
+not one. It arrives in the commit that adds the client, alongside uncommenting
+`DATABASE_URL` in the schema.
 
 The organizing principle is **feature-first, not layer-first**. A `components/`,
 `hooks/`, `utils/` split means every feature change touches four distant folders. A
@@ -108,13 +172,58 @@ pnpm add -D prettier eslint-config-prettier
 }
 ```
 
-Append `eslint-config-prettier/flat` last in `eslint.config.mjs`, and add `format` /
-`format:check` scripts. One tool lints, one tool formats, and neither owns the other's
-job.
+Append `eslint-config-prettier/flat` last in `eslint.config.mjs`. One tool lints, one tool
+formats, and neither owns the other's job. Then add the two scripts. CI calls
+`format:check` by name in §7, so it has to exist, and it has to check the same files that
+the one you run yourself writes:
 
-Gate lint at **`--max-warnings 0`**. ESLint exits 0 on warnings, so without it an unused
-variable sails through both hooks and CI — this playbook's own gate let one through on
-its first teeth check.
+```json
+{
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  }
+}
+```
+
+That `.` is the whole repository, which is why the next file matters.
+
+`.prettierignore`:
+
+```
+pnpm-lock.yaml
+```
+
+Shorter than you expect, because Prettier reads `.gitignore` as well as `.prettierignore`.
+`.next/` and `node_modules/` are already excluded by the `.gitignore` `create-next-app`
+wrote. What is left is the case `.gitignore` cannot cover: a file that is generated *and*
+committed. The lockfile is the one every project has. Reformatting it changes a file you
+do not own and is never what you meant.
+
+Now run it once over the scaffold, before wiring CI in §7:
+
+```bash
+pnpm format
+```
+
+`create-next-app` writes double quotes and semicolons; the `.prettierrc` above has just
+said otherwise. Skip this and your first CI run goes red on six files you never opened,
+which teaches exactly the wrong lesson about the gate on its first day.
+
+Gate lint at **`--max-warnings 0`**, in the script itself rather than only where it gets
+called:
+
+```json
+{
+  "scripts": { "lint": "eslint --max-warnings 0" }
+}
+```
+
+ESLint exits 0 on warnings, so without it an unused variable sails through both hooks and
+CI — this playbook's own gate let one through on its first teeth check. `create-next-app`
+ships `"lint": "eslint"` with no such flag, and CI's `pnpm lint` step calls that script
+directly rather than passing the flag itself, so the flag has to live in the script for
+CI to inherit it.
 
 ### 4. TypeScript settings
 
@@ -135,31 +244,121 @@ its first teeth check.
 first week. It forces you to handle the case where an array index or record key is
 missing — which is the actual runtime behavior, not a pedantic hypothetical.
 
+Add the script CI and your hooks will call:
+
+```json
+{
+  "scripts": { "typecheck": "next typegen && tsc --noEmit" }
+}
+```
+
+Route types are generated, not written, so a bare `tsc --noEmit` passes locally off a
+stale build and fails on a clean checkout — every reader of this page is on Next.js, since
+§1 scaffolds with `create-next-app`. Off Next.js, drop `next typegen &&` and use bare
+`tsc --noEmit`.
+
 ### 5. Environment variables, validated at boot
 
 Untyped `process.env` access is a runtime crash waiting for production. Validate once, at
 startup:
+
+```bash
+pnpm add zod
+```
 
 ```ts
 // src/lib/env.ts
 import { z } from 'zod'
 
 const schema = z.object({
-  DATABASE_URL: z.string().url(),
+  // Always required, whatever you are building.
   SESSION_SECRET: z.string().min(32),
+  NEXT_PUBLIC_APP_URL: z.url(),
   NODE_ENV: z.enum(['development', 'test', 'production']),
-  NEXT_PUBLIC_APP_URL: z.string().url(),
+  // Depends on the database decision in the entry criteria. If the answer was "no",
+  // leave this commented out and uncomment it in the same commit that adds the client.
+  // DATABASE_URL: z.url(),
 })
 
 export const env = schema.parse(process.env)
 ```
 
-Import `env` everywhere instead of `process.env`. A missing variable now fails the build
+Import `env` everywhere instead of `process.env`. A missing variable now fails at boot
 with a clear message naming the variable, rather than surfacing as `undefined` in a
 request handler three weeks later.
 
-Commit `.env.example` with every key and no values. It is the only documentation of
-required configuration that stays current, because the app stops booting when it drifts.
+Which is exactly why the schema only lists keys you can supply *today*. It is a gate, not
+a wishlist: every key in it has to have a value before anything boots, so a key for a
+database you have not chosen yet locks you out of your own dev server. If the entry
+criteria's database answer was "no", the commented-out line above is the whole idiom —
+`.optional()` works too, but it invites `env.DATABASE_URL` to be typed `string | undefined`
+in code that will one day require it.
+
+Then give the keys values. `.env.example` is committed and holds no secrets; `.env.local`
+is the one the app reads and `.gitignore` already excludes it:
+
+```
+# .env.example — copy to .env.local and fill in the blanks
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+SESSION_SECRET=              # openssl rand -base64 32
+```
+
+```bash
+cp .env.example .env.local
+openssl rand -base64 32      # paste after SESSION_SECRET= in .env.local
+```
+
+`NODE_ENV` is deliberately absent from both files: Next sets it (`development` for `pnpm
+dev`, `production` for `pnpm build`), and pinning it yourself is how you end up with a dev
+server that believes it is in production.
+
+That pair, a schema of keys you can actually set and an example file someone can copy, is
+what makes the first Definition of done reachable. A fresh clone, `pnpm install`,
+`cp`, one `openssl rand`, `pnpm dev`, and a page renders, with no database anywhere.
+`.env.example` stays the only documentation of required configuration that does not rot,
+because the app stops booting when it drifts.
+
+**One limit on "everywhere": server modules only, never a `'use client'` file.** The
+browser's `process.env` is a shim, not your environment. Next substitutes static
+`process.env.NEXT_PUBLIC_*` reads in client code and nothing else, and
+`schema.parse(process.env)` is not a static read, so the client gets an empty object and
+every key fails at once — including `NEXT_PUBLIC_APP_URL`, which is usually why someone
+imported `env` there to begin with.
+
+The failure shape is the part worth knowing. `pnpm build` succeeds, the server-rendered
+HTML is correct, and the page dies on hydration with a `ZodError` in the browser console
+naming `SESSION_SECRET`. Every gate this stage wires stays green; only loading the page in
+a browser shows it. The secret does not leak, because Next never hands a non-public
+variable to the client, but the key names and the whole of Zod ship in the bundle. When a
+client component needs a configured value, pass it down as a prop from a server component,
+or read `process.env.NEXT_PUBLIC_APP_URL` directly, which is the static read Next does
+substitute.
+
+Install the test runner now, even with nothing to test yet:
+
+```bash
+pnpm add -D vitest
+```
+
+Add:
+
+```json
+{
+  "scripts": { "test": "vitest run --passWithNoTests" }
+}
+```
+
+What to put in the tests is [06 — Testing](06-testing.md); the point here is that the gate
+you are about to wire has something real to call. A pipeline step naming a command nobody
+installed fails on its first run, and the failure looks like a broken pipeline rather than
+a missing dependency.
+
+`--passWithNoTests` is there because you have no tests yet and will not until
+[06 — Testing](06-testing.md). Without it `vitest run` exits 1 on an empty suite, so your
+first push fails on a hook that is working correctly — which teaches the reader to bypass
+the hook, the one habit this section exists to prevent. Drop the flag once 06 gives you
+real tests. Left in place after that, a test file quietly excluded by a broken glob passes
+green forever — the exact failure the Traps entry below warns about.
 
 ### 6. Git hooks
 
@@ -176,11 +375,11 @@ pre-commit:
   parallel: true
   commands:
     format:
-      glob: '*.{ts,tsx,mjs,css,json}'
+      glob: '*.{ts,tsx,js,jsx,mjs,cjs,css,json,md,yml,yaml}'
       run: pnpm exec prettier --write {staged_files}
       stage_fixed: true
     lint:
-      glob: '*.{ts,tsx,mjs}'
+      glob: '*.{ts,tsx,js,jsx,mjs,cjs}'
       run: pnpm exec eslint --max-warnings 0 {staged_files}
 
 pre-push:
@@ -188,8 +387,32 @@ pre-push:
     typecheck:
       run: pnpm typecheck
     test:
-      run: pnpm vitest run
+      run: pnpm test
 ```
+
+The format glob is wider than it first looks like it needs to be, and it matches what CI's
+`prettier --check .` covers on purpose. The shorter list is the one most people write, and
+it produces a hook that reports success on a commit CI then rejects: a file outside the
+glob is not checked and not fixed, and lefthook prints `format (skip) no files for
+inspection` and exits green. `README.md` is the likeliest one to slip through, and it is
+this stage's own required artifact. The lint glob stays narrower, since ESLint has nothing
+to say about Markdown or YAML.
+
+Hooks installed by that command exist only on the machine that ran it. Add a `prepare`
+script so a fresh clone gets them too:
+
+```json
+{
+  "scripts": { "prepare": "lefthook install || true" }
+}
+```
+
+The `|| true` is not defensive clutter. pnpm runs `prepare` on every install, `lefthook
+install` exits 1 outside a git repository, and build hosts check out your source without a
+`.git`. Unguarded, `pnpm install` fails on the host and the deploy dies at the install
+step, before it reaches anything you configured. Neither `CI=1` nor `VERCEL=1` changes it.
+Husky fails identically for the identical reason, so this is a property of `prepare`
+rather than a lefthook footnote.
 
 Format on commit, verify on push. Keep the full test suite out of `pre-commit` — a hook
 slow enough to be annoying is a hook people bypass with `--no-verify`, and then you have
@@ -210,21 +433,41 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with: { node-version-file: '.nvmrc', cache: 'pnpm' }
       - run: pnpm install --frozen-lockfile
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
-      - run: pnpm vitest run
+      - run: pnpm test
       - run: pnpm build
 ```
 
-Then enable branch protection on `main` requiring this check. An unenforced gate is
-decoration — and on GitHub Free, branch protection is only enforced on *public* repos.
-On a private one it saves and silently never fires. Confirm your plan enforces it.
+That last step runs your own modules, so §5's schema parses inside the build. The moment
+anything imports `env`, this workflow needs a value for every key the schema marks required
+— `SESSION_SECRET` and `NEXT_PUBLIC_APP_URL`. Add both as repository secrets under
+**Settings → Secrets and variables → Actions** and pass them to the `pnpm build` step's
+`env:`. Until that first import the workflow is green whether or not you did, so the gate
+breaks on a commit that has nothing to do with it. It is the same shape as the repository
+in §1 and the Git connection in §8: a step everything downstream assumes and no step
+instructs.
+
+Then enable branch protection on `main` requiring this check. The name to require is
+**`verify`**, the job id in the workflow above: GitHub reports a check under the job's own
+`name:` when it has one and under the job id otherwise. The `name: CI` on the first line
+names the *workflow*, not the check, and it is the one most people reach for.
+
+An unenforced gate is decoration — and on GitHub Free, branch protection is only enforced
+on *public* repos. On a private one it saves and silently never fires. Confirm your plan
+enforces it.
+
+Enforcement is not verification, and stopping at the first is the common mistake. Branch
+protection proves the gate is attached. It proves nothing about whether the gate can fail,
+which is a separate check with its own method: the `## Traps` entry "Not testing that CI
+actually fails" below, which is to push a broken commit once and watch it go red. Do that
+while the only thing that can break is a scaffold.
 
 ### 8. Connect Vercel
 
@@ -232,10 +475,69 @@ On a private one it saves and silently never fires. Confirm your plan enforces i
 pnpm add -g vercel && vercel link
 ```
 
-In project settings, confirm the Node version matches `.nvmrc`. Push a branch and open a
-pull request — you should get a preview URL. Verify that before writing any features; a
-broken deploy pipeline is far easier to debug against a scaffold than against a
-half-built app.
+That maps this directory to a Vercel project, and that is all it does. It does not
+connect the project to the repository you pushed in §1. The Git connection is a separate
+setting, and it is the one that builds every push and comments a preview URL on your pull
+requests. Set it in the project's **Settings → Git**.
+
+Three project settings decide whether this builds, and what it builds, and **none of them
+can live in your repository**. That is the part worth internalising: everything else in
+this stage is a file you commit and can diff. These live in a dashboard, and the only
+signal that one is wrong is the error it produces, where there is one.
+
+| Setting | Set it to | What you see when it is wrong |
+|---|---|---|
+| **Connected Repository** | the repo you pushed in §1, under Settings → Git | no preview URL on your pull request — or green production builds of a repository that is not yours |
+| **Root Directory** | the folder holding `package.json` | `No Next.js version detected` |
+| **Framework Preset** | Next.js | `No Output Directory named "public" found after the Build completed` |
+
+Those three are the ones that blocked this playbook's own first deploy, and the connected
+repository is the one with no error message attached, which is why it is listed first.
+
+**Node.js Version** is a fourth field in the same dashboard and the exception worth naming:
+it is the only one your repository can reach. `engines.node`, set in `### 1. Scaffold`,
+overrides whatever the dashboard holds, so you set it in `package.json` and leave the
+dashboard alone. Pinned in neither place, there is no error to read at all: the build
+succeeds on Vercel's default major, which is not necessarily yours.
+
+The Framework Preset error is the one that misleads. It reads as "you deleted something you
+needed"; it means the preset is `Other`, whose default output directory is `public`. A
+project created against an empty repository has nothing to detect, so Vercel guesses, and
+it guesses `Other`. With the Next.js preset the output is `.next` and a `public/` directory
+is optional.
+
+While you are in the dashboard, give this project the same two keys §7 gave CI:
+`SESSION_SECRET` and `NEXT_PUBLIC_APP_URL`, under **Settings → Environment Variables**, for
+Preview and Production both. `NEXT_PUBLIC_APP_URL` is the one to think about rather than
+copy across: `http://localhost:3000` is the local value and nothing else, and a preview
+deployment does not share an origin with production. A build here reads nothing from your
+machine, and §9 has the same problem for its own token.
+
+**Then check what it built, not whether it built.** A deployment list tells you a build
+succeeded. It does not tell you which repository it succeeded on, and a green build of the
+wrong repo is indistinguishable from a green build of yours at a glance. Take the commit
+SHA off the deployment and ask your own repository about it:
+
+```bash
+git cat-file -t <sha>      # a commit you can see  → "commit"
+                           # anything else         → "Not a valid object name", which is
+                           #                         the answer 79ef7a7 gave in the
+                           #                         incident deploying-101.md records
+```
+
+Now push a branch and open a pull request. You should get a preview URL — and if none
+appears at all, the Git connection is the first thing to look at, not the build, because a
+project with no repository attached has nothing to build and says so nowhere. Load the
+URL, because a green checkmark is not the check. Fetch one real page and confirm it
+renders, then open it in a browser with the console visible. A fetch returns the server's
+HTML, which stays correct even when the page dies on hydration — the failure §5 describes
+for a client component importing `env`, and the reason fetching alone cannot find it. If
+you have configured a canonical URL anywhere, fetch `/robots.txt` too: it prints the origin
+the build actually used, so one request tells you whether the value you set is the value
+that shipped.
+
+Verify all of this before writing any features. A broken deploy pipeline is far easier to
+debug against a scaffold than against a half-built app.
 
 ### 9. Error tracking
 
@@ -243,9 +545,35 @@ half-built app.
 pnpm add @sentry/nextjs && pnpm dlx @sentry/wizard@latest -i nextjs
 ```
 
-Confirm source map upload is working by triggering a deliberate error in a preview deploy
-and checking that the Sentry stack trace shows your TypeScript, not minified bundle
-output. Untested error tracking generally turns out to be broken exactly when you need it.
+**The auth token is the half the wizard cannot finish for you.** Source maps are uploaded
+during the build by Sentry's bundler plugin, which takes the token from `SENTRY_AUTH_TOKEN`
+in the *build's* environment, falling back to a `.env.sentry-build-plugin` file in the
+working directory, which is where the wizard writes it and which must stay uncommitted.
+So the one environment that builds what your users run has no token. Add
+`SENTRY_AUTH_TOKEN` to the Vercel project's environment variables for Preview and
+Production, or install Sentry's Vercel integration, which sets it for you.
+
+Get this wrong and nothing goes red. The plugin logs `No auth token provided. Will not
+upload source maps.` and the build succeeds, exactly like §8's green build of the wrong
+repository, and you find out months later reading a minified stack trace at 2am.
+
+So prove it the way §7 proves the CI gate, by breaking something on purpose:
+
+```ts
+// src/app/api/debug/boom/route.ts — temporary, delete after
+export function GET() {
+  throw new Error('Sentry smoke test')
+}
+```
+
+Push it on a branch, open `/api/debug/boom` on the preview URL, then read the issue in
+Sentry. The frame should name `route.ts` and the line you wrote. If it names a hashed
+chunk under `.next/`, the upload did not happen and the token is the first thing to check.
+Delete the route once you have your answer, and label the commit so it cannot quietly
+become permanent: `chore(TEMP): route that throws, to verify Sentry source maps (revert
+after)`.
+
+Untested error tracking generally turns out to be broken exactly when you need it.
 
 ### 10. Write the README before the code
 
@@ -257,12 +585,63 @@ Three sections, ten minutes:
 
 That last line matters more than it looks. See [10 — Documentation](10-documentation.md).
 
+Rolling back is the half of it this stage has not handed you, and a README is the wrong
+place to discover you do not know it. On Vercel the command is `vercel rollback`, which
+returns production to the previous deployment — and on the Hobby plan that is the only one
+it will go back to. To reach an older one, or to undo a rollback, `vercel ls` lists
+deployments and `vercel promote <url>` makes a specific one current. Put the command in
+the README, not a description of it.
+[13 — Production Deployment](13-production-deployment.md) owns this properly, including
+the case that breaks it: a deploy that also migrated the database does not roll back with
+the code.
+
+### AI in project setup
+
+Setup is the stage where an agent is most useful and most confidently wrong, and the split
+is clean: it is good at files you commit and blind to everything else. Every config here is
+text it can write, read back, and check. The settings that most often break a first deploy
+are not text, are not in your repository, and nothing you run locally can see them.
+
+Where it earns its place:
+
+- **Generate the config, then make it prove itself** (a skill). Scaffolds, `tsconfig`
+  flags, a `lefthook.yml`, a CI workflow — all text, all conventional, all fast. Have it
+  run each one rather than describe it. A workflow file that has never been pushed is a
+  guess with syntax highlighting.
+- **Derive `.env.example` from the schema** (a saved command). `src/lib/env.ts` already
+  lists every variable. Generating the example from it keeps your only configuration
+  documentation honest, because two files cannot drift when one is produced from the other.
+- **Port conventions from your last project** (memory). `claude-mem` answers "what did I
+  set up last time, and why". Setup is the most repeated stage in a career and the one
+  people most often rebuild from nothing.
+- **Read the docs for the version you installed** (an MCP). context7 over training memory.
+  Scaffolding tools change flags between minor versions, and an agent confidently passing a
+  removed flag produces an error two steps from its cause.
+- **Break the gate on purpose** (a saved command). Have it push a deliberately failing
+  commit and confirm CI goes red. This is the check people skip because it feels like
+  theatre, and it is the only thing separating a gate from a green badge.
+
+Named tools: `context7` for version-accurate docs, `claude-mem` for prior setups, and
+Superpowers' `verification-before-completion` for the "prove it" half of every item above.
+
+What none of this replaces: the dashboard. Root Directory, Framework Preset and the
+connected repository live in a web UI no agent reads, and this playbook's own first deploy
+was blocked by all three while every local check stayed green. An agent will happily debug
+the error message and cannot see the setting that caused it. Nor will it tell you that a
+green build is the wrong repository — that takes one command and a decision to be
+suspicious, and suspicion does not delegate.
+
 ---
 
 ## Artifacts
 
 - Repository with the feature-first `src/` structure
-- `.prettierrc`, `eslint.config.mjs`, `tsconfig.json`, `lefthook.yml`, `.nvmrc`, `.env.example`
+- `.prettierrc`, `.prettierignore`, `eslint.config.mjs`, `tsconfig.json`, `lefthook.yml`,
+  `.nvmrc`, `.npmrc`, `.env.example`
+- `package.json` pinning `engines.node` and `packageManager`, a guarded `prepare` script,
+  and the `typecheck`, `test`, `lint`, `format`, and `format:check` scripts. CI calls four
+  of them by name and the pre-push hook two; `format` is the one you run yourself, since
+  pre-commit invokes `prettier` on staged files directly rather than through a script
 - `src/lib/env.ts` validating configuration at boot
 - `.github/workflows/ci.yml` with branch protection enforcing it
 - A Vercel project producing preview URLs per pull request
@@ -273,13 +652,18 @@ That last line matters more than it looks. See [10 — Documentation](10-documen
 
 ## Definition of done
 
-- [ ] `pnpm install && pnpm dev` works from a fresh clone with only `.env.example` as a guide
-- [ ] A pull request produces a preview URL automatically
+- [ ] A fresh clone reaches a running app with `.env.example` as the only guide: `pnpm
+      install`, `cp .env.example .env.local`, fill in the blanks it names, `pnpm dev`
+- [ ] A pull request produces a preview URL automatically — which also proves §6's guarded
+      `prepare`, because the build host *is* the `.git`-less environment, and an unguarded
+      `lefthook install` would have failed the install step before any build began
 - [ ] CI fails on a deliberately broken commit (test it — do not assume it)
 - [ ] Branch protection blocks merging when CI is red
 - [ ] A deliberate error appears in Sentry with readable TypeScript stack traces
 - [ ] `pnpm build` succeeds locally
-- [ ] Node version is identical in `.nvmrc`, CI, and Vercel settings
+- [ ] Node version is pinned in the file each environment reads — `.nvmrc` for local
+      shells and CI, `engines.node` for the host
+- [ ] The deployed commit SHA exists in your repository (`git cat-file -t <sha>`)
 
 ---
 
@@ -306,6 +690,10 @@ errors and the rules stay strict.
 **Not testing that CI actually fails.** Green checkmarks on a workflow that silently
 skips tests are worse than no CI, because you trust them. Push a broken commit once and
 watch it go red.
+
+**Pinning the version your host does not read.** `.nvmrc` reaches your machine and your
+CI and stops. If the environment that actually serves users is not pinned by a file that
+environment reads, it is not pinned — and the failure is silent, because it builds.
 
 **Structuring by layer.** `components/`, `hooks/`, `utils/` looks tidy in week one. By
 month three, one feature change touches four folders and nobody can tell which utils are
