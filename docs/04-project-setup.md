@@ -80,8 +80,8 @@ use pnpm@latest` writes it for you.
 **Then give it a remote.** `create-next-app` has already run `git init` and made the first
 commit, on `main` — that branch name comes from the scaffold, not from your git config,
 which still defaults to `master`. What it cannot do is create the repository on GitHub, and
-everything downstream assumes one exists: §7 enables branch protection on `main`, §8 opens a
-pull request to get a preview URL.
+everything downstream assumes one exists: §7 enables branch protection on `main`, §8
+opens a pull request to get a preview URL.
 
 ```bash
 gh repo create my-app --private --source=. --remote=origin --push
@@ -121,11 +121,18 @@ src/
       schema.ts           # Zod schemas
       billing.test.ts
   components/ui/          # generic, reusable, feature-agnostic
-  lib/                    # cross-cutting: db client, auth, utils
-  db/
+  lib/                    # cross-cutting: auth, utils, env, the db client if there is one
+  db/                     # only if the entry criteria's database answer was yes
     schema.ts
     migrations/
 ```
+
+`src/db/` is the one folder in that tree that is conditional. The entry criteria said that
+if you were unsure, you do not need a database yet — and if that was your answer, do not
+create it. An empty `db/` holding a `schema.ts` that describes nothing is the structural
+version of §5's required `DATABASE_URL`: a placeholder that looks like a decision and is
+not one. It arrives in the commit that adds the client, alongside uncommenting
+`DATABASE_URL` in the schema.
 
 The organizing principle is **feature-first, not layer-first**. A `components/`,
 `hooks/`, `utils/` split means every feature change touches four distant folders. A
@@ -296,11 +303,11 @@ openssl rand -base64 32      # paste after SESSION_SECRET= in .env.local
 dev`, `production` for `pnpm build`), and pinning it yourself is how you end up with a dev
 server that believes it is in production.
 
-That pair — a schema of keys you can actually set, and an example file someone can copy —
-is what makes the first Definition of done reachable. A fresh clone, `pnpm install`, `cp`,
-one `openssl rand`, `pnpm dev`, and a page renders, with no database anywhere. `.env.example`
-stays the only documentation of required configuration that does not rot, because the app
-stops booting when it drifts.
+That pair — a schema of keys you can actually set, and an example file someone can copy
+— is what makes the first Definition of done reachable. A fresh clone, `pnpm install`,
+`cp`, one `openssl rand`, `pnpm dev`, and a page renders, with no database anywhere.
+`.env.example` stays the only documentation of required configuration that does not rot,
+because the app stops booting when it drifts.
 
 Install the test runner now, even with nothing to test yet:
 
@@ -415,10 +422,10 @@ On a private one it saves and silently never fires. Confirm your plan enforces i
 pnpm add -g vercel && vercel link
 ```
 
-That maps this directory to a Vercel project, and that is all it does. It does not connect
-the project to the repository you pushed in §1 — the Git connection is a separate setting,
-and it is the one that builds every push and comments a preview URL on your pull requests.
-Set it in the project's **Settings → Git**.
+That maps this directory to a Vercel project, and that is all it does. It does not
+connect the project to the repository you pushed in §1 — the Git connection is a separate
+setting, and it is the one that builds every push and comments a preview URL on your pull
+requests. Set it in the project's **Settings → Git**.
 
 Three project settings decide whether this builds, and what it builds, and **none of them
 can live in your repository**. That is the part worth internalising: everything else in
@@ -458,10 +465,11 @@ git cat-file -t 79ef7a7    # a commit you can see  → "commit"
 
 Now push a branch and open a pull request. You should get a preview URL — and if none
 appears at all, the Git connection is the first thing to look at, not the build, because a
-project with no repository attached has nothing to build and says so nowhere. Load the URL,
-because a green checkmark is not the check. Fetch one real page and confirm it renders. If you have
-configured a canonical URL anywhere, fetch `/robots.txt` too: it prints the origin the build
-actually used, so one request tells you whether the value you set is the value that shipped.
+project with no repository attached has nothing to build and says so nowhere. Load the
+URL, because a green checkmark is not the check. Fetch one real page and confirm it
+renders. If you have configured a canonical URL anywhere, fetch `/robots.txt` too: it
+prints the origin the build actually used, so one request tells you whether the value you
+set is the value that shipped.
 
 Verify all of this before writing any features. A broken deploy pipeline is far easier to
 debug against a scaffold than against a half-built app.
