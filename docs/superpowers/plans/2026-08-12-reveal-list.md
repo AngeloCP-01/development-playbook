@@ -2,7 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Replace five byte-identical expand-to-reveal accordions in `src/features/architecture/` with one shared `RevealList`, before stage 04 copies the pattern a sixth, seventh and eighth time.
+**Goal:** Replace **eleven** byte-identical expand-to-reveal accordions in `src/features/architecture/` with one shared `RevealList`, before stage 04 copies the pattern again.
+
+*This line said "five" until after Task 7, when a check for remaining callers found six more. See "Scope extension — Tasks 9–14" at the foot of this plan for how the count was wrong and why it mattered.*
 
 **Architecture:** Two new components in `src/components/`. `RevealList` owns the open-set state, the card and row markup, the chevron, and the `aria-expanded` / `aria-controls` pairing; callers supply rows and optional header and footer slots. `RevealFacet` owns the labelled paragraph that appears thirteen times across the five bodies. Each caller migrates in its own task so a reviewer can reject one migration while approving its neighbour.
 
