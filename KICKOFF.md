@@ -75,8 +75,10 @@ Before doing anything, read these for context:
   and a title sync test guards each doc's H1 against `stages.ts`. Never hand-edit
   `glossary.md`.
 - **Stage 04's doc is corrected and `TD-28` is closed**, on `fix/stage-04-doc-corrections`,
-  **37 commits, reviewed, not merged and not pushed**. `docs/04-project-setup.md` went
-  **323 → 690 lines**. The number that matters for how you read any debt entry here:
+  **reviewed, not merged and not pushed** — 37 commits of work (`859a1b8`…`1418c77`) plus
+  the record and review-fix commits that carry them; `git rev-list --count develop..HEAD`
+  is the live total. `docs/04-project-setup.md` went **323 → 711 lines at `38765e7`**.
+  The number that matters for how you read any debt entry here:
   **TD-28 named four defects and the round closed 31.** Reading the doc found 8, running
   every executable block of it found 5 more, a cold reader given the corrected doc and a
   task to finish found 14, and per-task reviews found the last 4. The evidence, the
@@ -122,7 +124,7 @@ Before doing anything, read these for context:
 ### Next round's scope: stage 04 — `RevealList`, then the port
 
 **The doc-correction phase is done** and is the reason this section no longer opens with
-TD-28. `fix/stage-04-doc-corrections` corrected `docs/04-project-setup.md` from 323 to 690
+TD-28. `fix/stage-04-doc-corrections` corrected `docs/04-project-setup.md` from 323 to 711
 lines and closed that debt, which named four of the thirty-one defects the round found. The
 branch is **not merged**. Settle the merge before planning against the doc, because a plan
 specified against prose that then moves is the failure stage 03 hit five times out of six
