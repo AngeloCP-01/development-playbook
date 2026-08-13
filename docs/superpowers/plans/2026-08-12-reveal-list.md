@@ -919,3 +919,68 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 - [ ] The `DeferredList` badge move is named in a commit subject, the tracker's `Deferred:` list, and the review brief
 - [ ] Whole-branch review complete, blocking findings fixed
 - [ ] Branch state reported; `NOT merged, NOT deployed`
+
+---
+
+## Scope extension — Tasks 9–14, the six the plan missed
+
+**Added 2026-08-13, on the user's call, after Task 7.** This plan opened by describing "five
+byte-identical accordions". That was wrong: there are **eleven**. The five were found because
+exactly two of them — `EvolutionNotes` and `ScalingMoves` — carried header comments admitting
+they were duplicates. The other six never said so, so nobody counted them.
+
+`ADRAnatomy`, `AIArchitecturePlays`, `ContractCost`, `Normalisation`, `SoftDelete` and
+`TraceForward` each carry the identical signature: `Card className="p-0"`,
+`divide-y divide-line`, `ChevronDown`, `aria-expanded`, and the exact button className
+`flex min-h-11 w-full items-center gap-3.5 px-5 py-3.5 text-left transition-colors duration-150 hover:bg-sunken lg:min-h-9`.
+
+Leaving them would have undercut this branch's own reason to exist — the plan's goal line
+says "before stage 04 copies the pattern a sixth, seventh and eighth time", and six
+copyable originals would have remained.
+
+### Shared requirements for Tasks 9–14
+
+Every one follows the pattern the five completed migrations established. Read
+`ResiliencePatterns.tsx` (facets + footer) and `DeploymentStyles.tsx` (badge) as the
+approved templates rather than re-deriving.
+
+- **Rendered output identical.** These are relocations. The proof is that the sweep does not move.
+- **`idPrefix` is load-bearing**, not cosmetic — it reproduces the component's existing panel
+  ids, and a silent rename is invisible to both the count and the audit.
+- **Footer and header text copied character for character**, diffed against the pre-task commit
+  rather than retyped. Three reviewers have now caught this class by comparing actual strings.
+- **Keep each header comment**, updating only what is now false. Several record why a section is
+  shaped the way it is; that is teaching material and losing it to a refactor is a real loss.
+- **Semantic tones are not interchangeable.** `go` means "this is good", `brand` means "you are
+  here", `warn` and `danger` carry their own meaning. Match the original exactly.
+- **Drop `'use client'`** where the file no longer holds state — `RevealList` carries it.
+- **Verify in a real browser, never by grepping built HTML.** These ids are computed inside a
+  client component in non-default `Stepper` panels, so a grep returns zero on a working
+  migration and a broken one alike.
+- **Baselines that must not move:** vitest **341 across 36 files**, **140** expandables,
+  **107** distinct panel ids, audit **14/14**.
+
+### The six, simplest first
+
+| Task | Component | Lines | `idPrefix` | Footer | Badge | Facets | Data |
+|---|---|---|---|---|---|---|---|
+| 9  | `ContractCost` | 90 | `contract` | yes | — | — | `./contracts` |
+| 10 | `Normalisation` | 98 | `normal-form` | yes | — | — | `./normal-forms` |
+| 11 | `TraceForward` | 100 | `trace` | yes | — | — | `./characteristics` |
+| 12 | `SoftDelete` | 111 | `soft-delete` | yes | 1 | — | `./soft-delete` |
+| 13 | `AIArchitecturePlays` | 200 | `ai-arch` | — | — | — | `./ai-plays` |
+| 14 | `ADRAnatomy` | 207 | `adr` | yes | — | 2 | inline |
+
+Ordered by size, the same reasoning that put `EvolutionNotes` first: prove the shape on the
+smallest caller before the ones with more to lose. **Tasks 13 and 14 are twice the size of the
+rest** and may carry structure beyond a plain accordion — read each in full before editing, and
+if a component turns out not to fit `RevealList`, say so rather than forcing it. A caller that
+does not fit is a finding about the component, not a failure of the task.
+
+### Verification after Task 14
+
+- [ ] `grep -c 'useState<Set<string>>' src/features/architecture/*.tsx` returns nothing — all
+      eleven migrated, no caller retains its own accordion state
+- [ ] vitest 341/36, lint, typecheck clean
+- [ ] audit 14/14, and the sweep still **140 expandables / 107 ids**
+- [ ] every `idPrefix` in the table above still produces its original panel ids
