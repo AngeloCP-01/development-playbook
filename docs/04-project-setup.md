@@ -639,8 +639,9 @@ suspicious, and suspicion does not delegate.
 - `.prettierrc`, `.prettierignore`, `eslint.config.mjs`, `tsconfig.json`, `lefthook.yml`,
   `.nvmrc`, `.npmrc`, `.env.example`
 - `package.json` pinning `engines.node` and `packageManager`, a guarded `prepare` script,
-  and the `typecheck`, `test`, `lint`, `format`, and `format:check` scripts the hooks and
-  CI call
+  and the `typecheck`, `test`, `lint`, `format`, and `format:check` scripts. CI calls four
+  of them by name and the pre-push hook two; `format` is the one you run yourself, since
+  pre-commit invokes `prettier` on staged files directly rather than through a script
 - `src/lib/env.ts` validating configuration at boot
 - `.github/workflows/ci.yml` with branch protection enforcing it
 - A Vercel project producing preview URLs per pull request
@@ -653,7 +654,9 @@ suspicious, and suspicion does not delegate.
 
 - [ ] A fresh clone reaches a running app with `.env.example` as the only guide: `pnpm
       install`, `cp .env.example .env.local`, fill in the blanks it names, `pnpm dev`
-- [ ] A pull request produces a preview URL automatically
+- [ ] A pull request produces a preview URL automatically — which also proves §6's guarded
+      `prepare`, because the build host *is* the `.git`-less environment, and an unguarded
+      `lefthook install` would have failed the install step before any build began
 - [ ] CI fails on a deliberately broken commit (test it — do not assume it)
 - [ ] Branch protection blocks merging when CI is red
 - [ ] A deliberate error appears in Sentry with readable TypeScript stack traces
