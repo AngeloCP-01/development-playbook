@@ -28,10 +28,12 @@ export function Normalisation() {
         summary: form.rule,
         body: (
           <>
-            <p className="t-label text-warn">The violation</p>
-            <p className="mt-1 text-sm leading-6 text-muted">
-              {form.violation}
-            </p>
+            <div>
+              <p className="t-label text-warn">The violation</p>
+              <p className="mt-1 text-sm leading-6 text-muted">
+                {form.violation}
+              </p>
+            </div>
             {form.exception && (
               <div className="mt-3">
                 <p className="t-label text-blueprint">
