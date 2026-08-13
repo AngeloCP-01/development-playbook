@@ -282,21 +282,6 @@ Import `env` everywhere instead of `process.env`. A missing variable now fails a
 with a clear message naming the variable, rather than surfacing as `undefined` in a
 request handler three weeks later.
 
-**Everywhere means every server module, not a `'use client'` file.** The browser has no
-`process.env`. Next substitutes static `process.env.NEXT_PUBLIC_*` reads in client code and
-nothing else, and `schema.parse(process.env)` is not a static read, so the client gets an
-empty object and every key fails at once — including `NEXT_PUBLIC_APP_URL`, which is
-usually why someone imported `env` there to begin with.
-
-The failure shape is the part worth knowing. `pnpm build` succeeds, the server-rendered
-HTML is correct, and the page dies on hydration with a `ZodError` in the browser console
-naming `SESSION_SECRET`. Every gate this stage wires stays green; only loading the page in
-a browser shows it. The secret does not leak, because Next never hands a non-public
-variable to the client, but the key names and the whole of Zod ship in the bundle. When a
-client component needs a configured value, pass it down as a prop from a server component,
-or read `process.env.NEXT_PUBLIC_APP_URL` directly, which is the static read Next does
-substitute.
-
 Which is exactly why the schema only lists keys you can supply *today*. It is a gate, not
 a wishlist: every key in it has to have a value before anything boots, so a key for a
 database you have not chosen yet locks you out of your own dev server. If the entry
@@ -327,6 +312,21 @@ what makes the first Definition of done reachable. A fresh clone, `pnpm install`
 `cp`, one `openssl rand`, `pnpm dev`, and a page renders, with no database anywhere.
 `.env.example` stays the only documentation of required configuration that does not rot,
 because the app stops booting when it drifts.
+
+**One limit on "everywhere": server modules only, never a `'use client'` file.** The
+browser has no `process.env`. Next substitutes static `process.env.NEXT_PUBLIC_*` reads in
+client code and nothing else, and `schema.parse(process.env)` is not a static read, so the
+client gets an empty object and every key fails at once — including `NEXT_PUBLIC_APP_URL`,
+which is usually why someone imported `env` there to begin with.
+
+The failure shape is the part worth knowing. `pnpm build` succeeds, the server-rendered
+HTML is correct, and the page dies on hydration with a `ZodError` in the browser console
+naming `SESSION_SECRET`. Every gate this stage wires stays green; only loading the page in
+a browser shows it. The secret does not leak, because Next never hands a non-public
+variable to the client, but the key names and the whole of Zod ship in the bundle. When a
+client component needs a configured value, pass it down as a prop from a server component,
+or read `process.env.NEXT_PUBLIC_APP_URL` directly, which is the static read Next does
+substitute.
 
 Install the test runner now, even with nothing to test yet:
 
