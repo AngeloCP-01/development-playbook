@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { expect, test } from 'vitest'
 import { RevealList } from './RevealList'
 
@@ -80,7 +80,18 @@ test('renders a row badge when the row carries one, since a silently dropped bad
   expect(screen.getByText('fails the test')).toBeDefined()
 })
 
-test('renders no badge for a row that does not carry one', () => {
-  render(<RevealList rows={rows} idPrefix="t" />)
-  expect(screen.queryByText('fails the test')).toBeNull()
+// The previous version of this test used a fixture where no row carried a
+// badge, so it could not catch cross-row leakage: row one's badge appearing
+// on row two would be invisible to it. Giving row one a badge and scoping the
+// negative assertion to row two with `within` makes the assertion about that
+// row, not about the document.
+test('renders no badge for a row that does not carry one, even when a sibling row does', () => {
+  render(
+    <RevealList
+      rows={[{ ...rows[0], badge: <span>fails the test</span> }, rows[1]]}
+      idPrefix="t"
+    />,
+  )
+  const secondRow = screen.getByRole('button', { name: /Second/ })
+  expect(within(secondRow).queryByText('fails the test')).toBeNull()
 })
