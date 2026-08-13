@@ -23,7 +23,7 @@ export type RevealRow = {
   title: string
   /** Rendered beside the title, not below it. See `DeferredList`'s migration note. */
   badge?: ReactNode
-  summary: string
+  summary?: string
   body: ReactNode
 }
 
@@ -74,9 +74,11 @@ export function RevealList({
                       <span className="font-medium">{row.title}</span>
                       {row.badge}
                     </span>
-                    <span className="mt-0.5 block text-sm text-subtle">
-                      {row.summary}
-                    </span>
+                    {row.summary && (
+                      <span className="mt-0.5 block text-sm text-subtle">
+                        {row.summary}
+                      </span>
+                    )}
                   </span>
                   <ChevronDown
                     className={`size-4 shrink-0 text-subtle transition-transform duration-150 ${open ? 'rotate-180' : ''}`}

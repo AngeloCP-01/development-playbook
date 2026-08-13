@@ -95,3 +95,22 @@ test('renders no badge for a row that does not carry one, even when a sibling ro
   const secondRow = screen.getByRole('button', { name: /Second/ })
   expect(within(secondRow).queryByText('fails the test')).toBeNull()
 })
+
+// `summary` is optional (Task 9b): `ContractCost` and two of the five
+// unmigrated accordions have no summary line at all. Before this, an absent
+// summary still rendered `<span className="mt-0.5 block text-sm
+// text-subtle" />` into the DOM — an empty element a later reader cannot
+// distinguish from an accidental omission. Scoped to the row with `within`,
+// the way the badge-leakage test above is scoped, so a leaked summary from a
+// sibling row would still be caught.
+test('renders no summary element for a row that does not carry a summary', () => {
+  const withoutSummary = {
+    id: rows[0].id,
+    title: rows[0].title,
+    body: rows[0].body,
+  }
+  render(<RevealList rows={[withoutSummary, rows[1]]} idPrefix="t" />)
+  const firstRow = screen.getByRole('button', { name: /First/ })
+  expect(within(firstRow).queryByText('first summary')).toBeNull()
+  expect(firstRow.querySelector('span.text-subtle')).toBeNull()
+})
