@@ -859,13 +859,21 @@ Also update the "Expand to reveal" row in the patterns table: its canonical exam
 cd web && lsof -ti:3100 | xargs kill -9 2>/dev/null; pnpm test:e2e
 ```
 
-Expected: **14/14, and the expandable count unchanged at 108 across 36 URLs.** The count is the proof that five components were replaced and nothing was lost; a green suite alone would not distinguish "all five migrated" from "one silently renders nothing".
+Expected: **14/14.** Then the count that is the actual proof:
+
+```bash
+node e2e/count-expandables.mjs
+```
+
+Expected: **140 across 36 URLs**, unchanged. The count is what distinguishes "all five migrated" from "one silently renders nothing"; a green suite cannot.
+
+**Two corrections to this step, both found before the branch started.** The number was written here as 108, which was TD-26's figure from 2026-08-03 — measured on 2026-08-13 the tree gives **140**, with no defect in between, because stage content grew. And `audit.spec.ts` opens disclosures per page and never aggregates, so nothing printed a total and the check as originally written could not be run at all. `e2e/count-expandables.mjs` exists so the number is derived rather than quoted. **Re-measure the "before" on your own tree rather than trusting 140** — if it disagrees, the tree moved again and your figure is the right one.
 
 If the count moved at all, **the refactor is wrong, not the checker.** Find the missing rows before proceeding.
 
 - [ ] **Step 4: Record the branch in `docs/tracker.md`**
 
-A Completed row citing: the commit range, the test count (baseline 331 across 33 files, plus the new `RevealList` and `RevealFacet` tests), the expandable count before and after, and the teeth checks from Tasks 1 and 2. Include a `Deferred:` list naming at minimum: the `DeferredList` badge move as a deliberate visual change, TD-27 and TD-12 still open, and any caller that turned out not to fit.
+A Completed row citing: the commit range, the test count (baseline **332 across 33 files** as of `dd44b30`, plus the new `RevealList` and `RevealFacet` tests), the expandable count before and after, and the teeth checks from Tasks 1 and 2. Include a `Deferred:` list naming at minimum: the `DeferredList` badge move as a deliberate visual change, TD-27 and TD-12 still open, and any caller that turned out not to fit.
 
 Add a decision entry from **D-53** onward: shared interaction components live in `src/components/`, and a pattern's second consumer is when it gets extracted rather than its fifth.
 
@@ -893,9 +901,10 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 
 ## Verification (after all tasks)
 
-- [ ] `cd web && pnpm vitest run` — green; count is baseline 331 plus 6 new tests across 2 new files
+- [ ] `cd web && pnpm vitest run` — green; count is baseline **332** plus 6 new tests across 2 new files
 - [ ] `pnpm lint && pnpm typecheck && pnpm format:check` — clean
-- [ ] `lsof -ti:3100 | xargs kill -9; pnpm test:e2e` — 14/14, **expandable count still 108 across 36 URLs**
+- [ ] `lsof -ti:3100 | xargs kill -9; pnpm build && pnpm start -p 3100 &` then `pnpm test:e2e` — 14/14
+- [ ] `node e2e/count-expandables.mjs` — **140 across 36 URLs**, matching the before-figure measured on this same tree
 - [ ] `grep -rn "useState<Set<string>>" src/features/architecture/` returns nothing — all five callers migrated
 - [ ] Every footer and header string diffed character for character against `git show HEAD~N` originals
 - [ ] `/stages/03-architecture` loaded in both themes at 320px and 1440px, zero console errors
