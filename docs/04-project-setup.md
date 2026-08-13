@@ -156,9 +156,43 @@ pnpm add -D prettier eslint-config-prettier
 }
 ```
 
-Append `eslint-config-prettier/flat` last in `eslint.config.mjs`, and add `format` /
-`format:check` scripts. One tool lints, one tool formats, and neither owns the other's
-job.
+Append `eslint-config-prettier/flat` last in `eslint.config.mjs`. One tool lints, one tool
+formats, and neither owns the other's job. Then add the two scripts — CI calls
+`format:check` by name in §7, so it has to exist and it has to check the same files the
+one you run yourself writes:
+
+```json
+{
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  }
+}
+```
+
+That `.` is the whole repository, which is why the next file matters.
+
+`.prettierignore`:
+
+```
+pnpm-lock.yaml
+```
+
+Shorter than you expect, because Prettier reads `.gitignore` as well as `.prettierignore`
+— `.next/` and `node_modules/` are already excluded by the `.gitignore`
+`create-next-app` wrote. What is left is the case `.gitignore` cannot cover: a file that is
+generated *and* committed. The lockfile is the one every project has. Reformatting it
+changes a file you do not own and is never what you meant.
+
+Now run it once over the scaffold, before wiring CI in §7:
+
+```bash
+pnpm format
+```
+
+`create-next-app` writes double quotes and semicolons; the `.prettierrc` above has just
+said otherwise. Skip this and your first CI run goes red on six files you never opened,
+which teaches exactly the wrong lesson about the gate on its first day.
 
 Gate lint at **`--max-warnings 0`**, in the script itself rather than only where it gets
 called:
@@ -493,8 +527,8 @@ suspicious, and suspicion does not delegate.
 ## Artifacts
 
 - Repository with the feature-first `src/` structure
-- `.prettierrc`, `eslint.config.mjs`, `tsconfig.json`, `lefthook.yml`, `.nvmrc`, `.npmrc`,
-  `.env.example`
+- `.prettierrc`, `.prettierignore`, `eslint.config.mjs`, `tsconfig.json`, `lefthook.yml`,
+  `.nvmrc`, `.npmrc`, `.env.example`
 - `package.json` pinning `engines.node` and `packageManager`, a guarded `prepare` script,
   and the `typecheck`, `test`, `lint`, `format`, and `format:check` scripts the hooks and
   CI call
