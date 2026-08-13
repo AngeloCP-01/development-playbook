@@ -134,7 +134,8 @@ src/
 `src/db/` is the one folder in that tree that is conditional. The entry criteria said that
 if you were unsure, you do not need a database yet. If that was your answer, do not create
 it. An empty `db/` holding a `schema.ts` that describes nothing is the structural version
-of §5's required `DATABASE_URL`: a placeholder that looks like a decision and is not one.
+of a `DATABASE_URL` you have no value for: a placeholder that looks like a decision and is
+not one.
 It arrives in the commit that adds the client, alongside uncommenting `DATABASE_URL` in
 the schema.
 
@@ -560,9 +561,10 @@ That last line matters more than it looks. See [10 — Documentation](10-documen
 
 Rolling back is the half of it this stage has not handed you, and a README is the wrong
 place to discover you do not know it. On Vercel the command is `vercel rollback`, which
-returns production to the previous deployment; `vercel ls` and `vercel promote <url>` pick
-a specific one instead, though on the Hobby plan the previous deployment is the only one
-you are allowed to go back to. Put the command in the README, not a description of it.
+returns production to the previous deployment — and on the Hobby plan that is the only one
+it will go back to. To reach an older one, or to undo a rollback, `vercel ls` lists
+deployments and `vercel promote <url>` makes a specific one current. Put the command in
+the README, not a description of it.
 [13 — Production Deployment](13-production-deployment.md) owns this properly, including
 the case that breaks it: a deploy that also migrated the database does not roll back with
 the code.
