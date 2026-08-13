@@ -140,9 +140,8 @@ src/
 if you were unsure, you do not need a database yet. If that was your answer, do not create
 it. An empty `db/` holding a `schema.ts` that describes nothing is the structural version
 of a `DATABASE_URL` you have no value for: a placeholder that looks like a decision and is
-not one.
-It arrives in the commit that adds the client, alongside uncommenting `DATABASE_URL` in
-the schema.
+not one. It arrives in the commit that adds the client, alongside uncommenting
+`DATABASE_URL` in the schema.
 
 The organizing principle is **feature-first, not layer-first**. A `components/`,
 `hooks/`, `utils/` split means every feature change touches four distant folders. A
@@ -515,9 +514,9 @@ URL, because a green checkmark is not the check. Fetch one real page and confirm
 renders, then open it in a browser with the console visible. A fetch returns the server's
 HTML, which stays correct even when the page dies on hydration — the failure §5 describes
 for a client component importing `env`, and the reason fetching alone cannot find it. If
-you have configured a canonical URL anywhere, fetch `/robots.txt` too: it
-prints the origin the build actually used, so one request tells you whether the value you
-set is the value that shipped.
+you have configured a canonical URL anywhere, fetch `/robots.txt` too: it prints the origin
+the build actually used, so one request tells you whether the value you set is the value
+that shipped.
 
 Verify all of this before writing any features. A broken deploy pipeline is far easier to
 debug against a scaffold than against a half-built app.
