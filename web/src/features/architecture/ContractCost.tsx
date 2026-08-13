@@ -17,8 +17,8 @@ import { CONTRACT_ROWS } from './contracts'
  * — moves from below the row title to beside it in the move: `RevealList`
  * has one badge slot, and it sits beside the title, matching `DeferredList`
  * and `DeploymentStyles`. There is no separate summary line here; the row
- * never had one, so `RevealList`'s summary slot goes unused rather than
- * carrying invented text.
+ * never had one, so `summary` (Task 9b: optional on `RevealRow`) is left off
+ * rather than carrying invented text.
  */
 
 const COST_LABEL: Record<string, string> = {
@@ -39,7 +39,6 @@ export function ContractCost() {
             {COST_LABEL[row.cost]}
           </span>
         ),
-        summary: '',
         body: <p className="text-sm leading-6 text-muted">{row.why}</p>,
       }))}
       footer={
