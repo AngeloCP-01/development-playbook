@@ -1,6 +1,7 @@
 /**
- * Counts how many expandables the audit's sweep actually opens, across every
- * URL in `audit.spec.ts`'s `PAGES`.
+ * Counts how many expandables the audit's sweep actually opens, across the
+ * same URLs the audit sweeps — ready stages from `src/lib/stages.ts`, their
+ * steps from the rail each one renders.
  *
  * Why this exists. TD-26 found the contrast sweep was opening five expandables
  * across 36 URLs while reporting a clean pass, and its fix took that to 108.
@@ -23,20 +24,51 @@
  *
  * The selector and the one-at-a-time loop mirror `openExpandables()` in
  * `audit.spec.ts`. If that changes, change this with it, or the two stop
- * measuring the same thing.
+ * measuring the same thing. The URL derivation mirrors `audit-pages.ts` for
+ * the same reason; it is duplicated rather than imported because this file is
+ * plain `.mjs` and that one is TypeScript.
  */
 import { chromium } from '@playwright/test'
 import { readFileSync } from 'node:fs'
 
 const BASE = process.env.AUDIT_BASE ?? 'http://localhost:3100'
 
-const spec = readFileSync(new URL('./audit.spec.ts', import.meta.url), 'utf8')
-const block = spec.match(/const PAGES[^=]*=\s*\[([\s\S]*?)\n\]/)
-if (!block) throw new Error('could not find PAGES in audit.spec.ts')
-const urls = [...block[1].matchAll(/'([^']*\/[^']*)'/g)].map((m) => m[1])
+// Ready stage slugs, from the same flag the router and `audit-pages.ts` use.
+// This file is plain `.mjs` and cannot import the TypeScript module, so it
+// reads the declaration instead — narrow enough to stay honest, and it fails
+// loudly rather than silently sweeping nothing if the shape ever changes.
+const stagesSrc = readFileSync(
+  new URL('../src/lib/stages.ts', import.meta.url),
+  'utf8',
+)
+const readySlugs = [
+  ...stagesSrc.matchAll(/slug:\s*'([^']+)'[\s\S]*?ready:\s*(true|false)/g),
+]
+  .filter(([, , ready]) => ready === 'true')
+  .map(([, slug]) => slug)
+
+if (readySlugs.length === 0) {
+  throw new Error('parsed no ready stages from src/lib/stages.ts')
+}
 
 const browser = await chromium.launch()
 const page = await browser.newPage()
+
+// Step ids come from the rail each stage renders, matching `audit-pages.ts`.
+// This used to scrape `const PAGES` out of `audit.spec.ts`; that array was
+// removed when TD-12 closed, which broke this script — found by running it.
+const urls = ['/']
+for (const slug of readySlugs) {
+  await page.goto(`${BASE}/stages/${slug}`, { waitUntil: 'networkidle' })
+  const ids = await page.$$eval('[role="tab"][id^="tab-"]', (tabs) =>
+    tabs.map((tab) => tab.id.slice('tab-'.length)),
+  )
+  if (ids.length === 0) {
+    throw new Error(`${slug} is ready but rendered no steps`)
+  }
+  urls.push(...ids.map((id) => `/stages/${slug}#${id}`))
+}
+
 const perPage = []
 const allIds = new Set()
 let total = 0
