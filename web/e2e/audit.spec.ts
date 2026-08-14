@@ -1,49 +1,11 @@
 import { expect, test } from '@playwright/test'
+import { auditPages } from './audit-pages'
 
 /**
  * The committed version of the audits that caught eleven bugs while stage 01
  * was built (docs/tracker.md, "Bugs found and fixed"). Four checks: overflow,
  * touch targets, contrast, console. Runs against a production build.
  */
-
-const PAGES = [
-  '/',
-  '/stages/01-product-discovery#frame',
-  '/stages/01-product-discovery#research',
-  '/stages/01-product-discovery#ai',
-  '/stages/01-product-discovery#talk',
-  '/stages/01-product-discovery#decide',
-  '/stages/01-product-discovery#record',
-  '/stages/02-planning#done',
-  '/stages/02-planning#cut',
-  '/stages/02-planning#sequence',
-  '/stages/02-planning#size',
-  '/stages/02-planning#ai',
-  '/stages/02-planning#write',
-  '/stages/02-planning#horizon',
-  '/stages/03-architecture#reverse',
-  '/stages/03-architecture#require',
-  '/stages/03-architecture#trace',
-  '/stages/03-architecture#model',
-  '/stages/03-architecture#worksheet',
-  '/stages/03-architecture#shape',
-  '/stages/03-architecture#oneapp',
-  '/stages/03-architecture#boundaries',
-  '/stages/03-architecture#sketch',
-  '/stages/03-architecture#flow',
-  '/stages/03-architecture#resilience',
-  '/stages/03-architecture#schema',
-  '/stages/03-architecture#indexes',
-  '/stages/03-architecture#tenancy',
-  '/stages/03-architecture#concurrency',
-  '/stages/03-architecture#races',
-  '/stages/03-architecture#evolve',
-  '/stages/03-architecture#contract',
-  '/stages/03-architecture#access',
-  '/stages/03-architecture#record',
-  '/stages/03-architecture#ai',
-  '/stages/03-architecture#traps',
-]
 
 const WIDTHS = [320, 768, 1024, 1440, 2560]
 
@@ -110,7 +72,7 @@ for (const width of WIDTHS) {
     page,
   }) => {
     await page.setViewportSize({ width, height: 900 })
-    for (const path of PAGES) {
+    for (const path of await auditPages(page)) {
       await page.goto(path, { waitUntil: 'networkidle' })
       const overflow = await page.evaluate(() => {
         const de = document.documentElement
@@ -127,7 +89,7 @@ test('interactive elements are at least 44px tall below lg', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 })
-  for (const path of PAGES) {
+  for (const path of await auditPages(page)) {
     await page.goto(path, { waitUntil: 'networkidle' })
     // A target that is only reachable behind an accordion is still a target.
     // This check never expanded anything either, which is how a sub-44px
@@ -216,7 +178,7 @@ for (const scheme of ['light', 'dark'] as const) {
     const page = await context.newPage()
     const failures: string[] = []
 
-    for (const path of PAGES) {
+    for (const path of await auditPages(page)) {
       await page.goto(path, { waitUntil: 'networkidle' })
       // Term definition panels and accordion bodies are surfaces too.
       await openExpandables(page)
@@ -388,7 +350,7 @@ test('zero console errors across every page and step', async ({ browser }) => {
   page.on('console', (m) => {
     if (m.type() === 'error') errors.push(m.text().slice(0, 120))
   })
-  for (const path of PAGES) {
+  for (const path of await auditPages(page)) {
     await page.goto(path, { waitUntil: 'networkidle' })
   }
   await context.close()
@@ -512,20 +474,23 @@ test('reset clears the uncommitted draft as well as the committed answers, since
 // ── the audit list audits what it claims to ────────────────────────────────
 
 /**
- * `PAGES` is hand-written (TD-12), and its failure mode is silent: a hash that
- * names no step does not error, it falls back to the first panel. So the suite
- * stays green while auditing step one twice and never touching the steps that
- * were added. That is not hypothetical — the stage 03 entries listed
- * `#constrain` and `#decide` for weeks after both steps had been renamed away,
- * which meant five of its nine steps had never been audited at all.
+ * A hash that names no step does not error — it falls back to the first panel.
+ * So a suite sweeping stale hashes stays green while auditing step one twice
+ * and never touching the steps that were added. Not hypothetical: the stage 03
+ * entries listed `#constrain` and `#decide` for weeks after both steps had
+ * been renamed away, which meant five of its nine steps had never been audited
+ * at all.
  *
- * This does not close TD-12; the list is still hand-maintained and forgetting
- * to add a step still audits nothing. It closes the half that lies.
+ * The list is now derived from the rendered rail (`audit-pages.ts`, TD-12), so
+ * a hash cannot go stale in that direction any more — it comes from the step
+ * that rendered it. This test stays because the fallback behaviour it names is
+ * still real, and because a derivation is worth a check that its output lands
+ * where it claims rather than being trusted for being generated.
  */
 test('every listed step hash lands on the step it names, since a dead hash falls back and audits step one twice', async ({
   page,
 }) => {
-  for (const path of PAGES.filter((p) => p.includes('#'))) {
+  for (const path of (await auditPages(page)).filter((p) => p.includes('#'))) {
     const id = path.split('#')[1]
     await page.goto(path, { waitUntil: 'networkidle' })
     await expect(
@@ -581,7 +546,7 @@ test('no step panel exceeds four screens, because a step that is a scroll is two
   await page.setViewportSize(PANEL_VIEWPORT)
   const failures: string[] = []
 
-  for (const path of PAGES.filter((p) => p.includes('#'))) {
+  for (const path of (await auditPages(page)).filter((p) => p.includes('#'))) {
     const id = path.split('#')[1]
     await page.goto(path, { waitUntil: 'networkidle' })
     const height = await page

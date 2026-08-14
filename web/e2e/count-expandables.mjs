@@ -1,6 +1,7 @@
 /**
- * Counts how many expandables the audit's sweep actually opens, across every
- * URL in `audit.spec.ts`'s `PAGES`.
+ * Counts how many expandables the audit's sweep actually opens, across the
+ * same URLs the audit sweeps — ready stages from `src/lib/stages.ts`, their
+ * steps from the rail each one renders.
  *
  * Why this exists. TD-26 found the contrast sweep was opening five expandables
  * across 36 URLs while reporting a clean pass, and its fix took that to 108.
@@ -23,20 +24,81 @@
  *
  * The selector and the one-at-a-time loop mirror `openExpandables()` in
  * `audit.spec.ts`. If that changes, change this with it, or the two stop
- * measuring the same thing.
+ * measuring the same thing. The URL derivation mirrors `audit-pages.ts` for
+ * the same reason; it is duplicated rather than imported because this file is
+ * plain `.mjs` and that one is TypeScript.
  */
 import { chromium } from '@playwright/test'
 import { readFileSync } from 'node:fs'
 
 const BASE = process.env.AUDIT_BASE ?? 'http://localhost:3100'
 
-const spec = readFileSync(new URL('./audit.spec.ts', import.meta.url), 'utf8')
-const block = spec.match(/const PAGES[^=]*=\s*\[([\s\S]*?)\n\]/)
-if (!block) throw new Error('could not find PAGES in audit.spec.ts')
-const urls = [...block[1].matchAll(/'([^']*\/[^']*)'/g)].map((m) => m[1])
+// Ready stage slugs, from the same flag the router and `audit-pages.ts` use.
+// This file is plain `.mjs` and cannot import the TypeScript module, so it
+// reads the declaration instead.
+//
+// The inner group refuses to cross a `slug:`, so each match is one stage entry
+// rather than a `slug` from one paired with a `ready` from a later one. That
+// matters because the pairing otherwise rests on `slug` always preceding
+// `ready` inside every object — which TypeScript does not require, prettier
+// does not enforce, and no test covers. Swap two fields in one entry and a
+// greedy pattern silently reads that stage's flag off its neighbour and drops
+// the stage after it, then prints a plausible URL count measured over the
+// wrong set.
+//
+// The completeness check below is what makes that loud: every `slug:` in the
+// file must have been paired, so a shape change fails here instead of
+// producing a believable wrong number. An earlier version guarded only against
+// parsing *nothing*, which catches zero and not wrong.
+const stagesSrc = readFileSync(
+  new URL('../src/lib/stages.ts', import.meta.url),
+  'utf8',
+)
+const parsed = [
+  ...stagesSrc.matchAll(
+    /slug:\s*'([^']+)'((?:(?!slug:)[\s\S])*?)ready:\s*(true|false)/g,
+  ),
+]
+// Only entries, not the `slug: string` field on the `Stage` type — counting
+// bare `slug:` makes this throw on every run, which is how this line was
+// written first.
+const declaredSlugs = [...stagesSrc.matchAll(/^\s*slug: '/gm)].length
+
+if (parsed.length !== declaredSlugs) {
+  throw new Error(
+    `paired ${parsed.length} stages against ${declaredSlugs} slug declarations ` +
+      `in src/lib/stages.ts — the file's shape changed, and sweeping the ` +
+      `stages this did pair would report a plausible number over the wrong set.`,
+  )
+}
+
+const readySlugs = parsed
+  .filter(([, , , ready]) => ready === 'true')
+  .map(([, slug]) => slug)
+
+if (readySlugs.length === 0) {
+  throw new Error('parsed no ready stages from src/lib/stages.ts')
+}
 
 const browser = await chromium.launch()
 const page = await browser.newPage()
+
+// Step ids come from the rail each stage renders, matching `audit-pages.ts`.
+// This used to scrape `const PAGES` out of `audit.spec.ts`; that array was
+// removed when TD-12 closed, which broke this script — found by running it.
+const urls = ['/']
+for (const slug of readySlugs) {
+  await page.goto(`${BASE}/stages/${slug}`, { waitUntil: 'networkidle' })
+  const ids = await page.$$eval(
+    '[role="tablist"][aria-label="Stage steps"] [role="tab"][id^="tab-"]',
+    (tabs) => tabs.map((tab) => tab.id.slice('tab-'.length)),
+  )
+  if (ids.length === 0) {
+    throw new Error(`${slug} is ready but rendered no steps`)
+  }
+  urls.push(...ids.map((id) => `/stages/${slug}#${id}`))
+}
+
 const perPage = []
 const allIds = new Set()
 let total = 0
@@ -62,7 +124,7 @@ for (const url of urls) {
 
   // The panel ids these disclosures control. A migration that renames one is
   // invisible to the count — the same number of rows still renders — and
-  // invisible to the audit, which hand-lists step hashes and never sees a
+  // invisible to the audit, which sweeps *step* hashes and never reads a
   // disclosure's own id. Collected here so one run catches both.
   for (const id of await page.evaluate(() =>
     [...document.querySelectorAll('[role=tabpanel] button[aria-controls]')].map(
