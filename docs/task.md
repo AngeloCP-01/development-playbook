@@ -60,6 +60,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-3** | Stages 02–18 interactive | ◐ *(02, 03 done; 15 remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton merged 2026-08-14 as `0207fd6`; content and images remain)* |
 
 ### Dependency map
 
@@ -565,6 +566,56 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
       layout, and the edge logs no console errors. Scoped to what a local build cannot do —
       contrast and overflow stay in `audit.spec.ts`, because the bytes CI checked are the
       bytes Vercel serves
+
+---
+
+### W-6 — Reference hub ◐ *(skeleton merged 2026-08-14 as `0207fd6`)*
+
+**Why it exists.** Two problems with one shape. `reference/glossary.md` and
+`reference/stack.md` have been unreachable from the app since they were written — no
+route renders either — and there was nowhere to put lookup material that answers "what
+was that command" rather than teaching a decision.
+
+Spec: `docs/superpowers/specs/2026-08-14-reference-hub-design.md`.
+Plan: `docs/superpowers/plans/2026-08-14-reference-hub-skeleton.md`.
+
+**W-6.1 — Skeleton ☑** *(merged 2026-08-14, `0207fd6`, 11 commits, +3175/−86)*
+
+`/reference` plus a per-sheet route, eleven sheets registered behind one renderer,
+a second nav landmark in the rail, sitemap entries guarded bidirectionally, and
+`reference/cheatsheets.md` generated from the registry. Ten of the eleven sheets are
+deliberately empty (**D-62**). Evidence in `docs/tracker.md`.
+
+**W-6.2 — Source graphics on the sheets ☐**
+
+Requested 2026-08-14, deferred out of the skeleton because it is an asset pipeline
+rather than a data-model tweak (**D-63**). Four things it needs:
+
+- the images move into `web/public/` — they sit in `reference/` today, which Next
+  does not serve, so nothing can display them at all
+- conversion off GIF. `MasterPlan-Api-Design.gif` is 4.1MB and
+  `Software-Architecture-Patterns.gif` is 1MB, both static images in the worst
+  available format for that. WebP or AVIF should cut them by an order of magnitude
+- a plate treatment that survives the cyanotype. Every one of these graphics has a
+  light background and would punch a hole in dark mode unbordered
+- `alt=""` where the transcription beside it is already a complete text equivalent,
+  captioned with the existing `source` attribution
+
+**W-6.3 — Fill the ten empty sheets ☐**
+
+Content work, not app work, now that the frame exists. Three sources are already
+gathered and logged in `reference/cheatsheet-sources.md`; the rest have search terms
+listed there by priority. Two of the three still need their post URL and author
+recorded before anything derived from them can ship on a public site.
+
+**W-6.4 — Glossary and stack surfaced in the hub ☐**
+
+The reason `/reference` beat `/cheatsheets` as a section name. Closes the original
+gap rather than adding a parallel one.
+
+**Deferred beyond W-6:** the figure registry and the six architecture diagrams;
+stage→sheet backlinks, since the tether is one-directional today; search; and
+copy-to-clipboard on code rows, which waits for the first sheet that has any.
 
 ---
 
