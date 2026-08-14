@@ -362,12 +362,19 @@ for (const scheme of ['light', 'dark'] as const) {
  * the branch, while this test reported 14/14 throughout. Both times it was
  * found by someone opening the dev server for an unrelated reason.
  *
- * Two things a manual dev check needs to know, learned fixing the second one:
- * the warning is attributed to the *rendering* component (`Card`), not the one
- * with the defect; and it only fires on a **cold** dev server — edit a
- * component under a running one and Fast Refresh rebuilds without re-running
- * React's creation-time key validation, so the reload reads clean whatever the
- * code says. Restart the server before you believe a clean console.
+ * Two things a manual dev check needs to know. The warning is attributed to
+ * the *rendering* component (`Card`), not the one holding the defect — which
+ * is why grepping for the named component finds nothing. And the check has one
+ * narrow blind spot: Fast Refresh patching an already-open tab does not fire
+ * it, and a reload issued a second or two after saving can race the rebuild
+ * and read clean. Reload once the rebuild has settled, or restart, and it
+ * fires reliably. Measured across three cold-server runs while closing this:
+ * no-reload patching stayed silent every time; a settled reload warned every
+ * time.
+ *
+ * The real reason both instances survived is duller and worth more: every
+ * manual check loaded one page. `#ai` exercises neither `header` nor `footer`,
+ * so it passed while three other steps warned.
  *
  * Tracked as **TD-35**. Closing it means a second, narrow spec against
  * `pnpm dev` that filters for React's own warning prefixes; this comment is
