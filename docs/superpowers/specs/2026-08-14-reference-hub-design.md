@@ -1,9 +1,10 @@
 # Reference hub — parked design note
 
-**Status: PARKED 2026-08-14.** Not a spec. Brainstormed to the point of a design,
-then held because `refactor/reveal-list` and stage 04's port are still in flight in
-another session. Resume by re-reading this, confirming the open question at the
-bottom, then writing the real spec.
+**Status: ACTIVE 2026-08-14.** Parked earlier the same day, then resumed when the
+slice was redefined (see D5). Stage 04's port remains in flight in another session,
+so this work touches no stage content and no `features/` directory.
+
+Plan: `docs/superpowers/plans/2026-08-14-reference-hub-skeleton.md`.
 
 ## Problem
 
@@ -74,15 +75,46 @@ figures, the same shape `features/stage-content.ts` already uses.
 - New routes must be appended to the audit route list (`audit.spec.ts:11-30`) or they
   skip the contrast and responsive gates.
 
-## Open question at resume
+**D5 — Register every planned sheet up front; empty is a valid state.** This
+supersedes the "one lead sheet" question the parked version left open. All eleven
+sheets exist in the registry from the first commit; a sheet with `sections: []`
+renders a "sheet not drawn" placeholder and is marked on the index. The reason is
+diagnostic rather than cosmetic: an empty sheet advertises a gap, so the index
+doubles as a worklist of what still needs gathering. It mirrors how a slug absent
+from `STAGE_CONTENT` already renders a placeholder rather than 404ing.
 
-Which sheet leads slice 1. The walking skeleton assumed **architecture patterns**
-because `reference/software-architecture-patterns.md` is already transcribed, but
-that sheet is six diagrams and exercises the figure registry — the unusual path.
-Seven of the nine planned sheets are tabular, so **git commands** proves the path
-that makes the rest cheap, and tethers to stage 04, which is in flight anyway.
+Consequence: the figure registry is not needed in this slice. The only sheet with
+content is `architecture-patterns`, and it lands as rows now, with its six diagrams
+deferred to the slice that introduces figures.
 
-Not resolved. Decide at resume.
+## The eleven sheets
+
+| Slug | Group | Stage | Content at ship | Source held |
+|---|---|---|---|---|
+| `architecture-patterns` | Architecture | 03 | rows | `Software-Architecture-Patterns.gif` |
+| `design-patterns` | Architecture | 03 | empty | `software_design_patterns.jpeg` |
+| `api-design` | Architecture | 03 | empty | `MasterPlan-Api-Design.gif` |
+| `git-commands` | Git | 04 | empty | `git-commands.jpeg` |
+| `git-branching` | Git | 04 | empty | — |
+| `coding-standards` | Standards | 05 | empty | — |
+| `javascript` | Languages | — | empty | — |
+| `python` | Languages | — | empty | — |
+| `java` | Languages | — | empty | — |
+| `spring-boot` | Languages | — | empty | — |
+| `express` | Languages | — | empty | — |
+
+Scoped out deliberately: the SQL, caching, scaling, testing, security and container
+sheets sketched in `reference/cheatsheet-sources.md` under priority 3. They were not
+asked for. They are recorded there so adding them later is a content change, not a
+rethink.
+
+## Housekeeping
+
+A byte-identical duplicate of the architecture GIF was found while gathering —
+`Software-Architecture-Patterns.gif` and `Software_Architecture_Patterns.gif`, same
+SHA-256, 1MB each. The user deleted the underscored copy the same day; the citation
+in `reference/software-architecture-patterns.md` was repointed to the hyphenated
+name that survives.
 
 ## Deferred
 
