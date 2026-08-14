@@ -2,7 +2,14 @@ import { architecturePatterns } from './architecture-patterns'
 import { PLANNED } from './planned'
 import type { Cheatsheet, CheatsheetGroup } from './types'
 
-export type { Cheatsheet, CheatsheetGroup, Row, Section, Source } from './types'
+export type {
+  Cheatsheet,
+  CheatsheetGroup,
+  Row,
+  Section,
+  Source,
+  SourceImage,
+} from './types'
 export { CHEATSHEET_GROUPS, isDrawn } from './types'
 
 export const CHEATSHEETS: Cheatsheet[] = [architecturePatterns, ...PLANNED]

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowUpRight } from 'lucide-react'
 import { isDrawn, type Cheatsheet } from '@/lib/cheatsheets'
 import { getStage } from '@/lib/stages'
@@ -90,6 +91,41 @@ export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
             been gathered yet.
           </p>
         </div>
+      )}
+
+      {sheet.source?.image && (
+        <figure className="mt-14">
+          {/* A plate, because every one of these graphics has a light background
+              and would punch a hole in the cyanotype unframed. The border and
+              padding give it an edge to sit against in both themes.
+
+              Not dimmed at rest: the obvious dark-mode trick is to drop opacity
+              until hover, but the whole reason the graphic is here is to be
+              read, and dimming content to make it blend is a worse trade than
+              letting it be bright.
+
+              next/image rather than a plain tag, despite these already being
+              WebP: the win is not re-encoding, it is srcset. These are up to
+              1536px tall and a phone has no use for the full file. */}
+          <div className="border border-line-strong bg-sunken p-3 sm:p-4">
+            <Image
+              src={sheet.source.image.src}
+              width={sheet.source.image.width}
+              height={sheet.source.image.height}
+              sizes="(min-width: 1024px) 55rem, 100vw"
+              // The transcription below is a complete text equivalent, so on a
+              // drawn sheet the graphic is decorative and announcing it would
+              // make a screen reader read the page twice. On an undrawn sheet it
+              // is the only content, so it has to describe itself.
+              alt={isDrawn(sheet) ? '' : sheet.source.image.alt}
+              aria-hidden={isDrawn(sheet) || undefined}
+              className="h-auto w-full"
+            />
+          </div>
+          <figcaption className="t-label mt-3 text-subtle">
+            The gathered original
+          </figcaption>
+        </figure>
       )}
 
       {sheet.source && (

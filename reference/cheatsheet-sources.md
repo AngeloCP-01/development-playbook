@@ -159,11 +159,31 @@ annotation lifecycle.
 
 ## Filing
 
-Save captures to `reference/sources/` named `<target-slug>--<author-surname>.<ext>`,
-for example `git-commands--pandey.pdf`. Then add a ledger row.
+Captures land in `reference/` as gathered. They are **not committed** — the originals
+run 1–4MB each and git keeps every version forever.
 
-Binary weight is worth watching: these run ~1MB each as GIF, less as PDF. If the
-folder grows past a few dozen, the captures should move out of git.
+What is committed is the converted copy in `web/public/reference/`, which is what the
+site serves. Convert with `sharp` before wiring a sheet to it:
+
+```js
+sharp(src, { animated: false }).webp({ quality: 82, effort: 6 }).toFile(out)
+```
+
+Quality 82 is where these flat-colour infographics stop losing the small labels;
+verify by reading the output before committing rather than trusting the number.
+Measured on this batch:
+
+| Original | Was | Now | Saved |
+|---|---|---|---|
+| `MasterPlan-Api-Design.gif` | 3817K | 196K | 94.9% |
+| `Software-Architecture-Patterns.gif` | 1024K | 121K | 88.2% |
+| `git-commands.jpeg` | 210K | 138K | 34.2% |
+| `software_design_patterns.jpeg` | 262K | 182K | 30.6% |
+
+The two GIFs are static images that were stored as GIF, which is why they collapse
+so far. Name the output `<target-slug>.webp`, all lowercase and hyphenated — a test
+asserts every registered `src` exists on disk, so a mismatch fails the suite rather
+than shipping a broken-image box.
 
 ## Ledger
 

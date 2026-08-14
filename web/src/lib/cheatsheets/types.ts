@@ -33,11 +33,27 @@ export type Section = {
   rows: Row[]
 }
 
+/**
+ * The gathered graphic, served from `web/public/reference/`. Dimensions are
+ * stored rather than measured so the plate reserves its space before the bytes
+ * arrive; without them the page reflows as each sheet loads.
+ *
+ * `alt` describes the graphic for the case where it is the only content. A drawn
+ * sheet does not use it — see the renderer.
+ */
+export type SourceImage = {
+  src: string
+  width: number
+  height: number
+  alt: string
+}
+
 /** Attribution for a sheet derived from someone else's work. */
 export type Source = {
   title: string
   author: string
   url?: string
+  image?: SourceImage
 }
 
 export type Cheatsheet = {
