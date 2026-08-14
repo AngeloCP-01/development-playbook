@@ -59,10 +59,20 @@ export function RevealList({
     })
 
   return (
+    // `header`, the list and `footer` are three sibling expression children of
+    // `Card`, the same shape — and the same hazard — as `title` and `badge` in
+    // the row header below, one level up. Task 16b keyed the inner one and left
+    // this one, so `#tenancy`, `#trace` and `#indexes` all still logged "Each
+    // child in a list should have a unique key prop" on every load in `pnpm
+    // dev`, attributed to `Card`. `#ai` passes neither slot, which is why the
+    // one page checked live read clean. See the long note on the row header
+    // span for why the keys settle it regardless of which JSX runtime compiled
+    // the file; `Fragment` adds no DOM node, so a caller passing no slot at all
+    // renders byte-identically to before.
     <Card className="p-0">
-      {header}
+      <Fragment key="header">{header}</Fragment>
 
-      <ul className="divide-y divide-line">
+      <ul key="rows" className="divide-y divide-line">
         {rows.map((row) => {
           const open = openIds.has(row.id)
           const panelId = `${idPrefix}-${row.id}`
@@ -137,7 +147,7 @@ export function RevealList({
         })}
       </ul>
 
-      {footer}
+      <Fragment key="footer">{footer}</Fragment>
     </Card>
   )
 }

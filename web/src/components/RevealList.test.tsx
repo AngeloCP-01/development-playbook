@@ -181,7 +181,20 @@ test('renders no summary element for a row that does not carry a summary', () =>
 // `vi.hoisted` rather than a plain module-scope `let` — a bare `let` here
 // throws `Cannot access before initialization` the moment the mock factory
 // runs.
+// The mock below was originally scoped to the row-header span alone, and that
+// scoping is why the whole-branch review found the same defect still live on
+// three steps at HEAD. `RevealList` has *two* sibling-expression-children
+// shapes, one nested inside the other: the row header span, and the `Card` it
+// wraps everything in — `{header}`, `<ul>`, `{footer}`. Task 16b keyed the
+// inner one and no test in this file could see the outer one, because the
+// matcher only ever looked at `className === 'flex flex-wrap items-center
+// gap-2'`. `#tenancy`, `#trace` and `#indexes` logged the warning on every
+// load in `pnpm dev` while this file stayed green.
+//
+// So the flag now covers both shapes, each matched by the element it belongs
+// to, and each has its own test below.
 const forceRowHeaderSpanNonStatic = vi.hoisted(() => ({ current: false }))
+const forceCardChildrenNonStatic = vi.hoisted(() => ({ current: false }))
 
 vi.mock('react/jsx-dev-runtime', async (importOriginal) => {
   const mod = await importOriginal<typeof import('react/jsx-dev-runtime')>()
@@ -194,18 +207,30 @@ vi.mock('react/jsx-dev-runtime', async (importOriginal) => {
     source,
     self,
   ) => {
+    const className =
+      typeof props === 'object' && props !== null && 'className' in props
+        ? props.className
+        : undefined
+
     const isRowHeaderSpan =
       forceRowHeaderSpanNonStatic.current &&
       type === 'span' &&
-      typeof props === 'object' &&
-      props !== null &&
-      'className' in props &&
-      props.className === 'flex flex-wrap items-center gap-2'
+      className === 'flex flex-wrap items-center gap-2'
+
+    // `<Card className="p-0">` is written in exactly one place, `RevealList`'s
+    // own return. Matched on the component type *and* its className so a
+    // caller-rendered `Card` elsewhere in a future tree cannot be caught by
+    // accident.
+    const isRevealListCard =
+      forceCardChildrenNonStatic.current &&
+      typeof type === 'function' &&
+      className === 'p-0'
+
     return originalJsxDEV(
       type,
       props,
       key,
-      isRowHeaderSpan ? false : isStatic,
+      isRowHeaderSpan || isRevealListCard ? false : isStatic,
       source,
       self,
     )
@@ -237,6 +262,49 @@ test('logs no React key warning for a ReactNode title built inside a caller comp
     expect(keyWarning).toBeUndefined()
   } finally {
     forceRowHeaderSpanNonStatic.current = false
+    consoleError.mockRestore()
+  }
+})
+
+// The outer shape, one level up from the test above: `RevealList` passes
+// `{header}`, `<ul>` and `{footer}` to `Card` as three sibling expression
+// children. `SoftDelete`, `TraceForward` and `Normalisation` all build a
+// header inside their own render, which gives that element an `_owner`, and
+// Turbopack logged on every load of `#tenancy`, `#trace` and `#indexes`:
+//   Each child in a list should have a unique "key" prop.
+//   Check the render method of `Card`. It was passed a child from `SoftDelete`.
+// A caller passing no header and no footer never surfaced it, which is why
+// `#ai` read clean and the branch shipped believing the warning was fixed.
+//
+// `HeaderFooterList` reproduces that structurally: a wrapper component that
+// builds both slot elements in its own render, so they take the same path the
+// three real pages do.
+function HeaderFooterList() {
+  return (
+    <RevealList
+      rows={rows}
+      idPrefix="slots"
+      header={<p>the precondition</p>}
+      footer={<p>the closing claim</p>}
+    />
+  )
+}
+
+test('logs no React key warning for header and footer slot elements built inside a caller render, since that is what SoftDelete, TraceForward and Normalisation each pass', () => {
+  const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+  forceCardChildrenNonStatic.current = true
+
+  try {
+    render(<HeaderFooterList />)
+
+    const keyWarning = consoleError.mock.calls.find((call) =>
+      call.some(
+        (arg) => typeof arg === 'string' && arg.includes('unique "key" prop'),
+      ),
+    )
+    expect(keyWarning).toBeUndefined()
+  } finally {
+    forceCardChildrenNonStatic.current = false
     consoleError.mockRestore()
   }
 })
