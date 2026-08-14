@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
-import { expect, test } from 'vitest'
-import { RevealList } from './RevealList'
+import { expect, test, vi } from 'vitest'
+import { RevealList, type RevealRow } from './RevealList'
 
 const rows = [
   {
@@ -135,4 +135,108 @@ test('renders no summary element for a row that does not carry a summary', () =>
   const firstRow = screen.getByRole('button', { name: /First/ })
   expect(within(firstRow).queryByText('first summary')).toBeNull()
   expect(firstRow.querySelector('span.text-subtle')).toBeNull()
+})
+
+// Task 15's ReactNode-title test (above) built its title at module scope,
+// outside any component's render — so the element it passed had no `_owner`
+// fiber, and React's dev-mode key validation never had anything to check.
+// `AIArchitecturePlays`' `PlayList` is different: it builds each row's title
+// with `entries.map(...)` *inside its own render*, which gives the element an
+// owner. Confirmed live in `pnpm dev` (Turbopack) on the real `ai-arch`
+// rows, the exact message:
+//   Each child in a list should have a unique "key" prop.
+//   Check the render method of `RevealList`. It was passed a child from `PlayList`.
+// `PlayList` is reproduced structurally here — a wrapper component mapping
+// entries to rows, no badge, title built inline — so any owned title takes
+// the same path the real page does.
+//
+// Vite/oxc (this project's Vitest transform) and Turbopack disagree on one
+// compile-time flag for `RevealList`'s row-header span,
+// `<span>{titleNode}{row.badge}</span>` (two sibling expression children).
+// Both compile it through the automatic JSX runtime's `jsxDEV`, which takes
+// an `isStaticChildren` flag; when true, `jsxDEV` marks each child element
+// `_store.validated = true` at creation time, which later suppresses
+// react-dom's reconciler-level `warnForMissingKey` check
+// (`react-dom-client.development.js`) — the actual place this warning is
+// thrown, confirmed by reading the installed react-dom source. oxc reliably
+// computes `isStaticChildren: true` for this literal two-expression source
+// (verified by instrumenting `jsxDEV` directly), so Vitest can never
+// naturally reproduce the warning against this file's real, unmodified JSX —
+// rendering the true `AIArchitecturePlays` component through Vitest was
+// tried and stayed silent, confirming this is a toolchain gap, not a defect
+// only Turbopack sees. Turbopack's actual `isStaticChildren` computation
+// isn't observable from here, only its output (the warning above) is.
+//
+// To get a test that fails for the real reason against the real,
+// unmodified `RevealList.tsx`, this mock forces `isStaticChildren: false`
+// for exactly that one span (matched by its className, so no other markup
+// in the tree is affected) — i.e. it makes Vitest's JSX compilation agree
+// with what Turbopack demonstrably does for this source, then lets the real,
+// un-mocked react-dom reconciler decide whether to warn. The flag is
+// per-test (`forceRowHeaderSpanNonStatic`), not file-global, so the other
+// tests in this file — several of which render a badge alongside a string
+// title — are unaffected.
+// `vi.mock` factories are hoisted above the rest of the module, including
+// `let`/`const` declarations, so the toggle has to be created through
+// `vi.hoisted` rather than a plain module-scope `let` — a bare `let` here
+// throws `Cannot access before initialization` the moment the mock factory
+// runs.
+const forceRowHeaderSpanNonStatic = vi.hoisted(() => ({ current: false }))
+
+vi.mock('react/jsx-dev-runtime', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('react/jsx-dev-runtime')>()
+  const originalJsxDEV = mod.jsxDEV
+  const patchedJsxDEV: typeof originalJsxDEV = (
+    type,
+    props,
+    key,
+    isStatic,
+    source,
+    self,
+  ) => {
+    const isRowHeaderSpan =
+      forceRowHeaderSpanNonStatic.current &&
+      type === 'span' &&
+      typeof props === 'object' &&
+      props !== null &&
+      'className' in props &&
+      props.className === 'flex flex-wrap items-center gap-2'
+    return originalJsxDEV(
+      type,
+      props,
+      key,
+      isRowHeaderSpan ? false : isStatic,
+      source,
+      self,
+    )
+  }
+  return { ...mod, jsxDEV: patchedJsxDEV }
+})
+
+function OwnedTitlePlayList({ claims }: { claims: string[] }) {
+  const rows: RevealRow[] = claims.map((claim, index) => ({
+    id: `claim-${index}`,
+    title: <span className="text-sm font-medium text-fg">{claim}</span>,
+    body: <p>{claim} body</p>,
+  }))
+  return <RevealList rows={rows} idPrefix="owned-title" />
+}
+
+test('logs no React key warning for a ReactNode title built inside a caller component render, since that owned element is what AIArchitecturePlays actually passes', () => {
+  const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+  forceRowHeaderSpanNonStatic.current = true
+
+  try {
+    render(<OwnedTitlePlayList claims={['First claim', 'Second claim']} />)
+
+    const keyWarning = consoleError.mock.calls.find((call) =>
+      call.some(
+        (arg) => typeof arg === 'string' && arg.includes('unique "key" prop'),
+      ),
+    )
+    expect(keyWarning).toBeUndefined()
+  } finally {
+    forceRowHeaderSpanNonStatic.current = false
+    consoleError.mockRestore()
+  }
 })

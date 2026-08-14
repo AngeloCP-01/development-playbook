@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, type ReactNode } from 'react'
+import { Fragment, useState, type ReactNode } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { Card } from '@/components/ui'
 
@@ -77,13 +77,39 @@ export function RevealList({
                   className="flex min-h-11 w-full items-center gap-3.5 px-5 py-3.5 text-left transition-colors duration-150 hover:bg-sunken lg:min-h-9"
                 >
                   <span className="min-w-0 flex-1">
+                    {/*
+                      `title` and `badge` are two sibling expression children of
+                      this span. React's automatic JSX runtime marks statically-
+                      written sibling children as pre-validated at creation time
+                      (`isStaticChildren`), which normally means no key is
+                      needed here — but that marking is a compiler-time
+                      optimisation, not a language guarantee, and Turbopack
+                      (this project's dev server) does not appear to apply it
+                      the same way Vite/oxc (this project's Vitest transform)
+                      does for this exact shape. With a plain `string` title the
+                      wrapper span below is built inside `RevealList` itself, so
+                      it has no external `_owner` and nothing ever surfaced.
+                      `AIArchitecturePlays` (Task 16) was the first caller to
+                      pass a `ReactNode` title built inside its own render —
+                      giving that element an owner — and Turbopack logged
+                      "Each child in a list should have a unique key prop" on
+                      every load (confirmed live; Task 16b). Explicit `key`s
+                      settle it independent of that flag: React's reconciler
+                      only warns when both `_store.validated` is unset *and*
+                      `key == null`, so a `key` closes the gap regardless of
+                      which JSX runtime compiled this file. `Fragment` adds no
+                      DOM node, so the string-title branch renders
+                      byte-identically to before.
+                    */}
                     <span className="flex flex-wrap items-center gap-2">
                       {typeof row.title === 'string' ? (
-                        <span className="font-medium">{row.title}</span>
+                        <span key="title" className="font-medium">
+                          {row.title}
+                        </span>
                       ) : (
-                        row.title
+                        <Fragment key="title">{row.title}</Fragment>
                       )}
-                      {row.badge}
+                      <Fragment key="badge">{row.badge}</Fragment>
                     </span>
                     {row.summary && (
                       <span className="mt-0.5 block text-sm text-subtle">
