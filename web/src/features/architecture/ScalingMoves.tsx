@@ -1,5 +1,4 @@
 import { RevealList } from '@/components/RevealList'
-import { RevealFacet } from '@/components/RevealFacet'
 import { SCALING_MOVES } from './styles'
 
 /**
@@ -12,6 +11,16 @@ import { SCALING_MOVES } from './styles'
  * as a peer — a reader scanning five collapsed rows would read "statelessness"
  * as one option among five, which is the exact misreading the section exists
  * to prevent. It goes in `RevealList`'s `header` slot, never as a row.
+ *
+ * The "part not in the name" blocks keep their own `t-label` markup rather
+ * than becoming `RevealFacet`s, the same exclusion `Normalisation` and
+ * `SoftDelete` make and for the same reason: `t-label` is mono, tracked caps,
+ * and `RevealFacet` hardcodes `text-xs font-semibold uppercase tracking-wide`
+ * — a different family, size, weight and tracking. The migration did swap
+ * them for one commit, which measured as Newsreader 12px/600 against
+ * JetBrains Mono 11px/500 and widened each label by 50px; reverted, since a
+ * refactor that says it changes where code lives should not change what
+ * renders.
  */
 
 export function ScalingMoves() {
@@ -49,9 +58,12 @@ export function ScalingMoves() {
           <>
             <p className="text-sm leading-6 text-muted">{move.what}</p>
             {move.catch && (
-              <RevealFacet label="The part not in the name" tone="warn">
-                {move.catch}
-              </RevealFacet>
+              <div>
+                <p className="t-label text-warn">The part not in the name</p>
+                <p className="mt-1 text-sm leading-6 text-muted">
+                  {move.catch}
+                </p>
+              </div>
             )}
           </>
         ),
