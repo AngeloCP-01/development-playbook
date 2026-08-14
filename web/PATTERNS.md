@@ -280,6 +280,14 @@ Notes that make each land:
   They are not simply un-migrated: each keeps a single row open (`useState(PLAYS[0].id)`)
   where `RevealList` lets any number be open at once, so converting one is a behaviour
   change and needs its own decision. Do not copy their markup into a new stage.
+
+  Stage 03 holds three more hand-rolled disclosures, and these are **not** candidates at
+  all: `ERView`, `InternalOrganisation` and `RouteShape`. Each is a grid of selected tiles
+  with one open at a time (`useState<string | null>`) — no chevron, no `Card p-0`, no
+  `divide-y` row list. They are the click-node inspector wearing a disclosure, not this
+  pattern, and `RevealList` would render something else entirely. Named here because the
+  folder is otherwise accordion-free, and "no accordions left in stage 03" is easy to read
+  as "nothing here is hand-rolled".
 - **Guess then reveal** must lock the answer before showing the verdict, and should score
   across the set ("3/6 right"). A revealed answer the reader did not commit to teaches
   nothing.
