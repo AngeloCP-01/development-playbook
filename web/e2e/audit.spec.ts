@@ -346,6 +346,33 @@ for (const scheme of ['light', 'dark'] as const) {
 
 // ── console ────────────────────────────────────────────────────────────────
 
+/**
+ * **What this test cannot see, which is most of what you would want it to.**
+ * It runs against a *production* build (`playwright.config.ts` builds and
+ * serves rather than reusing `pnpm dev`, because the dev overlay pollutes the
+ * console and the dev server renders differently). React strips its
+ * development-mode validation from a production build, so this whole family is
+ * invisible here: missing-key warnings, invalid DOM nesting, `act()` warnings,
+ * hydration-mismatch detail, prop-type complaints. A green run says nothing
+ * about any of them.
+ *
+ * Not hypothetical. `RevealList` logged *Each child in a list should have a
+ * unique "key" prop* on every `pnpm dev` load of `#ai` from `1772555` to
+ * `f1a23e7`, and then on `#tenancy`, `#trace` and `#indexes` for the rest of
+ * the branch, while this test reported 14/14 throughout. Both times it was
+ * found by someone opening the dev server for an unrelated reason.
+ *
+ * Two things a manual dev check needs to know, learned fixing the second one:
+ * the warning is attributed to the *rendering* component (`Card`), not the one
+ * with the defect; and it only fires on a **cold** dev server — edit a
+ * component under a running one and Fast Refresh rebuilds without re-running
+ * React's creation-time key validation, so the reload reads clean whatever the
+ * code says. Restart the server before you believe a clean console.
+ *
+ * Tracked as **TD-35**. Closing it means a second, narrow spec against
+ * `pnpm dev` that filters for React's own warning prefixes; this comment is
+ * the interim, and TD-35 asks for it by name.
+ */
 test('zero console errors across every page and step', async ({ browser }) => {
   const context = await browser.newContext()
   const page = await context.newPage()
