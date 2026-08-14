@@ -498,10 +498,13 @@ handing the corrected doc to a cold reader with a task to finish.
       `dd44b30`, `--no-ff`, which is where `refactor/reveal-list` was cut from
 - [x] **Merge of `refactor/reveal-list`** ✓ — in `develop` as `e29f3fe`, `--no-ff`, after a
       whole-branch review that found the React key warning still live on three panels
-- [x] **Merge of `fix/derive-audit-pages`** ✓ — into `develop`, `--no-ff`, 2026-08-14, after a
-      scoped re-review returned *Ready to merge* with its two blocking items addressed.
-      `develop` is now **110 commits ahead of `main`** and **unpushed**; `main` stays at
-      `8d5045c`, and both the push and the promotion are the user's
+- [x] **Merge of `fix/derive-audit-pages`** ✓ — in `develop` as `a07a9b6`, `--no-ff`,
+      2026-08-14, after a scoped re-review returned *Ready to merge* with its two blocking
+      items addressed. Gate re-run on the merged result: vitest **350/350 across 37 files**,
+      lint, typecheck and `format:check` clean; `web/` is byte-identical to the reviewed tip,
+      so the audit's 16/16 stands without a re-run. The merge took `develop` to **112 commits ahead of
+      `main`**, and it is **unpushed**; `main` stays at `8d5045c`, and both the push and the
+      promotion are the user's
 
 ### W-4 — Quality gates ☑
 
