@@ -140,6 +140,20 @@ Type change this implies: `Source` gains an optional `image: { src, width, heigh
 and the renderer gains a plate component. Deferred out of the skeleton slice
 deliberately — it is not a data-model tweak, it is an asset pipeline.
 
+**Closed 2026-08-14 as W-6.2 (`4727dc3`).** Three corrections to the above, recorded
+because the plan was wrong on each:
+
+- The type needed a fourth field. `alt` cannot be derived, and the *decision* of
+  whether to use it is what varies: on a drawn sheet the transcription is a complete
+  text equivalent so the graphic is decorative, and on an undrawn sheet it is the
+  only content and must describe itself. One field, two behaviours, both tested.
+- **`next/image`, not a plain tag.** The reasoning above — already-WebP, so
+  re-optimising buys nothing — missed `srcset`, which is the actual win when an
+  image is 1536px tall and the reader is on a phone. ESLint caught it.
+- The dim-at-rest idea was dropped. The graphic is there to be read, and dimming
+  content so it blends into the theme is a worse trade than letting it be bright
+  inside a frame.
+
 ## Housekeeping
 
 A byte-identical duplicate of the architecture GIF was found while gathering —

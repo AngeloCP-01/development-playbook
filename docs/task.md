@@ -60,7 +60,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-3** | Stages 02–18 interactive | ◐ *(02, 03 done; 15 remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton merged 2026-08-14 as `0207fd6`; content and images remain)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; ten sheets still to transcribe)* |
 
 ### Dependency map
 
@@ -586,20 +586,14 @@ a second nav landmark in the rail, sitemap entries guarded bidirectionally, and
 `reference/cheatsheets.md` generated from the registry. Ten of the eleven sheets are
 deliberately empty (**D-62**). Evidence in `docs/tracker.md`.
 
-**W-6.2 — Source graphics on the sheets ☐**
+**W-6.2 — Source graphics on the sheets ☑** *(merged 2026-08-14, `4727dc3`)*
 
-Requested 2026-08-14, deferred out of the skeleton because it is an asset pipeline
-rather than a data-model tweak (**D-63**). Four things it needs:
-
-- the images move into `web/public/` — they sit in `reference/` today, which Next
-  does not serve, so nothing can display them at all
-- conversion off GIF. `MasterPlan-Api-Design.gif` is 4.1MB and
-  `Software-Architecture-Patterns.gif` is 1MB, both static images in the worst
-  available format for that. WebP or AVIF should cut them by an order of magnitude
-- a plate treatment that survives the cyanotype. Every one of these graphics has a
-  light background and would punch a hole in dark mode unbordered
-- `alt=""` where the transcription beside it is already a complete text equivalent,
-  captioned with the existing `source` attribution
+All four requirements closed. The images live in `web/public/reference/` as WebP,
+**5.2MB of originals became 644K**, the plate frames them in both themes without
+dimming, and the alt decision is derived from whether a text equivalent exists —
+decorative on a drawn sheet, descriptive on an undrawn one, both directions tested.
+Originals stay untracked and gitignored; the conversion recipe and measured savings
+are in `reference/cheatsheet-sources.md`. Evidence in `docs/tracker.md`.
 
 **W-6.3 — Fill the ten empty sheets ☐**
 
