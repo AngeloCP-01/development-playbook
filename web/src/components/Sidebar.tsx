@@ -5,6 +5,11 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { PanelLeftClose, PanelLeftOpen, Menu, X } from 'lucide-react'
 import { STAGE_GROUPS, stagesByGroup } from '@/lib/stages'
+import {
+  CHEATSHEET_GROUPS,
+  cheatsheetsByGroup,
+  isDrawn,
+} from '@/lib/cheatsheets'
 import { useLocalStorage } from '@/lib/useLocalStorage'
 import { ThemeToggle } from './ThemeToggle'
 
@@ -134,88 +139,169 @@ export function Sidebar() {
           </div>
         </div>
 
-        <nav
-          aria-label="Stage index"
-          className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain"
-        >
-          {STAGE_GROUPS.map((group) => {
-            const labelId = `idx-${group.replace(/\s+/g, '-').toLowerCase()}`
-            return (
-              <div key={group} className="border-b border-line last:border-b-0">
-                {/* Not a heading: these precede the page h1 in DOM order, so
-                    using one would break the document outline. */}
+        {/* One scroll container around both indexes. Scrolling them separately
+            would give the rail two scrollbars on a short viewport, and pinning
+            the reference block outside the scroll would clip it. */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain">
+          <nav aria-label="Stage index" className="shrink-0 overflow-x-hidden">
+            {STAGE_GROUPS.map((group) => {
+              const labelId = `idx-${group.replace(/\s+/g, '-').toLowerCase()}`
+              return (
                 <div
-                  id={labelId}
-                  className={[
-                    't-label px-3 pb-1 pt-4 text-subtle',
-                    collapsed ? 'lg:px-0 lg:text-center' : '',
-                  ].join(' ')}
+                  key={group}
+                  className="border-b border-line last:border-b-0"
                 >
-                  <span className={collapsed ? 'lg:hidden' : ''}>{group}</span>
-                  <span
-                    className={collapsed ? 'hidden lg:inline' : 'hidden'}
-                    aria-hidden
+                  {/* Not a heading: these precede the page h1 in DOM order, so
+                    using one would break the document outline. */}
+                  <div
+                    id={labelId}
+                    className={[
+                      't-label px-3 pb-1 pt-4 text-subtle',
+                      collapsed ? 'lg:px-0 lg:text-center' : '',
+                    ].join(' ')}
                   >
-                    ·
-                  </span>
-                </div>
+                    <span className={collapsed ? 'lg:hidden' : ''}>
+                      {group}
+                    </span>
+                    <span
+                      className={collapsed ? 'hidden lg:inline' : 'hidden'}
+                      aria-hidden
+                    >
+                      ·
+                    </span>
+                  </div>
 
-                <ul aria-labelledby={labelId}>
-                  {stagesByGroup(group).map((stage) => {
-                    const href = `/stages/${stage.slug}`
-                    const active = pathname === href
-                    return (
-                      <li key={stage.slug}>
-                        <Link
-                          href={href}
-                          onClick={() => setDrawerOpen(false)}
-                          aria-current={active ? 'page' : undefined}
-                          title={
-                            collapsed
-                              ? `${stage.num} — ${stage.title}`
-                              : undefined
-                          }
-                          className={[
-                            'group flex min-h-11 items-center gap-3 px-3 text-sm transition-colors duration-150 lg:min-h-0 lg:py-1.5',
-                            collapsed ? 'lg:justify-center lg:px-0' : '',
-                            active
-                              ? 'border-l-2 border-brand bg-sunken pl-[10px] font-medium text-fg'
-                              : 'border-l-2 border-transparent text-muted hover:bg-sunken hover:text-fg',
-                          ].join(' ')}
-                        >
-                          <span
+                  <ul aria-labelledby={labelId}>
+                    {stagesByGroup(group).map((stage) => {
+                      const href = `/stages/${stage.slug}`
+                      const active = pathname === href
+                      return (
+                        <li key={stage.slug}>
+                          <Link
+                            href={href}
+                            onClick={() => setDrawerOpen(false)}
+                            aria-current={active ? 'page' : undefined}
+                            title={
+                              collapsed
+                                ? `${stage.num} — ${stage.title}`
+                                : undefined
+                            }
                             className={[
-                              't-data shrink-0 text-[11px]',
-                              active ? 'text-brand' : 'text-subtle',
+                              'group flex min-h-11 items-center gap-3 px-3 text-sm transition-colors duration-150 lg:min-h-0 lg:py-1.5',
+                              collapsed ? 'lg:justify-center lg:px-0' : '',
+                              active
+                                ? 'border-l-2 border-brand bg-sunken pl-[10px] font-medium text-fg'
+                                : 'border-l-2 border-transparent text-muted hover:bg-sunken hover:text-fg',
                             ].join(' ')}
                           >
-                            {stage.num}
-                          </span>
-                          <span
+                            <span
+                              className={[
+                                't-data shrink-0 text-[11px]',
+                                active ? 'text-brand' : 'text-subtle',
+                              ].join(' ')}
+                            >
+                              {stage.num}
+                            </span>
+                            <span
+                              className={[
+                                't-ui flex min-w-0 flex-1 items-center gap-2',
+                                collapsed ? 'lg:hidden' : '',
+                              ].join(' ')}
+                            >
+                              <span className="truncate">{stage.title}</span>
+                              {!stage.ready && (
+                                <span
+                                  className="t-label ml-auto shrink-0 text-[9px] text-subtle"
+                                  title="Not written yet"
+                                >
+                                  WIP
+                                </span>
+                              )}
+                            </span>
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </div>
+              )
+            })}
+          </nav>
+
+          <nav
+            aria-label="Reference index"
+            className="shrink-0 overflow-x-hidden border-t border-line-strong"
+          >
+            {CHEATSHEET_GROUPS.map((group) => {
+              const labelId = `ref-${group.toLowerCase()}`
+              return (
+                <div
+                  key={group}
+                  className="border-b border-line last:border-b-0"
+                >
+                  <div
+                    id={labelId}
+                    className={[
+                      't-label px-3 pb-1 pt-4 text-subtle',
+                      collapsed ? 'lg:px-0 lg:text-center' : '',
+                    ].join(' ')}
+                  >
+                    <span className={collapsed ? 'lg:hidden' : ''}>
+                      {group}
+                    </span>
+                    <span
+                      className={collapsed ? 'hidden lg:inline' : 'hidden'}
+                      aria-hidden
+                    >
+                      ·
+                    </span>
+                  </div>
+
+                  <ul aria-labelledby={labelId}>
+                    {cheatsheetsByGroup(group).map((sheet) => {
+                      const href = `/reference/${sheet.slug}`
+                      const active = pathname === href
+                      return (
+                        <li key={sheet.slug}>
+                          <Link
+                            href={href}
+                            onClick={() => setDrawerOpen(false)}
+                            aria-current={active ? 'page' : undefined}
+                            title={collapsed ? sheet.title : undefined}
                             className={[
-                              't-ui flex min-w-0 flex-1 items-center gap-2',
-                              collapsed ? 'lg:hidden' : '',
+                              'group flex min-h-11 items-center gap-3 px-3 text-sm transition-colors duration-150 lg:min-h-0 lg:py-1.5',
+                              collapsed ? 'lg:justify-center lg:px-0' : '',
+                              active
+                                ? 'border-l-2 border-brand bg-sunken pl-[10px] font-medium text-fg'
+                                : 'border-l-2 border-transparent text-muted hover:bg-sunken hover:text-fg',
                             ].join(' ')}
                           >
-                            <span className="truncate">{stage.title}</span>
-                            {!stage.ready && (
-                              <span
-                                className="t-label ml-auto shrink-0 text-[9px] text-subtle"
-                                title="Not written yet"
-                              >
-                                WIP
-                              </span>
-                            )}
-                          </span>
-                        </Link>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            )
-          })}
-        </nav>
+                            <span
+                              className={[
+                                't-ui flex min-w-0 flex-1 items-center gap-2',
+                                collapsed ? 'lg:hidden' : '',
+                              ].join(' ')}
+                            >
+                              <span className="truncate">{sheet.title}</span>
+                              {!isDrawn(sheet) && (
+                                <span
+                                  className="t-label ml-auto shrink-0 text-[9px] text-subtle"
+                                  title="Not gathered yet"
+                                >
+                                  WIP
+                                </span>
+                              )}
+                            </span>
+                          </Link>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </div>
+              )
+            })}
+          </nav>
+        </div>
 
         {/* The Next.js dev overlay parks bottom-left; leave it clearance. */}
         <div className="hidden h-12 shrink-0 lg:block" />

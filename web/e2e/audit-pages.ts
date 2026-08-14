@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test'
 import { STAGES } from '../src/lib/stages'
+import { CHEATSHEETS } from '../src/lib/cheatsheets'
 
 /**
  * The URLs the audit sweeps, derived rather than listed (TD-12).
@@ -23,6 +24,12 @@ import { STAGES } from '../src/lib/stages'
  * one — stage 03 types its `Step[]` against `STEP_IDS`, so an id that exists
  * nowhere is a compile error. Nothing guards it for stages 01 and 02, and that
  * gap is recorded as debt rather than papered over here.
+ *
+ * The reference sheets are appended from `CHEATSHEETS` on the same argument.
+ * Eleven of the twelve added URLs render the same component with different
+ * data, so most of that cost buys little — it is paid anyway because the
+ * alternative is a hand-kept list, which is the thing this module exists to
+ * stop being.
  */
 
 /**
@@ -81,6 +88,13 @@ export async function auditPages(page: Page): Promise<string[]> {
     const ids = await readStepIds(page, stage.slug)
     paths.push(...ids.map((id) => `/stages/${stage.slug}#${id}`))
   }
+
+  // Derived for the same reason the stage sweep is (TD-12): a sheet registered
+  // later must not be able to slip out of the audit in silence. Unlike the
+  // stage steps above, this needs no page load — the registry is a plain array,
+  // so the only cost is the sweep itself.
+  paths.push('/reference')
+  paths.push(...CHEATSHEETS.map((sheet) => `/reference/${sheet.slug}`))
 
   cached = paths
   return paths

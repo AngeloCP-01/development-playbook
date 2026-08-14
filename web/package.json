@@ -12,6 +12,7 @@
     "test:e2e": "playwright test",
     "test:prod": "playwright test --config=playwright.prod.ts",
     "gen:glossary": "vitest run src/lib/glossary.test.ts --update",
+    "gen:cheatsheets": "vitest run src/lib/cheatsheets/render.test.ts --update",
     "prepare": "lefthook install || true",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

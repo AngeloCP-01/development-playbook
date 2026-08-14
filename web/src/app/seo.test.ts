@@ -1,6 +1,7 @@
 import { expect, test } from 'vitest'
 import { SITE_URL } from '@/lib/site'
 import { STAGES } from '@/lib/stages'
+import { CHEATSHEETS } from '@/lib/cheatsheets'
 import robots from './robots'
 import sitemap from './sitemap'
 
@@ -51,4 +52,20 @@ test('robots allows indexing rather than forbidding it, which is the failure nob
 
 test('robots points crawlers at the sitemap, since an unlinked sitemap is one nothing fetches', () => {
   expect(robots().sitemap).toBe(`${SITE_URL}/sitemap.xml`)
+})
+
+// Same bidirectional shape as the stage guard above it. Forwards catches a new
+// sheet that never reaches the sitemap; backwards catches a sitemap entry for a
+// sheet that has been renamed, which is a soft 404 nobody sees.
+test('every cheatsheet appears in the sitemap, and every sheet URL in the sitemap is a real sheet', () => {
+  const urls = sitemap().map((entry) => entry.url)
+  const sheetUrls = urls.filter((u) => u.includes('/reference/'))
+
+  expect(sheetUrls.sort()).toEqual(
+    CHEATSHEETS.map((s) => `${SITE_URL}/reference/${s.slug}`).sort(),
+  )
+})
+
+test('the reference index itself is in the sitemap, which a sheet-derived list drops', () => {
+  expect(sitemap().map((e) => e.url)).toContain(`${SITE_URL}/reference`)
 })

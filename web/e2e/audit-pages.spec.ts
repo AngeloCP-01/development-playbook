@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { auditPages, readStepIds } from './audit-pages'
+import { CHEATSHEETS } from '../src/lib/cheatsheets'
 
 /**
  * Guards the derivation that replaced `audit.spec.ts`'s hand-written `PAGES`
@@ -81,10 +82,29 @@ test('derives exactly the pages the hand-written list held, since a derivation t
 }) => {
   const derived = await auditPages(page)
 
+  // The reference sheets are appended after the stage sweep and were never in
+  // the hand-written list, so they are excluded here rather than added to the
+  // fixture above. Padding the fixture would quietly turn this from a migration
+  // guard into a restatement of whatever the deriver currently returns, which is
+  // the one thing its docblock says it must not become.
+  const stagePages = derived.filter((url) => !url.startsWith('/reference'))
+
   // Order matters as much as membership: the sweep walks stages in `STAGES`
   // order, and a derivation that returned the right set in the wrong order
   // would mean it is reading something other than the rail.
-  expect(derived).toEqual(PAGES_AS_HAND_WRITTEN)
+  expect(stagePages).toEqual(PAGES_AS_HAND_WRITTEN)
+})
+
+test('appends the reference index and every registered sheet, so a sheet added later cannot slip out of the sweep', async ({
+  page,
+}) => {
+  const derived = await auditPages(page)
+  const referencePages = derived.filter((url) => url.startsWith('/reference'))
+
+  expect(referencePages).toEqual([
+    '/reference',
+    ...CHEATSHEETS.map((sheet) => `/reference/${sheet.slug}`),
+  ])
 })
 
 test('refuses to sweep a stage that is ready but renders no steps, since silence there is the failure TD-12 describes', async ({
