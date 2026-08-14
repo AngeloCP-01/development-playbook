@@ -384,7 +384,9 @@ which is why `trace` exists as its own step.
       the doc does not carry would be inventing reference content rather than porting it
 - [x] New step hashes added to `e2e/audit.spec.ts` by hand (TD-12) — **thirteen** of them this
       round, taking stage 03's entries from nine to twenty-two. A *dead* hash now fails; a
-      *missing* one still audits nothing, which is the half TD-12 still names
+      *missing* one still audits nothing, which is the half TD-12 still names. **TD-12 closed
+      2026-08-14**: the list derives from the ready set now, so this was the last round that
+      added a hash by hand
 - [x] **Whole-branch review before merge**, doc and app together. ✓ 2026-08-03 — seven
       blocking findings, two minors promoted for being reader-visible and introduced by this
       branch, sixteen deferred. The four per-task reviews before it had found fourteen blocking
@@ -419,7 +421,7 @@ pattern library on the hardest stage.
 | ~~3~~ ✓ | — | **Stage 03's doc gaps closed** across W-3.1, W-3.1b, W-3.3 and four cold-reader runs — run 4 returned **COMPLETE**, the first to do so. |
 | ~~4~~ ✓ | — | **W-3.2 + W-3.3 merged** to `main` as `790b3e4` (`--no-ff`, 106 commits, branch deleted). Gate re-run on the merged result: 313/313, 14/14 audit, lint, typecheck and format clean. **Not pushed** — the user handles that. |
 | ~~5~~ ✓ | — | **W-5 complete** — live at https://acp-dev-playbook.vercel.app, verified by `pnpm test:prod`. Every `W-` milestone except W-3 is now closed. |
-| **6 (in progress)** | **04 Project Setup** | **Decided 2026-08-11**, against this table's earlier answer of 15. Reading 04 to compare the two found its Vercel section factually wrong — it says to match the Node version to `.nvmrc`, which Vercel does not read — and silent on the three things that broke this project's own first deploy (**TD-28**). So the round is *fix a doc that misleads* rather than *port a doc that is fine*, and it is the one stage checkable against this repository. **Scoped as a doc-correction phase before the port.** 15's case is recorded in `docs/tracker.md`'s Next up; it lost on having nothing to ground it against. **Doc phase complete 2026-08-13** on `fix/stage-04-doc-corrections`, unmerged: 323 → 711 lines at `38765e7`, TD-28 closed, **31 defects against the four TD-28 named**. **`RevealList` done 2026-08-14** on its own branch, unmerged: eleven stage-03 accordions collapsed onto one component, not the five the plan scoped. **The port is still outstanding** — see W-3.4. |
+| **6 (in progress)** | **04 Project Setup** | **Decided 2026-08-11**, against this table's earlier answer of 15. Reading 04 to compare the two found its Vercel section factually wrong — it says to match the Node version to `.nvmrc`, which Vercel does not read — and silent on the three things that broke this project's own first deploy (**TD-28**). So the round is *fix a doc that misleads* rather than *port a doc that is fine*, and it is the one stage checkable against this repository. **Scoped as a doc-correction phase before the port.** 15's case is recorded in `docs/tracker.md`'s Next up; it lost on having nothing to ground it against. **Doc phase complete 2026-08-13** on `fix/stage-04-doc-corrections`, unmerged: 323 → 711 lines at `38765e7`, TD-28 closed, **31 defects against the four TD-28 named**. **`RevealList` done 2026-08-14**, merged to `develop` as `e29f3fe`: eleven stage-03 accordions collapsed onto one component, not the five the plan scoped. **TD-12 closed the same day** on `fix/derive-audit-pages`, also merged — the audit's page list derives from the ready set, so the port will not be adding hashes by hand. **The port is still outstanding** — see W-3.4. |
 | 7 | 16 Incident Management | Procedural, so a stepper fits naturally |
 | 7 | 13 Production Deployment | Expand/migrate/contract needs a visual |
 | — | remainder | 04–12, 14, 17, 18 |
@@ -477,16 +479,29 @@ handing the corrected doc to a cold reader with a task to finish.
       controller-authored, recorded in `docs/tracker.md`'s Process observations. Evidence in
       that file's row: 31 commits, vitest 332/33 → **347/36**, sweep **140 expandables / 107
       panel ids** unchanged end to end, audit 14/14. Debt opened: **TD-34**, **TD-35**
-- [ ] **The port.** Unchanged by the `RevealList` round. `04-project-setup` is still
-      `ready: false` and absent from `STAGE_CONTENT`, so the route renders "sheet not drawn".
-      **W-3 is not advanced.** Per the sequencing settled 2026-08-13, **TD-12** ran on its own
-      branch next, then a port-planning pass that re-cuts the seams by measurement — the spec's
-      nine-step table was written against a 323-line doc that is now 711 lines
+- [x] **TD-12** ✓ *(done 2026-08-14 on `fix/derive-audit-pages`)* — the audit's thirty-six
+      hand-written URLs replaced by `e2e/audit-pages.ts`, which reads stages from
+      `STAGES.filter(s => s.ready)` and step ids from the rail each one renders. Ran on its own
+      branch before the port, per the sequencing settled 2026-08-13, because the port is what
+      would otherwise have added the next hashes by hand. The equivalence test spells all
+      thirty-six out rather than recomputing them, and **carries a shelf-life note**: stage 04
+      going ready turns it red for a correct reason, and the fix is to delete it, not to paste
+      in what the derivation emits. Evidence in `docs/tracker.md`'s row: audit **14/14 →
+      16/16**, vitest **350/37**, sweep unchanged at **140 expandables / 107 ids**. Debt
+      opened: **TD-36**, for the direction it does not cover
+- [ ] **The port.** Unchanged by either the `RevealList` or the TD-12 round.
+      `04-project-setup` is still `ready: false` and absent from `STAGE_CONTENT`, so the route
+      renders "sheet not drawn". **W-3 is not advanced.** Next is the port-planning pass that
+      re-cuts the seams by measurement — the spec's nine-step table was written against a
+      323-line doc that is now 711 lines
 - [x] **Merge of the doc phase** ✓ — `fix/stage-04-doc-corrections` is in `develop` as
       `dd44b30`, `--no-ff`, which is where `refactor/reveal-list` was cut from
-- [ ] **Merge of `refactor/reveal-list`.** Whole-branch review not yet run; the branch is
-      unmerged and unpushed, and merging into `develop` is the user's call, asked for
-      separately. `develop` itself is **67 commits ahead of `main`**, and `main` is the user's
+- [x] **Merge of `refactor/reveal-list`** ✓ — in `develop` as `e29f3fe`, `--no-ff`, after a
+      whole-branch review that found the React key warning still live on three panels
+- [x] **Merge of `fix/derive-audit-pages`** ✓ — into `develop`, `--no-ff`, 2026-08-14, after a
+      scoped re-review returned *Ready to merge* with its two blocking items addressed.
+      `develop` is now **110 commits ahead of `main`** and **unpushed**; `main` stays at
+      `8d5045c`, and both the push and the promotion are the user's
 
 ### W-4 — Quality gates ☑
 
