@@ -25,7 +25,13 @@ import { STAGES } from '../src/lib/stages'
  * gap is recorded as debt rather than papered over here.
  */
 
-/** `Stepper` renders one tab per step with `id="tab-<stepId>"`. */
+/**
+ * `Stepper` renders one tab per step with `id="tab-<stepId>"`, inside the rail's
+ * own `role="tablist"`. The selector is scoped to that tablist rather than the
+ * document: `AuthPaths` already renders `role="tab"` with `auth-tab-*` ids, and
+ * misses `[id^="tab-"]` only by the prefix anchor. An in-panel tablist that ids
+ * its tabs `tab-*` would otherwise inject phantom steps into the sweep.
+ */
 const TAB_ID_PREFIX = 'tab-'
 
 /**
@@ -40,7 +46,7 @@ export async function readStepIds(page: Page, slug: string): Promise<string[]> {
   await page.goto(`/stages/${slug}`, { waitUntil: 'networkidle' })
 
   const ids = await page.$$eval(
-    '[role="tab"][id^="tab-"]',
+    '[role="tablist"][aria-label="Stage steps"] [role="tab"][id^="tab-"]',
     (tabs, prefix) => tabs.map((tab) => tab.id.slice(prefix.length)),
     TAB_ID_PREFIX,
   )

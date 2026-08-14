@@ -152,8 +152,9 @@ single-open panel to defend. `RevealList` tracks open rows as a `Set` of ids.
 
 **`idPrefix` is load-bearing.** Each panel's DOM id is `` `${idPrefix}-${row.id}` `` and it
 is what `aria-controls` points at. Changing a prefix renames every panel id in that list,
-and **nothing in the gate notices**: `e2e/audit.spec.ts` hand-lists *step* hashes in `PAGES`
-(TD-12), never a disclosure's own id, and the same number of rows still renders either way.
+and **nothing in the gate notices**: the audit sweeps *step* hashes, derived from each
+stage's rail since TD-12 closed, and never a disclosure's own id — so the same number of
+rows still renders either way and every sweep stays green.
 When you migrate a component onto `RevealList`, pick the prefix that reproduces the ids it
 already emitted, and check with `AUDIT_IDS=1 node e2e/count-expandables.mjs` against a
 freshly started server — it prints the total, the id count, and the ids themselves.

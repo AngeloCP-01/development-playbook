@@ -479,7 +479,7 @@ handing the corrected doc to a cold reader with a task to finish.
       panel ids** unchanged end to end, audit 14/14. Debt opened: **TD-34**, **TD-35**
 - [ ] **The port.** Unchanged by the `RevealList` round. `04-project-setup` is still
       `ready: false` and absent from `STAGE_CONTENT`, so the route renders "sheet not drawn".
-      **W-3 is not advanced.** Per the sequencing settled 2026-08-13, **TD-12** runs on its own
+      **W-3 is not advanced.** Per the sequencing settled 2026-08-13, **TD-12** ran on its own
       branch next, then a port-planning pass that re-cuts the seams by measurement — the spec's
       nine-step table was written against a 323-line doc that is now 711 lines
 - [x] **Merge of the doc phase** ✓ — `fix/stage-04-doc-corrections` is in `develop` as
