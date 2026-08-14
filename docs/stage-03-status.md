@@ -1,6 +1,5 @@
 # Stage 03 — implementation status
 
-test
 **What this is:** the coverage map for stage 03, doc against app, section by section. It
 exists because this stage has now diverged from its own port twice, and both times the
 divergence was discovered rather than tracked.
