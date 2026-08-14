@@ -3,6 +3,7 @@ import { Figure } from '@/components/Figure'
 import { Term } from '@/components/Term'
 import { Stepper, type Step } from '@/components/Stepper'
 import { References } from '@/components/References'
+import { TeamNotes } from '@/components/TeamNotes'
 import { DiscoveryFlow } from './DiscoveryFlow'
 import { SeverityScorer } from './SeverityScorer'
 import { QuestionLab } from './QuestionLab'
@@ -13,7 +14,6 @@ import { OpportunityTree } from './OpportunityTree'
 import { WorkedExample } from './WorkedExample'
 import { PipelineFit } from './PipelineFit'
 import { Worksheet } from './Worksheet'
-import { TeamNotes } from '@/features/architecture/TeamNotes'
 
 const STEPS: Step[] = [
   {

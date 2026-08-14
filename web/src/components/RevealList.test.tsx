@@ -1,0 +1,310 @@
+import { fireEvent, render, screen, within } from '@testing-library/react'
+import { expect, test, vi } from 'vitest'
+import { RevealList, type RevealRow } from './RevealList'
+
+const rows = [
+  {
+    id: 'one',
+    title: 'First',
+    summary: 'first summary',
+    body: <p>first body</p>,
+  },
+  {
+    id: 'two',
+    title: 'Second',
+    summary: 'second summary',
+    body: <p>second body</p>,
+  },
+]
+
+// The panel is a conditional render. A component that always mounted the body
+// would satisfy every data test about `rows` while destroying the pattern —
+// collapsed by default is what keeps a long stage from reading as a wall.
+test('keeps every row collapsed until it is opened, since collapsed-by-default is the pattern', () => {
+  render(<RevealList rows={rows} idPrefix="t" />)
+  expect(screen.queryByText('first body')).toBeNull()
+  expect(screen.getAllByRole('button')).toHaveLength(2)
+})
+
+// aria-controls is assembled in the component from idPrefix and row id. If it
+// names an element that does not exist, a screen reader user is told there is
+// a panel and cannot reach it, and nothing visual is wrong.
+test('points aria-controls at the panel that actually mounts, since a dangling id is silent for sighted readers', () => {
+  render(<RevealList rows={rows} idPrefix="t" />)
+  fireEvent.click(screen.getByRole('button', { name: /First/ }))
+
+  const control = screen.getByRole('button', { name: /First/ })
+  expect(control.getAttribute('aria-expanded')).toBe('true')
+
+  const panelId = control.getAttribute('aria-controls')
+  expect(panelId).toBe('t-one')
+  expect(document.getElementById(panelId!)).not.toBeNull()
+  expect(screen.getByText('first body')).toBeDefined()
+})
+
+// Rows open independently rather than as a single-open accordion: a reader
+// comparing two items has to be able to hold both open. This was a deliberate
+// choice in DeferredList and is easy to lose in a rewrite.
+test('lets two rows be open at once, since comparing items is why the list is not an accordion', () => {
+  render(<RevealList rows={rows} idPrefix="t" />)
+  fireEvent.click(screen.getByRole('button', { name: /First/ }))
+  fireEvent.click(screen.getByRole('button', { name: /Second/ }))
+  expect(screen.getByText('first body')).toBeDefined()
+  expect(screen.getByText('second body')).toBeDefined()
+})
+
+test('renders header and footer slots outside the row list, since three callers close on a summarising paragraph', () => {
+  render(
+    <RevealList
+      rows={rows}
+      idPrefix="t"
+      header={<p>the precondition</p>}
+      footer={<p>the closing claim</p>}
+    />,
+  )
+  expect(screen.getByText('the precondition')).toBeDefined()
+  expect(screen.getByText('the closing claim')).toBeDefined()
+})
+
+// `badge` is a conditional render: nothing enforces that a row carrying one
+// actually shows it, or that a row without one stays clean. Task 5's review
+// found this field entirely untested — a badge that silently stopped
+// rendering would leave both the data test and this component green.
+test('renders a row badge when the row carries one, since a silently dropped badge would still pass every data test', () => {
+  render(
+    <RevealList
+      rows={[{ ...rows[0], badge: <span>fails the test</span> }, rows[1]]}
+      idPrefix="t"
+    />,
+  )
+  expect(screen.getByText('fails the test')).toBeDefined()
+})
+
+// The previous version of this test used a fixture where no row carried a
+// badge, so it could not catch cross-row leakage: row one's badge appearing
+// on row two would be invisible to it. Giving row one a badge and scoping the
+// negative assertion to row two with `within` makes the assertion about that
+// row, not about the document.
+test('renders no badge for a row that does not carry one, even when a sibling row does', () => {
+  render(
+    <RevealList
+      rows={[{ ...rows[0], badge: <span>fails the test</span> }, rows[1]]}
+      idPrefix="t"
+    />,
+  )
+  const secondRow = screen.getByRole('button', { name: /Second/ })
+  expect(within(secondRow).queryByText('fails the test')).toBeNull()
+})
+
+// `title` was widened from `string` to `ReactNode` (Task 15) so a caller that
+// needs a differently-sized or pre-styled title — `AIArchitecturePlays`' 14px
+// claim text was the motivating case — can pass its own element through the
+// slot, the same way `badge` and `body` already do. `RevealList` wraps a
+// *string* title in its own `font-medium` span (unchanged, for the ten
+// existing callers); a caller-supplied element is rendered as-is, with no
+// extra wrapper forced around it, since a caller passing its own sized node
+// is expected to own its own styling, not inherit one more ancestor it can't
+// remove.
+test('renders a ReactNode title as-is, without wrapping it in a second font-medium span', () => {
+  render(
+    <RevealList
+      rows={[{ ...rows[0], title: <em>Custom title</em> }, rows[1]]}
+      idPrefix="t"
+    />,
+  )
+  const firstRow = screen.getByRole('button', { name: /Custom title/ })
+  const titleNode = within(firstRow).getByText('Custom title')
+  expect(titleNode.tagName).toBe('EM')
+  expect(titleNode.closest('span.font-medium')).toBeNull()
+})
+
+// `summary` is optional (Task 9b): `ContractCost` and two of the five
+// unmigrated accordions have no summary line at all. Before this, an absent
+// summary still rendered `<span className="mt-0.5 block text-sm
+// text-subtle" />` into the DOM — an empty element a later reader cannot
+// distinguish from an accidental omission. Scoped to the row with `within`,
+// the way the badge-leakage test above is scoped, so a leaked summary from a
+// sibling row would still be caught.
+test('renders no summary element for a row that does not carry a summary', () => {
+  const withoutSummary = {
+    id: rows[0].id,
+    title: rows[0].title,
+    body: rows[0].body,
+  }
+  render(<RevealList rows={[withoutSummary, rows[1]]} idPrefix="t" />)
+  const firstRow = screen.getByRole('button', { name: /First/ })
+  expect(within(firstRow).queryByText('first summary')).toBeNull()
+  expect(firstRow.querySelector('span.text-subtle')).toBeNull()
+})
+
+// Task 15's ReactNode-title test (above) built its title at module scope,
+// outside any component's render — so the element it passed had no `_owner`
+// fiber, and React's dev-mode key validation never had anything to check.
+// `AIArchitecturePlays`' `PlayList` is different: it builds each row's title
+// with `entries.map(...)` *inside its own render*, which gives the element an
+// owner. Confirmed live in `pnpm dev` (Turbopack) on the real `ai-arch`
+// rows, the exact message:
+//   Each child in a list should have a unique "key" prop.
+//   Check the render method of `RevealList`. It was passed a child from `PlayList`.
+// `PlayList` is reproduced structurally here — a wrapper component mapping
+// entries to rows, no badge, title built inline — so any owned title takes
+// the same path the real page does.
+//
+// Vite/oxc (this project's Vitest transform) and Turbopack disagree on one
+// compile-time flag for `RevealList`'s row-header span,
+// `<span>{titleNode}{row.badge}</span>` (two sibling expression children).
+// Both compile it through the automatic JSX runtime's `jsxDEV`, which takes
+// an `isStaticChildren` flag; when true, `jsxDEV` marks each child element
+// `_store.validated = true` at creation time, which later suppresses
+// react-dom's reconciler-level `warnForMissingKey` check
+// (`react-dom-client.development.js`) — the actual place this warning is
+// thrown, confirmed by reading the installed react-dom source. oxc reliably
+// computes `isStaticChildren: true` for this literal two-expression source
+// (verified by instrumenting `jsxDEV` directly), so Vitest can never
+// naturally reproduce the warning against this file's real, unmodified JSX —
+// rendering the true `AIArchitecturePlays` component through Vitest was
+// tried and stayed silent, confirming this is a toolchain gap, not a defect
+// only Turbopack sees. Turbopack's actual `isStaticChildren` computation
+// isn't observable from here, only its output (the warning above) is.
+//
+// To get a test that fails for the real reason against the real,
+// unmodified `RevealList.tsx`, this mock forces `isStaticChildren: false`
+// for exactly that one span (matched by its className, so no other markup
+// in the tree is affected) — i.e. it makes Vitest's JSX compilation agree
+// with what Turbopack demonstrably does for this source, then lets the real,
+// un-mocked react-dom reconciler decide whether to warn. The flag is
+// per-test (`forceRowHeaderSpanNonStatic`), not file-global, so the other
+// tests in this file — several of which render a badge alongside a string
+// title — are unaffected.
+// `vi.mock` factories are hoisted above the rest of the module, including
+// `let`/`const` declarations, so the toggle has to be created through
+// `vi.hoisted` rather than a plain module-scope `let` — a bare `let` here
+// throws `Cannot access before initialization` the moment the mock factory
+// runs.
+// The mock below was originally scoped to the row-header span alone, and that
+// scoping is why the whole-branch review found the same defect still live on
+// three steps at HEAD. `RevealList` has *two* sibling-expression-children
+// shapes, one nested inside the other: the row header span, and the `Card` it
+// wraps everything in — `{header}`, `<ul>`, `{footer}`. Task 16b keyed the
+// inner one and no test in this file could see the outer one, because the
+// matcher only ever looked at `className === 'flex flex-wrap items-center
+// gap-2'`. `#tenancy`, `#trace` and `#indexes` logged the warning on every
+// load in `pnpm dev` while this file stayed green.
+//
+// So the flag now covers both shapes, each matched by the element it belongs
+// to, and each has its own test below.
+const forceRowHeaderSpanNonStatic = vi.hoisted(() => ({ current: false }))
+const forceCardChildrenNonStatic = vi.hoisted(() => ({ current: false }))
+
+vi.mock('react/jsx-dev-runtime', async (importOriginal) => {
+  const mod = await importOriginal<typeof import('react/jsx-dev-runtime')>()
+  const originalJsxDEV = mod.jsxDEV
+  const patchedJsxDEV: typeof originalJsxDEV = (
+    type,
+    props,
+    key,
+    isStatic,
+    source,
+    self,
+  ) => {
+    const className =
+      typeof props === 'object' && props !== null && 'className' in props
+        ? props.className
+        : undefined
+
+    const isRowHeaderSpan =
+      forceRowHeaderSpanNonStatic.current &&
+      type === 'span' &&
+      className === 'flex flex-wrap items-center gap-2'
+
+    // `<Card className="p-0">` is written in exactly one place, `RevealList`'s
+    // own return. Matched on the component type *and* its className so a
+    // caller-rendered `Card` elsewhere in a future tree cannot be caught by
+    // accident.
+    const isRevealListCard =
+      forceCardChildrenNonStatic.current &&
+      typeof type === 'function' &&
+      className === 'p-0'
+
+    return originalJsxDEV(
+      type,
+      props,
+      key,
+      isRowHeaderSpan || isRevealListCard ? false : isStatic,
+      source,
+      self,
+    )
+  }
+  return { ...mod, jsxDEV: patchedJsxDEV }
+})
+
+function OwnedTitlePlayList({ claims }: { claims: string[] }) {
+  const rows: RevealRow[] = claims.map((claim, index) => ({
+    id: `claim-${index}`,
+    title: <span className="text-sm font-medium text-fg">{claim}</span>,
+    body: <p>{claim} body</p>,
+  }))
+  return <RevealList rows={rows} idPrefix="owned-title" />
+}
+
+test('logs no React key warning for a ReactNode title built inside a caller component render, since that owned element is what AIArchitecturePlays actually passes', () => {
+  const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+  forceRowHeaderSpanNonStatic.current = true
+
+  try {
+    render(<OwnedTitlePlayList claims={['First claim', 'Second claim']} />)
+
+    const keyWarning = consoleError.mock.calls.find((call) =>
+      call.some(
+        (arg) => typeof arg === 'string' && arg.includes('unique "key" prop'),
+      ),
+    )
+    expect(keyWarning).toBeUndefined()
+  } finally {
+    forceRowHeaderSpanNonStatic.current = false
+    consoleError.mockRestore()
+  }
+})
+
+// The outer shape, one level up from the test above: `RevealList` passes
+// `{header}`, `<ul>` and `{footer}` to `Card` as three sibling expression
+// children. `SoftDelete`, `TraceForward` and `Normalisation` all build a
+// header inside their own render, which gives that element an `_owner`, and
+// Turbopack logged on every load of `#tenancy`, `#trace` and `#indexes`:
+//   Each child in a list should have a unique "key" prop.
+//   Check the render method of `Card`. It was passed a child from `SoftDelete`.
+// A caller passing no header and no footer never surfaced it, which is why
+// `#ai` read clean and the branch shipped believing the warning was fixed.
+//
+// `HeaderFooterList` reproduces that structurally: a wrapper component that
+// builds both slot elements in its own render, so they take the same path the
+// three real pages do.
+function HeaderFooterList() {
+  return (
+    <RevealList
+      rows={rows}
+      idPrefix="slots"
+      header={<p>the precondition</p>}
+      footer={<p>the closing claim</p>}
+    />
+  )
+}
+
+test('logs no React key warning for header and footer slot elements built inside a caller render, since that is what SoftDelete, TraceForward and Normalisation each pass', () => {
+  const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+  forceCardChildrenNonStatic.current = true
+
+  try {
+    render(<HeaderFooterList />)
+
+    const keyWarning = consoleError.mock.calls.find((call) =>
+      call.some(
+        (arg) => typeof arg === 'string' && arg.includes('unique "key" prop'),
+      ),
+    )
+    expect(keyWarning).toBeUndefined()
+  } finally {
+    forceCardChildrenNonStatic.current = false
+    consoleError.mockRestore()
+  }
+})

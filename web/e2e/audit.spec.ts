@@ -346,6 +346,40 @@ for (const scheme of ['light', 'dark'] as const) {
 
 // ── console ────────────────────────────────────────────────────────────────
 
+/**
+ * **What this test cannot see, which is most of what you would want it to.**
+ * It runs against a *production* build (`playwright.config.ts` builds and
+ * serves rather than reusing `pnpm dev`, because the dev overlay pollutes the
+ * console and the dev server renders differently). React strips its
+ * development-mode validation from a production build, so this whole family is
+ * invisible here: missing-key warnings, invalid DOM nesting, `act()` warnings,
+ * hydration-mismatch detail, prop-type complaints. A green run says nothing
+ * about any of them.
+ *
+ * Not hypothetical. `RevealList` logged *Each child in a list should have a
+ * unique "key" prop* on every `pnpm dev` load of `#ai` from `1772555` to
+ * `f1a23e7`, and then on `#tenancy`, `#trace` and `#indexes` for the rest of
+ * the branch, while this test reported 14/14 throughout. Both times it was
+ * found by someone opening the dev server for an unrelated reason.
+ *
+ * Two things a manual dev check needs to know. The warning is attributed to
+ * the *rendering* component (`Card`), not the one holding the defect — which
+ * is why grepping for the named component finds nothing. And the check has one
+ * narrow blind spot: Fast Refresh patching an already-open tab does not fire
+ * it, and a reload issued a second or two after saving can race the rebuild
+ * and read clean. Reload once the rebuild has settled, or restart, and it
+ * fires reliably. Measured across three cold-server runs while closing this:
+ * no-reload patching stayed silent every time; a settled reload warned every
+ * time.
+ *
+ * The real reason both instances survived is duller and worth more: every
+ * manual check loaded one page. `#ai` exercises neither `header` nor `footer`,
+ * so it passed while three other steps warned.
+ *
+ * Tracked as **TD-35**. Closing it means a second, narrow spec against
+ * `pnpm dev` that filters for React's own warning prefixes; this comment is
+ * the interim, and TD-35 asks for it by name.
+ */
 test('zero console errors across every page and step', async ({ browser }) => {
   const context = await browser.newContext()
   const page = await context.newPage()

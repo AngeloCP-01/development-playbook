@@ -2,7 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Replace five byte-identical expand-to-reveal accordions in `src/features/architecture/` with one shared `RevealList`, before stage 04 copies the pattern a sixth, seventh and eighth time.
+**Goal:** Replace **eleven** byte-identical expand-to-reveal accordions in `src/features/architecture/` with one shared `RevealList`, before stage 04 copies the pattern again.
+
+*This line said "five" until after Task 7, when a check for remaining callers found six more. See "Scope extension — Tasks 9–14" at the foot of this plan for how the count was wrong and why it mattered.*
 
 **Architecture:** Two new components in `src/components/`. `RevealList` owns the open-set state, the card and row markup, the chevron, and the `aria-expanded` / `aria-controls` pairing; callers supply rows and optional header and footer slots. `RevealFacet` owns the labelled paragraph that appears thirteen times across the five bodies. Each caller migrates in its own task so a reviewer can reject one migration while approving its neighbour.
 
@@ -14,11 +16,11 @@
 - **Commit trailer**, every commit: `Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>`
 - **Conventional Commits.** Scopes here: `web`, `a11y`, `tracker`, `patterns`.
 - **The iron law.** No production code without a failing test first. Both new components get a `.test.tsx` before they exist.
-- **Tailwind cannot see dynamically built class names.** `text-${tone}` is purged and renders unstyled. Every colour class must appear as a complete literal string in the source. This is why `RevealFacet` carries a static tone map, and why it earns a render test.
+- **Tailwind cannot see dynamically built class names.** `text-${tone}` is purged and renders unstyled. Every colour class must appear as a complete literal string in the source. This is why `RevealFacet` carries a static tone map. **It is not why the render test exists** — corrected during Task 1: the map and the interpolation emit byte-identical `className` strings, so no jsdom assertion can tell them apart, and the defect lives only in compiled CSS. `RevealFacet.source.test.ts` is what catches it, plus lint's `no-unused-vars` for the shallow case.
 - **React 19 forbids setState in an effect body.** `RevealList` holds state in `useState` only; no effect reads or writes it.
 - **File extension picks the test environment.** `*.test.tsx` runs in `dom` (jsdom), `*.test.ts` in `unit` (node). No per-file configuration.
 - **`fireEvent`, not `element.click()`.** RTL wraps the dispatch in `act()`; a bare `.click()` does not, and the assertion runs before React commits.
-- **One deliberate visual change, declared rather than smuggled:** `DeferredList`'s "fails the test" badge moves from below the row title to beside it, matching `DeploymentStyles`. See Task 6.
+- **Two deliberate visual changes, both declared rather than smuggled.** `DeferredList`'s "fails the test" badge moves from below the row title to beside it, matching `DeploymentStyles` (Task 6). `ContractCost`'s cost chip moves the same way, for the same reason and by the same precedent (Task 9). **This constraint said "one" until Task 9** — the scope-extension table claimed `ContractCost` had no badge, derived by grep rather than by reading the file, and the file's own header comment calls it "the cost badge". The table was wrong and the file was right.
 - **Kill `:3100` before every `pnpm test:e2e`** (TD-27). A reused server measures the previous build and reports it as green.
 
 ## File Structure
@@ -462,10 +464,14 @@ Expected: PASS, clean. Paste the counts.
 - [ ] **Step 3: Verify the panel ids are unchanged**
 
 ```bash
-cd web && pnpm build && grep -o 'evolution-[a-z-]*' .next/server/app/stages/03-architecture.html | sort -u | head
+cd web && lsof -ti:3100 | xargs kill -9
+pnpm build && pnpm start -p 3100 &
+AUDIT_IDS=1 node e2e/count-expandables.mjs | tail -40
 ```
 
-Expected: the same ids as before the change. Ids are hand-listed in `web/e2e/audit.spec.ts`; a silently renamed one audits nothing.
+Expected: **140 expandables, 107 ids**, and this caller's ids unchanged.
+
+**Do not grep the built HTML for these ids — that check cannot fail.** These accordions live in non-default `Stepper` panels, so the static HTML carries only the RSC flight payload for them and never the rendered ids. Verified on 2026-08-13: `grep` for `evolution-`, `deferred-`, `style-`, `resilience-` and `scaling-` returns **zero** in the built HTML, before and after any migration. `count-expandables.mjs` drives a real browser, which is why it sees them.
 
 - [ ] **Step 4: Commit**
 
@@ -624,11 +630,12 @@ export function DeploymentStyles() {
 The badge sits inside the button, so it is part of the control's accessible name. Check the built page:
 
 ```bash
-cd web && pnpm build && \
-  grep -o "what this stage teaches" .next/server/app/stages/03-architecture.html | wc -l
+cd web && lsof -ti:3100 | xargs kill -9
+pnpm build && pnpm start -p 3100 &
+node -e "import('@playwright/test').then(async ({chromium})=>{const b=await chromium.launch();const p=await b.newPage();await p.goto('http://localhost:3100/stages/03-architecture#shape',{waitUntil:'networkidle'});console.log('badge occurrences:',await p.locator('text=what this stage teaches').count());await b.close()})"
 ```
 
-Expected: 1. Use `grep -o | wc -l`, not `grep -c`: the built HTML is one line, so `grep -c` returns 1 whether the badge appears once or five times. Zero means the badge stopped rendering, which no data test would catch.
+Expected: 1. **Do not grep the built HTML** — this accordion is in a non-default `Stepper` panel, so its rendered markup is not in the static file and the grep returns zero either way. Zero from the browser check means the badge stopped rendering, which no data test would catch.
 
 - [ ] **Step 3: Run the suite and commit**
 
@@ -718,7 +725,9 @@ Expected: 14/14. The `:3100` kill is not optional (TD-27); a reused server measu
 
 - [ ] **Step 3: Look at it**
 
-Load `/stages/03-architecture#defer` in both themes and confirm the badge sits beside the title, the row still reads as one item, and the title does not wrap awkwardly at 320px. This is the one step in the plan a test cannot do.
+Load `/stages/03-architecture#record` in both themes and confirm the badge sits beside the title, the row still reads as one item, and the title does not wrap awkwardly at 320px. This is the one step in the plan a test cannot do.
+
+**The hash is `#record`, not `#defer`.** This plan said `#defer` until Task 6's verification tried it: there is no `defer` step id — `steps.ts` renders `DeferredList` inside `record`. A dead hash falls back to step 1 silently, which is the exact failure `audit.spec.ts`'s "every listed step hash lands on the step it names" test exists to catch, and it is why that test is worth having. Anyone reading a step name in prose should check it against `STEP_IDS` rather than trusting it.
 
 - [ ] **Step 4: Commit, naming the change in the subject**
 
@@ -803,11 +812,12 @@ Note: `move.what` stays a bare paragraph rather than becoming a `RevealFacet`, b
 - [ ] **Step 2: Confirm the precondition is not a row**
 
 ```bash
-cd web && pnpm build && \
-  grep -o "the precondition" .next/server/app/stages/03-architecture.html | wc -l
+cd web && lsof -ti:3100 | xargs kill -9
+pnpm build && pnpm start -p 3100 &
+node -e "import('@playwright/test').then(async ({chromium})=>{const b=await chromium.launch();const p=await b.newPage();await p.goto('http://localhost:3100/stages/03-architecture#shape',{waitUntil:'networkidle'});console.log('precondition count:',await p.locator('text=the precondition').count());console.log('inside a button:',await p.locator('button:has-text(\"the precondition\")').count());await b.close()})"
 ```
 
-Expected: 1 (`grep -o | wc -l`, for the same reason as Task 5), and it must not appear inside a `<button>`. If the precondition became a row, the section now teaches the misreading its header comment says it exists to prevent.
+Expected: **1 occurrence, and 0 inside a button.** **Do not grep the built HTML** — non-default `Stepper` panel, so the grep returns zero either way. If the precondition became a row, the section now teaches the misreading its header comment says it exists to prevent. If the precondition became a row, the section now teaches the misreading its header comment says it exists to prevent.
 
 - [ ] **Step 3: Run the suite and commit**
 
@@ -859,13 +869,21 @@ Also update the "Expand to reveal" row in the patterns table: its canonical exam
 cd web && lsof -ti:3100 | xargs kill -9 2>/dev/null; pnpm test:e2e
 ```
 
-Expected: **14/14, and the expandable count unchanged at 108 across 36 URLs.** The count is the proof that five components were replaced and nothing was lost; a green suite alone would not distinguish "all five migrated" from "one silently renders nothing".
+Expected: **14/14.** Then the count that is the actual proof:
+
+```bash
+node e2e/count-expandables.mjs
+```
+
+Expected: **140 across 36 URLs**, unchanged. The count is what distinguishes "all five migrated" from "one silently renders nothing"; a green suite cannot.
+
+**Two corrections to this step, both found before the branch started.** The number was written here as 108, which was TD-26's figure from 2026-08-03 — measured on 2026-08-13 the tree gives **140**, with no defect in between, because stage content grew. And `audit.spec.ts` opens disclosures per page and never aggregates, so nothing printed a total and the check as originally written could not be run at all. `e2e/count-expandables.mjs` exists so the number is derived rather than quoted. **Re-measure the "before" on your own tree rather than trusting 140** — if it disagrees, the tree moved again and your figure is the right one.
 
 If the count moved at all, **the refactor is wrong, not the checker.** Find the missing rows before proceeding.
 
 - [ ] **Step 4: Record the branch in `docs/tracker.md`**
 
-A Completed row citing: the commit range, the test count (baseline 331 across 33 files, plus the new `RevealList` and `RevealFacet` tests), the expandable count before and after, and the teeth checks from Tasks 1 and 2. Include a `Deferred:` list naming at minimum: the `DeferredList` badge move as a deliberate visual change, TD-27 and TD-12 still open, and any caller that turned out not to fit.
+A Completed row citing: the commit range, the test count (baseline **332 across 33 files** as of `dd44b30`, plus the new `RevealList` and `RevealFacet` tests), the expandable count before and after, and the teeth checks from Tasks 1 and 2. Include a `Deferred:` list naming at minimum: the `DeferredList` badge move as a deliberate visual change, TD-27 and TD-12 still open, and any caller that turned out not to fit.
 
 Add a decision entry from **D-53** onward: shared interaction components live in `src/components/`, and a pattern's second consumer is when it gets extracted rather than its fifth.
 
@@ -893,12 +911,78 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 
 ## Verification (after all tasks)
 
-- [ ] `cd web && pnpm vitest run` — green; count is baseline 331 plus 6 new tests across 2 new files
+- [ ] `cd web && pnpm vitest run` — green; count is baseline **332** plus 6 new tests across 2 new files
 - [ ] `pnpm lint && pnpm typecheck && pnpm format:check` — clean
-- [ ] `lsof -ti:3100 | xargs kill -9; pnpm test:e2e` — 14/14, **expandable count still 108 across 36 URLs**
+- [ ] `lsof -ti:3100 | xargs kill -9; pnpm build && pnpm start -p 3100 &` then `pnpm test:e2e` — 14/14
+- [ ] `node e2e/count-expandables.mjs` — **140 across 36 URLs**, matching the before-figure measured on this same tree
 - [ ] `grep -rn "useState<Set<string>>" src/features/architecture/` returns nothing — all five callers migrated
 - [ ] Every footer and header string diffed character for character against `git show HEAD~N` originals
 - [ ] `/stages/03-architecture` loaded in both themes at 320px and 1440px, zero console errors
 - [ ] The `DeferredList` badge move is named in a commit subject, the tracker's `Deferred:` list, and the review brief
 - [ ] Whole-branch review complete, blocking findings fixed
 - [ ] Branch state reported; `NOT merged, NOT deployed`
+
+---
+
+## Scope extension — Tasks 9–14, the six the plan missed
+
+**Added 2026-08-13, on the user's call, after Task 7.** This plan opened by describing "five
+byte-identical accordions". That was wrong: there are **eleven**. The five were found because
+exactly two of them — `EvolutionNotes` and `ScalingMoves` — carried header comments admitting
+they were duplicates. The other six never said so, so nobody counted them.
+
+`ADRAnatomy`, `AIArchitecturePlays`, `ContractCost`, `Normalisation`, `SoftDelete` and
+`TraceForward` each carry the identical signature: `Card className="p-0"`,
+`divide-y divide-line`, `ChevronDown`, `aria-expanded`, and the exact button className
+`flex min-h-11 w-full items-center gap-3.5 px-5 py-3.5 text-left transition-colors duration-150 hover:bg-sunken lg:min-h-9`.
+
+Leaving them would have undercut this branch's own reason to exist — the plan's goal line
+says "before stage 04 copies the pattern a sixth, seventh and eighth time", and six
+copyable originals would have remained.
+
+### Shared requirements for Tasks 9–14
+
+Every one follows the pattern the five completed migrations established. Read
+`ResiliencePatterns.tsx` (facets + footer) and `DeploymentStyles.tsx` (badge) as the
+approved templates rather than re-deriving.
+
+- **Rendered output identical.** These are relocations. The proof is that the sweep does not move.
+- **`idPrefix` is load-bearing**, not cosmetic — it reproduces the component's existing panel
+  ids, and a silent rename is invisible to both the count and the audit.
+- **Footer and header text copied character for character**, diffed against the pre-task commit
+  rather than retyped. Three reviewers have now caught this class by comparing actual strings.
+- **Keep each header comment**, updating only what is now false. Several record why a section is
+  shaped the way it is; that is teaching material and losing it to a refactor is a real loss.
+- **Semantic tones are not interchangeable.** `go` means "this is good", `brand` means "you are
+  here", `warn` and `danger` carry their own meaning. Match the original exactly.
+- **Drop `'use client'`** where the file no longer holds state — `RevealList` carries it.
+- **Verify in a real browser, never by grepping built HTML.** These ids are computed inside a
+  client component in non-default `Stepper` panels, so a grep returns zero on a working
+  migration and a broken one alike.
+- **Baselines that must not move:** vitest **341 across 36 files**, **140** expandables,
+  **107** distinct panel ids, audit **14/14**.
+
+### The six, simplest first
+
+| Task | Component | Lines | `idPrefix` | Footer | Badge | Facets | Data |
+|---|---|---|---|---|---|---|---|
+| 9  | `ContractCost` | 90 | `contract` | yes | — | — | `./contracts` |
+| 10 | `Normalisation` | 98 | `normal-form` | yes | — | — | `./normal-forms` |
+| 11 | `TraceForward` | 100 | `trace` | yes | — | — | `./characteristics` |
+| 12 | `SoftDelete` | 111 | `soft-delete` | yes | 1 | — | `./soft-delete` |
+| 13 | `AIArchitecturePlays` | 200 | `ai-arch` | — | — | — | `./ai-plays` |
+| 14 | `ADRAnatomy` | 207 | `adr` | yes | — | 2 | inline |
+
+Ordered by size, the same reasoning that put `EvolutionNotes` first: prove the shape on the
+smallest caller before the ones with more to lose. **Tasks 13 and 14 are twice the size of the
+rest** and may carry structure beyond a plain accordion — read each in full before editing, and
+if a component turns out not to fit `RevealList`, say so rather than forcing it. A caller that
+does not fit is a finding about the component, not a failure of the task.
+
+### Verification after Task 14
+
+- [ ] `grep -c 'useState<Set<string>>' src/features/architecture/*.tsx` returns nothing — all
+      eleven migrated, no caller retains its own accordion state
+- [ ] vitest 341/36, lint, typecheck clean
+- [ ] audit 14/14, and the sweep still **140 expandables / 107 ids**
+- [ ] every `idPrefix` in the table above still produces its original panel ids

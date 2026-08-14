@@ -114,6 +114,121 @@ follows on the same line and unsafe when it does not, exactly like one in mid-se
 is in `Figure` captions, where a straight double quote closes the JSX attribute early; use
 typographic quotes there.
 
+### `RevealList` — `src/components/RevealList.tsx`
+
+A titled row, optionally a one-line summary under the title and a badge beside it, with the
+detail behind the click. Eleven components in stage 03 use it, twelve instances in all
+(`AIArchitecturePlays` renders two). Do not write another one.
+
+```tsx
+<RevealList
+  idPrefix="resilience"
+  rows={rows} // RevealRow[]
+  header={<div>…</div>} // optional, above the rows, inside the Card
+  footer={<p>…</p>} // optional, below them
+/>
+```
+
+`RevealRow` is `{ id, title, badge?, summary?, body }`.
+
+- **`title`** takes a `string` **or** a `ReactNode`, and the two branches are not the same.
+  A string is wrapped in the component's own `font-medium` span and renders at ambient body
+  size — 17px. A `ReactNode` renders unwrapped, so **the caller owns its own sizing and
+  weight**. That is what `AIArchitecturePlays` needs: its claim rows are `text-sm`, and
+  before the slot was widened a migration would have grown every claim from 14px to 17px.
+  If your title is a plain phrase, pass the string and inherit the house style.
+- **`badge`** is a `ReactNode` rendered **beside** the title, not below it. Two components
+  used to render their badge below (`DeferredList`, `ContractCost`); adopting the slot moved
+  both, and that was accepted as a deliberate visual change rather than worked around.
+- **`summary`** is optional. Omit it and no element is emitted; passing `''` renders an
+  empty span. One caller, `ContractCost`, was actually doing that; two more
+  (`AIArchitecturePlays`, `ADRAnatomy`) have no summary either, so the same workaround
+  would have recurred three times had the prop stayed required. Which is why it did not.
+- **`body`** is whatever the panel holds. `RevealFacet` is the usual filling.
+
+**Rows open independently. This is not an accordion, and that is deliberate.** A reader
+comparing two options has to be able to hold both open, and there is no ordering here for a
+single-open panel to defend. `RevealList` tracks open rows as a `Set` of ids.
+
+**`idPrefix` is load-bearing.** Each panel's DOM id is `` `${idPrefix}-${row.id}` `` and it
+is what `aria-controls` points at. Changing a prefix renames every panel id in that list,
+and **nothing in the gate notices**: `e2e/audit.spec.ts` hand-lists *step* hashes in `PAGES`
+(TD-12), never a disclosure's own id, and the same number of rows still renders either way.
+When you migrate a component onto `RevealList`, pick the prefix that reproduces the ids it
+already emitted, and check with `AUDIT_IDS=1 node e2e/count-expandables.mjs` against a
+freshly started server — it prints the total, the id count, and the ids themselves.
+
+Two constraints, neither fixed, both of which will bite the next caller:
+
+**Row headings are hardcoded `<h3>`.** A caller whose own section heading is also `<h3>`
+gets a flat outline instead of a nested one, and `RevealList` gives it no say. `ScalingMoves`
+already had this shape before the extraction; `AIArchitecturePlays` acquired it, its rows
+having been `<h4>`. Nothing renders differently — `globals.css` sets no global `h3`/`h4`
+rule — so this costs assistive-technology users and nobody else. Tracked as **TD-34**.
+
+**The panel always applies `space-y-3`.** Tailwind v4 compiles that to
+`:where(.space-y-3 > :not(:last-child))` setting `margin-block-end: 0.75rem`, so a panel with
+**more than one direct child** gets 12px between them whether it wants it or not. Five of
+the eleven original panels did not have `space-y-3` (`EvolutionNotes`, `ContractCost`,
+`Normalisation`, `TraceForward`, `AIArchitecturePlays`), and two of them changed when they
+adopted it: `Normalisation` went 4px → 12px, and `TraceForward` 12px → 24px, the second because its
+trailing `<a>` is `inline-flex` and an inline box's margin does not collapse with a block
+sibling's. **The fix in both cases is to wrap the affected children in a `<div>`**, which
+makes them one child again and restores the original spacing. A panel whose body is a single
+element is safe by construction, since the only child is also the last child.
+
+None of this is visible to any check the project runs. The expandable count does not move
+(same disclosures), the ids do not move (nothing renamed), the audit stays green (8px is not
+a contrast or touch-target failure) and jsdom renders no CSS at all. **Measure the computed
+gap in a real browser, before and after, on a server you started fresh** (TD-27 — a reused
+tab serves a stale build and reads as "no change").
+
+### `RevealFacet` — `src/components/RevealFacet.tsx`
+
+One labelled paragraph inside a row body: a tracked-caps label over a small paragraph. It
+was written out longhand thirteen times across five components before it existed.
+
+```tsx
+<RevealFacet label="the catch" tone="warn">
+  …
+</RevealFacet>
+```
+
+- **`label`** is a plain string, rendered uppercase.
+- **`tone`** colours the label: `blueprint | warn | go | danger | subtle`, default `subtle`.
+  Semantic colour means what `DESIGN.md` says it means. `go` is "this is good", `warn` and
+  `danger` carry their own weight, and `brand` is not on the list because it means "you are
+  here" and using it for approval has already been a bug in this repo.
+- **`bodyTone`** colours the paragraph: `muted | fg`, default `muted`. `fg` exists for
+  `ADRAnatomy`'s worked example, whose body is full ink rather than graphite — genuinely
+  different tokens in both themes.
+
+**Both tones resolve through a static `Record` map, and neither may ever become a template
+literal.** `text-${tone}` typechecks, lints clean, and ships a class Tailwind never generated
+a rule for, because Tailwind's scanner only keeps classes it can read whole in the source.
+The paragraph then renders with no colour at all.
+
+**No render test can catch that**, which is why it gets a paragraph. Each tone's class
+is its own name with a prefix, so the map and the interpolation produce byte-identical
+`className` strings, and the difference exists only in compiled CSS, which jsdom does not
+produce. The guard is `RevealFacet.source.test.ts`, which reads the component's own text —
+the same thing Tailwind reads — and fails when a tone's class stops appearing as a complete
+literal. Deleting the map and interpolating leaves both render tests green; only the source
+test goes red. Lint closes the remaining hole, failing the dead-but-declared map on
+`no-unused-vars` at `--max-warnings 0`.
+
+Any future map of the same shape, a size or a variant or a border colour, needs its own
+source test for the same reason.
+
+### `TeamNotes` — `src/components/TeamNotes.tsx`
+
+The collapsed "If you are not solo" disclosure, carrying a stage's team-scoped material
+without making it part of the main read. `{ title?, children }`; the title defaults.
+
+Every stage ships one (TD-13). Mount it near the end of the stage's closing step. It lives
+here, not in a feature folder, precisely so the next stage imports it instead of writing a
+third version by hand.
+
 ### `References` — `src/components/References.tsx` + `src/lib/references.ts`
 
 Closes a stage with 3–5 outward links (a test enforces the cap — a link dump is not a
@@ -146,7 +261,7 @@ copy a working version rather than start from scratch.
 
 | Pattern                  | What it teaches                                                    | Reach for it when                                                | Canonical example                                 |
 | ------------------------ | ------------------------------------------------------------------ | ---------------------------------------------------------------- | ------------------------------------------------- |
-| **Expand to reveal**     | A list of things, each with detail worth hiding until wanted       | You have 3+ items that each need a paragraph                     | `ValidationLadder`, `AIWorkflow`, `WorkedExample` |
+| **Expand to reveal**     | A list of things, each with detail worth hiding until wanted       | You have 3+ items that each need a paragraph                     | `RevealList` (+ `RevealFacet` for row bodies)     |
 | **Tabs**                 | Parallel categories the reader picks between                       | Content splits into 3–5 peer groups                              | `Toolkit`                                         |
 | **Single-select scorer** | A judgment call along a scale, with the consequence of each choice | The stage turns on one decision (severity, risk, priority)       | `SeverityScorer`                                  |
 | **Guess then reveal**    | Right-vs-wrong judgment, scored                                    | You can show good and bad examples of the same skill             | `QuestionLab`                                     |
@@ -159,7 +274,20 @@ Notes that make each land:
 
 - **Expand to reveal** is the workhorse. Show the item's title and a one-line summary
   collapsed; put the reasoning, the example, or the trade-off inside. The reader scans the
-  list, opens what they need.
+  list, opens what they need. Build it with `RevealList` and pass rows. Stages 01 and 02
+  hold four hand-rolled disclosures that were this row's canonical examples before the
+  component existed (`ValidationLadder`, `AIWorkflow`, `WorkedExample`, `AIPlanningPlays`).
+  They are not simply un-migrated: each keeps a single row open (`useState(PLAYS[0].id)`)
+  where `RevealList` lets any number be open at once, so converting one is a behaviour
+  change and needs its own decision. Do not copy their markup into a new stage.
+
+  Stage 03 holds three more hand-rolled disclosures, and these are **not** candidates at
+  all: `ERView`, `InternalOrganisation` and `RouteShape`. Each is a grid of selected tiles
+  with one open at a time (`useState<string | null>`) — no chevron, no `Card p-0`, no
+  `divide-y` row list. They are the click-node inspector wearing a disclosure, not this
+  pattern, and `RevealList` would render something else entirely. Named here because the
+  folder is otherwise accordion-free, and "no accordions left in stage 03" is easy to read
+  as "nothing here is hand-rolled".
 - **Guess then reveal** must lock the answer before showing the verdict, and should score
   across the set ("3/6 right"). A revealed answer the reader did not commit to teaches
   nothing.

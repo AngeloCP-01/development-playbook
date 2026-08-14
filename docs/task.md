@@ -419,7 +419,7 @@ pattern library on the hardest stage.
 | ~~3~~ ✓ | — | **Stage 03's doc gaps closed** across W-3.1, W-3.1b, W-3.3 and four cold-reader runs — run 4 returned **COMPLETE**, the first to do so. |
 | ~~4~~ ✓ | — | **W-3.2 + W-3.3 merged** to `main` as `790b3e4` (`--no-ff`, 106 commits, branch deleted). Gate re-run on the merged result: 313/313, 14/14 audit, lint, typecheck and format clean. **Not pushed** — the user handles that. |
 | ~~5~~ ✓ | — | **W-5 complete** — live at https://acp-dev-playbook.vercel.app, verified by `pnpm test:prod`. Every `W-` milestone except W-3 is now closed. |
-| **6 (in progress)** | **04 Project Setup** | **Decided 2026-08-11**, against this table's earlier answer of 15. Reading 04 to compare the two found its Vercel section factually wrong — it says to match the Node version to `.nvmrc`, which Vercel does not read — and silent on the three things that broke this project's own first deploy (**TD-28**). So the round is *fix a doc that misleads* rather than *port a doc that is fine*, and it is the one stage checkable against this repository. **Scoped as a doc-correction phase before the port.** 15's case is recorded in `docs/tracker.md`'s Next up; it lost on having nothing to ground it against. **Doc phase complete 2026-08-13** on `fix/stage-04-doc-corrections`, unmerged: 323 → 711 lines at `38765e7`, TD-28 closed, **31 defects against the four TD-28 named**. `RevealList` and the port are still outstanding — see W-3.4. |
+| **6 (in progress)** | **04 Project Setup** | **Decided 2026-08-11**, against this table's earlier answer of 15. Reading 04 to compare the two found its Vercel section factually wrong — it says to match the Node version to `.nvmrc`, which Vercel does not read — and silent on the three things that broke this project's own first deploy (**TD-28**). So the round is *fix a doc that misleads* rather than *port a doc that is fine*, and it is the one stage checkable against this repository. **Scoped as a doc-correction phase before the port.** 15's case is recorded in `docs/tracker.md`'s Next up; it lost on having nothing to ground it against. **Doc phase complete 2026-08-13** on `fix/stage-04-doc-corrections`, unmerged: 323 → 711 lines at `38765e7`, TD-28 closed, **31 defects against the four TD-28 named**. **`RevealList` done 2026-08-14** on its own branch, unmerged: eleven stage-03 accordions collapsed onto one component, not the five the plan scoped. **The port is still outstanding** — see W-3.4. |
 | 7 | 16 Incident Management | Procedural, so a stepper fits naturally |
 | 7 | 13 Production Deployment | Expand/migrate/contract needs a visual |
 | — | remainder | 04–12, 14, 17, 18 |
@@ -437,7 +437,7 @@ migration target and fix a schema before stages 03–18 have said what they need
 extends: the reader's own "Not in v1" entries become the items they triage in the horizon
 step. Verified end-to-end in a live browser.
 
-### W-3.4 — Stage 04's doc-correction phase ◐ *(doc done 2026-08-13 on `fix/stage-04-doc-corrections`, unmerged; port not started)*
+### W-3.4 — Stage 04's doc-correction phase ◐ *(doc done 2026-08-13, merged to `develop` as `dd44b30`; `RevealList` done 2026-08-14, unmerged; port not started)*
 
 The first round in this project shaped as a correction rather than a port, per **D-53**.
 Stage 03's rounds ported prose that was already right; `docs/04-project-setup.md` was wrong
@@ -466,12 +466,27 @@ handing the corrected doc to a cold reader with a task to finish.
 - [x] **Fix wave, all twelve prioritised entries closed** ✓ — three of them not as specified,
       and one reversed on review and recorded as reversed (**D-56**)
 - [x] **Whole-branch review of the fix wave** ✓ — eight findings, all addressed
-- [ ] **`RevealList`** — five stage-03 accordions sharing one markup, extracted before stage 04
-      becomes the sixth caller. Its own branch, independent of the port
-- [ ] **The port.** `04-project-setup` is `ready: false` and absent from `STAGE_CONTENT`, so
-      the route still renders "sheet not drawn". **W-3 is not advanced by this round**
-- [ ] **Merge.** The branch is unmerged and unpushed; merging into `develop` is the user's call,
-      asked for separately
+- [x] **`RevealList`** ✓ *(done 2026-08-14 on `refactor/reveal-list`, unmerged)* — scoped as
+      five stage-03 accordions sharing one markup, and there were **eleven**. The five were the
+      ones whose header comments admitted the duplication; the other six never said so. All
+      eleven now call `RevealList` (twelve instances), plus `RevealFacet` for row bodies and
+      `TeamNotes` moved to `src/components/`. **Two shared components widened**, both after an
+      implementer reported a caller that did not fit rather than forcing it (**D-61**); **two
+      deliberate visual changes**, both badge moves, declared in commit subjects. The branch's
+      real product is the verification story: **seven checks that could not fail**, six of them
+      controller-authored, recorded in `docs/tracker.md`'s Process observations. Evidence in
+      that file's row: 31 commits, vitest 332/33 → **347/36**, sweep **140 expandables / 107
+      panel ids** unchanged end to end, audit 14/14. Debt opened: **TD-34**, **TD-35**
+- [ ] **The port.** Unchanged by the `RevealList` round. `04-project-setup` is still
+      `ready: false` and absent from `STAGE_CONTENT`, so the route renders "sheet not drawn".
+      **W-3 is not advanced.** Per the sequencing settled 2026-08-13, **TD-12** runs on its own
+      branch next, then a port-planning pass that re-cuts the seams by measurement — the spec's
+      nine-step table was written against a 323-line doc that is now 711 lines
+- [x] **Merge of the doc phase** ✓ — `fix/stage-04-doc-corrections` is in `develop` as
+      `dd44b30`, `--no-ff`, which is where `refactor/reveal-list` was cut from
+- [ ] **Merge of `refactor/reveal-list`.** Whole-branch review not yet run; the branch is
+      unmerged and unpushed, and merging into `develop` is the user's call, asked for
+      separately. `develop` itself is **67 commits ahead of `main`**, and `main` is the user's
 
 ### W-4 — Quality gates ☑
 
