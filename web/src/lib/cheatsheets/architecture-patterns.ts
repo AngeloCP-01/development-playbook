@@ -14,6 +14,12 @@ export const architecturePatterns: Cheatsheet = {
   source: {
     title: 'Software Architecture Patterns',
     author: 'Sathish Kumar Subramani',
+    image: {
+      src: '/reference/software-architecture-patterns.webp',
+      width: 1152,
+      height: 1536,
+      alt: 'Six panels, one per pattern: event-driven, layered, monolithic, microservices, MVC and master-slave.',
+    },
   },
   sections: [
     {

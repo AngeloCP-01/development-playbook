@@ -34,6 +34,24 @@ const empty: Cheatsheet = {
   sections: [],
 }
 
+const undrawnWithImage: Cheatsheet = {
+  slug: 'undrawn-with-image',
+  title: 'Undrawn With Image',
+  group: 'Architecture',
+  blurb: 'Gathered but not transcribed.',
+  source: {
+    title: 'Some Graphic',
+    author: 'A. Person',
+    image: {
+      src: '/reference/some-graphic.webp',
+      width: 1080,
+      height: 1350,
+      alt: 'A fifteen-step roadmap for API design.',
+    },
+  },
+  sections: [],
+}
+
 test('renders every row of every section, since a dropped row is invisible in a lookup table', () => {
   render(<CheatsheetView sheet={drawn} />)
   expect(screen.getByText('Undoing things')).toBeTruthy()
@@ -86,4 +104,49 @@ test('gives each section a level-2 heading so the sheet is navigable by structur
   expect(
     screen.getByRole('heading', { name: 'Undoing things', level: 2 }),
   ).toBeTruthy()
+})
+
+// The source graphic is shown alongside the transcription rather than instead of
+// it (D-63). Dimensions are rendered because a plate that reserves no space
+// reflows the page as the image arrives.
+test('renders the source graphic with explicit dimensions when the sheet has one', () => {
+  render(<CheatsheetView sheet={undrawnWithImage} />)
+  const img = screen.getByRole('img', { name: /fifteen-step roadmap/i })
+
+  // next/image routes the file through the optimiser, so the src is a query
+  // rather than the path. Decoding it still catches the failure that matters —
+  // a sheet pointing at the wrong file — without asserting the loader's format.
+  expect(decodeURIComponent(img.getAttribute('src') ?? '')).toContain(
+    '/reference/some-graphic.webp',
+  )
+  expect(img.getAttribute('width')).toBe('1080')
+  expect(img.getAttribute('height')).toBe('1350')
+})
+
+// The alt decision is derived from whether a text equivalent exists, which makes
+// it exactly the conditional TD-17 requires a render test for. Getting this
+// backwards is an accessibility defect that no data test would catch: a
+// screen reader either hears a duplicate of the page it just read, or hears
+// nothing at all where the only content is.
+test('leaves the graphic decorative on a drawn sheet, since the transcription below it is a complete equivalent', () => {
+  const drawnWithImage = {
+    ...drawn,
+    source: { ...drawn.source!, image: undrawnWithImage.source!.image },
+  }
+  render(<CheatsheetView sheet={drawnWithImage} />)
+  expect(screen.queryByRole('img')).toBeNull()
+  const img = document.querySelector('img')
+  expect(img?.getAttribute('alt')).toBe('')
+})
+
+test('gives the graphic real alt text on an undrawn sheet, where it is the only content', () => {
+  render(<CheatsheetView sheet={undrawnWithImage} />)
+  expect(
+    screen.getByRole('img', { name: 'A fifteen-step roadmap for API design.' }),
+  ).toBeTruthy()
+})
+
+test('renders no graphic for a sheet whose source is text-only', () => {
+  render(<CheatsheetView sheet={drawn} />)
+  expect(document.querySelector('img')).toBeNull()
 })

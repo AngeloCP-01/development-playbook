@@ -101,3 +101,31 @@ test('a sheet with a source names both the work and its author', () => {
     expect(sheet.source.author.trim().length, sheet.slug).toBeGreaterThan(0)
   }
 })
+
+// A src typo ships a broken-image box and nothing catches it: the page renders,
+// the build passes, and only a human looking at that one sheet notices. The
+// files live in web/public, so a public path maps to disk by prefixing it.
+test('every registered source image exists on disk', async () => {
+  const { access } = await import('node:fs/promises')
+  const { fileURLToPath } = await import('node:url')
+
+  for (const sheet of CHEATSHEETS) {
+    const image = sheet.source?.image
+    if (!image) continue
+    const onDisk = fileURLToPath(
+      new URL(`../../../public${image.src}`, import.meta.url),
+    )
+    await expect(
+      access(onDisk),
+      `${sheet.slug} → ${image.src}`,
+    ).resolves.toBeUndefined()
+  }
+})
+
+test('every registered source image carries alt text, since on an undrawn sheet it is the only content', () => {
+  for (const sheet of CHEATSHEETS) {
+    const image = sheet.source?.image
+    if (!image) continue
+    expect(image.alt.trim().length, sheet.slug).toBeGreaterThan(0)
+  }
+})
