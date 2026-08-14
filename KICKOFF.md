@@ -88,13 +88,15 @@ Before doing anything, read these for context:
   left of the stage is in `docs/task.md`'s **W-3.4**.
 - **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **332 vitest tests across 33 files** in two projects — `unit`
-  (node, data invariants) and `dom` (jsdom, render tests, `*.test.tsx`) — a **14-test playwright
-  audit suite over 36 URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
+  eslint at `--max-warnings 0`, **350 vitest tests across 37 files** in two projects — `unit`
+  (node, data invariants) and `dom` (jsdom, render tests, `*.test.tsx`) — a **16-test playwright
+  audit suite over 36 derived URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
   public (D-26).
-- **`PAGES` in `web/e2e/audit.spec.ts` is still hand-written** (**TD-12**), so adding a step
-  means editing that array by hand — thirteen times this round. A dead hash now fails; a missing
-  one still audits nothing, which is the half that matters now.
+- **The audit sweeps the ready set automatically** (**TD-12 closed 2026-08-14**).
+  `e2e/audit-pages.ts` takes stages from `STAGES.filter(s => s.ready)` and step ids from the
+  rail each renders, so a new stage or step is swept without editing a list. A ready stage
+  that renders no rail throws. The gap left open is the other direction — a step that
+  disappears leaves the sweep silently, guarded only for stage 03 by `STEP_IDS` (**TD-36**).
 - **Deployed** (`W-5`, live 2026-08-11): **https://acp-dev-playbook.vercel.app**, verified
   against the running site — `/robots.txt`, a 19-URL `/sitemap.xml`, and stage pages rendering
   with the title template. The Vercel project is `acp-development-playbook`; the **assigned
