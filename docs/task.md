@@ -440,7 +440,7 @@ migration target and fix a schema before stages 03–18 have said what they need
 extends: the reader's own "Not in v1" entries become the items they triage in the horizon
 step. Verified end-to-end in a live browser.
 
-### W-3.4 — Stage 04's doc-correction phase ◐ *(doc done 2026-08-13, merged to `develop` as `dd44b30`; `RevealList` done 2026-08-14, unmerged; port not started)*
+### W-3.4 — Stage 04's doc-correction phase ◐ *(doc done 2026-08-13, merged as `dd44b30`; `RevealList` merged 2026-08-14 as `e29f3fe`; TD-12 closed as `a07a9b6`; **the port is all that remains**)*
 
 The first round in this project shaped as a correction rather than a port, per **D-53**.
 Stage 03's rounds ported prose that was already right; `docs/04-project-setup.md` was wrong
@@ -569,7 +569,15 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
 
 ---
 
-### W-6 — Reference hub ◐ *(skeleton merged 2026-08-14 as `0207fd6`)*
+### W-6 — Reference hub ◐ **PAUSED 2026-08-14** *(skeleton `0207fd6` and source graphics `4727dc3` merged; resume after the stage 04 port)*
+
+> **Parked deliberately, not abandoned.** The frame is finished and merged — routes,
+> rail, renderer, markdown generation, audit coverage and the source graphics. What
+> remains (W-6.3, W-6.4) is content work that competes with `W-3`, which is the
+> project. **Next active work is the stage 04 port under W-3.4, not this.**
+>
+> Resuming needs no re-decision: read this section, pick a sheet from
+> `reference/cheatsheet-sources.md`, and fill its `sections: []`. Nothing else changes.
 
 **Why it exists.** Two problems with one shape. `reference/glossary.md` and
 `reference/stack.md` have been unreachable from the app since they were written — no

@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
   a recorded decision actually hold
 
-### Project state (as of 2026-08-14 — stage 04's doc phase, `RevealList` and TD-12 all merged into `develop`; the port is the only thing left of the stage; the site live and self-verifying)
+### Project state (as of 2026-08-14 — stage 04's doc phase, `RevealList`, TD-12 and the W-6 reference hub all merged into `develop`; the stage 04 port is the next active work; the site live and self-verifying)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -46,6 +46,16 @@ Before doing anything, read these for context:
   complete, interactive and merged**; 03 is 22 steps with every panel under four screens.
   Fifteen stages remain, which is all that is left of `W-3` and of the project. See
   `docs/stage-03-status.md` for section-by-section coverage of 03.
+- **There is a second top-level section now: `/reference` (W-6), and it is PAUSED.** Eleven
+  cheatsheets registered behind one renderer, ten of them deliberately empty and chipped WIP,
+  because an index that advertises its gaps doubles as a worklist (**D-62**). The rail carries
+  a second nav landmark under the eighteen. `reference/cheatsheets.md` is generated from
+  `web/src/lib/cheatsheets/` by snapshot test, the same arrangement `terms.ts` has with the
+  glossary — do not hand-edit it; run `pnpm gen:cheatsheets`. **Eighteen is still eighteen**:
+  this is a sibling section, not a nineteenth stage, which was rejected for the third time.
+  Source graphics are served from `web/public/reference/` as WebP; the gathered originals are
+  gitignored on purpose (**D-63**). **Do not start W-6 content work** — the stage 04 port is
+  the next active thing.
 - **The D-52 reshape is done, and D-52 stands in place of D-38** (superseded, kept struck
   through for the record). `PANEL_EXCEPTIONS` in `web/e2e/audit.spec.ts` is back to its two
   permanent entries, which was the exit condition. **Twenty-two steps was not a target**: every
@@ -95,10 +105,10 @@ Before doing anything, read these for context:
   `docs/task.md`'s **W-3.4** and `docs/tracker.md`'s **Next up**.
 - **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **350 vitest tests across 37 files** in two projects — `unit`
-  (node, data invariants) and `dom` (jsdom, render tests, `*.test.tsx`) — a **16-test playwright
-  audit suite over 36 derived URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
-  public (D-26).
+  eslint at `--max-warnings 0`, **382 vitest tests across 41 files** in two projects — `unit`
+  (node, data invariants) and `dom` (jsdom, render tests, `*.test.tsx`) — a **17-test playwright
+  audit suite over 48 derived URLs** (36 stage, 12 reference), lefthook hooks, and CI. Branch
+  protection is on; the repo is public (D-26).
 - **The audit sweeps the ready set automatically** (**TD-12 closed 2026-08-14**).
   `e2e/audit-pages.ts` takes stages from `STAGES.filter(s => s.ready)` and step ids from the
   rail each renders, so a new stage or step is swept without editing a list. A ready stage

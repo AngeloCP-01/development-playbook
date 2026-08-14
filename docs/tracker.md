@@ -1629,10 +1629,17 @@ briefs were regenerated and verified to carry no surviving copy.
 **Next round (2026-08-14): the stage 04 port, and it opens with a planning pass rather than
 code.**
 
-Three branches have landed since the recommendation below and all three are in `develop`:
-the doc correction (`dd44b30`), `RevealList` (`e29f3fe`) and TD-12 (`a07a9b6`). What is left
-of stage 04 is the port itself, and the first thing it needs is a seam that has been measured
-rather than inherited.
+Five branches have landed since the recommendation below and all five are in `develop`: the
+doc correction (`dd44b30`), `RevealList` (`e29f3fe`), TD-12 (`a07a9b6`), and the two W-6
+reference-hub merges (`0207fd6`, `4727dc3`). What is left of stage 04 is the port itself, and
+the first thing it needs is a seam that has been measured rather than inherited.
+
+**W-6 is paused, not in flight.** It was a detour taken between the TD-12 close and this
+round, it is finished and merged as far as it goes, and its remaining work is content that
+would compete with `W-3`. It touches nothing the port touches — no `src/features/`, no stage
+data, no `docs/04-project-setup.md`. The one thing to carry forward is that
+`web/e2e/audit-pages.ts` now derives twelve reference URLs on top of the stage sweep, so the
+audit suite's baseline is 48 URLs rather than 36.
 
 **The spec's nine-step table is stale in a specific, checkable way.** Phase 5 of
 `docs/superpowers/specs/2026-08-12-stage-04-project-setup-design.md` cuts the doc into nine
