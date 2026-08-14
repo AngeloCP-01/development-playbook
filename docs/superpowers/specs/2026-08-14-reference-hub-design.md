@@ -108,6 +108,38 @@ sheets sketched in `reference/cheatsheet-sources.md` under priority 3. They were
 asked for. They are recorded there so adding them later is a content change, not a
 rethink.
 
+**D6 — The source graphic is displayed on the sheet, not only cited.** Added
+2026-08-14 during the skeleton build. The transcription stays the primary content —
+it is what is searchable, copyable, themeable and readable at 320px — and the
+original image sits alongside it as the visual reference it was gathered to be.
+This does not reverse the "GIF is source, text is deliverable" position; it makes
+the source visible instead of hiding it in a folder.
+
+Four things this needs, none of which the skeleton has:
+
+- **The files must move.** They live in `reference/` at the repo root, which Next
+  does not serve. They belong in `web/public/reference/` (or an `images/`
+  subfolder), with `reference/` keeping them only if the docs deliverable needs
+  them — otherwise that is two copies of a 4MB binary.
+- **Page weight is a real constraint.** `MasterPlan-Api-Design.gif` is 4.1MB and
+  `Software-Architecture-Patterns.gif` is 1MB. Both are static images stored as
+  GIF, which is the worst available format for that. Converting to WebP or AVIF
+  should cut them by an order of magnitude; `next/image` will not do it for a GIF
+  it is told to serve unoptimised. This wants a build step or a one-time convert.
+- **Dark mode.** Every one of these graphics has a light background. Dropped
+  straight onto the cyanotype it punches a white hole. Needs a frame treatment —
+  a bordered plate with padding, and probably a slight dim at rest.
+- **Alt text and licence.** One `alt` string cannot carry forty labels, but the
+  transcription beside it can — so the image should be `alt=""` and
+  `aria-hidden` where the text below is a complete equivalent, and captioned with
+  the existing `source` attribution. That also settles the reproduction question:
+  the credited original next to an original transcription is a materially better
+  position than either alone.
+
+Type change this implies: `Source` gains an optional `image: { src, width, height }`,
+and the renderer gains a plate component. Deferred out of the skeleton slice
+deliberately — it is not a data-model tweak, it is an asset pipeline.
+
 ## Housekeeping
 
 A byte-identical duplicate of the architecture GIF was found while gathering —
