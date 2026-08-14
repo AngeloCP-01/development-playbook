@@ -24,14 +24,12 @@ import { Term } from '@/components/Term'
  * a session store or paying a managed provider — so the two pieces read as
  * one exercise instead of two unrelated widgets.
  *
- * Built on `RevealList`; state, markup and the chevron now live there. Of
- * each row's two label+paragraph blocks, only "What it is for" becomes a
- * `RevealFacet` — its label and body classes match `RevealFacet` byte for
- * byte. "Filled in, for the auth decision above" keeps its own markup:
- * its body paragraph is `text-fg`, but `RevealFacet` hardcodes `text-muted`
- * for every tone's body text with no override, and `--color-fg`/
- * `--color-muted` are different tokens — converting it would dim the worked
- * example from ink to graphite, a real color change, not a wash.
+ * Built on `RevealList`; state, markup and the chevron now live there. Both
+ * of each row's label+paragraph blocks are `RevealFacet`s. "Filled in, for
+ * the auth decision above" needed `tone="blueprint"` (its label was never
+ * the default `subtle`) and `bodyTone="fg"` — its body paragraph is full ink,
+ * not muted graphite, and `RevealFacet` only grew that override once Task 15
+ * added a `bodyTone` prop with a static class map alongside the tone map.
  */
 
 type Part = {
@@ -146,12 +144,13 @@ export function ADRAnatomy() {
         body: (
           <>
             <RevealFacet label="What it is for">{part.purpose}</RevealFacet>
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-blueprint">
-                Filled in, for the auth decision above
-              </p>
-              <p className="mt-1 text-sm leading-6 text-fg">{part.worked}</p>
-            </div>
+            <RevealFacet
+              label="Filled in, for the auth decision above"
+              tone="blueprint"
+              bodyTone="fg"
+            >
+              {part.worked}
+            </RevealFacet>
           </>
         ),
       }))}
