@@ -468,7 +468,7 @@ handing the corrected doc to a cold reader with a task to finish.
 - [x] **Fix wave, all twelve prioritised entries closed** ✓ — three of them not as specified,
       and one reversed on review and recorded as reversed (**D-56**)
 - [x] **Whole-branch review of the fix wave** ✓ — eight findings, all addressed
-- [x] **`RevealList`** ✓ *(done 2026-08-14 on `refactor/reveal-list`, unmerged)* — scoped as
+- [x] **`RevealList`** ✓ *(done 2026-08-14 on `refactor/reveal-list`, merged as `e29f3fe`)* — scoped as
       five stage-03 accordions sharing one markup, and there were **eleven**. The five were the
       ones whose header comments admitted the duplication; the other six never said so. All
       eleven now call `RevealList` (twelve instances), plus `RevealFacet` for row bodies and
@@ -489,11 +489,27 @@ handing the corrected doc to a cold reader with a task to finish.
       in what the derivation emits. Evidence in `docs/tracker.md`'s row: audit **14/14 →
       16/16**, vitest **350/37**, sweep unchanged at **140 expandables / 107 ids**. Debt
       opened: **TD-36**, for the direction it does not cover
+- [ ] **Port-planning pass — the next round, and it is planning rather than code.** The
+      spec's Phase 5 table cuts the doc into nine steps, and it was written when
+      `docs/04-project-setup.md` was 323 lines. It is **711**. Mapping that table onto the doc
+      as it stands puts four steps at roughly a hundred lines each — `scaffold` (§1+§2, 129),
+      `gates` (§6+§7, 109), `strict` (§3+§4, 105), `env` (§5, 103) — against `deploy` (§8, 70),
+      `proof` (§9+§10, 56), `ai` (38), `checklist` (DoD + team, 30) and `traps` (29). Three of
+      the four heavy ones are **pairings the spec made when each half was about half its
+      current size**, so the question the pass exists to answer is whether D-52's panel weight
+      still lets them hold. Re-cut by measurement, not by re-reading the table (**D-51**: a
+      plan specified against prose that then moved is the failure stage 03 hit five times out
+      of six)
+- [ ] **TD-36 folds into that round.** Stage 04's `steps.ts` should type its `Step[]` against
+      `STEP_IDS` the way stage 03's does, and extending the same guard to stages 01 and 02 is
+      a few lines inside a round already in those files — against its own round later
 - [ ] **The port.** Unchanged by either the `RevealList` or the TD-12 round.
       `04-project-setup` is still `ready: false` and absent from `STAGE_CONTENT`, so the route
-      renders "sheet not drawn". **W-3 is not advanced.** Next is the port-planning pass that
-      re-cuts the seams by measurement — the spec's nine-step table was written against a
-      323-line doc that is now 711 lines
+      renders "sheet not drawn". **W-3 is not advanced.** One tripwire is already armed:
+      `web/e2e/audit-pages.spec.ts` goes **red the moment `ready: true` lands**, correctly —
+      its thirty-six-URL literal proves the TD-12 migration and nothing after it, and the file
+      says in writing that the fix is to delete the test rather than paste in what the
+      derivation now emits
 - [x] **Merge of the doc phase** ✓ — `fix/stage-04-doc-corrections` is in `develop` as
       `dd44b30`, `--no-ff`, which is where `refactor/reveal-list` was cut from
 - [x] **Merge of `refactor/reveal-list`** ✓ — in `develop` as `e29f3fe`, `--no-ff`, after a

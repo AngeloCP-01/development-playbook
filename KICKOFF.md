@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
   a recorded decision actually hold
 
-### Project state (as of 2026-08-13 — stage 04's doc phase done and unmerged, TD-28 closed, stage 03 merged, the site live and self-verifying)
+### Project state (as of 2026-08-14 — stage 04's doc phase, `RevealList` and TD-12 all merged into `develop`; the port is the only thing left of the stage; the site live and self-verifying)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -74,18 +74,25 @@ Before doing anything, read these for context:
   `web/src/lib/terms.ts`, `reference/glossary.md` is generated from it (`pnpm gen:glossary`),
   and a title sync test guards each doc's H1 against `stages.ts`. Never hand-edit
   `glossary.md`.
-- **Stage 04's doc is corrected and `TD-28` is closed**, on `fix/stage-04-doc-corrections`,
-  **reviewed, not merged and not pushed** — 37 commits of work (`859a1b8`…`1418c77`) plus
-  the record and review-fix commits that carry them; `git rev-list --count develop..HEAD`
-  is the live total. `docs/04-project-setup.md` went **323 → 711 lines at `38765e7`**.
+- **Stage 04's doc is corrected and `TD-28` is closed** — `fix/stage-04-doc-corrections`
+  merged into `develop` as **`dd44b30`**, `--no-ff`.
+  `docs/04-project-setup.md` went **323 → 711 lines at `38765e7`**.
   The number that matters for how you read any debt entry here:
   **TD-28 named four defects and the round closed 31.** Reading the doc found 8, running
   every executable block of it found 5 more, a cold reader given the corrected doc and a
   task to finish found 14, and per-task reviews found the last 4. The evidence, the
   `Deferred:` list and six new decisions (**D-53**…**D-58**) are in `docs/tracker.md`.
+- **`RevealList` is extracted and merged** (`e29f3fe`). It was scoped as five stage-03
+  accordions sharing one markup and there were **eleven** — the five were the ones whose
+  header comments admitted the duplication, and the other six never said so. All eleven now
+  call `RevealList` (twelve instances), with `RevealFacet` for row bodies and `TeamNotes`
+  moved to `src/components/`. **Use it for any new list-of-disclosures; do not hand-roll a
+  twelfth.** Debt it opened: **TD-34** (`RevealList` hardcodes `<h3>` for row headings) and
+  **TD-35** (the audit's console check cannot see a dev-only warning).
 - **Stage 04's port has not started.** `04-project-setup` is still `ready: false` and absent
-  from `STAGE_CONTENT`, `RevealList` is not extracted, and **W-3 is not advanced**. What is
-  left of the stage is in `docs/task.md`'s **W-3.4**.
+  from `STAGE_CONTENT`, and **W-3 is not advanced**. It is now the *only* piece of the stage
+  left — both things that used to sit in front of it have landed. What remains is in
+  `docs/task.md`'s **W-3.4** and `docs/tracker.md`'s **Next up**.
 - **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
   eslint at `--max-warnings 0`, **350 vitest tests across 37 files** in two projects — `unit`
@@ -117,43 +124,57 @@ Before doing anything, read these for context:
   including into `develop`. **The user handles pushes.**
   **Stage 03 is merged and pushed**: `feat/stage-03-app-port` landed on `main` as
   **`790b3e4`** (`--no-ff`, 106 commits, 91 files, +20k/−0.5k, branch deleted). Local `main`
-  is at **`8d5045c`** as of 2026-08-13. **Do not quote an ahead-of-remote count from this
+  is at **`8d5045c`** as of 2026-08-14, and **nothing since then has been pushed**.
+  `develop` carries three merged rounds ahead of it — the stage 04 doc correction
+  (`dd44b30`), `RevealList` (`e29f3fe`) and TD-12 (`a07a9b6`) — so **cut the next branch from
+  `develop`, not from `main`**, or you will be building against a tree that is three rounds
+  behind. **Do not quote an ahead-of-remote count from this
   file** — every version of it has gone stale, and the local `origin/main` ref is only as
   fresh as the last fetch. Derive it: `git fetch && git rev-list --count origin/main..main`.
   Two merged branches still sit on the remote and can be deleted:
   `origin/feat/stage-03-app-port` and `origin/feat/stage-03-standard-practices`.
 
-### Next round's scope: stage 04 — `RevealList`, then the port
+### Next round's scope: the stage 04 port — planning pass first, then the build
 
-**The doc-correction phase is done** and is the reason this section no longer opens with
-TD-28. `fix/stage-04-doc-corrections` corrected `docs/04-project-setup.md` from 323 to 711
-lines and closed that debt, which named four of the thirty-one defects the round found. The
-branch is **not merged**. Settle the merge before planning against the doc, because a plan
-specified against prose that then moves is the failure stage 03 hit five times out of six
+**Everything in front of the port has landed.** The doc correction (`dd44b30`), `RevealList`
+(`e29f3fe`) and TD-12 (`a07a9b6`) are all in `develop`. The port is the last piece of stage 04
+and the next advance of `W-3`.
+
+**Open with a planning pass, not with code.** The spec's Phase 5 cuts the doc into nine steps,
+and it was written when `docs/04-project-setup.md` was 323 lines. It is **711**. Mapping the
+same table onto today's doc puts four steps at roughly a hundred lines each — `scaffold`
+(§1+§2, **129**), `gates` (§6+§7, **109**), `strict` (§3+§4, **105**), `env` (§5, **103**) —
+against `deploy` (§8, 70), `proof` (§9+§10, 56), `ai` (38), `checklist` (DoD + team, 30) and
+`traps` (29). **Three of the four heavy ones are pairings the spec made when each half was
+about half its current length.** Whether they still hold is a D-52 panel-weight question, and
+D-52 answers by measuring the rendered panel — not by re-reading the table. A plan specified
+against prose that has since moved is the failure stage 03 hit five times out of six
 (**D-51**).
 
-Two pieces remain, in this order:
+Then the build: **the port** (`feat/stage-04-app-port`), cut off `develop`.
+`web/src/features/setup/`, a `steps.ts` holding `STEP_IDS` so a nonexistent id is a compile
+error, `ready: true` in `stages.ts`, and `DeployBlockers` as the headline component:
+guess-then-reveal over four real deploy failures, one of which has success as its symptom.
 
-1. **`RevealList`** (`refactor/reveal-list`). Five stage-03 accordions share one markup —
-   `DeferredList`, `DeploymentStyles`, `ResiliencePatterns`, `EvolutionNotes`,
-   `ScalingMoves` — and stage 04 needs the same shape for its Traps and Artifacts lists.
-   Extracting before the port means writing three new callers; extracting after means
-   rewriting three components that were just reviewed. **The equivalence check is the
-   control**: the audit sweep counts 108 expandables across 36 URLs, and the same count with
-   the same contrast result is what proves five components were replaced and nothing was
-   lost. A green suite alone would not. If the count moves at all, the refactor is wrong,
-   not the checker.
-2. **The port** (`feat/stage-04-app-port`), cut off `develop` once both have landed.
-   `web/src/features/setup/`, a `steps.ts` holding `STEP_IDS` so a nonexistent id is a
-   compile error, `ready: true` in `stages.ts`, and `DeployBlockers` as the headline
-   component: guess-then-reveal over four real deploy failures, one of which has success as
-   its symptom. The seam table and the nine provisional steps are in the spec.
+**Two things fold into this round rather than waiting for their own:**
+
+- **TD-36.** Nothing catches a step that disappears from stages 01 and 02 — stage 03 is
+  covered by construction because its `Step[]` is typed against `STEP_IDS`. Building stage
+  04's `steps.ts` the same way and extending the guard to 01 and 02 is a few lines inside a
+  round already in those files.
+- **A tripwire is already armed.** `web/e2e/audit-pages.spec.ts` goes **red the moment
+  `ready: true` lands**, correctly. Its thirty-six-URL literal proves the TD-12 migration and
+  nothing after it. **Delete the test rather than update it** — pasting in whatever the
+  derivation now emits makes the expectation generated by the thing it checks, which is the
+  defect class this repo has found seven times. The file says so in its own header; read it
+  before touching it.
 
 **Read these first, in this order:**
 
 1. `docs/superpowers/specs/2026-08-12-stage-04-project-setup-design.md` — the round's spec.
-   Phases 4 and 5 are the two pieces above and are the only parts still open. Note that its
-   defect table is the *starting* inventory of eight, not the final thirty-one.
+   Phase 5 is the only part still open, and **its nine-step table is the thing the planning
+   pass exists to re-cut**, not a specification to implement. Note also that its defect table
+   is the *starting* inventory of eight, not the final thirty-one.
 2. `docs/tracker.md`, the **2026-08-13 W-3 (04 doc)** row — what the correction phase found,
    and more usefully the long `Deferred:` list of what it deliberately did not do. Also
    **D-53**…**D-58**, the decisions that round produced.
@@ -174,14 +195,34 @@ findings after every task had already been reviewed clean. The doc is a third of
 length. Expect the port to be smaller than stage 03's 106 commits, and expect the review to
 find something, because it has every time.
 
-**The method that keeps paying, stated as a method rather than a war story.** Twice this month
-a recorded piece of evidence turned out to be a check that could not fail: a `metadataBase`
-build warning that only fires for a feature this app deliberately lacks, and a `robots.txt`
-regex that matched the substring inside `Disallow:`. Neither would have been caught by running
-the suite again. **The teeth check is what separates evidence from decoration**, and in both
-cases the assertion that turned out decorative was the one nobody teeth-checked.
+**The method that keeps paying, stated as a method rather than a war story.** A recorded piece
+of evidence turning out to be **a check that could not fail** is now this repo's most common
+defect, and the count is past seven — a `metadataBase` build warning that only fires for a
+feature this app deliberately lacks, a `robots.txt` regex that matched the substring inside
+`Disallow:`, three greps for panel ids that are computed inside client components and so
+return zero either way, a prettier run over markdown that `.prettierignore` excludes, and a
+guard that caught parsing *nothing* rather than parsing *wrong*. The `RevealList` round alone
+contributed seven, **six of them authored by the controller rather than the implementers** —
+they are written into briefs and plans more often than into code. `docs/tracker.md`'s Process
+observations has the catalogue. None would have been caught by running the suite again.
+**The teeth check is what separates evidence from decoration**, and in every case the
+assertion that turned out decorative was the one nobody teeth-checked.
 
-**Five things this round has taught, all of which cost time to learn:**
+**Three habits that caught more than reasoning did, on the last two branches:**
+
+- **The file wins.** Where a plan's table and the source disagree, the source is right — say so
+  in the brief. Three words in a task brief caught an accordion count that was eleven and not
+  five, a badge the plan denied existed, and a tone token named wrong.
+- **Run it, do not read it.** Three defects on the TD-12 branch were found by executing
+  something and none by reading: a tool that threw on startup while the suite reported 16/16,
+  a completeness check that threw on every run, and a regex that paired the wrong fields.
+- **A margin claim needs the browser.** Two spacing regressions shipped because three people
+  reasoned that adjacent margins would collapse. They do not collapse between `inline-flex`
+  siblings, and Tailwind v4's `space-y-*` sets `margin-block-end` on `:not(:last-child)`.
+
+**Six things the stage 03 and 04 rounds taught, all of which cost time to learn** (the header
+said five over six bullets until 2026-08-14, which is the smallest possible version of the
+count-the-thing-in-front-of-you problem the first bullet is about):
 
 - **The plan is wrong about the shape of the work more often than the implementation is.**
   Five of six tasks found a brief that did not match the tree: two seams that measured wrong, a
@@ -190,7 +231,7 @@ cases the assertion that turned out decorative was the one nobody teeth-checked.
   measurement, not the edit** — re-cut and re-measure rather than assuming the seam is right.
 - **A panel that measures 4.0 against a limit of 4.0 has not passed.** It passes today and
   fails on the next font change. Cut again.
-- **A step name in prose is a citation and it stales silently.** Seven shipped on this branch,
+- **A step name in prose is a citation and it stales silently.** Seven shipped on stage 03's branch,
   each found by grep and none by a test: `steps.ts` makes a nonexistent *id* a compile error and
   can say nothing about a name written in a sentence. Grep for step names whenever a step
   splits, and re-point `TRACE_ROWS[].stepId` — that one finally fired for real in Task 9.
@@ -220,9 +261,15 @@ cases the assertion that turned out decorative was the one nobody teeth-checked.
 
 Notes for whoever is preparing this handoff:
 
-- Refresh **Project state** and **This round's scope** before pasting. Delete closed
+- Refresh **Project state** and **Next round's scope** before pasting. Delete closed
   items rather than leaving them ticked.
-- Fill in the `[FILL IN: ...]` lean, or delete the line if genuinely undecided.
+- There is no longer a `[FILL IN: …]` line; the older note telling you to fill one in outlived
+  the line itself, which is the failure mode this whole file is exposed to.
+- **Untracked and deliberately parked**, so a new session does not read them as the round's
+  material: `docs/superpowers/specs/2026-08-14-reference-hub-design.md` (a Reference hub
+  design taken to four decisions and stopped on which cheatsheet leads slice 1 — it is
+  tracked, and it rode into `develop` on the TD-12 branch by accident of session, not
+  relevance), plus its three source files under `reference/`, which are still untracked.
 - If a round is already scoped, add a per-round sibling — `KICKOFF-W4.md` — rather than
   overwriting this one. The generic version stays useful.
 - Open threads worth carrying forward:
