@@ -141,7 +141,9 @@ detail behind the click. Eleven components in stage 03 use it, twelve instances 
   used to render their badge below (`DeferredList`, `ContractCost`); adopting the slot moved
   both, and that was accepted as a deliberate visual change rather than worked around.
 - **`summary`** is optional. Omit it and no element is emitted; passing `''` renders an
-  empty span, which is what three callers were doing before the prop was made optional.
+  empty span. One caller, `ContractCost`, was actually doing that; two more
+  (`AIArchitecturePlays`, `ADRAnatomy`) have no summary either, so the same workaround
+  would have recurred three times had the prop stayed required. Which is why it did not.
 - **`body`** is whatever the panel holds. `RevealFacet` is the usual filling.
 
 **Rows open independently. This is not an accordion, and that is deliberate.** A reader

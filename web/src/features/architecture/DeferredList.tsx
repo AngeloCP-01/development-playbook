@@ -25,7 +25,9 @@ import { DEFERRED_ITEMS } from './defer'
  * Built on `RevealList`, extracted from this file and four byte-identical
  * copies elsewhere in this directory. The "fails the test" badge moved from
  * below the row title to beside it in the move, matching `DeploymentStyles`
- * — the one deliberate visual change on this branch.
+ * — the first of the branch's two deliberate visual changes. `ContractCost`
+ * made the same move later, for the same reason, and this comment was written
+ * before that one existed.
  */
 
 export function DeferredList() {
