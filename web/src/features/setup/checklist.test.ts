@@ -1,30 +1,6 @@
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
+import { flat, h2 } from './doc-source'
 import { DONE, TEAM_MOVES } from './checklist'
-
-const DOC = readFileSync(
-  fileURLToPath(
-    new URL('../../../../docs/04-project-setup.md', import.meta.url),
-  ),
-  'utf8',
-)
-
-/**
- * The body of one `## ` section, up to the next `## `.
- *
- * Anchored to the line rather than `DOC.indexOf('## …')`: §5 mentions
- * "the first Definition of done" in running prose, and an unanchored slice on a
- * doc that also names its own headings is one edit away from starting in the
- * wrong place. `## Traps` already has that problem in this same file.
- */
-function h2(heading: string): string {
-  const match = new RegExp(`^## ${heading}$`, 'm').exec(DOC)
-  if (!match) throw new Error(`no section "## ${heading}" in the doc`)
-  const rest = DOC.slice(match.index + match[0].length)
-  const end = rest.search(/^## /m)
-  return end === -1 ? rest : rest.slice(0, end)
-}
 
 const DONE_SECTION = h2('Definition of done')
 const TEAM_SECTION = h2('Scaling to a team')
@@ -47,6 +23,35 @@ test('the done-box regex matches the checklist and stops at the section boundary
 
 test('every Definition of done checkbox in the doc has an item in the app', () => {
   expect(DONE).toHaveLength(DOC_BOXES.length)
+})
+
+// The count alone let a paraphrase through, and `checklist.ts` says in its own
+// header that these are the doc's checkboxes verbatim because "a paraphrase
+// there is a different bar" — a checklist the reader ticks against their real
+// project is the one place a softened wording changes what they accept as done.
+// A review paraphrased a label and all eight tests stayed green.
+test('each label is the doc’s checkbox verbatim, since a softened one moves the bar it sets', () => {
+  // Walked line by line rather than split on the `- [ ] ` marker. Splitting
+  // ran the last checkbox into the `---` rule that closes the section, and a
+  // label is not a line anyway — several wrap, and the continuation is indented.
+  const fromDoc: string[] = []
+  for (const line of DONE_SECTION.split('\n')) {
+    if (line.startsWith('- [ ] ')) fromDoc.push(line.slice(6))
+    else if (/^\s+\S/.test(line) && fromDoc.length)
+      fromDoc[fromDoc.length - 1] += ` ${line.trim()}`
+  }
+
+  // Apostrophes normalised on both sides. One label curls the doc's `§6's`
+  // into `§6’s`, which is correct typography for something rendered on a page
+  // and is not the thing this test is about. "Verbatim" here means no
+  // paraphrase, no softening, no dropped clause — every one of which still
+  // fails below.
+  const same = (s: string) => flat(s).replace(/[’‘]/g, "'")
+
+  expect(fromDoc).toHaveLength(DONE.length)
+  for (const [i, item] of DONE.entries()) {
+    expect(same(item.label), item.id).toBe(same(fromDoc[i]))
+  }
 })
 
 test('the team-move regex matches the four bold leads rather than the paragraphs under them', () => {

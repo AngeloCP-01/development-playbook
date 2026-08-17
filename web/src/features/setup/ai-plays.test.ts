@@ -1,23 +1,6 @@
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
+import { flat, section } from './doc-source'
 import { AI_LIMIT, PLAYS } from './ai-plays'
-
-const DOC = readFileSync(
-  fileURLToPath(
-    new URL('../../../../docs/04-project-setup.md', import.meta.url),
-  ),
-  'utf8',
-)
-
-/** The body of one `### ` section, up to the next heading of any level. */
-function section(heading: string): string {
-  const start = DOC.indexOf(`### ${heading}`)
-  if (start === -1) throw new Error(`no section "${heading}" in the doc`)
-  const rest = DOC.slice(start + heading.length + 4)
-  const end = rest.search(/^#{2,3} /m)
-  return end === -1 ? rest : rest.slice(0, end)
-}
 
 const AI = section('AI in project setup')
 
@@ -49,13 +32,33 @@ test('each play keeps the doc title it was extracted from, so the count cannot b
 })
 
 // The doc names the mechanism in parentheses after each title — "(a skill)",
-// "(a saved command)", "(memory)", "(an MCP)". The kind is not decoration:
-// AIPlays groups by it.
-test('every play declares the mechanism the doc puts in its parentheses', () => {
-  const kinds = new Set(['skill', 'command', 'memory', 'mcp'])
-  for (const play of PLAYS) {
-    expect(kinds.has(play.kind), `${play.id} kind=${play.kind}`).toBe(true)
-  }
+// "(a saved command)", "(memory)", "(an MCP)". `AIPlays` renders it as the row
+// badge, so a play carrying the wrong one mislabels itself on the page.
+//
+// This test used to assert `new Set(['skill','command','memory','mcp'])` had
+// each `play.kind` — the same four literals as the `Play['kind']` union, which
+// TypeScript already guarantees. A review flipped a play from `skill` to `mcp`
+// and it stayed green. It read its own type and called it reading the doc.
+const PARENTHETICAL: Record<string, string> = {
+  'a skill': 'skill',
+  'a saved command': 'command',
+  memory: 'memory',
+  'an MCP': 'mcp',
+}
+
+test('every play carries the mechanism the doc puts in its parentheses, not merely a legal one', () => {
+  const bullets = AI.match(/^- \*\*.+?\*\* \((.+?)\)/gm)
+  expect(bullets, 'no parenthesised bullets found in the doc').not.toBeNull()
+  expect(bullets).toHaveLength(PLAYS.length)
+
+  const fromDoc = bullets!.map((b) => {
+    const inner = b.match(/\((.+?)\)$/)![1]
+    const kind = PARENTHETICAL[inner]
+    expect(kind, `doc says "(${inner})", which maps to no kind`).toBeDefined()
+    return kind
+  })
+
+  expect(PLAYS.map((p) => p.kind)).toEqual(fromDoc)
 })
 
 test('ids are unique, because the reveal list keys on them', () => {
@@ -83,7 +86,7 @@ test('the limit keeps the reason it bites: every local check stayed green', () =
 })
 
 test('the doc is still where that limit comes from', () => {
-  expect(AI).toContain(
-    'Root Directory, Framework Preset and the\nconnected repository live in a web UI no agent reads',
+  expect(flat(AI)).toContain(
+    'Root Directory, Framework Preset and the connected repository live in a web UI no agent reads',
   )
 })

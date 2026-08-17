@@ -1,8 +1,13 @@
 import { expect, test } from 'vitest'
 import { BLOCKERS } from './blockers'
 
-test('four blockers, which is what the doc’s table holds', () => {
+// Three from §8's table plus `prepare`, which is §6's. The name of this test
+// said "what the doc's table holds" and the table holds three — a reader
+// trusting the name would have "corrected" the data down to three and deleted
+// the one that bites before the dashboard ones do.
+test('four blockers: §8’s three, plus the install-step failure §6 describes', () => {
   expect(BLOCKERS).toHaveLength(4)
+  expect(BLOCKERS.map((b) => b.id)).toContain('prepare')
 })
 
 test('every answer is one of that blocker’s own options, or the exercise cannot be scored', () => {
@@ -14,6 +19,11 @@ test('every answer is one of that blocker’s own options, or the exercise canno
   }
 })
 
+// Reported honestly, because a review asked what this can catch: all four
+// blockers reference one shared `CAUSES` array, so while that array has four
+// entries no edit to the four blocker literals can redden this. It is one
+// assertion wearing four, and it survives as a guard on a future blocker that
+// narrows its own options rather than as a live check on today's data.
 test('every blocker offers at least three options, since a coin flip teaches nothing', () => {
   for (const b of BLOCKERS) {
     expect(b.options.length, b.id).toBeGreaterThanOrEqual(3)

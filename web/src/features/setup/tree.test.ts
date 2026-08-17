@@ -1,23 +1,6 @@
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
+import { DOC, section } from './doc-source'
 import { SRC_TREE, type TreeNode } from './tree'
-
-const DOC = readFileSync(
-  fileURLToPath(
-    new URL('../../../../docs/04-project-setup.md', import.meta.url),
-  ),
-  'utf8',
-)
-
-/** The body of one `### ` section, up to the next heading of any level. */
-function section(heading: string): string {
-  const start = DOC.indexOf(`### ${heading}`)
-  if (start === -1) throw new Error(`no section "${heading}" in the doc`)
-  const rest = DOC.slice(start + heading.length + 4)
-  const end = rest.search(/^#{2,3} /m)
-  return end === -1 ? rest : rest.slice(0, end)
-}
 
 const STRUCTURE = section('2. Set the folder structure')
 

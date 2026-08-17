@@ -1,23 +1,6 @@
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
+import { flat, section } from './doc-source'
 import { CLIENT_FAILURE, GATES } from './client-trap'
-
-const DOC = readFileSync(
-  fileURLToPath(
-    new URL('../../../../docs/04-project-setup.md', import.meta.url),
-  ),
-  'utf8',
-)
-
-/** The body of one `### ` section, up to the next heading of any level. */
-function section(heading: string): string {
-  const start = DOC.indexOf(`### ${heading}`)
-  if (start === -1) throw new Error(`no section "${heading}" in the doc`)
-  const rest = DOC.slice(start + heading.length + 4)
-  const end = rest.search(/^#{2,3} /m)
-  return end === -1 ? rest : rest.slice(0, end)
-}
 
 const ENV = section('5. Environment variables, validated at boot')
 
@@ -33,12 +16,12 @@ test('exactly one gate catches the client-component failure, and it is loading t
 // Read out of the doc rather than asserted from memory: if the doc ever grows a
 // gate that does catch it, this fails instead of the panel quietly lying.
 test('the doc still says every wired gate stays green and only the browser shows it', () => {
-  expect(ENV).toContain(
-    'Every gate this stage wires stays green; only loading the page in\na browser shows it.',
+  expect(flat(ENV)).toContain(
+    'Every gate this stage wires stays green; only loading the page in a browser shows it.',
   )
 })
 
-test('the five gates are the ones the stage wires, in the order it wires them', () => {
+test('the four wired gates come in the order the stage wires them, with the browser last', () => {
   expect(GATES.map((g) => g.id)).toEqual([
     'build',
     'checks',
@@ -64,7 +47,7 @@ test('the failure description carries all three parts of the doc shape, not just
 })
 
 test('the doc is still the source of that shape, so a rewrite there fails here first', () => {
-  expect(ENV).toContain(
-    '`pnpm build` succeeds, the server-rendered\nHTML is correct, and the page dies on hydration',
+  expect(flat(ENV)).toContain(
+    '`pnpm build` succeeds, the server-rendered HTML is correct, and the page dies on hydration',
   )
 })

@@ -14,7 +14,15 @@ export type Artifact = {
 }
 
 /**
- * The config files of `docs/04-project-setup.md` §3–§7, line by line.
+ * The nine config blocks the five artifact steps render, line by line, from
+ * `docs/04-project-setup.md` §3–§7.
+ *
+ * Nine, not every block in those sections. The doc also fences the
+ * `format`/`format:check` scripts, `.prettierignore` and the `test` script,
+ * and those are not carried because no panel renders them. `artifacts.test.ts`
+ * pins the nine keys, so a tenth block appearing in the doc will not surface
+ * here on its own — that is a curation, and this paragraph is where it is
+ * recorded rather than left to read as exhaustive.
  *
  * Every `text` is copied out of the doc rather than retyped, and
  * `artifacts.test.ts` holds each block against the doc character-for-character.

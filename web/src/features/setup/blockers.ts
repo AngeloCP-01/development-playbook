@@ -64,6 +64,6 @@ export const BLOCKERS: Blocker[] = [
     options: CAUSES,
     answer: 'wrong-repo',
     explanation:
-      'The only one with no error attached, which is why it is the one to check first. A deployment list tells you a build succeeded; it does not tell you which repository it succeeded on, and a green build of the wrong repo is indistinguishable from a green build of yours at a glance. Take the commit SHA off the deployment and ask your own repository about it: `git cat-file -t <sha>` answers `commit` for a commit you can see, and `Not a valid object name` for one you cannot — which is the answer `79ef7a7` gave in the incident. The missing preview URL is the same cause: a project with no repository attached has nothing to build, and says so nowhere.',
+      'The only one with no error attached, which is why it is the one to check first. A deployment list tells you a build succeeded; it does not tell you which repository it succeeded on, and a green build of the wrong repo is indistinguishable from a green build of yours at a glance. Take the commit SHA off the deployment and ask your own repository about it: `git cat-file -t <sha>` answers `commit` for a commit you can see, and `Not a valid object name` for one you cannot — which is the answer `79ef7a7` gave in the incident. The missing preview URL is the same cause seen from the other side: your pull requests are on a repository this project is not watching, so there is nothing to build a preview of, and nothing anywhere says so.',
   },
 ]

@@ -4,9 +4,12 @@
  * only, never a `'use client'` file."
  *
  * The panel is a guess-then-reveal, and the guess only works because the answer
- * is counter-intuitive: the stage has just spent an afternoon wiring five gates
- * and four of them are silent on this. Every `why` below is the reason that
- * particular gate cannot see it, not a restatement of the verdict.
+ * is counter-intuitive: the stage has just spent an afternoon wiring four gates
+ * and every one of them is silent on this. The fifth entry below is not a gate
+ * the stage wires — it is loading the page, which is the only thing that shows
+ * the failure, and it earns its place in the list precisely because it is not
+ * automation. Every `why` is the reason that particular check cannot see it,
+ * not a restatement of the verdict.
  */
 
 export type Gate = {

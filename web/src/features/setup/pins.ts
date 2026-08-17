@@ -26,7 +26,7 @@ export const PIN_TARGETS: PinTarget[] = [
     environment: 'Your shell, and anyone else who clones this',
     reads: '.nvmrc',
     mistake: 'package.json → engines.node',
-    why: '`nvm` and `fnm` read `.nvmrc`, and switch to it on `cd` once the shell hook is enabled. `engines.node` is a constraint, not a switch: nothing in your shell changes version because you wrote it, and pnpm only complains about it if you asked for `engine-strict=true`.',
+    why: '`nvm` and `fnm` read `.nvmrc`, and switch to it on `cd` once the shell hook is enabled. `engines.node` is a constraint, not a switch: nothing in your shell changes version because you wrote it, and pnpm prints `WARN Unsupported engine` and installs anyway, exit 0. `engine-strict=true` in `.npmrc` is what turns that warning into a failed install, which is what you wanted when you wrote the constraint.',
   },
   {
     id: 'ci',

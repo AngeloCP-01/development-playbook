@@ -1,23 +1,33 @@
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
 import { ARTIFACTS } from './artifacts'
+import { fences } from './doc-source'
 
-const DOC = readFileSync(
-  fileURLToPath(
-    new URL('../../../../docs/04-project-setup.md', import.meta.url),
-  ),
-  'utf8',
-)
+const FENCES = fences()
 
 // Held character-for-character, the way `ddl-sync.test.ts` holds stage 03's
 // CREATE TABLE blocks. A config block that drifts from the doc is worse than a
 // drifted diagram, because the reader is meant to paste this one.
-test.each(Object.values(ARTIFACTS))(
-  '$filename appears in the doc exactly as the app renders it',
-  (artifact) => {
+//
+// This compared with `toContain` until a review demonstrated it could not see
+// a truncated artifact — a substring of a doc block is still contained by it,
+// so dropping the last line stayed green. That is not a hypothetical line: the
+// `env` artifact's last line is `export const env = schema.parse(process.env)`,
+// which is the line §5 exists for, and deleting it passed. The plan specified
+// `toContain` while citing `ddl-sync.test.ts` in this very comment, and
+// ddl-sync extracts the block and compares it with `toBe`.
+//
+// So the block is matched whole. `id` rather than `$filename` in the title
+// because three of the nine are `package.json` fragments and a failing run that
+// names the same file three times says less than it could.
+test.each(Object.entries(ARTIFACTS))(
+  '%s is one whole fenced block of the doc, not a slice of one',
+  (id, artifact) => {
     const rendered = artifact.lines.map((l) => l.text).join('\n')
-    expect(DOC).toContain(rendered)
+
+    // Array containment, so the comparison against each candidate is equality
+    // rather than substring. Matching a fence by its opening line first was the
+    // obvious shape and it is wrong here — four of the nine open with `{`.
+    expect(FENCES, id).toContain(rendered)
   },
 )
 

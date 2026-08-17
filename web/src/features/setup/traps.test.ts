@@ -1,31 +1,6 @@
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
+import { DOC, h2 } from './doc-source'
 import { TRAPS } from './traps'
-
-const DOC = readFileSync(
-  fileURLToPath(
-    new URL('../../../../docs/04-project-setup.md', import.meta.url),
-  ),
-  'utf8',
-)
-
-/**
- * The body of one `## ` section, up to the next `## `.
- *
- * `DOC.indexOf('## Traps')` — the obvious form, and the one the plan proposed —
- * is wrong for this doc. §7 refers to the section in running prose as
- * "the `## Traps` entry", so `indexOf` lands ~215 lines early and the slice
- * swallows §8's and §9's bold lead-ins. That form counts nine traps. The doc
- * has seven. Anchoring the heading to its own line is the fix.
- */
-function h2(heading: string): string {
-  const match = new RegExp(`^## ${heading}$`, 'm').exec(DOC)
-  if (!match) throw new Error(`no section "## ${heading}" in the doc`)
-  const rest = DOC.slice(match.index + match[0].length)
-  const end = rest.search(/^## /m)
-  return end === -1 ? rest : rest.slice(0, end)
-}
 
 const SECTION = h2('Traps')
 
