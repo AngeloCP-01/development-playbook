@@ -20,10 +20,15 @@ import { CHEATSHEETS } from '../src/lib/cheatsheets'
  *
  * The trade this makes, stated because it is real: the sweep now follows what
  * the app renders, so a step deleted by accident leaves the sweep silently
- * rather than failing it. That direction is `steps.ts`'s job where a stage has
- * one — stage 03 types its `Step[]` against `STEP_IDS`, so an id that exists
- * nowhere is a compile error. Nothing guards it for stages 01 and 02, and that
- * gap is recorded as debt rather than papered over here.
+ * rather than failing it. That direction is `steps.ts`'s job — every stage now
+ * types its `Step[]` against a `STEP_IDS` tuple, so an id that exists nowhere
+ * is a compile error. Stage 03 had that from the start and stages 01 and 02
+ * gained it with stage 04's port, which is what closed TD-36.
+ *
+ * Note the half it closes. A *renamed* or invented id is a compile error; a
+ * step deleted from both the tuple and the component is not, and no test here
+ * would notice the sweep shrinking. Where a count is worth holding, hold it in
+ * that stage's own `steps.test.ts` the way stage 04 does.
  *
  * The reference sheets are appended from `CHEATSHEETS` on the same argument.
  * Eleven of the twelve added URLs render the same component with different
