@@ -5,9 +5,11 @@ import { STAGE_CONTENT } from './stage-content'
 import { ProductDiscovery } from './discovery/ProductDiscovery'
 import { Planning } from './planning/Planning'
 import { Architecture } from './architecture/Architecture'
+import { Setup } from './setup/Setup'
 import { STEP_IDS as DISCOVERY_IDS } from './discovery/steps'
 import { STEP_IDS as PLANNING_IDS } from './planning/steps'
 import { STEP_IDS as ARCHITECTURE_IDS } from './architecture/steps'
+import { STEP_IDS as SETUP_IDS } from './setup/steps'
 
 /**
  * The half of TD-36 that a `STEP_IDS` tuple cannot close on its own.
@@ -37,6 +39,7 @@ const RAILS = [
   },
   { slug: '02-planning', Component: Planning, ids: PLANNING_IDS },
   { slug: '03-architecture', Component: Architecture, ids: ARCHITECTURE_IDS },
+  { slug: '04-project-setup', Component: Setup, ids: SETUP_IDS },
 ] as const
 
 for (const { slug, Component, ids } of RAILS) {
