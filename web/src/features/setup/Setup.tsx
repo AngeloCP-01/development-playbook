@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Stepper, type Step } from '@/components/Stepper'
 import { Callout, Contrast, Prose, Section } from '@/components/ui'
 import { Figure } from '@/components/Figure'
+import { Term } from '@/components/Term'
 import { References } from '@/components/References'
 import { InlineCode } from '@/components/InlineCode'
 import { AIPlays } from './AIPlays'
@@ -39,7 +40,7 @@ const STEPS: (Step & { id: StepId })[] = [
         <Section eyebrow="Day one" title="Scaffold, and pin what runs it">
           <Prose>
             <p>
-              One command produces the app.{' '}
+              One command produces the app, through <Term id="pnpm">pnpm</Term>.{' '}
               <code className="t-data break-words">--src-dir</code> keeps
               application code in{' '}
               <code className="t-data break-words">src/</code> and leaves the
@@ -501,7 +502,8 @@ const STEPS: (Step & { id: StepId })[] = [
             <p>
               Enable branch protection on{' '}
               <code className="t-data break-words">main</code> requiring this
-              check. The name to require is{' '}
+              check — the <Term id="merge-gate">merge gate</Term> everything
+              downstream leans on. The name to require is{' '}
               <strong className="text-fg">
                 <code className="t-data break-words">verify</code>
               </strong>
@@ -561,8 +563,9 @@ const STEPS: (Step & { id: StepId })[] = [
               directory to a Vercel project, and that is all it does. It does
               not connect the project to the repository you pushed in §1 — the
               Git connection is a separate setting, and it is the one that
-              builds every push and comments a preview URL on your pull
-              requests.
+              builds every push and comments a{' '}
+              <Term id="preview-deployment">preview deployment</Term> URL on
+              your pull requests.
             </p>
             <p>
               Everything else in this stage is a file you commit and can diff.
@@ -711,9 +714,10 @@ const STEPS: (Step & { id: StepId })[] = [
               production and how to roll back.
             </p>
             <p>
-              That last line matters more than it looks. Rolling back is the
-              half this stage has not handed you, and a README is the wrong
-              place to discover you do not know it. On Vercel it is{' '}
+              That last line matters more than it looks.{' '}
+              <Term id="rollback">Rolling back</Term> is the half this stage has
+              not handed you, and a README is the wrong place to discover you do
+              not know it. On Vercel it is{' '}
               <code className="t-data break-words">vercel rollback</code>, which
               returns production to the previous deployment — and on the Hobby
               plan that is the only one it will go back to. To reach an older
@@ -764,9 +768,11 @@ const STEPS: (Step & { id: StepId })[] = [
         <Section eyebrow="Closing" title="What you should have, and when">
           <Prose>
             <p>
-              Tick these against your own project. Every one is checkable —
-              there is no &ldquo;setup feels solid&rdquo; item, because that is
-              the kind of judgment this stage exists to replace.
+              This is the stage&rsquo;s{' '}
+              <Term id="definition-of-done">definition of done</Term>. Tick it
+              against your own project. Every one is checkable — there is no
+              &ldquo;setup feels solid&rdquo; item, because that is the kind of
+              judgment this stage exists to replace.
             </p>
           </Prose>
           <div className="mt-5">
