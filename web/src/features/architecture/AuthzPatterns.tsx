@@ -144,7 +144,7 @@ export function AuthzPatterns() {
                         checked
                           ? 'border-brand bg-brand-tint text-fg'
                           : done
-                            ? 'cursor-not-allowed border-line bg-raised text-subtle opacity-60'
+                            ? 'cursor-not-allowed border-line bg-raised text-subtle'
                             : 'border-line bg-raised text-muted hover:border-line-strong',
                       ].join(' ')}
                     >
@@ -164,7 +164,7 @@ export function AuthzPatterns() {
                       'min-h-11 border px-4 text-sm font-medium transition-colors duration-150 lg:min-h-9',
                       draft.length === needed
                         ? 'border-brand bg-brand text-brand-fg hover:opacity-90'
-                        : 'cursor-not-allowed border-line bg-raised text-subtle opacity-60',
+                        : 'cursor-not-allowed border-line bg-raised text-subtle',
                     ].join(' ')}
                   >
                     Commit

@@ -25,7 +25,15 @@ import { type Artifact, type ArtifactLine } from './artifacts'
  * scroll sideways to reach the annotation that is the whole point. Each code
  * cell therefore scrolls on its own and carries `tabIndex={0}`, so a keyboard
  * user without a trackpad can reach the overflow — the cost is one tab stop per
- * line, paid so that no note is ever off-screen.
+ * line, paid so that no note is ever off-screen. That cost is recorded as TD-40:
+ * most lines do not overflow at 1024px, so most of those stops reach nothing.
+ *
+ * **The note column is `select-none`** (TD-39). Laying rows out as [code][note]
+ * puts the notes between the code lines in the DOM, so selecting the block
+ * returned code, annotation, code, annotation — over data whose header says the
+ * reader is meant to paste it. Excluding the notes from selection is the fix
+ * that needs no control; a copy button would be better still and is the other
+ * half of TD-40's entry.
  *
  * **The pivot line takes the `brand` accent**, because a pivot is the line the
  * step's judgment turns on — attention, not approval. No semantic colour
@@ -63,7 +71,7 @@ function ArtifactRow({ line }: { line: ArtifactLine }) {
       {line.note ? (
         <p
           data-artifact-note
-          className="text-sm leading-6 text-muted sm:w-64 sm:shrink-0 lg:w-72"
+          className="select-none text-sm leading-6 text-muted sm:w-64 sm:shrink-0 lg:w-72"
         >
           {pivot ? (
             <span className="t-label mr-2 text-brand">Pivot</span>

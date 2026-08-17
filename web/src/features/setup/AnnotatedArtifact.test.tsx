@@ -47,3 +47,26 @@ test('renders a note’s backticked spans as code rather than printing the backt
   expect(note?.textContent).not.toContain('`')
   expect(note?.querySelectorAll('code').length).toBeGreaterThan(0)
 })
+
+// TD-39, first half. The rows lay out as [code][note], so the notes sit between
+// the code lines in the DOM and selecting a block yields code, annotation, code,
+// annotation — over data whose own header says the reader is meant to paste it.
+// `SchemaInspector`, the component this copied, avoided it by putting the note
+// in a separate panel.
+//
+// `select-none` on the note column makes a manual selection return only code.
+// Asserted as a class rather than as behaviour because jsdom computes no
+// selection; the behaviour was confirmed in a browser.
+test('excludes the notes from a text selection, so the block can be copied', () => {
+  const { container } = render(
+    <AnnotatedArtifact artifact={ARTIFACTS.lefthook} />,
+  )
+  const notes = [...container.querySelectorAll('[data-artifact-note]')]
+
+  expect(notes.length).toBeGreaterThan(0)
+  for (const note of notes) {
+    expect(note.className, note.textContent?.slice(0, 30)).toContain(
+      'select-none',
+    )
+  }
+})

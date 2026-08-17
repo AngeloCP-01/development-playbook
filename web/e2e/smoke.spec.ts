@@ -1,4 +1,6 @@
 import { expect, test } from '@playwright/test'
+import { STAGES } from '../src/lib/stages'
+import { CHEATSHEETS } from '../src/lib/cheatsheets'
 
 /**
  * Smoke tests against the deployed site. Read-only by construction: the site is
@@ -63,9 +65,19 @@ test(
       (m) => m[1],
     )
 
-    // 19 = the index plus one page per stage. A drop means a stage stopped
-    // being generated; a rise means something is being advertised twice.
-    expect(locs, `sitemap lists ${locs.length} URLs`).toHaveLength(19)
+    // Derived, not pinned. This read `toHaveLength(19)` — "the index plus one
+    // page per stage" — and was already wrong by twelve when the reference hub
+    // shipped `/reference` plus one URL per cheatsheet. It stayed green only
+    // because `main` predated that merge, so the first `test:prod` after a
+    // promotion would have failed on a stale literal rather than on anything
+    // about the deployment. Found by the stage 04 whole-branch review.
+    //
+    // `sitemap.ts` builds exactly these four groups, so this compares the
+    // deployed output against the declaration rather than against a number
+    // somebody typed. A stage that stops generating still fails it; so does a
+    // page advertised twice.
+    const expected = 1 + STAGES.length + 1 + CHEATSHEETS.length
+    expect(locs, `sitemap lists ${locs.length} URLs`).toHaveLength(expected)
     for (const loc of locs) {
       const u = new URL(loc)
       // Exact, not `toContain`. A substring match admits a longer hostname
