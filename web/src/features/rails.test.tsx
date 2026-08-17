@@ -2,14 +2,7 @@ import { render } from '@testing-library/react'
 import { expect, test } from 'vitest'
 import { STAGES } from '@/lib/stages'
 import { STAGE_CONTENT } from './stage-content'
-import { ProductDiscovery } from './discovery/ProductDiscovery'
-import { Planning } from './planning/Planning'
-import { Architecture } from './architecture/Architecture'
-import { Setup } from './setup/Setup'
-import { STEP_IDS as DISCOVERY_IDS } from './discovery/steps'
-import { STEP_IDS as PLANNING_IDS } from './planning/steps'
-import { STEP_IDS as ARCHITECTURE_IDS } from './architecture/steps'
-import { STEP_IDS as SETUP_IDS } from './setup/steps'
+import { STEP_IDS_BY_SLUG } from './step-ids'
 
 /**
  * The half of TD-36 that a `STEP_IDS` tuple cannot close on its own.
@@ -24,26 +17,25 @@ import { STEP_IDS as SETUP_IDS } from './setup/steps'
  * So the rail is compared against the tuple here, where the tuple stops being
  * a list nothing reads and becomes the count. Delete a step from a component
  * and this fails; delete it from both and the stage's own `steps.test.ts`
- * fails on the literal.
+ * fails on its ordered literal.
  *
- * **When a stage is ported, add it to `RAILS`.** The last test fails until you
- * do, on purpose — it is the same argument as the sweep's own derivation, one
- * level up: a stage that goes ready without an entry here would otherwise be
- * unguarded and nothing would say so.
+ * The component under test comes from `STAGE_CONTENT` rather than a mapping of
+ * this file's own, so what is rendered here is what the route renders. A local
+ * table was the first version and a review named it a third copy of the same
+ * mapping; the ids come from `step-ids.ts` for the same reason, shared with the
+ * e2e sweep.
+ *
+ * **When a stage is ported, add it to `STEP_IDS_BY_SLUG`.** The last test fails
+ * until you do, on purpose.
  */
-const RAILS = [
-  {
-    slug: '01-product-discovery',
-    Component: ProductDiscovery,
-    ids: DISCOVERY_IDS,
-  },
-  { slug: '02-planning', Component: Planning, ids: PLANNING_IDS },
-  { slug: '03-architecture', Component: Architecture, ids: ARCHITECTURE_IDS },
-  { slug: '04-project-setup', Component: Setup, ids: SETUP_IDS },
-] as const
-
-for (const { slug, Component, ids } of RAILS) {
+for (const [slug, ids] of Object.entries(STEP_IDS_BY_SLUG)) {
   test(`${slug} renders a rail tab per id in STEP_IDS, in order, since the audit sweeps what it draws`, () => {
+    const Component = STAGE_CONTENT[slug]
+    expect(
+      Component,
+      `${slug} is in STEP_IDS_BY_SLUG but not STAGE_CONTENT`,
+    ).toBeDefined()
+
     const { container } = render(<Component />)
 
     const rendered = [
@@ -56,11 +48,9 @@ for (const { slug, Component, ids } of RAILS) {
   })
 }
 
-test('every ready stage has a rail guarded here, so porting one cannot skip this file', () => {
-  const guarded = new Set<string>(RAILS.map((r) => r.slug))
+test('every ready stage declares a rail here, so porting one cannot skip this file', () => {
+  const declared = new Set(Object.keys(STEP_IDS_BY_SLUG))
   const ready = STAGES.filter((s) => s.ready).map((s) => s.slug)
 
-  // Registered-but-not-ready would be the other half of the same mistake.
-  expect(ready.filter((slug) => !guarded.has(slug))).toEqual([])
-  expect(ready.sort()).toEqual(Object.keys(STAGE_CONTENT).sort())
+  expect(ready.filter((slug) => !declared.has(slug))).toEqual([])
 })

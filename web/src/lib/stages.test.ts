@@ -55,6 +55,23 @@ test('every ready stage is registered in STAGE_CONTENT, so no live route renders
   }
 })
 
+// The other direction, which nothing held until stage 04's port. A component
+// registered against a stage still flagged `ready: false` renders nowhere: the
+// route reads the flag, so the work looks done and ships as a placeholder.
+// This arrived first as a second assertion inside a rail test, where a review
+// pointed out it was a new invariant smuggled in under someone else's name.
+//
+// Note the ordering it implies for a port. Registering the component and
+// flipping `ready` are one commit, not two — do them apart and this is red in
+// between, which is the test working rather than an inconvenience.
+test('nothing is registered in STAGE_CONTENT while its stage is still unready, or the work renders nowhere', () => {
+  for (const slug of Object.keys(STAGE_CONTENT)) {
+    expect(getStage(slug)?.ready, `${slug} is registered but not ready`).toBe(
+      true,
+    )
+  }
+})
+
 test('stage 02 is titled Product Planning, since that is the discipline it teaches', () => {
   expect(getStage('02-planning')?.title).toBe('Product Planning')
 })

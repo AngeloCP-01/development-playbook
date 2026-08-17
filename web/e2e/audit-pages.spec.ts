@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 import { auditPages, readStepIds } from './audit-pages'
 import { CHEATSHEETS } from '../src/lib/cheatsheets'
-import { STAGES } from '../src/lib/stages'
+import { STEP_IDS_BY_SLUG } from '../src/features/step-ids'
 
 /**
  * Guards the derivation that replaced `audit.spec.ts`'s hand-written `PAGES`
@@ -23,37 +23,40 @@ import { STAGES } from '../src/lib/stages'
  * not kept "for reference" either: an unused 36-URL literal sitting beside a
  * derivation is an invitation to paste.
  *
- * **What remains, and what each piece can actually catch.** Read this before
- * trusting any of it — the three tests below guard three different things and
- * only one of them fails on a content change:
+ * **What replaced it, and why not the obvious thing.** The first replacement
+ * asserted that the swept stage *set* equalled `STAGES.filter(s => s.ready)`.
+ * A review killed it, correctly: `auditPages` walks that same filter, so the
+ * two sides cannot disagree and the assertion could only go red if
+ * `audit-pages.ts` were edited — a test named for a guarantee it did not hold.
+ * It also replaced one URL per step with one entry per stage, quietly dropping
+ * the only thing in the suite that would notice `readStepIds` returning *some*
+ * of a rail.
  *
- * - *stage coverage* asserts the swept stage set equals `STAGES.filter(s =>
- *   s.ready)`. Note what this does not do. `auditPages` walks that same filter,
- *   so against the current implementation the two sides cannot disagree; the
- *   test is a guard on `auditPages` itself, and it fails if that function ever
- *   stops deriving its stage list from the ready flag — a hardcoded list, an
- *   early return, a filter that drops one. Teeth-check it by mutating
- *   `audit-pages.ts`, never by flipping a `ready` flag, which fails through the
- *   throw below instead and proves a different test.
- * - *sheet coverage* is the same shape for `CHEATSHEETS`.
- * - *the empty-rail throw* is the one that catches a live, broken stage.
+ * What is below instead compares an observation to a declaration, which is the
+ * one pairing available here that is not a source checked against itself:
+ * `auditPages` reads the rail out of the real built app, and
+ * `STEP_IDS_BY_SLUG` is what the stages say they contain. Neither is derived
+ * from the other. A stage that goes unswept fails it, a step that disappears
+ * fails it, and a selector that half-works fails it.
+ *
+ * `features/rails.test.tsx` makes the same comparison in jsdom against the
+ * component. Both are worth having: that one runs in the unit gate and fails
+ * in seconds, this one is the only check that the *built* app agrees.
  */
 
-test('the sweep covers exactly the stages marked ready, so a live stage cannot go unswept', async ({
+test('the sweep reaches every step every built stage declares, since a selector that returned half a rail would shrink it in silence', async ({
   page,
 }) => {
-  const paths = await auditPages(page)
+  const swept = (await auditPages(page)).filter((p) => p.startsWith('/stages/'))
 
-  const sweptStages = new Set(
-    paths
-      .filter((p) => p.startsWith('/stages/'))
-      .map((p) => `/stages/${p.split('/')[2].split('#')[0]}`),
-  )
-  const expected = new Set(
-    STAGES.filter((s) => s.ready).map((s) => `/stages/${s.slug}`),
+  const declared = Object.entries(STEP_IDS_BY_SLUG).flatMap(([slug, ids]) =>
+    ids.map((id) => `/stages/${slug}#${id}`),
   )
 
-  expect([...sweptStages].sort()).toEqual([...expected].sort())
+  // Sorted rather than compared in place: rail order is `rails.test.tsx`'s
+  // claim, and asserting it twice would mean a re-cut seam reddens two suites
+  // for one reason.
+  expect([...swept].sort()).toEqual([...declared].sort())
 })
 
 test('appends the reference index and every registered sheet, so a sheet added later cannot slip out of the sweep', async ({

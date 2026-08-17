@@ -18,17 +18,22 @@ import { CHEATSHEETS } from '../src/lib/cheatsheets'
  *   the router uses to decide whether a stage renders content at all
  * - which steps each has, from the rail it actually renders
  *
- * The trade this makes, stated because it is real: the sweep now follows what
- * the app renders, so a step deleted by accident leaves the sweep silently
- * rather than failing it. That direction is `steps.ts`'s job — every stage now
- * types its `Step[]` against a `STEP_IDS` tuple, so an id that exists nowhere
- * is a compile error. Stage 03 had that from the start and stages 01 and 02
- * gained it with stage 04's port, which is what closed TD-36.
+ * The trade this makes, stated because it is real: the sweep follows what the
+ * app renders, so on its own it cannot tell a step that was deleted from a
+ * step that never existed. Three things cover that between them, and none of
+ * them is this file:
  *
- * Note the half it closes. A *renamed* or invented id is a compile error; a
- * step deleted from both the tuple and the component is not, and no test here
- * would notice the sweep shrinking. Where a count is worth holding, hold it in
- * that stage's own `steps.test.ts` the way stage 04 does.
+ * - each stage's `steps.ts` types its `Step[]` against a `STEP_IDS` tuple, so
+ *   an id renamed in one place and not the other is a compile error. Stage 03
+ *   had this from the start; stages 01 and 02 gained it with stage 04's port.
+ * - `features/rails.test.tsx` renders each stage and compares the rail it
+ *   draws to that tuple, which is the direction the type cannot reach — a step
+ *   object deleted outright.
+ * - `audit-pages.spec.ts` makes the same comparison against the *built* app,
+ *   using the URLs this module returns.
+ *
+ * Together those close TD-36. The tuple alone does not, and this paragraph
+ * said it did for one commit.
  *
  * The reference sheets are appended from `CHEATSHEETS` on the same argument.
  * Eleven of the twelve added URLs render the same component with different

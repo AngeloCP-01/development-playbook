@@ -10,8 +10,9 @@
  * follows what the app draws rather than what this file says. What the tuple
  * catches is an id typed wrong or renamed in one place and not the other. What
  * it cannot catch is a step deleted from both this tuple and the panel array
- * together: that compiles, and the sweep quietly shrinks. `steps.test.ts` holds
- * the count for exactly that direction.
+ * together: that compiles, and the sweep quietly shrinks. `steps.test.ts`'s
+ * ordered literal is what fails there, and `features/rails.test.tsx` catches
+ * the other half — a step deleted from the panel array alone.
  *
  * Fifteen came out of the port-planning pass, not from a target. The spec's
  * original table cut the doc nine ways when it was 323 lines; the correction

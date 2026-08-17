@@ -11,7 +11,9 @@ import { STEP_IDS } from './steps'
 // drifts without anything noticing. A review caught that. It also caught the
 // direction the tuple cannot guard on its own: deleting a whole step object
 // from `Planning.tsx` while deleting its id here typechecks clean, and the
-// audit sweep silently shrinks by one URL. The count below is what fails.
+// audit sweep silently shrinks by one URL. The ordered literal below is what
+// fails then, and `features/rails.test.tsx` is what catches the same deletion
+// when the id here is left behind.
 test('stage 02 renders these seven steps in this order', () => {
   expect([...STEP_IDS]).toEqual([
     'done',
