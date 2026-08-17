@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
   a recorded decision actually hold
 
-### Project state (as of 2026-08-17 — **stage 04's port is built and unmerged** on `feat/stage-04-app-port`, 20 commits; W-3 is 4/18; the whole-branch review and the merge decision are what remain; the site live and self-verifying)
+### Project state (as of 2026-08-17 — **stage 04 is built, reviewed and merged into `develop`** as `bb3c119`; W-3 is 4/18; `develop` is unpushed and `main` is untouched; the site live and self-verifying)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
