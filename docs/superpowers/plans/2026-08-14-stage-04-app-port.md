@@ -1094,6 +1094,29 @@ EOF
 
 Every component here derives what it displays from a Wave 1 module, so every one gets a `*.test.tsx` render test. `web/PATTERNS.md` states the rule and TD-17 is why: a passing data test plus a component that ignores the data is green and wrong.
 
+> **Corrected in execution, 2026-08-17 — every `.tsx` test in this wave is written against
+> libraries this project does not have.** `web/package.json` carries
+> `@testing-library/dom` and `@testing-library/react` and nothing else. It does **not**
+> install `@testing-library/jest-dom`, so `toBeInTheDocument`, `toBeVisible`, `toBeDisabled`,
+> `toBeChecked`, `toHaveTextContent` and `toHaveAttribute` all throw
+> `Invalid Chai property` rather than failing as assertions. It does **not** install
+> `@testing-library/user-event`, so Tasks 9 and 11's `import userEvent from
+> '@testing-library/user-event'` does not resolve at all.
+>
+> This was found the hard way in Task 3, whose render test used `toHaveAttribute`. The
+> repo's real convention is `fireEvent` from `@testing-library/react` plus plain DOM
+> assertions — `src/components/RevealList.test.tsx` is the house example, and
+> `src/test/setup.ts` states in writing that a second responsibility there is a signal
+> rather than a convenience, which is the argument against adding jest-dom now.
+>
+> **Keep each test's name and intent; translate only the matcher mechanics.** The names are
+> claims about behaviour and they are still the right claims.
+
+> **Also corrected: Steps 2 and 4 of every Wave 1 task said to run
+> `pnpm vitest run src/features/setup/`.** With more than one implementer in that directory
+> that picks up siblings' half-written files and reports their failures as yours. Run your
+> own test files by explicit path.
+
 ### Task 8: `AnnotatedArtifact` — the shape five steps share
 
 **Files:**
