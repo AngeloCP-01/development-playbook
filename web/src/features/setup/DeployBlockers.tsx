@@ -39,14 +39,15 @@ function plain(text: string): string {
 }
 
 /**
- * A locked option keeps `text-subtle` and drops the `opacity-60` that stage 03's
- * seven exercises pair with it. Composited over `bg-raised` that pairing measures
- * 2.62:1 in light and 3.21:1 in dark on 13px text, against a 4.5:1 requirement —
- * found by the whole-branch review, which measured the state the audit never
- * visits because it only ever loads a panel's default. These options are content
- * the reader is meant to re-read beside the verdict, not unavailable controls.
- * Stage 04's other two exercises never adopted the opacity; this now matches them.
- * The seven in stage 03 are recorded as TD-41 rather than changed from here.
+ * A locked option keeps `text-subtle` and no opacity. Composited, the
+ * `opacity-60` this used to carry measures 2.62:1 in light and 3.21:1 in dark on
+ * 13px text, against a 4.5:1 requirement — found by the whole-branch review,
+ * which measured the state the audit never visits because it only ever loads a
+ * panel's default. These options are content the reader is meant to re-read
+ * beside the verdict, not unavailable controls.
+ *
+ * Stage 03 carried the same pairing in seven exercises (TD-41) and they are
+ * fixed too, so the idiom is gone from the repo rather than diverging here.
  */
 export function DeployBlockers() {
   const [choices, setChoices] = useState<Record<string, string>>({})
