@@ -58,7 +58,7 @@ export const STAGES: Stage[] = [
       'One afternoon that buys you every merge gate, preview deploy, and convention.',
     group: 'Building',
     timing: 'Once, on day one, before the first feature.',
-    ready: false,
+    ready: true,
   },
   {
     num: '05',

@@ -45,9 +45,10 @@ long-standing local-only backlog is cleared and CI has a real branch to run agai
 
 **Stage 04's doc phase is done and unmerged.** `fix/stage-04-doc-corrections` corrected
 `docs/04-project-setup.md` from 323 to 711 lines and **closed TD-28**, which turned out to
-name four of the thirty-one defects the round found. The interactive port has not started:
-`04-project-setup` is still `ready: false`. The row below carries the evidence and the
-branch is waiting on the user's merge decision.
+name four of the thirty-one defects the round found. **The interactive port is done too**,
+on `feat/stage-04-app-port` and also unmerged: `04-project-setup` is `ready: true` with
+fifteen steps, taking W-3 to 4/18. Both rows below carry the evidence and both branches
+are waiting on the user's merge decision.
 
 Quality gates remain live: prettier (skipping markdown, see the build note below), eslint at
 `--max-warnings 0`, **350 vitest tests across 37 files** in two projects — `unit` (node, data
@@ -82,6 +83,8 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-08-17 | W-3.4 | **Stage 04 is interactive, and the seam it shipped is the one that was measured.** `docs/04-project-setup.md` ported to `web/src/features/setup/` as **fifteen steps**, taking W-3 to **4/18**. Content is extracted as data first — eight modules, seven of them asserted against the doc at run time rather than against a count copied into a brief — then rendered by eight components, then assembled. The four provisional pairs from **D-65** (`scaffold`/`structure`, `env`/`client`, `ci`/`enforce`, `deploy`/`verify`) **all stayed split**, decided by arithmetic: combined they measure 4.80, 5.40, 3.54 and 4.23 against a 3.2 ceiling. That makes this the first seam in this repo to survive measurement unchanged — stage 03 re-cut five of six. **TD-36 closed** on three guards, not one (see its entry: the tuple alone closes half). `e2e/audit-pages.spec.ts`'s thirty-six-URL literal was **deleted rather than updated**, on the instruction in its own header | **23 commits** `394e515`…HEAD, **60 files, +5402/−191**. Tests **382/41 → 521/63**. Audit **17/17** against a fresh build each time, including contrast in both themes, no overflow 320→2560, zero console errors. Sweep re-derived rather than quoted: **157 expandables / 119 ids over 51 URLs**, from 140/107 over 36. Stage 04 prerenders to 228KB of static HTML; the derived sweep covers **63 URLs**. `gen:glossary` re-run and `reference/glossary.md` **byte-identical** — no term was invented. **Final panel table, all fifteen under 3.2, median 2.28 max 2.99**: scaffold 2.99, structure 1.81, format 2.67, strict 1.58, env 2.90, client 2.50, hooks 2.83, ci 2.35, enforce 1.19, deploy 2.94, verify 1.29, proof 2.28, ai 1.28, checklist 2.25, traps 1.57. **Six reviews ran and found 26 blocking items**, none of which the gate would have caught. The one that mattered: a coverage walk found **five doc sections telling the reader to run a script or set a value the app never showed them how to create** — `.nvmrc`/`engines.node`/`.npmrc`, the `test` script, `format:check`, Vercel's environment variables, and `SENTRY_AUTH_TOKEN` — all five assigned to a panel by the plan's own line ranges. That, not lean writing, is why the median was 1.74 before the fix wave and 2.28 after. Fixing it took `scaffold` to **4.25**, past the ceiling and past the audit's own 4.0 gate; it came down 4.25 → 3.47 → 3.34 → 2.99 in three measured steps rather than one guess. **Nine plan defects found by executing rather than reading**, including a test that could never pass (`PIN_RULE` asserted against a hard-wrapped doc), a regex that counted nine traps where the doc has seven (`DOC.indexOf('## Traps')` matches §7's prose about `## Traps`), material sourced to a section that does not contain it (only three of four blockers are §8's), and every `.tsx` test in Wave 2 written against `jest-dom` and `user-event`, neither of which this project installs | **Deferred:** the `## Artifacts` inventory was initially dropped and is now ported, but `Entry criteria` is still surfaced nowhere — consistent with stages 01–03, and recorded because stage 04's entry criteria carry the database decision that `tree.ts` and the `env` artifact both depend on. §1's no-`gh`-CLI fallback (create an *empty* repo in the web UI, then `git remote add`), §8's `/robots.txt` canonical-origin check, and the AI section's closing named-tools line are not ported. `AnnotatedArtifact` output is **not copyable** — notes are interleaved between code lines in the DOM, so selecting a block yields code, annotation, code, annotation, and there is no copy button (**TD-39**). Its per-line `tabIndex={0}` scrollers add up to eighteen tab stops on one artifact, most on lines that do not overflow (**TD-40**). Two components hand-roll type roles the design system already names. **The whole-branch review then found five more blocking items, all fixed here**: three literal backticks rendering on the live page from the reference cards, which D-67 exists to prevent and which nobody re-grepped for after the commit that added them; a locked-option contrast pair at 2.62:1 and 3.21:1 (**TD-41** files stage 03's seven instances of the same idiom, unfixed because they are merged UI this branch does not own); an `artifacts.ts` docblock still describing the pre-fix state and instructing a reader to delete three of the fix; two record files still saying the port had not started; and a sweep figure of 151/113 measured two content commits early and written into four files under the words *re-derived rather than quoted*. `pnpm test:prod` **not run** — it measures the deployed site and says nothing about this tree |
+| 2026-08-14 | W-3.4 (port planning) | **The stage 04 port's seam, measured rather than inherited.** The round opened with planning because the spec's Phase 5 table cut the doc nine ways when it was 323 lines and the correction phase took it to **711**. The tracker's own framing — four steps at roughly a hundred lines each — was the thing that needed checking, and checking it required knowing what a doc line costs on screen. **It costs nothing predictable.** Fitting stage 03's fourteen doc sections against their measured panels, with step count, code lines, prose lines and table lines as predictors, returns `screens = 3.068*steps + 0.0016*code - 0.0032*prose - 0.0531*table`: every content coefficient is noise and two are negative. §14 renders 145 prose lines in 2.29 screens; §1 renders 21 in 3.17. **Panel weight tracks step count and nothing else**, because an author fills a panel to about three screens whatever the step covers, by choosing what to collapse and what to cut. So the gate can falsify a seam afterwards and cannot choose one, which is **D-64**. What the measurements do carry is a **floor**, and the floor settles the question: `scaffold` (§1+§2) reaches **3.74** on chrome plus artifacts before a word of teaching, past stage 03's heaviest authored panel, and `gates` (§6+§7) reaches 3.00 while owing **seven** judgments. All four heavy pairings fail, and they fail on D-52's *first* clause rather than its threshold. Nine steps become **fifteen**, eleven firm and four provisional, and the provisional four are authored **split** and merged only on measurement — **D-65**, inverting stage 03, which authored merged and split on failure in five of six tasks | **2 commits** `dc47580`…`126b3c8` on `feat/stage-04-app-port`, cut off `develop` at `49122f5`. **The measurement is the evidence**: all **35 panels** across stages 01–03 measured at 1024×768 with the audit's own method (`#panel-<id>` height ÷ 768), giving stage 03 a median of **3.02** and a max of **3.88** over 22 panels, against 2.36 and 2.47 medians for stages 01 and 02. Per-unit costs taken off the same build: minimal panel chrome **1.70 screens** (`03#require` 1.68, `02#done` 1.69), a rendered code line **20px = 0.026 screens** (`t-data`, 14px/20px, as `SchemaInspector` renders it), a `<pre>` line **0.033** (12px/24px plus 24px padding), a figure **0.87 median** and 3.29 at worst. The first pass at the code number found four code units in three stages and was **wrong** — stage 03 renders DDL as per-line elements with `whitespace-pre`, not `<pre>`, so the classifier missed them; corrected by measuring the computed line-height rather than counting tags. The fit's data is **censored and is recorded as censored**: every stage-03 panel is post-reshape, so none can exceed 4.0, and the counterfactual comes from the pre-reshape record instead (`require` at **4.7** before `trace` split out, six of nine original panels failing). Spec amended in place with the original nine-step table kept and marked superseded; plan is **1,610 lines, sixteen tasks in four waves**, every data module carrying a test that reads `docs/04-project-setup.md` rather than a count copied into a brief. **NOT merged, NOT pushed.** | **The port itself.** `04-project-setup` is still `ready: false` and absent from `STAGE_CONTENT`; W-3 stays at 3/18. The execution approach was recommended and not chosen — subagent-driven for the eleven independent data and component tasks, inline for the two assembly tasks where the merge-or-split calls need the whole panel table in one context. **Two findings filed rather than fixed**: `count-expandables.mjs` sweeps 36 URLs where `audit-pages.ts` now sweeps 48, because W-6 appended `/reference` and eleven sheets to the audit's derivation and not to the `.mjs` copy that mirrors it (**TD-37**); and lefthook's pre-commit reported `format (skip) no files for inspection` on a commit touching two markdown files under `docs/`, so the format hook does not reach them (**TD-38**) — the same shape as the glob trap stage 04's own §6 teaches. **Two corrections rode along**: the spec's Verification cited a sweep baseline three moves stale (108 expandables / 36 URLs against a re-measured **140 / 107 ids**), and `docs/stage-03-status.md:3` held a stray committed line reading `test`. **Not decided**: which of the four provisional pairs merge. That is Wave 3's measurement and it cannot be answered before the panels exist |
 | 2026-08-14 | W-6.2 | **The gathered original is shown on each sheet, and converted off GIF first.** Closes the **D-63** amendment: the transcription stays primary and the graphic sits below it, framed on a plate because every one of these has a light background and would punch a hole in the cyanotype unframed. **Not dimmed at rest** — the obvious dark-mode trick is to drop opacity until hover, but the reason the graphic is there is to be read, and dimming content to make it blend is the worse trade. **The two GIFs were static images stored as GIF**, which is why they collapse so far. Originals stay untracked and gitignored; git keeps every version of a binary forever, and the converted copy is what the site serves | **1 commit** `6b62634`, merged `--no-ff` as `4727dc3`, 12 files. **5.2MB → 644K**: `MasterPlan-Api-Design.gif` 3817K→196K (−94.9%), `Software-Architecture-Patterns.gif` 1024K→121K (−88.2%), the two JPEGs −34.2% and −30.6%. **Legibility verified by reading the converted file**, not by trusting the quality number — every label in the fifteen-step roadmap survives at 196K. **382/382 tests** (6 new), **17/17 playwright** including WCAG AA both themes over the sheets carrying images, lint/typecheck/format/build clean on the merged result. **Teeth-checked** the on-disk guard by typoing a src: failed with `ENOENT … git-commandz.webp`, naming the exact path. **A correction is on the record**: the first pass used a plain `<img>` reasoning that already-WebP files gain nothing from re-optimising, which missed `srcset`. `@next/next/no-img-element` caught it; the rule was right and suppressing it would have been wrong. Dark mode confirmed by driving the real theme toggle rather than asserting — the first two attempts wrapped the system→light→dark cycle back to system and were caught by reading the computed `body` background | Transcribing the three gathered sources into `design-patterns`, `api-design` and `git-commands` — content work now that the frame exists. Two of the three still have no post URL or author recorded, which has to happen before anything derived from them ships publicly. The figure registry and the six architecture diagrams as drawn figures rather than a photographed original |
 | 2026-08-14 | W-6.1 | **A reference section beside the eighteen stages.** Lookup material had nowhere to live, and `reference/glossary.md` and `reference/stack.md` had been unreachable from the app since they were written — no route rendered either. `/reference` now holds cheatsheets as structured TS data behind one `CheatsheetView`, following the `terms.ts` precedent (D-36): TS is the source, `reference/cheatsheets.md` generates from it by snapshot test via `pnpm gen:cheatsheets`. **Eleven sheets are registered and ten are deliberately empty** — an empty sheet renders "Sheet not drawn" and is chipped WIP in the rail, so the index doubles as a worklist of what still needs gathering (D-62). Sheets tether to stages by slug, guarded by a test that every tether resolves. Rows are a CSS grid, not a `<table>`, because a table sets its own min-width from content and pushes the page into horizontal scroll at 320px | **11 commits** `1778bea`…`2114346`, merged `--no-ff` as `0207fd6`, 23 files, **+3175/−86**. **376/376 tests across 41 files** (26 new: 11 registry, 8 renderer, 4 sidebar, 2 sitemap, 1 snapshot), **17/17 playwright**, format/lint/typecheck/build clean — all re-run on the merged result, not just the branch. **Every RED was real and every teeth check bit**: breaking a stage tether failed exactly one test naming `git-commands → 04-project-setups`; replacing the placeholder branch with `null` failed only the placeholder test; renaming the nav landmark failed three and left the stage-index guard green. **The suite caught a real integration miss** — `audit-pages.spec.ts` asserts the derived sweep equals the frozen thirty-six-URL fixture, and twelve new reference URLs broke it. Padding the fixture would have converted a migration guard into a restatement of whatever the deriver returns, which its own docblock forbids, so the assertion was split: stage paths still compared against the fixture, reference tail asserted separately. **Measured at 320px**: document 312px against a 320 viewport, zero offending elements | Source graphics displayed on the sheets (**D-63**, needs an asset pipeline — files sit outside `web/public/`, and 5.1MB of static infographic is stored as GIF). The figure registry and the six architecture diagrams; the sheet carries rows only. Glossary and stack surfaced in the hub — the reason `/reference` beat `/cheatsheets` as a name, but not needed for the skeleton to stand. Stage→sheet backlinks; the tether is one-directional today. Search, already unscheduled at `docs/task.md`. Copy-to-clipboard on code rows, since nothing registered has code rows yet and a control with nothing to act on is untestable. Transcribing the three gathered sources into `design-patterns`, `api-design` and `git-commands` |
 | 2026-08-14 | TD-12 | **The audit's page list is derived, not listed.** `e2e/audit.spec.ts` held thirty-six hand-written URLs; stage 02 added six by hand and stage 03 thirteen more during its reshape. The failure ran in the direction nobody checks — a dead hash fails loudly, a **missing** one audits nothing while the suite reports green, which is how a stage could ship unaudited. `e2e/audit-pages.ts` now takes stages from `STAGES.filter(s => s.ready)`, the same flag the router reads, and step ids from the rail each stage renders, since `Stepper` emits one tab per step as `id="tab-<stepId>"`. Neither source can fall behind the app. **A ready stage that renders no rail throws** rather than contributing nothing, because live and broken should fail rather than disappear | **4 commits** `03f08a9`…`33bc2f6` and one more carrying this row, 9 files, **+448/−77** through `33bc2f6` — two to the close, one from the review (below), one to the records. Four of the nine are the working files, all under `web/e2e/`; the rest are records, plus one parked spec that rode in on the fix commit and belongs to no part of this work. **RED was real**: `Cannot find module './audit-pages'` before the module existed, an unresolved import rather than a failed assertion. **The equivalence test spells out all thirty-six URLs rather than recomputing them** from the source the implementation reads — an expectation derived the same way as the thing it checks asserts nothing, the defect class recorded seven times in Process observations. **Teeth-checked** by flipping `02-planning` to `ready: false`: the assertion failed with seven URLs missing, and the guard test stayed green, so exactly the intended one broke. Measured at the close: audit **14/14 → 16/16** over the same 36 URLs; sweep unchanged at **140 expandables / 107 ids**; vitest 350/37, lint, typecheck and `format:check` clean. **The review then found two blocking items, both this branch's own.** `2eb3c97` corrected `KICKOFF.md`'s stale audit figures and in the same commit left the identical numbers standing one file over in `docs/tracker.md`; `PATTERNS.md` and `count-expandables.mjs` both still described the `PAGES` array this branch had just deleted, the second inside a comment the branch itself rewrote. Three fresh instances of the trusted-but-false claim TD-12's own entry names, about the mechanism TD-12 is about. The second is the better finding: `count-expandables.mjs` paired `slug:` with `ready:` by a greedy match, correct today only because `slug` happens to precede `ready` in all eighteen entries — which TypeScript does not require, prettier does not enforce and no test covers. Swap two fields and it reads one stage's flag off its neighbour, drops the stage after it, and prints a plausible count over the wrong set; the comment above it claimed it would fail loudly, and the guard caught parsing *nothing*, not parsing *wrong*. Writing the completeness check that closes it **found its own bug** — counting bare `slug:` picks up the field on the `Stage` type, so it threw on every run until it counted `slug: '` — which is the third defect on this branch found by running something rather than reading it. **Post-fix, the whole gate re-run over the finished branch on 2026-08-14**: `format:check`, `lint --max-warnings 0` and `typecheck` (after typegen) all **exit 0**; vitest **350/350 across 37 files**; audit **16/16 in 1.1m**; and the sweep, stood up on a cold server per TD-27, still reports **140 expandables / 107 ids across 36 URLs** — the same three numbers the `RevealList` round measured, so the derivation covers exactly what the hand-written list did | **It broke a tool, which is the more useful half.** `e2e/count-expandables.mjs` — added during the `RevealList` round to make the 140/107 baseline obtainable — derived its URLs by scraping `const PAGES = [` out of `audit.spec.ts`. Deleting that array broke it on startup, and **nothing in the gate noticed**: `pnpm test:e2e` reported 16/16 while the script threw, because it is a tool no suite runs. Found by running it. Repaired to derive the same way, duplicated rather than imported because it is plain `.mjs`. **Not closed: the other direction.** The sweep follows what the app renders, so a step deleted by accident leaves it silently. Stage 03 is covered by construction — its `Step[]` is typed against `STEP_IDS` — and stages 01 and 02 have no equivalent, now **TD-36**, closing most cheaply as part of building the next stage rather than as its own round. **One file on this branch is not this branch's work**: `docs/superpowers/specs/2026-08-14-reference-hub-design.md`, a Reference-hub design brainstormed to four decisions and then **parked**, riding in on `33bc2f6` because it was written in the same session. It is marked parked in its own first line and ends on an unresolved question — which cheatsheet leads slice 1 — so it decides nothing and blocks nothing; recorded here because a spec appearing in a branch it has no relation to is the sort of thing a later reader treats as context for the branch. Its three source files under `reference/` are still untracked. **Merged to `develop` `--no-ff` on 2026-08-14**, the commit straight after this row (`a07a9b6`), taking `develop` to **112 ahead of `main`**. **Not pushed** — `main` is untouched at `8d5045c`, and both the push and the promotion are the user's |
@@ -139,6 +142,10 @@ of what was believed at the time is the point.
 
 | # | Decision | Reasoning | Consequence |
 |---|---|---|---|
+| **D-67** | **A data module quoted from the doc keeps the doc's markdown; the rendering strips it, never the data** | Stage 04 is the first stage whose *data* carries markup. Stages 01–03 hold concepts and write their code spans as JSX by hand — `Architecture.tsx` has about thirty `<code className="t-data">` written out. Stage 04 holds filenames, flags and commands, so its seven data modules quote them the way the doc does, and there were about two hundred backticks across the wave. Stripping them at the source was the obvious fix and is not available: `CLIENT_FAILURE`, `PIN_RULE` and nineteen artifact blocks are asserted to appear in `docs/04-project-setup.md` character-for-character, and the doc has the backticks. Doc fidelity and clean rendering are both required, so one of them has to move, and the data is the half that cannot | `components/InlineCode.tsx` renders backticked spans as `<code>` and knows one construct — deliberately not a markdown renderer, because a half-markdown renderer invites data that assumes the other half. An unpaired backtick renders literally rather than swallowing the tail of a sentence, so a typo in the data looks like a typo. An accessible name cannot hold elements, so any data string used as one strips its markers instead (`plain()` in `DeployBlockers.tsx`). **Nothing tests that no backtick reaches the page**: the eleven that shipped raw were found by grepping the built HTML, and the same method is what would find the next |
+| **D-66** | **Data held against a document is compared whole, never by containment** | `expect(DOC).toContain(rendered)` cannot see a truncated artifact, because a substring of a block is still contained by it. Demonstrated rather than argued: deleting the last line of the `env` artifact — `export const env = schema.parse(process.env)`, the line §5 exists for — left the suite green. The plan specified `toContain` in the same comment where it cited `ddl-sync.test.ts` as the precedent, and that file extracts the block and compares with `toBe`. The weaker form reads as equivalent and is not, in exactly the direction that matters: content going missing | `artifacts.test.ts` asserts each artifact is an element of the doc's fenced blocks, so equality rather than substring. Matching a fence by its opening line was the first shape and is wrong here — four of nineteen artifacts open with `{`. The wider rule for this repo: when a test's subject is *the doc still says this*, compare the whole unit and normalise only whitespace, because a hard-wrapped document re-flows and a re-wrap is not a content change |
+| **D-65** | **A step seam is authored split and merged on measurement, never authored merged and split on failure** | Stage 03 did it the other way and paid in five of six tasks, where the plan's seam measured wrong and the split landed a task later than proposed. The two directions are not symmetric in cost. A merge is a deletion and a re-point: remove an id from `STEP_IDS`, fold two panel bodies into one, done. A split is a new component, a new id, a new hash, and every reference to the old one moved — plus the deep links in `docs/` that already cite it. The cheaper direction to be wrong in is the one that undoes with a delete | Stage 04 ships fifteen ids with **four pairs marked provisional** (`scaffold`/`structure`, `env`/`client`, `ci`/`enforce`, `deploy`/`verify`). Each is authored as two panels; a pair whose combined height measures under 3.2 screens merges in the assembly task that built it, and the merge is recorded with the number that caused it. `steps.test.ts` holds the eleven firm ids by name and the count separately, so a merge changes one assertion deliberately rather than loosening both. Plan: `docs/superpowers/plans/2026-08-14-stage-04-app-port.md` |
+| **D-64** | **Panel weight can falsify a seam; it cannot choose one. The instrument for choosing is the floor, and the criterion is D-52's first clause** | D-52 has two halves — one judgment per step, and four screens at 1024×768 — and the second half has been doing the work because it is the one a test can run. Measuring all 35 panels across stages 01–03 showed the second half cannot do that work. Regressing stage 03's fourteen doc sections against their measured panels gives `screens = 3.068*steps` with every content coefficient at noise: 145 prose lines render in 2.29 screens and 21 render in 3.17, because an author fills a panel to about three screens whatever the step covers. Weight is a property of authoring, not of content, so it only reports afterwards that a seam was wrong. The data is also censored — no post-reshape panel *can* exceed the gate — and the pre-reshape record carries the counterfactual instead (`require` at 4.7, six of nine failing) | A stage's seam is cut by **enumerating the judgments** in each doc section, then sanity-checked against a **floor**: chrome 1.70 screens, plus 0.026 per rendered code line, plus about 0.87 per figure. A pairing whose floor is already near the ceiling fails before it is written, which is how stage 04's four heavy pairings were rejected without authoring any of them. The **working ceiling is 3.2, not 4.0** — stage 03's authored median is 3.02 and its max 3.88, so a panel arriving at 3.9 has no headroom for the corrections every stage has needed. The 4.0 gate in `audit.spec.ts` is unchanged and stays the backstop. Spec: `docs/superpowers/specs/2026-08-12-stage-04-project-setup-design.md`, Phase 5 re-cut |
 | **D-63** | **A graphic of text is a source, not a deliverable.** Material gathered as an infographic is transcribed into structured content; the original is kept and credited, not shipped in place of the transcription | The request was a section of cheatsheets held as GIFs. A GIF of text fails on six counts this repo already cares about: it is not searchable (and search is in the backlog), not copyable (a git cheatsheet you cannot copy a command from is worse than a browser tab), not responsive (1152×1536 fixed, illegible at 320px, and `audit.spec.ts` enforces 320→2560), not themeable (a cream background punches a hole in the cyanotype), not accessible (one `alt` string standing in for forty labels), and not diffable (~1MB each). Shipping one would have required exempting the page from the project's own verification standard, and needing an exemption is the tell. The counter-argument was tested rather than assumed: `Software-Architecture-Patterns.gif` was read, cropped at 2× per panel to verify the small labels, and converted — which is also how the MVC arrow directions were caught, since `View →(User Action)→ Controller` and `Controller →(Renders View)→ View` run opposite ways | The `Cheatsheet` type carries a `source: { title, author, url? }`, so attribution is a visible empty field rather than something forgotten — the site is publicly deployed, and an uncredited transcription of someone's graphic is a real problem rather than an untidy one. **Amended the same day**: the user asked for the original to be displayed too. That does not reverse this decision — the transcription stays primary and the graphic sits beside it as the visual reference it was gathered to be — but it needs an asset pipeline the skeleton does not have, and is deferred on those grounds |
 | **D-62** | **The eighteen is a closed set; lookup material gets a sibling section.** A nineteenth stage was rejected for the third time. Registered-but-empty is a valid state for an entry in that sibling section | Stage numbers are filing codes rather than a sequence, and filing codes only work if the set is closed — which is why `stages.test.ts` asserts eighteen in four places and `Sidebar.tsx` hard-codes it in the wordmark. Those guards are downstream of the claim, not the reason for it. The section name `/reference` was chosen over `/cheatsheets` because it mirrors the root `reference/` folder 1:1 and can absorb `glossary.md` and `stack.md`, which have been invisible in the app since they were written. The known hazard is recorded rather than fixed: `lib/references.ts` and `components/References.tsx` already mean *outward links per stage* — same word, different concept | Sheets tether to stages by slug with a test that every tether resolves, so the section sits beside the eighteen rather than apart from them. **Empty is diagnostic, not cosmetic**: ten of eleven sheets ship with `sections: []`, rendering a placeholder and chipping WIP in the rail, so the index advertises its gaps instead of hiding them. This mirrors the existing behaviour where a slug absent from `STAGE_CONTENT` renders a placeholder rather than 404ing |
 | **D-61** | **A caller that does not fit a shared component is reported, not forced.** The implementer stops, says what the gap is in the component, and hands the decision back | Task 13 reached `AIArchitecturePlays` and found its claim rows are `text-sm` where `RevealList`'s fixed title slot renders at ambient body size. It measured both (14px against 17px on a live `SoftDelete` row), declined the migration, and named the gap as `RevealRow.title` being typed `string` with no size hook. It also rejected the workaround available to it — routing sized text through `badge`, which was already `ReactNode` — on the grounds that this would relocate the `summary: ''` workaround rather than solve it. Task 14 then reported a second gap of the same kind in `RevealFacet`. Holding both until the second one landed meant the user decided once, with two data points, instead of approving two component changes one at a time | The user chose to close both gaps and migrate the remainder (Tasks 15–17) rather than record them as debt, and every existing caller was proven byte-identical afterwards. The general rule: a shared component that eleven callers have been reviewed against is not quietly widened mid-branch by whoever hits the wall first. **The counter-case is also on record**: `ADRAnatomy`'s second facet block was left unconverted for one round because its body is `text-fg` against `RevealFacet`'s hardcoded `text-muted`, and it was converted only after the override existed |
@@ -1053,6 +1060,73 @@ terms `terms.ts` already carried from the doc round are wired in as each concept
 (`fitness-function` inline in `trace`, for one); CQRS and event sourcing stay named rather
 than taught, which is D-49's call and not debt.
 
+### TD-41 — Stage 03's locked exercise options fail AA · **Medium**
+
+Seven of stage 03's exercises style a committed-but-unpicked option
+`text-subtle opacity-60` on `bg-raised`: `AuthzPatterns` (twice), `ExpandContract` (twice),
+`LockingChoice`, `ModelInterrogation`, `ReversibilityTable` and `SplitTrigger`.
+
+Composited, that measures **2.62:1 in light and 3.21:1 in dark** on 13–14px text, against
+the 4.5:1 this repo's verification standard requires of "every distinct text/background
+pair, both themes, all steps". Those options are content the reader is meant to re-read
+beside the verdict, not unavailable controls, so the greying is doing the wrong job as well
+as failing the number.
+
+**The audit cannot see it**, which is why it survived three stages. `audit.spec.ts` visits
+each panel in its default state; this pair only exists after a reader commits an answer.
+That is TD-26's shape (the audit is green about surfaces it never evaluates) narrowed to a
+specific, measured instance.
+
+Found by the whole-branch review of the stage 04 port, which measured it after that
+branch's own `DeployBlockers` was flagged for copying the idiom. **Stage 04 is already
+fixed** — it drops the opacity and keeps `text-subtle`, matching `ClientTrap` and
+`PinExercise`, which never adopted it and measure 5.19–12.71. The one-word fix is the same
+in all seven.
+
+**Not fixed here** because they are merged, shipped stage-03 UI and the branch that found
+them is a stage-04 port. Changing seven components across a stage this branch does not own
+is a separate decision with its own verification.
+
+### TD-39 — The annotated config blocks cannot be copied · **Medium**
+
+`artifacts.ts` says in its own header that the reader is meant to paste these, and
+nineteen of them render across five panels. They cannot be pasted.
+
+`AnnotatedArtifact` lays each line out as `<div>[code cell][note]</div>`, so the notes are
+interleaved into the DOM *between* the code lines. Selecting a block and copying it yields
+code line 1, annotation 1, code line 2, annotation 2, and so on. There is no copy button
+either.
+
+`SchemaInspector`, the component this one was copied from, does not have the problem — it
+puts the note in a separate click-to-select panel rather than beside each line. The
+interleaving came with the side-by-side layout, which was itself chosen for a measured
+reason (see `PATTERNS.md`): a single wide scroller would push every note past 700px at the
+1024px the panels are measured at.
+
+**Closes with** either a copy button that reads `lines.map(l => l.text).join('\n')` — the
+same string the doc-fidelity test already builds — or a `user-select: none` on the note
+column, which fixes copy without adding a control. The first is better and neither is
+large. Found by the Wave 3 review, not by any test; nothing in the gate can see it.
+
+### TD-40 — Eighteen tab stops on one config block · **Low**
+
+Each line of an `AnnotatedArtifact` is its own `overflow-x: auto` region with
+`tabIndex={0}`. That is the correct WCAG 2.1.1 treatment for a scrollable region — a
+keyboard user must be able to reach and scroll it — and it is applied to every line rather
+than to the lines that actually overflow.
+
+`ci.yml` is 20 lines, `lefthook.yml` 18, and the `hooks` panel carries two artifacts, so a
+keyboard reader tabs roughly twenty stops through one panel. Each takes the global
+`:focus-visible` outline, so it looks like a control and is not, and perhaps two of them
+scroll anything at 1024px.
+
+Not a WCAG failure — the mechanism is right and the alternative (no focusable scroller) is
+worse. Recorded because the cost is real, it is paid on six panels, and the component's
+header currently reads as though the question were settled.
+
+**Closes with** making the scroller conditional on the line actually overflowing, which
+needs a measurement in the browser rather than a guess about character counts.
+
 ### TD-19 — Scored radiogroups have no roving tabindex · **Medium**
 
 `SeverityScorer` and `Toolkit` (discovery), `SizeScorer`, `HorizonTriage` and
@@ -1267,7 +1341,56 @@ against `pnpm dev` and fails on `console.error` matching React's warning prefixe
 Until then, `audit.spec.ts` should at minimum say in a comment what its console check
 cannot see, so the next person reading 14/14 knows what it excludes.
 
-### TD-36 — Nothing catches a step that disappears from stages 01 and 02 · **Low**
+### TD-37 — The equivalence instrument no longer sweeps what the audit sweeps · **Medium**
+
+`e2e/count-expandables.mjs` exists to make the before-and-after count obtainable for a
+refactor that replaces disclosure components — the 140 expandables / 107 distinct ids that
+proved eleven migrations on the `RevealList` branch. Its own header states the constraint it
+runs on: the URL derivation mirrors `audit-pages.ts`, duplicated rather than imported because
+the file is plain `.mjs`, and *if that changes, change this with it, or the two stop measuring
+the same thing.*
+
+That is what happened. W-6 appended `/reference` and eleven cheatsheet URLs to
+`audit-pages.ts`, taking the audit's sweep from 36 URLs to **48**. The `.mjs` copy was not
+updated and still derives the stage URLs only, so it reports over **36**. Measured on
+`develop` at `49122f5`: the audit sweeps 48, the instrument sweeps 36, and the instrument does
+not say so.
+
+Nothing is wrong with either number in isolation, which is why this is debt rather than a bug.
+The cost is that a future refactor touching a disclosure on a **reference sheet** would be
+verified by a count that never loaded it, and the count would look exactly as authoritative
+as the one that proved the eleven migrations.
+
+Found while writing the stage 04 port plan, by running the instrument rather than quoting
+its last recorded output.
+
+**Closes with** appending the `CHEATSHEETS` slugs to the `.mjs` derivation, or by making both
+read one generated list. The stage 04 port does not need this — it moves stage panels only,
+and the 36-URL set covers all of them — so the plan states which set its number covers rather
+than fixing it mid-round.
+
+### TD-38 — The pre-commit format hook does not reach `docs/` · **Low**
+
+A commit touching two markdown files under `docs/` printed
+`format (skip) no files for inspection` and `lint (skip) no files for inspection`, then
+committed. The hook did not check them and did not claim to; it reported success on a commit
+it had inspected nothing in.
+
+This is the shape stage 04's own §6 teaches, which is what makes it worth recording rather
+than shrugging at: a glob narrower than what CI covers produces a hook that reports success on
+a commit CI then rejects, and `README.md` is the file the doc names as likeliest to slip
+through. Here the exposure is smaller — CI runs `format:check` over the repository, so the
+gate that matters still fires — but the local hook is decoration for every markdown file
+outside its glob, and this repository's markdown *is* half the product.
+
+Not yet diagnosed: whether the cause is the glob, the `root:` scoping in `lefthook.yml`, or
+the hook running with `web/` as its working directory. Diagnose before fixing — the three have
+different fixes and only one of them is the glob.
+
+**Closes with** a hook run that reports the two files by name on a `docs/`-only commit, and a
+teeth check that a deliberately mis-formatted markdown file fails it.
+
+### ~~TD-36~~ — Nothing catches a step that disappears from stages 01 and 02 · **CLOSED 2026-08-17**
 
 TD-12 closed by deriving the audit's sweep from the rail each ready stage renders, which
 means a step that ships is always swept. The reverse is now unguarded: a step deleted or
@@ -1298,6 +1421,38 @@ the set of stage paths in the derived list equals `STAGES.filter(s => s.ready)` 
 `/stages/<slug>`, which checks the filter rather than checking step ids against themselves.
 The file says this too, at the point someone will be looking.
 
+
+---
+
+**Closed 2026-08-17**, on the stage 04 port (`394e515`, `08131ac`, `0b18150`).
+
+**Read the "Closes with" clause and the title together, because they are not the same
+thing, and the first commit satisfied one while claiming the other.** A `steps.ts` per
+stage on the stage-03 pattern makes an id *renamed* in one place and not the other a
+compile error. It says nothing about a step *deleted*, which is what the title names — a
+review proved it by removing a whole step object from `ProductDiscovery.tsx`: typecheck
+clean, 385 tests green, and the sweep one URL shorter in silence.
+
+So this closes on three guards rather than one, and it is worth knowing which does what:
+
+- **`steps.ts` per stage** (`394e515`) — an id that exists nowhere is a compile error.
+  Stages 01 and 02 gained one; stage 03 already had it.
+- **`features/rails.test.tsx`** (`08131ac`) — renders every ready stage and compares the
+  rail it draws to that stage's tuple, in jsdom, in the unit gate. This is the direction
+  the type cannot reach. It also fails when a stage goes ready with no entry, which is how
+  stage 04 was caught before it had one.
+- **`e2e/audit-pages.spec.ts`** (`0b18150`) — the same comparison against the *built* app,
+  so a `readStepIds` selector that returns half a rail fails rather than shrinking the
+  sweep. Teeth-checked by making it drop the last tab.
+
+**This entry's own premise was partly wrong** and is left standing above rather than
+edited: it says stage 03 "is covered by construction" for the deletion direction. It was
+not — stage 03 had the identical one-directional guard, and gained the second one here
+along with 01 and 02.
+
+**What is still not covered**, stated so the strike-through does not overstate: a step
+deleted from *both* the tuple and the component compiles and renders consistently. Only
+that stage's own `steps.test.ts` ordered literal fails, which is why each stage has one.
 ### TD-34 — `RevealList` hardcodes `<h3>` for row headings · **Low**
 
 Every `RevealList` row wraps its trigger button in a literal `<h3>`, with no prop to change
@@ -1626,10 +1781,43 @@ briefs were regenerated and verified to carry no surviving copy.
 
 ## Next up
 
-**Next round (2026-08-14): the stage 04 port, and it opens with a planning pass rather than
-code.**
+**Next round: execute `docs/superpowers/plans/2026-08-14-stage-04-app-port.md`. The planning
+pass it came out of is done, and the seam is settled.**
 
-Five branches have landed since the recommendation below and all five are in `develop`: the
+State to resume from, verified at the close of 2026-08-14:
+
+- **Branch `feat/stage-04-app-port`**, cut off `develop` at `49122f5`, holding **2 commits** —
+  `dc47580` (the Phase 5 re-cut) and `126b3c8` (the plan). **Not merged, not pushed.**
+- `develop` is **131 commits ahead of `main`** and **is pushed**; `origin/develop` sits at
+  `49122f5`. `main` stays at `8d5045c`. The promotion is the user's.
+- **Nothing is half-built.** The branch is records only. No file under `web/src/` has been
+  touched, `04-project-setup` is still `ready: false`, and the working tree is clean.
+
+**Start at Task 1** of the plan. It is written to be executed task-by-task, and the two
+things a fresh session most needs to know are already inside it: `audit-pages.spec.ts` goes
+red the moment `ready: true` lands and must be **deleted** rather than updated (Task 2, and
+the file says so in its own header), and every assembly task ends in a **measurement** rather
+than an edit.
+
+**Execution approach, recommended and not yet chosen.** Subagent-driven for the eleven
+independent data and component tasks — Wave 1's six modules share no state, and stage 03's
+per-task reviewers returned fourteen blocking findings a self-review would not have caught.
+Inline for Tasks 12 and 13, where the merge-or-split calls on the four provisional pairs need
+the whole panel table in one context rather than a subagent seeing eight panels in isolation.
+
+**What the planning pass changed**, in one line each, with the full reasoning in the row above
+and in the spec: panel weight tracks step count and nothing else, so it can only falsify a
+seam (**D-64**); the seam is cut by judgment and sanity-checked against a floor; nine steps
+became **fifteen**; and provisional pairs are authored split and merged on measurement
+(**D-65**), which inverts stage 03's direction.
+
+Everything below this line is the recommendation the planning pass acted on. It is kept
+because the question it posed is the one the pass answered, and the answer was not the one it
+expected.
+
+---
+
+Five branches had landed at the time it was written and all five are in `develop`: the
 doc correction (`dd44b30`), `RevealList` (`e29f3fe`), TD-12 (`a07a9b6`), and the two W-6
 reference-hub merges (`0207fd6`, `4727dc3`). What is left of stage 04 is the port itself, and
 the first thing it needs is a seam that has been measured rather than inherited.

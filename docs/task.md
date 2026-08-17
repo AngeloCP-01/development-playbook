@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03 done; 15 remain)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04 done; 14 remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; ten sheets still to transcribe)* |
@@ -126,7 +126,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02 and 03 done; 15 remain)*
+### W-3 — Stages 02–18 interactive ◐ *(02, 03 and 04 done; 14 remain)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -440,7 +440,18 @@ migration target and fix a schema before stages 03–18 have said what they need
 extends: the reader's own "Not in v1" entries become the items they triage in the horizon
 step. Verified end-to-end in a live browser.
 
-### W-3.4 — Stage 04's doc-correction phase ◐ *(doc done 2026-08-13, merged as `dd44b30`; `RevealList` merged 2026-08-14 as `e29f3fe`; TD-12 closed as `a07a9b6`; **the port is all that remains**)*
+### W-3.4 — Stage 04, doc correction then port ☑ *(doc done 2026-08-13, merged as `dd44b30`; the port done 2026-08-17 on `feat/stage-04-app-port`, **20 commits `394e515`…`dc4c46d`, unmerged**)*
+
+**The port shipped fifteen steps, and the seam is the one that was measured.** All four
+provisional pairs from D-65 stayed split — combined they measure 4.80, 5.40, 3.54 and
+4.23 against a 3.2 ceiling — which makes this the first seam in the repo to survive
+measurement unchanged. Tests 382/41 → 521/63, audit 17/17, sweep 157/119 over 51 URLs.
+Coverage map: `docs/stage-04-status.md`. Evidence and the full panel table: the W-3.4 row
+in `docs/tracker.md`.
+
+**TD-36 closed here**, on three guards rather than the one its own "Closes with" clause
+named — the tuple alone makes a *renamed* id a compile error and says nothing about a
+*deleted* step.
 
 The first round in this project shaped as a correction rather than a port, per **D-53**.
 Stage 03's rounds ported prose that was already right; `docs/04-project-setup.md` was wrong
@@ -490,27 +501,38 @@ handing the corrected doc to a cold reader with a task to finish.
       in what the derivation emits. Evidence in `docs/tracker.md`'s row: audit **14/14 →
       16/16**, vitest **350/37**, sweep unchanged at **140 expandables / 107 ids**. Debt
       opened: **TD-36**, for the direction it does not cover
-- [ ] **Port-planning pass — the next round, and it is planning rather than code.** The
-      spec's Phase 5 table cuts the doc into nine steps, and it was written when
-      `docs/04-project-setup.md` was 323 lines. It is **711**. Mapping that table onto the doc
-      as it stands puts four steps at roughly a hundred lines each — `scaffold` (§1+§2, 129),
-      `gates` (§6+§7, 109), `strict` (§3+§4, 105), `env` (§5, 103) — against `deploy` (§8, 70),
-      `proof` (§9+§10, 56), `ai` (38), `checklist` (DoD + team, 30) and `traps` (29). Three of
-      the four heavy ones are **pairings the spec made when each half was about half its
-      current size**, so the question the pass exists to answer is whether D-52's panel weight
-      still lets them hold. Re-cut by measurement, not by re-reading the table (**D-51**: a
-      plan specified against prose that then moved is the failure stage 03 hit five times out
-      of six)
+- [x] **Port-planning pass** ✓ *(done 2026-08-14 on `feat/stage-04-app-port`, `dc47580` and
+      `126b3c8`; not merged, not pushed)*. The pass asked whether D-52's panel weight still
+      let the spec's four heavy pairings hold, and the answer was that **panel weight cannot
+      answer that question**. All 35 panels across stages 01–03 were measured at 1024×768:
+      stage 03's median is 3.02 and its max 3.88, and a fit against its fourteen doc sections
+      returns `screens = 3.068*steps` with every content coefficient at noise. Weight is a
+      property of authoring, not of content, so it falsifies a seam afterwards and cannot
+      choose one — **D-64**. What settled it instead is the **floor**: chrome 1.70 screens,
+      0.026 per rendered code line, 0.87 per figure. On that arithmetic `scaffold` (§1+§2)
+      reaches **3.74 before it teaches anything** and `gates` (§6+§7) reaches 3.00 while owing
+      seven judgments, so **all four pairings fail**, on D-52's *first* clause rather than its
+      threshold. Nine steps become **fifteen**, eleven firm and four provisional, and the
+      provisional four are authored split and merged only on measurement (**D-65**). The
+      original nine-step table is kept in the spec and marked superseded
+- [x] **The implementation plan** ✓ — `docs/superpowers/plans/2026-08-14-stage-04-app-port.md`,
+      **1,610 lines, sixteen tasks in four waves**: foundation, content-as-data, components,
+      then assembly where every task ends in a measurement rather than an edit. Execution
+      approach recommended and **not yet chosen** — subagent-driven for the eleven independent
+      data and component tasks, inline for the two assembly tasks whose merge-or-split calls
+      need the whole panel table in one context
 - [ ] **TD-36 folds into that round.** Stage 04's `steps.ts` should type its `Step[]` against
       `STEP_IDS` the way stage 03's does, and extending the same guard to stages 01 and 02 is
-      a few lines inside a round already in those files — against its own round later
-- [ ] **The port.** Unchanged by either the `RevealList` or the TD-12 round.
+      a few lines inside a round already in those files — against its own round later. **Now
+      Task 1 of the plan**, which writes both
+- [ ] **The port.** Unchanged by the `RevealList` round, the TD-12 round or the planning pass.
       `04-project-setup` is still `ready: false` and absent from `STAGE_CONTENT`, so the route
       renders "sheet not drawn". **W-3 is not advanced.** One tripwire is already armed:
       `web/e2e/audit-pages.spec.ts` goes **red the moment `ready: true` lands**, correctly —
       its thirty-six-URL literal proves the TD-12 migration and nothing after it, and the file
       says in writing that the fix is to delete the test rather than paste in what the
-      derivation now emits
+      derivation now emits. **Now Task 2 of the plan**, which deletes it and puts a
+      stage-coverage guard in its place
 - [x] **Merge of the doc phase** ✓ — `fix/stage-04-doc-corrections` is in `develop` as
       `dd44b30`, `--no-ff`, which is where `refactor/reveal-list` was cut from
 - [x] **Merge of `refactor/reveal-list`** ✓ — in `develop` as `e29f3fe`, `--no-ff`, after a
@@ -520,8 +542,9 @@ handing the corrected doc to a cold reader with a task to finish.
       items addressed. Gate re-run on the merged result: vitest **350/350 across 37 files**,
       lint, typecheck and `format:check` clean; `web/` is byte-identical to the reviewed tip,
       so the audit's 16/16 stands without a re-run. The merge took `develop` to **112 commits ahead of
-      `main`**, and it is **unpushed**; `main` stays at `8d5045c`, and both the push and the
-      promotion are the user's
+      `main`** and it was unpushed at the time; `main` stays at `8d5045c`, and the promotion is
+      the user's. *(Both numbers moved after this was written: the two W-6 merges took `develop`
+      to **131 ahead**, and it has since been **pushed** — `origin/develop` at `49122f5`.)*
 
 ### W-4 — Quality gates ☑
 

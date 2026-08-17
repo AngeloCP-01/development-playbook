@@ -3,7 +3,8 @@
 **Date:** 2026-08-12
 **Scope:** `docs/04-project-setup.md`, `reference/stack.md`, `web/src/components/`,
 `web/src/features/architecture/`, `web/src/features/setup/`, `web/src/lib/`, `web/e2e/`
-**Status:** Approved (brainstorming) → pending implementation plan
+**Status:** Approved (brainstorming) → phases 1–4 shipped → **Phase 5 re-cut 2026-08-14**,
+pending implementation plan
 **Round:** W-3 from `docs/task.md`, fourth stage. Order decided 2026-08-11 against
 15 — Observability; the reasoning is in `docs/tracker.md`, "Next up"
 
@@ -276,6 +277,110 @@ blocks and is the likeliest to split. Stage 03's round found a brief that did no
 tree in five of six tasks; naming the expectation up front is cheaper than discovering it in
 task 5.
 
+> **Superseded 2026-08-14 by the port-planning pass below.** The table above is kept as the
+> record of what was believed when the doc was 323 lines. All four of its heavy pairings
+> failed measurement; `gates` split, as this paragraph predicted, and so did the three it
+> did not predict.
+
+### Phase 5 re-cut — the port-planning pass (2026-08-14)
+
+The round opened with planning rather than code, because the table above was written
+against a 323-line doc and the correction phase took `docs/04-project-setup.md` to **711**.
+Re-cutting it by those line counts is the failure D-51 names in a new form: a seam
+specified against a measurement that does not measure the thing.
+
+**What was measured.** Every panel of every ready stage, at 1024×768, with the audit's own
+method (`#panel-<id>`'s bounding height ÷ 768): 35 panels across stages 01–03. Then the
+per-unit costs that a plan can multiply, taken off the live build rather than estimated.
+
+| Quantity | Measured |
+|---|---|
+| Minimal panel chrome | **1.70 screens** (`03#require` 1.68, `02#done` 1.69) |
+| Rendered code, per line (`t-data`, 14px/20px) | **0.026 screens** — 40 lines ≈ 1.04 |
+| `<pre>` block, per line (12px/24px + 24px padding) | 0.033 screens — 40 lines ≈ 1.28 |
+| Figure, median | **0.87 screens** (max 3.29, `03#trace`) |
+| Stage 03's authored panels | median **3.02**, max **3.88**, n=22 |
+
+**The negative result is the load-bearing one.** Fitting stage 03's fourteen doc sections
+against their measured panels — predictors being step count, code lines, prose lines and
+table lines — returns:
+
+```
+screens = 3.068*steps + 0.0016*code - 0.0032*prose - 0.0531*table
+mean abs residual 0.44 screens, max 1.01
+```
+
+Every content coefficient is noise, and two are negative. **Panel weight tracks step count
+and nothing else.** §14 of stage 03 renders 145 prose lines in 2.29 screens; §1 renders 21
+in 3.17. An author fills a panel to about three screens whatever the step covers, by
+choosing what to collapse behind a disclosure and what to cut. So panel weight cannot tell
+you where a seam belongs — it can only tell you, afterwards, that one was wrong.
+
+That data is **censored and is recorded as censored**. All 22 stage-03 panels are
+post-reshape, so none *can* exceed 4.0: the gate failed them until they did not. The
+counterfactual comes from the pre-reshape record instead: `require` measured **4.7** before
+`trace` split out, and six of stage 03's nine original panels failed the threshold. Naive
+panels do exceed; authored ones land near three.
+
+**What the measurements do support is a floor**, being chrome plus rendered artifacts
+before a word of teaching, and that floor answers the question the pass exists for:
+
+| Step in the table above | Doc source | Code lines | Floor | Judgments owed |
+|---|---|---|---|---|
+| `scaffold` | §1 + §2 | 44 | **3.74** (incl. the `src/` tree figure) | 3 |
+| `gates` | §6 + §7 | 50 | **3.00** | 7 |
+| `strict` | §3 + §4 | 43 | **2.82** | 5 |
+| `env` | §5 | 36 | 2.64 | 4 |
+
+`scaffold` reaches 3.74 before it teaches anything, past stage 03's heaviest authored
+panel, and `gates` reaches 3.00 while owing seven judgments. **All four pairings fail**,
+and they fail on D-52's *first* clause rather than its threshold: each puts two artifacts
+and two judgments in one panel. The 711-line count pointed at the right four steps for the
+wrong reason.
+
+**The re-cut. Eleven firm, four provisional.**
+
+| # | id | Doc source | The judgment or act | Pattern |
+|---|---|---|---|---|
+| 1 | `scaffold` | §1 | Which file does each environment actually read | Scored exercise, three environments |
+| 2 | `structure` | §2 | Feature-first or layer-first | Click-node inspector on the tree |
+| 3 | `format` | §3 | One tool lints, one formats — and where the gate flag lives | Annotated artifact |
+| 4 | `strict` | §4 | Which flags earn the first week's friction | Annotated artifact |
+| 5 | `env` | §5a | Validate at boot; the schema is a gate, not a wishlist | Annotated artifact + `Contrast` |
+| 6 | `client` | §5b | *Which gate catches a `'use client'` import of `env`?* — none does | Guess then reveal |
+| 7 | `hooks` | §6 | Pre-commit against pre-push, and the guarded `prepare` | Annotated artifact |
+| 8 | `ci` | §7a | The minimum pipeline, and which name to require | Annotated artifact |
+| 9 | `enforce` | §7b | Enforcement is not verification | Expand to reveal |
+| 10 | `deploy` | §8a | Which failures the repo can express | `DeployBlockers`, guess then reveal |
+| 11 | `verify` | §8b | Check what it built, not whether it built | Copy artifact (`git cat-file -t`) |
+| 12 | `proof` | §9 + §10 | What counts as evidence that error tracking works | Expand to reveal |
+| 13 | `ai` | AI in project setup | Where an agent reaches, and where it cannot | Mirrors `AIArchitecturePlays` |
+| 14 | `checklist` | Artifacts + Definition of done + Scaling to a team | — | Persisted worksheet + `TeamNotes` |
+| 15 | `traps` | Traps | — | `Callout kind="trap"` set |
+
+**The provisional four are 1/2, 5/6, 8/9 and 10/11**, and they are authored *split* and
+merged only if the combined panel measures under 3.2. This inverts stage 03, which authored
+merged and split on failure and paid for it in five of six tasks: a merge is a deletion and
+a re-point, while a split is a new component, new ids, and every reference to them moved.
+The cheaper direction to be wrong in is the one that undoes with a delete.
+
+**The exit condition of every step is its measurement, not its edit** (D-52). A step that
+lands over 3.2 is re-cut in the task that built it, not deferred — 3.2 rather than 4.0
+because stage 03's authored median is 3.02 and its maximum 3.88, so a panel arriving at 3.9
+has no headroom for the round of corrections every stage has needed.
+
+**Folded into this round rather than given their own:**
+
+- **TD-36** — stage 04's `steps.ts` types its `Step[]` against `STEP_IDS` the way stage
+  03's does, and the same guard extends to stages 01 and 02 while the round is in those
+  files.
+- **`web/e2e/audit-pages.spec.ts` is deleted, not updated**, when `ready: true` lands. Its
+  thirty-six-URL literal proves the TD-12 migration and nothing after it; pasting in what
+  the derivation emits makes the expectation generated by the thing it checks. The file
+  carries that instruction in its own header.
+- **`docs/stage-03-status.md:3`** holds a stray committed line reading `test`. Found while
+  reading for this pass; unrelated to the port, one line, fixed here rather than filed.
+
 **`DeployBlockers` is the headline component** — guess-then-reveal over four real failures,
 the answer locked before the verdict, scored across the set:
 
@@ -316,10 +421,16 @@ lesson.
 - The three passes from `DESIGN.md` against a live build — contrast in both themes at every
   step, no overflow 320→2560px, zero console errors.
 - **Panel weight per step**, D-52, measured rather than judged. Re-cut and re-measure; do
-  not assume a seam is right because the edit is done.
-- **`RevealList` equivalence.** The audit sweep counts 108 expandables across 36 URLs after
-  TD-26's fix. Same count and same contrast result before and after the refactor is what
-  proves five components were replaced and nothing was lost. A green suite alone would not.
+  not assume a seam is right because the edit is done. **Against 3.2, not 4.0** — the
+  reasoning is in the Phase 5 re-cut above, and so is the reason a measurement can only
+  falsify a seam rather than choose one.
+- **`RevealList` equivalence.** ✓ Closed with Phase 4, and the numbers moved twice since
+  this was written: 108 expandables across 36 URLs at the time, **140 across 36** when the
+  refactor landed, and the sweep now covers **48 URLs** because W-6 appended twelve
+  reference sheets. The baseline the port measures against is therefore
+  **140 expandables / 107 distinct panel ids over 48 URLs**, re-derived on the branch
+  rather than quoted from here. The principle stands: a green suite does not prove a
+  component still renders its rows.
 - **`:3100` killed before every `pnpm test:e2e`.** TD-27 is open by choice this round, and
   a session that runs the suite after each task otherwise measures the first task's build
   every time. It hid two over-threshold panels for five tasks on stage 03.
