@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03 done; 15 remain)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04 done; 14 remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; ten sheets still to transcribe)* |
@@ -126,7 +126,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02 and 03 done; 15 remain)*
+### W-3 — Stages 02–18 interactive ◐ *(02, 03 and 04 done; 14 remain)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -440,7 +440,18 @@ migration target and fix a schema before stages 03–18 have said what they need
 extends: the reader's own "Not in v1" entries become the items they triage in the horizon
 step. Verified end-to-end in a live browser.
 
-### W-3.4 — Stage 04's doc-correction phase ◐ *(doc done 2026-08-13, merged as `dd44b30`; `RevealList` merged 2026-08-14 as `e29f3fe`; TD-12 closed as `a07a9b6`; seam re-cut and plan written 2026-08-14 on `feat/stage-04-app-port`; **the port is all that remains, and it is now a written plan waiting to be executed**)*
+### W-3.4 — Stage 04, doc correction then port ☑ *(doc done 2026-08-13, merged as `dd44b30`; the port done 2026-08-17 on `feat/stage-04-app-port`, **20 commits `394e515`…`dc4c46d`, unmerged**)*
+
+**The port shipped fifteen steps, and the seam is the one that was measured.** All four
+provisional pairs from D-65 stayed split — combined they measure 4.80, 5.40, 3.54 and
+4.23 against a 3.2 ceiling — which makes this the first seam in the repo to survive
+measurement unchanged. Tests 382/41 → 518/62, audit 17/17, sweep 151/113 over 51 URLs.
+Coverage map: `docs/stage-04-status.md`. Evidence and the full panel table: the W-3.4 row
+in `docs/tracker.md`.
+
+**TD-36 closed here**, on three guards rather than the one its own "Closes with" clause
+named — the tuple alone makes a *renamed* id a compile error and says nothing about a
+*deleted* step.
 
 The first round in this project shaped as a correction rather than a port, per **D-53**.
 Stage 03's rounds ported prose that was already right; `docs/04-project-setup.md` was wrong

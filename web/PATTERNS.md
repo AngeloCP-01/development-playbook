@@ -221,6 +221,32 @@ test goes red. Lint closes the remaining hole, failing the dead-but-declared map
 Any future map of the same shape, a size or a variant or a border colour, needs its own
 source test for the same reason.
 
+### `InlineCode` — `src/components/InlineCode.tsx`
+
+Renders a data string's backticked spans as `<code>`, and knows one construct.
+
+**Use it whenever a component renders a string that came out of a doc.** Stage 04 is the
+first stage whose *data* carries markup: stages 01–03 hold concepts and write their code
+spans as JSX by hand, while stage 04 holds filenames, flags and commands, so its seven
+data modules quote them the way `docs/04-project-setup.md` does — about two hundred
+backticks across the wave.
+
+Stripping them from the data is not available, which is what makes this a component rather
+than a cleanup. `CLIENT_FAILURE`, `PIN_RULE` and nineteen artifact blocks are asserted to
+appear in the doc character-for-character, and the doc has the backticks (**D-67**).
+
+Three things worth knowing before reaching for it:
+
+- **It is deliberately not a markdown renderer.** Asterisks, links and underscores pass
+  through as written. A half-markdown renderer invites data that assumes the other half.
+- **An unpaired backtick renders literally**, rather than turning the tail of the sentence
+  into a monospace span. A typo in the data should look like a typo.
+- **An accessible name cannot hold elements.** A data string used as an `aria-label` needs
+  its markers stripped instead — `plain()` in `DeployBlockers.tsx` is the one case so far.
+
+Nothing tests that no backtick reaches the page. The eleven that shipped raw were found by
+grepping the built HTML, twice, and that is still the only method that finds them.
+
 ### `AnnotatedArtifact` — `src/features/setup/AnnotatedArtifact.tsx`
 
 One config file quoted verbatim and annotated line by line, rendered from

@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
   a recorded decision actually hold
 
-### Project state (as of 2026-08-14, end of day — stage 04's doc phase, `RevealList`, TD-12 and the W-6 reference hub all merged into `develop`; the port's seam re-cut and its plan written on `feat/stage-04-app-port`, unmerged; executing that plan is the next active work; the site live and self-verifying)
+### Project state (as of 2026-08-17 — **stage 04's port is built and unmerged** on `feat/stage-04-app-port`, 20 commits; W-3 is 4/18; the whole-branch review and the merge decision are what remain; the site live and self-verifying)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -43,9 +43,10 @@ Before doing anything, read these for context:
   `ddl-sync.test.ts` plus `evolve.test.ts`, which hold three SQL blocks in the app to the doc
   character-for-character.
 - **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01, 02 and 03 are
-  complete, interactive and merged**; 03 is 22 steps with every panel under four screens.
-  Fifteen stages remain, which is all that is left of `W-3` and of the project. See
-  `docs/stage-03-status.md` for section-by-section coverage of 03.
+  complete, interactive and merged**; **stage 04 is complete and interactive but NOT merged**
+  — it is the 20 commits on `feat/stage-04-app-port`. 03 is 22 steps, 04 is 15. Fourteen
+  stages remain, which is all that is left of `W-3` and of the project. See
+  `docs/stage-03-status.md` and `docs/stage-04-status.md` for section-by-section coverage.
 - **There is a second top-level section now: `/reference` (W-6), and it is PAUSED.** Eleven
   cheatsheets registered behind one renderer, ten of them deliberately empty and chipped WIP,
   because an index that advertises its gaps doubles as a worklist (**D-62**). The rail carries
@@ -105,15 +106,19 @@ Before doing anything, read these for context:
   `docs/task.md`'s **W-3.4** and `docs/tracker.md`'s **Next up**.
 - **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **382 vitest tests across 41 files** in two projects — `unit`
+  eslint at `--max-warnings 0`, **518 vitest tests across 62 files** in two projects — `unit`
   (node, data invariants) and `dom` (jsdom, render tests, `*.test.tsx`) — a **17-test playwright
-  audit suite over 48 derived URLs** (36 stage, 12 reference), lefthook hooks, and CI. Branch
-  protection is on; the repo is public (D-26).
+  audit suite over 63 derived URLs** (51 stage, 12 reference), lefthook hooks, and CI. Branch
+  protection is on; the repo is public (D-26). Those figures are the branch's, not `develop`'s.
 - **The audit sweeps the ready set automatically** (**TD-12 closed 2026-08-14**).
   `e2e/audit-pages.ts` takes stages from `STAGES.filter(s => s.ready)` and step ids from the
   rail each renders, so a new stage or step is swept without editing a list. A ready stage
-  that renders no rail throws. The gap left open is the other direction — a step that
-  disappears leaves the sweep silently, guarded only for stage 03 by `STEP_IDS` (**TD-36**).
+  that renders no rail throws. **TD-36 closed 2026-08-17** on the stage 04 port, and on
+  three guards rather than one: a `STEP_IDS` tuple per stage catches a *renamed* id,
+  `features/rails.test.tsx` catches a step *deleted* from a component, and
+  `e2e/audit-pages.spec.ts` makes the same comparison against the built app. A step deleted
+  from both the tuple and the component still compiles — that is what each stage's
+  `steps.test.ts` ordered literal is for.
 - **Deployed** (`W-5`, live 2026-08-11): **https://acp-dev-playbook.vercel.app**, verified
   against the running site — `/robots.txt`, a 19-URL `/sitemap.xml`, and stage pages rendering
   with the title template. The Vercel project is `acp-development-playbook`; the **assigned
@@ -140,85 +145,67 @@ Before doing anything, read these for context:
   (`dd44b30`), `RevealList` (`e29f3fe`), TD-12 (`a07a9b6`) and the two W-6 reference-hub
   merges (`0207fd6`, `4727dc3`). So **cut the next branch from `develop`, not from `main`**,
   or you will be building against a tree that is five rounds behind. The one branch currently
-  in flight is **`feat/stage-04-app-port`**, records only and unmerged; continue on it rather
-  than cutting a second. **Do not quote an ahead-of-remote count from this
+  in flight is **`feat/stage-04-app-port`**, which now carries the whole stage 04 port and is
+  **unmerged and unpushed**. **Do not quote an ahead-of-remote count from this
   file** — every version of it has gone stale, and the local `origin/main` ref is only as
   fresh as the last fetch. Derive it: `git fetch && git rev-list --count origin/main..main`.
   Two merged branches still sit on the remote and can be deleted:
   `origin/feat/stage-03-app-port` and `origin/feat/stage-03-standard-practices`.
 
-### Next round's scope: execute the stage 04 port plan
+### Next round's scope: close the branch, then pick stage 05
 
-**The planning pass is done and the seam is settled.** Everything in front of the port had
-already landed — the doc correction (`dd44b30`), `RevealList` (`e29f3fe`), TD-12 (`a07a9b6`)
-and the two W-6 merges. What is new since is the pass itself, on
-**`feat/stage-04-app-port`**, cut off `develop` at `49122f5` and holding **two commits**:
-`dc47580` (the Phase 5 re-cut) and `126b3c8` (the plan). **Not merged, not pushed, and nothing
-is half-built** — the branch is records only, no file under `web/src/` has been touched, and
-`04-project-setup` is still `ready: false`.
+**The stage 04 port is built.** `feat/stage-04-app-port` holds **20 commits**,
+`394e515`…`dc4c46d`, cut off `develop` at `49122f5`. Not merged, not pushed. What remains
+of *this* round is the whole-branch review and the merge decision, both of which are the
+user's to call — see `superpowers:finishing-a-development-branch`.
 
-**What the pass found, because it changes how the next one reads D-52.** All 35 panels across
-stages 01–03 were measured at 1024×768 with the audit's own method. Stage 03's median is
-**3.02** and its max **3.88**. Fitting its fourteen doc sections against those panels returns
-`screens = 3.068*steps` with every content coefficient at noise — 145 prose lines render in
-2.29 screens and 21 render in 3.17. **Panel weight tracks step count and nothing else**,
-because an author fills a panel to about three screens whatever the step covers. So the gate
-falsifies a seam afterwards and cannot choose one (**D-64**), and the instrument for choosing
-is the **floor**: chrome 1.70 screens, 0.026 per rendered code line, 0.87 per figure. On that
-arithmetic `scaffold` (§1+§2) reaches **3.74 before it teaches anything** and `gates` (§6+§7)
-reaches 3.00 while owing seven judgments, so all four of the spec's heavy pairings fail — on
-D-52's *first* clause, not its threshold. Nine steps became **fifteen**, eleven firm and four
-provisional, and the provisional four are authored **split** and merged only on measurement
-(**D-65**), which inverts stage 03's direction because a merge undoes with a delete.
+**What the round produced, kept short because `docs/tracker.md`'s W-3.4 row is the record.**
+Fifteen steps, all under the 3.2 ceiling, median 2.27 and max 2.99. Tests 382/41 → 518/62.
+Audit 17/17 over 63 URLs. Sweep 151 expandables / 113 ids over 51 URLs. Six new decisions
+are **D-66** and **D-67**; **TD-36 closed**, **TD-39** and **TD-40** opened.
 
-**The round is now: execute `docs/superpowers/plans/2026-08-14-stage-04-app-port.md`**, 1,610
-lines, sixteen tasks in four waves — foundation, content-as-data, components, then assembly
-where every task ends in a measurement rather than an edit. Start at Task 1.
+**The thing worth carrying into the next stage, above everything else.** Five reviews ran
+and found 21 blocking items, and the single most valuable was a **coverage walk of the doc
+against the app** — section by section, asking *what does the doc teach that the app does
+not*. It found five sections in one shape: the app told the reader to run a script or set a
+value it never showed them how to create. All five had been assigned to a panel by the
+plan's own line ranges, so they were silent drops rather than curations, and the symptom
+was visible in the numbers the whole time — the panel median was 1.74 where stage 03's is
+3.02, and that gap was missing content, not lean writing. **Run that walk before believing
+a port is complete.** Nothing in the gate can see it.
 
-**Execution approach, recommended and not yet chosen.** Subagent-driven for the eleven
-independent data and component tasks; **inline for Tasks 12 and 13**, whose merge-or-split
-calls need the whole panel table in one context rather than a subagent seeing eight panels in
-isolation.
+**Second: nine plan defects were found by executing rather than reading**, which is the
+same lesson the last two rounds recorded and it did not stop being true. A test that could
+never pass (`PIN_RULE` asserted with `toContain` against a hard-wrapped doc). A regex that
+counted nine traps where the doc has seven, because `DOC.indexOf('## Traps')` matches §7's
+prose *about* `## Traps`. Material sourced to a section that does not contain it. And every
+`.tsx` test in Wave 2 written against `jest-dom` and `user-event`, neither of which this
+project installs — about twenty tests that would have failed on `Invalid Chai property`
+rather than on anything real.
 
-**Two things fold into this round rather than waiting for their own, and both are already
-tasks in the plan:**
-
-- **TD-36** is **Task 1**. Nothing catches a step that disappears from stages 01 and 02 —
-  stage 03 is covered by construction because its `Step[]` is typed against `STEP_IDS`.
-  Building stage 04's `steps.ts` the same way and extending the guard to 01 and 02 is a few
-  lines inside a round already in those files.
-- **The armed tripwire** is **Task 2**. `web/e2e/audit-pages.spec.ts` goes **red the moment
-  `ready: true` lands**, correctly. Its thirty-six-URL literal proves the TD-12 migration and
-  nothing after it. **Delete the test rather than update it** — pasting in whatever the
-  derivation now emits makes the expectation generated by the thing it checks, which is the
-  defect class this repo has found seven times. The file says so in its own header; read it
-  before touching it.
-
-**Two findings from the pass were filed, not fixed**, and neither blocks the port:
-**TD-37**, `count-expandables.mjs` sweeps 36 URLs where `audit-pages.ts` now sweeps 48, so the
-equivalence instrument silently covers stages only — its baseline, re-measured rather than
-quoted, is **140 expandables / 107 distinct ids over 36 URLs**. **TD-38**, lefthook's
-pre-commit format hook does not reach `docs/`, which is the glob trap stage 04's own §6
-teaches.
+**Third, and it caught two people including the controller: a teeth check can lie.** One
+`perl -0p` mutation without `/g` replaced the first occurrence in the slurped file — a
+mention inside a docblock — leaving the JSX untouched, so a real test looked toothless.
+Another derived *both* sides of its assertion from the same data row, so the prescribed
+mutation moved the expectation along with the render and proved nothing. **Verify that the
+mutation actually landed before trusting what the run tells you.**
 
 **Read these first, in this order:**
 
-1. `docs/superpowers/plans/2026-08-14-stage-04-app-port.md` — the plan being executed. Its
-   Global Constraints are the round's rules, including the **3.2 working ceiling** and killing
-   `:3100` before every measurement (TD-27).
-2. `docs/superpowers/specs/2026-08-12-stage-04-project-setup-design.md` — the round's spec.
-   Read **`### Phase 5 re-cut — the port-planning pass (2026-08-14)`**; the nine-step table
-   above it is kept and **marked superseded**, so do not implement it. Note also that its
-   defect table is the *starting* inventory of eight, not the final thirty-one.
-2. `docs/tracker.md`, the **2026-08-13 W-3 (04 doc)** row — what the correction phase found,
-   and more usefully the long `Deferred:` list of what it deliberately did not do. Also
-   **D-53**…**D-58**, the decisions that round produced.
-3. `docs/verification/cold-reader-stage-04-run1.md` — the twelve entries with their close-out
-   state, and the ten boundary items the port has to leave alone as well.
-4. `web/PATTERNS.md` — the interaction patterns, and the render-test rule added with TD-17.
-   Read before building any stage.
-5. `docs/learnings/stage-implementation-101.md` — the layout traps and the verification
+1. `docs/tracker.md`, the **2026-08-17 W-3.4** row — what the port shipped, with the panel
+   table, and more usefully its `Deferred:` list. Then **D-64**…**D-67**, and **TD-39** /
+   **TD-40**, which this round opened and did not fix.
+2. `docs/stage-04-status.md` — the coverage map, doc against app, section by section. It
+   also records the three sections deliberately not ported.
+3. `web/PATTERNS.md` — the interaction patterns, the render-test rule added with TD-17, and
+   the two entries this round added: `InlineCode` and `AnnotatedArtifact`. Read before
+   building any stage.
+4. `docs/learnings/stage-implementation-101.md` — the layout traps and the verification
    checklist for building a stage.
+5. `docs/superpowers/plans/2026-08-14-stage-04-app-port.md` — **only if you are auditing
+   what happened**, not as instructions. It carries two in-execution amendments and its
+   Global Constraints are the round's rules; nine of its task specifications turned out to
+   be wrong about the tree, which is the point of the second lesson above.
 
 **`docs/learnings/deploying-101.md` is no longer the raw material** — §8 has absorbed it, and
 the round found one entry over-claiming it as a source for material it does not contain. Read
