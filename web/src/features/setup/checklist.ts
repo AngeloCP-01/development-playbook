@@ -74,3 +74,43 @@ export const TEAM_MOVES: TeamMove[] = [
     body: 'A password manager or Vercel environment variables, never Slack and never a `.env` sent over chat.',
   },
 ]
+
+export type ArtifactItem = { id: string; text: string }
+
+/**
+ * §Artifacts — what this stage leaves behind, as an inventory.
+ *
+ * Kept as one flat list rather than folded into `DONE`, because the two answer
+ * different questions: this one is *what exists*, and the definition of done is
+ * *what you can check*. The doc keeps them apart for the same reason.
+ *
+ * Ported after a review found it dropped with no note. The argument for
+ * dropping it was that the panels already render nineteen of these files with
+ * annotations, so a flat list restates them — true of the files, and not true
+ * of the last four entries, which are not files at all.
+ */
+export const ARTIFACT_ITEMS: ArtifactItem[] = [
+  { id: 'repo', text: 'Repository with the feature-first `src/` structure' },
+  {
+    id: 'configs',
+    text: '`.prettierrc`, `.prettierignore`, `eslint.config.mjs`, `tsconfig.json`, `lefthook.yml`, `.nvmrc`, `.npmrc`, `.env.example`',
+  },
+  {
+    id: 'package-json',
+    text: '`package.json` pinning `engines.node` and `packageManager`, a guarded `prepare` script, and the `typecheck`, `test`, `lint`, `format`, and `format:check` scripts',
+  },
+  {
+    id: 'env-module',
+    text: '`src/lib/env.ts` validating configuration at boot',
+  },
+  {
+    id: 'workflow',
+    text: '`.github/workflows/ci.yml` with branch protection enforcing it',
+  },
+  {
+    id: 'vercel',
+    text: 'A Vercel project producing preview URLs per pull request',
+  },
+  { id: 'sentry', text: 'Sentry with verified source maps' },
+  { id: 'readme', text: '`README.md` covering what/run/deploy' },
+]

@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 import { flat, h2 } from './doc-source'
-import { DONE, TEAM_MOVES } from './checklist'
+import { ARTIFACT_ITEMS, DONE, TEAM_MOVES } from './checklist'
 
 const DONE_SECTION = h2('Definition of done')
 const TEAM_SECTION = h2('Scaling to a team')
@@ -91,4 +91,23 @@ test('every team move explains itself rather than restating its title', () => {
     expect(move.body.trim().length, move.id).toBeGreaterThan(40)
     expect(move.body.trim()).not.toBe(move.title.trim())
   }
+})
+
+// Ported after a review found the doc's `## Artifacts` section dropped with no
+// note anywhere. Counted against the doc for the same reason every other list
+// in this wave is: a brief saying "eight bullets" is the thing that goes stale.
+const DOC_ARTIFACTS = h2('Artifacts').match(/^- (?!\[ \])/gm) ?? []
+
+test('the artifacts regex matches the inventory bullets rather than nothing', () => {
+  expect(DOC_ARTIFACTS.length).toBeGreaterThan(0)
+  expect(h2('Artifacts')).toContain('feature-first')
+})
+
+test('every artifact the doc inventories has an entry in the app', () => {
+  expect(ARTIFACT_ITEMS).toHaveLength(DOC_ARTIFACTS.length)
+})
+
+test('ids are unique, because the inventory renders as a keyed list', () => {
+  const ids = ARTIFACT_ITEMS.map((a) => a.id)
+  expect(new Set(ids).size).toBe(ids.length)
 })

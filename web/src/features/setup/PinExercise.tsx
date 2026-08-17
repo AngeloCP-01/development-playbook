@@ -30,12 +30,6 @@ import { PIN_RULE, PIN_TARGETS } from './pins'
  * that makes the exercise redundant.
  */
 
-/**
- * The data quotes code inline with markdown backticks, because `pins.ts` is
- * held against the doc's own prose character-for-character. Rendering it raw
- * would print the backticks, so odd-indexed splits become `<code>`.
- */
-
 const OPTIONS = PIN_TARGETS.map((t) => t.reads)
 
 /**

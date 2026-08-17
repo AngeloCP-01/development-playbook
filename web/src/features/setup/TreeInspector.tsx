@@ -29,8 +29,6 @@ import { SRC_TREE, type TreeNode } from './tree'
  * write, and a style attribute is the honest answer.
  */
 
-/** Inline code is quoted with markdown backticks in `tree.ts`; render it. */
-
 type FlatNode = { node: TreeNode; depth: number }
 
 function flatten(node: TreeNode, depth = 0): FlatNode[] {

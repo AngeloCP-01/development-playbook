@@ -30,6 +30,91 @@ export type Artifact = {
  * diagram that drifts.
  */
 export const ARTIFACTS: Record<string, Artifact> = {
+  nvmrc: {
+    id: 'nvmrc',
+    filename: '.nvmrc',
+    language: 'bash',
+    lines: [
+      {
+        text: 'echo "22" > .nvmrc',
+        note: 'What `nvm` and `fnm` read locally, and what GitHub Actions reads through `node-version-file`. It stops there — your host does not read it.',
+        pivot: true,
+      },
+    ],
+  },
+  enginesJson: {
+    id: 'enginesJson',
+    filename: 'package.json',
+    language: 'json',
+    lines: [
+      { text: '{' },
+      {
+        text: '  "engines": { "node": "22.x" },',
+        note: 'A major, not a range. `22.x` is the form Vercel\u2019s own docs show and the form this project uses; a range is not documented as supported, and this field is the one thing the host actually reads, so it is not the place to improvise a format.',
+        pivot: true,
+      },
+      {
+        text: '  "packageManager": "pnpm@<current>"',
+        note: '`corepack use pnpm@latest` resolves the current release and writes it here with a hash, which is the pin you want. `reference/stack.md` names a floor, not a pin — if `latest` hands you a newer major than that file lists, you are where you should be. Do not pin backwards to match it.',
+      },
+      { text: '}' },
+    ],
+  },
+  npmrc: {
+    id: 'npmrc',
+    filename: '.npmrc',
+    language: 'bash',
+    lines: [
+      {
+        text: 'echo "engine-strict=true" >> .npmrc',
+        note: 'Without this line pnpm prints `WARN Unsupported engine` and installs anyway, exit 0 — a warning in CI log noise is not a gate. With it, the install fails on the wrong major, which is what you wanted when you wrote the constraint.',
+        pivot: true,
+      },
+    ],
+  },
+  formatScripts: {
+    id: 'formatScripts',
+    filename: 'package.json',
+    language: 'json',
+    lines: [
+      { text: '{' },
+      { text: '  "scripts": {' },
+      { text: '    "format": "prettier --write .",' },
+      {
+        text: '    "format:check": "prettier --check ."',
+        note: 'CI calls this one by name, so it has to exist, and it has to check the same files the one you run yourself writes. That `.` is the whole repository, which is why `.prettierignore` matters.',
+        pivot: true,
+      },
+      { text: '  }' },
+      { text: '}' },
+    ],
+  },
+  prettierignore: {
+    id: 'prettierignore',
+    filename: '.prettierignore',
+    language: 'bash',
+    lines: [
+      {
+        text: 'pnpm-lock.yaml',
+        note: 'Shorter than you expect, because Prettier reads `.gitignore` too — `.next/` and `node_modules/` are already excluded. What is left is the case `.gitignore` cannot cover: a file that is generated *and* committed. The lockfile is the one every project has, and reformatting it changes a file you do not own.',
+        pivot: true,
+      },
+    ],
+  },
+  testScript: {
+    id: 'testScript',
+    filename: 'package.json',
+    language: 'json',
+    lines: [
+      { text: '{' },
+      {
+        text: '  "scripts": { "test": "vitest run --passWithNoTests" }',
+        note: 'The gate you are about to wire has to have something real to call; a pipeline step naming a command nobody installed fails on its first run, and the failure looks like a broken pipeline rather than a missing dependency.',
+        pivot: true,
+      },
+      { text: '}' },
+    ],
+  },
   catFile: {
     id: 'catFile',
     filename: 'Terminal',

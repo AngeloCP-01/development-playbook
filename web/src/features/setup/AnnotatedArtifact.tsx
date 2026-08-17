@@ -46,14 +46,18 @@ function ArtifactRow({ line }: { line: ArtifactLine }) {
       ].join(' ')}
     >
       <div tabIndex={0} className="min-w-0 overflow-x-auto sm:flex-1">
-        <span
+        {/* <code>, not <span>: dropping <pre> is the measured choice (20px a
+            line against 24px plus 24px of block padding), and it costs nothing
+            to keep the element that says this is code. Thirteen config files
+            were being announced as running prose. */}
+        <code
           data-artifact-line
           className={`t-data inline-block min-h-5 whitespace-pre text-[13px] leading-5 sm:text-sm ${
             line.note ? 'text-fg' : 'text-muted'
           }`}
         >
           {line.text}
-        </span>
+        </code>
       </div>
 
       {line.note ? (

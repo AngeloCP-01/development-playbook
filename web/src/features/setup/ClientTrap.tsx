@@ -31,8 +31,6 @@ import { CLIENT_FAILURE, GATES } from './client-trap'
  * callout at the end rather than on four blameless rows.
  */
 
-/** Inline code is quoted with markdown backticks in `client-trap.ts`. */
-
 export function ClientTrap() {
   const [guess, setGuess] = useState<string | null>(null)
   const committed = guess !== null

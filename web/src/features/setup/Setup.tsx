@@ -4,6 +4,7 @@ import { Callout, Contrast, Prose, Section } from '@/components/ui'
 import { Figure } from '@/components/Figure'
 import { Term } from '@/components/Term'
 import { References } from '@/components/References'
+import { RevealList } from '@/components/RevealList'
 import { InlineCode } from '@/components/InlineCode'
 import { AIPlays } from './AIPlays'
 import { AnnotatedArtifact } from './AnnotatedArtifact'
@@ -13,6 +14,7 @@ import { ClientTrap } from './ClientTrap'
 import { PinExercise } from './PinExercise'
 import { TreeInspector } from './TreeInspector'
 import { ARTIFACTS } from './artifacts'
+import { ARTIFACT_ITEMS } from './checklist'
 import { TRAPS } from './traps'
 import { type StepId } from './steps'
 
@@ -40,12 +42,9 @@ const STEPS: (Step & { id: StepId })[] = [
         <Section eyebrow="Day one" title="Scaffold, and pin what runs it">
           <Prose>
             <p>
-              One command produces the app, through <Term id="pnpm">pnpm</Term>.{' '}
-              <code className="t-data break-words">--src-dir</code> keeps
-              application code in{' '}
-              <code className="t-data break-words">src/</code> and leaves the
-              root for configuration, which is worth it the moment the root
-              accumulates a dozen config files.
+              One command produces the app, through <Term id="pnpm">pnpm</Term>.
+              Every flag on it is a decision you would otherwise make later and
+              retrofit.
             </p>
           </Prose>
           <div className="mt-5">
@@ -60,8 +59,34 @@ const STEPS: (Step & { id: StepId })[] = [
           <Prose>
             <p>
               Three environments run this code and no single file reaches all
-              three. Pair each one with the file it actually reads, before the
-              verdict shows. The middle one is the pairing this stage was
+              three, so the version gets written in three places.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <RevealList
+              idPrefix="setup-pins"
+              rows={[
+                {
+                  id: 'files',
+                  title: 'The three files, if you want to look first',
+                  badge: 'Shell · CI · host',
+                  summary:
+                    'A bare major, a constraint the host reads, and the flag that turns the constraint into a gate.',
+                  body: (
+                    <div className="space-y-4">
+                      <AnnotatedArtifact artifact={ARTIFACTS.nvmrc} />
+                      <AnnotatedArtifact artifact={ARTIFACTS.enginesJson} />
+                      <AnnotatedArtifact artifact={ARTIFACTS.npmrc} />
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
+          <Prose>
+            <p className="mt-6">
+              Now pair each environment with the file it actually reads, before
+              the verdict shows. The middle one is the pairing this stage was
               corrected for.
             </p>
           </Prose>
@@ -75,33 +100,25 @@ const STEPS: (Step & { id: StepId })[] = [
             <p>
               <code className="t-data break-words">create-next-app</code> has
               already run <code className="t-data break-words">git init</code>{' '}
-              and made the first commit, on{' '}
-              <code className="t-data break-words">main</code> — that branch
-              name comes from the scaffold, not from your git config, which
-              still defaults to{' '}
+              and committed, on <code className="t-data break-words">main</code>{' '}
+              — that name comes from the scaffold, not from your git config,
+              which still defaults to{' '}
               <code className="t-data break-words">master</code>. What it cannot
               do is create the repository on GitHub, and everything downstream
               assumes one exists.
             </p>
             <p>
-              Everything you have edited since is still uncommitted, and that
-              first commit predates all of it. Commit before you push, or the
-              repository you create holds the scaffold and none of your pins.
+              That commit also predates every pin you just wrote, so commit
+              before you push or the repository holds the scaffold and none of
+              them. Afterwards{' '}
+              <code className="t-data break-words">git log --oneline</code>{' '}
+              should show the same first commit in both places — which is what
+              the <em>Verify</em> step later asks about a deployment, and worth
+              being in the habit of before a dashboard is involved.
             </p>
           </Prose>
           <div className="mt-5">
             <AnnotatedArtifact artifact={ARTIFACTS.repoCmd} />
-          </div>
-          <div className="mt-5">
-            <Callout kind="info" title="Check the two logs match">
-              <p>
-                <code className="t-data break-words">git log --oneline</code> on
-                GitHub and locally should now show the same first commit. That
-                is the thing §8 later asks you to check about a{' '}
-                <em>deployment</em>, and it is worth being in the habit before a
-                dashboard is involved.
-              </p>
-            </Callout>
           </div>
         </Section>
       </div>
@@ -179,6 +196,8 @@ const STEPS: (Step & { id: StepId })[] = [
           </Prose>
           <div className="mt-5 space-y-5">
             <AnnotatedArtifact artifact={ARTIFACTS.prettierrc} />
+            <AnnotatedArtifact artifact={ARTIFACTS.formatScripts} />
+            <AnnotatedArtifact artifact={ARTIFACTS.prettierignore} />
             <AnnotatedArtifact artifact={ARTIFACTS.lint} />
           </div>
         </Section>
@@ -209,9 +228,8 @@ const STEPS: (Step & { id: StepId })[] = [
             <p>
               <code className="t-data break-words">create-next-app</code>{' '}
               produces a reasonable{' '}
-              <code className="t-data break-words">tsconfig.json</code>. Four
-              flags are worth adding on day one, because adding them later means
-              fixing every violation at once.
+              <code className="t-data break-words">tsconfig.json</code>. Add
+              these four.
             </p>
           </Prose>
           <div className="mt-5 space-y-5">
@@ -367,6 +385,43 @@ const STEPS: (Step & { id: StepId })[] = [
         </Section>
 
         <Section
+          eyebrow="Before the gates"
+          title="Install the test runner with nothing to test"
+        >
+          <Prose>
+            <p>
+              The gate the next two steps wire calls{' '}
+              <code className="t-data break-words">pnpm test</code>, so that
+              script has to exist before either of them does. What goes in the
+              tests is{' '}
+              <Link href="/stages/06-testing" className="text-brand">
+                06 — Testing
+              </Link>
+              ; the point here is that the gate has something real to call.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <AnnotatedArtifact artifact={ARTIFACTS.testScript} />
+          </div>
+          <div className="mt-5">
+            <Callout
+              kind="warn"
+              title="Drop --passWithNoTests once stage 06 gives you real tests"
+            >
+              <p>
+                Without it{' '}
+                <code className="t-data break-words">vitest run</code> exits 1
+                on an empty suite, so your first push fails on a hook that is
+                working correctly — which teaches the reader to bypass the hook,
+                the one habit this section exists to prevent. Left in place
+                afterwards, a test file quietly excluded by a broken glob passes
+                green forever.
+              </p>
+            </Callout>
+          </div>
+        </Section>
+
+        <Section
           eyebrow="What to do instead"
           title="Pass it down, or read the public key directly"
         >
@@ -459,8 +514,8 @@ const STEPS: (Step & { id: StepId })[] = [
               <Link href="/stages/11-ci-cd" className="text-brand">
                 11 — CI/CD
               </Link>
-              . The minimum, right now: one job, six steps, ordered so the
-              cheapest check fails first.
+              . The minimum, right now: one job, six commands of your own,
+              ordered so the cheapest fails first.
             </p>
           </Prose>
           <div className="mt-5">
@@ -523,8 +578,8 @@ const STEPS: (Step & { id: StepId })[] = [
               <p>
                 On a private one it saves and silently never fires — an
                 unenforced gate is decoration. Confirm your plan enforces it.
-                This is the second time §1&rsquo;s private-or-public choice
-                decides something other than privacy.
+                This is what §1 meant by the private-or-public choice deciding
+                more than privacy.
               </p>
             </Callout>
           </div>
@@ -536,13 +591,54 @@ const STEPS: (Step & { id: StepId })[] = [
         >
           <Prose>
             <p>
-              Stopping at the first is the common mistake. Branch protection
-              proves the gate is <em>attached</em>. It proves nothing about
-              whether the gate <em>can fail</em>, which is a separate check with
-              its own method: push a broken commit once and watch it go red. Do
-              that while the only thing that can break is a scaffold.
+              Stopping at the first is the common mistake, and the two words get
+              used as though they were one thing. Open each to see what it does
+              and does not buy you.
             </p>
           </Prose>
+          <div className="mt-5">
+            <RevealList
+              idPrefix="setup-enforce"
+              rows={[
+                {
+                  id: 'attached',
+                  title: 'Enforcement',
+                  badge: 'What branch protection proves',
+                  summary: 'The gate is attached to the branch.',
+                  body: (
+                    <p>
+                      Nobody merges to{' '}
+                      <code className="t-data break-words">main</code> without
+                      the check reporting. That is worth having and it is all it
+                      is. A gate can be attached, required, and structurally
+                      incapable of failing — a test suite excluded by a broken
+                      glob, a lint script with no{' '}
+                      <code className="t-data break-words">
+                        --max-warnings 0
+                      </code>
+                      , a workflow whose only real step never runs.
+                    </p>
+                  ),
+                },
+                {
+                  id: 'can-fail',
+                  title: 'Verification',
+                  badge: 'What only a red run proves',
+                  summary: 'The gate can actually fail.',
+                  body: (
+                    <p>
+                      A separate check with its own method: push a deliberately
+                      broken commit once and watch it go red. Do that while the
+                      only thing that can break is a scaffold. This playbook
+                      wired a lint gate that let an unused variable through on
+                      its first teeth check, and the workflow was green
+                      throughout.
+                    </p>
+                  ),
+                },
+              ]}
+            />
+          </div>
         </Section>
       </div>
     ),
@@ -587,6 +683,31 @@ const STEPS: (Step & { id: StepId })[] = [
               </p>
             </Callout>
           </div>
+        </Section>
+
+        <Section
+          eyebrow="While you are in there"
+          title="Give the project the two keys CI already has"
+        >
+          <Prose>
+            <p>
+              <code className="t-data break-words">SESSION_SECRET</code> and{' '}
+              <code className="t-data break-words">NEXT_PUBLIC_APP_URL</code>,
+              under{' '}
+              <strong className="text-fg">
+                Settings → Environment Variables
+              </strong>
+              , for Preview and Production both. A build here reads nothing from
+              your machine.
+            </p>
+            <p>
+              <code className="t-data break-words">NEXT_PUBLIC_APP_URL</code> is
+              the one to think about rather than copy across:{' '}
+              <code className="t-data break-words">http://localhost:3000</code>{' '}
+              is the local value and nothing else, and a preview deployment does
+              not share an origin with production.
+            </p>
+          </Prose>
         </Section>
 
         <Section
@@ -671,9 +792,13 @@ const STEPS: (Step & { id: StepId })[] = [
               </strong>{' '}
               Source maps are uploaded during the build, from{' '}
               <code className="t-data break-words">SENTRY_AUTH_TOKEN</code> in
-              the <em>build&rsquo;s</em> environment, falling back to a file the
-              wizard writes locally and which must stay uncommitted. So the one
-              environment that builds what your users run has no token.
+              the <em>build&rsquo;s</em> environment, falling back to a{' '}
+              <code className="t-data break-words">
+                .env.sentry-build-plugin
+              </code>{' '}
+              file in the working directory, which is where the wizard writes it
+              and which must stay uncommitted. So the one environment that
+              builds what your users run has no token.
             </p>
             <p>
               Get this wrong and nothing goes red. The plugin logs{' '}
@@ -683,6 +808,13 @@ const STEPS: (Step & { id: StepId })[] = [
               and the build succeeds — exactly like a green build of the wrong
               repository — and you find out months later reading a minified
               stack trace at 2am.
+            </p>
+            <p>
+              The fix is one field: add{' '}
+              <code className="t-data break-words">SENTRY_AUTH_TOKEN</code> to
+              the Vercel project&rsquo;s environment variables for Preview and
+              Production, or install Sentry&rsquo;s Vercel integration, which
+              sets it for you.
             </p>
           </Prose>
           <div className="mt-5">
@@ -717,17 +849,66 @@ const STEPS: (Step & { id: StepId })[] = [
               That last line matters more than it looks.{' '}
               <Term id="rollback">Rolling back</Term> is the half this stage has
               not handed you, and a README is the wrong place to discover you do
-              not know it. On Vercel it is{' '}
-              <code className="t-data break-words">vercel rollback</code>, which
-              returns production to the previous deployment — and on the Hobby
-              plan that is the only one it will go back to. To reach an older
-              one, <code className="t-data break-words">vercel ls</code> and{' '}
-              <code className="t-data break-words">
-                vercel promote &lt;url&gt;
-              </code>
-              . Put the command in the README, not a description of it.
+              not know it. Put the command in the README, not a description of
+              it.
             </p>
           </Prose>
+          <div className="mt-5">
+            <RevealList
+              idPrefix="setup-rollback"
+              rows={[
+                {
+                  id: 'rollback',
+                  title: 'vercel rollback',
+                  badge: 'The one you will reach for',
+                  summary: 'Returns production to the previous deployment.',
+                  body: (
+                    <p>
+                      On the Hobby plan the <em>previous</em> one is the only
+                      one it will go back to, so it is a single step backwards
+                      rather than a time machine.
+                    </p>
+                  ),
+                },
+                {
+                  id: 'promote',
+                  title: 'vercel ls, then vercel promote <url>',
+                  badge: 'Anything further back',
+                  summary:
+                    'Lists deployments and makes a specific one current.',
+                  body: (
+                    <p>
+                      Also how you undo a rollback. Worth writing both into the
+                      README while you can still read this page, because the
+                      moment you need them you will not be reading it.
+                    </p>
+                  ),
+                },
+                {
+                  id: 'migrations',
+                  title: 'The case that breaks all of it',
+                  badge: 'Read 13 before you need this',
+                  summary:
+                    'A deploy that also migrated the database does not roll back with the code.',
+                  body: (
+                    <p>
+                      Reverting the code leaves a schema the old code has never
+                      seen.{' '}
+                      <Link
+                        href="/stages/13-production-deployment"
+                        className="text-brand"
+                      >
+                        13 — Production Deployment
+                      </Link>{' '}
+                      owns this properly; the point here is that it exists, so
+                      &ldquo;we can always roll back&rdquo; is a claim with a
+                      condition on it.
+                    </p>
+                  ),
+                },
+              ]}
+            />
+          </div>
         </Section>
       </div>
     ),
@@ -779,6 +960,37 @@ const STEPS: (Step & { id: StepId })[] = [
             <SetupChecklist />
           </div>
         </Section>
+
+        <Section eyebrow="Closing" title="What you should be holding">
+          <Prose>
+            <p>
+              The inventory, as distinct from the checklist above: this is what{' '}
+              <em>exists</em> when the stage is done, where that is what you can{' '}
+              <em>check</em>. Most of it appeared as an annotated file earlier;
+              the last four are not files at all, which is why they are easy to
+              believe you have.
+            </p>
+          </Prose>
+          <ul className="mt-5 space-y-2.5">
+            {ARTIFACT_ITEMS.map((item) => (
+              <li
+                key={item.id}
+                data-artifact-item
+                className="flex gap-3 text-[0.9375rem] leading-relaxed text-muted"
+              >
+                <span
+                  className="t-data shrink-0 pt-0.5 text-subtle"
+                  aria-hidden
+                >
+                  —
+                </span>
+                <span className="measure">
+                  <InlineCode text={item.text} />
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Section>
       </div>
     ),
   },
@@ -791,9 +1003,10 @@ const STEPS: (Step & { id: StepId })[] = [
         <Section eyebrow="Closing" title="Seven traps">
           <Prose>
             <p>
-              Each of these has a specific cost and a specific tell. They are
-              ordered by how expensive they are to discover late rather than by
-              how likely they are.
+              Each of these has a specific cost and a specific tell. The first
+              is the most expensive mistake on the page; the rest are in the
+              order the doc lists them, which is roughly the order you meet
+              them.
             </p>
           </Prose>
           <div className="mt-5 space-y-4">

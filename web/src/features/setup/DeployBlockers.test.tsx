@@ -8,11 +8,16 @@ import { BLOCKERS } from './blockers'
 // and throws on ambiguity. Each card is reached by the one thing that differs
 // between them — its symptom, which is also the radiogroup's accessible name.
 //
-// Matched on the symptom's first six words rather than the whole string. The
-// accessible name drops the doc's backticks, since a screen reader should not
-// hear them, and asserting the full name here would mean re-applying the
-// component's own transformation and checking it against itself. Six words is
-// unique across four blockers and contains no markup either way.
+// Matched on the symptom's first six words rather than the whole string.
+//
+// The reason written here first was that a full-name assertion would re-apply
+// the component's own transformation and check it against itself. A review
+// pointed out that is not true: the helper re-applies exactly that
+// transformation, just to a prefix, so truncating reduces circularity by zero
+// and only weakens what is asserted. The real reason is duller — testing
+// library's string `name` matcher is exact, and these names are long and
+// punctuated, so a regex is the practical way to reach them. Six words is
+// unique across four blockers.
 const cardFor = (symptom: string) =>
   screen.getByRole('radiogroup', {
     name: new RegExp(
@@ -115,9 +120,30 @@ test('scores across the whole set of four rather than per blocker', () => {
 // Symptoms and explanations are quoted from the doc and carry its inline code
 // markers — `pnpm install`, `.git`, `git cat-file -t <sha>`. Written before
 // `InlineCode` existed, this printed them as backticks.
-test('renders the data’s backticked spans as code rather than printing the backticks', () => {
+//
+// Named for the symptoms only, because that is all this renders: explanations
+// sit behind `{done && …}` and no answer has been given here. The explanation
+// path is covered by `seen()` in the two reveal tests above, which is where a
+// regression there would surface. The name said "the data's" and reached one
+// half of it.
+test('renders the symptoms’ backticked spans as code rather than printing the backticks', () => {
   const { container } = render(<DeployBlockers />)
 
   expect(container.textContent).not.toContain('`')
   expect(container.querySelectorAll('code').length).toBeGreaterThan(0)
+})
+
+// The other half, asserted where it is actually reachable.
+test('renders a revealed explanation’s backticked spans as code too', () => {
+  const { container } = render(<DeployBlockers />)
+  const b = BLOCKERS.find((x) => x.explanation.includes('`'))!
+
+  fireEvent.click(
+    within(cardFor(b.symptom)).getByRole('radio', { name: b.options[0].label }),
+  )
+
+  expect(container.textContent).not.toContain('`')
+  expect(
+    cardFor(b.symptom).parentElement?.querySelectorAll('code').length ?? 0,
+  ).toBeGreaterThan(0)
 })
