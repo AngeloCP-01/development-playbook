@@ -178,7 +178,21 @@ Expected: PASS, 3 tests.
 
 - [ ] **Step 5: Teeth-check**
 
-Delete `'traps'` from the tuple, re-run, confirm the length test fails and only it. Restore.
+Delete `'traps'` from the tuple, re-run, confirm the seam test fails. Restore.
+
+> **Corrected in execution, 2026-08-17.** This step read "confirm the *length* test fails and
+> only it", and that is wrong on both halves: `'traps'` is a firm id, so the firm-ids test
+> names it too and **two** tests fail. An implementer pasting "only the length test failed"
+> into a report would be recording something that did not happen.
+>
+> The tests it describes are also gone. A review ran two counter-examples against them —
+> renaming a provisional id, and swapping the first two — and **both passed three green
+> tests**, under a comment claiming an id "must never silently rename". The count-plus-firm-ids
+> pair asserted neither the identity of the provisional four nor any position. What replaced
+> them is an ordered `toEqual` over the whole tuple, expected to be edited once when a Wave 3
+> merge lands, plus an invariant that must not be: the eleven firm ids in relative order. Use
+> **three** mutations here — rename a provisional id (both fail), swap two ids (seam only), and
+> drop a provisional id as a merge would (seam only, invariant holds).
 
 - [ ] **Step 6: Close TD-36 for stages 01 and 02**
 
