@@ -10,7 +10,7 @@ them had been assigned to a panel by the plan's own line ranges.
 coverage review and its fix wave.
 
 **Current state:** doc **10 numbered sections + 5 closing sections / 711 lines**. App
-**15 steps**. 518 tests across 62 files; a 17-test audit suite over **63 derived URLs**.
+**15 steps**. 521 tests across 63 files; a 17-test audit suite over **63 derived URLs**.
 Lint, typecheck and `format:check` clean. Glossary unchanged — this stage invented no
 term, and every one it wraps already existed.
 
@@ -37,12 +37,12 @@ fresh build with `:3100` killed first (TD-27).
 |---|---|---|---|
 | `scaffold` | 2.99 | `deploy` | 2.94 |
 | `structure` | 1.81 | `verify` | 1.29 |
-| `format` | 2.67 | `proof` | 2.27 |
+| `format` | 2.67 | `proof` | 2.28 |
 | `strict` | 1.58 | `ai` | 1.28 |
 | `env` | 2.90 | `checklist` | 2.25 |
 | `client` | 2.50 | `traps` | 1.57 |
 | `hooks` | 2.83 | | |
-| `ci` | 2.35 | **median** | **2.27** |
+| `ci` | 2.35 | **median** | **2.28** |
 | `enforce` | 1.19 | **max** | **2.99** |
 
 `enforce` is the lightest panel in the app and below the 1.70 the spec recorded as minimal
@@ -65,8 +65,8 @@ about the pair and not a reason to pad the panel.
 | §5 Environment variables | `env`, `client` | Full across the pair. `env` and `envExample` artifacts plus a `Contrast` on the gate-not-wishlist judgment; `client` carries `ClientTrap`, the `testScript` artifact and the `--passWithNoTests` argument |
 | §6 Git hooks | `hooks` | Full. `lefthook` and `prepare` artifacts, the glob trap, the `\|\| true` explanation |
 | §7 CI, on day one | `ci`, `enforce` | Full across the pair. `ci` artifact and the secrets-the-build-needs point; `enforce` carries the job-id-not-workflow-name distinction, the GitHub Free limit, and enforcement-versus-verification as a two-row disclosure |
-| §8 Connect Vercel | `deploy`, `verify` | Full across the pair. The three dashboard settings, the Node.js Version exception, the environment-variable paragraph, `DeployBlockers`, the `catFile` artifact, and load-it-do-not-fetch-it |
-| §9 Error tracking | `proof` | Full. The auth-token gap **and its fix**, `.env.sentry-build-plugin` named, the `boomRoute` artifact, the TEMP commit label |
+| §8 Connect Vercel | `deploy`, `verify` | Full across the pair. The three dashboard settings and where to set the Git connection, the Node.js Version exception, the environment-variable paragraph, `DeployBlockers`, the `catFile` artifact, and load-it-do-not-fetch-it |
+| §9 Error tracking | `proof` | Full. The install command, the auth-token gap **and its fix**, `.env.sentry-build-plugin` named, the `boomRoute` artifact, the TEMP commit label |
 | §10 Write the README | `proof` | Full. The three sections, and the rollback commands as a three-row disclosure including the migration case |
 | AI in project setup | `ai` | Five plays via `AIPlays`, `AI_LIMIT` outside the rows. **Not ported:** the closing named-tools line |
 | Artifacts | `checklist` | Full, as an eight-item inventory beside the checklist |
@@ -81,6 +81,8 @@ about the pair and not a reason to pad the panel.
   `git remote add origin` and `git push -u origin main`. The `gh` path is shown; the
   manual one is a second route to the same state.
 - **§8's `/robots.txt` canonical-origin check.**
+- **§10's cross-reference to `10 — Documentation`.** The `proof` panel links 06, 11 and
+  13 and drops this one.
 - **The AI section's closing named-tools line** — context7, `claude-mem`,
   `verification-before-completion`.
 
@@ -88,9 +90,10 @@ about the pair and not a reason to pad the panel.
 
 ## What holds the port to the doc
 
-Seven data modules, each with a test that reads `docs/04-project-setup.md` at run time and
-derives its expected count from the file rather than from a number typed into a brief.
-That is the whole reason the wave was ordered data-first, and it earned itself twice:
+Eight data modules. **Seven** carry a test that reads `docs/04-project-setup.md` at run
+time and derives its expected count from the file rather than from a number typed into a
+brief. That is the whole reason the wave was ordered data-first, and it earned itself
+twice:
 
 - The plan's traps regex sliced from `DOC.indexOf('## Traps')`, which matches §7's *prose*
   about what to put in a README, and counted **nine** traps where the doc has **seven**.
@@ -100,6 +103,13 @@ That is the whole reason the wave was ordered data-first, and it earned itself t
 `artifacts.ts` holds **nineteen** config blocks character-for-character against the doc's
 fenced blocks — compared whole, not by containment (**D-66**), because `toContain` cannot
 see a truncated artifact and a review demonstrated that by deleting the line §5 exists for.
+
+**`blockers.ts` is the eighth and reads nothing**, which is worth stating rather than
+rounding to seven. Two of its symptoms are verbatim Vercel error strings quoted from §8's
+table, exactly the class the artifacts are held to character-for-character, and nothing
+would notice a typo in either. Its fourth symptom deliberately departs from the doc's
+wording, because §8's table cell names the cause inside the symptom and would hand the
+exercise its answer; that departure is unguarded too.
 
 `doc-source.ts` is the single reader. Its section slicing is anchored to a heading on its
 own line and bounded at the next heading of the same level or higher, never at `^#` — a

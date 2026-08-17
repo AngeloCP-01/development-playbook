@@ -445,7 +445,7 @@ step. Verified end-to-end in a live browser.
 **The port shipped fifteen steps, and the seam is the one that was measured.** All four
 provisional pairs from D-65 stayed split — combined they measure 4.80, 5.40, 3.54 and
 4.23 against a 3.2 ceiling — which makes this the first seam in the repo to survive
-measurement unchanged. Tests 382/41 → 518/62, audit 17/17, sweep 151/113 over 51 URLs.
+measurement unchanged. Tests 382/41 → 521/63, audit 17/17, sweep 157/119 over 51 URLs.
 Coverage map: `docs/stage-04-status.md`. Evidence and the full panel table: the W-3.4 row
 in `docs/tracker.md`.
 

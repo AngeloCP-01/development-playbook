@@ -100,13 +100,14 @@ Before doing anything, read these for context:
   moved to `src/components/`. **Use it for any new list-of-disclosures; do not hand-roll a
   twelfth.** Debt it opened: **TD-34** (`RevealList` hardcodes `<h3>` for row headings) and
   **TD-35** (the audit's console check cannot see a dev-only warning).
-- **Stage 04's port has not started.** `04-project-setup` is still `ready: false` and absent
-  from `STAGE_CONTENT`, and **W-3 is not advanced**. It is now the *only* piece of the stage
-  left — both things that used to sit in front of it have landed. What remains is in
-  `docs/task.md`'s **W-3.4** and `docs/tracker.md`'s **Next up**.
-- **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
+- **Stage 04's port is done and unmerged.** `04-project-setup` is `ready: true`, registered
+  in `STAGE_CONTENT`, and rendering fifteen steps. **W-3 is 4/18.** All four provisional
+  D-65 pairs stayed split, since combined they measure 4.80, 5.40, 3.54 and 4.23 against a
+  3.2 ceiling — **the first seam in this repo to survive measurement unchanged**. Panel
+  table and evidence: the W-3.4 row in `docs/tracker.md`.
+- **Stages 05–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **518 vitest tests across 62 files** in two projects — `unit`
+  eslint at `--max-warnings 0`, **521 vitest tests across 63 files** in two projects — `unit`
   (node, data invariants) and `dom` (jsdom, render tests, `*.test.tsx`) — a **17-test playwright
   audit suite over 63 derived URLs** (51 stage, 12 reference), lefthook hooks, and CI. Branch
   protection is on; the repo is public (D-26). Those figures are the branch's, not `develop`'s.
@@ -160,8 +161,8 @@ of *this* round is the whole-branch review and the merge decision, both of which
 user's to call — see `superpowers:finishing-a-development-branch`.
 
 **What the round produced, kept short because `docs/tracker.md`'s W-3.4 row is the record.**
-Fifteen steps, all under the 3.2 ceiling, median 2.27 and max 2.99. Tests 382/41 → 518/62.
-Audit 17/17 over 63 URLs. Sweep 151 expandables / 113 ids over 51 URLs. Six new decisions
+Fifteen steps, all under the 3.2 ceiling, median 2.28 and max 2.99. Tests 382/41 → 521/63.
+Audit 17/17 over 63 URLs. Sweep 157 expandables / 119 ids over 51 URLs. Six new decisions
 are **D-66** and **D-67**; **TD-36 closed**, **TD-39** and **TD-40** opened.
 
 **The thing worth carrying into the next stage, above everything else.** Five reviews ran

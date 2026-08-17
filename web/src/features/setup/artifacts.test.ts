@@ -17,7 +17,7 @@ const FENCES = fences()
 // ddl-sync extracts the block and compares it with `toBe`.
 //
 // So the block is matched whole. `id` rather than `$filename` in the title
-// because three of the nine are `package.json` fragments and a failing run that
+// because six of the nineteen are `package.json` fragments and a failing run that
 // names the same file three times says less than it could.
 test.each(Object.entries(ARTIFACTS))(
   '%s is one whole fenced block of the doc, not a slice of one',
@@ -26,7 +26,7 @@ test.each(Object.entries(ARTIFACTS))(
 
     // Array containment, so the comparison against each candidate is equality
     // rather than substring. Matching a fence by its opening line first was the
-    // obvious shape and it is wrong here — four of the nine open with `{`.
+    // obvious shape and it is wrong here — eight of the nineteen open with `{`.
     expect(FENCES, id).toContain(rendered)
   },
 )
@@ -45,9 +45,12 @@ test('lefthook.yml keeps the wide format glob, since the narrow one is the trap 
 
 // Added by the controller after the implementer flagged its absence, which is
 // the right way round. Every other test here iterates `Object.values`, so
-// deleting five of the nine keys left the suite green and simply ran fewer
-// cases — a suite that gets quieter as it loses coverage. Five steps render
-// these, and a missing key is a blank panel rather than a failure.
+// deleting keys left the suite green and simply ran fewer cases — a suite that
+// gets quieter as it loses coverage. Nine panels render one of these, and a
+// missing key is a blank panel rather than a failure.
+//
+// The list has grown 9 → 11 → 13 → 19 across this branch as coverage gaps were
+// found and closed. Each step was a deliberate edit here, which is the point.
 test('all nineteen artifacts are present, since a suite that iterates what exists cannot miss what does not', () => {
   expect(Object.keys(ARTIFACTS).sort()).toEqual([
     'boomRoute',

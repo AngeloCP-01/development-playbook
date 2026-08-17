@@ -14,20 +14,29 @@ export type Artifact = {
 }
 
 /**
- * The nine config blocks the five artifact steps render, line by line, from
- * `docs/04-project-setup.md` §3–§7.
- *
- * Nine, not every block in those sections. The doc also fences the
- * `format`/`format:check` scripts, `.prettierignore` and the `test` script,
- * and those are not carried because no panel renders them. `artifacts.test.ts`
- * pins the nine keys, so a tenth block appearing in the doc will not surface
- * here on its own — that is a curation, and this paragraph is where it is
- * recorded rather than left to read as exhaustive.
+ * The nineteen config blocks stage 04's panels render, line by line, from
+ * `docs/04-project-setup.md` §1 and §3–§9.
  *
  * Every `text` is copied out of the doc rather than retyped, and
- * `artifacts.test.ts` holds each block against the doc character-for-character.
- * The reader is meant to paste these, so a block that drifts is worse than a
- * diagram that drifts.
+ * `artifacts.test.ts` asserts each block **equals** one of the doc's fenced
+ * blocks rather than being contained by one (D-66) — a substring of a block is
+ * still contained, so containment cannot see an artifact that has lost its last
+ * line. The reader is meant to paste these, so a block that drifts is worse
+ * than a diagram that drifts.
+ *
+ * **This paragraph said nine until the whole-branch review, and it said the
+ * wrong thing in the most expensive direction.** It named the
+ * `format`/`format:check` scripts, `.prettierignore` and the `test` script as
+ * deliberately not carried "because no panel renders them" — and by then a
+ * coverage review had found the opposite, that the app was telling readers to
+ * run scripts it never showed them how to write, and all three had been added.
+ * A reader following the stale text would have deleted three of that fix as an
+ * uncurated mistake. The commit that made this header false is the same commit
+ * that wrote "nineteen now" into its own message.
+ *
+ * `artifacts.test.ts` pins the full key list, so a twentieth block appearing in
+ * the doc does not surface here on its own. That is still a curation; this is
+ * still where it is recorded.
  */
 export const ARTIFACTS: Record<string, Artifact> = {
   nvmrc: {

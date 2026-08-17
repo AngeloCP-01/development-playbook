@@ -38,6 +38,16 @@ function plain(text: string): string {
   return text.replace(/`/g, '')
 }
 
+/**
+ * A locked option keeps `text-subtle` and drops the `opacity-60` that stage 03's
+ * seven exercises pair with it. Composited over `bg-raised` that pairing measures
+ * 2.62:1 in light and 3.21:1 in dark on 13px text, against a 4.5:1 requirement —
+ * found by the whole-branch review, which measured the state the audit never
+ * visits because it only ever loads a panel's default. These options are content
+ * the reader is meant to re-read beside the verdict, not unavailable controls.
+ * Stage 04's other two exercises never adopted the opacity; this now matches them.
+ * The seven in stage 03 are recorded as TD-41 rather than changed from here.
+ */
 export function DeployBlockers() {
   const [choices, setChoices] = useState<Record<string, string>>({})
 
@@ -114,7 +124,7 @@ export function DeployBlockers() {
                         checked
                           ? 'border-brand bg-brand-tint text-fg'
                           : done
-                            ? 'cursor-not-allowed border-line bg-raised text-subtle opacity-60'
+                            ? 'cursor-not-allowed border-line bg-raised text-subtle'
                             : 'border-line bg-raised text-muted hover:border-line-strong',
                       ].join(' ')}
                     >

@@ -657,9 +657,10 @@ const STEPS: (Step & { id: StepId })[] = [
             <p>
               <code className="t-data break-words">vercel link</code> maps this
               directory to a Vercel project, and that is all it does. It does
-              not connect the project to the repository you pushed in §1 — the
-              Git connection is a separate setting, and it is the one that
-              builds every push and comments a{' '}
+              not connect the project to the repository you pushed in §1. The
+              Git connection is a separate setting, under{' '}
+              <strong className="text-fg">Settings → Git</strong>, and it is the
+              one that builds every push and comments a{' '}
               <Term id="preview-deployment">preview deployment</Term> URL on
               your pull requests.
             </p>
@@ -786,7 +787,11 @@ const STEPS: (Step & { id: StepId })[] = [
         <Section eyebrow="Deployment" title="Prove the alarm is wired">
           <Prose>
             <p>
-              The Sentry wizard gets you most of the way.{' '}
+              <code className="t-data break-words">
+                pnpm add @sentry/nextjs &amp;&amp; pnpm dlx
+                @sentry/wizard@latest -i nextjs
+              </code>{' '}
+              gets you most of the way.{' '}
               <strong className="text-fg">
                 The auth token is the half it cannot finish for you.
               </strong>{' '}
