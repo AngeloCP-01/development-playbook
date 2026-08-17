@@ -221,6 +221,40 @@ test goes red. Lint closes the remaining hole, failing the dead-but-declared map
 Any future map of the same shape, a size or a variant or a border colour, needs its own
 source test for the same reason.
 
+### `AnnotatedArtifact` — `src/features/setup/AnnotatedArtifact.tsx`
+
+One config file quoted verbatim and annotated line by line, rendered from
+`src/features/setup/artifacts.ts` (`{ id, filename, language, lines }`, each line
+`{ text, note?, pivot? }`). Five of stage 04's steps render one — `format`, `strict`,
+`env`, `hooks` and `ci` — which is why the artifact is a prop rather than picked inside
+the component. It is a server component; nothing in it is interactive.
+
+**Per-line elements with `t-data whitespace-pre`, not a `<pre>`, and that is a
+measurement rather than a preference.** A rendered line costs **20px** here
+(`text-[13px]`/`leading-5`, `sm:text-sm` holding the same 20px) against a `<pre>`'s
+**24px a line plus 24px of block padding** it does not give back. Five panels carry one
+of these, so the difference is whether they clear the round's 3.2-screen ceiling. The
+shape is `SchemaInspector`'s per-line render (`src/features/architecture/SchemaInspector.tsx:54`)
+minus its click-to-select detail panel.
+
+The note sits **beside** its line at `sm` and up and **below** it under that. That
+placement is what makes the horizontal scroller per line rather than one container
+around the whole block: the widest line in `artifacts.ts` is 92 characters, so a shared
+`min-w-max` block would push a right-hand note column past 700px and out of the 1024px
+panel the audit measures, leaving the reader to scroll sideways to reach the annotation
+that is the point. Each code cell therefore scrolls on its own and carries
+`tabIndex={0}` — the cost is one tab stop per line, paid so no note is ever off-screen.
+
+The **pivot** line (at most one per artifact) takes the `brand` accent, because a pivot
+is the line the step's judgment turns on: attention, not approval. Colour is not the only
+signal for it — the row also carries a `PIVOT` label its neighbours do not. No semantic
+colour applies to any line, since none of them is wrong.
+
+`data-artifact-line`, `data-artifact-note` and `data-artifact-pivot` exist for
+`AnnotatedArtifact.test.tsx`, which holds the rendered lines against
+`lines.map(l => l.text)` as a sequence. A line element must therefore contain its line
+text and nothing else — no line numbers, no note text inside it.
+
 ### `TeamNotes` — `src/components/TeamNotes.tsx`
 
 The collapsed "If you are not solo" disclosure, carrying a stage's team-scoped material
