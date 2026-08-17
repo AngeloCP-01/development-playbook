@@ -14,8 +14,9 @@ import { OpportunityTree } from './OpportunityTree'
 import { WorkedExample } from './WorkedExample'
 import { PipelineFit } from './PipelineFit'
 import { Worksheet } from './Worksheet'
+import { type StepId } from './steps'
 
-const STEPS: Step[] = [
+const STEPS: (Step & { id: StepId })[] = [
   {
     id: 'frame',
     label: 'Frame',
