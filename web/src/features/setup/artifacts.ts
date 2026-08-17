@@ -30,6 +30,44 @@ export type Artifact = {
  * diagram that drifts.
  */
 export const ARTIFACTS: Record<string, Artifact> = {
+  catFile: {
+    id: 'catFile',
+    filename: 'Terminal',
+    language: 'bash',
+    lines: [
+      {
+        text: 'git cat-file -t <sha>      # a commit you can see  \u2192 "commit"',
+        note: 'Take the SHA off the deployment and ask your own repository about it. A deployment list tells you a build succeeded; it does not tell you which repository it succeeded on.',
+        pivot: true,
+      },
+      {
+        text: '                           # anything else         \u2192 "Not a valid object name", which is',
+      },
+      {
+        text: '                           #                         the answer 79ef7a7 gave in the',
+      },
+      {
+        text: '                           #                         incident deploying-101.md records',
+      },
+    ],
+  },
+  boomRoute: {
+    id: 'boomRoute',
+    filename: 'src/app/api/debug/boom/route.ts',
+    language: 'ts',
+    lines: [
+      {
+        text: '// src/app/api/debug/boom/route.ts \u2014 temporary, delete after',
+      },
+      {
+        text: 'export function GET() {',
+        note: 'Push it on a branch, open it on the preview URL, then read the issue in Sentry. The frame should name `route.ts` and the line you wrote; a hashed chunk under `.next/` means the upload did not happen.',
+        pivot: true,
+      },
+      { text: "  throw new Error('Sentry smoke test')" },
+      { text: '}' },
+    ],
+  },
   scaffoldCmd: {
     id: 'scaffoldCmd',
     filename: 'Terminal',

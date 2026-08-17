@@ -1,21 +1,27 @@
+import Link from 'next/link'
 import { Stepper, type Step } from '@/components/Stepper'
 import { Callout, Contrast, Prose, Section } from '@/components/ui'
 import { Figure } from '@/components/Figure'
 import { References } from '@/components/References'
+import { InlineCode } from '@/components/InlineCode'
+import { AIPlays } from './AIPlays'
 import { AnnotatedArtifact } from './AnnotatedArtifact'
+import { DeployBlockers } from './DeployBlockers'
+import { SetupChecklist } from './SetupChecklist'
 import { ClientTrap } from './ClientTrap'
 import { PinExercise } from './PinExercise'
 import { TreeInspector } from './TreeInspector'
 import { ARTIFACTS } from './artifacts'
+import { TRAPS } from './traps'
 import { type StepId } from './steps'
 
 /**
  * Stage 04's fifteen panels.
  *
- * Steps 1–8 carry their content; 9–15 are still the Wave 0 skeleton until
- * Task 13. The stage went `ready: true` before any of it existed, deliberately:
- * the exit condition of every content task is a panel measurement at 1024×768,
- * and there is nothing to measure until the route renders.
+ * All fifteen carry their content. The stage went `ready: true` before any of
+ * it existed, deliberately: the exit condition of every content task is a panel
+ * measurement at 1024×768, and there is nothing to measure until the route
+ * renders.
  *
  * Four of the fifteen are provisional — `structure`, `client`, `enforce` and
  * `verify` — and merge into the step above them if the combined panel measures
@@ -447,7 +453,38 @@ const STEPS: (Step & { id: StepId })[] = [
       <div className="space-y-16">
         <Section eyebrow="Enforcement" title="The pipeline, cheapest first">
           <Prose>
-            <p>Content lands in Task 13.</p>
+            <p>
+              Full detail is{' '}
+              <Link href="/stages/11-ci-cd" className="text-brand">
+                11 — CI/CD
+              </Link>
+              . The minimum, right now: one job, six steps, ordered so the
+              cheapest check fails first.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <AnnotatedArtifact artifact={ARTIFACTS.ci} />
+          </div>
+        </Section>
+
+        <Section
+          eyebrow="The step nothing instructs"
+          title="The build runs your own modules"
+        >
+          <Prose>
+            <p>
+              The moment anything imports{' '}
+              <code className="t-data break-words">env</code>, this workflow
+              needs a value for every key §5&rsquo;s schema marks required. Add
+              them as repository secrets under{' '}
+              <strong className="text-fg">
+                Settings → Secrets and variables → Actions
+              </strong>{' '}
+              and pass them to the build step&rsquo;s{' '}
+              <code className="t-data break-words">env:</code>. Until that first
+              import the workflow is green whether or not you did, so the gate
+              breaks on a commit that has nothing to do with it.
+            </p>
           </Prose>
         </Section>
       </div>
@@ -459,9 +496,50 @@ const STEPS: (Step & { id: StepId })[] = [
     hint: 'Enforcement is not verification',
     content: (
       <div className="space-y-16">
-        <Section eyebrow="Enforcement" title="A green check is not a guarantee">
+        <Section eyebrow="Enforcement" title="Which name to require">
           <Prose>
-            <p>Content lands in Task 13.</p>
+            <p>
+              Enable branch protection on{' '}
+              <code className="t-data break-words">main</code> requiring this
+              check. The name to require is{' '}
+              <strong className="text-fg">
+                <code className="t-data break-words">verify</code>
+              </strong>
+              , the job id — GitHub reports a check under the job&rsquo;s own{' '}
+              <code className="t-data break-words">name:</code> when it has one
+              and under the job id otherwise. The{' '}
+              <code className="t-data break-words">name: CI</code> on the first
+              line names the <em>workflow</em>, not the check, and it is the one
+              most people reach for.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <Callout
+              kind="warn"
+              title="On GitHub Free, protection is only enforced on public repos"
+            >
+              <p>
+                On a private one it saves and silently never fires — an
+                unenforced gate is decoration. Confirm your plan enforces it.
+                This is the second time §1&rsquo;s private-or-public choice
+                decides something other than privacy.
+              </p>
+            </Callout>
+          </div>
+        </Section>
+
+        <Section
+          eyebrow="The distinction"
+          title="Enforcement is not verification"
+        >
+          <Prose>
+            <p>
+              Stopping at the first is the common mistake. Branch protection
+              proves the gate is <em>attached</em>. It proves nothing about
+              whether the gate <em>can fail</em>, which is a separate check with
+              its own method: push a broken commit once and watch it go red. Do
+              that while the only thing that can break is a scaffold.
+            </p>
           </Prose>
         </Section>
       </div>
@@ -473,10 +551,56 @@ const STEPS: (Step & { id: StepId })[] = [
     hint: 'Which failures your repository cannot express',
     content: (
       <div className="space-y-16">
-        <Section eyebrow="Deployment" title="Four ways the first deploy fails">
+        <Section
+          eyebrow="Deployment"
+          title="Three settings your repository cannot hold"
+        >
           <Prose>
-            <p>Content lands in Task 13.</p>
+            <p>
+              <code className="t-data break-words">vercel link</code> maps this
+              directory to a Vercel project, and that is all it does. It does
+              not connect the project to the repository you pushed in §1 — the
+              Git connection is a separate setting, and it is the one that
+              builds every push and comments a preview URL on your pull
+              requests.
+            </p>
+            <p>
+              Everything else in this stage is a file you commit and can diff.
+              These live in a dashboard, and the only signal that one is wrong
+              is the error it produces, where there is one.
+            </p>
           </Prose>
+          <div className="mt-5">
+            <Callout kind="info" title="Node.js Version is the exception">
+              <p>
+                It is a fourth field in the same dashboard and the only one your
+                repository can reach:{' '}
+                <code className="t-data break-words">engines.node</code>{' '}
+                overrides whatever the dashboard holds, so you set it in{' '}
+                <code className="t-data break-words">package.json</code> and
+                leave the dashboard alone. Pinned in neither place there is no
+                error to read at all — the build succeeds on Vercel&rsquo;s
+                default major, which is not necessarily yours.
+              </p>
+            </Callout>
+          </div>
+        </Section>
+
+        <Section
+          eyebrow="The exercise"
+          title="Four failures, and one of them is a success"
+        >
+          <Prose>
+            <p>
+              All four blocked this playbook&rsquo;s own first deploy. Read the
+              symptom and commit to a cause before the verdict shows. One of the
+              four presents as three green production builds, which is the case
+              you cannot reason your way to.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <DeployBlockers />
+          </div>
         </Section>
       </div>
     ),
@@ -487,9 +611,43 @@ const STEPS: (Step & { id: StepId })[] = [
     hint: 'Check what it built, not whether it built',
     content: (
       <div className="space-y-16">
-        <Section eyebrow="Deployment" title="Check the SHA, not the status">
+        <Section
+          eyebrow="Deployment"
+          title="Check what it built, not whether it built"
+        >
           <Prose>
-            <p>Content lands in Task 13.</p>
+            <p>
+              A deployment list tells you a build succeeded. It does not tell
+              you which repository it succeeded on, and a green build of the
+              wrong repo is indistinguishable from a green build of yours at a
+              glance.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <AnnotatedArtifact artifact={ARTIFACTS.catFile} />
+          </div>
+        </Section>
+
+        <Section eyebrow="Then" title="Load the URL, do not just fetch it">
+          <Prose>
+            <p>
+              Push a branch and open a pull request. You should get a preview
+              URL — and if none appears at all, the Git connection is the first
+              thing to look at, not the build.
+            </p>
+            <p>
+              A green checkmark is not the check. Fetch one real page and
+              confirm it renders, then open it in a browser{' '}
+              <strong className="text-fg">with the console visible</strong>. A
+              fetch returns the server&rsquo;s HTML, which stays correct even
+              when the page dies on hydration — the failure the <em>Client</em>{' '}
+              step describes, and the reason fetching alone cannot find it.
+            </p>
+            <p>
+              Verify all of this before writing any features. A broken deploy
+              pipeline is far easier to debug against a scaffold than against a
+              half-built app.
+            </p>
           </Prose>
         </Section>
       </div>
@@ -503,7 +661,68 @@ const STEPS: (Step & { id: StepId })[] = [
       <div className="space-y-16">
         <Section eyebrow="Deployment" title="Prove the alarm is wired">
           <Prose>
-            <p>Content lands in Task 13.</p>
+            <p>
+              The Sentry wizard gets you most of the way.{' '}
+              <strong className="text-fg">
+                The auth token is the half it cannot finish for you.
+              </strong>{' '}
+              Source maps are uploaded during the build, from{' '}
+              <code className="t-data break-words">SENTRY_AUTH_TOKEN</code> in
+              the <em>build&rsquo;s</em> environment, falling back to a file the
+              wizard writes locally and which must stay uncommitted. So the one
+              environment that builds what your users run has no token.
+            </p>
+            <p>
+              Get this wrong and nothing goes red. The plugin logs{' '}
+              <code className="t-data break-words">
+                No auth token provided. Will not upload source maps.
+              </code>{' '}
+              and the build succeeds — exactly like a green build of the wrong
+              repository — and you find out months later reading a minified
+              stack trace at 2am.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <AnnotatedArtifact artifact={ARTIFACTS.boomRoute} />
+          </div>
+          <div className="mt-5">
+            <Callout
+              kind="warn"
+              title="Label the commit so it cannot become permanent"
+            >
+              <p>
+                <code className="t-data break-words">
+                  chore(TEMP): route that throws, to verify Sentry source maps
+                  (revert after)
+                </code>
+              </p>
+            </Callout>
+          </div>
+        </Section>
+
+        <Section eyebrow="Ten minutes" title="Write the README before the code">
+          <Prose>
+            <p>
+              Three sections: <strong className="text-fg">what this is</strong>,
+              understandable by future you at 2am;{' '}
+              <strong className="text-fg">running locally</strong>, clone
+              through dev command; and{' '}
+              <strong className="text-fg">deploying</strong>, how it reaches
+              production and how to roll back.
+            </p>
+            <p>
+              That last line matters more than it looks. Rolling back is the
+              half this stage has not handed you, and a README is the wrong
+              place to discover you do not know it. On Vercel it is{' '}
+              <code className="t-data break-words">vercel rollback</code>, which
+              returns production to the previous deployment — and on the Hobby
+              plan that is the only one it will go back to. To reach an older
+              one, <code className="t-data break-words">vercel ls</code> and{' '}
+              <code className="t-data break-words">
+                vercel promote &lt;url&gt;
+              </code>
+              . Put the command in the README, not a description of it.
+            </p>
           </Prose>
         </Section>
       </div>
@@ -520,8 +739,18 @@ const STEPS: (Step & { id: StepId })[] = [
           title="Where an agent reaches, and where it cannot"
         >
           <Prose>
-            <p>Content lands in Task 13.</p>
+            <p>
+              Setup is the stage where an agent is most useful and most
+              confidently wrong, and the split is clean: it is good at files you
+              commit and blind to everything else. Every config here is text it
+              can write, read back, and check. The settings that most often
+              break a first deploy are not text, are not in your repository, and
+              nothing you run locally can see them.
+            </p>
           </Prose>
+          <div className="mt-5">
+            <AIPlays />
+          </div>
         </Section>
       </div>
     ),
@@ -534,8 +763,15 @@ const STEPS: (Step & { id: StepId })[] = [
       <div className="space-y-16">
         <Section eyebrow="Closing" title="What you should have, and when">
           <Prose>
-            <p>Content lands in Task 13.</p>
+            <p>
+              Tick these against your own project. Every one is checkable —
+              there is no &ldquo;setup feels solid&rdquo; item, because that is
+              the kind of judgment this stage exists to replace.
+            </p>
           </Prose>
+          <div className="mt-5">
+            <SetupChecklist />
+          </div>
         </Section>
       </div>
     ),
@@ -548,8 +784,21 @@ const STEPS: (Step & { id: StepId })[] = [
       <div className="space-y-16">
         <Section eyebrow="Closing" title="Seven traps">
           <Prose>
-            <p>Content lands in Task 13.</p>
+            <p>
+              Each of these has a specific cost and a specific tell. They are
+              ordered by how expensive they are to discover late rather than by
+              how likely they are.
+            </p>
           </Prose>
+          <div className="mt-5 space-y-4">
+            {TRAPS.map((trap) => (
+              <Callout key={trap.id} kind="trap" title={trap.title}>
+                <p>
+                  <InlineCode text={trap.body} />
+                </p>
+              </Callout>
+            ))}
+          </div>
         </Section>
       </div>
     ),
