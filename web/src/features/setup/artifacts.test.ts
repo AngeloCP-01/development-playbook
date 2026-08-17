@@ -48,7 +48,7 @@ test('lefthook.yml keeps the wide format glob, since the narrow one is the trap 
 // deleting five of the nine keys left the suite green and simply ran fewer
 // cases — a suite that gets quieter as it loses coverage. Five steps render
 // these, and a missing key is a blank panel rather than a failure.
-test('all nine artifacts are present, since a suite that iterates what exists cannot miss what does not', () => {
+test('all eleven artifacts are present, since a suite that iterates what exists cannot miss what does not', () => {
   expect(Object.keys(ARTIFACTS).sort()).toEqual([
     'ci',
     'env',
@@ -57,6 +57,8 @@ test('all nine artifacts are present, since a suite that iterates what exists ca
     'lint',
     'prepare',
     'prettierrc',
+    'repoCmd',
+    'scaffoldCmd',
     'tsconfig',
     'typecheck',
   ])

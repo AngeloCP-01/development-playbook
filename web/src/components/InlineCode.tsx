@@ -34,7 +34,7 @@ export function InlineCode({ text }: { text: string }) {
     <>
       {parts.map((part, i) =>
         i % 2 === 1 ? (
-          <code key={i} className="t-data">
+          <code key={i} className="t-data break-words">
             {part}
           </code>
         ) : (

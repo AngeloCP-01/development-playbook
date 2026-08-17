@@ -35,3 +35,15 @@ test('marks the pivot line distinctly from the lines around it', () => {
   const { container } = render(<AnnotatedArtifact artifact={ARTIFACTS.lint} />)
   expect(container.querySelectorAll('[data-artifact-pivot]')).toHaveLength(1)
 })
+
+// Notes are prose copied from the doc, so they carry the doc's inline code
+// markers. This component predates `InlineCode` by two commits and printed the
+// backticks literally — eleven of them on the scaffold panel alone, found by
+// grepping the built page rather than by reading the component.
+test('renders a note’s backticked spans as code rather than printing the backticks', () => {
+  const { container } = render(<AnnotatedArtifact artifact={ARTIFACTS.lint} />)
+  const note = container.querySelector('[data-artifact-note]')
+
+  expect(note?.textContent).not.toContain('`')
+  expect(note?.querySelectorAll('code').length).toBeGreaterThan(0)
+})

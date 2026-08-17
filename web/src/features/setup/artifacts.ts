@@ -30,6 +30,39 @@ export type Artifact = {
  * diagram that drifts.
  */
 export const ARTIFACTS: Record<string, Artifact> = {
+  scaffoldCmd: {
+    id: 'scaffoldCmd',
+    filename: 'Terminal',
+    language: 'bash',
+    lines: [
+      {
+        text: 'pnpm create next-app@latest my-app \\',
+        note: 'One command produces the app. Every flag after it is a decision you would otherwise make later and retrofit.',
+      },
+      {
+        text: '  --typescript --app --tailwind --eslint --src-dir --use-pnpm',
+        note: '`--src-dir` keeps application code in `src/` and leaves the root for configuration — worth it once the root accumulates a dozen config files.',
+        pivot: true,
+      },
+      { text: 'cd my-app' },
+    ],
+  },
+  repoCmd: {
+    id: 'repoCmd',
+    filename: 'Terminal',
+    language: 'bash',
+    lines: [
+      {
+        text: 'git add -A && git commit -m "chore: pin node and pnpm"',
+        note: 'The scaffold already made a commit, and it predates every pin you just wrote. Skip this and the repository you create holds the scaffold and none of them.',
+        pivot: true,
+      },
+      {
+        text: 'gh repo create my-app --private --source=. --remote=origin --push',
+        note: 'Private or public decides more than privacy: on GitHub Free, branch protection is only enforced on public repositories. §7 is where that bites.',
+      },
+    ],
+  },
   prettierrc: {
     id: 'prettierrc',
     filename: '.prettierrc',

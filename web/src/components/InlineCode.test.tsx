@@ -48,3 +48,14 @@ test('gives every code span the t-data type role, not a Tailwind font size', () 
   const { container } = render(<InlineCode text="the `engines.node` field" />)
   expect(container.querySelector('code')?.className).toContain('t-data')
 })
+
+// A long identifier is one word to the line-breaker, and this stage is made of
+// them. `process.env.NEXT_PUBLIC_APP_URL` measured 321px inside a 320px
+// viewport and pushed the document 25px sideways — caught by the audit's
+// overflow sweep, which is the check that exists for exactly this.
+test('lets a long identifier break, since one unbreakable token scrolls the page sideways', () => {
+  const { container } = render(
+    <InlineCode text="read `process.env.NEXT_PUBLIC_APP_URL` directly" />,
+  )
+  expect(container.querySelector('code')?.className).toContain('break-words')
+})

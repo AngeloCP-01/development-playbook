@@ -1,4 +1,5 @@
 import { Card } from '@/components/ui'
+import { InlineCode } from '@/components/InlineCode'
 import { type Artifact, type ArtifactLine } from './artifacts'
 
 /**
@@ -63,7 +64,7 @@ function ArtifactRow({ line }: { line: ArtifactLine }) {
           {pivot ? (
             <span className="t-label mr-2 text-brand">Pivot</span>
           ) : null}
-          {line.note}
+          <InlineCode text={line.note} />
         </p>
       ) : null}
     </div>

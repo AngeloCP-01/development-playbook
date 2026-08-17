@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Check, RotateCcw, X } from 'lucide-react'
 import { Callout, Card } from '@/components/ui'
+import { InlineCode } from '@/components/InlineCode'
 import { BLOCKERS } from './blockers'
 
 /**
@@ -25,6 +26,17 @@ import { BLOCKERS } from './blockers'
  * list. The score is over the whole set: a reader who arrives at `wrong-repo`
  * by elimination still had to commit to the other three first.
  */
+
+/**
+ * The same string with its code markers removed, for an `aria-label`.
+ *
+ * `InlineCode` handles what is seen; an accessible name is a plain string and
+ * cannot hold elements, so a symptom used as a radiogroup's label would
+ * otherwise be announced with its backticks read out.
+ */
+function plain(text: string): string {
+  return text.replace(/`/g, '')
+}
 
 export function DeployBlockers() {
   const [choices, setChoices] = useState<Record<string, string>>({})
@@ -79,12 +91,12 @@ export function DeployBlockers() {
           return (
             <li key={b.id} className="border border-line bg-sunken p-4">
               <p className="mb-3 min-w-0 break-words text-[15px] font-medium leading-6 text-fg">
-                {b.symptom}
+                <InlineCode text={b.symptom} />
               </p>
 
               <div
                 role="radiogroup"
-                aria-label={b.symptom}
+                aria-label={plain(b.symptom)}
                 className="grid grid-cols-1 gap-2 sm:grid-cols-2"
               >
                 {b.options.map((opt) => {
@@ -134,7 +146,7 @@ export function DeployBlockers() {
                       )}
                     </p>
                     <p className="measure text-sm leading-6 text-muted">
-                      {b.explanation}
+                      <InlineCode text={b.explanation} />
                     </p>
                   </div>
                 )}

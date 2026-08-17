@@ -7,14 +7,40 @@ import { BLOCKERS } from './blockers'
 // array), so an unscoped `getByRole('radio', { name })` matches four elements
 // and throws on ambiguity. Each card is reached by the one thing that differs
 // between them — its symptom, which is also the radiogroup's accessible name.
+//
+// Matched on the symptom's first six words rather than the whole string. The
+// accessible name drops the doc's backticks, since a screen reader should not
+// hear them, and asserting the full name here would mean re-applying the
+// component's own transformation and checking it against itself. Six words is
+// unique across four blockers and contains no markup either way.
 const cardFor = (symptom: string) =>
-  screen.getByRole('radiogroup', { name: symptom })
+  screen.getByRole('radiogroup', {
+    name: new RegExp(
+      symptom
+        .replace(/`/g, '')
+        .split(' ')
+        .slice(0, 6)
+        .join(' ')
+        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+    ),
+  })
+
+// `InlineCode` splits a string across a <p> and its <code> children, so
+// `getByText(wholeString)` finds nothing — the text is real on the page and no
+// single node holds it. These match on the element's own textContent with the
+// backticks removed, which is what a reader actually sees.
+const seen = (text: string) => {
+  const want = text.replace(/`/g, '')
+  return (_content: string, el: Element | null) =>
+    el?.textContent?.trim() === want &&
+    !Array.from(el.children).some((c) => c.textContent?.trim() === want)
+}
 
 test('renders one card per blocker, derived from the data rather than hardcoded', () => {
   render(<DeployBlockers />)
   expect(screen.getAllByRole('radiogroup')).toHaveLength(BLOCKERS.length)
   for (const b of BLOCKERS) {
-    expect(screen.getByText(b.symptom)).toBeDefined()
+    expect(screen.getByText(seen(b.symptom))).toBeDefined()
   }
 })
 
@@ -23,7 +49,7 @@ test('renders one card per blocker, derived from the data rather than hardcoded'
 test('hides every verdict until that blocker has been answered', () => {
   render(<DeployBlockers />)
   for (const b of BLOCKERS) {
-    expect(screen.queryByText(b.explanation)).toBeNull()
+    expect(screen.queryByText(seen(b.explanation))).toBeNull()
   }
 })
 
@@ -35,8 +61,8 @@ test('reveals only the answered blocker’s verdict, not the whole set', () => {
       name: first.options[0].label,
     }),
   )
-  expect(screen.getByText(first.explanation)).toBeDefined()
-  expect(screen.queryByText(BLOCKERS[1].explanation)).toBeNull()
+  expect(screen.getByText(seen(first.explanation))).toBeDefined()
+  expect(screen.queryByText(seen(BLOCKERS[1].explanation))).toBeNull()
 })
 
 test('a locked answer cannot be changed, since scoring a second guess scores hindsight', () => {
@@ -84,4 +110,14 @@ test('scores across the whole set of four rather than per blocker', () => {
   const wrong = BLOCKERS[1].options.find((o) => o.id !== BLOCKERS[1].answer)!
   answer(BLOCKERS[1], wrong.id)
   expect(screen.getByText('1/2 right')).toBeDefined()
+})
+
+// Symptoms and explanations are quoted from the doc and carry its inline code
+// markers — `pnpm install`, `.git`, `git cat-file -t <sha>`. Written before
+// `InlineCode` existed, this printed them as backticks.
+test('renders the data’s backticked spans as code rather than printing the backticks', () => {
+  const { container } = render(<DeployBlockers />)
+
+  expect(container.textContent).not.toContain('`')
+  expect(container.querySelectorAll('code').length).toBeGreaterThan(0)
 })
