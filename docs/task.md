@@ -552,10 +552,11 @@ handing the corrected doc to a cold reader with a task to finish.
 **The doc has been corrected.** `docs/05-development.md` is now **587 lines** across
 **six** `##` sections and **twelve** `###` ones (`### Authorize reads, not just writes`,
 `### Loading and error states` and `### AI in development` are the three new ones). Twelve
-tasks plus a five-item fix wave closed nineteen of the twenty defects the pre-round
-verification found, and a whole-branch review then closed the twentieth along with four
-blocking findings of its own. `05-development` stays `ready: false` and absent from
-`STAGE_CONTENT` on purpose — the port is a separate round — so W-3 stays at **4/18**.
+tasks closed nineteen of the twenty defects the pre-round verification found; the fix
+wave (Task 11, five commits) closed the twentieth. A whole-branch review then found and
+closed four blocking findings of its own, on top of the twenty. `05-development` stays
+`ready: false` and absent from `STAGE_CONTENT` on purpose — the port is a separate
+round — so W-3 stays at **4/18**.
 
 **D-54** put the cold-reader pass before the port, and it found twenty defects. Three
 instruments ran, two dispatched read-only and blind to each other, and **three defects were

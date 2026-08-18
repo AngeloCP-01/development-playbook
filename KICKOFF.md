@@ -165,8 +165,9 @@ Before doing anything, read these for context:
   since stage 03 — the stage 04 doc correction, `RevealList`, TD-12, the two W-6
   reference-hub merges, the stage 04 port and its two debt branches — so a branch cut from
   `main` builds against a tree many rounds behind. **One branch is in flight**:
-  `fix/stage-05-doc-corrections`, complete and awaiting merge — 27 commits off `develop`,
-  full gate green, whole-branch review clean after four blocking fixes. **Not merged, not
+  `fix/stage-05-doc-corrections`, complete and awaiting merge — 28 commits off `develop`
+  (this file's own commit not among them), full gate green, whole-branch review clean
+  after four blocking fixes. **Not merged, not
   pushed.** `docs/05-development.md` is corrected; the port is not started and is a separate
   round (**W-3.5b**), which should wait until this branch is in `develop`.
 
@@ -191,9 +192,10 @@ Before doing anything, read these for context:
 
 **The doc round (W-3.5) is done. The next round is W-3.5b, the port, and it has not begun.**
 
-**First, a merge decision that is not this session's to make alone.** `fix/stage-05-doc-corrections`
-carries 27 commits, full gate green (`pnpm lint`, `typecheck`, `test`, `build`), and a
-whole-branch review that returned *Ready with fixes* and is now satisfied. **Ask the user
+**First, a merge decision that is not this session's to make alone.**
+`fix/stage-05-doc-corrections` carries 28 commits (this file's own commit not among
+them), full gate green (`pnpm lint`, `typecheck`, `test`, `build`), and a whole-branch
+review that returned *Ready with fixes* and is now satisfied. **Ask the user
 before merging it to `develop`** — per `CLAUDE.md`, a plan being approved is not approval to
 merge the branch that came out of it. The port should be built against `docs/05-development.md`
 as it stands on `develop` after that merge, not against the feature branch.
@@ -275,10 +277,10 @@ zero looked conclusive and was indistinguishable from a mechanism that always an
 the round found one entry over-claiming it as a source for material it does not contain. Read
 it for the incident, not as a specification.
 
-**What the doc phase cost, as calibration for the port:** 27 commits, three verification
-instruments (two runs each), twelve tasks plus a five-item fix wave, and a whole-branch
-review that returned four blocking findings after every task had already been reviewed
-clean. The doc is a third of stage 03's length. Expect the port to be smaller than stage
+**What the doc phase cost, as calibration for the port:** 28 commits (this file's own
+commit not among them), three verification instruments (two runs each), twelve tasks
+plus a five-item fix wave, and a whole-branch review that returned four blocking
+findings after every task had already been reviewed clean. The doc is a third of stage 03's length. Expect the port to be smaller than stage
 03's 106 commits, and expect the review to find something, because it has every time.
 
 **The method that keeps paying, stated as a method rather than a war story.** A recorded piece
