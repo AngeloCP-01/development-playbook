@@ -400,6 +400,29 @@ pnpm vitest --watch         # tests re-running as you type
 Vitest in watch mode in a spare terminal is the highest-leverage habit on this page. The
 gap between writing a bug and seeing it fail shrinks to seconds.
 
+### AI in development
+
+This is the stage where AI is most useful and most expensive to trust, because the loop is
+fast enough that a wrong suggestion costs you the same thirty seconds as a right one and
+you stop checking.
+
+**Where it earns its place.** Writing the test first from a description of the behaviour.
+Filling in a Zod schema from a sample payload. Translating a query you can already describe
+in words. Explaining an error you have not seen before. Producing the fourth variation of
+something you have already written three times.
+
+**Where it does not.** Anything where being subtly wrong looks identical to being right:
+an authorization predicate, a migration's backfill, a cache key, a regular expression over
+data you have not sampled. The failure mode is not a syntax error, it is a plausible answer.
+
+**The rule that makes it safe here is the one already on this page.** Small slices and a
+test that failed first mean a wrong suggestion is caught in seconds by something other than
+your reading of it. Reviewing generated code you did not ask to be tested is how the same
+thirty seconds becomes an afternoon.
+
+Ask it to explain code it wrote before you keep the code. If the explanation is vague, the
+code is usually wrong, and that check costs less than the debugging does.
+
 ---
 
 ## Artifacts
