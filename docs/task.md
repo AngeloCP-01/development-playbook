@@ -408,7 +408,7 @@ plan"; architecture's, testing's and so on will each have their own). Status:
 | 01 Product Discovery | ☑ | ☑ | Doc `### AI in discovery` backfilled; TD-15 closed |
 | 02 Product Planning | ☑ | ☑ | Done: 7th step + `### AI in planning` |
 | 03 Architecture | ☑ | ☑ | `### AI in architecture`, its own step — the 21st of 22 after the D-52 reshape, and the 6th when it was written. The doc had **no** AI section — the round had to write one before it could mirror it, which is why `stage-metadata.test.ts` now fails any stage whose doc lacks the heading |
-| 04 Project Setup | ☑ | ☐ | `### AI in project setup` was written test-first during the doc-correction round: `stage-metadata.test.ts` failed with `04-project-setup has no "### AI in ..." subsection` before the section existed, and the teeth check renamed the heading to `### AI for project setup` to confirm the assertion could still fail. The app step arrives with the port |
+| 04 Project Setup | ☑ | ☑ | `### AI in project setup` was written test-first during the doc-correction round: `stage-metadata.test.ts` failed with `04-project-setup has no "### AI in ..." subsection` before the section existed, and the teeth check renamed the heading to `### AI for project setup` to confirm the assertion could still fail. The app step arrives with the port |
 | 05–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
 
 Suggested order. Revised 2026-07-24 (D-27): the first pass ranked purely by teaching
@@ -423,9 +423,10 @@ pattern library on the hardest stage.
 | ~~4~~ ✓ | — | **W-3.2 + W-3.3 merged** to `main` as `790b3e4` (`--no-ff`, 106 commits, branch deleted). Gate re-run on the merged result: 313/313, 14/14 audit, lint, typecheck and format clean. **Not pushed** — the user handles that. |
 | ~~5~~ ✓ | — | **W-5 complete** — live at https://acp-dev-playbook.vercel.app, verified by `pnpm test:prod`. Every `W-` milestone except W-3 is now closed. |
 | **6 ☑** | **04 Project Setup** | **Decided 2026-08-11**, against this table's earlier answer of 15. Reading 04 to compare the two found its Vercel section factually wrong — it says to match the Node version to `.nvmrc`, which Vercel does not read — and silent on the three things that broke this project's own first deploy (**TD-28**). So the round is *fix a doc that misleads* rather than *port a doc that is fine*, and it is the one stage checkable against this repository. **Scoped as a doc-correction phase before the port.** 15's case is recorded in `docs/tracker.md`'s Next up; it lost on having nothing to ground it against. **Doc phase complete 2026-08-13** on `fix/stage-04-doc-corrections`, unmerged: 323 → 711 lines at `38765e7`, TD-28 closed, **31 defects against the four TD-28 named**. **`RevealList` done 2026-08-14**, merged to `develop` as `e29f3fe`: eleven stage-03 accordions collapsed onto one component, not the five the plan scoped. **TD-12 closed the same day** on `fix/derive-audit-pages`, also merged — the audit's page list derives from the ready set, so the port will not be adding hashes by hand. **Port done 2026-08-17** and merged to `develop` as `bb3c119`: fifteen steps, all under the 3.2 ceiling, W-3 to 4/18. See W-3.4. |
-| 7 | 16 Incident Management | Procedural, so a stepper fits naturally |
-| 7 | 13 Production Deployment | Expand/migrate/contract needs a visual |
-| — | remainder | 05–12, 14, 17, 18 |
+| **7 (next)** | **05 Development** | **Decided 2026-08-18**, against this table's own answer of 16 or 13. Those two were ranked on how well a stepper fits their shape; 05 is chosen on sequence instead. It is the stage a reader reaches immediately after 04 — setup ends with a repository that builds and deploys, and 05 is the loop they then run dozens of times a day — so shipping them adjacent means the first two interactive stages past discovery and planning read as continuous. 16 and 13 keep their case and their priority; they are now 8. |
+| 8 | 16 Incident Management | Procedural, so a stepper fits naturally |
+| 8 | 13 Production Deployment | Expand/migrate/contract needs a visual |
+| — | remainder | 06–12, 14, 17, 18 |
 
 **~~Settle before stage 03:~~ ✓ resolved 2026-07-27 (D-36).** TD-2 and TD-3 are closed:
 `terms.ts` is the single glossary source (`reference/glossary.md` generated via
