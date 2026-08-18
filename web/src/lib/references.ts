@@ -105,6 +105,38 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: 'Where this stage’s opening claim comes from — architecture as the decisions that are hard to change — and, more usefully, its limits. Fowler’s argument is that the job is to make decisions reversible rather than to make them correctly, which reframes the whole reversibility sort.',
     },
   ],
+  '04-project-setup': [
+    {
+      title: 'Configuring Node.js Version',
+      source: 'Vercel Docs',
+      url: 'https://vercel.com/docs/deployments/configure-a-build#node.js-version',
+      adds: 'The authority for the one dashboard field your repository can reach. This stage says `engines.node` overrides the project setting and that `22.x` is the form to write; this is where both come from, along with what happens when a major reaches end of life while your project is still on it.',
+    },
+    {
+      title: 'Project Settings: Root Directory and Framework Preset',
+      source: 'Vercel Docs',
+      url: 'https://vercel.com/docs/project-configuration',
+      adds: 'The two settings behind the deploy exercise, described from the platform side. Worth reading for the settings this stage does not cover — build and install command overrides, ignored build steps — which become relevant the moment the repository is not a single app at the root.',
+    },
+    {
+      title: 'About protected branches',
+      source: 'GitHub Docs',
+      url: 'https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches',
+      adds: 'What branch protection can enforce beyond a required check — linear history, required reviews, who may bypass. It also states the plan limits this stage warns about, which is the detail worth confirming for yourself rather than taking from a playbook.',
+    },
+    {
+      title: 'Source Maps in Next.js',
+      source: 'Sentry Docs',
+      url: 'https://docs.sentry.io/platforms/javascript/guides/nextjs/sourcemaps/',
+      adds: 'The upload mechanism this stage only sketches: where the auth token is read from, what the build logs when it is missing, and how to verify an upload landed. Go here when the smoke-test route produces a hashed chunk instead of a filename.',
+    },
+    {
+      title: 'Total TypeScript: tsconfig Cheat Sheet',
+      source: 'Matt Pocock',
+      url: 'https://www.totaltypescript.com/tsconfig-cheat-sheet',
+      adds: 'A per-flag argument for the compiler options this stage turns on without much justification, and for several it leaves out. The clearest short case for `noUncheckedIndexedAccess` being worth its first week of friction.',
+    },
+  ],
 }
 
 export function getReferences(slug: string): Reference[] {

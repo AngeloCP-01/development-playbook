@@ -6,6 +6,10 @@ been running in production for two years and still works."
 This is a **reference, not a curriculum**. You do not read it front to back. You open the
 stage you are standing in, read it, and get back to work.
 
+Read it here: **https://acp-dev-playbook.vercel.app** — the same content as the markdown
+below, turned into something you consult rather than read. Stages 01 to 04 are
+interactive; the rest render their documents.
+
 ---
 
 ## Start here

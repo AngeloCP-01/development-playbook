@@ -1,5 +1,6 @@
 import { ArrowUpRight } from 'lucide-react'
 import { getReferences } from '@/lib/references'
+import { InlineCode } from './InlineCode'
 
 /**
  * Outward links, closing a stage. Each entry leads with what it adds rather
@@ -41,7 +42,7 @@ export function References({ slug }: { slug: string }) {
                   <span className="t-label text-subtle">{r.source}</span>
                 </span>
                 <span className="mt-1.5 block max-w-[68ch] text-[0.9375rem] leading-relaxed text-muted">
-                  {r.adds}
+                  <InlineCode text={r.adds} />
                 </span>
               </span>
               <ArrowUpRight

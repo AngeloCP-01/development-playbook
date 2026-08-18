@@ -6,3 +6,10 @@
 .playwright-mcp/
 *.png
 !web/public/**/*.png
+
+# Gathered cheatsheet originals. The converted WebP in web/public/reference/ is
+# what the site serves and what is committed; these run 1-4MB each and git keeps
+# every version forever. Provenance lives in reference/cheatsheet-sources.md.
+reference/*.gif
+reference/*.jpeg
+reference/*.jpg

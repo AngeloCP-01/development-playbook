@@ -205,3 +205,47 @@ Check that the gate you configured is one your plan actually runs.
 - The final proof, still owed after push: a deliberately broken commit pushed with
   `--no-verify` on a scratch branch, to watch CI itself go red once. Hooks were proven
   locally; CI is proven the same way or not at all.
+
+---
+
+## A fix that drives a number to zero needs a case where it should not be zero
+
+TD-40 in the stage 04 round. Every code line in an annotated config block carried
+`tabIndex={0}`, so `ci.yml` alone put twenty tab stops in a panel and most reached nothing:
+a focus ring on a region that does not scroll. The fix measures each line and makes only
+the overflowing ones focusable.
+
+The first verification looked conclusive and proved nothing:
+
+```
+W1024  total=20  focusable=0  overflowing=0
+```
+
+Twenty stops down to zero, exactly as intended. But **a mechanism that always answered
+"not focusable" produces the identical reading.** So does one whose measurement throws and
+falls through to a default. Nothing in that line distinguishes the fix from a hardcoded
+`-1`.
+
+The check that means something is the width where the answer should be non-zero:
+
+```
+W320   total=11  focusable=5  overflowing=5
+W768   total=11  focusable=2  overflowing=2
+W1024  total=11  focusable=2  overflowing=2
+W1440  total=11  focusable=1  overflowing=1
+```
+
+Now the number tracks the condition, in both directions, across four viewports. That is
+the mechanism engaging rather than a constant that happens to be right once.
+
+**The general shape.** Any change whose success looks like *fewer* — fewer warnings, fewer
+queries, fewer re-renders, fewer elements — has a trivial passing implementation: do
+nothing at all, or break the thing that produces them. Verifying only in the condition
+where the count should drop cannot tell the fix from the sabotage. Pair every
+"it went to zero" with a case where it must not be zero, and assert against the *condition*
+(`focusable === overflowing`) rather than against the number, so the assertion survives the
+next content change.
+
+This is the same argument as the teeth check one section up, pointed at a different failure:
+a teeth check asks whether the test can fail, and this asks whether the *fix* can be
+distinguished from doing nothing.

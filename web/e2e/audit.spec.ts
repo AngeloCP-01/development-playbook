@@ -1,49 +1,11 @@
 import { expect, test } from '@playwright/test'
+import { auditPages } from './audit-pages'
 
 /**
  * The committed version of the audits that caught eleven bugs while stage 01
  * was built (docs/tracker.md, "Bugs found and fixed"). Four checks: overflow,
  * touch targets, contrast, console. Runs against a production build.
  */
-
-const PAGES = [
-  '/',
-  '/stages/01-product-discovery#frame',
-  '/stages/01-product-discovery#research',
-  '/stages/01-product-discovery#ai',
-  '/stages/01-product-discovery#talk',
-  '/stages/01-product-discovery#decide',
-  '/stages/01-product-discovery#record',
-  '/stages/02-planning#done',
-  '/stages/02-planning#cut',
-  '/stages/02-planning#sequence',
-  '/stages/02-planning#size',
-  '/stages/02-planning#ai',
-  '/stages/02-planning#write',
-  '/stages/02-planning#horizon',
-  '/stages/03-architecture#reverse',
-  '/stages/03-architecture#require',
-  '/stages/03-architecture#trace',
-  '/stages/03-architecture#model',
-  '/stages/03-architecture#worksheet',
-  '/stages/03-architecture#shape',
-  '/stages/03-architecture#oneapp',
-  '/stages/03-architecture#boundaries',
-  '/stages/03-architecture#sketch',
-  '/stages/03-architecture#flow',
-  '/stages/03-architecture#resilience',
-  '/stages/03-architecture#schema',
-  '/stages/03-architecture#indexes',
-  '/stages/03-architecture#tenancy',
-  '/stages/03-architecture#concurrency',
-  '/stages/03-architecture#races',
-  '/stages/03-architecture#evolve',
-  '/stages/03-architecture#contract',
-  '/stages/03-architecture#access',
-  '/stages/03-architecture#record',
-  '/stages/03-architecture#ai',
-  '/stages/03-architecture#traps',
-]
 
 const WIDTHS = [320, 768, 1024, 1440, 2560]
 
@@ -110,7 +72,7 @@ for (const width of WIDTHS) {
     page,
   }) => {
     await page.setViewportSize({ width, height: 900 })
-    for (const path of PAGES) {
+    for (const path of await auditPages(page)) {
       await page.goto(path, { waitUntil: 'networkidle' })
       const overflow = await page.evaluate(() => {
         const de = document.documentElement
@@ -127,7 +89,7 @@ test('interactive elements are at least 44px tall below lg', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 })
-  for (const path of PAGES) {
+  for (const path of await auditPages(page)) {
     await page.goto(path, { waitUntil: 'networkidle' })
     // A target that is only reachable behind an accordion is still a target.
     // This check never expanded anything either, which is how a sub-44px
@@ -216,22 +178,48 @@ for (const scheme of ['light', 'dark'] as const) {
     const page = await context.newPage()
     const failures: string[] = []
 
-    for (const path of PAGES) {
+    for (const path of await auditPages(page)) {
       await page.goto(path, { waitUntil: 'networkidle' })
       // Term definition panels and accordion bodies are surfaces too.
       await openExpandables(page)
       await page.waitForTimeout(150)
 
       const rows = await page.evaluate(() => {
-        // Resolve any CSS colour (incl. oklab) to rgb via the browser itself —
-        // regex-parsing oklab() produced a false 1.34:1 once. See
-        // docs/learnings/stage-implementation-101.md.
+        // This comment used to claim the parser resolved oklab "via the browser
+        // itself". It did not — it *rejected* oklab and returned null, so every
+        // such colour was skipped rather than checked. Tailwind emits oklab for
+        // any alpha colour, so the rule was: add an opacity and leave the audit.
+        //
+        // Rasterising is the honest version of what the comment promised. Paint
+        // the background, paint the colour over it, read the pixel: the browser
+        // resolves whatever colour space it likes and composites the alpha in
+        // the same step, and what comes back is what the eye receives. It is
+        // also the technique TD-16 was originally measured with by hand.
+        const raster = (color: string, bg: number[]) => {
+          const cv = document.createElement('canvas')
+          cv.width = cv.height = 1
+          const ctx = cv.getContext('2d', { willReadFrequently: true })!
+          ctx.fillStyle = `rgb(${bg[0]},${bg[1]},${bg[2]})`
+          ctx.fillRect(0, 0, 1, 1)
+          const before = ctx.fillStyle
+          ctx.fillStyle = color
+          // On a colour the browser cannot parse, fillStyle keeps its previous
+          // value — which would silently report the background as the
+          // foreground and pass at 1:1. Refuse to guess instead.
+          if (ctx.fillStyle === before && color !== `rgb(${bg.join(', ')}`)
+            return null
+          ctx.fillRect(0, 0, 1, 1)
+          const d = ctx.getImageData(0, 0, 1, 1).data
+          return [d[0], d[1], d[2]]
+        }
+
         const parse = (c: string) => {
           const m = (c.match(/-?[\d.]+/g) || []).map(Number)
           return m.length >= 3 && !/okl|lab|lch/.test(c)
             ? { rgb: m.slice(0, 3), a: m[3] ?? 1 }
             : null
         }
+
         const out: {
           fg: number[]
           bg: number[]
@@ -240,6 +228,40 @@ for (const scheme of ['light', 'dark'] as const) {
           sample: string
         }[] = []
         const seen = new Set<string>()
+
+        const bgUnder = (start: Element): number[] | null => {
+          let e: Element | null = start
+          while (e) {
+            const c = parse(getComputedStyle(e).backgroundColor)
+            if (c && c.a > 0.5) return c.rgb
+            e = e.parentElement
+          }
+          return null
+        }
+
+        // Placeholders are text, and the loop below cannot see them: it keys
+        // off `el.textContent`, and an empty field has none. They are also the
+        // worst thing to lose, because in this app the placeholder carries the
+        // worked example — it shows the reader what a good answer looks like.
+        for (const el of document.querySelectorAll('input, textarea')) {
+          const ph = (el as HTMLInputElement).placeholder
+          if (!ph) continue
+          const cs = getComputedStyle(el, '::placeholder')
+          const bg = bgUnder(el)
+          if (!bg) continue
+          const rgb = raster(cs.color, bg)
+          if (!rgb) continue
+          const key = `ph|${rgb}|${bg}|${Math.round(parseFloat(cs.fontSize))}`
+          if (seen.has(key)) continue
+          seen.add(key)
+          out.push({
+            fg: rgb,
+            bg,
+            size: parseFloat(cs.fontSize),
+            weight: parseInt(cs.fontWeight) || 400,
+            sample: `placeholder: ${ph.slice(0, 20)}`,
+          })
+        }
         for (const el of document.querySelectorAll('*')) {
           const t = el.textContent?.trim()
           if (!t || t.length < 3 || el.children.length) continue
@@ -250,24 +272,15 @@ for (const scheme of ['light', 'dark'] as const) {
             +cs.opacity < 0.5
           )
             continue
-          const fg = parse(cs.color)
-          if (!fg) continue
-          let e: Element | null = el
-          let bg: number[] | null = null
-          while (e) {
-            const c = parse(getComputedStyle(e).backgroundColor)
-            if (c && c.a > 0.5) {
-              bg = c.rgb
-              break
-            }
-            e = e.parentElement
-          }
+          const bg = bgUnder(el)
           if (!bg) continue
-          const key = `${fg.rgb}|${bg}|${Math.round(parseFloat(cs.fontSize))}`
+          const rgb = raster(cs.color, bg)
+          if (!rgb) continue
+          const key = `${rgb}|${bg}|${Math.round(parseFloat(cs.fontSize))}`
           if (seen.has(key)) continue
           seen.add(key)
           out.push({
-            fg: fg.rgb,
+            fg: rgb,
             bg,
             size: parseFloat(cs.fontSize),
             weight: parseInt(cs.fontWeight) || 400,
@@ -295,6 +308,40 @@ for (const scheme of ['light', 'dark'] as const) {
 
 // ── console ────────────────────────────────────────────────────────────────
 
+/**
+ * **What this test cannot see, which is most of what you would want it to.**
+ * It runs against a *production* build (`playwright.config.ts` builds and
+ * serves rather than reusing `pnpm dev`, because the dev overlay pollutes the
+ * console and the dev server renders differently). React strips its
+ * development-mode validation from a production build, so this whole family is
+ * invisible here: missing-key warnings, invalid DOM nesting, `act()` warnings,
+ * hydration-mismatch detail, prop-type complaints. A green run says nothing
+ * about any of them.
+ *
+ * Not hypothetical. `RevealList` logged *Each child in a list should have a
+ * unique "key" prop* on every `pnpm dev` load of `#ai` from `1772555` to
+ * `f1a23e7`, and then on `#tenancy`, `#trace` and `#indexes` for the rest of
+ * the branch, while this test reported 14/14 throughout. Both times it was
+ * found by someone opening the dev server for an unrelated reason.
+ *
+ * Two things a manual dev check needs to know. The warning is attributed to
+ * the *rendering* component (`Card`), not the one holding the defect — which
+ * is why grepping for the named component finds nothing. And the check has one
+ * narrow blind spot: Fast Refresh patching an already-open tab does not fire
+ * it, and a reload issued a second or two after saving can race the rebuild
+ * and read clean. Reload once the rebuild has settled, or restart, and it
+ * fires reliably. Measured across three cold-server runs while closing this:
+ * no-reload patching stayed silent every time; a settled reload warned every
+ * time.
+ *
+ * The real reason both instances survived is duller and worth more: every
+ * manual check loaded one page. `#ai` exercises neither `header` nor `footer`,
+ * so it passed while three other steps warned.
+ *
+ * Tracked as **TD-35**. Closing it means a second, narrow spec against
+ * `pnpm dev` that filters for React's own warning prefixes; this comment is
+ * the interim, and TD-35 asks for it by name.
+ */
 test('zero console errors across every page and step', async ({ browser }) => {
   const context = await browser.newContext()
   const page = await context.newPage()
@@ -303,7 +350,7 @@ test('zero console errors across every page and step', async ({ browser }) => {
   page.on('console', (m) => {
     if (m.type() === 'error') errors.push(m.text().slice(0, 120))
   })
-  for (const path of PAGES) {
+  for (const path of await auditPages(page)) {
     await page.goto(path, { waitUntil: 'networkidle' })
   }
   await context.close()
@@ -427,20 +474,23 @@ test('reset clears the uncommitted draft as well as the committed answers, since
 // ── the audit list audits what it claims to ────────────────────────────────
 
 /**
- * `PAGES` is hand-written (TD-12), and its failure mode is silent: a hash that
- * names no step does not error, it falls back to the first panel. So the suite
- * stays green while auditing step one twice and never touching the steps that
- * were added. That is not hypothetical — the stage 03 entries listed
- * `#constrain` and `#decide` for weeks after both steps had been renamed away,
- * which meant five of its nine steps had never been audited at all.
+ * A hash that names no step does not error — it falls back to the first panel.
+ * So a suite sweeping stale hashes stays green while auditing step one twice
+ * and never touching the steps that were added. Not hypothetical: the stage 03
+ * entries listed `#constrain` and `#decide` for weeks after both steps had
+ * been renamed away, which meant five of its nine steps had never been audited
+ * at all.
  *
- * This does not close TD-12; the list is still hand-maintained and forgetting
- * to add a step still audits nothing. It closes the half that lies.
+ * The list is now derived from the rendered rail (`audit-pages.ts`, TD-12), so
+ * a hash cannot go stale in that direction any more — it comes from the step
+ * that rendered it. This test stays because the fallback behaviour it names is
+ * still real, and because a derivation is worth a check that its output lands
+ * where it claims rather than being trusted for being generated.
  */
 test('every listed step hash lands on the step it names, since a dead hash falls back and audits step one twice', async ({
   page,
 }) => {
-  for (const path of PAGES.filter((p) => p.includes('#'))) {
+  for (const path of (await auditPages(page)).filter((p) => p.includes('#'))) {
     const id = path.split('#')[1]
     await page.goto(path, { waitUntil: 'networkidle' })
     await expect(
@@ -496,7 +546,7 @@ test('no step panel exceeds four screens, because a step that is a scroll is two
   await page.setViewportSize(PANEL_VIEWPORT)
   const failures: string[] = []
 
-  for (const path of PAGES.filter((p) => p.includes('#'))) {
+  for (const path of (await auditPages(page)).filter((p) => p.includes('#'))) {
     const id = path.split('#')[1]
     await page.goto(path, { waitUntil: 'networkidle' })
     const height = await page

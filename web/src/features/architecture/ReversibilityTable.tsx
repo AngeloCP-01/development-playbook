@@ -126,7 +126,7 @@ export function ReversibilityTable() {
                         checked
                           ? 'border-brand bg-brand-tint text-fg'
                           : done
-                            ? 'cursor-not-allowed border-line bg-raised text-subtle opacity-60'
+                            ? 'cursor-not-allowed border-line bg-raised text-subtle'
                             : 'border-line bg-raised text-muted hover:border-line-strong',
                       ].join(' ')}
                     >

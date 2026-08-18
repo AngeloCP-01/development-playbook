@@ -25,13 +25,13 @@ Before doing anything, read these for context:
 - `README.md` — the playbook's own index and its central claim
 - `web/AGENTS.md` — this Next.js version postdates your training data; read
   `node_modules/next/dist/docs/` before writing framework code
-- `docs/learnings/README.md` — six guides written after rounds that cost real time. Two are
-  directly relevant to W-3.2: `decisions-need-tests-101.md` — this round *did* supersede D-38,
-  and that guide is about what makes a recorded decision actually hold, which D-38 did not — and
-  `stage-implementation-101.md` (the layout traps and verification checklist for building a
-  stage)
+- `docs/learnings/README.md` — six guides written after rounds that cost real time. Three
+  bear on stage 04's port: `stage-implementation-101.md` (the layout traps and verification
+  checklist for building a stage), `cold-reader-testing.md` (the method, now run before the
+  app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
+  a recorded decision actually hold
 
-### Project state (as of 2026-08-03, after the D-52 round, the eight doc gaps, cold-reader run 4, and the whole-branch re-review)
+### Project state (as of 2026-08-18 — **stage 04 shipped and its debt is closed**; W-3 is 4/18 and **stage 05 is next**; `develop` is ahead of `origin/develop` and `main` is untouched; the site live and self-verifying)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -42,10 +42,21 @@ Before doing anything, read these for context:
   (pins that doc's fourteen subsections in order), `source-citations.test.ts` (D-42), and
   `ddl-sync.test.ts` plus `evolve.test.ts`, which hold three SQL blocks in the app to the doc
   character-for-character.
-- **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01 and 02 are
-  complete and interactive; 03 is on `feat/stage-03-app-port` at 22 steps**, every panel under
-  four screens. See `docs/stage-03-status.md` for section-by-section coverage — it is the map,
-  and it is current.
+- **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01, 02 and 03 are
+  complete, interactive and merged**; **stage 04 is complete and interactive but NOT merged**
+  — it is the 20 commits on `feat/stage-04-app-port`. 03 is 22 steps, 04 is 15. Fourteen
+  stages remain, which is all that is left of `W-3` and of the project. See
+  `docs/stage-03-status.md` and `docs/stage-04-status.md` for section-by-section coverage.
+- **There is a second top-level section now: `/reference` (W-6), and it is PAUSED.** Eleven
+  cheatsheets registered behind one renderer, ten of them deliberately empty and chipped WIP,
+  because an index that advertises its gaps doubles as a worklist (**D-62**). The rail carries
+  a second nav landmark under the eighteen. `reference/cheatsheets.md` is generated from
+  `web/src/lib/cheatsheets/` by snapshot test, the same arrangement `terms.ts` has with the
+  glossary — do not hand-edit it; run `pnpm gen:cheatsheets`. **Eighteen is still eighteen**:
+  this is a sibling section, not a nineteenth stage, which was rejected for the third time.
+  Source graphics are served from `web/public/reference/` as WebP; the gathered originals are
+  gitignored on purpose (**D-63**). **Do not start W-6 content work** — the stage 04 port is
+  the next active thing.
 - **The D-52 reshape is done, and D-52 stands in place of D-38** (superseded, kept struck
   through for the record). `PANEL_EXCEPTIONS` in `web/e2e/audit.spec.ts` is back to its two
   permanent entries, which was the exit condition. **Twenty-two steps was not a target**: every
@@ -54,8 +65,8 @@ Before doing anything, read these for context:
 - **Stage 03's port content is complete, and so are its eight recorded doc gaps** (W-3.3).
   The doc is at **1,507 lines / 14 sections**; the app is still 22 steps, because every gap
   landed inside an existing panel under the four-screen rule and three went behind
-  expand-to-reveal (D-49). **TD-23 stays open** on the merge alone — both whole-branch passes
-  have now run and every finding is fixed.
+  expand-to-reveal (D-49). **TD-23 is closed** — it always waited on the merge rather than
+  on content, and `790b3e4` is that merge.
 - **Cold-reader run 4 returned COMPLETE** — the first of four runs to do so
   (`docs/verification/cold-reader-stage-03-run4.md`). Two findings were recorded as deferred
   rather than fixed, and they are content decisions waiting on a call: 2NF is unviolatable
@@ -74,66 +85,189 @@ Before doing anything, read these for context:
   `web/src/lib/terms.ts`, `reference/glossary.md` is generated from it (`pnpm gen:glossary`),
   and a title sync test guards each doc's H1 against `stages.ts`. Never hand-edit
   `glossary.md`.
-- **Stages 04–18** render a "sheet not drawn" placeholder. Routing works for all 18.
+- **Stage 04's doc is corrected and `TD-28` is closed** — `fix/stage-04-doc-corrections`
+  merged into `develop` as **`dd44b30`**, `--no-ff`.
+  `docs/04-project-setup.md` went **323 → 711 lines at `38765e7`**.
+  The number that matters for how you read any debt entry here:
+  **TD-28 named four defects and the round closed 31.** Reading the doc found 8, running
+  every executable block of it found 5 more, a cold reader given the corrected doc and a
+  task to finish found 14, and per-task reviews found the last 4. The evidence, the
+  `Deferred:` list and six new decisions (**D-53**…**D-58**) are in `docs/tracker.md`.
+- **`RevealList` is extracted and merged** (`e29f3fe`). It was scoped as five stage-03
+  accordions sharing one markup and there were **eleven** — the five were the ones whose
+  header comments admitted the duplication, and the other six never said so. All eleven now
+  call `RevealList` (twelve instances), with `RevealFacet` for row bodies and `TeamNotes`
+  moved to `src/components/`. **Use it for any new list-of-disclosures; do not hand-roll a
+  twelfth.** Debt it opened: **TD-34** (`RevealList` hardcodes `<h3>` for row headings) and
+  **TD-35** (the audit's console check cannot see a dev-only warning).
+- **Stage 04 is shipped and merged**, and so is the debt its reviews opened.
+  `04-project-setup` renders fifteen steps, all under the 3.2 ceiling. All four provisional
+  D-65 pairs stayed split, since combined they measure 4.80, 5.40, 3.54 and 4.23 — **the
+  first seam in this repo to survive measurement unchanged**, where stage 03 re-cut five of
+  six. **TD-36, TD-39, TD-40 and TD-41 are all closed**, so no debt from that round is
+  outstanding. Panel table and evidence: the W-3.4 row in `docs/tracker.md`; coverage map:
+  `docs/stage-04-status.md`.
+- **Stages 05–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **331 vitest tests across 33 files** in two projects — `unit`
-  (node, data invariants) and `dom` (jsdom, render tests, `*.test.tsx`) — a **14-test playwright
-  audit suite over 36 URLs**, lefthook hooks, and CI. Branch protection is on; the repo is
-  public (D-26).
-- **`PAGES` in `web/e2e/audit.spec.ts` is still hand-written** (**TD-12**), so adding a step
-  means editing that array by hand — thirteen times this round. A dead hash now fails; a missing
-  one still audits nothing, which is the half that matters now.
-- **Not deployed yet, but the repo is ready for it** (`W-5`, 2026-08-04). `engines.node` pins
-  the Node version Vercel reads, `metadataBase` is set, and `sitemap.ts` / `robots.ts` cover the
-  19 public URLs. **Two things stand between this and a live site**, and only one is a dashboard
-  setting: the Vercel project (`acp-development-playbook`) needs Root Directory `web`, because
-  the app is not at the repo root. The other was found by review and is already fixed — pnpm
-  runs `prepare` on every install, `lefthook install` exits 1 without a `.git`, and Vercel's
-  build environment has none, so the install step died before Root Directory was ever consulted.
-  `NEXT_PUBLIC_SITE_URL` overrides the origin without a code change.
-- **Branch/push:** work happens on `feat/`|`fix/`|`docs/<date>-` branches, merged to `main`
-  with `--no-ff` and a hand-written subject, never squashed. **The user handles pushes.**
-  **Stage 03 is merged and pushed**: `feat/stage-03-app-port` landed on `main` as
-  **`790b3e4`** (`--no-ff`, 106 commits, 91 files, +20k/−0.5k, branch deleted), and
-  `origin/main` is at `2f42753`. **TD-17's harness is merged and not yet pushed** (`99f60cd`),
-  so `main` is **7 commits ahead of the remote**. Two merged branches still sit on the remote
-  and can be deleted: `origin/feat/stage-03-app-port` and
-  `origin/feat/stage-03-standard-practices`.
+  eslint at `--max-warnings 0`, **527 vitest tests across 64 files** in two projects — `unit`
+  (node, data invariants) and `dom` (jsdom, render tests, `*.test.tsx`) — a **17-test playwright
+  audit suite over 63 derived URLs** (51 stage, 12 reference), lefthook hooks, and CI. Branch
+  protection is on; the repo is public (D-26). Re-derive these rather than quoting them.
+- **The audit sweeps the ready set automatically** (**TD-12 closed 2026-08-14**).
+  `e2e/audit-pages.ts` takes stages from `STAGES.filter(s => s.ready)` and step ids from the
+  rail each renders, so a new stage or step is swept without editing a list. A ready stage
+  that renders no rail throws. **TD-36 closed 2026-08-17** on the stage 04 port, and on
+  three guards rather than one: a `STEP_IDS` tuple per stage catches a *renamed* id,
+  `features/rails.test.tsx` catches a step *deleted* from a component, and
+  `e2e/audit-pages.spec.ts` makes the same comparison against the built app. A step deleted
+  from both the tuple and the component still compiles — that is what each stage's
+  `steps.test.ts` ordered literal is for.
+- **Deployed** (`W-5`, live 2026-08-11): **https://acp-dev-playbook.vercel.app**, verified
+  against the running site — `/robots.txt`, a 19-URL `/sitemap.xml`, and stage pages rendering
+  with the title template. The Vercel project is `acp-development-playbook`; the **assigned
+  origin is `acp-dev-playbook`**, which is not derivable from the project name and was guessed
+  wrong once. `NEXT_PUBLIC_SITE_URL` is set in Vercel and overrides `src/lib/site.ts`.
+  Three dashboard settings were needed and none is expressible in the repo: **Root Directory
+  `web`**, **Framework Preset Next.js** (it was *Other*, whose output directory is `public` —
+  which this round had deleted), and the **connected repository**, which pointed at a
+  placeholder. See `docs/learnings/deploying-101.md` before deploying anything else.
+- **W-5 is complete.** `pnpm test:prod` verifies the deployment itself — five `@smoke` checks
+  covering what CI structurally cannot: the env-var-dependent `robots.txt` and `sitemap.xml`,
+  whether the 19 advertised URLs resolve, and the real edge's console. It is **not** part of the
+  pre-merge gate; run it after a promotion to `main`.
+- **Branch/push:** work happens on `feat/`|`fix/`|`chore/`|`docs/<date>-` branches, merged
+  with `--no-ff` and a hand-written subject, never squashed. **Since 2026-08-11 `main` is
+  production** — the site deploys from it — so work branches merge to **`develop`** and never
+  to `main`. You may open a PR to `main`; the user merges it. **Ask before every merge**,
+  including into `develop`. **The user handles pushes.**
+  **Cut the next branch from `develop`, never from `main`.** `develop` carries every round
+  since stage 03 — the stage 04 doc correction, `RevealList`, TD-12, the two W-6
+  reference-hub merges, the stage 04 port and its two debt branches — so a branch cut from
+  `main` builds against a tree many rounds behind. **No branches are in flight**; the last
+  three were merged and deleted.
 
-### This round's scope
+  **Derive every position rather than reading one here.** Every version of this paragraph
+  has gone stale, and the local `origin/*` refs are only as fresh as the last fetch:
 
-**Stage 03 is done and merged.** The D-52 round's twelve tasks, W-3.3's eight doc gaps,
-cold-reader run 4 and its fix wave, and the whole-branch re-review's five Important findings
-all landed on `main` as `790b3e4` (`--no-ff`, 106 commits, branch deleted). **TD-23 is
-closed.** The next round is a new stage — 15 Observability is the recommended one — or `W-5`,
-the deploy. Nothing below blocks either; it is history worth carrying.
+  ```
+  git fetch
+  git log --oneline -1 develop origin/develop main origin/main
+  git rev-list --count origin/develop..develop
+  ```
 
-**Read these two first, in this order:**
+  Two things known to be true on 2026-08-18 and worth checking rather than trusting:
+  `develop` was ahead of `origin/develop` by a few commits, and **local `main` at `8d5045c`
+  was behind `origin/main` at `f1c7e51`** — something reached the remote `main` that this
+  local repository has not seen. Reconcile that before any promotion.
 
-1. `.superpowers/sdd/2026-07-31-step-panel-weight/progress.md` — the ledger. Every task, its
-   commits, every deviation from the plan and why. It is git-ignored scratch, so read it before
-   running anything that cleans the tree.
-2. `docs/superpowers/plans/2026-07-31-step-panel-weight.md` — the plan. **All twelve tasks are
-   done.** Its spec is `docs/superpowers/specs/2026-07-31-step-panel-weight-design.md`, and the
-   plan's own Verification section is the checklist for what comes next.
+  Two merged branches still sit on the remote and can be deleted:
+  `origin/feat/stage-03-app-port` and `origin/feat/stage-03-standard-practices`.
 
-**What that merge carried.** 106 commits, doc and app as one unit (D-51). The whole-branch
-review has run and returned **seven blocking findings**, plus two minors promoted for being
-reader-visible and introduced by this branch, and sixteen deferred to the tracker. All nine are
-fixed. Four per-task reviews had found **fourteen** before it, and the rate did not fall off:
-the last task reviewed, Task 11, produced three, and the branch pass then produced seven. Two of
-those fourteen were factual errors about Postgres in teaching material, which is the class of
-mistake a per-task review catches and a casual read does not — and the branch pass caught the
-class above that, a green verification gate measuring almost nothing.
+### Next round's scope: stage 05 — Development
 
-**The re-review's headline is worth carrying forward as a method, not a fact.** Its I1 was a
-backfill instruction that told the reader to paginate a `WHERE col IS NULL` loop by remembering
-the highest id touched. It reads as careful advice. Run it and the guard has already removed
-the rows the cursor is skipping past: **5000 of 5000 rows silently unmigrated, reported as
-success**. Nothing but execution finds that — which is D-50 arriving a second time, on
-*behaviour* rather than on syntax.
+**`docs/05-development.md` is 249 lines across four `##` sections and nine `###` ones** —
+the loop, vertical slices, Server Components by default, thin route files, Server Actions
+needing validation and authorization, types at the boundaries, commits, when you get stuck,
+and local environment, then Artifacts, Definition of done, Scaling to a team and Traps.
+That is a third of stage 04's doc and a sixth of stage 03's, so expect a smaller seam than
+fifteen steps and let the measurement say how much smaller.
 
-**Five things this round has taught, all of which cost time to learn:**
+**05 was chosen against the priority table's own answer of 16 or 13**, and the reasoning is
+recorded in `docs/task.md`: those two were ranked on how well a stepper fits their shape,
+while 05 is chosen on sequence. Stage 04 ends with a repository that builds and deploys;
+05 is the loop the reader then runs dozens of times a day, so shipping them adjacent keeps
+the path continuous. 16 and 13 keep their case at priority 8.
+
+**Do the cold-reader pass on the doc before building anything** (D-54). Stage 03 ran it
+last and ended with a finished app sitting on a doc with three blocking gaps; stage 04 ran
+it first and it returned three blocking findings that would otherwise have been ported into
+components. `docs/learnings/cold-reader-testing.md` is the method.
+
+**Then run the delivery loop**: brainstorm, spec, plan, TDD per task, per-task review,
+whole-branch review, merge. Stage 04's spec and plan are the freshest house example, and
+its plan carries two in-execution amendments showing what a plan gets wrong.
+
+### Three things stage 04 learned that will save this round time
+
+**Walk the doc against the app, section by section, before believing a port is complete.**
+This was the single most valuable check of that round and nothing in the gate can replace
+it. On a branch already green on its whole gate and five closed reviews, it
+found **five doc sections whose material the app never taught**, all sharing one shape: the
+app told the reader to run a script or set a value it never showed them how to create. All
+five had been assigned to a panel by the plan's own line ranges, so they were silent drops
+rather than curations. The tell was visible in the numbers and I misread it — a panel median
+of 1.74 against stage 03's 3.02 is a signal to go looking, not a compliment. The method and
+the output shape are in `docs/learnings/stage-implementation-101.md` and
+`docs/stage-04-status.md`.
+
+**Nine plan defects were found by executing rather than reading.** A test that could never
+pass, because it asserted `toContain` against a sentence the doc hard-wraps mid-clause. A
+regex that counted nine traps where the doc has seven, because `DOC.indexOf('## Traps')`
+matches §7's prose *about* `## Traps`. Material sourced to a section that does not contain
+it. And every `.tsx` test in one wave written against `jest-dom` and `user-event`, neither
+of which this project installs.
+
+**A teeth check can lie, and so can a fix that reaches zero.** Two mutations "passed" on
+that round without ever landing: a `perl -0p` without `/g` replaced a mention inside a
+docblock, and an edit script that asserts before writing aborted and wrote nothing while
+its earlier substitutions looked applied. Separately, a fix that drove twenty tab stops to
+zero looked conclusive and was indistinguishable from a mechanism that always answered
+"not focusable" — it needed the widths where the answer should *not* be zero.
+`docs/learnings/quality-gates-101.md` has both.
+
+**Read these first, in this order:**
+
+1. `docs/05-development.md` — the doc being ported, 249 lines. Read it as a cold reader
+   would before reading anything about how stage 04 was built.
+2. `docs/learnings/stage-implementation-101.md` — the layout traps, the verification
+   checklist, and the coverage walk added after stage 04.
+3. `web/PATTERNS.md` — the interaction patterns and the render-test rule from TD-17, plus
+   `InlineCode`, `RevealList` and `AnnotatedArtifact`. Read before building any stage.
+4. `docs/tracker.md`, the **2026-08-17 W-3.4** row and **D-64**…**D-67** — how the last
+   stage was measured and what it deliberately did not do.
+5. `docs/stage-04-status.md` — what a finished coverage map looks like, and the shape to
+   produce for 05.
+6. `docs/superpowers/{specs,plans}/2026-08-1*-stage-04-*` — the freshest house example of a
+   spec and plan, **read as an example rather than as instructions**.
+
+**`docs/learnings/deploying-101.md` is no longer the raw material** — §8 has absorbed it, and
+the round found one entry over-claiming it as a source for material it does not contain. Read
+it for the incident, not as a specification.
+
+**What the doc phase cost, as calibration for the port:** 37 commits over two days, three
+verification instruments, twelve fix entries, and a whole-branch review that returned eight
+findings after every task had already been reviewed clean. The doc is a third of stage 03's
+length. Expect the port to be smaller than stage 03's 106 commits, and expect the review to
+find something, because it has every time.
+
+**The method that keeps paying, stated as a method rather than a war story.** A recorded piece
+of evidence turning out to be **a check that could not fail** is now this repo's most common
+defect, and the count is past seven — a `metadataBase` build warning that only fires for a
+feature this app deliberately lacks, a `robots.txt` regex that matched the substring inside
+`Disallow:`, three greps for panel ids that are computed inside client components and so
+return zero either way, a prettier run over markdown that `.prettierignore` excludes, and a
+guard that caught parsing *nothing* rather than parsing *wrong*. The `RevealList` round alone
+contributed seven, **six of them authored by the controller rather than the implementers** —
+they are written into briefs and plans more often than into code. `docs/tracker.md`'s Process
+observations has the catalogue. None would have been caught by running the suite again.
+**The teeth check is what separates evidence from decoration**, and in every case the
+assertion that turned out decorative was the one nobody teeth-checked.
+
+**Three habits that caught more than reasoning did, on the last two branches:**
+
+- **The file wins.** Where a plan's table and the source disagree, the source is right — say so
+  in the brief. Three words in a task brief caught an accordion count that was eleven and not
+  five, a badge the plan denied existed, and a tone token named wrong.
+- **Run it, do not read it.** Three defects on the TD-12 branch were found by executing
+  something and none by reading: a tool that threw on startup while the suite reported 16/16,
+  a completeness check that threw on every run, and a regex that paired the wrong fields.
+- **A margin claim needs the browser.** Two spacing regressions shipped because three people
+  reasoned that adjacent margins would collapse. They do not collapse between `inline-flex`
+  siblings, and Tailwind v4's `space-y-*` sets `margin-block-end` on `:not(:last-child)`.
+
+**Six things the stage 03 and 04 rounds taught, all of which cost time to learn** (the header
+said five over six bullets until 2026-08-14, which is the smallest possible version of the
+count-the-thing-in-front-of-you problem the first bullet is about):
 
 - **The plan is wrong about the shape of the work more often than the implementation is.**
   Five of six tasks found a brief that did not match the tree: two seams that measured wrong, a
@@ -142,7 +276,7 @@ success**. Nothing but execution finds that — which is D-50 arriving a second 
   measurement, not the edit** — re-cut and re-measure rather than assuming the seam is right.
 - **A panel that measures 4.0 against a limit of 4.0 has not passed.** It passes today and
   fails on the next font change. Cut again.
-- **A step name in prose is a citation and it stales silently.** Seven shipped on this branch,
+- **A step name in prose is a citation and it stales silently.** Seven shipped on stage 03's branch,
   each found by grep and none by a test: `steps.ts` makes a nonexistent *id* a compile error and
   can say nothing about a name written in a sentence. Grep for step names whenever a step
   splits, and re-point `TRACE_ROWS[].stepId` — that one finally fired for real in Task 9.
@@ -172,9 +306,15 @@ success**. Nothing but execution finds that — which is D-50 arriving a second 
 
 Notes for whoever is preparing this handoff:
 
-- Refresh **Project state** and **This round's scope** before pasting. Delete closed
+- Refresh **Project state** and **Next round's scope** before pasting. Delete closed
   items rather than leaving them ticked.
-- Fill in the `[FILL IN: ...]` lean, or delete the line if genuinely undecided.
+- There is no longer a `[FILL IN: …]` line; the older note telling you to fill one in outlived
+  the line itself, which is the failure mode this whole file is exposed to.
+- **Untracked and deliberately parked**, so a new session does not read them as the round's
+  material: `docs/superpowers/specs/2026-08-14-reference-hub-design.md` (a Reference hub
+  design taken to four decisions and stopped on which cheatsheet leads slice 1 — it is
+  tracked, and it rode into `develop` on the TD-12 branch by accident of session, not
+  relevance), plus its three source files under `reference/`, which are still untracked.
 - If a round is already scoped, add a per-round sibling — `KICKOFF-W4.md` — rather than
   overwriting this one. The generic version stays useful.
 - Open threads worth carrying forward:
@@ -184,8 +324,9 @@ Notes for whoever is preparing this handoff:
     `.superpowers/sdd/2026-07-28-stage-03-architecture/progress.md`.
   - **Cold-reader testing** (`docs/learnings/cold-reader-testing.md`) is how a stage doc is
     validated before it ships. Run the beginner-completeness pass **before** building the
-    interactive stage, not after — stage 03 ran it last and now has a finished app on top of
-    a doc with three blocking gaps.
+    interactive stage, not after — stage 03 ran it last and ended with a finished app on top
+    of a doc with three blocking gaps. Now **D-54**, after stage 04 ran it first and the pass
+    returned three blocking findings that would otherwise have been ported into components.
   - **Most of stage 03's defects were plan-authored, not implementer error** (tracker,
     "Process observations"). A per-task review sees one diff; nothing but controller-level
     review catches a task whose output undermines another's. Budget for that.

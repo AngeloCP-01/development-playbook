@@ -3,10 +3,15 @@
 **Purpose:** the log. What actually shipped, what was decided and why, and what
 debt was taken on. Scope and planning live in [task.md](task.md).
 
-**Last updated:** 2026-08-04
-**Current phase:** W-3 — stages 01, 02 and **03 (Architecture)** are interactive. Stage 03 is
-the densest stage and the **solutions architect's home** — the audience stage 02 feeds but
-does not serve (D-37).
+**Last updated:** 2026-08-13
+**Current phase:** W-3, and it is the only `W-` milestone still open — stages 01, 02 and
+**03 (Architecture)** are interactive, fifteen remain. Stage 03 is the densest and the
+**solutions architect's home** — the audience stage 02 feeds but does not serve (D-37).
+
+**The site is live** at https://acp-dev-playbook.vercel.app and verifies itself with
+`pnpm test:prod` (W-5, complete 2026-08-11). **`main` is production**: work branches merge to
+`develop`, `main` is reachable by pull request only, and every merge is asked about first —
+the flow is written up in `CLAUDE.md`'s Git conventions.
 
 **Stage 03's doc and its port are level, and merged.** `W-3.1` closed **TD-18**,
 **TD-21** and **TD-22**, taking `docs/03-architecture.md` to **14 subsections**; the doc-gaps
@@ -38,10 +43,17 @@ items and five minor, all resolved, including SQL that would not run and a check
 ticked for work deliberately deferred. **Pushed** — `origin/main` is at `249bd9d`, so the
 long-standing local-only backlog is cleared and CI has a real branch to run against.
 
+**Stage 04's doc phase is done and unmerged.** `fix/stage-04-doc-corrections` corrected
+`docs/04-project-setup.md` from 323 to 711 lines and **closed TD-28**, which turned out to
+name four of the thirty-one defects the round found. **The interactive port is done too**,
+on `feat/stage-04-app-port` and also unmerged: `04-project-setup` is `ready: true` with
+fifteen steps, taking W-3 to 4/18. Both rows below carry the evidence and both branches
+are waiting on the user's merge decision.
+
 Quality gates remain live: prettier (skipping markdown, see the build note below), eslint at
-`--max-warnings 0`, **331 vitest tests across 33 files** in two projects — `unit` (node, data
-invariants) and `dom` (jsdom, render tests) — a **14-test audit suite sweeping 36
-URLs** (stage 03's twenty-two step hashes added by hand — TD-12), lefthook, and CI. Everything
+`--max-warnings 0`, **350 vitest tests across 37 files** in two projects — `unit` (node, data
+invariants) and `dom` (jsdom, render tests) — a **16-test audit suite sweeping 36
+URLs** (derived from the ready set since TD-12 closed; stage 03's twenty-two hashes were added by hand before that), lefthook, and CI. Everything
 since `82a980b` was local until 2026-07-29, when `main` was pushed and CI ran green on the
 stage 03 merge (`30426083363`). The stage 03 merge (`790b3e4`) and TD-23's close were **pushed on 2026-08-04**;
 `origin/main` is at `2f42753`. `main` is now **7 commits ahead** — the TD-17 spec, plan, four
@@ -59,7 +71,7 @@ arrived unprompted on day one.
 GitHub Free enforces rulesets on public repos only (D-26). CI history reads red, red,
 green, green across the typegen fix. TD-10 closed; W-4 is fully done.
 
-Next round: stage 03 and W-5's repo side are both done. The live choice is the next stage — 15 — Observability by `docs/task.md`'s order, 04 by this file's own argument that stage 03 is the template everything after copies — or finishing W-5 by deploying.
+~~Next round: stage 03 and W-5's repo side are both done. The live choice is the next stage — 15 — Observability by `docs/task.md`'s order, 04 by this file's own argument that stage 03 is the template everything after copies — or finishing W-5 by deploying.~~ ✓ **settled 2026-08-11** in stage 04's favour, and its doc phase has since run. What is left of stage 04 is `RevealList` and the port; see Next up.
 
 ---
 
@@ -71,10 +83,20 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
-| 2026-08-04 | W-5 (repo side) | **Deploy preparation.** `engines.node` pins the version Vercel actually reads — `.nvmrc` reaches local and CI only, so the one host that serves users was unpinned. One `SITE_URL` feeds `metadataBase`, `sitemap.ts` and `robots.ts`, because a deploy round that writes an origin into three files has built the drift it exists to prevent. Sitemap derives its 19 URLs from `STAGES`. Five `create-next-app` SVGs deleted from `public/`, unreferenced since W-0 — the directory itself is now gone | 3 commits `b9088c4`…`d15c1dd`. **331 tests across 33 files**, lint, typecheck, `format:check` clean, `pnpm build` with **no `metadataBase` warning** and `/robots.txt` + `/sitemap.xml` in the route table. Generated output read rather than inferred: `.next/server/app/sitemap.xml.body` carries exactly **19** `<loc>` entries, `robots.txt.body` reads `Allow: /` and names the sitemap. **audit 14/14** against a fresh build with `:3100` killed first (TD-27). Nine teeth checks in total, each failing alone — a trailing slash on the origin, a stage dropped from the sitemap, `Disallow: /` in both its string and array spellings, a probe file in `public/`, a `favicon.ico` in `public/`, an unguarded `prepare`, a wrong `engines.node`, and `metadataBase` deleted | **Not deployed** — Root Directory must be set to `web` in the Vercel project, which has no in-repo equivalent. **A whole-branch review found the round had missed an earlier blocker entirely**: `prepare: lefthook install` exits 1 without a `.git`, Vercel's build environment has none, and pnpm runs `prepare` on every install — so the deploy would have failed at the install step, before Root Directory mattered. Fixed with `|| true` and guarded. The same review found the recorded `metadataBase` evidence vacuous: the build warning it cited fires only for relative Open Graph images, which this app deliberately has none of, so it could not fail either way. **No CSP**: the theme script runs via `dangerouslySetInnerHTML` before first paint, so a policy needs a nonce or hash and a wrong one ships a blank page — its own change, with its own verification. **No Open Graph or OG image**, scoped out. **No post-deployment verification**: the audit suite assumes `:3100` and cannot be retargeted until a deployment exists |
-| 2026-08-04 | — | **Component test harness (TD-17).** `vitest.config.ts` split into two projects — `unit` (node, `*.test.ts`) and `dom` (jsdom, `*.test.tsx`) — so the extension picks the environment rather than a per-file docblock somebody has to remember; `extends: true` is what carries the `@/*` alias into both. Three dev dependencies (`jsdom`, `@testing-library/react`, `@testing-library/dom`); `jest-dom` and `@vitejs/plugin-react` deliberately not added. A written convention in `web/PATTERNS.md` and `CLAUDE.md` says which components get one | 4 commits `83ed997`…HEAD. **320 tests across 29 files** (was 313/26), lint, typecheck and `format:check` clean, `pnpm gen:glossary` re-run with `reference/glossary.md` byte-identical, e2e still 14/14. Both render tests **teeth-checked by injecting the defect they exist to catch** — gating the interrogation's reasoning on `correct`, and making `fieldName` return its argument unchanged — each failing alone out of the full suite and reverted. RED for the harness itself was real: the `.tsx` file matched no `include` glob until the config changed. **A whole-branch review then found the harness's first real customer on the same branch**: `ModelInterrogation` told readers “Five questions” while rendering six, having gained one when the doc did — a data test asserts the length and is perfectly happy, and the audit suite never reads the sentence. Fixed test-first. The review also raised two blocking record defects (the tracker header contradicting the row below it; three dependencies landing with no `reference/stack.md` entry) and eight minors, all closed here except two recorded deferrals | No backfill across stage 03's remaining components; the three Playwright stand-ins in `audit.spec.ts` stay, since deleting a real-browser check on the strength of an hour-old jsdom one has no evidence behind it. `matchMedia` is still unstubbed — jsdom does not implement it, and the first component that needs one adds it to `src/test/setup.ts`. **Two findings deferred rather than fixed:** `jsdom@30` declares `engines: node ^22.22.2`, and this machine runs 22.19.0 while `.nvmrc` pins the floating major `22` — nothing enforces it and all 320 tests pass, but the repo now carries a dependency whose floor its own dev Node misses, and bumping `.nvmrc` changes an environment rather than a file, so it is the user's call. And the six render-testable components stage 03 already ships are still uncovered — the backfill non-goal stands |
+| 2026-08-17 | W-3.4 | **Stage 04 is interactive, and the seam it shipped is the one that was measured.** `docs/04-project-setup.md` ported to `web/src/features/setup/` as **fifteen steps**, taking W-3 to **4/18**. Content is extracted as data first — eight modules, seven of them asserted against the doc at run time rather than against a count copied into a brief — then rendered by eight components, then assembled. The four provisional pairs from **D-65** (`scaffold`/`structure`, `env`/`client`, `ci`/`enforce`, `deploy`/`verify`) **all stayed split**, decided by arithmetic: combined they measure 4.80, 5.40, 3.54 and 4.23 against a 3.2 ceiling. That makes this the first seam in this repo to survive measurement unchanged — stage 03 re-cut five of six. **TD-36 closed** on three guards, not one (see its entry: the tuple alone closes half). `e2e/audit-pages.spec.ts`'s thirty-six-URL literal was **deleted rather than updated**, on the instruction in its own header | **23 commits** `394e515`…HEAD, **60 files, +5402/−191**. Tests **382/41 → 521/63**. Audit **17/17** against a fresh build each time, including contrast in both themes, no overflow 320→2560, zero console errors. Sweep re-derived rather than quoted: **157 expandables / 119 ids over 51 URLs**, from 140/107 over 36. Stage 04 prerenders to 228KB of static HTML; the derived sweep covers **63 URLs**. `gen:glossary` re-run and `reference/glossary.md` **byte-identical** — no term was invented. **Final panel table, all fifteen under 3.2, median 2.28 max 2.99**: scaffold 2.99, structure 1.81, format 2.67, strict 1.58, env 2.90, client 2.50, hooks 2.83, ci 2.35, enforce 1.19, deploy 2.94, verify 1.29, proof 2.28, ai 1.28, checklist 2.25, traps 1.57. **Six reviews ran and found 26 blocking items**, none of which the gate would have caught. The one that mattered: a coverage walk found **five doc sections telling the reader to run a script or set a value the app never showed them how to create** — `.nvmrc`/`engines.node`/`.npmrc`, the `test` script, `format:check`, Vercel's environment variables, and `SENTRY_AUTH_TOKEN` — all five assigned to a panel by the plan's own line ranges. That, not lean writing, is why the median was 1.74 before the fix wave and 2.28 after. Fixing it took `scaffold` to **4.25**, past the ceiling and past the audit's own 4.0 gate; it came down 4.25 → 3.47 → 3.34 → 2.99 in three measured steps rather than one guess. **Nine plan defects found by executing rather than reading**, including a test that could never pass (`PIN_RULE` asserted against a hard-wrapped doc), a regex that counted nine traps where the doc has seven (`DOC.indexOf('## Traps')` matches §7's prose about `## Traps`), material sourced to a section that does not contain it (only three of four blockers are §8's), and every `.tsx` test in Wave 2 written against `jest-dom` and `user-event`, neither of which this project installs | **Deferred:** the `## Artifacts` inventory was initially dropped and is now ported, but `Entry criteria` is still surfaced nowhere — consistent with stages 01–03, and recorded because stage 04's entry criteria carry the database decision that `tree.ts` and the `env` artifact both depend on. §1's no-`gh`-CLI fallback (create an *empty* repo in the web UI, then `git remote add`), §8's `/robots.txt` canonical-origin check, and the AI section's closing named-tools line are not ported. `AnnotatedArtifact` shipped without a copy affordance and with a tab stop on every line (**TD-39**, **TD-40**); both were closed the following day on their own branches, along with **TD-41**, so no debt from this round is still open. Two components hand-roll type roles the design system already names. **The whole-branch review then found five more blocking items, all fixed here**: three literal backticks rendering on the live page from the reference cards, which D-67 exists to prevent and which nobody re-grepped for after the commit that added them; a locked-option contrast pair at 2.62:1 and 3.21:1 (**TD-41** files stage 03's seven instances of the same idiom, unfixed because they are merged UI this branch does not own); an `artifacts.ts` docblock still describing the pre-fix state and instructing a reader to delete three of the fix; two record files still saying the port had not started; and a sweep figure of 151/113 measured two content commits early and written into four files under the words *re-derived rather than quoted*. `pnpm test:prod` **not run** — it measures the deployed site and says nothing about this tree |
+| 2026-08-14 | W-3.4 (port planning) | **The stage 04 port's seam, measured rather than inherited.** The round opened with planning because the spec's Phase 5 table cut the doc nine ways when it was 323 lines and the correction phase took it to **711**. The tracker's own framing — four steps at roughly a hundred lines each — was the thing that needed checking, and checking it required knowing what a doc line costs on screen. **It costs nothing predictable.** Fitting stage 03's fourteen doc sections against their measured panels, with step count, code lines, prose lines and table lines as predictors, returns `screens = 3.068*steps + 0.0016*code - 0.0032*prose - 0.0531*table`: every content coefficient is noise and two are negative. §14 renders 145 prose lines in 2.29 screens; §1 renders 21 in 3.17. **Panel weight tracks step count and nothing else**, because an author fills a panel to about three screens whatever the step covers, by choosing what to collapse and what to cut. So the gate can falsify a seam afterwards and cannot choose one, which is **D-64**. What the measurements do carry is a **floor**, and the floor settles the question: `scaffold` (§1+§2) reaches **3.74** on chrome plus artifacts before a word of teaching, past stage 03's heaviest authored panel, and `gates` (§6+§7) reaches 3.00 while owing **seven** judgments. All four heavy pairings fail, and they fail on D-52's *first* clause rather than its threshold. Nine steps become **fifteen**, eleven firm and four provisional, and the provisional four are authored **split** and merged only on measurement — **D-65**, inverting stage 03, which authored merged and split on failure in five of six tasks | **2 commits** `dc47580`…`126b3c8` on `feat/stage-04-app-port`, cut off `develop` at `49122f5`. **The measurement is the evidence**: all **35 panels** across stages 01–03 measured at 1024×768 with the audit's own method (`#panel-<id>` height ÷ 768), giving stage 03 a median of **3.02** and a max of **3.88** over 22 panels, against 2.36 and 2.47 medians for stages 01 and 02. Per-unit costs taken off the same build: minimal panel chrome **1.70 screens** (`03#require` 1.68, `02#done` 1.69), a rendered code line **20px = 0.026 screens** (`t-data`, 14px/20px, as `SchemaInspector` renders it), a `<pre>` line **0.033** (12px/24px plus 24px padding), a figure **0.87 median** and 3.29 at worst. The first pass at the code number found four code units in three stages and was **wrong** — stage 03 renders DDL as per-line elements with `whitespace-pre`, not `<pre>`, so the classifier missed them; corrected by measuring the computed line-height rather than counting tags. The fit's data is **censored and is recorded as censored**: every stage-03 panel is post-reshape, so none can exceed 4.0, and the counterfactual comes from the pre-reshape record instead (`require` at **4.7** before `trace` split out, six of nine original panels failing). Spec amended in place with the original nine-step table kept and marked superseded; plan is **1,610 lines, sixteen tasks in four waves**, every data module carrying a test that reads `docs/04-project-setup.md` rather than a count copied into a brief. **NOT merged, NOT pushed.** | **The port itself.** `04-project-setup` is still `ready: false` and absent from `STAGE_CONTENT`; W-3 stays at 3/18. The execution approach was recommended and not chosen — subagent-driven for the eleven independent data and component tasks, inline for the two assembly tasks where the merge-or-split calls need the whole panel table in one context. **Two findings filed rather than fixed**: `count-expandables.mjs` sweeps 36 URLs where `audit-pages.ts` now sweeps 48, because W-6 appended `/reference` and eleven sheets to the audit's derivation and not to the `.mjs` copy that mirrors it (**TD-37**); and lefthook's pre-commit reported `format (skip) no files for inspection` on a commit touching two markdown files under `docs/`, so the format hook does not reach them (**TD-38**) — the same shape as the glob trap stage 04's own §6 teaches. **Two corrections rode along**: the spec's Verification cited a sweep baseline three moves stale (108 expandables / 36 URLs against a re-measured **140 / 107 ids**), and `docs/stage-03-status.md:3` held a stray committed line reading `test`. **Not decided**: which of the four provisional pairs merge. That is Wave 3's measurement and it cannot be answered before the panels exist |
+| 2026-08-14 | W-6.2 | **The gathered original is shown on each sheet, and converted off GIF first.** Closes the **D-63** amendment: the transcription stays primary and the graphic sits below it, framed on a plate because every one of these has a light background and would punch a hole in the cyanotype unframed. **Not dimmed at rest** — the obvious dark-mode trick is to drop opacity until hover, but the reason the graphic is there is to be read, and dimming content to make it blend is the worse trade. **The two GIFs were static images stored as GIF**, which is why they collapse so far. Originals stay untracked and gitignored; git keeps every version of a binary forever, and the converted copy is what the site serves | **1 commit** `6b62634`, merged `--no-ff` as `4727dc3`, 12 files. **5.2MB → 644K**: `MasterPlan-Api-Design.gif` 3817K→196K (−94.9%), `Software-Architecture-Patterns.gif` 1024K→121K (−88.2%), the two JPEGs −34.2% and −30.6%. **Legibility verified by reading the converted file**, not by trusting the quality number — every label in the fifteen-step roadmap survives at 196K. **382/382 tests** (6 new), **17/17 playwright** including WCAG AA both themes over the sheets carrying images, lint/typecheck/format/build clean on the merged result. **Teeth-checked** the on-disk guard by typoing a src: failed with `ENOENT … git-commandz.webp`, naming the exact path. **A correction is on the record**: the first pass used a plain `<img>` reasoning that already-WebP files gain nothing from re-optimising, which missed `srcset`. `@next/next/no-img-element` caught it; the rule was right and suppressing it would have been wrong. Dark mode confirmed by driving the real theme toggle rather than asserting — the first two attempts wrapped the system→light→dark cycle back to system and were caught by reading the computed `body` background | Transcribing the three gathered sources into `design-patterns`, `api-design` and `git-commands` — content work now that the frame exists. Two of the three still have no post URL or author recorded, which has to happen before anything derived from them ships publicly. The figure registry and the six architecture diagrams as drawn figures rather than a photographed original |
+| 2026-08-14 | W-6.1 | **A reference section beside the eighteen stages.** Lookup material had nowhere to live, and `reference/glossary.md` and `reference/stack.md` had been unreachable from the app since they were written — no route rendered either. `/reference` now holds cheatsheets as structured TS data behind one `CheatsheetView`, following the `terms.ts` precedent (D-36): TS is the source, `reference/cheatsheets.md` generates from it by snapshot test via `pnpm gen:cheatsheets`. **Eleven sheets are registered and ten are deliberately empty** — an empty sheet renders "Sheet not drawn" and is chipped WIP in the rail, so the index doubles as a worklist of what still needs gathering (D-62). Sheets tether to stages by slug, guarded by a test that every tether resolves. Rows are a CSS grid, not a `<table>`, because a table sets its own min-width from content and pushes the page into horizontal scroll at 320px | **11 commits** `1778bea`…`2114346`, merged `--no-ff` as `0207fd6`, 23 files, **+3175/−86**. **376/376 tests across 41 files** (26 new: 11 registry, 8 renderer, 4 sidebar, 2 sitemap, 1 snapshot), **17/17 playwright**, format/lint/typecheck/build clean — all re-run on the merged result, not just the branch. **Every RED was real and every teeth check bit**: breaking a stage tether failed exactly one test naming `git-commands → 04-project-setups`; replacing the placeholder branch with `null` failed only the placeholder test; renaming the nav landmark failed three and left the stage-index guard green. **The suite caught a real integration miss** — `audit-pages.spec.ts` asserts the derived sweep equals the frozen thirty-six-URL fixture, and twelve new reference URLs broke it. Padding the fixture would have converted a migration guard into a restatement of whatever the deriver returns, which its own docblock forbids, so the assertion was split: stage paths still compared against the fixture, reference tail asserted separately. **Measured at 320px**: document 312px against a 320 viewport, zero offending elements | Source graphics displayed on the sheets (**D-63**, needs an asset pipeline — files sit outside `web/public/`, and 5.1MB of static infographic is stored as GIF). The figure registry and the six architecture diagrams; the sheet carries rows only. Glossary and stack surfaced in the hub — the reason `/reference` beat `/cheatsheets` as a name, but not needed for the skeleton to stand. Stage→sheet backlinks; the tether is one-directional today. Search, already unscheduled at `docs/task.md`. Copy-to-clipboard on code rows, since nothing registered has code rows yet and a control with nothing to act on is untestable. Transcribing the three gathered sources into `design-patterns`, `api-design` and `git-commands` |
+| 2026-08-14 | TD-12 | **The audit's page list is derived, not listed.** `e2e/audit.spec.ts` held thirty-six hand-written URLs; stage 02 added six by hand and stage 03 thirteen more during its reshape. The failure ran in the direction nobody checks — a dead hash fails loudly, a **missing** one audits nothing while the suite reports green, which is how a stage could ship unaudited. `e2e/audit-pages.ts` now takes stages from `STAGES.filter(s => s.ready)`, the same flag the router reads, and step ids from the rail each stage renders, since `Stepper` emits one tab per step as `id="tab-<stepId>"`. Neither source can fall behind the app. **A ready stage that renders no rail throws** rather than contributing nothing, because live and broken should fail rather than disappear | **4 commits** `03f08a9`…`33bc2f6` and one more carrying this row, 9 files, **+448/−77** through `33bc2f6` — two to the close, one from the review (below), one to the records. Four of the nine are the working files, all under `web/e2e/`; the rest are records, plus one parked spec that rode in on the fix commit and belongs to no part of this work. **RED was real**: `Cannot find module './audit-pages'` before the module existed, an unresolved import rather than a failed assertion. **The equivalence test spells out all thirty-six URLs rather than recomputing them** from the source the implementation reads — an expectation derived the same way as the thing it checks asserts nothing, the defect class recorded seven times in Process observations. **Teeth-checked** by flipping `02-planning` to `ready: false`: the assertion failed with seven URLs missing, and the guard test stayed green, so exactly the intended one broke. Measured at the close: audit **14/14 → 16/16** over the same 36 URLs; sweep unchanged at **140 expandables / 107 ids**; vitest 350/37, lint, typecheck and `format:check` clean. **The review then found two blocking items, both this branch's own.** `2eb3c97` corrected `KICKOFF.md`'s stale audit figures and in the same commit left the identical numbers standing one file over in `docs/tracker.md`; `PATTERNS.md` and `count-expandables.mjs` both still described the `PAGES` array this branch had just deleted, the second inside a comment the branch itself rewrote. Three fresh instances of the trusted-but-false claim TD-12's own entry names, about the mechanism TD-12 is about. The second is the better finding: `count-expandables.mjs` paired `slug:` with `ready:` by a greedy match, correct today only because `slug` happens to precede `ready` in all eighteen entries — which TypeScript does not require, prettier does not enforce and no test covers. Swap two fields and it reads one stage's flag off its neighbour, drops the stage after it, and prints a plausible count over the wrong set; the comment above it claimed it would fail loudly, and the guard caught parsing *nothing*, not parsing *wrong*. Writing the completeness check that closes it **found its own bug** — counting bare `slug:` picks up the field on the `Stage` type, so it threw on every run until it counted `slug: '` — which is the third defect on this branch found by running something rather than reading it. **Post-fix, the whole gate re-run over the finished branch on 2026-08-14**: `format:check`, `lint --max-warnings 0` and `typecheck` (after typegen) all **exit 0**; vitest **350/350 across 37 files**; audit **16/16 in 1.1m**; and the sweep, stood up on a cold server per TD-27, still reports **140 expandables / 107 ids across 36 URLs** — the same three numbers the `RevealList` round measured, so the derivation covers exactly what the hand-written list did | **It broke a tool, which is the more useful half.** `e2e/count-expandables.mjs` — added during the `RevealList` round to make the 140/107 baseline obtainable — derived its URLs by scraping `const PAGES = [` out of `audit.spec.ts`. Deleting that array broke it on startup, and **nothing in the gate noticed**: `pnpm test:e2e` reported 16/16 while the script threw, because it is a tool no suite runs. Found by running it. Repaired to derive the same way, duplicated rather than imported because it is plain `.mjs`. **Not closed: the other direction.** The sweep follows what the app renders, so a step deleted by accident leaves it silently. Stage 03 is covered by construction — its `Step[]` is typed against `STEP_IDS` — and stages 01 and 02 have no equivalent, now **TD-36**, closing most cheaply as part of building the next stage rather than as its own round. **One file on this branch is not this branch's work**: `docs/superpowers/specs/2026-08-14-reference-hub-design.md`, a Reference-hub design brainstormed to four decisions and then **parked**, riding in on `33bc2f6` because it was written in the same session. It is marked parked in its own first line and ends on an unresolved question — which cheatsheet leads slice 1 — so it decides nothing and blocks nothing; recorded here because a spec appearing in a branch it has no relation to is the sort of thing a later reader treats as context for the branch. Its three source files under `reference/` are still untracked. **Merged to `develop` `--no-ff` on 2026-08-14**, the commit straight after this row (`a07a9b6`), taking `develop` to **112 ahead of `main`**. **Not pushed** — `main` is untouched at `8d5045c`, and both the push and the promotion are the user's |
+| 2026-08-14 | W-3.4 (`RevealList`) | **`RevealList` and `RevealFacet`, extracted from stage 03's duplicated accordions.** The branch was scoped to replace **five** and replaced **eleven**. The five were exactly the ones whose own header comments admitted the duplication (`EvolutionNotes` and `ScalingMoves` said so in prose and deferred the fix as "a change of its own"); the other six never announced themselves, so the scope came from what was documented rather than from what was there. A grep for the shared button className, run while confirming Task 7 had finished the five, found `ADRAnatomy`, `AIArchitecturePlays`, `ContractCost`, `Normalisation`, `SoftDelete` and `TraceForward` carrying the identical signature down to `Card className="p-0"`, `divide-y divide-line` and the button's full class string. **The user extended the branch rather than deferring them**, on the reasoning that finishing at five would leave six copyable originals in front of stage 04 — which is the thing this branch existed to prevent. Eleven components now call `RevealList` (**twelve instances**; `AIArchitecturePlays` renders its internal `PlayList` twice), and `src/features/architecture/` holds no bespoke **accordion** — no copy of the collapsed-row, chevron, `Card p-0`/`divide-y` shape this branch existed to unify. It does still hold three hand-rolled **disclosures** (`ERView`, `InternalOrganisation`, `RouteShape`), which are a different pattern and were never in scope: single-open selected tiles in a grid, no chevron, no divider list. Not missed migrations, and named in `PATTERNS.md` so a stage-04 author does not read the folder as accordion-free and copy one. **Two shared components were widened** for two callers that genuinely did not fit, and both were **reported rather than forced** on first contact: `RevealRow.title` went `string` → `ReactNode`, because `AIArchitecturePlays`' claim rows are `text-sm` (14px measured) and `RevealList`'s fixed title slot renders at 17px, so migrating as-was would have grown every claim; and `RevealFacet` gained a `bodyTone` override, because one block per `ADRAnatomy` row is `text-fg` where the component hardcoded `text-muted` — different tokens in both themes, not a near-match. **Two visual changes, both deliberate, both declared in a commit subject before they landed**: `DeferredList`'s and `ContractCost`'s badges moved from below the title to beside it, because that is where the shared slot puts them. `TeamNotes` moved to `src/components/` (TD-13 made it every stage's convention), and `PATTERNS.md` now documents all three components including both of `RevealList`'s known hazards | **37 commits `437e945`…`23ecb10`** off `dd44b30`, 26 files, **+1675/−979** — 31 to the last migration, then **six from the whole-branch review** (below). The direction is the point: `src/features/architecture/` is **439 added against 1015 removed** across 13 files, `src/components/` **629 added** across six (`RevealList` 143 lines, `RevealFacet` 73, three test files, plus `TeamNotes` relocated). **vitest 332/33 → 350/37**, the four new files being `RevealList.test.tsx`, `RevealFacet.test.tsx`, `RevealFacet.source.test.ts` and `ScalingMoves.test.tsx`; test-file count verified against the tree at both ends with `git ls-tree`. **The equivalence proof is the sweep, not the suite**: `e2e/count-expandables.mjs` reports **140 expandables across 36 URLs and 107 distinct panel ids**, identical before the first migration and after the last, which is what distinguishes "eleven migrated" from "one silently renders nothing". Audit **14/14**, lint clean at `--max-warnings 0`, typecheck and `format:check` clean, build exit 0. **Every task was reviewed read-only in a fresh context and the reviews did the load-bearing work**: Task 10's returned **spec ❌** on a rendering regression no check on this branch could see, and reviewers reproduced findings independently rather than trusting reports — byte-identity across all twelve call sites by sha256 and djb2, badge coordinates to six decimal places, React's own source read to confirm the key-validation mechanism, and one throwaway unwrapped build stood up on a spare port purely to reproduce a 24px gap. **Seven checks that could not fail** were found and are recorded in Process observations, because that is the transferable half of this branch | **Not fixed, opened as debt:** `RevealList` hardcodes `<h3>` for row headings, flattening the outline for any caller whose section heading is also `<h3>` (**TD-34**); the audit's zero-console-errors test runs a production build and is structurally blind to dev-only React warnings (**TD-35**). **Not converted, and not debt:** the four hand-rolled disclosures in stages 01 and 02 (`ValidationLadder`, `AIWorkflow`, `WorkedExample`, `AIPlanningPlays`) each keep a single row open, so converting one is a behaviour change needing its own decision, now stated in `PATTERNS.md` rather than left implicit. **Left open:** TD-12 (the audit's hand-maintained `PAGES`), deliberately sequenced *after* this branch by user decision because it rewrites the file Tasks 5–8 verify against and would have moved the 140/107 baselines for an unrelated reason; TD-27 (a reused server serves a stale build), which bit an implementer mid-branch and cost one wrong measurement; and Task 15's minor, that `typeof row.title === 'string'` also drops the `font-medium` wrapper for a bare number or array, which no caller exposes. **Not advanced:** the stage 04 port. `04-project-setup` is still `ready: false` and absent from `STAGE_CONTENT`. **Whole-branch review run, and it earned its place**: seventeen per-task reviews had passed, and it still found two blocking defects neither could see. **I1** — the React key warning Task 16b was believed to have fixed was still live on `#tenancy`, `#trace` and `#indexes`; Task 16b keyed the row header's two sibling children and left `Card`'s three (`{header}`, `<ul>`, `{footer}`) unkeyed, and the test could not see it because its `jsxDEV` mock was scoped to the row-header span by className. Every live check on record had loaded `#ai` only, which passes neither slot. **I2** — a *third* visual change, undeclared: Task 5 moved `ScalingMoves`' four catch labels from `t-label` to a `RevealFacet` label (JetBrains Mono 11px/500 → Newsreader 12px/600, each label 448.78px → 498.24px), the exact swap `Normalisation` and `SoftDelete` had both written header comments refusing. Reverted, so "two visual changes" stays true rather than being amended into three. Four minors also fixed, all records-accuracy: a hypothetical stated as history in `PATTERNS.md`, a stale "the one visual change" comment, this row's own accordion claim, and TD-35's stated minimum comment. **The fix round drew the wrong lesson and the final re-review corrected it**, which is worth keeping in both halves. The fix round reported that the live dev probe only has teeth on a *cold* server, since Fast Refresh supposedly rebuilds without re-running React's creation-time key validation. **Disproved across three cold-server runs**: reverting the keys under a running server and reloading *does* warn, every time, once the rebuild settles. The real blind spot is narrower — Fast Refresh patching an already-open tab with no reload, and a reload that races an in-flight rebuild. The duller explanation is the true one: **every manual check loaded a single page**, and `#ai` exercises neither `header` nor `footer`. Corrected in `audit.spec.ts` and in TD-35 rather than rewritten away, because a wrong mechanism inside a comment written to explain a blind spot points the next reader at the wrong variable. Post-fix: vitest **350/37**, audit **14/14**, sweep still **140/107 across 36 URLs**, lint and typecheck clean. **NOT merged, NOT pushed** |
+| 2026-08-13 | W-3 (04 doc) | **Stage 04's doc-correction phase.** `docs/04-project-setup.md` 323 → **711 lines at `38765e7`**, and **TD-28 closed as a subset of itself**: it named four defects, all in §8, and the round closed **31** across every numbered section, plus `## Artifacts` and `## Definition of done`. Three instruments ran in sequence and each found what the one before it structurally could not — reading the doc (8), executing every runnable block in a scratch directory (5 more), and a cold reader handed the corrected doc and a task to finish (14 more, 10 boundaries classified out and untouched); per-task reviews found the last four. `reference/stack.md`'s Node row now names the file each environment reads instead of the environment, which is the generalisation the whole defect rests on. `### AI in project setup` exists, so `stage-metadata.test.ts` covers 04. **The port has not happened**: `04-project-setup` is still `ready: false` and absent from `STAGE_CONTENT` | **37 commits `859a1b8`…`1418c77`**, 9 files, +3307/−40, counted against the tree as this record was written, so the range ends where the work ended and excludes the record commits that carry it — `git rev-list --count develop..HEAD` is the branch total, and it moves every time this row is edited. **332/332 vitest across 33 files** (331/33 before; the +1 is `AI_SECTION_STAGES` gaining `04-project-setup`), lint clean at `--max-warnings 0`, typecheck clean after typegen, `pnpm gen:glossary` re-run with `reference/glossary.md` byte-identical, and a fixed-string grep for the old *matches .nvmrc* sentence returning nothing doc-wide. **`format:check` passes and is not evidence about any prose here**: `web/.prettierignore` excludes `*.md` and prettier reports success on an empty match set, confirmed by feeding it a deliberately malformed markdown file and watching it pass, so on this branch it covers exactly one `.ts` file. **Task 1 ran the doc rather than reading it** — `docs/verification/stage-04-doc-execution.md`, 15 rows scored `6 CURRENT · 2 STALE · 3 WRONG · 4 not executed`, the score extracted by a pasted re-runnable command and recounted independently by the controller on a different `awk` field. Raw exit codes: an impossible `engines` range gives `WARN Unsupported engine` and **exit 0**, so "makes pnpm refuse to install" was never true without the `engine-strict=true` the doc never sets; `lefthook run pre-push` **exit 1** with two `ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL … not found`, because stage 04 wires a gate onto scripts it never creates; the `prepare` guard reproduced at **exit 1 / exit 1 / exit 0** across a bare invocation, `CI=1 VERCEL=1`, and the `\|\| true` form. **Task 3's teeth check ran three times with no invented test file in the scaffold for any of them:** BEFORE exit 1 (`not found` ×2) → INTERMEDIATE exit 1 (`No test files found, exiting with code 1`, the same defect one link further down the chain) → AFTER **exit 0** with zero test files. **Task 4 proved the `engines` format instead of adopting it**: `22.x` with Node v22.19.0 → exit 0, `23.x` with the same Node → `ERR_PNPM_UNSUPPORTED_ENGINE`, exit 1, so the local guard survives the change to Vercel's documented form. **Task 6 had a real RED** — `AssertionError: 04-project-setup has no "### AI in ..." subsection`, `1 failed \| 21 passed` with the title-sync test still green, teeth-checked by renaming the heading to `### AI for project setup` (one failure, same assertion) and reverting to `22 passed`. **Cold-reader run 1 ran before the port** (`docs/verification/cold-reader-stage-04-run1.md`): completeness `3 BLOCKING · 20 NON-BLOCKING · 8 BOUNDARY`, reclassified to **14 defects, 10 boundaries, 12 prioritised entries**, four of the nine drops disproven by this branch's own execution file; consultability **3/5** against stage 03's 4/5, and its MISS was verified as **this round's own doing** via `git show develop:` rather than assumed. Its review found a dropped row **by arithmetic** — 11 claimed entries against 10 actual — which no amount of re-reading a 218-line record produces. **All twelve entries closed**, three not as specified: entry 4 refused to add `.next/` to `.prettierignore` because Prettier reads `.gitignore` too and the instruction would have taught something false; entry 10 closed by verification with no edit; entry 11's cited source was checked and does not contain the material (`grep` for rollback, roll back, promote and previous deployment across `deploying-101.md`'s 139 lines returns nothing), so §10 now points at `docs/13-production-deployment.md`. **The fix wave executed rather than reasoned.** `SESSION_SECRET` blanked → HTTP 500 carrying the Zod `too_small` thrown from `env.ts` at module evaluation, restored → 200. A `'use client'` component importing `env` **builds clean, serves correct HTML, and dies in the browser** on a three-issue `ZodError`, with the secret's value in none of the 10 client chunks — so the cold reader's "secret leak" premise is wrong and the real cost is that every gate this stage wires stays green. With §6's globs as printed, `lefthook` reported `format (skip) no files for inspection`, exited green, and left three files `prettier --check .` then rejected; widened, all three were rewritten and re-staged at exit 0. **The `engines.node` overrides-the-dashboard claim rests on Vercel's own documentation, and this row had the ranking backwards until the whole-branch review** — it read "evidenced from W-5… corroborated against Vercel's own documentation", and the reverse is true. `docs/superpowers/specs/2026-08-04-w5-deploy-design.md:21` *asserts* the override in prose, `docs/learnings/deploying-101.md` asserts it again, and neither records a deploy where the dashboard held one major and `engines.node` won, so W-5 corroborates. The primary source is https://vercel.com/docs/functions/runtimes/node-js/node-js-versions, which defines `engines#node` as the way "to override the one you have selected in the Project Settings" and states the case outright: Project Settings on **20.x** with `24.x` in `package.json` deploys **24.x**. This branch's own execution file evidences none of it — `stage-04-doc-execution.md` §8 is marked *not executed*, there being no Vercel account on this machine — and citing it would have recorded a check that never ran as evidence, which is the exact failure this round spent itself finding. **The round reversed itself once, on the record**: entry 12 escalated N2 to live (pnpm 11 shipped mid-round, so `corepack use pnpm@latest` writes `pnpm@11.21.0` against `stack.md`'s `10.x`) and pinned `corepack use pnpm@10`; the whole-branch review reversed both, because `stack.md` calls its versions "floors, not pins" and calls a version number in a stage doc a bug in the stage doc, so `@latest` was compliant and the pin was the deviation. `@latest` restored, and the sentence above it — which had promised something the command never did — is what was actually wrong. **Whole-branch review of the fix wave: eight findings** (3 Important, 5 Minor, 2 record-only), all addressed in 6 commits `b77a21e`…`1418c77`, two sources re-fetched rather than taken on trust and the review right both times. **A second whole-branch review, over the finished branch, returned seven more** (4 blocking, 3 recommended) and made the same observation each time: not one is a defect in what the branch *asserts*, since every claim checked out, but a consequence of the branch's own corrections that nothing on the branch followed through on. All seven closed in 7 commits `d056b9e`…`4cca648`, report at `.superpowers/sdd/2026-08-12-stage-04-doc-corrections/final-fix-report.md`. Its two mechanical checks both held: `git cat-file -t 79ef7a7` still answers `Not a valid object name` (exit 128), and the GitHub API still returns `v7.0.1` / `v6.0.10` / `v7.0.0` for the three actions §7 pins | **The port itself.** `04-project-setup` stays `ready: false`; `RevealList` is not extracted; W-3 is not advanced. **TD-27** (stale e2e server) and **TD-12** (hand-written audit `PAGES`) were declined as non-goals up front and are still open. **TD-29** and **TD-30** were opened during the fix wave rather than closed — the Vercel rollback commands now live in two stage docs, and §5 still installs Vitest under an environment-variables heading, which needs a new numbered section. **`docs/11-ci-cd.md` was not edited and now disagrees with §7**, which pins the three actions at v7/v6/v7 while 11 still pins all three at `@v4` and sends its reader nowhere useful — §7's own opening line links there. Editing 11 was a non-goal at spec time and stayed one; the divergence is **TD-31**, opened by the whole-branch review, which found it on no deferred list at all. An unnoticed deferral is not a deliberate one, and this list only means anything if the difference is kept. **The ten boundary items stand untouched**: the completeness run's eight (test content → 06, `--passWithNoTests` removal → 06, full CI/CD → 11, documentation depth → 10, observability past first-pass error tracking → 15, repo naming → 01, structural decisions → 03, CODEOWNERS and `CONTRIBUTING.md` → "Scaling to a team") plus N9 and N13. **Nine NON-BLOCKING items dropped**, four of them disproven by this branch's own execution run. **One addition dropped for lack of evidence**: that GitHub offers a status-check name only once it has reported, true in memory and unsupported by two passes over GitHub's own branch-protection docs, with no runnable check available here. **Not executed, and labelled as such rather than implied**: `vercel link` and every dashboard setting (no account), the Sentry wizard (no org login), `gh repo create … --push` end to end (it would create a real repository under the user's account), and an actual `vercel rollback`. **Two hazards found and not fixed, now numbered**: Turbopack does not re-evaluate `env.ts` when `.env.local` changes, so **a reader testing their own env validation without restarting gets a false pass** — a check that cannot fail, placed in the reader's hands, and §5 says nothing about it (**TD-32**, rated High alongside TD-26 and TD-27, which are the same defect on our side of the line); and §9 may install Sentry twice, once directly and once via the wizard, which needs a wizard run against a real org to prove (**TD-33**, Low). Both were carried in this cell alone until the whole-branch review, which is the objection: debt is ranked by cost and revisited, and a hazard in a table cell is neither. **Per-task minors carried rather than fixed**: Task 1's `docs(setup)` scope against the stage-slug convention and its "on any pnpm version" cross-version claim tested only at 10.33.0; Task 2's citation of a dispatch-time resolution a reviewer could not find; Task 3's M1 and M4–M7, plus `2db28ce`'s commit message overclaiming what had been verified at the time, left uncorrected because history is appended to rather than rewritten; Task 4's five, including `79ef7a7` sitting on the line annotated `→ "commit"` when in the real incident it returned the opposite; Task 5's M1 and M2; Task 6's dropped ", so this is actionable" clause; and the fix wave's M5 (entry 3's trio-order provenance overclaimed, membership right and order wrong) and M8. **Cosmetic, all pre-existing**: `## Entry criteria`'s first two bullets at 97 and 99 columns, and the doc citing its own sections two ways (`§1` in three places, `### 1. Scaffold` in one). **This repository's own `lefthook.yml` still carries the narrow globs the doc just widened** — defensible for markdown, since `web/.prettierignore` excludes it from CI too, with a genuine one-file residue in `pnpm-workspace.yaml`, currently clean. **The humanizer ran over entries 1–6's prose (`93d881f`), was declined for 8b's and the fix wave's, and the whole-branch review reversed that** — the argument had been that the text already cleared a review, which is circular, since the pass is part of *done* under CLAUDE.md and its own output is what a review reads. Run over the whole document afterwards, it came back near-empty, which was the predicted and the correct outcome: em-dash density 5.9 per 100 lines on `develop` against 6.4 here, so the additions match the original's habit rather than inflating it; zero hits across the AI-vocabulary list; no superficial `-ing` tails, no copula avoidance, no filler or hedging, no signposting, and every `now` outside one line reading as the reader's own sequence rather than as narration of a diff. Three edits landed and all three were in prose written that same session: one genuinely diff-anchored sentence in §7 that told the reader what the branch had changed, one manufactured closer in the same paragraph, and one overclaim in §8 that no value could be copied from `.env.local` when only the URL cannot. **The skill's blanket "cut every em dash" was declined on the record**, as the skill itself allows: this is the house voice across all eighteen stage docs and CLAUDE.md, and stripping 48 of them from one document would leave it matching none of the others. **Not merged, not pushed** |
+| 2026-08-11 | W-5 (verify) | **Post-deployment verification**, closing W-5's last open item. `pnpm test:prod` and `playwright.prod.ts` — no `webServer`, remote `baseURL`, `@smoke` tag, `retries: 2` because a remote host flakes where a localhost server does not. Five checks, each chosen by one rule: it must test something a local or CI build structurally cannot. That excluded contrast, overflow and panel weight, since the bytes CI checked are the bytes Vercel serves | 4 commits `5e348ca`…`c231501`, merged as `a977e17`. **5 passed** against the live site; **331/331 unit across 33 files**, lint, typecheck and `format:check` clean; `pnpm test:e2e` still **14 passed** and never reaches production, via `grepInvert` — which was verified by running it, since whether `grepInvert` matches the `tag` option rather than only the title was the one thing the plan could not settle by reading. Every check teeth-checked: `PROD_URL` at the old wrong hostname, an asserted origin of `example.com`, a 20-entry sitemap, an inverted status condition proving all 19 requests happen, a wrong stage title, and an injected `console.error` | **Not automated in CI** — a push to `main` and a live deployment are not simultaneous, so it needs a wait-for-deployment step, which is the usual source of flake. **No deployed-commit check**: it needs a build-stamp surface and Vercel's system env vars exposed, and the sitemap-resolves check covers most of the risk for free. **No Sentry, error rates or latency baselines** — `docs/14` asks for all three and they belong to `15 — Observability`, which is unbuilt. **The origin is now in two files** (`site.ts` and `playwright.prod.ts`); a Playwright config cannot import from `src/`, and `PROD_URL` overrides it, but if the domain changes both move. **A stage title is hard-coded** in the render check while titles are single-sourced in `stages.ts` (D-36) — accepted rather than fixed, because `audit.spec.ts` imports nothing from `src/` either and the no-import rule was written for `SITE_URL`, which varies by environment as a title does not | **A whole-branch review found one of the five checks decorative.** `/Allow:\s*\//i` was unanchored, so `Disallow: /admin` contains `allow: /` and the check passed against a `robots.txt` with no `Allow` directive at all — in a suite whose entire rule is that each check earns its place, and the missing teeth check is why it survived. Both robots assertions are now anchored, and the origin assertion moved off `toContain`, which admitted a longer hostname and, worse, the doubled slash a trailing-slash env var produces. Both closed with controlled-origin teeth checks serving deliberately wrong artefacts |
+| 2026-08-11 | — | **TD-16 closed: worksheet placeholders reach AA, and the audit can see them.** The `/70` opacity dropped from all three worksheets — `--faint` was already tuned to 4.80:1 light / 7.93:1 dark, and the call site was discarding it. The audit's colour handling switched from parsing to **rasterising**, which fixes two blind spots at once: `oklab()` values were being skipped rather than checked (Tailwind emits oklab for every alpha modifier), and placeholders were never sampled at all because the sweep keyed off `el.textContent` and an empty field has none | The suite now reproduces the hand-measured numbers independently — **2.77:1 light, 4.44:1 dark** on all three worksheets — and nothing else fails on 36 pages in either theme. RED before the fix, GREEN after, teeth-checked by restoring `/70` on one worksheet and confirming only that page failed. 331/331 unit, 14/14 audit, lint, typecheck, format clean | Alpha-colour *backgrounds* are still resolved by the old parser, so an `oklab()` background still walks up to an opaque ancestor rather than being composited. No failure depends on it today; recorded rather than fixed. `docs/14` post-deployment verification still open |
+| 2026-08-11 | W-5 (live) | **Deployed.** `https://acp-dev-playbook.vercel.app`. The repo side was done on 2026-08-04; getting a live site took three dashboard problems the repository could not express and this round did not predict — the project was connected to a placeholder repository, its Framework Preset was *Other*, and Root Directory was unset | Verified against the running site rather than the dashboard: `/robots.txt` returns `Allow: /` and names the sitemap; `/sitemap.xml` carries **19** `<loc>` entries on the real origin; `/stages/03-architecture` renders with the `%s · Development Playbook` title template applied. CI green on `main`. **The guessed origin was wrong** — `acp-dev-playbook`, not `acp-development-playbook` — which `NEXT_PUBLIC_SITE_URL` corrected in production before it reached anyone; the fallback in `site.ts` is now the verified value | **Post-deployment verification per `docs/14` still open**, and now unblocked for the first time: the audit suite assumes a local server on `:3100`, so pointing it at a deployed URL is its own slice. No CSP, no Open Graph, no custom domain |
+| 2026-08-04 | W-5 (repo side) | **Deploy preparation.** `engines.node` pins the version Vercel actually reads — `.nvmrc` reaches local and CI only, so the one host that serves users was unpinned. One `SITE_URL` feeds `metadataBase`, `sitemap.ts` and `robots.ts`, because a deploy round that writes an origin into three files has built the drift it exists to prevent. Sitemap derives its 19 URLs from `STAGES`. Five `create-next-app` SVGs deleted from `public/`, unreferenced since W-0 — the directory itself is now gone | 3 commits `b9088c4`…`d15c1dd`. **331 tests across 33 files**, lint, typecheck, `format:check` clean, `pnpm build` with **no `metadataBase` warning** and `/robots.txt` + `/sitemap.xml` in the route table. Generated output read rather than inferred: `.next/server/app/sitemap.xml.body` carries exactly **19** `<loc>` entries, `robots.txt.body` reads `Allow: /` and names the sitemap. **audit 14/14** against a fresh build with `:3100` killed first (TD-27). Nine teeth checks in total, each failing alone — a trailing slash on the origin, a stage dropped from the sitemap, `Disallow: /` in both its string and array spellings, a probe file in `public/`, a `favicon.ico` in `public/`, an unguarded `prepare`, a wrong `engines.node`, and `metadataBase` deleted | **Deployed 2026-08-11** at `https://acp-dev-playbook.vercel.app` — see the W-5 (live) row above for what the deploy itself cost. Root Directory `web` was the blocker this round predicted. **A whole-branch review found the round had missed an earlier blocker entirely**: `prepare: lefthook install` exits 1 without a `.git`, Vercel's build environment has none, and pnpm runs `prepare` on every install — so the deploy would have failed at the install step, before Root Directory mattered. Fixed with `|| true` and guarded. The same review found the recorded `metadataBase` evidence vacuous: the build warning it cited fires only for relative Open Graph images, which this app deliberately has none of, so it could not fail either way. **No CSP**: the theme script runs via `dangerouslySetInnerHTML` before first paint, so a policy needs a nonce or hash and a wrong one ships a blank page — its own change, with its own verification. **No Open Graph or OG image**, scoped out. **No post-deployment verification**: the audit suite assumes `:3100` and cannot be retargeted until a deployment exists |
+| 2026-08-04 | — | **Component test harness (TD-17).** `vitest.config.ts` split into two projects — `unit` (node, `*.test.ts`) and `dom` (jsdom, `*.test.tsx`) — so the extension picks the environment rather than a per-file docblock somebody has to remember; `extends: true` is what carries the `@/*` alias into both. Three dev dependencies (`jsdom`, `@testing-library/react`, `@testing-library/dom`); `jest-dom` and `@vitejs/plugin-react` deliberately not added. A written convention in `web/PATTERNS.md` and `CLAUDE.md` says which components get one | 4 commits `83ed997`…`3d5b147`, merged as `99f60cd`. **320 tests across 29 files** (was 313/26), lint, typecheck and `format:check` clean, `pnpm gen:glossary` re-run with `reference/glossary.md` byte-identical, e2e still 14/14. Both render tests **teeth-checked by injecting the defect they exist to catch** — gating the interrogation's reasoning on `correct`, and making `fieldName` return its argument unchanged — each failing alone out of the full suite and reverted. RED for the harness itself was real: the `.tsx` file matched no `include` glob until the config changed. **A whole-branch review then found the harness's first real customer on the same branch**: `ModelInterrogation` told readers “Five questions” while rendering six, having gained one when the doc did — a data test asserts the length and is perfectly happy, and the audit suite never reads the sentence. Fixed test-first. The review also raised two blocking record defects (the tracker header contradicting the row below it; three dependencies landing with no `reference/stack.md` entry) and eight minors, all closed here except two recorded deferrals | No backfill across stage 03's remaining components; the three Playwright stand-ins in `audit.spec.ts` stay, since deleting a real-browser check on the strength of an hour-old jsdom one has no evidence behind it. `matchMedia` is still unstubbed — jsdom does not implement it, and the first component that needs one adds it to `src/test/setup.ts`. **Two findings deferred rather than fixed:** `jsdom@30` declares `engines: node ^22.22.2`, and this machine runs 22.19.0 while `.nvmrc` pins the floating major `22` — nothing enforces it and all 320 tests pass, but the repo now carries a dependency whose floor its own dev Node misses, and bumping `.nvmrc` changes an environment rather than a file, so it is the user's call. And the six render-testable components stage 03 already ships are still uncovered — the backfill non-goal stands |
 | 2026-08-03 | W-3.3 | Stage 03's **eight recorded doc gaps**, cold-reader **run 4**, and the whole-branch **re-review**. The gaps were the residue of three rounds: normal forms named and never defined, soft delete shown as one mechanic with no choice posed, the filter half of soft delete missing entirely, the tenancy tables, the partial unique index that is the only way to express "at most one approved claim per shift", the third-party-call cadence, the pull-import contract row, and the container diagram's auth box. Doc **1,346 → 1,507 lines**, app 22 steps unchanged — every gap landed inside an existing panel under D-52's four-screen rule, three of them behind expand-to-reveal (D-49) | 15 commits `c080be1`…`5afbe09`. **Cold-reader run 4: COMPLETE**, 4 stalls / 8 guesses, against run 3's "PARTIALLY" — `docs/verification/cold-reader-stage-03-run4.md`. Its fix wave got a **D-48 verification pass on a live Postgres 17 cluster**, which confirmed the partial-index and soft-delete claims. The **whole-branch re-review then found five Important**: the headline (**I1**) was a backfill instruction telling the reader to paginate a `WHERE col IS NULL` loop by remembering the highest id touched — the guard shrinks the candidate set every pass, so a keyset cursor skips exactly the rows the previous pass rewrote. Proved by running it: **5000 of 5000 rows silently unmigrated**, reported as success; the corrected instruction reports zero after six iterations. **I4** was three separate sentences hand-counting "six boxes" against a diagram of eight, one of them calling all six "not yours" in the same breath as explaining that one is skipped *because* it is yours. All five plus six minors fixed in `5afbe09`; **313/313** vitest across **26** files, **14/14** audit over 36 URLs, lint and typecheck clean, every new test teeth-checked by breaking its claim and confirming only that test fails | **M5** — 2NF is unviolatable under the `uuid` primary keys every DDL in this stage uses, so the worked 2NF example keys on `(invoice_id, line_no)` and nothing else does. Run 4 filed the same thing under "genuinely unusable". Fixing it means either changing the example's key or teaching why surrogate keys make 2NF vacuous, and both are content decisions, not patches. **M6** — the archive table's "when volume is the problem" gives no threshold. Also still open: the sixteen minors from the previous whole-branch review; **TD-26** (the audit green about surfaces it never evaluates) and **TD-27** (the second `test:e2e` of a session measures a stale build), both opened during this round |
-| 2026-08-03 | W-3.2 | Stage 03's **app port**, closing TD-23's content gap and TD-25's app half. `web/src/features/architecture/` went from the **six** steps `W-3` shipped — `W-3.1` was doc-only (D-46) and left the app untouched — to **22**, mirroring all 14 doc subsections across **24** numbered figures. Ships **D-52** in place of D-38 (struck through, not edited): a step holds one judgment and its panel stays under four screens at 1024×768, enforced by `web/e2e/audit.spec.ts` rather than recorded, with `PANEL_EXCEPTIONS` back down to its two permanent baselines (`01#record` 6.7, `02#horizon` 5.6) | **90 commits** counted against the tree as this record landed, `c1a03b4`…HEAD. **286/286** vitest across **24** files; **14/14** playwright audit over **36** URLs, including the panel-weight test — no panel over threshold. Lint, typecheck and `format:check` clean. Four per-task reviewer subagents (tasks 5–9 and 11) returned **fourteen blocking findings**, all verified real, including two factual errors about Postgres in teaching material — a `FOR UPDATE` described doing what `SKIP LOCKED` does (`4bc60aa`), and an overclaim that transaction-mode pooling breaks a transactional lock (`687a042`).  **Then the whole-branch review**, whose three headline findings no per-task review could have seen: the contrast gate (below), the `access` step teaching the singular authorization framing 100px above the exercise that corrects it (`97554b7`), and the *doc* still describing transaction pooling incorrectly after the app had been fixed, so the merge would have shipped a source of truth less accurate than its port (`70ddefe`). Fixed one commit per finding, `57a44d9`…`c080be1`, then `2734fb4`. **Scoped re-review: all nine addressed, 0 open, ready to merge** — it reproduced every measurement from an independent harness and teeth-checked with different injections than the fix used. Task 11's review caught a third: a trace row that named a timeout "graceful degradation", contradicting the definition the stage's own resilience step gives (`dcfe1ae`). The **whole-branch review then produced seven blocking findings of its own**, so the defect rate did not fall off: the last task reviewed produced three and the whole-branch pass produced seven. Its headline was that the branch's own verification claim was hollow — the contrast and touch-target gates walked the step rail instead of the panel and opened five expandables across 36 pages, so every page was checked on its stage's last step with nothing revealed (`e058333`; corrected, 108 expandables and 867 colour pairs against 717, zero failures in either theme) | Sixteen minors from the whole-branch review, deferred with the reviewer's provenance rather than fixed. **TD-26** carries the three further ways the audit can be green about a surface it never evaluates, all found while fixing the first. Also open: a `RevealList` component to de-duplicate five accordions sharing one markup; the step rail's own fit past ~12 entries at 1440px, which is the half of D-38 that D-52 dropped without saying so; and nine glossary terms defined and never wrapped, because the names live in data strings where JSX cannot go — a pattern decision, not a patch |
+| 2026-08-03 | W-3.2 | Stage 03's **app port**, closing TD-23's content gap and TD-25's app half. `web/src/features/architecture/` went from the **six** steps `W-3` shipped — `W-3.1` was doc-only (D-46) and left the app untouched — to **22**, mirroring all 14 doc subsections across **24** numbered figures. Ships **D-52** in place of D-38 (struck through, not edited): a step holds one judgment and its panel stays under four screens at 1024×768, enforced by `web/e2e/audit.spec.ts` rather than recorded, with `PANEL_EXCEPTIONS` back down to its two permanent baselines (`01#record` 6.7, `02#horizon` 5.6) | **90 commits** counted against the tree as this record landed, `c1a03b4`…`c080be1`; the branch finished at 106 and merged as `790b3e4`. **286/286** vitest across **24** files; **14/14** playwright audit over **36** URLs, including the panel-weight test — no panel over threshold. Lint, typecheck and `format:check` clean. Four per-task reviewer subagents (tasks 5–9 and 11) returned **fourteen blocking findings**, all verified real, including two factual errors about Postgres in teaching material — a `FOR UPDATE` described doing what `SKIP LOCKED` does (`4bc60aa`), and an overclaim that transaction-mode pooling breaks a transactional lock (`687a042`).  **Then the whole-branch review**, whose three headline findings no per-task review could have seen: the contrast gate (below), the `access` step teaching the singular authorization framing 100px above the exercise that corrects it (`97554b7`), and the *doc* still describing transaction pooling incorrectly after the app had been fixed, so the merge would have shipped a source of truth less accurate than its port (`70ddefe`). Fixed one commit per finding, `57a44d9`…`c080be1`, then `2734fb4`. **Scoped re-review: all nine addressed, 0 open, ready to merge** — it reproduced every measurement from an independent harness and teeth-checked with different injections than the fix used. Task 11's review caught a third: a trace row that named a timeout "graceful degradation", contradicting the definition the stage's own resilience step gives (`dcfe1ae`). The **whole-branch review then produced seven blocking findings of its own**, so the defect rate did not fall off: the last task reviewed produced three and the whole-branch pass produced seven. Its headline was that the branch's own verification claim was hollow — the contrast and touch-target gates walked the step rail instead of the panel and opened five expandables across 36 pages, so every page was checked on its stage's last step with nothing revealed (`e058333`; corrected, 108 expandables and 867 colour pairs against 717, zero failures in either theme) | Sixteen minors from the whole-branch review, deferred with the reviewer's provenance rather than fixed. **TD-26** carries the three further ways the audit can be green about a surface it never evaluates, all found while fixing the first. Also open: a `RevealList` component to de-duplicate five accordions sharing one markup; the step rail's own fit past ~12 entries at 1440px, which is the half of D-38 that D-52 dropped without saying so; and nine glossary terms defined and never wrapped, because the names live in data strings where JSX cannot go — a pattern decision, not a patch |
 | 2026-07-21 | P-0 | README index, `reference/stack.md`, `reference/glossary.md` | 17 terms; versions checked against `npm view` that day | Search; per-stage frontmatter |
 | 2026-07-21 | P-1 | Stages 04, 11, 12, 13, 14 | Template held under real config content — the reason this group went first | — |
 | 2026-07-21 | P-2 | Stages 05, 06, 07, 09, 10 | — | — |
@@ -120,6 +142,21 @@ of what was believed at the time is the point.
 
 | # | Decision | Reasoning | Consequence |
 |---|---|---|---|
+| **D-67** | **A data module quoted from the doc keeps the doc's markdown; the rendering strips it, never the data** | Stage 04 is the first stage whose *data* carries markup. Stages 01–03 hold concepts and write their code spans as JSX by hand — `Architecture.tsx` has about thirty `<code className="t-data">` written out. Stage 04 holds filenames, flags and commands, so its seven data modules quote them the way the doc does, and there were about two hundred backticks across the wave. Stripping them at the source was the obvious fix and is not available: `CLIENT_FAILURE`, `PIN_RULE` and nineteen artifact blocks are asserted to appear in `docs/04-project-setup.md` character-for-character, and the doc has the backticks. Doc fidelity and clean rendering are both required, so one of them has to move, and the data is the half that cannot | `components/InlineCode.tsx` renders backticked spans as `<code>` and knows one construct — deliberately not a markdown renderer, because a half-markdown renderer invites data that assumes the other half. An unpaired backtick renders literally rather than swallowing the tail of a sentence, so a typo in the data looks like a typo. An accessible name cannot hold elements, so any data string used as one strips its markers instead (`plain()` in `DeployBlockers.tsx`). **Nothing tests that no backtick reaches the page**: the eleven that shipped raw were found by grepping the built HTML, and the same method is what would find the next |
+| **D-66** | **Data held against a document is compared whole, never by containment** | `expect(DOC).toContain(rendered)` cannot see a truncated artifact, because a substring of a block is still contained by it. Demonstrated rather than argued: deleting the last line of the `env` artifact — `export const env = schema.parse(process.env)`, the line §5 exists for — left the suite green. The plan specified `toContain` in the same comment where it cited `ddl-sync.test.ts` as the precedent, and that file extracts the block and compares with `toBe`. The weaker form reads as equivalent and is not, in exactly the direction that matters: content going missing | `artifacts.test.ts` asserts each artifact is an element of the doc's fenced blocks, so equality rather than substring. Matching a fence by its opening line was the first shape and is wrong here — four of nineteen artifacts open with `{`. The wider rule for this repo: when a test's subject is *the doc still says this*, compare the whole unit and normalise only whitespace, because a hard-wrapped document re-flows and a re-wrap is not a content change |
+| **D-65** | **A step seam is authored split and merged on measurement, never authored merged and split on failure** | Stage 03 did it the other way and paid in five of six tasks, where the plan's seam measured wrong and the split landed a task later than proposed. The two directions are not symmetric in cost. A merge is a deletion and a re-point: remove an id from `STEP_IDS`, fold two panel bodies into one, done. A split is a new component, a new id, a new hash, and every reference to the old one moved — plus the deep links in `docs/` that already cite it. The cheaper direction to be wrong in is the one that undoes with a delete | Stage 04 ships fifteen ids with **four pairs marked provisional** (`scaffold`/`structure`, `env`/`client`, `ci`/`enforce`, `deploy`/`verify`). Each is authored as two panels; a pair whose combined height measures under 3.2 screens merges in the assembly task that built it, and the merge is recorded with the number that caused it. `steps.test.ts` holds the eleven firm ids by name and the count separately, so a merge changes one assertion deliberately rather than loosening both. Plan: `docs/superpowers/plans/2026-08-14-stage-04-app-port.md` |
+| **D-64** | **Panel weight can falsify a seam; it cannot choose one. The instrument for choosing is the floor, and the criterion is D-52's first clause** | D-52 has two halves — one judgment per step, and four screens at 1024×768 — and the second half has been doing the work because it is the one a test can run. Measuring all 35 panels across stages 01–03 showed the second half cannot do that work. Regressing stage 03's fourteen doc sections against their measured panels gives `screens = 3.068*steps` with every content coefficient at noise: 145 prose lines render in 2.29 screens and 21 render in 3.17, because an author fills a panel to about three screens whatever the step covers. Weight is a property of authoring, not of content, so it only reports afterwards that a seam was wrong. The data is also censored — no post-reshape panel *can* exceed the gate — and the pre-reshape record carries the counterfactual instead (`require` at 4.7, six of nine failing) | A stage's seam is cut by **enumerating the judgments** in each doc section, then sanity-checked against a **floor**: chrome 1.70 screens, plus 0.026 per rendered code line, plus about 0.87 per figure. A pairing whose floor is already near the ceiling fails before it is written, which is how stage 04's four heavy pairings were rejected without authoring any of them. The **working ceiling is 3.2, not 4.0** — stage 03's authored median is 3.02 and its max 3.88, so a panel arriving at 3.9 has no headroom for the corrections every stage has needed. The 4.0 gate in `audit.spec.ts` is unchanged and stays the backstop. Spec: `docs/superpowers/specs/2026-08-12-stage-04-project-setup-design.md`, Phase 5 re-cut |
+| **D-63** | **A graphic of text is a source, not a deliverable.** Material gathered as an infographic is transcribed into structured content; the original is kept and credited, not shipped in place of the transcription | The request was a section of cheatsheets held as GIFs. A GIF of text fails on six counts this repo already cares about: it is not searchable (and search is in the backlog), not copyable (a git cheatsheet you cannot copy a command from is worse than a browser tab), not responsive (1152×1536 fixed, illegible at 320px, and `audit.spec.ts` enforces 320→2560), not themeable (a cream background punches a hole in the cyanotype), not accessible (one `alt` string standing in for forty labels), and not diffable (~1MB each). Shipping one would have required exempting the page from the project's own verification standard, and needing an exemption is the tell. The counter-argument was tested rather than assumed: `Software-Architecture-Patterns.gif` was read, cropped at 2× per panel to verify the small labels, and converted — which is also how the MVC arrow directions were caught, since `View →(User Action)→ Controller` and `Controller →(Renders View)→ View` run opposite ways | The `Cheatsheet` type carries a `source: { title, author, url? }`, so attribution is a visible empty field rather than something forgotten — the site is publicly deployed, and an uncredited transcription of someone's graphic is a real problem rather than an untidy one. **Amended the same day**: the user asked for the original to be displayed too. That does not reverse this decision — the transcription stays primary and the graphic sits beside it as the visual reference it was gathered to be — but it needs an asset pipeline the skeleton does not have, and is deferred on those grounds |
+| **D-62** | **The eighteen is a closed set; lookup material gets a sibling section.** A nineteenth stage was rejected for the third time. Registered-but-empty is a valid state for an entry in that sibling section | Stage numbers are filing codes rather than a sequence, and filing codes only work if the set is closed — which is why `stages.test.ts` asserts eighteen in four places and `Sidebar.tsx` hard-codes it in the wordmark. Those guards are downstream of the claim, not the reason for it. The section name `/reference` was chosen over `/cheatsheets` because it mirrors the root `reference/` folder 1:1 and can absorb `glossary.md` and `stack.md`, which have been invisible in the app since they were written. The known hazard is recorded rather than fixed: `lib/references.ts` and `components/References.tsx` already mean *outward links per stage* — same word, different concept | Sheets tether to stages by slug with a test that every tether resolves, so the section sits beside the eighteen rather than apart from them. **Empty is diagnostic, not cosmetic**: ten of eleven sheets ship with `sections: []`, rendering a placeholder and chipping WIP in the rail, so the index advertises its gaps instead of hiding them. This mirrors the existing behaviour where a slug absent from `STAGE_CONTENT` renders a placeholder rather than 404ing |
+| **D-61** | **A caller that does not fit a shared component is reported, not forced.** The implementer stops, says what the gap is in the component, and hands the decision back | Task 13 reached `AIArchitecturePlays` and found its claim rows are `text-sm` where `RevealList`'s fixed title slot renders at ambient body size. It measured both (14px against 17px on a live `SoftDelete` row), declined the migration, and named the gap as `RevealRow.title` being typed `string` with no size hook. It also rejected the workaround available to it — routing sized text through `badge`, which was already `ReactNode` — on the grounds that this would relocate the `summary: ''` workaround rather than solve it. Task 14 then reported a second gap of the same kind in `RevealFacet`. Holding both until the second one landed meant the user decided once, with two data points, instead of approving two component changes one at a time | The user chose to close both gaps and migrate the remainder (Tasks 15–17) rather than record them as debt, and every existing caller was proven byte-identical afterwards. The general rule: a shared component that eleven callers have been reviewed against is not quietly widened mid-branch by whoever hits the wall first. **The counter-case is also on record**: `ADRAnatomy`'s second facet block was left unconverted for one round because its body is `text-fg` against `RevealFacet`'s hardcoded `text-muted`, and it was converted only after the override existed |
+| **D-60** | **A shared component is extracted at its second consumer, not its fifth.** Shared interaction components live in `src/components/`, not in the feature folder where the first one happened to be written | `RevealList` was extracted from **eleven** copies, and the branch that did it cost nineteen task units, seventeen commits of migration and two mid-branch scope extensions. Two of the eleven files carried header comments admitting they were duplicates and deferring the fix as "a change of its own"; the other nine never said anything, which is why the plan opened by describing five. The cost is superlinear in the copy count, because each copy drifts a little and every difference has to be proven deliberate or accidental before it can be collapsed. `TeamNotes` is the same lesson at the other end: it was built in `features/architecture/` and imported across a feature boundary by stage 01 within one round, at which point the move to `src/components/` was already correct and was instead deferred for two months | Two consequences. **Location:** anything a second stage will plausibly use goes in `src/components/` when the second use appears, and `PATTERNS.md` documents it there. **Timing:** "we will extract it when there are a few more" is a decision to pay more later, so the trigger is the second consumer. A component still in a feature folder at its second importer is a finding, not a style preference |
+| **D-59** | **Rendered output is measured, not reasoned about.** A claim about what the browser produces — a gap, a font size, a colour, a coordinate — is only evidence if it came from a browser, on a server started fresh for that reading | `TraceForward` is the case that settles it. `RevealList`'s `space-y-3` injects a 12px `margin-block-end`, and the row's trailing `<a>` already carried `mt-3`. Three independent analyses — the implementer's, the controller's and a reviewer's — agreed the two 12px margins would collapse and the gap would be unchanged. Measured: **24px**. The anchor is `inline-flex`, and an inline-level box's margin does not collapse with a block sibling's. Had the consensus been trusted, a doubled gap would have shipped across a ten-row list, invisible to the expandable count, the panel ids, the audit and all 342 tests. `Normalisation` failed the same way in the opposite direction (4px became 12px, caught only by a computed-gap reading against the pre-branch original), and one of those readings was itself wrong the first time because a reused `:3100` tab served a stale build | Any visual-equivalence claim on a refactor cites a computed value read from a live page, before and after, on a port not used earlier in the session (**TD-27**). "The classes are the same so the rendering is the same" is not a verification. This is also why `e2e/count-expandables.mjs` exists and why it prints panel ids as well as a total: both are properties of a rendered page that no assertion in the suite was checking |
+| **D-58** | **A Definition-of-done checkbox the document never teaches the reader to perform is not written.** An implementer handed one is expected to refuse it and say why | Task 5's brief specified a box reading "`pnpm install` succeeds in a checkout with no `.git`". §6 explains why that case matters and no section teaches anyone how to build such a checkout, so the box would have been unperformable — a checkbox that looks like verification and is not, which is the defect class the entire round was closing. The implementer declined it and routed the coverage to the existing preview-URL box instead, on the grounds that Vercel's build host *is* the `.git`-less environment. That is stronger than what was specified, because it checks against a real host rather than a simulated one | Coverage may be routed to a box that already exists, but the connection has to be stated on the page. Here it was left to a scratch report first, and saying it out loud became its own fix-wave entry. A spec or plan that mandates an unperformable box is a plan-authored error and is recorded as one, not as implementer drift |
+| **D-57** | **Once a fix wave's entry list cites section numbers, the numbering is frozen for the duration of the wave.** New material lands inside existing sections | The cold reader's prioritised list names sections by heading, and those headings carry numbers: entries 8 through 11 all cite one. Giving the missing repository-creation step its own numbered section would have renumbered §7 onward and invalidated four entries mid-wave, inside a document whose presenting problem was that it disagreed with itself. The step went at the end of `### 1. Scaffold` instead | Anything that genuinely needs its own section becomes debt rather than an edit. **TD-30** is that debt, opened for §5 still installing Vitest under an environment-variables heading, and naming it costs less than silently carrying a section in the wrong place. D-42 does not cover this: an entry list is a work queue, not a citation, and it goes stale the same way a line number does |
+| **D-56** | **A stage doc points at `reference/stack.md`'s floor and prints a command that resolves it at run time. It does not print the version.** Made under reversal | `corepack use pnpm@latest` sat under a sentence promising "the actual pnpm version from `reference/stack.md`", and when pnpm 11 shipped mid-round `@latest` began writing a major that file does not name. The round read that as the command breaking its promise and pinned `corepack use pnpm@10`. Review reversed it against two lines of `stack.md`: the versions there are "**floors, not pins**", and "if a stage doc contains a version number, that is a bug in the stage doc". Under its own rules `@latest` was compliant and the pin was the deviation — it rots the moment the floor moves, and it prints a major the referenced file forbids. What was wrong was always the sentence, not the command | `@latest` restored; the prose now describes floor semantics, so a newer major means the reader re-reads `stack.md` rather than pinning around it. The reversal is recorded rather than tidied away: `docs/verification/cold-reader-stage-04-run1.md`'s entry 12 row reads "Closed, after one reversal" and carries the whole arc, because the wrong call is part of what happened |
+| **D-55** | **`reference/stack.md` names the file each environment reads, not the environment** | The Node row said to match the version "in CI, in Docker, and in Vercel project settings" — right, and unactionable. It names a setting without naming the file that overrides it, so a reader who writes `.nvmrc` has pinned local and CI and believes they have pinned all three. That belief is TD-28's headline defect and it cost this project a day of a deploy. The file whose entire job is that versions live in one place was the wrong place to leave the mechanism implicit | One clause on that row: `.nvmrc` for local shells and CI, `engines.node` in `package.json` for Vercel, which reads neither. It generalises past Node, and the generalisation is the teachable half — for each environment that runs your code, find the file *that* environment reads. `docs/04-project-setup.md` §1 teaches it, §8 defers to §1 rather than repeating it, and the Definition of done checks files instead of environments |
+| **D-54** | **The cold-reader completeness pass runs before the app is built, not after** | `docs/learnings/stage-implementation-101.md` records stage 03 running it last and ending with a finished twenty-two-step app sitting on a doc with three blocking gaps. Run first on stage 04, the same pass returned three blocking findings — §5's schema cannot be run as written, no step creates the repository the later sections assume, and the Vercel Git connection is never instructed — and each one would otherwise have been ported into a component before anyone noticed. It also caught a findability regression the round had just created, which a pass run after the port would have blamed on the port | The pass moves into the doc phase and its fix wave is budgeted there; D-48 still applies to the wave itself. The cost is that a cold reader now reads a document mid-correction and can report defects the round introduced. That is worth having, provided the record says which is which: this round checked every such finding against `git show develop:` rather than assuming, and found one round-caused and one inherited |
+| **D-53** | **A stage whose doc is wrong gets a doc-correction phase before the port, as its own branch and its own round** | Stage 03's round ported prose that was already right. Stage 04's doc was wrong where a reader acts on it, which is TD-28, and porting first means the app inherits the defects and two artifacts need correcting instead of one — the bill TD-23 and W-3.3 already paid once. The round's own arithmetic is the argument: 31 defects closed, 27 of them invisible to the reading that raised the debt. A port specified against any pre-correction state of that document would have been specified against a document that moved 37 commits underneath it | The branch order is doc correction, then `RevealList`, then the port cut off `develop` once both have landed (D-51 still governs how the doc and its port travel together once the port exists). A stage doc that comes through its correction phase unchanged skips this and ports directly, so the phase is a response to evidence rather than a new standard step. Spec: `docs/superpowers/specs/2026-08-12-stage-04-project-setup-design.md` |
 | **D-52** | **A step holds one judgment, and its panel does not exceed four screens at 1024×768. Step count follows content.** Supersedes **D-38** | D-38 capped a dense stage at five content steps, and its stated reason was that “a stepper stops being navigable when a step is a scroll” — a claim about how much one panel holds, enforced by counting a different noun. The two pull opposite ways: fewer steps for the same content makes panels heavier, so the rule pushed toward the failure it existed to prevent. Measured at 1024×768, stage 03's *median* panel was **5.3 screens** against 2.4 and 2.5 for stages 01 and 02 — its typical panel was heavier than either of their worst non-outlier panels, while sitting inside a rule that only knew about counts. D-38 had also already been exceeded without a recorded deviation: **stage 02 shipped six content steps plus AI**, which satisfies `PATTERNS.md`'s four-to-six and breaks D-38, so the rule had been narrower than the documented guideline since the stage after the one it was written for. Four screens is taken from the data rather than chosen: stages 01 and 02 both have a next-heaviest panel at 3.2, so the threshold clears everything either stage has except one panel each, and it is not tuned to let anything on stage 03 pass — six of its nine panels failed | Enforced, not recorded: `web/e2e/audit.spec.ts` measures every panel and fails anything over the threshold, with a baselined `PANEL_EXCEPTIONS` list carrying `01#record` (6.7) and `02#horizon` (5.6) permanently and stage 03's oversized panels as temporary debt. A baselined panel that improves past its number fails too, and — after the first review of that test found the exemption unbounded — so does one that grows past it. `PATTERNS.md`'s four-to-six becomes the typical range rather than a ceiling. Spec and plan: `docs/superpowers/{specs,plans}/2026-07-31-step-panel-weight*` |
 | **D-51** | **A stage's doc and its port never run concurrently, and they merge as one unit.** Supersedes **D-46** in practice | The divergence this rule prevents happened twice in four days. W-3.1 rewrote the doc after the app was built (TD-23). W-3.1b then rewrote it *while* the port was in flight, on the reasoning that the two branches touched disjoint files — which was true and irrelevant. The port's `styles.ts`, `sketch.ts`, `schema-blocks.ts` and `contracts.ts` **are** the doc's content in another form; that is what a port is. So the doc moving always changes what the port owes, whatever files each branch happens to touch. File-level non-overlap is not semantic non-overlap, and treating it as though it were is what produced an app teaching a security defect the doc had already fixed | `feat/stage-03-standard-practices` was merged **into** the port branch rather than into `main`, so the port has a target that has stopped moving and the new content gets ported once instead of twice. TD-25's "double-port cost accepted" line is therefore wrong and struck. Coverage is now tracked continuously in `docs/stage-03-status.md` rather than discovered by review |
 | **D-50** | **Executable content in a doc gets executed, not read.** Any SQL, shell or config a stage document tells a reader to run is run against the real thing before the round closes | W-3.1b's plan said "read any SQL as SQL" (D-48) and the round did exactly that — and reading missed two defects a whole-branch reviewer then found in four minutes by starting a `postgres:17` container. The backfill example corrupted every single-word name (`strpos` returns 0, so `substr(name, 1)` returns the whole string, giving `last_name = first_name`) and its own "repeat until zero rows" comment was false, because one null name made the loop never terminate. Both were in the paragraph lecturing the reader about *silent, plausible* migration bugs. "Read code as code" and "run code" are different instructions, and only the second one catches a wrong result from correct-looking syntax | The W-3 review already executed the reassembled DDL against a live PostgreSQL, so this is a return to a standard this project had and dropped rather than a new one. Cheap: one `docker run`, and the whole round's DDL plus the backfill loop plus the partial-unique-index behaviour were verified in three commands. Applies to any stage doc that ships a runnable snippet — 04, 05, 11, 12 and 13 all will |
@@ -283,7 +320,7 @@ that does not exist. Same class of drift as the resolved TD-1, one layer down.
 rename there is a wide diff for no behaviour change), so `DESIGN.md` should adopt
 `brand`/`danger`, or note both names explicitly.
 
-### TD-12 — The audit `PAGES` list is hand-maintained · **Medium** *(was Low)*
+### ~~TD-12~~ — The audit `PAGES` list is hand-maintained · **CLOSED 2026-08-14**
 
 `web/e2e/audit.spec.ts` hard-codes each step hash to sweep (`#done`, `#cut`, …). Every new
 `ready` stage must add its hashes by hand, and nothing fails if they drift from the stages
@@ -296,6 +333,119 @@ unaudited. That line is corrected.
 
 **Closes with:** derive `PAGES` from `STAGES.filter(s => s.ready)` crossed with each
 stage's step ids, so the sweep tracks the ready set automatically.
+
+**Closed 2026-08-14** by `fix/derive-audit-pages`. `e2e/audit-pages.ts` takes stages from
+`STAGES.filter(s => s.ready)` — the same flag the router reads to decide whether a stage
+renders content at all — and step ids from the rail each one renders, since `Stepper` emits
+one tab per step as `id="tab-<stepId>"`. Neither source can fall behind the app.
+
+Two things about the closure are worth keeping. **A ready stage that renders no rail throws
+rather than contributing nothing**, because "live and broken" should fail rather than
+disappear, which is the shape of the bug this debt described. And **the equivalence test
+spells out all thirty-six URLs rather than recomputing them** from the source the
+implementation reads — an expectation derived the same way as the thing it checks asserts
+nothing, which is the defect class recorded seven times in Process observations.
+
+**It also broke a tool and that is the more useful half.** `e2e/count-expandables.mjs`, added
+during the `RevealList` round to make the 140/107 baseline obtainable, derived its URL list by
+scraping `const PAGES = [` out of `audit.spec.ts`. Deleting that array broke it, and nothing
+in the gate noticed: `pnpm test:e2e` went 16/16 with the script throwing on startup, because
+the script is a tool nobody's suite runs. Found by running it. It now derives the same way,
+duplicated rather than imported because it is plain `.mjs` and `audit-pages.ts` is TypeScript.
+
+**What this does not close**, stated because the debt's own wording only covered one
+direction: the sweep now follows what the app renders, so a step deleted by accident leaves
+the sweep silently instead of failing it. Stage 03 guards that direction for itself — its
+`Step[]` is typed against `STEP_IDS`, so an id that exists nowhere is a compile error — and
+stages 01 and 02 have no equivalent. **TD-36**.
+
+### ~~TD-28~~ — Stage 04's deploy section is wrong, and this repo proved it · **CLOSED 2026-08-13**
+
+`docs/04-project-setup.md`'s **§8 Connect Vercel** reads:
+
+> *"In project settings, confirm the Node version matches `.nvmrc`."*
+
+Vercel does not read `.nvmrc`. Its Node version comes from the project setting, overridden by
+`engines.node` in `package.json`. A reader following that sentence pins local and CI, believes
+they have pinned the host, and has not — which is the exact drift `reference/stack.md:19` calls
+"a recurring source of 'works locally' bugs".
+
+Three more omissions in the same section, all of which broke this project's own first deploy
+on 2026-08-11 before any of the advice in §8 became relevant:
+
+- **`prepare` scripts fail on a build host.** pnpm runs `prepare` on every install,
+  `lefthook install` exits 1 outside a git repository, and Vercel's build environment has no
+  `.git`. The install step dies first. Husky has the identical failure for the identical
+  reason, so this is not a lefthook footnote.
+- **Root Directory** is unmentioned, and an app in a subdirectory does not build without it.
+- **Framework Preset** is unmentioned. A project created against an empty repository guesses,
+  and `Other`'s output directory is `public` — which produces an error naming a symptom two
+  steps from its cause.
+
+**Why it is High rather than Medium.** The stage docs are the product, this section is
+advice a reader acts on, and acting on it costs a day. It is also the one stage this
+repository can check against itself: `docs/learnings/deploying-101.md` is the corrected
+version, written from what actually happened.
+
+**Closes with:** the stage 04 round, which is scoped as a doc-correction phase *before* the
+port rather than a port alone — see the Next up section.
+
+---
+
+**Closed 2026-08-13** by `fix/stage-04-doc-corrections`, 37 commits `859a1b8`…`1418c77`,
+`docs/04-project-setup.md` 323 → 690 lines. All four defects above are fixed. So are
+twenty-seven others.
+
+**TD-28 named four, and all four sit in §8** — the Node sentence, `prepare` failing on a
+build host, Root Directory, Framework Preset. Reading the same document to write the spec
+found eight, and three of the extra four are outside that section: the Definition of done
+restated the Node error as a checkbox, so correcting §8 alone left the page arguing with
+itself; §1 framed `engines.node` as a pnpm guard and never said it is the file the host
+reads; and there was no `### AI in …` subsection at all, which `stage-metadata.test.ts`
+treats as a build blocker. The fourth is §6 never adding a `prepare` script, which TD-28
+touched only by assuming one existed — its own bullet describes what happens to a script
+the document never tells anybody to write.
+
+Eight was not the end of it either. Each later instrument found defects the previous one
+could not see:
+
+| Instrument | Defects it found | Running total |
+|---|---|---|
+| Reading the doc, for the spec (`docs/superpowers/specs/2026-08-12-stage-04-project-setup-design.md`) | 8, TD-28's four among them | 8 |
+| **Running** it — every executable block, in a scratch directory (`docs/verification/stage-04-doc-execution.md`) | 5 | 13 |
+| A **cold reader** given the corrected doc and a task to finish (`docs/verification/cold-reader-stage-04-run1.md`) | 14, with 10 boundaries classified out and left alone | 27 |
+| **Per-task reviews**, on things no inventory had named | 4 | **31** |
+
+The four the reviews found are the ones worth naming, because nothing in the first three
+passes was looking for them: §5 tells the reader to import `zod` and no section installs
+it (a reader hits `TS2307` before the test gate is reached, and it stayed hidden because
+Task 1's verifier had run `pnpm add zod` unprompted, so the scaffold was more complete than
+the document all along); §4 prints a copy-pasteable `tsc --noEmit` that its own next
+sentence disowns for Next.js readers; §3's `lint` script omits `--max-warnings 0` while
+§3's prose says a warning "sails through both hooks and CI" without it; and §1 instructed
+`"engines": { "node": ">=22 <23" }`, a range format Vercel does not document, in the single
+field whose job is pinning the host — while this repository's own `web/package.json`, the
+one that actually deploys, uses `"22.x"`.
+
+Two more findings came out of the consultability run and are navigation rather than fact:
+`### 8. Connect Vercel` stopped answering "which file controls my host's Node version"
+once the true answer moved to §1, and §7 never pointed at the teeth check that proves a CI
+gate can fail. The first was **caused by this round**, traced to `79460eb` against
+`git show develop:`, and is recorded that way rather than filed as inherited.
+
+The defects reach every numbered section, §1 through §10, with §4 the only one that needed
+a reviewer to find its own. They also reach `## Artifacts` and `## Definition of done`, and
+a subsection that did not exist until this round wrote it. `## Traps` gained an entry
+rather than losing a defect, and `## Entry criteria` was read repeatedly and came out
+unedited.
+
+**Why the debt was scoped wrong, since that generalises.** TD-28 was raised by reading one
+section, days after a deploy, by someone who knew exactly what to look for and found it.
+That is the best case for reading, and it still came in at four of thirty-one. Reading
+catches claims that are wrong. It does not catch a claim that was never true (the
+`engines` warning), a gate wired to scripts nobody creates (§6, §7), or a step that is
+simply absent, because absence has no sentence to read. Only running the document catches
+the second, and only making somebody finish the task catches the third.
 
 ### TD-27 — The second `pnpm test:e2e` of a session measures a stale build · **High**
 
@@ -381,7 +531,7 @@ known page, so the next selector change that silently stops opening things fails
 passes quietly. Related: ~~**TD-17**~~ (closed 2026-08-04) was the reason this class had to
 be caught in e2e at all.
 
-### TD-16 — Worksheet placeholder text fails AA, and the audit suite cannot see it · **High** *(was Medium)*
+### ~~TD-16~~ — Worksheet placeholder text fails AA, and the audit suite cannot see it · **CLOSED 2026-08-11**
 
 All three worksheets — `discovery/Worksheet.tsx:161`, `planning/PlanWorksheet.tsx:179`,
 `architecture/DomainWorksheet.tsx:165` — carry the identical class
@@ -425,6 +575,30 @@ Shipping anyway was the right call (stages 01 and 02 already ship under the same
 spot, so holding stage 03 alone to the letter of the standard would be arbitrary rather
 than principled), but "CI is green" should not be read as "the gate cleared" for this class
 of failure until the blind spot itself closes.
+
+**CLOSED 2026-08-11.** Both halves, as this entry required. The class string dropped its
+`/70`, and that alone clears AA — `--faint` had already been tuned to exactly **4.80:1** on
+`--sunk` in light and sits at **7.93:1** in dark, so the token was never the problem; the
+opacity at the call site was throwing away contrast that had been deliberately bought.
+
+The blind spot was two bugs, not one. `audit.spec.ts` keyed off `el.textContent`, and an
+empty `<textarea>` has none — so placeholders were never sampled. And its colour parser
+*rejected* every `oklab()` value while a comment above it claimed to resolve oklab "via the
+browser itself", so any alpha colour went unchecked rather than checked. Tailwind emits
+oklab for every alpha modifier, which made the effective rule: add an opacity and leave the
+audit.
+
+Both are fixed by rasterising — paint the background, paint the colour over it, read the
+pixel — which resolves any colour space and composites alpha in one step, and refuses to
+guess when the browser rejects a colour rather than reporting the background as the
+foreground. `docs/learnings/contrast-checkers-lie.md` had described this exact technique a
+round earlier, including the snippet; the suite stayed blind anyway, which is worth
+remembering about written-down knowledge.
+
+The audit now reproduces this entry's hand-measured numbers independently: **2.77:1 light**
+and **4.44:1 dark**, on all three worksheets, and nothing else on 36 pages fails in either
+theme. **The verification standard's letter is now met** — the caveat above about
+`feat/stage-03-architecture` not clearing its own gate no longer applies to any branch.
 
 ### ~~TD-17~~ — No component-test harness, so a class of regression is ungated · **CLOSED 2026-08-04**
 
@@ -886,6 +1060,113 @@ terms `terms.ts` already carried from the doc round are wired in as each concept
 (`fitness-function` inline in `trace`, for one); CQRS and event sourcing stay named rather
 than taught, which is D-49's call and not debt.
 
+### ~~TD-41~~ — Stage 03's locked exercise options fail AA · **CLOSED 2026-08-18**
+
+Seven of stage 03's exercises style a committed-but-unpicked option
+`text-subtle opacity-60` on `bg-raised`: `AuthzPatterns` (twice), `ExpandContract` (twice),
+`LockingChoice`, `ModelInterrogation`, `ReversibilityTable` and `SplitTrigger`.
+
+Composited, that measures **2.62:1 in light and 3.21:1 in dark** on 13–14px text, against
+the 4.5:1 this repo's verification standard requires of "every distinct text/background
+pair, both themes, all steps". Those options are content the reader is meant to re-read
+beside the verdict, not unavailable controls, so the greying is doing the wrong job as well
+as failing the number.
+
+**The audit cannot see it**, which is why it survived three stages. `audit.spec.ts` visits
+each panel in its default state; this pair only exists after a reader commits an answer.
+That is TD-26's shape (the audit is green about surfaces it never evaluates) narrowed to a
+specific, measured instance.
+
+Found by the whole-branch review of the stage 04 port, which measured it after that
+branch's own `DeployBlockers` was flagged for copying the idiom. **Stage 04 is already
+fixed** — it drops the opacity and keeps `text-subtle`, matching `ClientTrap` and
+`PinExercise`, which never adopted it and measure 5.19–12.71. The one-word fix is the same
+in all seven.
+
+**Fixed 2026-08-18** on `fix/stage-04-debt` (`6cd5869`), once that became its own branch
+rather than a widening of the port.
+
+Measured after the change: **6.92–7.09 in light and 8.20 in dark** on `ModelInterrogation`,
+`AuthzPatterns`, `SplitTrigger` and `ReversibilityTable`. The first probe missed
+`ExpandContract` (it is `role="checkbox"`, not `radio`) and `LockingChoice`, and rather than
+keep rewriting throwaway probe code the gap was closed the conclusive way: all **ten**
+locked-state sites across the eight components now carry the identical class string
+`cursor-not-allowed border-line bg-raised text-subtle`, and contrast is a pure function of
+the two colours, so the four measured ratios are the ratios. `grep opacity-60` over both
+feature directories returns only a comment.
+
+### ~~TD-39~~ — The annotated config blocks cannot be copied · **CLOSED 2026-08-18**
+
+`artifacts.ts` says in its own header that the reader is meant to paste these, and
+nineteen of them render across five panels. They cannot be pasted.
+
+`AnnotatedArtifact` lays each line out as `<div>[code cell][note]</div>`, so the notes are
+interleaved into the DOM *between* the code lines. Selecting a block and copying it yields
+code line 1, annotation 1, code line 2, annotation 2, and so on. There is no copy button
+either.
+
+`SchemaInspector`, the component this one was copied from, does not have the problem — it
+puts the note in a separate click-to-select panel rather than beside each line. The
+interleaving came with the side-by-side layout, which was itself chosen for a measured
+reason (see `PATTERNS.md`): a single wide scroller would push every note past 700px at the
+1024px the panels are measured at.
+
+**Closed 2026-08-18** (`40a9403`, `fc915bb`), in two parts, because the two halves fix
+different paths.
+
+`select-none` on the note column fixes the manual path: a drag-selection now returns only
+the config. `CopyArtifact` is the direct one, and it hands over exactly
+`lines.map(l => l.text).join('\n')` — the same string `artifacts.test.ts` builds to hold the
+block against the doc, so what a reader pastes is what the test verifies. It confirms the
+copy and reverts after two seconds, since a click that silently succeeds reads the same as
+one that silently failed.
+
+The `select-none` test asserts a class rather than behaviour and says so in place: jsdom
+computes no selection, so that half was confirmed in a browser and the class is what a
+test can hold.
+
+Original entry follows.
+
+**Closed with** either a copy button that reads `lines.map(l => l.text).join('\n')` — the
+same string the doc-fidelity test already builds — or a `user-select: none` on the note
+column, which fixes copy without adding a control. The first is better and neither is
+large. Found by the Wave 3 review, not by any test; nothing in the gate can see it.
+
+### ~~TD-40~~ — Eighteen tab stops on one config block · **CLOSED 2026-08-18**
+
+Each line of an `AnnotatedArtifact` is its own `overflow-x: auto` region with
+`tabIndex={0}`. That is the correct WCAG 2.1.1 treatment for a scrollable region — a
+keyboard user must be able to reach and scroll it — and it is applied to every line rather
+than to the lines that actually overflow.
+
+`ci.yml` is 20 lines, `lefthook.yml` 18, and the `hooks` panel carries two artifacts, so a
+keyboard reader tabs roughly twenty stops through one panel. Each takes the global
+`:focus-visible` outline, so it looks like a control and is not, and perhaps two of them
+scroll anything at 1024px.
+
+Not a WCAG failure — the mechanism is right and the alternative (no focusable scroller) is
+worse. Recorded because the cost is real, it is paid on six panels, and the component's
+header currently reads as though the question were settled.
+
+**Closed 2026-08-18** (`fc915bb`) with exactly that, and the measurement is the evidence.
+`OverflowFocus` sets `tabIndex` from `scrollWidth > clientWidth` per cell, re-running on
+resize through a `ResizeObserver`.
+
+Measured against a real build on `strict`'s eleven lines: **5 focusable at 320px, 2 at 768
+and 1024, 1 at 1440** — matching the overflow count exactly at each width, against eleven
+at every width before. `ci.yml`'s twenty lines contribute **none** at 1024px, which also
+corrects the component docblock: the 92-character line that justified per-line scrollers is
+the exception, not the rule.
+
+The second measurement is the one that matters. Checking only 1024px would have shown zero
+stops and looked identical to a mechanism that always answered "not focusable".
+
+Implemented with a ref callback rather than an effect, because
+`react-hooks/set-state-in-effect` is an error here and measuring into state would fail lint
+and cascade a render. It sets `tabindex` imperatively on nodes React owns, which is safe
+only while the lines are static markup — recorded in the component, since it stops being
+safe the moment a line becomes dynamic.
+
 ### TD-19 — Scored radiogroups have no roving tabindex · **Medium**
 
 `SeverityScorer` and `Toolkit` (discovery), `SizeScorer`, `HorizonTriage` and
@@ -956,6 +1237,286 @@ and before the traps. Collapsed because the solo reader is the baseline (D-3) an
 be slowed by team material; present because the doc has it and the app is not allowed to
 quietly hold less than the doc. `TeamNotes` is the shared component — do not re-invent it
 per stage. Stages 04–18 now copy a convention instead of choosing a precedent.
+
+### TD-29 — The Vercel rollback commands now live in two stage docs · **Low**
+
+`docs/04-project-setup.md`'s **§10 Write the README before the code** and
+`docs/13-production-deployment.md`'s **§Rollback** both print `vercel rollback`,
+`vercel ls` and `vercel promote`. Opened by the fix wave on
+`fix/stage-04-doc-corrections`: §10 needed a rollback mechanism to make its own README
+artifact producible (cold-reader N19), and 13 is where the material properly lives, so §10
+gives the command and links onward.
+
+The duplication is deliberate and small. What makes it debt is that **only one copy carries
+the Hobby-plan caveat** — that `vercel rollback` will only return to the *previous*
+production deployment, which is why `promote` exists as the way further back. §10 has it
+because its reader is on the free plan by default; 13 does not. Two prints of the same
+command, one of which is missing the constraint that decides whether it works, is the
+`.nvmrc`/`engines.node` shape at lower stakes.
+
+Closes by either putting the caveat in 13 as well, or cutting §10 to a pure cross-reference
+once a reader arriving at §10 can be trusted to follow it. Not resolved on the branch that
+opened it, because 13 is outside stage 04's scope and editing it there would widen a fix
+wave that had already grown past its plan.
+
+### TD-30 — Stage 04's §5 installs Vitest under an env-variables heading · **Low**
+
+`### 5. Environment variables, validated at boot` ends by running `pnpm add -D vitest`,
+adding the `test` script, and explaining `--passWithNoTests` — roughly a fifth of the
+section, about neither environment variables nor booting.
+
+Pre-existing, and it read as a reasonable aside when §5 was short. The fix wave on
+`fix/stage-04-doc-corrections` roughly tripled the section (the required/optional key split,
+the `.env.example` step, the client-boundary limit), and the tail now reads as though it
+were appended to whatever section happened to be last. The reader consulting §5 for an env
+question scrolls past a test runner to reach it.
+
+Closes by giving the test-runner install its own numbered section, or folding it into §7,
+which is the gate that calls `pnpm test` and the reason it is installed this early at all.
+Renumbering is the cost, and it is why this was not done inline: entries 8–11 of the
+cold-reader list cite `### 7`, `### 8` and `### 10` by number, and renumbering mid-wave
+would have invalidated the brief the next agent was working from.
+
+### TD-31 — Stage 11 still carries the action pins stage 04 just corrected · **Medium**
+
+`docs/04-project-setup.md`'s **§7 CI, on day one** opens "Full detail in
+[11 — CI/CD](11-ci-cd.md)" and then pins `actions/checkout@v7`, `pnpm/action-setup@v6` and
+`actions/setup-node@v7`, each verified live against the GitHub API during the fix wave and
+re-verified when this entry was written (`v7.0.1`, `v6.0.10`, `v7.0.0`).
+`docs/11-ci-cd.md` still pins all three at `@v4`, in both of its workflows, plus
+`actions/upload-artifact@v4` against a current `v7.0.1`.
+
+The stale pins are **pre-existing** — 11 has never been through a correction round. The
+*divergence* is this branch's, and it is worse than either state alone: §7's own first
+sentence sends the reader to the document holding the version §7 exists to fix. Ranked
+above TD-29 and TD-30 for that reason and no other; the `@v4` pins all still resolve, so
+nothing breaks, and what a reader loses is the ability to trust either page.
+
+Closes when 11 gets its own correction round, which is where the edit belongs — it has two
+workflows, an artifact upload and a caching story that this branch never read. Editing it
+from stage 04's branch was a non-goal at spec time and stayed one. Opened by the
+whole-branch review, which found it on no `Deferred:` list: an unnoticed deferral rather
+than a deliberate one, and the difference between those is the whole point of keeping the
+list.
+
+### TD-32 — Stage 04's §5 hands the reader a check that cannot fail · **High**
+
+`### 5. Environment variables, validated at boot` is the section whose entire promise is
+that a missing variable stops the app. The obvious way to confirm that promise is the one
+a reader will take: leave `pnpm dev` running, blank `SESSION_SECRET` in `.env.local`, and
+reload the page. **Turbopack does not re-evaluate `env.ts` when `.env.local` changes.** The
+fix wave on `fix/stage-04-doc-corrections` watched it log `Reload env: .env.local` and go
+on serving **200** off the cached module; the same edit followed by a restart gave **HTTP
+500** carrying the Zod `too_small` thrown from `env.ts` at module evaluation. Observed
+there and not re-run for this entry, which is why the restart is stated as the fix rather
+than as the only fix.
+
+That is worse than an undocumented quirk. The reader who verifies without restarting sees
+the app keep working and concludes the validation is wired when the only thing proved is
+that a module was cached — a green result that a broken implementation produces too. Rated
+alongside **TD-26** and **TD-27** because it is the same defect, in the reader's hands
+rather than ours: a check whose passing outcome carries no information. §5 says nothing
+about it.
+
+Closes with one sentence in §5 saying to restart the dev server, and the reason. It is
+deliberately not a one-line drive-by: the cheap phrasing ("restart after editing
+`.env.local`") teaches the ritual and not the reason, and the reason is the transferable
+half — a validation that runs once at module evaluation can only be re-tested by causing
+another module evaluation.
+
+### TD-33 — Stage 04's §9 may install the Sentry SDK twice · **Low**
+
+`### 9. Error tracking` runs `pnpm add @sentry/nextjs && pnpm dlx @sentry/wizard@latest -i
+nextjs` as one line. The wizard installs the SDK itself, so the explicit `pnpm add` is
+plausibly redundant — and if the wizard resolves a different version than the one already
+in `package.json`, the reader watches their dependency change during a step that claims to
+be about configuration.
+
+Unproven, and that is the whole reason it is debt rather than a fix. Confirming it needs
+the wizard run against a real Sentry org, which this machine has no login for; §9 is
+marked *not executed* in `docs/verification/stage-04-doc-execution.md` for that reason.
+Guessing at the resolution would put an unverified instruction in the section whose
+subject is that unverified instrumentation fails silently.
+
+Closes the next time anyone runs the wizard against a real org: either drop the `pnpm add`
+or keep it and say why. Low because both orderings leave the reader with a working SDK.
+
+### TD-35 — The audit's console check cannot see a dev-only warning · **High**
+
+`e2e/audit.spec.ts`'s "zero console errors across every page and step" runs against a
+production build, deliberately: the dev overlay pollutes the console and the dev server
+renders differently, which is why `playwright.config.ts` builds and serves rather than
+reusing `pnpm dev`. **React strips its development-mode validation from a production
+build.** Everything in that family is therefore invisible to the gate: missing-key
+warnings, invalid DOM nesting, `act()` warnings, hydration-mismatch detail, prop-type
+complaints.
+
+This is not hypothetical here. `RevealList` logged *Each child in a list should have a
+unique "key" prop* on **every** `pnpm dev` page load of `/stages/03-architecture#ai` from
+`1772555` until `f1a23e7` fixed it, while the audit reported 14/14 throughout. It was found
+by an implementer opening the dev server for an unrelated visual measurement, which is
+luck rather than process. **It then happened a second time on the same branch**: the fix
+keyed the row header and left `Card`'s three children, so `#tenancy`, `#trace` and
+`#indexes` warned on every dev load until the whole-branch review caught it, with the audit
+reporting 14/14 the entire time. Two notes now recorded in `audit.spec.ts` for anyone
+checking by hand: React attributes the warning to the *rendering* component (`Card`), not
+the defective one; and the blind spot is narrow — Fast Refresh patching an already-open tab
+does not fire it, and a reload within a second or two of saving can race the rebuild, but a
+settled reload fires reliably. **An earlier version of this entry said the warning only
+fires on a cold server and that any edit-and-reload reads clean. That was wrong**, disproved
+across three cold-server runs by the final scoped re-review, and it is corrected here rather
+than rewritten away: what actually let both instances survive is that every manual check
+loaded a single page, and `#ai` exercises neither `header` nor `footer`.
+
+CLAUDE.md states the standard as "**zero console errors in a clean browser context**". The
+production-only check does not meet its own wording, and nothing says so at the point where
+someone reads the result. Same defect class as **TD-26** (a sweep green about surfaces it
+never evaluated), **TD-27** and **TD-32**: a check whose passing outcome carries less
+information than a reader will assume. Rated alongside them.
+
+Closing it is not simply "also run it in dev". The dev overlay is a real source of noise
+and the reason for the current shape, so the fix has to distinguish React's own warnings
+from the overlay's — plausibly a second, narrow spec that loads a small set of pages
+against `pnpm dev` and fails on `console.error` matching React's warning prefixes only.
+Until then, `audit.spec.ts` should at minimum say in a comment what its console check
+cannot see, so the next person reading 14/14 knows what it excludes.
+
+### TD-37 — The equivalence instrument no longer sweeps what the audit sweeps · **Medium**
+
+`e2e/count-expandables.mjs` exists to make the before-and-after count obtainable for a
+refactor that replaces disclosure components — the 140 expandables / 107 distinct ids that
+proved eleven migrations on the `RevealList` branch. Its own header states the constraint it
+runs on: the URL derivation mirrors `audit-pages.ts`, duplicated rather than imported because
+the file is plain `.mjs`, and *if that changes, change this with it, or the two stop measuring
+the same thing.*
+
+That is what happened. W-6 appended `/reference` and eleven cheatsheet URLs to
+`audit-pages.ts`, taking the audit's sweep from 36 URLs to **48**. The `.mjs` copy was not
+updated and still derives the stage URLs only, so it reports over **36**. Measured on
+`develop` at `49122f5`: the audit sweeps 48, the instrument sweeps 36, and the instrument does
+not say so.
+
+Nothing is wrong with either number in isolation, which is why this is debt rather than a bug.
+The cost is that a future refactor touching a disclosure on a **reference sheet** would be
+verified by a count that never loaded it, and the count would look exactly as authoritative
+as the one that proved the eleven migrations.
+
+Found while writing the stage 04 port plan, by running the instrument rather than quoting
+its last recorded output.
+
+**Closes with** appending the `CHEATSHEETS` slugs to the `.mjs` derivation, or by making both
+read one generated list. The stage 04 port does not need this — it moves stage panels only,
+and the 36-URL set covers all of them — so the plan states which set its number covers rather
+than fixing it mid-round.
+
+### TD-38 — The pre-commit format hook does not reach `docs/` · **Low**
+
+A commit touching two markdown files under `docs/` printed
+`format (skip) no files for inspection` and `lint (skip) no files for inspection`, then
+committed. The hook did not check them and did not claim to; it reported success on a commit
+it had inspected nothing in.
+
+This is the shape stage 04's own §6 teaches, which is what makes it worth recording rather
+than shrugging at: a glob narrower than what CI covers produces a hook that reports success on
+a commit CI then rejects, and `README.md` is the file the doc names as likeliest to slip
+through. Here the exposure is smaller — CI runs `format:check` over the repository, so the
+gate that matters still fires — but the local hook is decoration for every markdown file
+outside its glob, and this repository's markdown *is* half the product.
+
+Not yet diagnosed: whether the cause is the glob, the `root:` scoping in `lefthook.yml`, or
+the hook running with `web/` as its working directory. Diagnose before fixing — the three have
+different fixes and only one of them is the glob.
+
+**Closes with** a hook run that reports the two files by name on a `docs/`-only commit, and a
+teeth check that a deliberately mis-formatted markdown file fails it.
+
+### ~~TD-36~~ — Nothing catches a step that disappears from stages 01 and 02 · **CLOSED 2026-08-17**
+
+TD-12 closed by deriving the audit's sweep from the rail each ready stage renders, which
+means a step that ships is always swept. The reverse is now unguarded: a step deleted or
+renamed by accident simply leaves the sweep, and nothing fails.
+
+Stage 03 is covered by construction. `features/architecture/steps.ts` exports `STEP_IDS`,
+`Architecture.tsx` types its `Step[]` against it, and `TRACE_ROWS[].stepId` resolves against
+the same list — so an id that exists nowhere is a compile error. Stages 01 and 02 declare
+their ids inline in the component and have no equivalent.
+
+The asymmetry is deliberate rather than an oversight: a declared list is a specification and
+the rendered rail is an observation, and TD-12's recorded failure was the sweep falling behind
+the app, not the app falling behind the sweep. Both are real; only one was costing anything.
+
+**Closes with** a `steps.ts` per stage on the stage-03 pattern, most cheaply as part of
+building the next stage rather than as its own round — the stage-04 port will write one
+anyway if it follows stage 03's shape.
+
+**One thing to do at the same time, because it comes due on the same commit.**
+`e2e/audit-pages.spec.ts` pins today's thirty-six URLs as a literal. That was a one-shot
+migration proof, and it is the only check that would catch `auditPages` covering stage 01
+and then stopping — an early `break`, a stray `.slice`, a `continue` that swallows a stage.
+It goes red the moment stage 04 ships, for a correct reason, and the obvious fix is to paste
+in whatever the derivation now emits. That would make the expectation generated by the thing
+it checks, which is the defect this project has recorded seven times. **Delete the test and
+its array; do not edit them.** If the coverage is wanted, assert stage coverage instead —
+the set of stage paths in the derived list equals `STAGES.filter(s => s.ready)` mapped to
+`/stages/<slug>`, which checks the filter rather than checking step ids against themselves.
+The file says this too, at the point someone will be looking.
+
+
+---
+
+**Closed 2026-08-17**, on the stage 04 port (`394e515`, `08131ac`, `0b18150`).
+
+**Read the "Closes with" clause and the title together, because they are not the same
+thing, and the first commit satisfied one while claiming the other.** A `steps.ts` per
+stage on the stage-03 pattern makes an id *renamed* in one place and not the other a
+compile error. It says nothing about a step *deleted*, which is what the title names — a
+review proved it by removing a whole step object from `ProductDiscovery.tsx`: typecheck
+clean, 385 tests green, and the sweep one URL shorter in silence.
+
+So this closes on three guards rather than one, and it is worth knowing which does what:
+
+- **`steps.ts` per stage** (`394e515`) — an id that exists nowhere is a compile error.
+  Stages 01 and 02 gained one; stage 03 already had it.
+- **`features/rails.test.tsx`** (`08131ac`) — renders every ready stage and compares the
+  rail it draws to that stage's tuple, in jsdom, in the unit gate. This is the direction
+  the type cannot reach. It also fails when a stage goes ready with no entry, which is how
+  stage 04 was caught before it had one.
+- **`e2e/audit-pages.spec.ts`** (`0b18150`) — the same comparison against the *built* app,
+  so a `readStepIds` selector that returns half a rail fails rather than shrinking the
+  sweep. Teeth-checked by making it drop the last tab.
+
+**This entry's own premise was partly wrong** and is left standing above rather than
+edited: it says stage 03 "is covered by construction" for the deletion direction. It was
+not — stage 03 had the identical one-directional guard, and gained the second one here
+along with 01 and 02.
+
+**What is still not covered**, stated so the strike-through does not overstate: a step
+deleted from *both* the tuple and the component compiles and renders consistently. Only
+that stage's own `steps.test.ts` ordered literal fails, which is why each stage has one.
+### TD-34 — `RevealList` hardcodes `<h3>` for row headings · **Low**
+
+Every `RevealList` row wraps its trigger button in a literal `<h3>`, with no prop to change
+the level. A caller whose own section heading is also `<h3>` therefore gets a flat outline
+where a nested one is correct, and cannot do anything about it.
+
+Two callers are in that state. `ScalingMoves` already was before the extraction, so it is
+inherited rather than caused. `AIArchitecturePlays` **acquired** it in `1772555`: its rows
+were `<h4>` under an `<h3>` section heading and became `<h3>` siblings of it. Verified
+against `11cbec0` that the `ScalingMoves` precedent is real and not a deflection.
+
+Nothing renders differently — `globals.css` sets no global `h3`/`h4` rule — so the entire
+cost falls on heading-based navigation in a screen reader, where each list's claim rows now
+present as peers of the `<h3>` that introduces them rather than as its children. Low
+because it degrades an outline rather than breaking a control, and because no automated
+check in this repo currently looks at heading order at all, which is arguably the larger
+gap it points at.
+
+Closes with a `headingLevel?: 'h3' | 'h4'` prop on `RevealList` defaulting to `h3`, so
+existing callers are untouched and `AIArchitecturePlays` passes `h4` to get its original
+outline back. Structural to the shared component, which is why it was reported rather than
+fixed mid-branch: eleven migrations were reviewed against a stable `RevealList`, and
+changing its markup at task sixteen would have invalidated the byte-identity evidence every
+earlier review rested on.
 
 ---
 
@@ -1100,13 +1661,289 @@ that had been applied years earlier, a step-count assumption, and a play count t
 status doc rather than from the doc. The plan was written by the same agent that wrote the
 spec, which is the same failure mode one level up.
 
+### A per-task reviewer can only check what it can see
+
+Implementers on the stage 04 doc round received numbered ambiguity resolutions in their
+dispatch message. Reviewers received the brief, the report and the diff. So an implementer
+writing "per the brief's ambiguity resolution #1" was citing something that existed, was
+correct, and was unfindable by the one person whose job was checking it. Two reports did
+exactly that before anybody noticed. Task 5's reviewer flagged the citation as unverifiable
+and was right to — the substance was sound (it was the controller's resolution #3, "the
+scripts matter as much as the files"), the traceability was not there at all. Task 2 had
+produced the same shape one task earlier.
+
+The problem is not that the resolutions were wrong. Every one of them held up on the
+merits. It is that a *review clean* verdict covering a requirement the reviewer never
+received is a verdict about something smaller than it looks, and nothing in the artifacts
+says which requirements were in that state.
+
+Fixed from Task 6 onward: the reviewer dispatch carries the resolutions verbatim, so a
+citation to one can be checked. Worth carrying past this round, because anything a
+controller settles at dispatch time is a requirement — an ambiguity call, a scope
+decision, an instruction to trust a command over the plan — and a requirement only one side
+of the review can see is being enforced on trust.
+
+### An agent that batches its work for one commit at the end looks hung
+
+Task 8's first attempt took all twelve fix entries in a single dispatch. The watchdog fired
+at 600 seconds. `git log` and `git status` were both clean and no report file existed: the
+agent had reached entry 7 of 12 and was holding every edit in memory for one commit at the
+end, so the stall cost all seven.
+
+The retry split the task in half and made "commit after each entry" the first instruction
+rather than the last. Task 8a then ran **1034 seconds without stalling**, nearly twice the
+first attempt's whole lifetime, and left seven commits behind on the way. The work was not
+faster and it was not smaller. It was visible. A watchdog waiting on silence cannot tell a
+working agent from a hung one, and batching makes every long task look like the second kind.
+
+Only half of that is infrastructure. Stalls are a known pattern here — three of five
+dispatches stalled on 2026-08-11 and every retry succeeded — so one stall is treated as
+infrastructure and a second on the same prompt as signal. The recoverable half was the
+controller's: the brief said "commit in coherent groups" and never said commit *as you go*,
+so a stall cost everything instead of the last group. That sharpens the note above about
+incremental persistence rather than repeating it. Writing the report incrementally is not
+enough by itself, because a report describing uncommitted edits describes a tree that no
+longer exists.
+
+### Seven checks that could not fail, on one branch
+
+`refactor/reveal-list` was a relocation. Nothing about it was supposed to be interesting,
+and it produced the strongest evidence this project has that **a green check is not
+evidence until something has watched it go red**. Seven separate checks on that branch
+returned a passing result they would also have returned if the code were broken. Six of
+them were written by this session's own controller, in a plan whose whole subject is
+proving that eleven components still render what they used to.
+
+The sequence, because the order is half the lesson. The ledger numbers the third, sixth
+and seventh explicitly; the others are placed by where they were found.
+
+1. **The expandable baseline was stale and unobtainable at once.** The plan said "expandable
+   count unchanged at 108 across 36 URLs". 108 was TD-26's figure from 2026-08-03; measured
+   on the branch's own tree it was **140**, with no defect in between, because stage content
+   had grown. Worse, `audit.spec.ts` opens disclosures per page and never aggregates, so
+   nothing anywhere printed a total. The check could not have been run even against the right
+   number. `e2e/count-expandables.mjs` exists because of this, and derives `PAGES` from
+   `audit.spec.ts` rather than repeating it.
+2. **`RevealFacet`'s tone-map teeth check could not fail.** Mutating `TONE_CLASS[tone]` to
+   `` `text-${tone}` `` left all 334 tests green. Each tone's class is its own name with a
+   prefix, so the map and the interpolation emit **byte-identical** `className` strings; the
+   defect exists only in Tailwind's compiled CSS, which jsdom never produces. The component's
+   doc comment claimed the render test caught this. It could not, and never could have. The
+   implementer found this itself rather than reporting a pass.
+3. **The panel-id check grepped built HTML that never contains the ids.** These disclosures
+   sit in non-default `Stepper` panels and their ids are computed inside a client component,
+   so no static artifact holds the string. The grep returned zero on a working migration and
+   on a broken one alike, and it shipped in **three separate task briefs** before an
+   implementer questioned it. A later review ruled the general case precisely: a Server
+   Component's literal JSX children do serialise into the RSC flight payload and are
+   greppable, but a template literal evaluated in a Client Component never reduces to a
+   literal substring.
+4. **A badge test that a deletion mutation could not fail.** "Renders no badge for a row that
+   does not carry one" survived `{row.badge}` → `{null}`, because no fixture row carried a
+   badge and absence is indistinguishable from deletion. The review's ruling is the useful
+   part: **the controller's instruction was wrong, not the test.** A different mutation, a
+   wrongly-added default badge, does fail it. Insensitive to one mutation is not vacuous. The
+   fixture was strengthened anyway so a badge leaking across rows is caught.
+5. **A gap changed and nothing saw it.** `RevealList` applies `space-y-3` unconditionally;
+   Tailwind v4 compiles that to a `margin-block-end` on every child but the last, so
+   `Normalisation` went 4px → 12px and `TraceForward` 12px → 24px. **The count stayed 140,
+   the ids stayed 107, the audit stayed 14/14 and all 342 tests passed.** Only measuring the
+   computed gap in a real browser, against the pre-branch original, finds it. `TraceForward`
+   is the sharper half: three independent analyses, two reviewers and the controller, agreed
+   the margins would collapse to 12px, and the browser said 24px, because the trailing `<a>`
+   is `inline-flex` and an inline box's margin does not collapse with a block sibling's.
+6. **The same interpolation blindness, a second time, and anticipated.** Removing
+   `BODY_TONE_CLASS` left both new render tests green for exactly the reason found in Task 1.
+   Only `RevealFacet.source.test.ts` went red, which is what that file exists for.
+7. **A dev-only React warning behind three stacked blind spots.** Once a caller passed a
+   `ReactNode` title built inside its own render, React logged a missing-key warning on every
+   `pnpm dev` page load. The audit's "zero console errors" test **runs a production build,
+   where React strips dev-only validation** — 14/14 while the dev server warned continuously.
+   CLAUDE.md's standard is zero console errors in a clean browser context; the gate cannot
+   see this class at all. The test written earlier to cover `ReactNode` titles missed it
+   because its element was built at module scope and so had no owner. And the obvious
+   correction to that test **still** could not fail: React's reconciler gates the check on
+   `_store.validated`, which the JSX dev-runtime pre-sets for statically-written sibling
+   children, and Vite/oxc marks `RevealList`'s exact shape static where Turbopack does not.
+   Rendering the real, unmodified component through Vitest stayed silent. Confirmed
+   empirically before being assumed, then verified again by a reviewer reading React's own
+   source.
+
+Three things worth carrying:
+
+**A check inherits the authority of the thing it is written into.** Six of these were
+plan-authored, and every implementer that ran one ran it in good faith. The plan is the
+last place anyone looks for a bug, which is exactly why an unfalsifiable check survives
+there. This is the same finding as "most of stage 03's defects were plan-authored", one
+altitude further up: it is now the *verification* that is plan-authored and wrong.
+
+**Measure rather than reason about rendered output** (D-59). Items 5 and 7 were both
+settled by a browser contradicting a consensus, not by anyone spotting the flaw.
+
+**A teeth check is only meaningful against a mutation the test could plausibly catch.**
+Item 4 is the correction to items 2 and 6, not a repeat of them: "the mutation did not fail
+the test" is a finding about the pair, and the reviewer's job is to say which half is wrong.
+
+### A commit body is written while finishing; a report is written while accounting
+
+Two task implementers on this branch committed their work and never wrote a report. Both
+gaps were caught by the reviewer, not by review of the commit. One was asked to write its
+report retroactively, with an explicit instruction to say so if anything in the commit body
+had not actually happened. It corrected **four** of its own claims: "1440px" was the MCP
+default viewport it never queried, "both themes" was three of the four combinations, the
+console check ran once and before the theme switch and resize rather than after, and it
+never ran `getBoundingClientRect` at all, that having been the reviewer's work.
+
+That is the second commit-body overstatement caught this way (`2db28ce` on the stage 04 doc
+branch was the first). History here is appended to rather than rewritten, so the commit
+stands and the correction lives in the report and the ledger.
+
+The generalisation is in the heading. A commit body is written in the same breath as the
+last edit, by an agent that wants to be finished; a report is written afterwards against a
+tree that has stopped moving. The second reliably catches the first, which is an argument
+for reports being mandatory and *checked* rather than nice-to-have. Of the branch's
+nineteen task units, two have no report file at all, and Task 16's record — including the
+seventh check-that-cannot-fail — survives only as ledger entries.
+
+### A staged brief is a snapshot of a plan, not a view of it
+
+Briefs for Tasks 4–8 were extracted early so dispatches could be immediate. The plan was
+then corrected mid-branch, and the extracts kept the old text — including the vacuous
+built-HTML grep from item 3 above. **Task 5 ran it.** It was saved only because its dispatch
+independently required a browser check as well, so it did both; Task 7 would have been the
+same gamble.
+
+Cheap to prevent and easy to repeat: regenerate every unsent brief whenever the plan
+changes, and grep the briefs, not just the plan, when a defect is corrected. The remaining
+briefs were regenerated and verified to carry no surviving copy.
+
 ---
 
 ## Next up
 
-**Recommendation (superseded 2026-08-04): W-3.2 is merged and TD-17 is closed. The live
-choice is `W-5` (deploy) or the next stage.** The reasoning below is kept as written at the
-time rather than edited, per the decisions convention.
+**Next round: execute `docs/superpowers/plans/2026-08-14-stage-04-app-port.md`. The planning
+pass it came out of is done, and the seam is settled.**
+
+State to resume from, verified at the close of 2026-08-14:
+
+- **Branch `feat/stage-04-app-port`**, cut off `develop` at `49122f5`, holding **2 commits** —
+  `dc47580` (the Phase 5 re-cut) and `126b3c8` (the plan). **Not merged, not pushed.**
+- `develop` is **131 commits ahead of `main`** and **is pushed**; `origin/develop` sits at
+  `49122f5`. `main` stays at `8d5045c`. The promotion is the user's.
+- **Nothing is half-built.** The branch is records only. No file under `web/src/` has been
+  touched, `04-project-setup` is still `ready: false`, and the working tree is clean.
+
+**Start at Task 1** of the plan. It is written to be executed task-by-task, and the two
+things a fresh session most needs to know are already inside it: `audit-pages.spec.ts` goes
+red the moment `ready: true` lands and must be **deleted** rather than updated (Task 2, and
+the file says so in its own header), and every assembly task ends in a **measurement** rather
+than an edit.
+
+**Execution approach, recommended and not yet chosen.** Subagent-driven for the eleven
+independent data and component tasks — Wave 1's six modules share no state, and stage 03's
+per-task reviewers returned fourteen blocking findings a self-review would not have caught.
+Inline for Tasks 12 and 13, where the merge-or-split calls on the four provisional pairs need
+the whole panel table in one context rather than a subagent seeing eight panels in isolation.
+
+**What the planning pass changed**, in one line each, with the full reasoning in the row above
+and in the spec: panel weight tracks step count and nothing else, so it can only falsify a
+seam (**D-64**); the seam is cut by judgment and sanity-checked against a floor; nine steps
+became **fifteen**; and provisional pairs are authored split and merged on measurement
+(**D-65**), which inverts stage 03's direction.
+
+Everything below this line is the recommendation the planning pass acted on. It is kept
+because the question it posed is the one the pass answered, and the answer was not the one it
+expected.
+
+---
+
+Five branches had landed at the time it was written and all five are in `develop`: the
+doc correction (`dd44b30`), `RevealList` (`e29f3fe`), TD-12 (`a07a9b6`), and the two W-6
+reference-hub merges (`0207fd6`, `4727dc3`). What is left of stage 04 is the port itself, and
+the first thing it needs is a seam that has been measured rather than inherited.
+
+**W-6 is paused, not in flight.** It was a detour taken between the TD-12 close and this
+round, it is finished and merged as far as it goes, and its remaining work is content that
+would compete with `W-3`. It touches nothing the port touches — no `src/features/`, no stage
+data, no `docs/04-project-setup.md`. The one thing to carry forward is that
+`web/e2e/audit-pages.ts` now derives twelve reference URLs on top of the stage sweep, so the
+audit suite's baseline is 48 URLs rather than 36.
+
+**The spec's nine-step table is stale in a specific, checkable way.** Phase 5 of
+`docs/superpowers/specs/2026-08-12-stage-04-project-setup-design.md` cuts the doc into nine
+steps. It was written when `docs/04-project-setup.md` was 323 lines; the correction round took
+it to **711**. Mapping the same table onto today's doc:
+
+| Step | Doc source | Lines |
+|---|---|---|
+| `scaffold` | §1 Scaffold + §2 Folder structure | **129** |
+| `gates` | §6 Git hooks + §7 CI | **109** |
+| `strict` | §3 Lint/format + §4 TypeScript | **105** |
+| `env` | §5 Environment variables | **103** |
+| `deploy` | §8 Connect Vercel | 70 |
+| `proof` | §9 Error tracking + §10 README | 56 |
+| `ai` | AI in project setup | 38 |
+| `checklist` | Definition of done + Scaling to a team | 30 |
+| `traps` | Traps | 29 |
+
+Three of the four heavy steps are **pairings the spec made when each half was about half its
+current length**. Whether they still hold is a D-52 panel-weight question, and D-52's answer
+comes from measuring the rendered panel, not from re-reading the table. The exit condition of
+a split is the measurement, not the edit.
+
+**Two things fold into the same round rather than waiting for their own:**
+
+- **TD-36.** Stage 04's `steps.ts` should type its `Step[]` against `STEP_IDS` the way stage
+  03's does, and extending that guard to stages 01 and 02 is a few lines inside a round that
+  is already in those files.
+- **`web/e2e/audit-pages.spec.ts` will go red the moment `ready: true` lands**, correctly. Its
+  thirty-six-URL literal proves the TD-12 migration and nothing after it. **Delete the test
+  rather than update it** — pasting in what the derivation emits makes the expectation
+  generated by the thing it checks, which is the defect class this repo has now found seven
+  times. The file carries that instruction in its own header.
+
+**Also live, and not part of any branch:** `docs/superpowers/specs/2026-08-14-reference-hub-design.md`
+is a **parked** design for a Reference hub, brainstormed to four decisions and stopped on an
+open question (which cheatsheet leads slice 1). It rode into `develop` on the TD-12 branch
+because it was written in the same session; it decides nothing about stage 04. Its three
+source files under `reference/` are still untracked.
+
+---
+
+**Recommendation (2026-08-11): stage 04 — Project Setup, next. Decided.**
+
+The deciding evidence was neither of the two arguments that had been sitting in the records.
+Reading `docs/04-project-setup.md` to compare it against 15 turned up that its **§8 Connect
+Vercel is factually wrong** — it tells the reader to match the Node version to `.nvmrc`, which
+Vercel does not read — and silent on the three things that actually broke this project's first
+deploy. That is **TD-28**, and it reframes the choice: not "port 04" against "port 15", but
+*fix a doc that misleads* against *port a doc that is fine but unexercised*.
+
+Three reasons it wins on this project's own standards:
+
+1. **It is checkable.** The verification standard here is checking against something real, and
+   every strong round this month came from executing something — Postgres, the live site, a
+   controlled origin. Stage 04 can be checked against *this repository*, which is a project
+   that was set up, deployed, and broken in instructive ways. Stage 15 has no backend, no
+   Sentry and no metrics to check against; it would be the most speculative stage yet, and the
+   cold-reader method would have the least purchase on it.
+2. **The material is fresh and it cost something.** `docs/learnings/deploying-101.md` was
+   written the same day, from scars rather than memory.
+3. **It exercises the template while it is fresh.** Three rounds running, the defects landed in
+   the template rather than the content. Stage 04 is where TD-16's fix, the render-test
+   convention and the panel-weight rule find out whether they transfer.
+
+**Shape of the round, decided up front rather than discovered halfway: a doc-correction phase
+before the port.** Stage 03's round was a port of prose that was already right. This one is not.
+
+**The case for 15, recorded because it is real and lost anyway.** `docs/14` defers Sentry,
+error rates and latency baselines to it, so there is a dangling dependency; and "unfamiliar
+ground" is a genuine argument for reader value. It loses because unfamiliar also means
+research-heavy with nothing to ground it against, and stage 03 — also unfamiliar — cost 106
+commits and four cold-reader runs.
+
+Two earlier recommendations are kept below as written rather than edited, per the decisions
+convention. Both are superseded: W-3.2 merged, TD-17 closed, W-5 complete.
 
 The reasoning, rather than the assertion. All twelve tasks of the D-52 round are done, and so
 is the whole-branch review the round was pointed at. Nothing is left to build on this branch.
@@ -1141,20 +1978,21 @@ Two things worth deciding at the same time, both surfaced by this round rather t
 
 **Also open, in rough order:**
 
-- **`W-5` (deploy)** — **repo side done 2026-08-04.** What remains is not code: set Root
-  Directory to `web` in the Vercel project, push, and confirm the first build. Then
-  post-deployment verification per `docs/14`, which needs the audit suite retargeted off
-  `:3100` — that is the slice that turns the suite into a real post-deployment check rather
-  than a local one.
+- ~~**`W-5` (deploy)**~~ — **complete 2026-08-11.** Live at
+  `https://acp-dev-playbook.vercel.app`, and `pnpm test:prod` verifies the deployment itself.
+  Automating that in CI is deferred: a push to `main` and a live build are not simultaneous.
 - ~~**`TD-17`**~~ (no component-test harness) — **closed 2026-08-04.** It was the cheapest
   remaining way to raise the floor, and it paid on the same branch: the whole-branch review
   found the interrogation panel telling readers "Five questions" while rendering six, which is
   the defect class the harness exists to catch, in the component it was built around.
-- **`TD-16`** (placeholder contrast) — a real AA failure on instructional text, plus the audit
-  blind spot that hid it. Fix both halves together.
-- **`TD-12`** (audit `PAGES` hand-maintained) — **thirteen hashes added by hand this round**,
-  one per new step. A dead hash fails; a missing one still audits nothing, which is the half that
-  matters now that adding steps is routine.
+- ~~**`TD-16`**~~ (placeholder contrast) — **closed 2026-08-11**, both halves. The blind spot
+  turned out to be two: placeholders had no text node to sample, and every `oklab()` colour was
+  skipped rather than checked. Rasterising fixed both.
+- ~~**`TD-12`**~~ (audit `PAGES` hand-maintained) — **closed 2026-08-14.** Stage 03 added
+  thirteen hashes by hand, one per new step, which is what raised it to Medium. The sweep now
+  derives from `STAGES.filter(s => s.ready)` and the rail each stage renders, so the half that
+  mattered — a *missing* hash auditing nothing while the suite stays green — cannot recur.
+  What it does not cover is the reverse, and that is **TD-36**.
 - **`P-6`** — the remaining conventions to fold into the stage docs.
 
 Carry into whichever round is next:

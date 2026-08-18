@@ -57,9 +57,10 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03 done; 15 remain)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04 done; 14 remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
-| **W-5** | Deploy | ◐ *(repo side done; awaiting Vercel Root Directory + first deploy)* |
+| **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; ten sheets still to transcribe)* |
 
 ### Dependency map
 
@@ -125,7 +126,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02 and 03 done; 15 remain)*
+### W-3 — Stages 02–18 interactive ◐ *(02, 03 and 04 done; 14 remain)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -384,7 +385,9 @@ which is why `trace` exists as its own step.
       the doc does not carry would be inventing reference content rather than porting it
 - [x] New step hashes added to `e2e/audit.spec.ts` by hand (TD-12) — **thirteen** of them this
       round, taking stage 03's entries from nine to twenty-two. A *dead* hash now fails; a
-      *missing* one still audits nothing, which is the half TD-12 still names
+      *missing* one still audits nothing, which is the half TD-12 still names. **TD-12 closed
+      2026-08-14**: the list derives from the ready set now, so this was the last round that
+      added a hash by hand
 - [x] **Whole-branch review before merge**, doc and app together. ✓ 2026-08-03 — seven
       blocking findings, two minors promoted for being reader-visible and introduced by this
       branch, sixteen deferred. The four per-task reviews before it had found fourteen blocking
@@ -405,7 +408,8 @@ plan"; architecture's, testing's and so on will each have their own). Status:
 | 01 Product Discovery | ☑ | ☑ | Doc `### AI in discovery` backfilled; TD-15 closed |
 | 02 Product Planning | ☑ | ☑ | Done: 7th step + `### AI in planning` |
 | 03 Architecture | ☑ | ☑ | `### AI in architecture`, its own step — the 21st of 22 after the D-52 reshape, and the 6th when it was written. The doc had **no** AI section — the round had to write one before it could mirror it, which is why `stage-metadata.test.ts` now fails any stage whose doc lacks the heading |
-| 04–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
+| 04 Project Setup | ☑ | ☑ | `### AI in project setup` was written test-first during the doc-correction round: `stage-metadata.test.ts` failed with `04-project-setup has no "### AI in ..." subsection` before the section existed, and the teeth check renamed the heading to `### AI for project setup` to confirm the assertion could still fail. The app step arrives with the port |
+| 05–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
 
 Suggested order. Revised 2026-07-24 (D-27): the first pass ranked purely by teaching
 value and put 02 fifth. That ignored the reader's journey and the risk of proving the
@@ -417,10 +421,12 @@ pattern library on the hardest stage.
 | ~~2~~ ✓ | 03 Architecture | **Doc and app content agree; the whole-branch review has run, and TD-23 now waits only on the merge.** The densest stage by a distance: 14 doc sections, 22 app steps, 24 figures. TD-18, TD-21, TD-22 and TD-25's doc half all closed on it. Stress-tested the pattern library and produced two new rows (annotated artifact, and the panel-weight rule that replaced the step-count ceiling). |
 | ~~3~~ ✓ | — | **Stage 03's doc gaps closed** across W-3.1, W-3.1b, W-3.3 and four cold-reader runs — run 4 returned **COMPLETE**, the first to do so. |
 | ~~4~~ ✓ | — | **W-3.2 + W-3.3 merged** to `main` as `790b3e4` (`--no-ff`, 106 commits, branch deleted). Gate re-run on the merged result: 313/313, 14/14 audit, lint, typecheck and format clean. **Not pushed** — the user handles that. |
-| **5 (next)** | 15 Observability | Unfamiliar ground; benefits most from figures. TD-23 is closed, so stage 03 no longer blocks anything. |
-| 6 | 16 Incident Management | Procedural, so a stepper fits naturally |
-| 6 | 13 Production Deployment | Expand/migrate/contract needs a visual |
-| — | remainder | 04–12, 14, 17, 18 |
+| ~~5~~ ✓ | — | **W-5 complete** — live at https://acp-dev-playbook.vercel.app, verified by `pnpm test:prod`. Every `W-` milestone except W-3 is now closed. |
+| **6 ☑** | **04 Project Setup** | **Decided 2026-08-11**, against this table's earlier answer of 15. Reading 04 to compare the two found its Vercel section factually wrong — it says to match the Node version to `.nvmrc`, which Vercel does not read — and silent on the three things that broke this project's own first deploy (**TD-28**). So the round is *fix a doc that misleads* rather than *port a doc that is fine*, and it is the one stage checkable against this repository. **Scoped as a doc-correction phase before the port.** 15's case is recorded in `docs/tracker.md`'s Next up; it lost on having nothing to ground it against. **Doc phase complete 2026-08-13** on `fix/stage-04-doc-corrections`, unmerged: 323 → 711 lines at `38765e7`, TD-28 closed, **31 defects against the four TD-28 named**. **`RevealList` done 2026-08-14**, merged to `develop` as `e29f3fe`: eleven stage-03 accordions collapsed onto one component, not the five the plan scoped. **TD-12 closed the same day** on `fix/derive-audit-pages`, also merged — the audit's page list derives from the ready set, so the port will not be adding hashes by hand. **Port done 2026-08-17** and merged to `develop` as `bb3c119`: fifteen steps, all under the 3.2 ceiling, W-3 to 4/18. See W-3.4. |
+| **7 (next)** | **05 Development** | **Decided 2026-08-18**, against this table's own answer of 16 or 13. Those two were ranked on how well a stepper fits their shape; 05 is chosen on sequence instead. It is the stage a reader reaches immediately after 04 — setup ends with a repository that builds and deploys, and 05 is the loop they then run dozens of times a day — so shipping them adjacent means the first two interactive stages past discovery and planning read as continuous. 16 and 13 keep their case and their priority; they are now 8. |
+| 8 | 16 Incident Management | Procedural, so a stepper fits naturally |
+| 8 | 13 Production Deployment | Expand/migrate/contract needs a visual |
+| — | remainder | 06–12, 14, 17, 18 |
 
 **~~Settle before stage 03:~~ ✓ resolved 2026-07-27 (D-36).** TD-2 and TD-3 are closed:
 `terms.ts` is the single glossary source (`reference/glossary.md` generated via
@@ -434,6 +440,112 @@ overwrite. A shared cross-stage store was rejected as premature (it would make s
 migration target and fix a schema before stages 03–18 have said what they need). The chain
 extends: the reader's own "Not in v1" entries become the items they triage in the horizon
 step. Verified end-to-end in a live browser.
+
+### W-3.4 — Stage 04, doc correction then port ☑ *(doc done 2026-08-13, merged as `dd44b30`; the port done 2026-08-17, **23 commits merged to `develop` as `bb3c119`, `--no-ff`, branch deleted**)*
+
+**The port shipped fifteen steps, and the seam is the one that was measured.** All four
+provisional pairs from D-65 stayed split — combined they measure 4.80, 5.40, 3.54 and
+4.23 against a 3.2 ceiling — which makes this the first seam in the repo to survive
+measurement unchanged. Tests 382/41 → 521/63, audit 17/17, sweep 157/119 over 51 URLs.
+Coverage map: `docs/stage-04-status.md`. Evidence and the full panel table: the W-3.4 row
+in `docs/tracker.md`.
+
+**TD-36 closed here**, on three guards rather than the one its own "Closes with" clause
+named — the tuple alone makes a *renamed* id a compile error and says nothing about a
+*deleted* step.
+
+The first round in this project shaped as a correction rather than a port, per **D-53**.
+Stage 03's rounds ported prose that was already right; `docs/04-project-setup.md` was wrong
+where a reader acts on it, which is what **TD-28** recorded and considerably understated.
+
+Evidence for everything below is in `docs/tracker.md`'s row for this round. The short
+version: TD-28 named four defects, all in `### 8. Connect Vercel`, and the round closed
+**31** across every numbered section. Three instruments ran in sequence and each caught what
+the previous one could not — reading the doc, executing every runnable block of it, and
+handing the corrected doc to a cold reader with a task to finish.
+
+- [x] **Execute the doc before correcting it** (**D-50**) ✓ `docs/verification/stage-04-doc-execution.md`.
+      Fifteen claims scored, and the five defects it found that reading had missed were folded
+      into Tasks 2 and 3 by the user's scope call rather than deferred
+- [x] **Correct §1, §6, §7, §8, the Definition of done and Artifacts** ✓ — including the
+      `prepare` script the doc never added, the `typecheck` and test scripts its own gates
+      called, and the three settings a repository cannot express
+- [x] **`reference/stack.md` names the file each environment reads** ✓ (**D-55**) — one clause
+      on the Node row, which is the generalisation TD-28's headline defect rests on
+- [x] **`### AI in project setup`, written test-first** ✓ — real RED from
+      `stage-metadata.test.ts`, teeth-checked, suite 331 → **332 across 33 files**
+- [x] **Cold-reader run 1, before the port rather than after** ✓ (**D-54**)
+      `docs/verification/cold-reader-stage-04-run1.md`. Completeness returned three blocking
+      findings; consultability scored **3/5**, and one of its two misses was traced to this
+      round's own correction rather than assumed inherited
+- [x] **Fix wave, all twelve prioritised entries closed** ✓ — three of them not as specified,
+      and one reversed on review and recorded as reversed (**D-56**)
+- [x] **Whole-branch review of the fix wave** ✓ — eight findings, all addressed
+- [x] **`RevealList`** ✓ *(done 2026-08-14 on `refactor/reveal-list`, merged as `e29f3fe`)* — scoped as
+      five stage-03 accordions sharing one markup, and there were **eleven**. The five were the
+      ones whose header comments admitted the duplication; the other six never said so. All
+      eleven now call `RevealList` (twelve instances), plus `RevealFacet` for row bodies and
+      `TeamNotes` moved to `src/components/`. **Two shared components widened**, both after an
+      implementer reported a caller that did not fit rather than forcing it (**D-61**); **two
+      deliberate visual changes**, both badge moves, declared in commit subjects. The branch's
+      real product is the verification story: **seven checks that could not fail**, six of them
+      controller-authored, recorded in `docs/tracker.md`'s Process observations. Evidence in
+      that file's row: 31 commits, vitest 332/33 → **347/36**, sweep **140 expandables / 107
+      panel ids** unchanged end to end, audit 14/14. Debt opened: **TD-34**, **TD-35**
+- [x] **TD-12** ✓ *(done 2026-08-14 on `fix/derive-audit-pages`)* — the audit's thirty-six
+      hand-written URLs replaced by `e2e/audit-pages.ts`, which reads stages from
+      `STAGES.filter(s => s.ready)` and step ids from the rail each one renders. Ran on its own
+      branch before the port, per the sequencing settled 2026-08-13, because the port is what
+      would otherwise have added the next hashes by hand. The equivalence test spells all
+      thirty-six out rather than recomputing them, and **carries a shelf-life note**: stage 04
+      going ready turns it red for a correct reason, and the fix is to delete it, not to paste
+      in what the derivation emits. Evidence in `docs/tracker.md`'s row: audit **14/14 →
+      16/16**, vitest **350/37**, sweep unchanged at **140 expandables / 107 ids**. Debt
+      opened: **TD-36**, for the direction it does not cover
+- [x] **Port-planning pass** ✓ *(done 2026-08-14 on `feat/stage-04-app-port`, `dc47580` and
+      `126b3c8`; not merged, not pushed)*. The pass asked whether D-52's panel weight still
+      let the spec's four heavy pairings hold, and the answer was that **panel weight cannot
+      answer that question**. All 35 panels across stages 01–03 were measured at 1024×768:
+      stage 03's median is 3.02 and its max 3.88, and a fit against its fourteen doc sections
+      returns `screens = 3.068*steps` with every content coefficient at noise. Weight is a
+      property of authoring, not of content, so it falsifies a seam afterwards and cannot
+      choose one — **D-64**. What settled it instead is the **floor**: chrome 1.70 screens,
+      0.026 per rendered code line, 0.87 per figure. On that arithmetic `scaffold` (§1+§2)
+      reaches **3.74 before it teaches anything** and `gates` (§6+§7) reaches 3.00 while owing
+      seven judgments, so **all four pairings fail**, on D-52's *first* clause rather than its
+      threshold. Nine steps become **fifteen**, eleven firm and four provisional, and the
+      provisional four are authored split and merged only on measurement (**D-65**). The
+      original nine-step table is kept in the spec and marked superseded
+- [x] **The implementation plan** ✓ — `docs/superpowers/plans/2026-08-14-stage-04-app-port.md`,
+      **1,610 lines, sixteen tasks in four waves**: foundation, content-as-data, components,
+      then assembly where every task ends in a measurement rather than an edit. Execution
+      approach recommended and **not yet chosen** — subagent-driven for the eleven independent
+      data and component tasks, inline for the two assembly tasks whose merge-or-split calls
+      need the whole panel table in one context
+- [ ] **TD-36 folds into that round.** Stage 04's `steps.ts` should type its `Step[]` against
+      `STEP_IDS` the way stage 03's does, and extending the same guard to stages 01 and 02 is
+      a few lines inside a round already in those files — against its own round later. **Now
+      Task 1 of the plan**, which writes both
+- [ ] **The port.** Unchanged by the `RevealList` round, the TD-12 round or the planning pass.
+      `04-project-setup` is still `ready: false` and absent from `STAGE_CONTENT`, so the route
+      renders "sheet not drawn". **W-3 is not advanced.** One tripwire is already armed:
+      `web/e2e/audit-pages.spec.ts` goes **red the moment `ready: true` lands**, correctly —
+      its thirty-six-URL literal proves the TD-12 migration and nothing after it, and the file
+      says in writing that the fix is to delete the test rather than paste in what the
+      derivation now emits. **Now Task 2 of the plan**, which deletes it and puts a
+      stage-coverage guard in its place
+- [x] **Merge of the doc phase** ✓ — `fix/stage-04-doc-corrections` is in `develop` as
+      `dd44b30`, `--no-ff`, which is where `refactor/reveal-list` was cut from
+- [x] **Merge of `refactor/reveal-list`** ✓ — in `develop` as `e29f3fe`, `--no-ff`, after a
+      whole-branch review that found the React key warning still live on three panels
+- [x] **Merge of `fix/derive-audit-pages`** ✓ — in `develop` as `a07a9b6`, `--no-ff`,
+      2026-08-14, after a scoped re-review returned *Ready to merge* with its two blocking
+      items addressed. Gate re-run on the merged result: vitest **350/350 across 37 files**,
+      lint, typecheck and `format:check` clean; `web/` is byte-identical to the reviewed tip,
+      so the audit's 16/16 stands without a re-run. The merge took `develop` to **112 commits ahead of
+      `main`** and it was unpushed at the time; `main` stays at `8d5045c`, and the promotion is
+      the user's. *(Both numbers moved after this was written: the two W-6 merges took `develop`
+      to **131 ahead**, and it has since been **pushed** — `origin/develop` at `49122f5`.)*
 
 ### W-4 — Quality gates ☑
 
@@ -450,7 +562,7 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
       confirm Actions fails — **TD-10**
 - [x] Fix or document whatever the suite reveals
 
-### W-5 — Deploy ◐ *(repo side done 2026-08-04; awaiting first deploy)*
+### W-5 — Deploy ☑ *(live 2026-08-11 at https://acp-dev-playbook.vercel.app; verified by `pnpm test:prod`)*
 
 - [x] Node version pinned where Vercel reads it — `engines.node` in `web/package.json`.
       `.nvmrc` reaches local and CI only, which left the one host that serves users unpinned
@@ -458,13 +570,78 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
 - [x] Five `create-next-app` assets deleted from `public/`, with a test so they cannot return
 - [x] `prepare` hook made safe for a checkout with no `.git` — found by review, and it would
       have failed the Vercel install step before Root Directory was ever read
-- [ ] **Set Root Directory to `web` in the Vercel project** — the build fails without it, and
-      there is no in-repo equivalent
-- [ ] Preview deploy per pull request *(automatic once the project is connected)*
-- [ ] Production deploy
-- [ ] Post-deployment verification per `docs/14` — **deliberately not started.** The audit suite
-      assumes a local server on `:3100` (`playwright.config.ts`), and retargeting it at a
-      deployed URL cannot be written until a deployment exists to point at
+- [x] **Root Directory set to `web`** in the Vercel project — no in-repo equivalent
+- [x] **Framework Preset set to Next.js.** Not planned for, and not discoverable from the
+      repository: the project had been created against a placeholder repo with nothing to
+      detect, so it defaulted to *Other*, whose Output Directory is `public` — a directory this
+      round had just deleted. The build failed with `No Output Directory named "public" found`,
+      which names the symptom and not the cause
+- [x] **Connected to the right repository.** It was pointed at `AngeloCP-01/acp-development-playbook`,
+      a placeholder holding one unrelated commit, while the work lives in
+      `AngeloCP-01/development-playbook`. Three green production builds of the wrong repo looked
+      exactly like success
+- [x] Preview deploy per pull request *(automatic, now that the project is connected)*
+- [x] **Production deploy** — live and verified: `/robots.txt` reads `Allow: /` and names the
+      sitemap, `/sitemap.xml` carries 19 `<loc>` entries on the real origin, and
+      `/stages/03-architecture` renders with the title template applied
+- [x] **Post-deployment verification per `docs/14`** — `pnpm test:prod` runs five `@smoke`
+      checks against the deployed site: `robots.txt` and `sitemap.xml` carry the live origin,
+      all 19 advertised URLs resolve, the home and a stage page render through the real
+      layout, and the edge logs no console errors. Scoped to what a local build cannot do —
+      contrast and overflow stay in `audit.spec.ts`, because the bytes CI checked are the
+      bytes Vercel serves
+
+---
+
+### W-6 — Reference hub ◐ **PAUSED 2026-08-14** *(skeleton `0207fd6` and source graphics `4727dc3` merged; resume after the stage 04 port)*
+
+> **Parked deliberately, not abandoned.** The frame is finished and merged — routes,
+> rail, renderer, markdown generation, audit coverage and the source graphics. What
+> remains (W-6.3, W-6.4) is content work that competes with `W-3`, which is the
+> project. **Next active work is the stage 04 port under W-3.4, not this.**
+>
+> Resuming needs no re-decision: read this section, pick a sheet from
+> `reference/cheatsheet-sources.md`, and fill its `sections: []`. Nothing else changes.
+
+**Why it exists.** Two problems with one shape. `reference/glossary.md` and
+`reference/stack.md` have been unreachable from the app since they were written — no
+route renders either — and there was nowhere to put lookup material that answers "what
+was that command" rather than teaching a decision.
+
+Spec: `docs/superpowers/specs/2026-08-14-reference-hub-design.md`.
+Plan: `docs/superpowers/plans/2026-08-14-reference-hub-skeleton.md`.
+
+**W-6.1 — Skeleton ☑** *(merged 2026-08-14, `0207fd6`, 11 commits, +3175/−86)*
+
+`/reference` plus a per-sheet route, eleven sheets registered behind one renderer,
+a second nav landmark in the rail, sitemap entries guarded bidirectionally, and
+`reference/cheatsheets.md` generated from the registry. Ten of the eleven sheets are
+deliberately empty (**D-62**). Evidence in `docs/tracker.md`.
+
+**W-6.2 — Source graphics on the sheets ☑** *(merged 2026-08-14, `4727dc3`)*
+
+All four requirements closed. The images live in `web/public/reference/` as WebP,
+**5.2MB of originals became 644K**, the plate frames them in both themes without
+dimming, and the alt decision is derived from whether a text equivalent exists —
+decorative on a drawn sheet, descriptive on an undrawn one, both directions tested.
+Originals stay untracked and gitignored; the conversion recipe and measured savings
+are in `reference/cheatsheet-sources.md`. Evidence in `docs/tracker.md`.
+
+**W-6.3 — Fill the ten empty sheets ☐**
+
+Content work, not app work, now that the frame exists. Three sources are already
+gathered and logged in `reference/cheatsheet-sources.md`; the rest have search terms
+listed there by priority. Two of the three still need their post URL and author
+recorded before anything derived from them can ship on a public site.
+
+**W-6.4 — Glossary and stack surfaced in the hub ☐**
+
+The reason `/reference` beat `/cheatsheets` as a section name. Closes the original
+gap rather than adding a parallel one.
+
+**Deferred beyond W-6:** the figure registry and the six architecture diagrams;
+stage→sheet backlinks, since the tether is one-directional today; search; and
+copy-to-clipboard on code rows, which waits for the first sheet that has any.
 
 ---
 

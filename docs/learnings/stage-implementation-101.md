@@ -124,3 +124,81 @@ scripts (TD-5); until they are committed, keep re-writing them.
 For anything visual, a screenshot review catches what scripts do not: invisible tokens, a
 legend that promises colour coding the elements do not show, a layout that technically
 passes but reads as dead space.
+
+---
+
+## Ask what the doc teaches that the app does not, section by section
+
+Added after stage 04, where it was the single most valuable check of the round and nothing
+in the gate could have replaced it.
+
+The port was green on everything: 518 tests, a 17-test audit over 63 URLs, every panel
+under the weight ceiling, five per-task reviews already closed. A reviewer then walked
+`docs/04-project-setup.md` heading by heading against the panels and found **five sections
+whose material the app never taught** — and they shared one shape:
+
+> the app tells the reader to run a script, or set a value, that it never shows them how to
+> create.
+
+Both the CI artifact and the lefthook artifact invoked `pnpm test` while nothing said to
+write that script. `format:check` the same. The three files that pin a Node version were
+described in prose and never shown. Sentry's missing-token problem was diagnosed with no
+fix given. Vercel's environment variables were absent entirely.
+
+**Every one had been assigned to a panel by the plan's own line ranges.** They were silent
+drops, not curations, and no test can see the difference: a data module asserted against
+the doc proves the data it *has* matches, and says nothing about data it never got.
+
+**The symptom is visible in the panel measurements, if you look for it.** Stage 04's median
+panel was **1.74 screens** against stage 03's authored **3.02**. I read that as "either the
+seam is finer than the content needs, or the panels are thin" and could not tell which. It
+was neither. It was content that had gone missing, and the median moved to 2.28 once the
+five sections landed. A stage measuring well under its comparable's median is a signal to
+go looking, not a compliment.
+
+**The method, which is cheap:** open the doc and the panel file side by side, walk every
+heading including the closing sections, and write a row per section saying which panel
+carries it and what specifically. Anything you cannot name lands in a "not ported"
+list with a reason. That table is now `docs/stage-04-status.md`'s coverage section, and
+writing it is what forces the question.
+
+Do it **before** believing a port is complete, and do it with fresh eyes — the session that
+wrote the panels is the worst reader of them, because it remembers intending to cover
+things.
+
+---
+
+## A teeth check can lie, in two ways that both look like a pass
+
+Stage 04 hit both, and one of them caught the controller rather than an implementer.
+
+**The mutation did not land.** `perl -0pi -e 's/className="t-data"/.../'` without `/g`
+replaces the *first* occurrence in the slurped file — which was a mention inside a docblock,
+not the JSX. The test "survived" a mutation that never touched the code, and read as
+toothless. Confirm the mutation is actually in the file before trusting what the run says.
+
+The same shape bit twice more in a different guise: a Python edit script that `assert`s
+several anchors and writes at the end will abort on the first miss and write **nothing**,
+while its earlier substitutions look applied. Two rounds of "I already fixed that" turned
+out to be that. Write unconditionally and report the misses.
+
+**Both sides of the assertion came from the same source.** A render test read
+`getAttribute('data-catches')` and compared it to `String(gate.catchesIt)` — both off the
+same row. Flipping the data moves the expectation along with the render, so the plan's
+prescribed mutation proved nothing at all. The fix is a literal: *exactly one gate catches,
+and it is the browser*. Any assertion shaped `expect(rendered).toBe(String(row.flag))` has
+this hole.
+
+---
+
+## Check which testing libraries the project actually installs
+
+Stage 04's plan wrote every `.tsx` test against `@testing-library/jest-dom` and
+`@testing-library/user-event`. This project installs neither. About twenty tests would have
+failed on `Invalid Chai property: toBeInTheDocument` rather than on anything real, and the
+first one to hit it read like a broken component.
+
+The house convention is `fireEvent` from `@testing-library/react` plus plain DOM assertions
+(`el.getAttribute(...)`, `(el as HTMLInputElement).checked`). `src/components/RevealList.test.tsx`
+is the example. `src/test/setup.ts` argues in writing against growing a second
+responsibility, which is the case against adding jest-dom now.

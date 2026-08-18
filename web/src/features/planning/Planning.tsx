@@ -18,8 +18,9 @@ import { PlanWorksheet } from './PlanWorksheet'
 import { HorizonBands } from './HorizonBands'
 import { HorizonBoard } from './HorizonBoard'
 import { AIPlanningPlays } from './AIPlanningPlays'
+import { type StepId } from './steps'
 
-const STEPS: Step[] = [
+const STEPS: (Step & { id: StepId })[] = [
   {
     id: 'done',
     label: 'Done',

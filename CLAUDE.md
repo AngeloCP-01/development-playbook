@@ -13,11 +13,16 @@ pnpm lint         # eslint --max-warnings 0
 pnpm format       # prettier --write (format:check is what CI runs)
 pnpm test         # vitest — two projects: `unit` (node, data invariants), `dom` (jsdom, render tests)
 pnpm test:e2e     # playwright audit suite against a production build on :3100
+pnpm test:prod    # playwright @smoke checks against the DEPLOYED site (docs/14)
 pnpm typecheck    # next typegen && tsc --noEmit
 ```
 
 Lefthook runs format+lint on commit and typecheck+test on push. CI
 (`.github/workflows/ci.yml`) is the same gate cheapest-first, plus the audit suite.
+
+`pnpm test:prod` is **not** part of that gate. It checks the deployed site, so a green run
+says nothing about the working tree and a red one may have nothing to do with local changes.
+Run it after a promotion to `main`.
 
 ## Two deliverables, one body of content
 
@@ -152,6 +157,25 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
 
 **Branches** are `feat/<kebab-topic>` or `fix/<kebab-topic>`, no ticket numbers.
 `docs/<date>-<topic>` branches carry a date in the slug; `feat`/`fix` do not.
+
+### `main` is production — the branch you may not merge to
+
+Since 2026-08-11 the site is live from `main` (https://acp-dev-playbook.vercel.app), so a
+push to `main` is a deploy. The flow that follows from that:
+
+```
+feat/… · fix/… · chore/… · docs/…   ──merge──>   develop   ──user only──>   main
+```
+
+- **Work branches merge to `develop`.** Never to `main`, whatever the change is and however
+  safe it looks. A records-only edit deploys exactly as hard as a feature.
+- **`main` is the user's.** You may **open a pull request** to `main`; you may not merge it,
+  and you may not push to it. The user handles that promotion.
+- **Ask before every merge, including into `develop`.** Having a plan approved is not
+  approval to merge the branch that came out of it — integration is a separate decision, and
+  it is the user's each time.
+
+Everything below applies to a merge into `develop` exactly as it did to `main`.
 
 **Merges use `--no-ff`** — never squash, never rebase. The merge subject is hand-written
 and carries meaning, because history should show what shipped as one unit:
