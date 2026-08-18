@@ -45,6 +45,12 @@ Building "user profiles": do not build the whole schema, then all the queries, t
 the UI. Build *view your own display name* end to end — column, query, component, test.
 Ship it. Then add editing. Then avatars.
 
+The column comes first and it is not this stage's to teach. The table it belongs to was
+designed in [03 — Architecture](03-architecture.md); the tooling that applies the change
+was installed in [04 — Project Setup](04-project-setup.md). What belongs here is the
+habit: change the schema for the one case you are shipping, not for the three you expect
+to ship next.
+
 Each slice is demonstrable, independently valuable, and independently revertible. You
 also learn about the design from the first slice, before that design is baked into
 thirty files.
@@ -55,10 +61,13 @@ Next.js 16's App Router makes server the default. Keep it that way.
 
 ```tsx
 // src/app/(app)/invoices/page.tsx — a Server Component
+import { requireUser } from '@/lib/auth'
 import { getInvoices } from '@/features/billing/queries'
+import { InvoiceTable } from '@/features/billing/invoice-table'
 
 export default async function InvoicesPage() {
-  const invoices = await getInvoices()
+  const user = await requireUser()
+  const invoices = await getInvoices(user.id)
   return <InvoiceTable invoices={invoices} />
 }
 ```
@@ -83,7 +92,11 @@ Client Component, so the boundary does not have to swallow a subtree to cross it
 ### Keep route files thin
 
 ```tsx
-// Route file: routing, auth, composition. Nothing else.
+// src/app/(app)/billing/page.tsx — routing, auth, composition. Nothing else.
+import { requireUser } from '@/lib/auth'
+import { getInvoices } from '@/features/billing/queries'
+import { InvoiceTable } from '@/features/billing/invoice-table'
+
 export default async function BillingPage() {
   const user = await requireUser()
   const invoices = await getInvoices(user.id)
@@ -91,9 +104,30 @@ export default async function BillingPage() {
 }
 ```
 
-The logic lives in `src/features/billing/queries.ts`, which is a plain function that can
-be tested without a framework. When business logic is inside a route file, testing it
-means booting Next.js — which is why that logic tends to go untested.
+Every symbol a file uses is imported in that file. The examples on this page show their
+imports for the same reason your editor does: a block you cannot paste and run is a block
+you cannot check.
+
+The logic lives one directory away, and it is an ordinary function:
+
+```ts
+// src/features/billing/queries.ts
+import { eq } from 'drizzle-orm'
+import { db } from '@/db'
+import { invoices } from '@/db/schema'
+
+export async function getInvoices(ownerId: string) {
+  return db.select().from(invoices).where(eq(invoices.ownerId, ownerId))
+}
+```
+
+No framework, no request, no mocking. A test calls it with an id and checks what comes
+back ([06](06-testing.md)). When business logic is inside a route file, testing it means
+booting Next.js — which is why that logic tends to go untested.
+
+Feature code lives under `src/features/<feature>/`, and that includes its components.
+`invoice-table.tsx` sits beside `queries.ts` because they change together. `src/components/`
+is for what more than one feature uses.
 
 ### Server Actions need validation and authorization
 
@@ -196,7 +230,7 @@ gap between writing a bug and seeing it fail shrinks to seconds.
 ## Artifacts
 
 - Small, focused commits with explanatory bodies
-- Feature code in `src/features/`, route files thin
+- Feature code in `src/features/<feature>/`, components included, route files thin
 - Server Actions that authenticate, validate, and authorize
 - Zod schemas at every external boundary
 
