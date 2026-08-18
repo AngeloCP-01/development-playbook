@@ -286,10 +286,16 @@ fully typed.
 - **HTTP request bodies** — Zod
 - **Environment variables** — Zod, at boot ([04](04-project-setup.md))
 - **Third-party API responses** — Zod. Their contract can change without warning.
-- **Database rows** — Drizzle already types these from your schema
 
-Inside those boundaries, no `any`, no unchecked casts. Every `as` is a place you told the
-compiler to stop helping.
+Database rows are the exception, and it is worth being exact about why. Drizzle types them
+from your schema, so the compiler knows their shape without a parse step. That is inference,
+not validation: nothing checks at runtime that the row matches, so if the table drifts from
+the schema the types will keep insisting everything is fine. It is a boundary you are
+choosing to trust, rather than one you have closed.
+
+Inside those boundaries, no `any`, no unchecked casts. Every `as` cast is a place you told
+the compiler to stop helping, so each one carries a comment saying what you know that it
+does not. If you cannot write that comment, the cast is covering a bug.
 
 ### Loading and error states
 
@@ -413,7 +419,7 @@ For each slice, before you open the pull request:
 - [ ] `pnpm typecheck` clean — the script from [04](04-project-setup.md), not a bare
       `tsc --noEmit`, which passes off a stale build and fails on a clean checkout
 - [ ] `pnpm lint` (at `--max-warnings 0`) and `pnpm format:check` clean
-- [ ] No `any`. Every `as` has a comment saying what the compiler could not know
+- [ ] No `any`. Every `as` cast has a comment saying what the compiler could not know
 - [ ] Server Actions authorize, not just authenticate — and so do reads
 - [ ] `loading.tsx` and `error.tsx` exist for any segment that fetches
 - [ ] Expected failures are returned and rendered, not thrown
@@ -453,8 +459,7 @@ bundle and a slow hydration rather than a blank page — which is why this one i
 miss. Push it to the leaves.
 
 **Server Actions without authorization.** Authentication proves who they are. It does not
-prove the record is theirs. This omission is the most common serious security bug in
-App Router applications.
+prove the record is theirs, and neither does a check you forgot to put in the `where`.
 
 **Business logic in route files.** Untestable without booting a framework, so it goes
 untested.
