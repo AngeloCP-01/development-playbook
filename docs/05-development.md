@@ -95,7 +95,9 @@ renders entirely on the client.
 A `'use client'` at the top of a page puts the whole tree on the far side of that
 boundary. On the one component that needs a click handler, it does not. And a Server
 Component passed through as `children` stays a Server Component even when its parent is a
-Client Component, so the boundary does not have to swallow a subtree to cross it.
+Client Component — Next's own docs are explicit that it is rendered on the server and
+handed to the Client Component as already-rendered output, never pulled into its module
+graph. The boundary does not have to swallow a subtree to cross it.
 
 ### Keep route files thin
 
