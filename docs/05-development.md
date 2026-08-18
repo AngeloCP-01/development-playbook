@@ -328,10 +328,11 @@ export default function Error({
 ```
 
 `loading.tsx` shows while that segment's data resolves. `error.tsx` catches what throws
-below it, and it has to be a Client Component because it takes an `onClick` — one of the
-few places the directive is not a choice. The retry prop carries an `unstable_` prefix in
-this Next version (`unstable_retry`, not the `reset` you may remember from older
-releases), so a copy that still calls `reset` will not compile.
+below it, and it has to be a Client Component because error boundaries always are — one of
+the few places the directive is not a choice. The retry prop carries an `unstable_` prefix
+in this Next version (`unstable_retry`, not the `reset` you may remember from older
+releases), so a copy that still calls `reset` gets `undefined` and a Try-again button that
+throws.
 
 Those two cover the unexpected. Expected failures are different and do not belong here: an
 invalid amount or a record that is not yours is the Server Action's return value, which is
