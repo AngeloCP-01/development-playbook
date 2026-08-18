@@ -233,6 +233,47 @@ display. It is a leaf, and the page holding it stays a Server Component.
 succeeds, the database is correct, and the list on screen still shows the old amount until
 something else forces a refresh — which is a bug reported as "it didn't save".
 
+### Authorize reads, not just writes
+
+The rule above is written for actions because that is where the damage is loudest, but
+"never trust an ID from the client" says nothing about the verb. A detail route is the same
+bug with a quieter symptom:
+
+```ts
+// src/features/billing/queries.ts — alongside getInvoices; the import gains `and`
+import { and, eq } from 'drizzle-orm'
+
+export async function getInvoice(id: string, ownerId: string) {
+  return db.query.invoices.findFirst({
+    where: and(eq(invoices.id, id), eq(invoices.ownerId, ownerId)),
+  })
+}
+```
+
+```tsx
+// src/app/(app)/billing/[id]/page.tsx
+import { notFound } from 'next/navigation'
+import { requireUser } from '@/lib/auth'
+import { getInvoice } from '@/features/billing/queries'
+import { InvoiceDetail } from '@/features/billing/invoice-detail'
+
+export default async function InvoicePage({ params }: PageProps<'/billing/[id]'>) {
+  const { id } = await params
+  const user = await requireUser()
+  const invoice = await getInvoice(id, user.id)   // not getInvoice(id)
+  if (!invoice) notFound()
+  return <InvoiceDetail invoice={invoice} />
+}
+```
+
+The owner is a parameter of the query, not a check after it. `getInvoices(user.id)` in the
+earlier example is the same discipline applied to a list: scope the query, do not filter
+the result.
+
+Filtering after the fact is the version that looks right and is not. The row was already
+loaded, so a logging line, an error message or a `console.log` left in during debugging can
+still put it somewhere it does not belong.
+
 ### Types at the boundaries
 
 Parse untrusted input into typed values at the edge; keep the inside of the application
