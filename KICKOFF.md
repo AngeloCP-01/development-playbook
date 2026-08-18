@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
   a recorded decision actually hold
 
-### Project state (as of 2026-08-18 — **stage 05's doc round is complete** on `fix/stage-05-doc-corrections`, NOT merged, NOT deployed; W-3 is still 4/18, since the port is a separate round that has not started)
+### Project state (as of 2026-08-18 — **stage 05's doc round is merged to `develop`** as `9ef3763`, `--no-ff`, local only, NOT deployed; W-3 is still 4/18, since the port is a separate round that is next and has not started)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -44,7 +44,10 @@ Before doing anything, read these for context:
   character-for-character.
 - **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01, 02 and 03 are
   complete, interactive and merged**; **stage 04 is complete and interactive but NOT merged**
-  — it is the 20 commits on `feat/stage-04-app-port`. 03 is 22 steps, 04 is 15. Fourteen
+  — it is the 20 commits on `feat/stage-04-app-port`. **Stage 05's doc is corrected and merged
+  to `develop` (`9ef3763`), but its app port has not started** — `05-development` stays
+  `ready: false` and absent from `STAGE_CONTENT`; the doc merge is what the port now builds
+  against, not a substitute for it. 03 is 22 steps, 04 is 15. Fourteen
   stages remain, which is all that is left of `W-3` and of the project. See
   `docs/stage-03-status.md` and `docs/stage-04-status.md` for section-by-section coverage.
 - **There is a second top-level section now: `/reference` (W-6), and it is PAUSED.** Eleven
@@ -55,8 +58,8 @@ Before doing anything, read these for context:
   glossary — do not hand-edit it; run `pnpm gen:cheatsheets`. **Eighteen is still eighteen**:
   this is a sibling section, not a nineteenth stage, which was rejected for the third time.
   Source graphics are served from `web/public/reference/` as WebP; the gathered originals are
-  gitignored on purpose (**D-63**). **Do not start W-6 content work** — merging the stage 05
-  doc branch, then the stage 05 port, is the next active thing.
+  gitignored on purpose (**D-63**). **Do not start W-6 content work** — the stage 05 doc branch
+  is merged; the stage 05 port (W-3.5b) is the next active thing.
 - **The D-52 reshape is done, and D-52 stands in place of D-38** (superseded, kept struck
   through for the record). `PANEL_EXCEPTIONS` in `web/e2e/audit.spec.ts` is back to its two
   permanent entries, which was the exit condition. **Twenty-two steps was not a target**: every
@@ -114,7 +117,12 @@ Before doing anything, read these for context:
   port (**D-54**), closed across twelve tasks plus a five-item fix wave, then re-verified:
   completeness went **8 BLOCKING → 0**, consultability **4/5 → 5/5**. Four new decisions,
   **D-68**…**D-71**. Full evidence is the **2026-08-18 W-3.5 (doc round, correction)** row in
-  `docs/tracker.md`.
+  `docs/tracker.md`. **Merged to `develop` as `9ef3763`, `--no-ff`, 2026-08-18** — 29 branch
+  commits plus the merge, `fix/stage-05-doc-corrections` deleted, and the merged result
+  re-gated on `develop`: `pnpm lint`, `pnpm typecheck`, `pnpm test` (**64 files / 529 tests**)
+  and `pnpm build` all exit 0. `develop` itself is not pushed; `main` is untouched. **D-74**
+  records why the doc round merged before the port started rather than after: this project
+  already paid the double-port cost once, on stage 03's W-3.1b.
 - **The whole-branch review caught what eleven per-task reviews could not, including its own
   earlier fix.** Four blocking findings: a stale `getInvoice` readback in `docs/06-testing.md`
   that a per-task fix left inconsistent, a form input with no accessible name, the records below
@@ -163,13 +171,15 @@ Before doing anything, read these for context:
   including into `develop`. **The user handles pushes.**
   **Cut the next branch from `develop`, never from `main`.** `develop` carries every round
   since stage 03 — the stage 04 doc correction, `RevealList`, TD-12, the two W-6
-  reference-hub merges, the stage 04 port and its two debt branches — so a branch cut from
-  `main` builds against a tree many rounds behind. **One branch is in flight**:
-  `fix/stage-05-doc-corrections`, complete and awaiting merge — 28 commits off `develop`
-  (this file's own commit not among them), full gate green, whole-branch review clean
-  after four blocking fixes. **Not merged, not
-  pushed.** `docs/05-development.md` is corrected; the port is not started and is a separate
-  round (**W-3.5b**), which should wait until this branch is in `develop`.
+  reference-hub merges, the stage 04 port, its two debt branches, and now the **stage 05 doc
+  correction** — so a branch cut from `main` builds against a tree many rounds behind.
+  **No branch is in flight.** `fix/stage-05-doc-corrections` merged to `develop` as
+  **`9ef3763`**, `--no-ff`, 2026-08-18 — 29 branch commits plus the merge (30 on `develop`
+  since `07c7045`), full gate green pre-merge, whole-branch review clean after four blocking
+  fixes, then re-gated on `develop` after the merge (same four commands, all exit 0). The
+  branch is **deleted**, per convention. `docs/05-development.md` is corrected on `develop`;
+  the port is a separate round (**W-3.5b**), it has not started, and it is the next branch to
+  cut.
 
   **Derive every position rather than reading one here.** Every version of this paragraph
   has gone stale, and the local `origin/*` refs are only as fresh as the last fetch:
@@ -188,17 +198,12 @@ Before doing anything, read these for context:
   Two merged branches still sit on the remote and can be deleted:
   `origin/feat/stage-03-app-port` and `origin/feat/stage-03-standard-practices`.
 
-### Next round's scope: merge the doc branch, then port stage 05 into the app
+### Next round's scope: port stage 05 into the app
 
-**The doc round (W-3.5) is done. The next round is W-3.5b, the port, and it has not begun.**
-
-**First, a merge decision that is not this session's to make alone.**
-`fix/stage-05-doc-corrections` carries 28 commits (this file's own commit not among
-them), full gate green (`pnpm lint`, `typecheck`, `test`, `build`), and a whole-branch
-review that returned *Ready with fixes* and is now satisfied. **Ask the user
-before merging it to `develop`** — per `CLAUDE.md`, a plan being approved is not approval to
-merge the branch that came out of it. The port should be built against `docs/05-development.md`
-as it stands on `develop` after that merge, not against the feature branch.
+**The doc round (W-3.5) is done and merged. The next round is W-3.5b, the port, and it has
+not begun.** `fix/stage-05-doc-corrections` merged to `develop` as `9ef3763`, `--no-ff`,
+2026-08-18, branch deleted, gate re-run green on the merged result. **No merge decision is
+outstanding** — build the port against `docs/05-development.md` as it now stands on `develop`.
 
 Read these before starting the port:
 
@@ -207,16 +212,24 @@ Read these before starting the port:
    closed (`docs/verification/cold-reader-stage-05-run2.md`).
 2. `docs/tracker.md`'s **2026-08-18 W-3.5 (doc round, correction)** row — what the twelve
    tasks, the fix wave and the whole-branch review each caught, and what is still deferred.
-3. `docs/learnings/stage-implementation-101.md` — the layout traps, the verification
+3. `CLAUDE.md`'s "Making a stage interactive" — the three-file trace (`web/src/lib/stages.ts`
+   → `web/src/features/<stage>/` → `web/src/features/stage-content.ts`), read from the source
+   rather than from a summary.
+4. `web/PATTERNS.md` — **must be read before building the stage.** It catalogues which
+   interaction pattern fits which content; the default is something the reader clicks, not a
+   paragraph, and a stage that is only prose blocks is the anti-pattern this repo names.
+5. `docs/learnings/stage-implementation-101.md` — the layout traps, the verification
    checklist, and the coverage walk added after stage 04's port.
-4. `docs/stage-04-status.md` — what a finished coverage map looks like, as a model for stage 05's.
+6. `docs/stage-04-status.md` — what a finished coverage map looks like, as a model for stage 05's.
 
 **What the port is working from.** The doc gained three sections this round —
 `### Authorize reads, not just writes`, `### Loading and error states`, `### AI in
 development` — and corrected several others (`'use client'`'s framing, the check-then-act
 authorization example, the throw-vs-return contradiction). It is roughly a third of stage 04's
 711 lines, so expect a seam well under fifteen steps; let the measurement say how much
-smaller, the way D-65 did for stage 04.
+smaller, the way D-65 did for stage 04. **D-35 already applies**: an "AI plays" section is
+mandatory per stage, and `### AI in development` already exists in the doc, so the port
+inherits it rather than inventing it.
 
 **Two things carried from the doc round, worth knowing before the port starts:**
 
@@ -228,6 +241,29 @@ smaller, the way D-65 did for stage 04.
   fix** (`reset` wrongly said to be `undefined`; it exists and does a narrower job than
   `unstable_retry`). The lesson for the port: verify a framework claim yourself before
   transcribing it into a component, even one this doc round already "corrected" once.
+
+**Thirteen minors were deferred out of the whole-branch review rather than fixed** — full
+catalogue in `.superpowers/sdd/2026-08-18-stage-05-doc-corrections/final-branch-review.md`,
+"Minor" and "Triage of the thirteen deferred minors". The two or three most likely to matter
+to the port:
+
+- **M9 — `<div aria-busy="true" aria-label="…">` in the `loading.tsx` block has no exposed
+  accessible name** on a role-less `<div>`; the port's actual loading component should not
+  inherit this. `role="status"` on the wrapper, or visible text, fixes it.
+- **M3 — the doc's two route examples (`/invoices` and `/billing`) are now character-identical
+  bodies**, but only `/billing` is downstream-consistent (`revalidatePath`, `loading.tsx`,
+  `error.tsx`, `[id]/page.tsx`); the port needs to pick one route shape rather than port both
+  literally and leave `/invoices` orphaned.
+- **`InvoiceDetail` is imported in one code block and never defined anywhere in the doc** —
+  the review's call was "leave it, but say so", not "produce it"; the port should not treat
+  the missing component as something it owes the reader.
+
+**One defect from this round's method, found in a document this round did not touch, worth
+recording explicitly because it will bite:** `docs/06-testing.md`'s `### Integration tests`
+uses `getInvoice` and `asUser` in its example block without importing either — the same
+"excerpt with its imports and callers removed" defect class this round closed nineteen times
+in stage 05, still alive in stage 06. Not this round's branch to fix; worth a future doc-round
+finding rather than an assumption that stage 06 is clean.
 
 ### Three things stage 04 learned that will save this round time
 
