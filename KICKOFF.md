@@ -120,7 +120,8 @@ Before doing anything, read these for context:
   `docs/tracker.md`. **Merged to `develop` as `9ef3763`, `--no-ff`, 2026-08-18** — 29 branch
   commits plus the merge, `fix/stage-05-doc-corrections` deleted, and the merged result
   re-gated on `develop`: `pnpm lint`, `pnpm typecheck`, `pnpm test` (**64 files / 529 tests**)
-  and `pnpm build` all exit 0. `develop` itself is not pushed; `main` is untouched. **D-74**
+  and `pnpm build` all exit 0. `develop` has since been pushed — `origin/develop` is at the
+  same commit; `main` is untouched by this round. **D-74**
   records why the doc round merged before the port started rather than after: this project
   already paid the double-port cost once, on stage 03's W-3.1b.
 - **The whole-branch review caught what eleven per-task reviews could not, including its own
@@ -190,10 +191,11 @@ Before doing anything, read these for context:
   git rev-list --count origin/develop..develop
   ```
 
-  Two things known to be true on 2026-08-18 and worth checking rather than trusting:
-  `develop` was ahead of `origin/develop` by a few commits, and **local `main` at `8d5045c`
-  was behind `origin/main` at `f1c7e51`** — something reached the remote `main` that this
-  local repository has not seen. Reconcile that before any promotion.
+  Two things known to be true at the end of 2026-08-18 and worth checking rather than
+  trusting: `develop` and `origin/develop` were level at `24c412e` — the doc round is
+  pushed — and **local `main` at `8d5045c` was behind `origin/main` at `5d76b8a`**,
+  so something reached the remote `main` that this local repository has not seen.
+  Reconcile that before any promotion.
 
   Two merged branches still sit on the remote and can be deleted:
   `origin/feat/stage-03-app-port` and `origin/feat/stage-03-standard-practices`.
