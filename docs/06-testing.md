@@ -101,7 +101,7 @@ describe('updateInvoice', () => {
 
     await asUser(user, () => updateInvoice({ invoiceId: invoice.id, amount: 250 }))
 
-    const updated = await getInvoice(invoice.id)
+    const updated = await getInvoice(invoice.id, user.id)
     expect(updated.amount).toBe(250)
   })
 
@@ -115,7 +115,7 @@ describe('updateInvoice', () => {
     )
     expect(result).toEqual({ ok: false, error: 'Not found' })
 
-    expect((await getInvoice(invoice.id)).amount).toBe(100)
+    expect((await getInvoice(invoice.id, owner.id)).amount).toBe(100)
   })
 })
 ```
