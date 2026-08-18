@@ -76,9 +76,9 @@ export default async function InvoicesPage() {
 }
 ```
 
-`requireUser` comes from [04 — Project Setup](04-project-setup.md) — that's where the
-session mechanism lives, along with what the function returns and what happens when
-nobody is signed in.
+`requireUser` comes from `@/lib/auth`, set up outside this stage. [03 —
+Architecture](03-architecture.md#authentication-and-authorization) is where the session
+strategy — rolling your own, a library, or a managed provider — actually gets decided.
 
 No `useEffect`, no loading state, no client-side fetch, no API route in between. The data
 access happens where the data lives.
@@ -161,8 +161,8 @@ export function InvoiceTable({
 }
 ```
 
-Column, query, component — the same order named as the unit of work earlier on this
-page, closed out for this one slice. The test is [06](06-testing.md)'s.
+Query, then component — the same order named as the unit of work earlier on this
+page. The test is [06](06-testing.md)'s.
 
 ### Server Actions need validation and authorization
 
@@ -268,12 +268,15 @@ display. It is a leaf, and the page holding it stays a Server Component.
 succeeds, the database is correct, and the list on screen still shows the old amount until
 something else forces a refresh — which is a bug reported as "it didn't save".
 
-Not every action needs a form. A button that already has what it needs — an id, an amount
-already on screen — calls the action directly; there is no user-typed text, so step 2 has
-nothing to catch:
+Not every action needs a form. A button that already has what it needs — an id, an
+amount already on screen — can call the action directly. That does not change what the
+action owes the caller: `updateInvoice` is a public endpoint no matter who calls it, so it
+authenticates, validates, and authorizes exactly as it does for the form, and
+`invoice.id` is still an id from the client that step 3 has to check before trusting it:
 
 ```tsx
-// no typed input — invoice.id and invoice.amount are already known, not user-typed
+// src/features/billing/retry-button.tsx
+// resubmits the same amount after a save that failed to reach the server
 'use client'
 
 import { useTransition } from 'react'
@@ -296,8 +299,10 @@ export function RetryButton({ invoice }: { invoice: { id: string; amount: number
 }
 ```
 
-Step 2 (validate) still runs inside `updateInvoice` — there is just nothing for the
-caller to have gotten wrong.
+Every step still runs — authenticate, validate, authorize — because the endpoint has no
+way to know this call came from a button with nothing to type rather than a form with
+everything to type. A real button would still have to do something with a failed result,
+the way the form does; this one drops it to stay short.
 
 ### Authorize reads, not just writes
 
