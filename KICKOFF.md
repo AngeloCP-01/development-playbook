@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
   a recorded decision actually hold
 
-### Project state (as of 2026-08-18 — **stage 04 shipped and its debt is closed**; W-3 is 4/18 and **stage 05 is next**; `develop` is ahead of `origin/develop` and `main` is untouched; the site live and self-verifying)
+### Project state (as of 2026-08-18 — **stage 05's doc round is measured, planned, and not started**; W-3 is 4/18; a twelve-task plan is waiting on `fix/stage-05-doc-corrections`, four commits deep, none of them a correction)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -55,8 +55,8 @@ Before doing anything, read these for context:
   glossary — do not hand-edit it; run `pnpm gen:cheatsheets`. **Eighteen is still eighteen**:
   this is a sibling section, not a nineteenth stage, which was rejected for the third time.
   Source graphics are served from `web/public/reference/` as WebP; the gathered originals are
-  gitignored on purpose (**D-63**). **Do not start W-6 content work** — the stage 04 port is
-  the next active thing.
+  gitignored on purpose (**D-63**). **Do not start W-6 content work** — the stage 05 doc
+  round is the next active thing.
 - **The D-52 reshape is done, and D-52 stands in place of D-38** (superseded, kept struck
   through for the record). `PANEL_EXCEPTIONS` in `web/e2e/audit.spec.ts` is back to its two
   permanent entries, which was the exit condition. **Twenty-two steps was not a target**: every
@@ -107,6 +107,18 @@ Before doing anything, read these for context:
   six. **TD-36, TD-39, TD-40 and TD-41 are all closed**, so no debt from that round is
   outstanding. Panel table and evidence: the W-3.4 row in `docs/tracker.md`; coverage map:
   `docs/stage-04-status.md`.
+- **Stage 05's doc has been measured and not touched.** Twenty defects, from three
+  instruments run before the port (**D-54**): a completeness reader given only the doc, a
+  consultability reader given only the headings, and a compiler. **Three defects were found
+  twice by inputs blind to each other**, which is the strongest signal the round produced.
+  The doc scored **4/5** on consultability and its judgement is good; what is wrong is
+  mechanical — **its code blocks are excerpts with their imports and callers removed**, and
+  its checklist has drifted from its own body. Four new decisions, **D-68**…**D-71**.
+- **Two agent claims were corrected rather than transcribed, and that is the transferable
+  half.** The completeness reader justified a real finding with a mechanism that could not
+  be confirmed in Next's shipped docs, and it was dropped while the finding stood on other
+  grounds. Its low-confidence `tsc` guess was promoted to confirmed on evidence it could not
+  see. **Do not transcribe a subagent's reasoning because its conclusion is right.**
 - **Stages 05–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
   eslint at `--max-warnings 0`, **527 vitest tests across 64 files** in two projects — `unit`
@@ -143,8 +155,9 @@ Before doing anything, read these for context:
   **Cut the next branch from `develop`, never from `main`.** `develop` carries every round
   since stage 03 — the stage 04 doc correction, `RevealList`, TD-12, the two W-6
   reference-hub merges, the stage 04 port and its two debt branches — so a branch cut from
-  `main` builds against a tree many rounds behind. **No branches are in flight**; the last
-  three were merged and deleted.
+  `main` builds against a tree many rounds behind. **One branch is in flight**: `fix/stage-05-doc-corrections`,
+  four commits deep and holding this round's verification records, spec and plan. It
+  contains no edit to `docs/05-development.md` yet.
 
   **Derive every position rather than reading one here.** Every version of this paragraph
   has gone stale, and the local `origin/*` refs are only as fresh as the last fetch:
@@ -163,29 +176,62 @@ Before doing anything, read these for context:
   Two merged branches still sit on the remote and can be deleted:
   `origin/feat/stage-03-app-port` and `origin/feat/stage-03-standard-practices`.
 
-### Next round's scope: stage 05 — Development
+### Next round's scope: execute the stage 05 doc plan
 
-**`docs/05-development.md` is 249 lines across four `##` sections and nine `###` ones** —
-the loop, vertical slices, Server Components by default, thin route files, Server Actions
-needing validation and authorization, types at the boundaries, commits, when you get stuck,
-and local environment, then Artifacts, Definition of done, Scaling to a team and Traps.
-That is a third of stage 04's doc and a sixth of stage 03's, so expect a smaller seam than
-fifteen steps and let the measurement say how much smaller.
+**Everything below is already decided. The plan is written and the round has not begun.**
 
-**05 was chosen against the priority table's own answer of 16 or 13**, and the reasoning is
-recorded in `docs/task.md`: those two were ranked on how well a stepper fits their shape,
-while 05 is chosen on sequence. Stage 04 ends with a repository that builds and deploys;
-05 is the loop the reader then runs dozens of times a day, so shipping them adjacent keeps
-the path continuous. 16 and 13 keep their case at priority 8.
+Read these three, in this order, before anything else:
 
-**Do the cold-reader pass on the doc before building anything** (D-54). Stage 03 ran it
-last and ended with a finished app sitting on a doc with three blocking gaps; stage 04 ran
-it first and it returned three blocking findings that would otherwise have been ported into
-components. `docs/learnings/cold-reader-testing.md` is the method.
+1. `docs/superpowers/plans/2026-08-18-stage-05-doc-corrections.md` — twelve tasks, 93 steps,
+   full content inline. **Start at Task 1.**
+2. `docs/superpowers/specs/2026-08-18-stage-05-doc-corrections-design.md` — why the round is
+   shaped this way, including the one rename it refuses and why.
+3. `docs/verification/cold-reader-stage-05-run1.md` and `stage-05-doc-execution.md` — the
+   twenty defects, classified, with the disagreements recorded.
 
-**Then run the delivery loop**: brainstorm, spec, plan, TDD per task, per-task review,
-whole-branch review, merge. Stage 04's spec and plan are the freshest house example, and
-its plan carries two in-execution amendments showing what a plan gets wrong.
+**The branch is `fix/stage-05-doc-corrections`, cut from `develop` at `07c7045`.** Four
+commits: two verification records, the spec, the plan. **`docs/05-development.md` has not
+been edited.** Do not re-run the cold-reader pass — it has run, and Task 10 is where it runs
+again, on the same `sprout` scenario so the results compare.
+
+**Execution approach, recommended and not yet chosen by the user:** implement **inline**,
+dispatch a **fresh reviewer subagent per task**, then a whole-branch reviewer. Eight of
+twelve tasks modify the same file, so subagent isolation buys nothing and invites eight
+agents to re-decide the tone of one document. The review half is where subagents pay here —
+four per-task reviewers on the stage 04 round found fourteen blocking defects, and the
+whole-branch review found seven more after every task had been reviewed clean. This is the
+kickoff's own four-word rule: **implement inline, dispatch reviewers.**
+
+**What the round is.** `docs/05-development.md` goes from 249 lines to roughly 600 and gains
+three sections: `### Authorize reads, not just writes`, `### Loading and error states`, and
+`### AI in development`. Two headings are renamed and one is deliberately **not**. Scope was
+set to full close by the user, and read-path authorization was assigned to this stage
+(**D-69**).
+
+**The two defects that decide the round:**
+
+- **The Definition of done requires what the body forbids.** It asks for loading and error
+  states while the body teaches "no loading state", and neither `loading.tsx`, `error.tsx`
+  nor `Suspense` appears anywhere on the page. The stage 03 pattern, with the body teaching
+  the negation.
+- **`'use client'` does not opt a tree out of server rendering**, stated wrongly in two
+  places. Verified against Next's shipped docs, not argued.
+
+**Three things about this plan specifically:**
+
+- **Task 1's RED is deliberately fabricated**, because every anchor in `docs/` resolves
+  today and a guard written against a clean tree passes on its first run while proving
+  nothing. **Task 7 supplies the real break** by renaming `### Commits`. If Task 7's rename
+  does not turn Task 1's guard red, the guard is broken and that is the moment to find out.
+- **A stated rule governs which symbols a code block must produce**, in Global Constraints.
+  It exists because the plan's own self-review caught the `loading.tsx` block importing a
+  skeleton it never showed, which is precisely the `InvoiceTable` defect the round closes.
+- **Task 6 carries an amendment** found while writing the records: the bare `tsc --noEmit`
+  violates **D-25** and contradicts `docs/11-ci-cd.md`, which teaches the same trap under
+  `## Traps`. Four places address it and stage 05 is the only one wrong. Cite D-25.
+
+**Do not start the port.** That is W-3.5b, a separate round with its own spec, after this
+branch merges. `05-development` stays `ready: false` throughout.
 
 ### Three things stage 04 learned that will save this round time
 
@@ -217,8 +263,9 @@ zero looked conclusive and was indistinguishable from a mechanism that always an
 
 **Read these first, in this order:**
 
-1. `docs/05-development.md` — the doc being ported, 249 lines. Read it as a cold reader
-   would before reading anything about how stage 04 was built.
+1. `docs/05-development.md` — the doc being corrected, still 249 lines and untouched.
+   **Do not read it as a cold reader** — that pass has run twice over and its findings are
+   in `docs/verification/`. Read it against the plan's task you are about to execute.
 2. `docs/learnings/stage-implementation-101.md` — the layout traps, the verification
    checklist, and the coverage walk added after stage 04.
 3. `web/PATTERNS.md` — the interaction patterns and the render-test rule from TD-17, plus

@@ -749,6 +749,10 @@ EOF
 
 This closes **D1** (the highest-value defect: the checklist requires what the body forbids), **C3** (bare `tsc --noEmit`), **D7** (loop and checklist describe different workflows), **D9** (the `as` standard differs between body and checklist).
 
+**Amendment, 2026-08-18, found while writing the records rather than during the pass.** C3 is stronger than the spec and the verification record state, and the correction is worth having in front of whoever writes this section. The bare `tsc --noEmit` does not merely disagree with stage 04. It violates **D-25**, a numbered decision in `docs/tracker.md`: *"Typechecking goes through a `typecheck` script, never bare `tsc`."* And `docs/11-ci-cd.md` teaches the same trap under `## Traps`, naming `.next/types/`, `PageProps`, and this playbook's own CI catching it on its first real run.
+
+So four places in this repo address the question and stage 05 is the only one that gets it wrong. Cite D-25 in the task report. Neither the cold reader (which saw one document) nor the compiler could have found this; it came from grepping the other docs.
+
 - [ ] **Step 1: Insert the new section**
 
 ```markdown
