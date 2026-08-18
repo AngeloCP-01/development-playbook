@@ -204,8 +204,8 @@ export async function updateInvoice(input: unknown) {
 ```
 
 Authenticate, validate, authorize — every action, every time. Never trust an ID from the
-client to belong to the caller. Step 3 is the one people omit, and it is the most common
-serious security bug in App Router applications.
+client to belong to the caller. Step 3 is the one people omit, and in this playbook's
+experience it is the most common serious security bug in App Router applications.
 
 Notice that step 3 is not a separate read. Fetching the row, comparing its owner, and then
 updating by id alone leaves a gap between the check and the write, and it is easy to write
