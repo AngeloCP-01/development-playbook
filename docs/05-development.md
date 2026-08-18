@@ -133,6 +133,31 @@ Feature code lives under `src/features/<feature>/`, and that includes its compon
 `invoice-table.tsx` sits beside `queries.ts` because they change together. `src/components/`
 is for what more than one feature uses.
 
+```tsx
+// src/features/billing/invoice-table.tsx
+export function InvoiceTable({
+  invoices,
+}: {
+  invoices: { id: string; amount: number }[]
+}) {
+  return (
+    <table>
+      <tbody>
+        {invoices.map((invoice) => (
+          <tr key={invoice.id}>
+            <td>{invoice.id}</td>
+            <td>{invoice.amount}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+```
+
+Column, query, component — the same order named as the unit of work earlier on this
+page, closed out for this one slice. The test is [06](06-testing.md)'s.
+
 ### Server Actions need validation and authorization
 
 A Server Action is a public HTTP endpoint. It looks like a function call, and that is
