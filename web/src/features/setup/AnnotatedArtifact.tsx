@@ -1,6 +1,7 @@
 import { Card } from '@/components/ui'
 import { InlineCode } from '@/components/InlineCode'
 import { type Artifact, type ArtifactLine } from './artifacts'
+import { CopyArtifact, OverflowFocus } from './ArtifactControls'
 
 /**
  * One config file from `artifacts.ts`, quoted verbatim and annotated line by
@@ -24,16 +25,21 @@ import { type Artifact, type ArtifactLine } from './artifacts'
  * out of the 1024px panel the audit measures, and the reader would have to
  * scroll sideways to reach the annotation that is the whole point. Each code
  * cell therefore scrolls on its own and carries `tabIndex={0}`, so a keyboard
- * user without a trackpad can reach the overflow — the cost is one tab stop per
- * line, paid so that no note is ever off-screen. That cost is recorded as TD-40:
- * most lines do not overflow at 1024px, so most of those stops reach nothing.
+ * user without a trackpad can reach the overflow. **That tab stop is now
+ * conditional** (TD-40): `OverflowFocus` measures each cell and makes only the
+ * ones that actually overflow focusable. Measured on `strict`'s eleven lines,
+ * that is 5 stops at 320px, 2 at 768 and 1024, and 1 at 1440 — against eleven
+ * before, at every width. `ci.yml`'s twenty lines contribute none at 1024px,
+ * which is also the honest correction to the paragraph above: the 92-character
+ * line is the exception rather than the rule.
  *
  * **The note column is `select-none`** (TD-39). Laying rows out as [code][note]
  * puts the notes between the code lines in the DOM, so selecting the block
  * returned code, annotation, code, annotation — over data whose header says the
- * reader is meant to paste it. Excluding the notes from selection is the fix
- * that needs no control; a copy button would be better still and is the other
- * half of TD-40's entry.
+ * reader is meant to paste it. Excluding the notes from selection fixes the
+ * manual path; `CopyArtifact` is the direct one, and it hands over exactly the
+ * string `artifacts.test.ts` builds to hold the block against the doc, so what
+ * a reader pastes is what the test verifies.
  *
  * **The pivot line takes the `brand` accent**, because a pivot is the line the
  * step's judgment turns on — attention, not approval. No semantic colour
@@ -53,7 +59,11 @@ function ArtifactRow({ line }: { line: ArtifactLine }) {
         pivot ? 'border-brand bg-brand-tint' : 'border-transparent',
       ].join(' ')}
     >
-      <div tabIndex={0} className="min-w-0 overflow-x-auto sm:flex-1">
+      <div
+        data-artifact-scroller
+        tabIndex={-1}
+        className="min-w-0 overflow-x-auto sm:flex-1"
+      >
         {/* <code>, not <span>: dropping <pre> is the measured choice (20px a
             line against 24px plus 24px of block padding), and it costs nothing
             to keep the element that says this is code. Thirteen config files
@@ -89,13 +99,19 @@ export function AnnotatedArtifact({ artifact }: { artifact: Artifact }) {
       <div className="mb-2.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span className="t-data text-sm text-fg">{artifact.filename}</span>
         <span className="t-label text-subtle">{artifact.language}</span>
+        <CopyArtifact
+          filename={artifact.filename}
+          text={artifact.lines.map((l) => l.text).join('\n')}
+        />
       </div>
 
-      <div className="border border-line bg-sunken py-2">
-        {artifact.lines.map((line, i) => (
-          <ArtifactRow key={`${i}-${line.text}`} line={line} />
-        ))}
-      </div>
+      <OverflowFocus>
+        <div className="border border-line bg-sunken py-2">
+          {artifact.lines.map((line, i) => (
+            <ArtifactRow key={`${i}-${line.text}`} line={line} />
+          ))}
+        </div>
+      </OverflowFocus>
     </Card>
   )
 }
