@@ -11,7 +11,7 @@ is done. This is where most of your hours go.
 ## Entry criteria
 
 - [ ] Project scaffolded, CI green, preview deploys working ([04](04-project-setup.md))
-- [ ] The next piece of work is scoped small enough to finish in a day or two
+- [ ] The next piece of work is scoped small enough to merge within two days
       ([02 — Planning](02-planning.md))
 
 ---
@@ -25,13 +25,17 @@ Pick the smallest shippable slice
   → Write the test that proves it works ([06](06-testing.md))
   → Make it work
   → Make it clean
+  → Open the pull request ([07](07-code-review.md))
   → Verify on the preview ([12](12-staging.md))
   → Ship ([13](13-production-deployment.md))
 ```
 
 The discipline is in "smallest shippable slice." Anything that cannot merge within two
-days should be decomposed or hidden behind a flag. Long-lived branches diverge, conflict,
-and stop being reviewable — and a branch you cannot review is a branch you cannot trust.
+days should be decomposed or hidden behind a flag. A flag here is the boring kind: a
+boolean your code reads, defaulting to off, that lets half-built work merge without being
+reachable. An environment variable is enough to start; reach for a flag service when you
+need to change one without a deploy. Long-lived branches diverge, conflict, and stop being
+reviewable — and a branch you cannot review is a branch you cannot trust.
 
 "Make it work, then make it clean" is an ordering, not permission to skip the second
 part. Cleanup happens before the PR, not in a follow-up ticket that never gets picked up.
@@ -339,7 +343,7 @@ invalid amount or a record that is not yours is the Server Action's return value
 why `updateInvoice` hands back `{ ok: false, error }` for the form to render rather than
 throwing into an error boundary the user cannot act on.
 
-### Commits
+### Commits and branches
 
 Small and focused. A commit that changes one thing can be reverted, cherry-picked, and
 understood.
@@ -355,7 +359,12 @@ Subject in imperative mood, under ~70 characters. Body explains **why** — the 
 shows what. Six months from now, `git log` is the only record of your reasoning, and "fix
 bug" tells future-you nothing.
 
-Rebase your branch before opening a PR so history stays linear and reviewable.
+A branch that cannot merge within two days is too big. That is the same rule as "smallest
+shippable slice" seen from the other end: if it has not merged, it is not shipped, and a
+branch nobody has reviewed is work nobody has checked. Decompose it, or put the unfinished
+part behind a flag and merge what works.
+
+Rebase before you open the pull request so history reads in order.
 
 ### When you get stuck
 
@@ -373,12 +382,13 @@ For anything gnarlier than a typo, use the systematic-debugging discipline: form
 hypothesis, design the smallest test that would disprove it, run it, repeat. Randomly
 changing code until it works produces code that works for reasons you do not know.
 
-### Local environment
+### Keep the feedback loop running
 
 ```bash
-pnpm dev              # Next.js dev server
-pnpm drizzle-kit studio  # inspect the database
-pnpm vitest --watch      # tests re-running as you type
+pnpm dev                    # Next.js dev server
+pnpm drizzle-kit push       # apply a schema change locally
+pnpm drizzle-kit studio     # inspect the database
+pnpm vitest --watch         # tests re-running as you type
 ```
 
 Vitest in watch mode in a spare terminal is the highest-leverage habit on this page. The
@@ -432,9 +442,10 @@ Then open it, and after the preview builds:
 
 ## Traps
 
-**Long-lived branches.** A branch open for two weeks will conflict, will be unreviewable,
-and will be merged with a rubber stamp because nobody can hold 3,000 lines in their head.
-Slice smaller; use flags.
+**Long-lived branches.** Two days is the rule; two weeks is what it looks like when nobody
+enforces it. By then it conflicts, nobody can hold 3,000 lines in their head, and it gets
+merged with a rubber stamp because reviewing it properly would take a day. Slice smaller,
+or hide the unfinished half behind a flag.
 
 **`'use client'` at the top of a page.** Everything below it ships to the browser and
 gives up server-only data access. It is still prerendered, so the symptom is a heavy

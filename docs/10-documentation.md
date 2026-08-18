@@ -166,7 +166,7 @@ Prefer these over prose wherever the choice exists.
 
 `git log` is the highest-density record of why the codebase looks like this. Treat the
 body as documentation with a permanent home that cannot drift from the change it
-describes. See [05 — Development](05-development.md#commits).
+describes. See [05 — Development](05-development.md#commits-and-branches).
 
 ---
 
