@@ -287,6 +287,57 @@ fully typed.
 Inside those boundaries, no `any`, no unchecked casts. Every `as` is a place you told the
 compiler to stop helping.
 
+### Loading and error states
+
+"No loading state" earlier on this page is about client-side fetching: there is no
+`useEffect`, so there is no `isLoading` flag for you to manage. The waiting did not
+disappear. It moved to the route, where the framework handles it.
+
+Two files, neither of which you import anywhere — the App Router finds them by name:
+
+```tsx
+// src/app/(app)/billing/loading.tsx
+export default function Loading() {
+  return (
+    <div aria-busy="true" aria-label="Loading invoices">
+      {Array.from({ length: 5 }, (_, i) => (
+        <div key={i} className="h-10 animate-pulse rounded bg-neutral-200" />
+      ))}
+    </div>
+  )
+}
+```
+
+```tsx
+// src/app/(app)/billing/error.tsx
+'use client'
+
+export default function Error({
+  unstable_retry,
+}: {
+  error: Error
+  unstable_retry: () => void
+}) {
+  return (
+    <div role="alert">
+      <p>Could not load invoices.</p>
+      <button onClick={() => unstable_retry()}>Try again</button>
+    </div>
+  )
+}
+```
+
+`loading.tsx` shows while that segment's data resolves. `error.tsx` catches what throws
+below it, and it has to be a Client Component because it takes an `onClick` — one of the
+few places the directive is not a choice. The retry prop carries an `unstable_` prefix in
+this Next version (`unstable_retry`, not the `reset` you may remember from older
+releases), so a copy that still calls `reset` will not compile.
+
+Those two cover the unexpected. Expected failures are different and do not belong here: an
+invalid amount or a record that is not yours is the Server Action's return value, which is
+why `updateInvoice` hands back `{ ok: false, error }` for the form to render rather than
+throwing into an error boundary the user cannot act on.
+
 ### Commits
 
 Small and focused. A commit that changes one thing can be reverted, cherry-picked, and
@@ -345,15 +396,22 @@ gap between writing a bug and seeing it fail shrinks to seconds.
 
 ## Definition of done
 
-For each slice, before opening a PR:
+For each slice, before you open the pull request:
 
 - [ ] Tests written and passing ([06](06-testing.md))
-- [ ] `pnpm tsc --noEmit` clean
+- [ ] `pnpm typecheck` clean — the script from [04](04-project-setup.md), not a bare
+      `tsc --noEmit`, which passes off a stale build and fails on a clean checkout
 - [ ] `pnpm lint` (at `--max-warnings 0`) and `pnpm format:check` clean
-- [ ] No `any`, no unexplained `as`
-- [ ] Server Actions authorize, not just authenticate
-- [ ] Loading and error states exist for anything async
+- [ ] No `any`. Every `as` has a comment saying what the compiler could not know
+- [ ] Server Actions authorize, not just authenticate — and so do reads
+- [ ] `loading.tsx` and `error.tsx` exist for any segment that fetches
+- [ ] Expected failures are returned and rendered, not thrown
+- [ ] Branch is under two days old, or the rest is behind a flag
+- [ ] Rebased, so history reads in order
 - [ ] Self-reviewed the diff ([07](07-code-review.md))
+
+Then open it, and after the preview builds:
+
 - [ ] Verified on the preview URL ([12](12-staging.md))
 
 ---
