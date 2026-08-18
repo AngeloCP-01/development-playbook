@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04 done; 14 remain — stage 05's doc round is complete on `fix/stage-05-doc-corrections`, NOT merged; the port is still ahead of it)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04 done; 14 remain — stage 05's doc round is merged to `develop` (`9ef3763`); the port (W-3.5b) has not started, so this stays 4/18)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; ten sheets still to transcribe)* |
@@ -547,16 +547,19 @@ handing the corrected doc to a cold reader with a task to finish.
       the user's. *(Both numbers moved after this was written: the two W-6 merges took `develop`
       to **131 ahead**, and it has since been **pushed** — `origin/develop` at `49122f5`.)*
 
-### W-3.5 — Stage 05, doc correction then port ◐ *(doc round complete 2026-08-18 on `fix/stage-05-doc-corrections`, NOT merged; port not started)*
+### W-3.5 — Stage 05, doc correction then port ◐ *(doc round merged to `develop` 2026-08-18 as `9ef3763`, `--no-ff`; port not started)*
 
 **The doc has been corrected.** `docs/05-development.md` is now **587 lines** across
 **six** `##` sections and **twelve** `###` ones (`### Authorize reads, not just writes`,
 `### Loading and error states` and `### AI in development` are the three new ones). Twelve
 tasks closed nineteen of the twenty defects the pre-round verification found; the fix
 wave (Task 11, five commits) closed the twentieth. A whole-branch review then found and
-closed four blocking findings of its own, on top of the twenty. `05-development` stays
-`ready: false` and absent from `STAGE_CONTENT` on purpose — the port is a separate
-round — so W-3 stays at **4/18**.
+closed four blocking findings of its own, on top of the twenty. **`fix/stage-05-doc-corrections`
+merged to `develop` as `9ef3763`, `--no-ff`, 2026-08-18** — 29 branch commits plus the merge,
+branch deleted, and the merged result re-gated on `develop`: `pnpm lint`, `pnpm typecheck`,
+`pnpm test` (64 files / 529 tests) and `pnpm build` all exit 0. `05-development` still stays
+`ready: false` and absent from `STAGE_CONTENT` on purpose — merging the doc round is not the
+port, it is what the port now builds against (**D-74**) — so W-3 stays at **4/18**.
 
 **D-54** put the cold-reader pass before the port, and it found twenty defects. Three
 instruments ran, two dispatched read-only and blind to each other, and **three defects were
@@ -604,9 +607,26 @@ the shape of the round:
 - [x] **Task 12 — records, humanizer, whole-branch review** ✓ humanizer pass found nothing
       to change; whole-branch review returned four blocking findings, all fixed (one of
       them a false claim the per-task process itself had introduced — see the tracker row)
-- [ ] **The port itself (W-3.5b).** A separate round with its own spec. The doc is a third of
-      stage 04's length, so expect a seam well under fifteen steps and let the measurement
-      say how much smaller
+- [x] **Merge of the doc phase** ✓ `fix/stage-05-doc-corrections` is in `develop` as
+      `9ef3763`, `--no-ff`, branch deleted. Gate re-run on the merged result: `pnpm lint`,
+      `pnpm typecheck`, `pnpm test` (**64 files / 529 tests**) and `pnpm build` all exit 0
+- [ ] **The port itself (W-3.5b) — the next thing, and it has not started.** A separate round
+      with its own spec, built against `docs/05-development.md` as it now stands on `develop`
+      (**D-74**: merging first is what avoids a double port, per `docs/task.md`'s W-3.1b
+      precedent above). `CLAUDE.md`'s "Making a stage interactive" is the three-file trace to
+      follow exactly, not from summary:
+      1. `web/src/lib/stages.ts` — flip `ready: true` for `05-development`
+      2. `web/src/features/development/` (or the stage's slug) — build the content component,
+         grouping sections into 4–6 `Step` objects rendered through `<Stepper>`
+      3. `web/src/features/stage-content.ts` — register the component against the slug
+      **`web/PATTERNS.md` must be read before building the stage** — it catalogues which
+      interaction pattern fits which content, and `CLAUDE.md` is explicit that the default is
+      something the reader clicks, not a paragraph; a stage that is only prose blocks is the
+      anti-pattern. The doc is a third of stage 04's length (587 vs. 711 lines), so expect a
+      seam well under fifteen steps and let the measurement say how much smaller. **D-35**
+      already applies: an "AI plays" section is mandatory per stage, and stage 05's
+      `### AI in development` already exists in the doc, so the port inherits it rather than
+      inventing it
 
 **One finding from before this round, now closed.** Stage 05's checklist used to prescribe
 a bare `pnpm tsc --noEmit`, which **violated D-25** and contradicted `docs/11-ci-cd.md`,
