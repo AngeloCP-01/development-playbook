@@ -266,6 +266,37 @@ display. It is a leaf, and the page holding it stays a Server Component.
 succeeds, the database is correct, and the list on screen still shows the old amount until
 something else forces a refresh — which is a bug reported as "it didn't save".
 
+Not every action needs a form. A button that already has what it needs — an id, an amount
+already on screen — calls the action directly; there is no user-typed text, so step 2 has
+nothing to catch:
+
+```tsx
+// no typed input — invoice.id and invoice.amount are already known, not user-typed
+'use client'
+
+import { useTransition } from 'react'
+import { updateInvoice } from './actions'
+
+export function RetryButton({ invoice }: { invoice: { id: string; amount: number } }) {
+  const [pending, start] = useTransition()
+  return (
+    <button
+      disabled={pending}
+      onClick={() =>
+        start(async () => {
+          await updateInvoice({ invoiceId: invoice.id, amount: invoice.amount })
+        })
+      }
+    >
+      {pending ? 'Retrying…' : 'Retry'}
+    </button>
+  )
+}
+```
+
+Step 2 (validate) still runs inside `updateInvoice` — there is just nothing for the
+caller to have gotten wrong.
+
 ### Authorize reads, not just writes
 
 The rule above is written for actions because that is where the damage is loudest, but
