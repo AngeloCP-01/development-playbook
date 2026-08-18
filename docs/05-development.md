@@ -253,7 +253,8 @@ export function InvoiceAmountForm({ invoiceId }: { invoiceId: string }) {
 
   return (
     <form action={formAction}>
-      <input name="amount" type="number" min="1" required />
+      <label htmlFor="amount">Amount</label>
+      <input id="amount" name="amount" type="number" min="1" required />
       <button disabled={pending}>{pending ? 'Saving…' : 'Save'}</button>
       {state?.ok === false && <p role="alert">{state.error}</p>}
     </form>
@@ -407,9 +408,12 @@ export default function Error({
 `loading.tsx` shows while that segment's data resolves. `error.tsx` catches what throws
 below it, and it has to be a Client Component because error boundaries always are — one of
 the few places the directive is not a choice. The retry prop carries an `unstable_` prefix
-in this Next version (`unstable_retry`, not the `reset` you may remember from older
-releases), so a copy that still calls `reset` gets `undefined` and a Try-again button that
-throws.
+in this Next version (`unstable_retry`, not the bare `reset` you may remember from older
+releases). The framework still passes `reset` too, but the two do different jobs:
+`unstable_retry` re-fetches and re-renders the failed segment, while `reset` only clears
+the boundary's error state without re-fetching anything, so it cannot recover a Server
+Component error. A copy that still calls `reset` compiles and runs — it just gets a
+Try-again button that does not try again.
 
 Those two cover the unexpected. Expected failures are different and do not belong here: an
 invalid amount or a record that is not yours is the Server Action's return value, which is
@@ -487,9 +491,10 @@ Where it earns its place:
   where the owner is me and the amount is over $500" into the `where` clause is fast when
   you already know the answer and are only saving typing.
 - **Check a framework prop against the version actually installed** (an MCP). This page's
-  own `error.tsx` takes `unstable_retry` in this Next version; the `reset` an older
-  training set remembers gets `undefined` and a Try-again button that throws. `context7`
-  reads the installed version's docs instead of guessing from memory.
+  own `error.tsx` takes `unstable_retry` in this Next version, and it is not a rename of
+  the `reset` an older training set remembers — `reset` still exists, it just clears state
+  without re-fetching, so a copy that keeps calling it compiles but does not recover.
+  `context7` reads the installed version's docs instead of guessing from memory.
 - **Check what broke last time** (memory). `claude-mem` answers "did I already hit this,
   and how did I actually fix it" — most useful exactly when a stack trace looks familiar.
 - **Reduce a bug to the smallest reproduction, then test one hypothesis at a time** (a
