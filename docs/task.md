@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04 done; 14 remain — stage 05's doc round is in flight on `fix/stage-05-doc-corrections`, no correction landed)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04 done; 14 remain — stage 05's doc round is complete on `fix/stage-05-doc-corrections`, NOT merged; the port is still ahead of it)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; ten sheets still to transcribe)* |
@@ -547,11 +547,15 @@ handing the corrected doc to a cold reader with a task to finish.
       the user's. *(Both numbers moved after this was written: the two W-6 merges took `develop`
       to **131 ahead**, and it has since been **pushed** — `origin/develop` at `49122f5`.)*
 
-### W-3.5 — Stage 05, doc correction then port ◐ *(verification and planning done 2026-08-18; no correction landed; port not started)*
+### W-3.5 — Stage 05, doc correction then port ◐ *(doc round complete 2026-08-18 on `fix/stage-05-doc-corrections`, NOT merged; port not started)*
 
-**The doc has been measured and not yet touched.** `docs/05-development.md` is still 249
-lines across **six** `##` sections and nine `###` ones. `05-development` is `ready: false`
-and absent from `STAGE_CONTENT`, so W-3 stays at **4/18**.
+**The doc has been corrected.** `docs/05-development.md` is now **587 lines** across
+**six** `##` sections and **twelve** `###` ones (`### Authorize reads, not just writes`,
+`### Loading and error states` and `### AI in development` are the three new ones). Twelve
+tasks plus a five-item fix wave closed nineteen of the twenty defects the pre-round
+verification found, and a whole-branch review then closed the twentieth along with four
+blocking findings of its own. `05-development` stays `ready: false` and absent from
+`STAGE_CONTENT` on purpose — the port is a separate round — so W-3 stays at **4/18**.
 
 **D-54** put the cold-reader pass before the port, and it found twenty defects. Three
 instruments ran, two dispatched read-only and blind to each other, and **three defects were
@@ -586,25 +590,27 @@ the shape of the round:
       stage's job (**D-69**)
 - [x] **Spec and plan** ✓ `2026-08-18-stage-05-doc-corrections-design.md` and its
       twelve-task plan
-- [ ] **Task 1 — the anchor guard** (**D-71**). `source-citations.test.ts` cannot see a
-      markdown link, so renaming `### Commits` breaks `docs/10-documentation.md` silently
-- [ ] **Tasks 2–9 — the corrections.** The doc gains `### Authorize reads, not just writes`,
-      `### Loading and error states` and `### AI in development`, and reaches ~600 lines
-- [ ] **Task 10 — re-run all three instruments** on the same `sprout` scenario, since a
-      different one produces a fresh unrelated list and says nothing about what was fixed
-- [ ] **Task 11 — the fix wave** (**D-48**), budgeted rather than optional. Stage 03's fix
-      wave shipped that round's only unrunnable SQL
-- [ ] **Task 12 — records, humanizer, whole-branch review**
+- [x] **Task 1 — the anchor guard** (**D-71**) ✓ `source-citations.test.ts` extended to
+      every `](NN-name.md#anchor)` across `docs/`; caught the rename below by real RED
+- [x] **Tasks 2–9 — the corrections** ✓ the doc gained `### Authorize reads, not just
+      writes`, `### Loading and error states` and `### AI in development`, and reached
+      587 lines
+- [x] **Task 10 — re-run all three instruments** ✓ `docs/verification/cold-reader-stage-05-run2.md`
+      and `docs/verification/stage-05-doc-execution-run2.md`: completeness 8 BLOCKING → 0,
+      consultability 4/5 → 5/5, nineteen of twenty defects closed
+- [x] **Task 11 — the fix wave** (**D-48**) ✓ five commits closed the twentieth defect
+      (`InvoiceTable` produced) and the last two run-2 findings
+- [x] **Task 12 — records, humanizer, whole-branch review** ✓ humanizer pass found nothing
+      to change; whole-branch review returned four blocking findings, all fixed (one of
+      them a false claim the per-task process itself had introduced — see the tracker row)
 - [ ] **The port itself (W-3.5b).** A separate round with its own spec. The doc is a third of
       stage 04's length, so expect a seam well under fifteen steps and let the measurement
       say how much smaller
 
-**One finding worth carrying past this round.** Stage 05's checklist prescribes a bare
-`pnpm tsc --noEmit`, which **violates D-25** and contradicts `docs/11-ci-cd.md`, where the
-same trap is taught under `## Traps` and credited to this playbook's own CI. Four places in
-this repo address the question and stage 05 is the only one that gets it wrong. No
-instrument on the branch could have found it — it came from grepping the other docs, which
-is the check worth repeating on the next stage.
+**One finding from before this round, now closed.** Stage 05's checklist used to prescribe
+a bare `pnpm tsc --noEmit`, which **violated D-25** and contradicted `docs/11-ci-cd.md`,
+where the same trap is taught under `## Traps` and credited to this playbook's own CI.
+`## Definition of done` now reads `pnpm typecheck` clean, with the reasoning inline.
 
 ### W-4 — Quality gates ☑
 
