@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
   a recorded decision actually hold
 
-### Project state (as of 2026-08-17 — **stage 04 is built, reviewed and merged into `develop`** as `bb3c119`; W-3 is 4/18; `develop` is unpushed and `main` is untouched; the site live and self-verifying)
+### Project state (as of 2026-08-18 — **stage 04 shipped and its debt is closed**; W-3 is 4/18 and **stage 05 is next**; `develop` is ahead of `origin/develop` and `main` is untouched; the site live and self-verifying)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -100,17 +100,19 @@ Before doing anything, read these for context:
   moved to `src/components/`. **Use it for any new list-of-disclosures; do not hand-roll a
   twelfth.** Debt it opened: **TD-34** (`RevealList` hardcodes `<h3>` for row headings) and
   **TD-35** (the audit's console check cannot see a dev-only warning).
-- **Stage 04's port is done and unmerged.** `04-project-setup` is `ready: true`, registered
-  in `STAGE_CONTENT`, and rendering fifteen steps. **W-3 is 4/18.** All four provisional
-  D-65 pairs stayed split, since combined they measure 4.80, 5.40, 3.54 and 4.23 against a
-  3.2 ceiling — **the first seam in this repo to survive measurement unchanged**. Panel
-  table and evidence: the W-3.4 row in `docs/tracker.md`.
+- **Stage 04 is shipped and merged**, and so is the debt its reviews opened.
+  `04-project-setup` renders fifteen steps, all under the 3.2 ceiling. All four provisional
+  D-65 pairs stayed split, since combined they measure 4.80, 5.40, 3.54 and 4.23 — **the
+  first seam in this repo to survive measurement unchanged**, where stage 03 re-cut five of
+  six. **TD-36, TD-39, TD-40 and TD-41 are all closed**, so no debt from that round is
+  outstanding. Panel table and evidence: the W-3.4 row in `docs/tracker.md`; coverage map:
+  `docs/stage-04-status.md`.
 - **Stages 05–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **521 vitest tests across 63 files** in two projects — `unit`
+  eslint at `--max-warnings 0`, **527 vitest tests across 64 files** in two projects — `unit`
   (node, data invariants) and `dom` (jsdom, render tests, `*.test.tsx`) — a **17-test playwright
   audit suite over 63 derived URLs** (51 stage, 12 reference), lefthook hooks, and CI. Branch
-  protection is on; the repo is public (D-26). Those figures are the branch's, not `develop`'s.
+  protection is on; the repo is public (D-26). Re-derive these rather than quoting them.
 - **The audit sweeps the ready set automatically** (**TD-12 closed 2026-08-14**).
   `e2e/audit-pages.ts` takes stages from `STAGES.filter(s => s.ready)` and step ids from the
   rail each renders, so a new stage or step is swept without editing a list. A ready stage
@@ -138,75 +140,95 @@ Before doing anything, read these for context:
   production** — the site deploys from it — so work branches merge to **`develop`** and never
   to `main`. You may open a PR to `main`; the user merges it. **Ask before every merge**,
   including into `develop`. **The user handles pushes.**
-  **Stage 03 is merged and pushed**: `feat/stage-03-app-port` landed on `main` as
-  **`790b3e4`** (`--no-ff`, 106 commits, 91 files, +20k/−0.5k, branch deleted). Local `main`
-  is at **`8d5045c`** as of 2026-08-14, and **`main` has had nothing pushed to it since**.
-  `develop` **has** been pushed — `origin/develop` was at `49122f5` at the close of
-  2026-08-14 — and it carries five merged rounds ahead of `main`: the stage 04 doc correction
-  (`dd44b30`), `RevealList` (`e29f3fe`), TD-12 (`a07a9b6`) and the two W-6 reference-hub
-  merges (`0207fd6`, `4727dc3`). So **cut the next branch from `develop`, not from `main`**,
-  or you will be building against a tree that is five rounds behind. The one branch currently
-  in flight is **`feat/stage-04-app-port`**, which now carries the whole stage 04 port and is
-  **unmerged and unpushed**. **Do not quote an ahead-of-remote count from this
-  file** — every version of it has gone stale, and the local `origin/main` ref is only as
-  fresh as the last fetch. Derive it: `git fetch && git rev-list --count origin/main..main`.
+  **Cut the next branch from `develop`, never from `main`.** `develop` carries every round
+  since stage 03 — the stage 04 doc correction, `RevealList`, TD-12, the two W-6
+  reference-hub merges, the stage 04 port and its two debt branches — so a branch cut from
+  `main` builds against a tree many rounds behind. **No branches are in flight**; the last
+  three were merged and deleted.
+
+  **Derive every position rather than reading one here.** Every version of this paragraph
+  has gone stale, and the local `origin/*` refs are only as fresh as the last fetch:
+
+  ```
+  git fetch
+  git log --oneline -1 develop origin/develop main origin/main
+  git rev-list --count origin/develop..develop
+  ```
+
+  Two things known to be true on 2026-08-18 and worth checking rather than trusting:
+  `develop` was ahead of `origin/develop` by a few commits, and **local `main` at `8d5045c`
+  was behind `origin/main` at `f1c7e51`** — something reached the remote `main` that this
+  local repository has not seen. Reconcile that before any promotion.
+
   Two merged branches still sit on the remote and can be deleted:
   `origin/feat/stage-03-app-port` and `origin/feat/stage-03-standard-practices`.
 
-### Next round's scope: close the branch, then pick stage 05
+### Next round's scope: stage 05 — Development
 
-**The stage 04 port is built.** `feat/stage-04-app-port` holds **20 commits**,
-`394e515`…`dc4c46d`, cut off `develop` at `49122f5`. Not merged, not pushed. What remains
-of *this* round is the whole-branch review and the merge decision, both of which are the
-user's to call — see `superpowers:finishing-a-development-branch`.
+**`docs/05-development.md` is 249 lines across four `##` sections and nine `###` ones** —
+the loop, vertical slices, Server Components by default, thin route files, Server Actions
+needing validation and authorization, types at the boundaries, commits, when you get stuck,
+and local environment, then Artifacts, Definition of done, Scaling to a team and Traps.
+That is a third of stage 04's doc and a sixth of stage 03's, so expect a smaller seam than
+fifteen steps and let the measurement say how much smaller.
 
-**What the round produced, kept short because `docs/tracker.md`'s W-3.4 row is the record.**
-Fifteen steps, all under the 3.2 ceiling, median 2.28 and max 2.99. Tests 382/41 → 521/63.
-Audit 17/17 over 63 URLs. Sweep 157 expandables / 119 ids over 51 URLs. Six new decisions
-are **D-66** and **D-67**; **TD-36 closed**, **TD-39** and **TD-40** opened.
+**05 was chosen against the priority table's own answer of 16 or 13**, and the reasoning is
+recorded in `docs/task.md`: those two were ranked on how well a stepper fits their shape,
+while 05 is chosen on sequence. Stage 04 ends with a repository that builds and deploys;
+05 is the loop the reader then runs dozens of times a day, so shipping them adjacent keeps
+the path continuous. 16 and 13 keep their case at priority 8.
 
-**The thing worth carrying into the next stage, above everything else.** Five reviews ran
-and found 21 blocking items, and the single most valuable was a **coverage walk of the doc
-against the app** — section by section, asking *what does the doc teach that the app does
-not*. It found five sections in one shape: the app told the reader to run a script or set a
-value it never showed them how to create. All five had been assigned to a panel by the
-plan's own line ranges, so they were silent drops rather than curations, and the symptom
-was visible in the numbers the whole time — the panel median was 1.74 where stage 03's is
-3.02, and that gap was missing content, not lean writing. **Run that walk before believing
-a port is complete.** Nothing in the gate can see it.
+**Do the cold-reader pass on the doc before building anything** (D-54). Stage 03 ran it
+last and ended with a finished app sitting on a doc with three blocking gaps; stage 04 ran
+it first and it returned three blocking findings that would otherwise have been ported into
+components. `docs/learnings/cold-reader-testing.md` is the method.
 
-**Second: nine plan defects were found by executing rather than reading**, which is the
-same lesson the last two rounds recorded and it did not stop being true. A test that could
-never pass (`PIN_RULE` asserted with `toContain` against a hard-wrapped doc). A regex that
-counted nine traps where the doc has seven, because `DOC.indexOf('## Traps')` matches §7's
-prose *about* `## Traps`. Material sourced to a section that does not contain it. And every
-`.tsx` test in Wave 2 written against `jest-dom` and `user-event`, neither of which this
-project installs — about twenty tests that would have failed on `Invalid Chai property`
-rather than on anything real.
+**Then run the delivery loop**: brainstorm, spec, plan, TDD per task, per-task review,
+whole-branch review, merge. Stage 04's spec and plan are the freshest house example, and
+its plan carries two in-execution amendments showing what a plan gets wrong.
 
-**Third, and it caught two people including the controller: a teeth check can lie.** One
-`perl -0p` mutation without `/g` replaced the first occurrence in the slurped file — a
-mention inside a docblock — leaving the JSX untouched, so a real test looked toothless.
-Another derived *both* sides of its assertion from the same data row, so the prescribed
-mutation moved the expectation along with the render and proved nothing. **Verify that the
-mutation actually landed before trusting what the run tells you.**
+### Three things stage 04 learned that will save this round time
+
+**Walk the doc against the app, section by section, before believing a port is complete.**
+This was the single most valuable check of that round and nothing in the gate can replace
+it. On a branch already green on its whole gate and five closed reviews, it
+found **five doc sections whose material the app never taught**, all sharing one shape: the
+app told the reader to run a script or set a value it never showed them how to create. All
+five had been assigned to a panel by the plan's own line ranges, so they were silent drops
+rather than curations. The tell was visible in the numbers and I misread it — a panel median
+of 1.74 against stage 03's 3.02 is a signal to go looking, not a compliment. The method and
+the output shape are in `docs/learnings/stage-implementation-101.md` and
+`docs/stage-04-status.md`.
+
+**Nine plan defects were found by executing rather than reading.** A test that could never
+pass, because it asserted `toContain` against a sentence the doc hard-wraps mid-clause. A
+regex that counted nine traps where the doc has seven, because `DOC.indexOf('## Traps')`
+matches §7's prose *about* `## Traps`. Material sourced to a section that does not contain
+it. And every `.tsx` test in one wave written against `jest-dom` and `user-event`, neither
+of which this project installs.
+
+**A teeth check can lie, and so can a fix that reaches zero.** Two mutations "passed" on
+that round without ever landing: a `perl -0p` without `/g` replaced a mention inside a
+docblock, and an edit script that asserts before writing aborted and wrote nothing while
+its earlier substitutions looked applied. Separately, a fix that drove twenty tab stops to
+zero looked conclusive and was indistinguishable from a mechanism that always answered
+"not focusable" — it needed the widths where the answer should *not* be zero.
+`docs/learnings/quality-gates-101.md` has both.
 
 **Read these first, in this order:**
 
-1. `docs/tracker.md`, the **2026-08-17 W-3.4** row — what the port shipped, with the panel
-   table, and more usefully its `Deferred:` list. Then **D-64**…**D-67**, and **TD-39** /
-   **TD-40**, which this round opened and did not fix.
-2. `docs/stage-04-status.md` — the coverage map, doc against app, section by section. It
-   also records the three sections deliberately not ported.
-3. `web/PATTERNS.md` — the interaction patterns, the render-test rule added with TD-17, and
-   the two entries this round added: `InlineCode` and `AnnotatedArtifact`. Read before
-   building any stage.
-4. `docs/learnings/stage-implementation-101.md` — the layout traps and the verification
-   checklist for building a stage.
-5. `docs/superpowers/plans/2026-08-14-stage-04-app-port.md` — **only if you are auditing
-   what happened**, not as instructions. It carries two in-execution amendments and its
-   Global Constraints are the round's rules; nine of its task specifications turned out to
-   be wrong about the tree, which is the point of the second lesson above.
+1. `docs/05-development.md` — the doc being ported, 249 lines. Read it as a cold reader
+   would before reading anything about how stage 04 was built.
+2. `docs/learnings/stage-implementation-101.md` — the layout traps, the verification
+   checklist, and the coverage walk added after stage 04.
+3. `web/PATTERNS.md` — the interaction patterns and the render-test rule from TD-17, plus
+   `InlineCode`, `RevealList` and `AnnotatedArtifact`. Read before building any stage.
+4. `docs/tracker.md`, the **2026-08-17 W-3.4** row and **D-64**…**D-67** — how the last
+   stage was measured and what it deliberately did not do.
+5. `docs/stage-04-status.md` — what a finished coverage map looks like, and the shape to
+   produce for 05.
+6. `docs/superpowers/{specs,plans}/2026-08-1*-stage-04-*` — the freshest house example of a
+   spec and plan, **read as an example rather than as instructions**.
 
 **`docs/learnings/deploying-101.md` is no longer the raw material** — §8 has absorbed it, and
 the round found one entry over-claiming it as a source for material it does not contain. Read
