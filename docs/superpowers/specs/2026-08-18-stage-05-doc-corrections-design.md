@@ -57,8 +57,10 @@ Two defects carry most of the weight:
    consultability pass rather than asserted.
 4. Close the gate hole this round exposed: cross-document anchor links are unguarded, so a
    heading rename breaks them silently.
-5. Land `### AI in development` and its test-list entry at the start of the round, which is
-   what `stage-metadata.test.ts` was deliberately structured to make possible.
+5. Land `### AI in development` and its test-list entry **with the doc amendment rather than
+   with the port**, which is the ordering `stage-metadata.test.ts` was deliberately
+   structured to make possible: its list is explicit rather than derived from `ready`, so
+   the section does not have to wait for the flag to flip.
 
 ## Non-goals
 
