@@ -67,8 +67,18 @@ No `useEffect`, no loading state, no client-side fetch, no API route in between.
 access happens where the data lives.
 
 Add `'use client'` only when you need interactivity — event handlers, state, effects,
-browser APIs. When you do, push it to the leaves. A `'use client'` at the top of a page
-makes the whole tree client-rendered; on the specific interactive component, it does not.
+browser APIs. When you do, push it to the leaves.
+
+`'use client'` does not mean "not rendered on the server". Client Components are still
+prerendered to HTML on the first load, which is why a page using them is not blank before
+its JavaScript arrives. What the directive marks is a boundary: everything below it ships
+to the browser, gives up direct access to server-only data, and on later navigations
+renders entirely on the client.
+
+A `'use client'` at the top of a page puts the whole tree on the far side of that
+boundary. On the one component that needs a click handler, it does not. And a Server
+Component passed through as `children` stays a Server Component even when its parent is a
+Client Component, so the boundary does not have to swallow a subtree to cross it.
 
 ### Keep route files thin
 
@@ -226,8 +236,10 @@ For each slice, before opening a PR:
 and will be merged with a rubber stamp because nobody can hold 3,000 lines in their head.
 Slice smaller; use flags.
 
-**`'use client'` at the top of a page.** Opts the entire tree out of server rendering.
-Push it to the leaves.
+**`'use client'` at the top of a page.** Everything below it ships to the browser and
+gives up server-only data access. It is still prerendered, so the symptom is a heavy
+bundle and a slow hydration rather than a blank page — which is why this one is easy to
+miss. Push it to the leaves.
 
 **Server Actions without authorization.** Authentication proves who they are. It does not
 prove the record is theirs. This omission is the most common serious security bug in
