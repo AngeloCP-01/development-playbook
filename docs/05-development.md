@@ -76,6 +76,10 @@ export default async function InvoicesPage() {
 }
 ```
 
+`requireUser` comes from [04 — Project Setup](04-project-setup.md) — that's where the
+session mechanism lives, along with what the function returns and what happens when
+nobody is signed in.
+
 No `useEffect`, no loading state, no client-side fetch, no API route in between. The data
 access happens where the data lives.
 
