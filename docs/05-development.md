@@ -402,26 +402,41 @@ gap between writing a bug and seeing it fail shrinks to seconds.
 
 ### AI in development
 
-This is the stage where AI is most useful and most expensive to trust, because the loop is
-fast enough that a wrong suggestion costs you the same thirty seconds as a right one and
-you stop checking.
+The loop here runs fast enough that reading a suggestion and accepting it take about the
+same half second, and that speed is what makes this the risky stage: the mistakes that
+survive are the ones that read as correct on the way past. An authorization predicate, a
+migration's backfill, a cache key, a regular expression over data you have not sampled —
+none of those fail loudly. They fail the day someone finds the gap.
 
-**Where it earns its place.** Writing the test first from a description of the behaviour.
-Filling in a Zod schema from a sample payload. Translating a query you can already describe
-in words. Explaining an error you have not seen before. Producing the fourth variation of
-something you have already written three times.
+Where it earns its place:
 
-**Where it does not.** Anything where being subtly wrong looks identical to being right:
-an authorization predicate, a migration's backfill, a cache key, a regular expression over
-data you have not sampled. The failure mode is not a syntax error, it is a plausible answer.
+- **Write the failing test from a description of the behaviour, before any code** (a
+  skill). `test-driven-development` enforces the order rather than hoping for it — no
+  implementation until a test exists and has failed for the right reason.
+- **Fill in a Zod schema from a sample payload** (a saved command). The boundary types on
+  this page are a mechanical translation once the payload is in front of you, which is
+  exactly the kind of task a model does not get subtly wrong.
+- **Translate a query you can already describe in words** (a saved command). "Invoices
+  where the owner is me and the amount is over $500" into the `where` clause is fast when
+  you already know the answer and are only saving typing.
+- **Check a framework prop against the version actually installed** (an MCP). This page's
+  own `error.tsx` takes `unstable_retry` in this Next version; the `reset` an older
+  training set remembers gets `undefined` and a Try-again button that throws. `context7`
+  reads the installed version's docs instead of guessing from memory.
+- **Check what broke last time** (memory). `claude-mem` answers "did I already hit this,
+  and how did I actually fix it" — most useful exactly when a stack trace looks familiar.
+- **Reduce a bug to the smallest reproduction, then test one hypothesis at a time** (a
+  skill). `systematic-debugging`, already named on this page, is what keeps either of you
+  from mutating code at random until something works.
 
-**The rule that makes it safe here is the one already on this page.** Small slices and a
-test that failed first mean a wrong suggestion is caught in seconds by something other than
-your reading of it. Reviewing generated code you did not ask to be tested is how the same
-thirty seconds becomes an afternoon.
+Named tools, so this is actionable: `test-driven-development` and `systematic-debugging`
+from the Superpowers plugin, `context7` for version-accurate docs, and `claude-mem` for
+what broke before.
 
-Ask it to explain code it wrote before you keep the code. If the explanation is vague, the
-code is usually wrong, and that check costs less than the debugging does.
+What none of this replaces: reading the diff before you keep it. A green test only proves
+the case you remembered to write. The authorization gap already covered on this page
+passes every test that never scopes a query by owner, and a model has no more reason than
+you did to notice the one that is missing.
 
 ---
 
