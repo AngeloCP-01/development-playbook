@@ -42,6 +42,7 @@ const AI_SECTION_STAGES = [
   '02-planning',
   '03-architecture',
   '04-project-setup',
+  '05-development',
 ]
 
 test.each(AI_SECTION_STAGES)(

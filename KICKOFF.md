@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
   a recorded decision actually hold
 
-### Project state (as of 2026-08-18 — **stage 04 shipped and its debt is closed**; W-3 is 4/18 and **stage 05 is next**; `develop` is ahead of `origin/develop` and `main` is untouched; the site live and self-verifying)
+### Project state (as of 2026-08-18 — **stage 05's doc round is complete** on `fix/stage-05-doc-corrections`, NOT merged, NOT deployed; W-3 is still 4/18, since the port is a separate round that has not started)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -55,8 +55,8 @@ Before doing anything, read these for context:
   glossary — do not hand-edit it; run `pnpm gen:cheatsheets`. **Eighteen is still eighteen**:
   this is a sibling section, not a nineteenth stage, which was rejected for the third time.
   Source graphics are served from `web/public/reference/` as WebP; the gathered originals are
-  gitignored on purpose (**D-63**). **Do not start W-6 content work** — the stage 04 port is
-  the next active thing.
+  gitignored on purpose (**D-63**). **Do not start W-6 content work** — merging the stage 05
+  doc branch, then the stage 05 port, is the next active thing.
 - **The D-52 reshape is done, and D-52 stands in place of D-38** (superseded, kept struck
   through for the record). `PANEL_EXCEPTIONS` in `web/e2e/audit.spec.ts` is back to its two
   permanent entries, which was the exit condition. **Twenty-two steps was not a target**: every
@@ -107,6 +107,27 @@ Before doing anything, read these for context:
   six. **TD-36, TD-39, TD-40 and TD-41 are all closed**, so no debt from that round is
   outstanding. Panel table and evidence: the W-3.4 row in `docs/tracker.md`; coverage map:
   `docs/stage-04-status.md`.
+- **Stage 05's doc is corrected.** `docs/05-development.md` went from **249 lines across six
+  `##` and nine `###`** to **587 lines across six `##` and twelve `###`** — the three new
+  sections are `### Authorize reads, not just writes`, `### Loading and error states` and
+  `### AI in development`. Twenty defects were found by three instruments run before the
+  port (**D-54**), closed across twelve tasks plus a five-item fix wave, then re-verified:
+  completeness went **8 BLOCKING → 0**, consultability **4/5 → 5/5**. Four new decisions,
+  **D-68**…**D-71**. Full evidence is the **2026-08-18 W-3.5 (doc round, correction)** row in
+  `docs/tracker.md`.
+- **The whole-branch review caught what eleven per-task reviews could not, including its own
+  earlier fix.** Four blocking findings: a stale `getInvoice` readback in `docs/06-testing.md`
+  that a per-task fix left inconsistent, a form input with no accessible name, the records below
+  (this file among them), and — the one worth remembering — a *false claim a per-task review's
+  own fix had introduced*, asserting `reset` is `undefined` in this Next version when the
+  framework passes it alongside `unstable_retry` and the shipped docs give it a heading. All
+  four are fixed. **A correction is not verified by the fact that a review directed it.**
+- **Two agent claims were corrected rather than transcribed, and that is the transferable
+  half.** The completeness reader justified a real finding with a mechanism that could not
+  be confirmed in Next's shipped docs, and it was dropped while the finding stood on other
+  grounds. Its low-confidence `tsc` guess was promoted to confirmed on evidence it could not
+  see. **Do not transcribe a subagent's reasoning because its conclusion is right** — and
+  the caution applies to a controller's own directed fix as much as to an agent's.
 - **Stages 05–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
   eslint at `--max-warnings 0`, **527 vitest tests across 64 files** in two projects — `unit`
@@ -143,8 +164,12 @@ Before doing anything, read these for context:
   **Cut the next branch from `develop`, never from `main`.** `develop` carries every round
   since stage 03 — the stage 04 doc correction, `RevealList`, TD-12, the two W-6
   reference-hub merges, the stage 04 port and its two debt branches — so a branch cut from
-  `main` builds against a tree many rounds behind. **No branches are in flight**; the last
-  three were merged and deleted.
+  `main` builds against a tree many rounds behind. **One branch is in flight**:
+  `fix/stage-05-doc-corrections`, complete and awaiting merge — 28 commits off `develop`
+  (this file's own commit not among them), full gate green, whole-branch review clean
+  after four blocking fixes. **Not merged, not
+  pushed.** `docs/05-development.md` is corrected; the port is not started and is a separate
+  round (**W-3.5b**), which should wait until this branch is in `develop`.
 
   **Derive every position rather than reading one here.** Every version of this paragraph
   has gone stale, and the local `origin/*` refs are only as fresh as the last fetch:
@@ -163,29 +188,46 @@ Before doing anything, read these for context:
   Two merged branches still sit on the remote and can be deleted:
   `origin/feat/stage-03-app-port` and `origin/feat/stage-03-standard-practices`.
 
-### Next round's scope: stage 05 — Development
+### Next round's scope: merge the doc branch, then port stage 05 into the app
 
-**`docs/05-development.md` is 249 lines across four `##` sections and nine `###` ones** —
-the loop, vertical slices, Server Components by default, thin route files, Server Actions
-needing validation and authorization, types at the boundaries, commits, when you get stuck,
-and local environment, then Artifacts, Definition of done, Scaling to a team and Traps.
-That is a third of stage 04's doc and a sixth of stage 03's, so expect a smaller seam than
-fifteen steps and let the measurement say how much smaller.
+**The doc round (W-3.5) is done. The next round is W-3.5b, the port, and it has not begun.**
 
-**05 was chosen against the priority table's own answer of 16 or 13**, and the reasoning is
-recorded in `docs/task.md`: those two were ranked on how well a stepper fits their shape,
-while 05 is chosen on sequence. Stage 04 ends with a repository that builds and deploys;
-05 is the loop the reader then runs dozens of times a day, so shipping them adjacent keeps
-the path continuous. 16 and 13 keep their case at priority 8.
+**First, a merge decision that is not this session's to make alone.**
+`fix/stage-05-doc-corrections` carries 28 commits (this file's own commit not among
+them), full gate green (`pnpm lint`, `typecheck`, `test`, `build`), and a whole-branch
+review that returned *Ready with fixes* and is now satisfied. **Ask the user
+before merging it to `develop`** — per `CLAUDE.md`, a plan being approved is not approval to
+merge the branch that came out of it. The port should be built against `docs/05-development.md`
+as it stands on `develop` after that merge, not against the feature branch.
 
-**Do the cold-reader pass on the doc before building anything** (D-54). Stage 03 ran it
-last and ended with a finished app sitting on a doc with three blocking gaps; stage 04 ran
-it first and it returned three blocking findings that would otherwise have been ported into
-components. `docs/learnings/cold-reader-testing.md` is the method.
+Read these before starting the port:
 
-**Then run the delivery loop**: brainstorm, spec, plan, TDD per task, per-task review,
-whole-branch review, merge. Stage 04's spec and plan are the freshest house example, and
-its plan carries two in-execution amendments showing what a plan gets wrong.
+1. `docs/05-development.md` itself — **587 lines, six `##`, twelve `###`.** Read it as the
+   port's source of truth, not as a cold reader; that pass has run twice and its findings are
+   closed (`docs/verification/cold-reader-stage-05-run2.md`).
+2. `docs/tracker.md`'s **2026-08-18 W-3.5 (doc round, correction)** row — what the twelve
+   tasks, the fix wave and the whole-branch review each caught, and what is still deferred.
+3. `docs/learnings/stage-implementation-101.md` — the layout traps, the verification
+   checklist, and the coverage walk added after stage 04's port.
+4. `docs/stage-04-status.md` — what a finished coverage map looks like, as a model for stage 05's.
+
+**What the port is working from.** The doc gained three sections this round —
+`### Authorize reads, not just writes`, `### Loading and error states`, `### AI in
+development` — and corrected several others (`'use client'`'s framing, the check-then-act
+authorization example, the throw-vs-return contradiction). It is roughly a third of stage 04's
+711 lines, so expect a seam well under fifteen steps; let the measurement say how much
+smaller, the way D-65 did for stage 04.
+
+**Two things carried from the doc round, worth knowing before the port starts:**
+
+- **`getInvoice` has two defensible, different-looking shapes across documents** —
+  `docs/05-development.md` takes the owner as a parameter, `docs/08-security-audit.md`
+  derives it from the session internally — deliberately not harmonised (out of scope for a
+  stage 05 branch to rewrite stage 08). The port only needs stage 05's shape.
+- **A whole-branch review found a false claim introduced by an earlier per-task review's own
+  fix** (`reset` wrongly said to be `undefined`; it exists and does a narrower job than
+  `unstable_retry`). The lesson for the port: verify a framework claim yourself before
+  transcribing it into a component, even one this doc round already "corrected" once.
 
 ### Three things stage 04 learned that will save this round time
 
@@ -217,8 +259,9 @@ zero looked conclusive and was indistinguishable from a mechanism that always an
 
 **Read these first, in this order:**
 
-1. `docs/05-development.md` — the doc being ported, 249 lines. Read it as a cold reader
-   would before reading anything about how stage 04 was built.
+1. `docs/05-development.md` — the corrected doc, 587 lines, six `##`, twelve `###`.
+   **Do not read it as a cold reader** — that pass has run twice over and its findings are
+   in `docs/verification/`. Read it as the port's source of truth, section by section.
 2. `docs/learnings/stage-implementation-101.md` — the layout traps, the verification
    checklist, and the coverage walk added after stage 04.
 3. `web/PATTERNS.md` — the interaction patterns and the render-test rule from TD-17, plus
@@ -234,11 +277,11 @@ zero looked conclusive and was indistinguishable from a mechanism that always an
 the round found one entry over-claiming it as a source for material it does not contain. Read
 it for the incident, not as a specification.
 
-**What the doc phase cost, as calibration for the port:** 37 commits over two days, three
-verification instruments, twelve fix entries, and a whole-branch review that returned eight
-findings after every task had already been reviewed clean. The doc is a third of stage 03's
-length. Expect the port to be smaller than stage 03's 106 commits, and expect the review to
-find something, because it has every time.
+**What the doc phase cost, as calibration for the port:** 28 commits (this file's own
+commit not among them), three verification instruments (two runs each), twelve tasks
+plus a five-item fix wave, and a whole-branch review that returned four blocking
+findings after every task had already been reviewed clean. The doc is a third of stage 03's length. Expect the port to be smaller than stage
+03's 106 commits, and expect the review to find something, because it has every time.
 
 **The method that keeps paying, stated as a method rather than a war story.** A recorded piece
 of evidence turning out to be **a check that could not fail** is now this repo's most common

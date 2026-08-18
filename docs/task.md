@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04 done; 14 remain)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04 done; 14 remain — stage 05's doc round is complete on `fix/stage-05-doc-corrections`, NOT merged; the port is still ahead of it)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; ten sheets still to transcribe)* |
@@ -546,6 +546,72 @@ handing the corrected doc to a cold reader with a task to finish.
       `main`** and it was unpushed at the time; `main` stays at `8d5045c`, and the promotion is
       the user's. *(Both numbers moved after this was written: the two W-6 merges took `develop`
       to **131 ahead**, and it has since been **pushed** — `origin/develop` at `49122f5`.)*
+
+### W-3.5 — Stage 05, doc correction then port ◐ *(doc round complete 2026-08-18 on `fix/stage-05-doc-corrections`, NOT merged; port not started)*
+
+**The doc has been corrected.** `docs/05-development.md` is now **587 lines** across
+**six** `##` sections and **twelve** `###` ones (`### Authorize reads, not just writes`,
+`### Loading and error states` and `### AI in development` are the three new ones). Twelve
+tasks closed nineteen of the twenty defects the pre-round verification found; the fix
+wave (Task 11, five commits) closed the twentieth. A whole-branch review then found and
+closed four blocking findings of its own, on top of the twenty. `05-development` stays
+`ready: false` and absent from `STAGE_CONTENT` on purpose — the port is a separate
+round — so W-3 stays at **4/18**.
+
+**D-54** put the cold-reader pass before the port, and it found twenty defects. Three
+instruments ran, two dispatched read-only and blind to each other, and **three defects were
+found twice** — which is the strongest signal the round produced. The doc's judgement is
+good and it scored 4/5 on consultability; what is wrong with it is narrower and more
+mechanical. **Its code blocks are excerpts with their imports and their callers removed**,
+and its checklist has drifted away from its own body. A cold reader given only the doc could
+not produce one compiling file for its first slice.
+
+Evidence is in `docs/tracker.md`'s **2026-08-18 W-3.5** row. The two findings that decide
+the shape of the round:
+
+- **The `## Definition of done` requires what the body forbids.** It asks for "loading and
+  error states" while `### Server Components by default` teaches "no loading state", and
+  neither `loading.tsx`, `error.tsx` nor `Suspense` appears anywhere. This is the pattern
+  `cold-reader-testing.md` names from stage 03 — a checkbox gating on a concept the body
+  never taught — except here the body teaches its negation.
+- **`'use client'` does not do what the doc says.** Stated wrongly in two places. Next's
+  shipped docs say Client Components are used to *prerender* HTML. The advice is right and
+  the reason is wrong, which sends a reader debugging a slow page looking for HTML that is
+  already there.
+
+- [x] **Run the three instruments before correcting anything** (**D-54**, **D-50**) ✓
+      `docs/verification/stage-05-doc-execution.md` and
+      `docs/verification/cold-reader-stage-05-run1.md`. The compiler pass runs twice, as
+      printed and with the gaps filled (**D-68**), because those measure different things
+- [x] **Classify each finding defect or boundary, disagreeing where warranted** ✓ nineteen
+      defects, eight boundaries. Two agent claims corrected rather than transcribed: an
+      unconfirmable digest-masking mechanism dropped, and a low-confidence `tsc` guess
+      promoted to confirmed
+- [x] **Settle the two open scope calls** ✓ full close, and read-path authorization is this
+      stage's job (**D-69**)
+- [x] **Spec and plan** ✓ `2026-08-18-stage-05-doc-corrections-design.md` and its
+      twelve-task plan
+- [x] **Task 1 — the anchor guard** (**D-71**) ✓ `source-citations.test.ts` extended to
+      every `](NN-name.md#anchor)` across `docs/`; caught the rename below by real RED
+- [x] **Tasks 2–9 — the corrections** ✓ the doc gained `### Authorize reads, not just
+      writes`, `### Loading and error states` and `### AI in development`, and reached
+      587 lines
+- [x] **Task 10 — re-run all three instruments** ✓ `docs/verification/cold-reader-stage-05-run2.md`
+      and `docs/verification/stage-05-doc-execution-run2.md`: completeness 8 BLOCKING → 0,
+      consultability 4/5 → 5/5, nineteen of twenty defects closed
+- [x] **Task 11 — the fix wave** (**D-48**) ✓ five commits closed the twentieth defect
+      (`InvoiceTable` produced) and the last two run-2 findings
+- [x] **Task 12 — records, humanizer, whole-branch review** ✓ humanizer pass found nothing
+      to change; whole-branch review returned four blocking findings, all fixed (one of
+      them a false claim the per-task process itself had introduced — see the tracker row)
+- [ ] **The port itself (W-3.5b).** A separate round with its own spec. The doc is a third of
+      stage 04's length, so expect a seam well under fifteen steps and let the measurement
+      say how much smaller
+
+**One finding from before this round, now closed.** Stage 05's checklist used to prescribe
+a bare `pnpm tsc --noEmit`, which **violated D-25** and contradicted `docs/11-ci-cd.md`,
+where the same trap is taught under `## Traps` and credited to this playbook's own CI.
+`## Definition of done` now reads `pnpm typecheck` clean, with the reasoning inline.
 
 ### W-4 — Quality gates ☑
 
