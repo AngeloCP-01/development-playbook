@@ -42,9 +42,9 @@ Before doing anything, read these for context:
   (pins that doc's fourteen subsections in order), `source-citations.test.ts` (D-42), and
   `ddl-sync.test.ts` plus `evolve.test.ts`, which hold three SQL blocks in the app to the doc
   character-for-character.
-- **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01, 02 and 03 are
-  complete, interactive and merged**; **stage 04 is complete and interactive but NOT merged**
-  — it is the 20 commits on `feat/stage-04-app-port`. **Stage 05's doc is corrected and merged
+- **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01 through 04 are
+  complete, interactive and merged** — stage 04 landed at `bb3c119`, and
+  `feat/stage-04-app-port` no longer exists. **Stage 05's doc is corrected and merged
   to `develop` (`9ef3763`), but its app port has not started** — `05-development` stays
   `ready: false` and absent from `STAGE_CONTENT`; the doc merge is what the port now builds
   against, not a substitute for it. 03 is 22 steps, 04 is 15. Fourteen
