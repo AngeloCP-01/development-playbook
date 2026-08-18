@@ -138,7 +138,11 @@ exactly what makes it dangerous — the resemblance invites you to trust the inp
 // src/features/billing/actions.ts
 'use server'
 
+import { revalidatePath } from 'next/cache'
+import { and, eq } from 'drizzle-orm'
 import { z } from 'zod'
+import { db } from '@/db'
+import { invoices } from '@/db/schema'
 import { requireUser } from '@/lib/auth'
 
 const schema = z.object({
@@ -147,25 +151,87 @@ const schema = z.object({
 })
 
 export async function updateInvoice(input: unknown) {
-  const user = await requireUser()                    // 1. authenticate
-  const data = schema.parse(input)                    // 2. validate
+  const user = await requireUser()                       // 1. authenticate
 
-  const invoice = await db.query.invoices.findFirst({
-    where: eq(invoices.id, data.invoiceId),
-  })
-  if (invoice?.ownerId !== user.id) throw new Error('Not found')   // 3. authorize
+  const parsed = schema.safeParse(input)                 // 2. validate
+  if (!parsed.success) return { ok: false, error: 'Invalid amount' } as const
 
-  return db.update(invoices).set({ amount: data.amount })
-    .where(eq(invoices.id, data.invoiceId))
+  const updated = await db                               // 3. authorize
+    .update(invoices)
+    .set({ amount: parsed.data.amount })
+    .where(
+      and(
+        eq(invoices.id, parsed.data.invoiceId),
+        eq(invoices.ownerId, user.id),
+      ),
+    )
+    .returning({ id: invoices.id })
+
+  if (updated.length === 0) return { ok: false, error: 'Not found' } as const
+
+  revalidatePath('/billing')
+  return { ok: true } as const
 }
 ```
 
 Authenticate, validate, authorize — every action, every time. Never trust an ID from the
-client to belong to the caller. Step 3 is the one people omit, and it is the one that
-becomes a data breach.
+client to belong to the caller. Step 3 is the one people omit, and it is the most common
+serious security bug in App Router applications.
 
-Return "Not found" rather than "Forbidden" for records the user does not own. "Forbidden"
-confirms the record exists, which leaks information.
+Notice that step 3 is not a separate read. Fetching the row, comparing its owner, and then
+updating by id alone leaves a gap between the check and the write, and it is easy to write
+the check correctly and still forget it in the `where`. Putting the owner in the `where`
+makes the authorization and the update the same statement, and `returning()` tells you
+whether it matched.
+
+That also gets the disclosure right for free. Zero rows means either the invoice does not
+exist or it is not yours, and the caller cannot tell which — so "Not found" is the honest
+answer as well as the safe one. Answering "Forbidden" would confirm the record exists.
+
+The action returns its failures instead of throwing them. A record that is not yours is a
+normal outcome, not a bug, and Next's error handling draws exactly that line: throw for the
+unexpected and let an error boundary catch it, return the expected. The caller needs the
+message to put it on screen, which a thrown error does not give it.
+
+Return the narrowest thing that works — `{ ok: true }`, an id, a count. Whatever an action
+returns crosses the network to the client, so returning the raw database result makes your
+table's shape part of a public contract.
+
+And the other half, because an action nothing calls is half an endpoint:
+
+```tsx
+// src/features/billing/invoice-amount-form.tsx
+'use client'
+
+import { useActionState } from 'react'
+import { updateInvoice } from './actions'
+
+export function InvoiceAmountForm({ invoiceId }: { invoiceId: string }) {
+  const [state, formAction, pending] = useActionState(
+    async (_prev: unknown, formData: FormData) =>
+      updateInvoice({
+        invoiceId,
+        amount: Number(formData.get('amount')),
+      }),
+    null,
+  )
+
+  return (
+    <form action={formAction}>
+      <input name="amount" type="number" min="1" required />
+      <button disabled={pending}>{pending ? 'Saving…' : 'Save'}</button>
+      {state?.ok === false && <p role="alert">{state.error}</p>}
+    </form>
+  )
+}
+```
+
+This is where `'use client'` earns itself: the form needs a pending state and an error to
+display. It is a leaf, and the page holding it stays a Server Component.
+
+`revalidatePath` in the action is what makes the change appear. Without it the mutation
+succeeds, the database is correct, and the list on screen still shows the old amount until
+something else forces a refresh — which is a bug reported as "it didn't save".
 
 ### Types at the boundaries
 
