@@ -110,9 +110,10 @@ describe('updateInvoice', () => {
     const attacker = await seedUser()
     const invoice = await seedInvoice({ ownerId: owner.id, amount: 100 })
 
-    await expect(
-      asUser(attacker, () => updateInvoice({ invoiceId: invoice.id, amount: 1 })),
-    ).rejects.toThrow()
+    const result = await asUser(attacker, () =>
+      updateInvoice({ invoiceId: invoice.id, amount: 1 }),
+    )
+    expect(result).toEqual({ ok: false, error: 'Not found' })
 
     expect((await getInvoice(invoice.id)).amount).toBe(100)
   })
