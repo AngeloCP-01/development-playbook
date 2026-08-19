@@ -25,10 +25,27 @@ test("both verbs are represented, since the doc's point is that the rule ignores
   expect(ids).toContain('action-no-owner') // a write
 })
 
-test('the check-then-write gap is one of the six, because it is the version that looks right', () => {
+/**
+ * Round 1 pinned "between the check and the write" — the atomicity story.
+ * Round 2 (I1) demoted that to a secondary point because it is disprovable: a
+ * race here is a lost update, not a privilege escalation, and this model has
+ * no ownership-transfer primitive to race against. The load-bearing claim is
+ * now structural — authorization and the write are two separate statements,
+ * so nothing keeps them agreeing — and that is what has to stay pinned, or a
+ * future edit could delete the real argument and leave only the demoted one
+ * standing with the suite still green.
+ *
+ * "two separate statements" is a short, distinctive phrase rather than a full
+ * sentence: specific enough that it cannot survive deletion of the structural
+ * argument, general enough to survive a legitimate reword of the sentence
+ * around it. The old phrase is kept as a second assertion because the gap is
+ * still a real, named property of the snippet — demoted, not removed.
+ */
+test('the check-then-write verdict leads with the structural argument, because the atomicity story does not hold', () => {
   const gap = SNIPPETS.find((s) => s.id === 'action-check-then-write')
   expect(gap?.safe).toBe(false)
-  expect(gap?.verdict).toMatch(/between the check and the write/i)
+  expect(gap?.verdict).toMatch(/two separate statements/i)
+  expect(gap?.verdict).toMatch(/gap between the check and the write/i)
 })
 
 test('ids are unique, because the drill keys its state on them', () => {

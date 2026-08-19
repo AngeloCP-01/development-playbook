@@ -90,9 +90,22 @@ await db.update(invoices)
   {
     id: 'button-caller',
     label: 'A button, and the action it calls',
-    code: `async function retryInvoice(invoiceId: string, amount: number) {
-  'use server'
-  const user = await requireUser()
+    code: `// src/features/billing/actions.ts
+'use server'
+
+import { eq } from 'drizzle-orm'
+import { z } from 'zod'
+import { db } from '@/db'
+import { invoices } from '@/db/schema'
+import { requireUser } from '@/lib/auth'
+
+const schema = z.object({
+  invoiceId: z.string().uuid(),
+  amount: z.number().int().positive(),
+})
+
+export async function retryInvoice(invoiceId: string, amount: number) {
+  await requireUser()
   const parsed = schema.safeParse({ invoiceId, amount })
   if (!parsed.success) return { ok: false, error: 'Invalid amount' } as const
 
@@ -100,13 +113,30 @@ await db.update(invoices)
   await db.update(invoices)
     .set({ amount: parsed.data.amount })
     .where(eq(invoices.id, parsed.data.invoiceId))
+  return { ok: true } as const
 }
 
-<button onClick={() => start(async () => {
-  await retryInvoice(invoice.id, invoice.amount)
-})}>
-  Retry
-</button>`,
+// src/features/billing/retry-button.tsx
+'use client'
+
+import { useTransition } from 'react'
+import { retryInvoice } from './actions'
+
+export function RetryButton({ invoice }: { invoice: { id: string; amount: number } }) {
+  const [pending, start] = useTransition()
+  return (
+    <button
+      disabled={pending}
+      onClick={() =>
+        start(async () => {
+          await retryInvoice(invoice.id, invoice.amount)
+        })
+      }
+    >
+      {pending ? 'Retrying…' : 'Retry'}
+    </button>
+  )
+}`,
     safe: false,
     verdict:
       'Unsafe, and not for the reason the Server Action above is. That one simply omits the owner check; this one talks itself out of adding it. The comment’s assumption — that an id lifted from a row already on screen must belong to whoever clicked — is not something retryInvoice can verify from inside the function. Nothing about being called from a button with nothing to type rather than a form with everything to type tells the endpoint who is asking; any caller who can invoke retryInvoice with a different id gets the same update.',
