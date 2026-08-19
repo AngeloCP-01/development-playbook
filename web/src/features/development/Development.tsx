@@ -319,7 +319,11 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
           <Prose>
             <p className="mt-6">
               Query, then component &mdash; the same order named as the unit of
-              work earlier on this page.
+              work earlier on this page. The test is{' '}
+              <Link href="/stages/06-testing" className={stageLinkClass}>
+                {stageTitle('06-testing')}
+              </Link>
+              &rsquo;s.
             </p>
           </Prose>
         </Section>
@@ -671,7 +675,7 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
                 {
                   id: 'env-vars',
                   title: 'Environment variables',
-                  summary: 'Parsed once, at boot.',
+                  summary: 'Parsed once, at boot (04).',
                   body: (
                     <RevealFacet label="Once, not per request" tone="blueprint">
                       A schema over{' '}
