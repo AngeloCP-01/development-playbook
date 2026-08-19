@@ -68,7 +68,7 @@ export const STAGES: Stage[] = [
     blurb: 'The loop you run dozens of times a day.',
     group: 'Building',
     timing: 'Continuously.',
-    ready: false,
+    ready: true,
   },
   {
     num: '06',
