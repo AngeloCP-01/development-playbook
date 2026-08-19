@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
-import { PLAYS } from './ai-plays'
-import { section } from './doc-source'
+import { AI_LIMIT, PLAYS } from './ai-plays'
+import { flat, section } from './doc-source'
 
 const SECTION = section('AI in development')
 const DOC_PLAYS = SECTION.match(/^- \*\*.+?\*\*/gm) ?? []
@@ -44,4 +44,26 @@ test('the unstable_retry play keeps the correction, not just the tool name', () 
   const play = PLAYS.find((p) => p.kind === 'mcp')
   expect(play?.body).toContain('unstable_retry')
   expect(play?.body).toMatch(/not a rename/i)
+})
+
+// The section's closing point, and the reason this stage's AI panel is not a
+// list of wins. Stage 04's counterpart pins its own AI_LIMIT the same way;
+// this is that fix, applied here after the omission was caught in review
+// (Task 10).
+test('the limit keeps the reading-the-diff claim, not just its topic', () => {
+  expect(AI_LIMIT).toContain('reading the diff before you keep it')
+})
+
+// The clause that must not be lost: it ties the AI section back to the
+// authorization gap this stage already covers elsewhere, which is the whole
+// reason the closing paragraph exists rather than a generic "review your AI
+// output" caution.
+test('the limit keeps the authorization-gap sentence, not a generic caution', () => {
+  expect(AI_LIMIT).toContain(
+    'The authorization gap already covered on this page passes every test that never scopes a query by owner',
+  )
+})
+
+test('the doc is still where that limit comes from', () => {
+  expect(flat(SECTION)).toContain(flat(AI_LIMIT))
 })

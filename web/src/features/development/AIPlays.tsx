@@ -1,7 +1,7 @@
 import { TriangleAlert } from 'lucide-react'
 import { InlineCode } from '@/components/InlineCode'
 import { RevealList } from '@/components/RevealList'
-import { PLAYS, type Play } from './ai-plays'
+import { AI_LIMIT, PLAYS, type Play } from './ai-plays'
 
 /**
  * Source: `docs/05-development.md`, "### AI in development".
@@ -12,13 +12,13 @@ import { PLAYS, type Play } from './ai-plays'
  * reader benefit, and the doc names the mechanism in parentheses beside
  * each title, not as a taxonomy of its own.
  *
- * The header and closing paragraphs are this component's own prose, not
- * `ai-plays.ts` data — that module carries only `PLAYS` (D-66's "verbatim
- * where it is tested" rule applies to the plays themselves, not to framing
- * text nothing checks against the doc). They stand in for the doc's opening
- * ("the mistakes that survive are the ones that read as correct on the way
- * past") and closing ("what none of this replaces") paragraphs, the same
- * shape stage 04's `AI_LIMIT` box closes on.
+ * The closing paragraph is `AI_LIMIT`, sourced from `ai-plays.ts` and pinned
+ * to the doc there — the same shape stage 04's `AI_LIMIT` box closes on, and
+ * the same export name. (This was missing from the original Task 10 brief
+ * and briefly hand-authored inline here; a review caught the gap.) The
+ * header line above the rows remains this component's own connective
+ * prose — a light paraphrase of the doc's opening sentence, not quoted or
+ * tested against it, since nothing here claims it is verbatim.
  *
  * TD-34 applies here exactly as it does in stage 04's counterpart:
  * `RevealList` hardcodes `<h3>` per row, so this component contributes no
@@ -72,14 +72,9 @@ export function AIPlays() {
       <div className="border border-line bg-raised p-4 sm:p-5">
         <p className="mb-2 flex items-center gap-2 text-sm font-semibold text-fg">
           <TriangleAlert className="size-4 shrink-0 text-warn" aria-hidden />
-          What none of this replaces
+          What a green test does not prove
         </p>
-        <p className="measure text-sm leading-6 text-muted">
-          Reading the diff before you keep it. A green test only proves the case
-          you remembered to write — a query that never scopes by owner passes
-          every test that never checked for the gap, and a model has no more
-          reason than you did to notice the one that is missing.
-        </p>
+        <p className="measure text-sm leading-6 text-muted">{AI_LIMIT}</p>
       </div>
     </div>
   )

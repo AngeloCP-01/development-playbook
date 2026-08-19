@@ -57,3 +57,17 @@ export const PLAYS: Play[] = [
     body: '`systematic-debugging`, already named on this page, is what keeps either of you from mutating code at random until something works.',
   },
 ]
+
+/**
+ * The section's closing point, and the reason this panel is not a list of
+ * wins. Kept as the doc words it: a green test only proves the case you
+ * remembered to write, and the authorization gap this stage already covers
+ * is exactly the kind of miss a model has no more reason than you did to
+ * notice.
+ *
+ * Stage 04's `ai-plays.ts` exports the same shape (`AI_LIMIT`). This one was
+ * missing from the original Task 10 brief and was hand-authored inline in
+ * `AIPlays.tsx` for one commit; a review caught the gap and this is that fix.
+ */
+export const AI_LIMIT =
+  'What none of this replaces: reading the diff before you keep it. A green test only proves the case you remembered to write. The authorization gap already covered on this page passes every test that never scopes a query by owner, and a model has no more reason than you did to notice the one that is missing.'
