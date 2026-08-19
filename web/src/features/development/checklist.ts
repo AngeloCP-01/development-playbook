@@ -22,9 +22,23 @@
  * scraping the bare `(06)` back into a slug, or shipping a dead number where
  * the doc had a working one. `checklist.test.ts` checks every populated
  * value against `STAGES`, the same way `loop.test.ts` already does.
+ *
+ * `phase` carries the doc's own break in this list (N5, `coverage-walk.md`):
+ * doc 526 opens "before you open the pull request", doc 540 breaks with
+ * "Then open it, and after the preview builds:" ahead of the eleventh box.
+ * Rendering all eleven as one list left that box untickable in the order the
+ * panel presented it — the preview it asks about does not exist until the PR
+ * does. `phase` is required on every item rather than optional like `stage`,
+ * because every doc box is on one side of that break or the other; there is
+ * no third state a missing value could mean.
  */
 
-export type DoneItem = { id: string; label: string; stage?: string }
+export type DoneItem = {
+  id: string
+  label: string
+  stage?: string
+  phase: 'before-pr' | 'after-preview'
+}
 export type TeamMove = { id: string; title: string; body: string }
 
 export const DONE: DoneItem[] = [
@@ -32,48 +46,62 @@ export const DONE: DoneItem[] = [
     id: 'tests-passing',
     label: 'Tests written and passing (06)',
     stage: '06-testing',
+    phase: 'before-pr',
   },
   {
     id: 'typecheck',
     label:
       '`pnpm typecheck` clean — the script from 04, not a bare `tsc --noEmit`, which passes off a stale build and fails on a clean checkout',
     stage: '04-project-setup',
+    phase: 'before-pr',
   },
   {
     id: 'lint-format',
     label: '`pnpm lint` (at `--max-warnings 0`) and `pnpm format:check` clean',
+    phase: 'before-pr',
   },
   {
     id: 'no-any',
     label:
       'No `any`. Every `as` cast has a comment saying what the compiler could not know',
+    phase: 'before-pr',
   },
   {
     id: 'authorize-reads',
     label: 'Server Actions authorize, not just authenticate — and so do reads',
+    phase: 'before-pr',
   },
   {
     id: 'loading-error',
     label: '`loading.tsx` and `error.tsx` exist for any segment that fetches',
+    phase: 'before-pr',
   },
   {
     id: 'expected-failures',
     label: 'Expected failures are returned and rendered, not thrown',
+    phase: 'before-pr',
   },
   {
     id: 'branch-age',
     label: 'Branch is under two days old, or the rest is behind a flag',
+    phase: 'before-pr',
   },
-  { id: 'rebased', label: 'Rebased, so history reads in order' },
+  {
+    id: 'rebased',
+    label: 'Rebased, so history reads in order',
+    phase: 'before-pr',
+  },
   {
     id: 'self-reviewed',
     label: 'Self-reviewed the diff (07)',
     stage: '07-code-review',
+    phase: 'before-pr',
   },
   {
     id: 'preview-verified',
     label: 'Verified on the preview URL (12)',
     stage: '12-staging',
+    phase: 'after-preview',
   },
 ]
 

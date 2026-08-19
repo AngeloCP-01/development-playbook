@@ -20,6 +20,36 @@ export type LoopStage = {
   stage?: string
 }
 
+/**
+ * Source: `docs/05-development.md`, `## Entry criteria` — the two checkboxes
+ * that gate the loop, each linking to the stage that satisfies it (N10,
+ * `coverage-walk.md`). Same shape as `checklist.ts`'s `DONE`: the doc's link
+ * is stripped to a bare stage number in `label` (the prose guard in this
+ * directory forbids markdown link syntax in an authored string) and the slug
+ * it pointed to survives separately in `stage`, so a component can render a
+ * real cross-reference instead of the dead parenthetical the label alone
+ * would leave behind.
+ */
+export type EntryCriterion = {
+  id: string
+  label: string
+  stage: string
+}
+
+export const ENTRY_CRITERIA: EntryCriterion[] = [
+  {
+    id: 'scaffolded',
+    label: 'Project scaffolded, CI green, preview deploys working (04)',
+    stage: '04-project-setup',
+  },
+  {
+    id: 'scoped',
+    label:
+      'The next piece of work is scoped small enough to merge within two days (02)',
+    stage: '02-planning',
+  },
+]
+
 export const LOOP_STAGES: LoopStage[] = [
   {
     id: 'slice',

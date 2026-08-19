@@ -159,3 +159,31 @@ test('links every done item that carries a stage, one per item', () => {
   const links = screen.getAllByRole('link')
   expect(links).toHaveLength(withStage.length)
 })
+
+// N5 (coverage-walk.md): the doc breaks its list with "Then open it, and
+// after the preview builds:" ahead of the eleventh box — as shipped, that
+// box sat in the same untickable-in-order list as the other ten. The break
+// text has to actually separate them in DOM order, not just render somewhere
+// on the page.
+test('splits the checklist at the doc’s own break, so the preview item does not read as tickable before the PR exists', () => {
+  render(<DevChecklist />)
+  const breakText = screen.getByText(
+    'Then open it, and after the preview builds:',
+  )
+  const rebased = screen.getByRole('checkbox', { name: REBASED })
+  const preview = screen.getByRole('checkbox', {
+    name: /Verified on the preview URL/,
+  })
+  expect(
+    Boolean(
+      rebased.compareDocumentPosition(breakText) &
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    ),
+  ).toBe(true)
+  expect(
+    Boolean(
+      breakText.compareDocumentPosition(preview) &
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    ),
+  ).toBe(true)
+})

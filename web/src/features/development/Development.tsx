@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { Stepper, type Step } from '@/components/Stepper'
 import { Callout, Contrast, Prose, Section } from '@/components/ui'
 import { Figure } from '@/components/Figure'
@@ -7,6 +8,7 @@ import { RevealFacet } from '@/components/RevealFacet'
 import { AnnotatedArtifact } from '@/components/AnnotatedArtifact'
 import { InlineCode } from '@/components/InlineCode'
 import { References } from '@/components/References'
+import { getStage } from '@/lib/stages'
 import { LoopFlow } from './LoopFlow'
 import { ClientBoundary } from './ClientBoundary'
 import { AuthorizationDrill } from './AuthorizationDrill'
@@ -14,7 +16,19 @@ import { AIPlays } from './AIPlays'
 import { DevChecklist } from './DevChecklist'
 import { ARTIFACTS } from './artifacts'
 import { TRAPS } from './traps'
+import { ENTRY_CRITERIA } from './loop'
 import { type StepId } from './steps'
+
+/**
+ * Cross-stage link titles this stage's prose renders inline (N2, N4, N10 —
+ * `coverage-walk.md`). `getStage` returns `undefined` for an unknown slug;
+ * the `??` fallback keeps every render safe without an `as` cast or a `!`
+ * assertion even though these four slugs are guaranteed present —
+ * `loop.test.ts` and `stages.test.ts` both pin that separately.
+ */
+const stageTitle = (slug: string) => getStage(slug)?.title ?? slug
+const stageLinkClass =
+  'text-brand underline underline-offset-2 hover:no-underline'
 
 /**
  * Stage 05's thirteen panels.
@@ -84,12 +98,28 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
           <Prose>
             <p>
               Two things are already settled by the time this loop starts, and
-              neither is this stage&rsquo;s to teach: the project is scaffolded
-              with CI green and preview deploys working, and the next piece of
-              work is scoped small enough to merge within two days. What belongs
-              here is the loop itself.
+              neither is this stage&rsquo;s to teach. What belongs here is the
+              loop itself.
             </p>
           </Prose>
+          <ul className="mt-4 space-y-2">
+            {ENTRY_CRITERIA.map((criterion) => (
+              <li
+                key={criterion.id}
+                className="flex flex-wrap items-center gap-x-2.5 gap-y-1"
+              >
+                <span className="min-w-0 break-words text-sm leading-6 text-muted">
+                  <InlineCode text={criterion.label} />
+                </span>
+                <Link
+                  href={`/stages/${criterion.stage}`}
+                  className="t-label flex min-h-11 shrink-0 items-center border border-line px-1.5 py-0.5 text-brand transition-colors duration-150 hover:border-brand lg:min-h-9"
+                >
+                  {stageTitle(criterion.stage)}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </Section>
 
         <Section
@@ -157,6 +187,21 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
               }
             />
           </div>
+          <Prose>
+            <p className="mt-6">
+              The column comes first and it is not this stage&rsquo;s to teach.
+              The table it belongs to was designed in{' '}
+              <Link href="/stages/03-architecture" className={stageLinkClass}>
+                {stageTitle('03-architecture')}
+              </Link>
+              ; the tooling that applies the change was installed in{' '}
+              <Link href="/stages/04-project-setup" className={stageLinkClass}>
+                {stageTitle('04-project-setup')}
+              </Link>
+              . What belongs here is the habit: change the schema for the one
+              case you are shipping, not for the three you expect to ship next.
+            </p>
+          </Prose>
         </Section>
       </div>
     ),
@@ -188,7 +233,8 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
                   &apos;use client&apos;
                 </code>
               </Term>{' '}
-              only when you need interactivity, and push it to the leaves.
+              only when you need interactivity &mdash; event handlers, state,
+              effects, browser APIs. When you do, push it to the leaves.
             </p>
           </Prose>
         </Section>
@@ -270,6 +316,12 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
               ]}
             />
           </div>
+          <Prose>
+            <p className="mt-6">
+              Query, then component &mdash; the same order named as the unit of
+              work earlier on this page.
+            </p>
+          </Prose>
         </Section>
 
         <Section
@@ -483,6 +535,17 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
                         check it before trusting it, exactly as it does for the
                         form.
                       </RevealFacet>
+                      <RevealFacet label="Left out to stay short" tone="danger">
+                        A real button would still have to do something with a
+                        failed result, the way the form does; this one drops it
+                        to stay short. Paste it as-is and a failed retry fails
+                        silently &mdash; the same &ldquo;reported as it
+                        didn&rsquo;t save&rdquo; bug{' '}
+                        <code className="t-data break-words">
+                          revalidatePath
+                        </code>{' '}
+                        already named for this endpoint.
+                      </RevealFacet>
                     </div>
                   ),
                 },
@@ -608,14 +671,22 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
                 {
                   id: 'env-vars',
                   title: 'Environment variables',
-                  summary: 'Parsed once, at boot (04).',
+                  summary: 'Parsed once, at boot.',
                   body: (
                     <RevealFacet label="Once, not per request" tone="blueprint">
                       A schema over{' '}
                       <code className="t-data break-words">process.env</code>{' '}
                       checked at startup, so a missing or malformed variable
                       fails the boot rather than the first request that happens
-                      to touch it.
+                      to touch it. That schema is written where the app is
+                      scaffolded &mdash;{' '}
+                      <Link
+                        href="/stages/04-project-setup"
+                        className={stageLinkClass}
+                      >
+                        {stageTitle('04-project-setup')}
+                      </Link>
+                      .
                     </RevealFacet>
                   ),
                 },

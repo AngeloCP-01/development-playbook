@@ -40,6 +40,14 @@ import { ARTIFACT_ITEMS, DONE, TEAM_MOVES } from './checklist'
  * tells a screen-reader user nothing, the same reasoning `CarryForward` and
  * `ArchCarryForward` already apply to their own stage links.
  *
+ * **N5 fix (`coverage-walk.md`).** `DONE` renders as two lists, split on
+ * `DoneItem.phase`, with the doc's own break — "Then open it, and after the
+ * preview builds:" — sitting between them. Rendered as one list, the eleventh
+ * box (verifying on the preview URL) was untickable in the order the panel
+ * presented it: the preview does not exist until the PR does. Two `<ul>`s
+ * over one `count`/`DONE.length` keeps the worksheet's single running total
+ * meaningful across both.
+ *
  * Checked means *done*, so the control is tinted `go`, not `brand` — `brand`
  * is attention, not approval.
  *
@@ -62,11 +70,49 @@ export function DevChecklist() {
 
   const count = DONE.filter((item) => ticked.includes(item.id)).length
   const complete = count === DONE.length
+  const beforePr = DONE.filter((item) => item.phase === 'before-pr')
+  const afterPreview = DONE.filter((item) => item.phase === 'after-preview')
 
   const toggle = (id: string) =>
     setValue((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     )
+
+  const renderItem = (item: (typeof DONE)[number]) => {
+    const on = ticked.includes(item.id)
+    const stage = item.stage ? getStage(item.stage) : undefined
+    return (
+      <li key={item.id}>
+        <div className="flex min-h-11 items-start gap-2 px-5 py-3 transition-colors duration-150 hover:bg-sunken lg:min-h-9">
+          <label
+            className="flex min-w-0 flex-1 cursor-pointer items-start gap-3.5"
+            htmlFor={`${idBase}-${item.id}`}
+          >
+            <input
+              id={`${idBase}-${item.id}`}
+              type="checkbox"
+              checked={on}
+              onChange={() => toggle(item.id)}
+              className="mt-1 size-4 shrink-0 accent-go"
+            />
+            <span
+              className={`min-w-0 break-words text-sm leading-6 ${on ? 'text-subtle' : 'text-muted'}`}
+            >
+              <InlineCode text={item.label} />
+            </span>
+          </label>
+          {stage && (
+            <Link
+              href={`/stages/${stage.slug}`}
+              className="t-label flex min-h-11 shrink-0 items-center border border-line px-1.5 py-0.5 text-brand transition-colors duration-150 hover:border-brand lg:min-h-9"
+            >
+              {stage.title}
+            </Link>
+          )}
+        </div>
+      </li>
+    )
+  }
 
   return (
     <div className="space-y-4">
@@ -110,43 +156,13 @@ export function DevChecklist() {
           </span>
         </div>
 
-        <ul className="divide-y divide-line">
-          {DONE.map((item) => {
-            const on = ticked.includes(item.id)
-            const stage = item.stage ? getStage(item.stage) : undefined
-            return (
-              <li key={item.id}>
-                <div className="flex min-h-11 items-start gap-2 px-5 py-3 transition-colors duration-150 hover:bg-sunken lg:min-h-9">
-                  <label
-                    className="flex min-w-0 flex-1 cursor-pointer items-start gap-3.5"
-                    htmlFor={`${idBase}-${item.id}`}
-                  >
-                    <input
-                      id={`${idBase}-${item.id}`}
-                      type="checkbox"
-                      checked={on}
-                      onChange={() => toggle(item.id)}
-                      className="mt-1 size-4 shrink-0 accent-go"
-                    />
-                    <span
-                      className={`min-w-0 break-words text-sm leading-6 ${on ? 'text-subtle' : 'text-muted'}`}
-                    >
-                      <InlineCode text={item.label} />
-                    </span>
-                  </label>
-                  {stage && (
-                    <Link
-                      href={`/stages/${stage.slug}`}
-                      className="t-label flex min-h-11 shrink-0 items-center border border-line px-1.5 py-0.5 text-brand transition-colors duration-150 hover:border-brand lg:min-h-9"
-                    >
-                      {stage.title}
-                    </Link>
-                  )}
-                </div>
-              </li>
-            )
-          })}
-        </ul>
+        <ul className="divide-y divide-line">{beforePr.map(renderItem)}</ul>
+
+        <p className="border-t border-line bg-sunken px-5 py-2.5 text-sm text-subtle">
+          Then open it, and after the preview builds:
+        </p>
+
+        <ul className="divide-y divide-line">{afterPreview.map(renderItem)}</ul>
 
         <div className="flex flex-wrap items-center gap-3 border-t border-line px-5 py-3.5">
           <button

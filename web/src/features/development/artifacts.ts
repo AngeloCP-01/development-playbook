@@ -21,7 +21,7 @@ export const ARTIFACTS: Record<string, Artifact> = {
       { text: '// src/app/(app)/invoices/page.tsx — a Server Component' },
       {
         text: "import { requireUser } from '@/lib/auth'",
-        note: 'Set up outside this stage. Stage 03 is where the session strategy actually gets decided.',
+        note: 'Set up outside this stage. Stage 03 is where the session strategy — rolling your own, a library, or a managed provider — actually gets decided.',
       },
       { text: "import { getInvoices } from '@/features/billing/queries'" },
       {

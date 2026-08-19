@@ -84,3 +84,30 @@ test('stage is populated exactly where the doc checkbox carried a link, no more 
   const docHasLink = DOC_DONE.map((b) => LINK_PATTERN.test(b))
   expect(DONE.map((d) => Boolean(d.stage))).toEqual(docHasLink)
 })
+
+/**
+ * N5 (coverage-walk.md): doc 526 opens the list "before you open the pull
+ * request"; doc 540 breaks it with "Then open it, and after the preview
+ * builds:" ahead of the eleventh box. `phase` carries that split the same
+ * way `stage` already carries the doc's link — structure beside the label,
+ * not folded into it.
+ */
+test('exactly ten boxes belong before the PR and one after the preview, matching the doc split', () => {
+  expect(DONE.filter((d) => d.phase === 'before-pr')).toHaveLength(10)
+  expect(DONE.filter((d) => d.phase === 'after-preview')).toHaveLength(1)
+})
+
+test('the preview-verified item is the one box that comes after the preview', () => {
+  const afterPreview = DONE.filter((d) => d.phase === 'after-preview')
+  expect(afterPreview.map((d) => d.id)).toEqual(['preview-verified'])
+})
+
+test('phase is populated on every item, and the before-pr items all precede the after-preview one', () => {
+  expect(
+    DONE.every((d) => d.phase === 'before-pr' || d.phase === 'after-preview'),
+  ).toBe(true)
+  const phases = DONE.map((d) => d.phase)
+  expect(phases.lastIndexOf('before-pr')).toBeLessThan(
+    phases.indexOf('after-preview'),
+  )
+})

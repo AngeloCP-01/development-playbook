@@ -86,3 +86,16 @@ test('filenames match the path comment the doc opens each block with', () => {
     expect(artifact.lines[0].text, key).toContain(artifact.filename)
   }
 })
+
+/**
+ * N7 (coverage-walk.md): doc 79–81 names the three options waiting at the
+ * 03 cross-reference — "rolling your own, a library, or a managed
+ * provider". The note kept the pointer to stage 03 but dropped what shape of
+ * decision is there, which is the whole point of pointing at all.
+ */
+test('the requireUser note keeps the three session-strategy options, not just the pointer to 03', () => {
+  const note = ARTIFACTS.invoicesPage.lines.find((l) =>
+    l.text.includes('requireUser'),
+  )?.note
+  expect(note).toContain('rolling your own, a library, or a managed provider')
+})

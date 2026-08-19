@@ -36,7 +36,7 @@ export const PLAYS: Play[] = [
     title:
       'Write the failing test from a description of the behaviour, before any code',
     kind: 'skill',
-    body: '`test-driven-development` enforces the order rather than hoping for it — no implementation until a test exists and has failed for the right reason.',
+    body: '`test-driven-development`, from the Superpowers plugin, enforces the order rather than hoping for it — no implementation until a test exists and has failed for the right reason.',
   },
   {
     id: 'schema-from-payload',
@@ -67,7 +67,7 @@ export const PLAYS: Play[] = [
     title:
       'Reduce a bug to the smallest reproduction, then test one hypothesis at a time',
     kind: 'skill',
-    body: '`systematic-debugging`, already named on this page, is what keeps either of you from mutating code at random until something works.',
+    body: '`systematic-debugging`, already named on this page and from the Superpowers plugin, is what keeps either of you from mutating code at random until something works.',
   },
 ]
 

@@ -90,3 +90,18 @@ test('the premise keeps the failure-mode list that was dropped once already', ()
 test('the doc is still where that premise comes from', () => {
   expect(flat(SECTION)).toContain(flat(AI_PREMISE))
 })
+
+/**
+ * N6 (coverage-walk.md): doc 504–506 names both skill plays as "from the
+ * Superpowers plugin". Nothing in the app said where they came from, so the
+ * two read as generic principles rather than something installable —
+ * `context7` and `claude-mem` survive on their own because their names are
+ * already searchable, which is exactly what the two skills lacked.
+ */
+test('both skill plays say they ship from the Superpowers plugin, not just their own name', () => {
+  const skills = PLAYS.filter((p) => p.kind === 'skill')
+  expect(skills).toHaveLength(2)
+  for (const play of skills) {
+    expect(play.body, play.id).toContain('Superpowers plugin')
+  }
+})
