@@ -247,13 +247,25 @@ Three things worth knowing before reaching for it:
 Nothing tests that no backtick reaches the page. The eleven that shipped raw were found by
 grepping the built HTML, twice, and that is still the only method that finds them.
 
-### `AnnotatedArtifact` — `src/features/setup/AnnotatedArtifact.tsx`
+### `AnnotatedArtifact` — `src/components/AnnotatedArtifact.tsx`
 
-One config file quoted verbatim and annotated line by line, rendered from
-`src/features/setup/artifacts.ts` (`{ id, filename, language, lines }`, each line
-`{ text, note?, pivot? }`). Five of stage 04's steps render one — `format`, `strict`,
-`env`, `hooks` and `ci` — which is why the artifact is a prop rather than picked inside
-the component. It is a server component; nothing in it is interactive.
+One config file quoted verbatim and annotated line by line. `{ id, filename, language,
+lines }` (each line `{ text, note?, pivot? }`) is typed in `src/components/artifact.ts`;
+the artifacts themselves stay per stage — `src/features/setup/artifacts.ts`,
+`src/features/development/artifacts.ts` — since they are data, not something to share.
+Extracted to `src/components/` when stage 05 became the second caller (`language` gained
+`'tsx'` there, for application code rather than config). Five of stage 04's steps render
+one — `format`, `strict`, `env`, `hooks` and `ci` — plus nine of stage 05's, which is why
+the artifact is a prop rather than picked inside the component. It is a server component;
+nothing in it is interactive.
+
+`AnnotatedArtifact.test.tsx` stays in `src/features/setup/`, not beside the component it
+tests. It renders stage-04 data (`ARTIFACTS.lefthook`) and pins a blank line in
+`lefthook.yml`, so it lives with the data it exercises rather than with the shared
+component — moving it would have meant either a synthetic fixture (losing the guarantee
+that the test pins content copied from the doc) or a `src/components/` module reaching
+back into `src/features/setup/`, which inverts the layering this extraction exists to
+avoid.
 
 **Per-line elements with `t-data whitespace-pre`, not a `<pre>`, and that is a
 measurement rather than a preference.** A rendered line costs **20px** here
@@ -286,9 +298,12 @@ text and nothing else — no line numbers, no note text inside it.
 The collapsed "If you are not solo" disclosure, carrying a stage's team-scoped material
 without making it part of the main read. `{ title?, children }`; the title defaults.
 
-Every stage ships one (TD-13). Mount it near the end of the stage's closing step. It lives
-here, not in a feature folder, precisely so the next stage imports it instead of writing a
-third version by hand.
+Every stage ships one (TD-13). **Mount it inside the stage's checklist component**, not as
+its own step — both stage 04 (`SetupChecklist.tsx`) and stage 05 (`DevChecklist.tsx`) do
+this, and the code is the ground rule here: this section used to say "near the end of the
+stage's closing step," and that was the bug, not the two stages. It lives in
+`src/components/`, not in a feature folder, precisely so the next stage imports it instead
+of writing a third version by hand.
 
 ### `References` — `src/components/References.tsx` + `src/lib/references.ts`
 
@@ -325,7 +340,7 @@ copy a working version rather than start from scratch.
 | **Expand to reveal**     | A list of things, each with detail worth hiding until wanted       | You have 3+ items that each need a paragraph                     | `RevealList` (+ `RevealFacet` for row bodies)     |
 | **Tabs**                 | Parallel categories the reader picks between                       | Content splits into 3–5 peer groups                              | `Toolkit`                                         |
 | **Single-select scorer** | A judgment call along a scale, with the consequence of each choice | The stage turns on one decision (severity, risk, priority)       | `SeverityScorer`                                  |
-| **Guess then reveal**    | Right-vs-wrong judgment, scored                                    | You can show good and bad examples of the same skill             | `QuestionLab`                                     |
+| **Guess then reveal**    | Right-vs-wrong judgment, scored                                    | You can show good and bad examples of the same skill             | `QuestionLab`, `AuthorizationDrill`               |
 | **Click-node inspector** | A structure whose parts each mean something                        | You have a diagram, tree, or pipeline with explainable nodes     | `OpportunityTree`, `DiscoveryFlow`                |
 | **Annotated artifact**   | Which parts of a real artifact carry a decision                    | You are quoting something verbatim — schema, config, workflow file | `SchemaInspector`                                 |
 | **Copy artifact**        | A prompt, command, or template the reader will actually use        | You are handing over something to paste elsewhere                | `AIWorkflow` prompts                              |
@@ -351,7 +366,11 @@ Notes that make each land:
   as "nothing here is hand-rolled".
 - **Guess then reveal** must lock the answer before showing the verdict, and should score
   across the set ("3/6 right"). A revealed answer the reader did not commit to teaches
-  nothing.
+  nothing. Stage 05's `AuthorizationDrill` is a second instance, not a new pattern: six
+  safe/unsafe code snippets, one binary judgment per row, locked before the verdict shows,
+  scored across the set — the same shape as `QuestionLab` with code where the quiz had
+  text. Named here rather than given its own row because the row it already fits was
+  written for exactly this generalisation.
 - **Click-node inspector** pairs a diagram with a detail panel that updates on selection.
   Colour-code levels but always add a second signal (a dot, a label) so the coding is not
   the only cue.
