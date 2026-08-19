@@ -29,6 +29,8 @@ drift apart.
 
 **Circuit breaker** — A wrapper that counts consecutive failures, and once past a threshold stops attempting the call at all for a cooldown period, failing fast instead. After the cooldown it lets one request through to test whether the dependency recovered. See [03 — Architecture](../docs/03-architecture.md).
 
+**Client Component** — A component marked ‘use client’. It still renders once on the server to produce the page’s first HTML, then ships its own code to the browser and takes over there — which is what lets it hold state, run event handlers, and read something like window. See [05 — Development](../docs/05-development.md).
+
 **Concierge test** — You do the work manually for a handful of real users — spreadsheets, emails, your own labour — while they experience the result as if it were a product.
 
 **Connection pooling** — A pooler sits between the application and the database, holding a limited number of real connections and multiplexing client requests onto them, instead of each caller opening its own. See [03 — Architecture](../docs/03-architecture.md).
@@ -58,6 +60,8 @@ drift apart.
 **Fake-door test** — A page describing the product with a real signup or purchase button. Clicking it reaches a "coming soon" message. You measure how many people click.
 
 **Feasibility risk** — One of the standard product risks, alongside whether people want it and whether it makes business sense. It asks whether the technology, data, budget and time actually permit the solution. See [02 — Product Planning](../docs/02-planning.md).
+
+**Feature flag** — A boolean your code reads before doing something, set to off by default. Code sitting behind one can merge to the main branch without being reachable by anyone. An environment variable is enough to start; a dedicated flag service earns its keep only once you need to flip one without a deploy. See [05 — Development](../docs/05-development.md).
 
 **Fitness function** — From evolutionary architecture: a test asserting a property of the system rather than a behaviour of a function. A rule that no module imports across a feature boundary, a build-size budget that fails the pipeline, an assertion that a page issues one query rather than forty. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -120,6 +124,10 @@ drift apart.
 **Read replica** — A secondary instance kept up to date from the primary, used to spread read load. Writes still go to one place, so replicas scale reads and do nothing for write throughput. See [03 — Architecture](../docs/03-architecture.md).
 
 **Rollback** — Returning production to the last known-good state. On Vercel it is promoting a prior deployment, which takes seconds — but it is not automatic for database migrations, which is why migrations get careful, separate treatment. See [13 — Production Deployment](../docs/13-production-deployment.md).
+
+**Server Action** — A function whose file or body opens with the ‘use server’ directive. Next.js turns it into a public HTTP endpoint behind the scenes, wires it to a form’s action or a plain click handler, and lets the calling code write it as though it were an ordinary async function. See [05 — Development](../docs/05-development.md).
+
+**Server Component** — A component that runs during the request, with direct access to whatever the server can reach — a database, a filesystem, a secret. It sends the browser only the HTML it produced; its own source never becomes part of the JavaScript bundle. See [05 — Development](../docs/05-development.md).
 
 **Serverless** — Code deployed as individual functions the platform starts when a request arrives and stops afterwards, billed per invocation rather than per hour. Vercel’s deployment model for a Next.js application is this. See [03 — Architecture](../docs/03-architecture.md).
 
