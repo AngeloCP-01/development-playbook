@@ -655,6 +655,33 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'It is what keeps “smallest shippable slice” honest when a feature genuinely takes longer than two days end to end — the alternative is a long-lived branch, and those diverge, conflict, and stop being reviewable.',
   },
+  zod: {
+    name: 'Zod',
+    see: '05-development',
+    short:
+      'A schema library that parses unknown input into a typed value, or fails.',
+    full: 'A TypeScript schema library used to parse data whose shape you cannot trust — an HTTP request body, an environment variable, a third-party API response — into a value the compiler can rely on. `schema.safeParse(input)` returns either the typed data or a list of what did not match, and nothing downstream sees the input until it has passed.',
+    soWhat:
+      'It is the difference between a type and a check. A TypeScript type disappears at runtime, so annotating unparsed input as a type only names a hope; Zod is the part that actually looks at the value before anything trusts it.',
+  },
+  'error-boundary': {
+    name: 'Error boundary',
+    see: '05-development',
+    short:
+      'A boundary that catches what throws below it and renders a fallback instead of a blank page.',
+    full: 'A segment marked by a file like `error.tsx` in the App Router. It catches an unhandled throw from anything it wraps and renders a fallback in place of the crashed subtree, rather than taking the whole page down. It has to be a Client Component — one of the few places the directive is not a choice.',
+    soWhat:
+      'It is for the unexpected only. A failure you can already name — an invalid amount, a record that is not the caller’s — belongs in a Server Action’s return value instead, because the reader needs the actual message, not a generic retry button.',
+  },
+  rebase: {
+    name: 'Rebase',
+    see: '05-development',
+    short:
+      'Replay a branch’s commits on top of the latest target branch, so history reads in a straight line.',
+    full: 'Move a branch’s commits so they start from the current tip of the branch it will merge into, rather than from wherever it happened to fork. Run before opening the pull request, so the diff a reviewer sees is the diff that will actually land.',
+    soWhat:
+      'A merge without it still works, but the history it leaves behind interleaves two branches’ commits by timestamp instead of by intent — exactly the record `git log` exists to be.',
+  },
 }
 
 export function getTerm(key: string): Term | undefined {

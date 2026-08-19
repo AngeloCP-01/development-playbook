@@ -137,7 +137,7 @@ export function DevChecklist() {
                   {stage && (
                     <Link
                       href={`/stages/${stage.slug}`}
-                      className="t-label mt-0.5 shrink-0 border border-line px-1.5 py-0.5 text-brand transition-colors duration-150 hover:border-brand"
+                      className="t-label flex min-h-11 shrink-0 items-center border border-line px-1.5 py-0.5 text-brand transition-colors duration-150 hover:border-brand lg:min-h-9"
                     >
                       {stage.title}
                     </Link>
