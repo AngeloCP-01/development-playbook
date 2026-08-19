@@ -1,6 +1,6 @@
 import { Card } from '@/components/ui'
 import { InlineCode } from '@/components/InlineCode'
-import { type Artifact, type ArtifactLine } from './artifacts'
+import { type Artifact, type ArtifactLine } from './artifact'
 import { CopyArtifact, OverflowFocus } from './ArtifactControls'
 
 /**
