@@ -1,7 +1,7 @@
 import { TriangleAlert } from 'lucide-react'
 import { InlineCode } from '@/components/InlineCode'
 import { RevealList } from '@/components/RevealList'
-import { AI_LIMIT, PLAYS, type Play } from './ai-plays'
+import { AI_LIMIT, AI_PREMISE, PLAYS, type Play } from './ai-plays'
 
 /**
  * Source: `docs/05-development.md`, "### AI in development".
@@ -12,13 +12,16 @@ import { AI_LIMIT, PLAYS, type Play } from './ai-plays'
  * reader benefit, and the doc names the mechanism in parentheses beside
  * each title, not as a taxonomy of its own.
  *
- * The closing paragraph is `AI_LIMIT`, sourced from `ai-plays.ts` and pinned
- * to the doc there — the same shape stage 04's `AI_LIMIT` box closes on, and
- * the same export name. (This was missing from the original Task 10 brief
- * and briefly hand-authored inline here; a review caught the gap.) The
- * header line above the rows remains this component's own connective
- * prose — a light paraphrase of the doc's opening sentence, not quoted or
- * tested against it, since nothing here claims it is verbatim.
+ * The header and closing paragraphs are both sourced from `ai-plays.ts` and
+ * pinned to the doc there: `AI_PREMISE` for the section's opening (why the
+ * panel exists, and the concrete list of things that fail silently) and
+ * `AI_LIMIT` for its close — the same shapes stage 04's counterpart uses,
+ * the same export names. Both were missing from the original Task 10 brief
+ * and were briefly hand-authored inline here; a review caught the gap for
+ * `AI_LIMIT` first (F1), then caught that the header was a *lossy*
+ * paraphrase of `AI_PREMISE` — it kept the paragraph's first sentence and
+ * silently dropped the second, the concrete failure-mode list that makes the
+ * paragraph actionable (F2).
  *
  * TD-34 applies here exactly as it does in stage 04's counterpart:
  * `RevealList` hardcodes `<h3>` per row, so this component contributes no
@@ -43,10 +46,7 @@ export function AIPlays() {
         idPrefix="dev-ai"
         header={
           <p className="border-b border-line px-5 py-3.5 text-sm leading-6 text-muted">
-            The loop here runs fast enough that reading a suggestion and
-            accepting it take about the same half second — which is what makes
-            this the risky stage. The mistakes that survive are the ones that
-            read as correct on the way past.
+            {AI_PREMISE}
           </p>
         }
         rows={PLAYS.map((play) => ({

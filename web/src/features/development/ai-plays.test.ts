@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { AI_LIMIT, PLAYS } from './ai-plays'
+import { AI_LIMIT, AI_PREMISE, PLAYS } from './ai-plays'
 import { flat, section } from './doc-source'
 
 const SECTION = section('AI in development')
@@ -66,4 +66,27 @@ test('the limit keeps the authorization-gap sentence, not a generic caution', ()
 
 test('the doc is still where that limit comes from', () => {
   expect(flat(SECTION)).toContain(flat(AI_LIMIT))
+})
+
+// The doc's opening paragraph for this section — why the AI panel exists at
+// all and why setup-speed makes it risky. A first pass paraphrased this into
+// the component and silently dropped its second sentence, the concrete list
+// of things that fail silently; this pins both sentences so that loss cannot
+// recur unseen (F2).
+test('the premise keeps the risky-stage claim from the first sentence', () => {
+  expect(AI_PREMISE).toContain('that speed is what makes this the risky stage')
+})
+
+// The sentence that was dropped: the concrete list is what makes the
+// paragraph actionable rather than a general warning, so this pins a phrase
+// from it specifically, not just the paragraph's presence.
+test('the premise keeps the failure-mode list that was dropped once already', () => {
+  expect(AI_PREMISE).toContain(
+    "An authorization predicate, a migration's backfill, a cache key, a regular expression over data you have not sampled",
+  )
+  expect(AI_PREMISE).toContain('none of those fail loudly')
+})
+
+test('the doc is still where that premise comes from', () => {
+  expect(flat(SECTION)).toContain(flat(AI_PREMISE))
 })

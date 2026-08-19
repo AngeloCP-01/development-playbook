@@ -10,6 +10,19 @@
  * are different questions.
  */
 
+/**
+ * The section's opening paragraph — why the panel exists and why setup speed
+ * makes it risky. Lifted verbatim, both sentences: a first pass paraphrased
+ * this into `AIPlays.tsx` directly and silently dropped the second sentence,
+ * the concrete list of things that fail silently (an authorization
+ * predicate, a migration's backfill, a cache key, an unsampled regular
+ * expression) — the half that makes the paragraph actionable rather than a
+ * general warning. `ai-plays.test.ts` pins a phrase from that sentence
+ * specifically so the same loss cannot recur unseen (F2).
+ */
+export const AI_PREMISE =
+  "The loop here runs fast enough that reading a suggestion and accepting it take about the same half second, and that speed is what makes this the risky stage: the mistakes that survive are the ones that read as correct on the way past. An authorization predicate, a migration's backfill, a cache key, a regular expression over data you have not sampled — none of those fail loudly. They fail the day someone finds the gap."
+
 export type Play = {
   id: string
   title: string
