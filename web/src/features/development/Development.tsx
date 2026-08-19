@@ -136,6 +136,7 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
               trust.
             </p>
           </Prose>
+          {/* LoopFlow self-wraps Fig 1 — Figure n={2} below is the next one, not a skip */}
           <LoopFlow />
           <Prose>
             <p>
