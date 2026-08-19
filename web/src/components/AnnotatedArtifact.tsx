@@ -3,6 +3,10 @@ import { InlineCode } from '@/components/InlineCode'
 import { type Artifact, type ArtifactLine } from './artifact'
 import { CopyArtifact, OverflowFocus } from './ArtifactControls'
 
+// Render test: `src/features/setup/AnnotatedArtifact.test.tsx`, not a sibling
+// `*.test.tsx` here — it needs real artifact data, and that data (`ARTIFACTS`)
+// is stage-04-local.
+
 /**
  * One config file from `artifacts.ts`, quoted verbatim and annotated line by
  * line. Five of stage 04's fifteen steps render one of these — `format`,

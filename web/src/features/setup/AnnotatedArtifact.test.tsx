@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { expect, test } from 'vitest'
-import { AnnotatedArtifact } from './AnnotatedArtifact'
+import { AnnotatedArtifact } from '@/components/AnnotatedArtifact'
 import { ARTIFACTS } from './artifacts'
 
 // The reader is meant to paste these files, so the block has to be the file.
