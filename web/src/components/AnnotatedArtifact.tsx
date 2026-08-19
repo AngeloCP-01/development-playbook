@@ -101,7 +101,26 @@ export function AnnotatedArtifact({ artifact }: { artifact: Artifact }) {
   return (
     <Card>
       <div className="mb-2.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <span className="t-data text-sm text-fg">{artifact.filename}</span>
+        {/*
+         * `min-w-0 break-words` (fixed alongside stage 05's Task 11): a
+         * filename with no spaces is one unbreakable "word" to the browser,
+         * and a flex item's default `min-width: auto` keeps it at its full
+         * natural width regardless of `overflow-wrap` unless something also
+         * relaxes that minimum — confirmed live, one property alone did not
+         * fix it, only the two together did. Every stage-04 filename long
+         * enough to be at risk (`invoice-amount-form.tsx` and siblings)
+         * happens to contain a hyphen, a legal soft-wrap point on its own,
+         * so this never surfaced there; stage 05's longest filename is a
+         * route path with no hyphen (`src/app/(app)/billing/[id]/page.tsx`),
+         * which is what exposed it — a real, measured 24px document-level
+         * overflow at 320px width, only once this filename was rendered in
+         * a route. `min-w-0 break-words` is the same combination
+         * `TreeInspector`, `ClientTrap`, `LoopFlow` and `DevChecklist`
+         * already use for the same shape of problem.
+         */}
+        <span className="t-data min-w-0 break-words text-sm text-fg">
+          {artifact.filename}
+        </span>
         <span className="t-label text-subtle">{artifact.language}</span>
         <CopyArtifact
           filename={artifact.filename}

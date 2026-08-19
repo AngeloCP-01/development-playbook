@@ -133,12 +133,29 @@ export function ClientBoundary() {
                 style={{ paddingInlineStart: `${0.5 + depth * 0.85}rem` }}
                 className="flex flex-wrap items-center gap-2 border border-transparent py-1"
               >
+                {/*
+                 * `flex-wrap` here (fixed alongside stage 05's Task 11):
+                 * without it, the outer row's own `flex-wrap` still shrinks
+                 * this button below the single-line width its two children
+                 * (component name + directive badge) need, since a flex
+                 * item's default min-width is its *own* min-content size —
+                 * and that size is small here because the component-name
+                 * span has no `shrink-0` and can itself wrap. The badge span
+                 * does carry `shrink-0`, so it refuses to shrink and pokes
+                 * out past the button's right edge instead: a real,
+                 * measured 1px document-level overflow at 320px width (the
+                 * badge's own edge lands ~0.8px past the viewport), first
+                 * observed once this component was mounted into a route —
+                 * jsdom render tests never lay out real pixels. `flex-wrap`
+                 * lets the badge drop to its own line under the same
+                 * constraint instead of overflowing.
+                 */}
                 <button
                   type="button"
                   aria-pressed={isDirective}
                   onClick={() => setDirectiveId(node.id)}
                   className={[
-                    'flex min-h-11 items-center gap-2 border px-2 py-1.5 text-left transition-colors duration-150 lg:min-h-9',
+                    'flex min-h-11 flex-wrap items-center gap-2 border px-2 py-1.5 text-left transition-colors duration-150 lg:min-h-9',
                     isDirective
                       ? 'border-brand bg-brand-tint text-fg'
                       : 'border-line bg-raised text-muted hover:border-line-strong',
