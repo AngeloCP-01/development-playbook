@@ -74,11 +74,45 @@ test('the readout names the real cost rather than a blank page', () => {
   expect(readout.textContent).not.toMatch(/blank/i)
 })
 
+/**
+ * M2 (final whole-branch review): the previous version of this test only
+ * asserted `[data-children-note]` exists — that the note is rendered at all,
+ * never what it says. The badge inside it
+ * (`data-ships="false"` on `ClientBoundary.tsx:242`) *is* the exception's
+ * whole claim: a Server Component passed as `children` never ships to the
+ * browser, whatever the boundary above it does. A component that mirrored
+ * the shipping state instead of hardcoding the exception — the same failure
+ * class F1 closed for `data-prerendered` elsewhere in this file — would
+ * still make `[data-children-note]` exist, and this test would stay green
+ * while reporting the opposite of the invariant it names.
+ *
+ * Checked in both boundary positions: `form` (where every other node in that
+ * subtree also does not ship, so a mirrored badge would coincidentally read
+ * `false` too) and after the boundary moves to `page` (where every other
+ * node *does* ship — the one state where a naive "mirror the tree" implementation
+ * would diverge from the fixed, always-`false` badge and get caught).
+ */
 test('a Server Component passed as children stays a Server Component', () => {
   const { container } = render(<ClientBoundary />)
   fireEvent.click(node(container, 'form').querySelector('button')!)
   expect(node(container, 'input').getAttribute('data-ships')).toBe('true')
-  expect(container.querySelector('[data-children-note]')).not.toBeNull()
+  const note = container.querySelector('[data-children-note]')
+  expect(note).not.toBeNull()
+  expect(note!.querySelector('[data-ships]')!.getAttribute('data-ships')).toBe(
+    'false',
+  )
+})
+
+test('the children-note badge still reads false once the boundary moves to page, where the rest of the tree ships', () => {
+  const { container } = render(<ClientBoundary />)
+  fireEvent.click(node(container, 'page').querySelector('button')!)
+  for (const id of ['page', 'table', 'row', 'form', 'input']) {
+    expect(node(container, id).getAttribute('data-ships'), id).toBe('true')
+  }
+  const note = container.querySelector('[data-children-note]')!
+  expect(note.querySelector('[data-ships]')!.getAttribute('data-ships')).toBe(
+    'false',
+  )
 })
 
 test('the readout is announced, since it swaps in place', () => {

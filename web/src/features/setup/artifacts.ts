@@ -1,6 +1,4 @@
-import { type Artifact, type ArtifactLine } from '@/components/artifact'
-
-export type { Artifact, ArtifactLine }
+import { type Artifact } from '@/components/artifact'
 
 /**
  * The nineteen config blocks stage 04's panels render, line by line, from

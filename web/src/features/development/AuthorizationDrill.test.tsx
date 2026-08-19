@@ -98,3 +98,40 @@ test('the answer buttons are real radios, not divs with an onclick', () => {
     safeButton(container, 'list-scoped').getAttribute('aria-checked'),
   ).toBe('false')
 })
+
+/**
+ * M1 (final whole-branch review): the previous test above only ever sampled
+ * the unanswered state, where `aria-checked` is `'false'` on every button —
+ * exactly what a component hardcoding `aria-checked={false}` would also
+ * produce. `AuthorizationDrill.tsx` derives it as `done && chose === true` /
+ * `done && chose === false`; a regression to a hardcoded `false` would leave
+ * the chosen radio never announcing its selection to a screen-reader user,
+ * and the suite above would stay green throughout. Asserting after an
+ * answer — on both the button that was chosen and the one that was not — is
+ * what a hardcoded `false` cannot pass.
+ *
+ * Both rows: the derivation branches on `snippet.safe`, so a row where
+ * "safe" is the correct choice and one where "unsafe" is are covered
+ * separately rather than assuming the wiring is identical either way.
+ */
+test('the chosen radio reports checked and the other does not, once answered (safe row)', () => {
+  const { container } = render(<AuthorizationDrill />)
+  fireEvent.click(safeButton(container, 'list-scoped'))
+  expect(
+    safeButton(container, 'list-scoped').getAttribute('aria-checked'),
+  ).toBe('true')
+  expect(
+    unsafeButton(container, 'list-scoped').getAttribute('aria-checked'),
+  ).toBe('false')
+})
+
+test('the chosen radio reports checked and the other does not, once answered (unsafe row)', () => {
+  const { container } = render(<AuthorizationDrill />)
+  fireEvent.click(unsafeButton(container, 'detail-unscoped'))
+  expect(
+    unsafeButton(container, 'detail-unscoped').getAttribute('aria-checked'),
+  ).toBe('true')
+  expect(
+    safeButton(container, 'detail-unscoped').getAttribute('aria-checked'),
+  ).toBe('false')
+})
