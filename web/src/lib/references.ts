@@ -137,6 +137,32 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: 'A per-flag argument for the compiler options this stage turns on without much justification, and for several it leaves out. The clearest short case for `noUncheckedIndexedAccess` being worth its first week of friction.',
     },
   ],
+  '05-development': [
+    {
+      title: 'Server and Client Components',
+      source: 'Next.js Docs',
+      url: 'https://nextjs.org/docs/app/getting-started/server-and-client-components',
+      adds: "The source for a claim this stage makes but does not walk through: a Server Component passed as `children` (or any other prop) to a Client Component is never pulled into that component's client module graph — it renders on the server and arrives as already-rendered output. Also the fuller decision list — state, browser APIs, secrets, bundle size — behind the one example shown here.",
+    },
+    {
+      title: 'How to think about data security in Next.js',
+      source: 'Next.js Docs',
+      url: 'https://nextjs.org/docs/app/guides/data-security',
+      adds: 'The framework’s own reasoning for authenticate-validate-authorize, not just this stage’s restatement of it: a Server Action is reachable by direct POST whether or not anything imports it, secured only by non-deterministic action IDs, which is why re-checking auth inside the action is load-bearing rather than defensive. Covers the IDOR framing by name and the case for returning only what the UI needs, both of which this stage’s `updateInvoice` follows without citing.',
+    },
+    {
+      title: 'Basic usage',
+      source: 'Zod Docs',
+      url: 'https://zod.dev/basics',
+      adds: 'The mechanics behind the one call this stage shows: `.parse` throws a `ZodError`, `.safeParse` returns a discriminated union instead, and `z.infer<>` is how the compiler-side type gets derived from the same schema rather than written twice. Worth reading before reaching for a refinement or a transform, neither of which this stage touches.',
+    },
+    {
+      title: 'Short-Lived Feature Branches',
+      source: 'trunkbaseddevelopment.com',
+      url: 'https://trunkbaseddevelopment.com/short-lived-feature-branches/',
+      adds: 'The origin of the two-day number this stage states as a rule, plus what it implies once a team exists: the branch-length limit holds regardless of team size, but trunk-based development itself stops meaning direct commits somewhere around fifteen people. Also lays out the rebase-vs-stash choice for catching a branch up before merging, which this stage names as “rebase before you open the pull request” without showing the alternative.',
+    },
+  ],
 }
 
 export function getReferences(slug: string): Reference[] {
