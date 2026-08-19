@@ -23,8 +23,12 @@ test('the app ticks exactly the boxes the doc sets', () => {
  * wording — this transform is applied only to the doc side of the comparison
  * below (`DONE`'s labels are already in that stripped form), so "verbatim"
  * still means what it says everywhere else.
+ *
+ * `LINK_PATTERN` is the same pattern, exposed separately so the presence
+ * check below (`.test()`) and the strip (`.replace()`) cannot drift apart.
  */
-const stripLinks = (s: string) => s.replace(/\[(\d+)\]\([^)]*\)/g, '$1')
+const LINK_PATTERN = /\[(\d+)\]\([^)]*\)/
+const stripLinks = (s: string) => s.replace(new RegExp(LINK_PATTERN, 'g'), '$1')
 
 test('each done item is the doc checkbox verbatim, not a paraphrase of it', () => {
   const doc = DOC_DONE.map((b) => flat(stripLinks(b.replace(/^- \[ \] /, ''))))
@@ -65,4 +69,18 @@ test('every stage slug a done item links to is a real stage', async () => {
   for (const d of DONE) {
     if (d.stage) expect(slugs, d.id).toContain(d.stage)
   }
+})
+
+/**
+ * The slug-validity test above is conditional on `d.stage` being set, so it
+ * cannot fail on a *removed* slug — delete `stage` from an item and that test
+ * stays green while the app silently goes back to rendering a dead bare
+ * number. This test closes both directions by comparing against the doc
+ * itself rather than a second hand-maintained list of "the four ids": every
+ * `DONE` item's `stage` must be defined exactly when that item's own doc
+ * checkbox matched `LINK_PATTERN`, no more and no fewer.
+ */
+test('stage is populated exactly where the doc checkbox carried a link, no more and no fewer', () => {
+  const docHasLink = DOC_DONE.map((b) => LINK_PATTERN.test(b))
+  expect(DONE.map((d) => Boolean(d.stage))).toEqual(docHasLink)
 })
