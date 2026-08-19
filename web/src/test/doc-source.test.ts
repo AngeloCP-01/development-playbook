@@ -29,11 +29,20 @@ test('a section is bounded at the next heading of the same level or higher', () 
 })
 
 /**
- * Never `^#{1,…}`: a single hash and a space is a shell comment, and both docs
- * are full of fenced bash blocks that open with one.
+ * Never `^#{1,…}`: a single hash and a space is a shell comment, and both
+ * docs are full of fenced bash blocks that open with one. This has to run
+ * against stage 04 §5, not stage 05 — no fenced line in stage 05's "Keep the
+ * feedback loop running" section opens with a single `#`, so `^#{1,…}` and
+ * `^#{2,…}` produce byte-identical output there and a test reading only that
+ * section cannot tell the fixed bound from the buggy one. Stage 04 §5's
+ * `.env.example` fence does open with one (`# .env.example — copy to
+ * .env.local and fill in the blanks`); a single-hash bound would cut the
+ * section off there, several paragraphs before its actual end.
  */
 test('a fenced shell comment does not end a section', () => {
-  expect(five.section('Keep the feedback loop running')).toContain('pnpm dev')
+  expect(four.section('5. Environment variables, validated at boot')).toContain(
+    'Install the test runner now',
+  )
 })
 
 test('fences returns whole blocks with the markers stripped', () => {

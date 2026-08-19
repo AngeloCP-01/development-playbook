@@ -8,9 +8,9 @@ import { fileURLToPath } from 'node:url'
  * a component would break the build. Living under `src/test/` rather than in a
  * feature folder is part of saying so.
  *
- * Extracted when stage 05 would have been the third copy. Stage 04's own
- * version records why that matters: four implementers working from their own
- * task slices each wrote `section()`, and the copies *diverged* — only the `h2`
+ * Extracted when stage 05 would have been the third copy. Stage 04's first
+ * pass is why that matters: four implementers working from their own task
+ * slices each wrote `section()`, and the copies *diverged* — only the `h2`
  * pair carried the line-anchoring fix, so three modules were still cutting
  * sections with an unbounded `indexOf`, the exact bug the traps module had
  * already found and fixed.
