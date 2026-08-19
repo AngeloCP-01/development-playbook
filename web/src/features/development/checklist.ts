@@ -15,17 +15,29 @@
  *
  * Ids are slugs rather than positions: a persisted worksheet keys progress
  * against them, so reordering the list must not reset a reader's ticks.
+ *
+ * `stage` mirrors `loop.ts`'s `LoopStage.stage`: a slug held separately from
+ * the display text, populated for the four items whose doc checkbox carried
+ * a link. It exists so a later component can render a real link instead of
+ * scraping the bare `(06)` back into a slug, or shipping a dead number where
+ * the doc had a working one. `checklist.test.ts` checks every populated
+ * value against `STAGES`, the same way `loop.test.ts` already does.
  */
 
-export type DoneItem = { id: string; label: string }
+export type DoneItem = { id: string; label: string; stage?: string }
 export type TeamMove = { id: string; title: string; body: string }
 
 export const DONE: DoneItem[] = [
-  { id: 'tests-passing', label: 'Tests written and passing (06)' },
+  {
+    id: 'tests-passing',
+    label: 'Tests written and passing (06)',
+    stage: '06-testing',
+  },
   {
     id: 'typecheck',
     label:
       '`pnpm typecheck` clean — the script from 04, not a bare `tsc --noEmit`, which passes off a stale build and fails on a clean checkout',
+    stage: '04-project-setup',
   },
   {
     id: 'lint-format',
@@ -53,8 +65,16 @@ export const DONE: DoneItem[] = [
     label: 'Branch is under two days old, or the rest is behind a flag',
   },
   { id: 'rebased', label: 'Rebased, so history reads in order' },
-  { id: 'self-reviewed', label: 'Self-reviewed the diff (07)' },
-  { id: 'preview-verified', label: 'Verified on the preview URL (12)' },
+  {
+    id: 'self-reviewed',
+    label: 'Self-reviewed the diff (07)',
+    stage: '07-code-review',
+  },
+  {
+    id: 'preview-verified',
+    label: 'Verified on the preview URL (12)',
+    stage: '12-staging',
+  },
 ]
 
 export const ARTIFACT_ITEMS: string[] = [
