@@ -85,18 +85,30 @@ await db.update(invoices)
   .where(eq(invoices.id, parsed.data.invoiceId))`,
     safe: false,
     verdict:
-      'Unsafe, and the hardest of the six. The check is correct and it still leaves a gap between the check and the write. Putting the owner in the where makes the authorization and the update the same statement, and returning() tells you whether it matched.',
+      'Unsafe, and the hardest of the six to see straight through. The check above is correct at the moment it runs — the real problem is that authorization and the write are two separate statements, and nothing keeps them agreeing with each other. Delete the guard clause, or route a second caller through the same update, and this quietly turns into the action above with no compiler error and no test catching it. There is also a gap between the check and the write, which matters wherever ownership can change mid-request, but that gap is the secondary problem. Folding the owner into the where closes both at once, and returning() tells you whether it actually matched.',
   },
   {
     id: 'button-caller',
-    label: 'A button calling the action directly',
-    code: `<button onClick={() => start(async () => {
-  await updateInvoice({ invoiceId: invoice.id, amount: invoice.amount })
+    label: 'A button, and the action it calls',
+    code: `async function retryInvoice(invoiceId: string, amount: number) {
+  'use server'
+  const user = await requireUser()
+  const parsed = schema.safeParse({ invoiceId, amount })
+  if (!parsed.success) return { ok: false, error: 'Invalid amount' } as const
+
+  // this id came off a row we already rendered for this user, so it must be theirs
+  await db.update(invoices)
+    .set({ amount: parsed.data.amount })
+    .where(eq(invoices.id, parsed.data.invoiceId))
+}
+
+<button onClick={() => start(async () => {
+  await retryInvoice(invoice.id, invoice.amount)
 })}>
   Retry
 </button>`,
     safe: false,
     verdict:
-      'Unsafe to reason about this way. The snippet itself is fine — the question is what it lets you assume. invoice.id is still an id from the client, and the endpoint has no way to know this call came from a button with nothing to type rather than a form with everything to type. Every step still runs.',
+      'Unsafe, and not for the reason the Server Action above is. That one simply omits the owner check; this one talks itself out of adding it. The comment’s assumption — that an id lifted from a row already on screen must belong to whoever clicked — is not something retryInvoice can verify from inside the function. Nothing about being called from a button with nothing to type rather than a form with everything to type tells the endpoint who is asking; any caller who can invoke retryInvoice with a different id gets the same update.',
   },
 ]

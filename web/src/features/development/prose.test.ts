@@ -28,12 +28,13 @@ import { expect, test } from 'vitest'
  * The walk is generic over field names for the same reason. Rather than
  * enumerating `note` today and guessing at `body`/`verdict`/`summary`/`label`
  * for modules not yet written, every string value reachable from an exported
- * object or array is checked. The one field name this test knows is `text`,
- * excluded because it holds lifted code (`artifacts.ts`) rather than authored
- * prose — asserted byte-identical to the doc's fenced blocks elsewhere, and a
+ * object or array is checked. Two field names this test knows are `text` and
+ * `code`, both excluded because they hold code rather than authored prose —
+ * `text` is lifted verbatim from the doc's fenced blocks (`artifacts.ts`),
+ * `code` is the authored-but-not-prose drill snippets (`snippets.ts`) — and a
  * code line can legitimately contain `](` (a destructured array pattern, a
- * call passed a computed member). Everything that is not `text` is prose and
- * is in scope.
+ * call passed a computed member). Everything that is not `text` or `code` is
+ * prose and is in scope.
  */
 const dir = fileURLToPath(new URL('.', import.meta.url))
 
@@ -56,7 +57,7 @@ function walk(
   hits: Hit[],
 ) {
   if (typeof value === 'string') {
-    if (key === 'text') return
+    if (key === 'text' || key === 'code') return
     if (LINK_PATTERN.test(value)) hits.push({ module: moduleName, path, value })
     return
   }
