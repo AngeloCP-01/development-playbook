@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
   a recorded decision actually hold
 
-### Project state (as of 2026-08-18 — **stage 05's doc round is merged to `develop`** as `9ef3763`, `--no-ff`, local only, NOT deployed; W-3 is still 4/18, since the port is a separate round that is next and has not started)
+### Project state (as of 2026-08-19 — **stage 05 is interactive**, built on `feat/stage-05-app-port` and **NOT yet merged** — the user's call; W-3 is **5/18**, thirteen stages remain)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -44,12 +44,13 @@ Before doing anything, read these for context:
   character-for-character.
 - **Web app:** `web/` — Next 16, TypeScript, Tailwind 4, no backend. **Stages 01 through 04 are
   complete, interactive and merged** — stage 04 landed at `bb3c119`, and
-  `feat/stage-04-app-port` no longer exists. **Stage 05's doc is corrected and merged
-  to `develop` (`9ef3763`), but its app port has not started** — `05-development` stays
-  `ready: false` and absent from `STAGE_CONTENT`; the doc merge is what the port now builds
-  against, not a substitute for it. 03 is 22 steps, 04 is 15. Fourteen
-  stages remain, which is all that is left of `W-3` and of the project. See
-  `docs/stage-03-status.md` and `docs/stage-04-status.md` for section-by-section coverage.
+  `feat/stage-04-app-port` no longer exists. **Stage 05 is now interactive too, but on an
+  unmerged branch**: `feat/stage-05-app-port` (content complete at `6cdc2c4`, records commits
+  follow) renders thirteen steps against `docs/05-development.md`, `05-development` is
+  `ready: true` there, and the branch is not yet in `develop`. 03 is 22 steps, 04 is 15, 05 is
+  13. Thirteen stages remain, which is all that is left of `W-3` and of the project. See
+  `docs/stage-03-status.md`, `docs/stage-04-status.md` and `docs/stage-05-status.md` for
+  section-by-section coverage.
 - **There is a second top-level section now: `/reference` (W-6), and it is PAUSED.** Eleven
   cheatsheets registered behind one renderer, ten of them deliberately empty and chipped WIP,
   because an index that advertises its gaps doubles as a worklist (**D-62**). The rail carries
@@ -58,8 +59,8 @@ Before doing anything, read these for context:
   glossary — do not hand-edit it; run `pnpm gen:cheatsheets`. **Eighteen is still eighteen**:
   this is a sibling section, not a nineteenth stage, which was rejected for the third time.
   Source graphics are served from `web/public/reference/` as WebP; the gathered originals are
-  gitignored on purpose (**D-63**). **Do not start W-6 content work** — the stage 05 doc branch
-  is merged; the stage 05 port (W-3.5b) is the next active thing.
+  gitignored on purpose (**D-63**). **Do not start W-6 content work** — `W-3` is the project,
+  and the next `W-3` round (stage 06 onward) has not been chosen yet.
 - **The D-52 reshape is done, and D-52 stands in place of D-38** (superseded, kept struck
   through for the record). `PANEL_EXCEPTIONS` in `web/e2e/audit.spec.ts` is back to its two
   permanent entries, which was the exit condition. **Twenty-two steps was not a target**: every
@@ -124,6 +125,21 @@ Before doing anything, read these for context:
   same commit; `main` is untouched by this round. **D-74**
   records why the doc round merged before the port started rather than after: this project
   already paid the double-port cost once, on stage 03's W-3.1b.
+- **Stage 05 is ported: thirteen steps, built 2026-08-19, NOT yet merged.** Sixteen tasks in
+  four waves against `docs/superpowers/plans/2026-08-19-stage-05-app-port.md`. **Both
+  provisional splits in `steps.ts` survived measurement unchanged** — `drill` did not merge
+  into `reads` (combined 6.24 against the round's 3.2 target) and `boundaries` did not merge
+  into `action` (measured 3.16, no room left) — the second seam in this repo to survive
+  intact; stage 04's four were the first, stage 03 re-cut five of six. **A read-only coverage
+  walk (Task 14), blind to this branch's plan and reports, found ten sections a green gate and
+  eleven clean per-task reviews had missed** — nine closed in a fix wave, the tenth (the doc's
+  front-matter framing, N9) deferred as a cross-stage question rather than a stage-05 defect
+  (**D-80**). Six new decisions, **D-75**…**D-80**. Tests **529/64 → 645/80**, audit **17/17**
+  over **76 derived URLs**, all thirteen panels under the 4.0 ceiling (median 2.42, max 3.82).
+  Coverage map: `docs/stage-05-status.md`. Full evidence: the **2026-08-19 W-3.5b (port)** row
+  in `docs/tracker.md`. **`feat/stage-05-app-port` is NOT merged, NOT pushed** — 30 branch
+  commits `4bf5edb`…`aab9584` plus records commits; ask before merging, same as every branch
+  in this project.
 - **The whole-branch review caught what eleven per-task reviews could not, including its own
   earlier fix.** Four blocking findings: a stale `getInvoice` readback in `docs/06-testing.md`
   that a per-task fix left inconsistent, a form input with no accessible name, the records below
@@ -137,12 +153,13 @@ Before doing anything, read these for context:
   grounds. Its low-confidence `tsc` guess was promoted to confirmed on evidence it could not
   see. **Do not transcribe a subagent's reasoning because its conclusion is right** — and
   the caution applies to a controller's own directed fix as much as to an agent's.
-- **Stages 05–18** render a "sheet not drawn" placeholder. Routing works for all 18.
+- **Stages 06–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **527 vitest tests across 64 files** in two projects — `unit`
+  eslint at `--max-warnings 0`, **645 vitest tests across 80 files** in two projects — `unit`
   (node, data invariants) and `dom` (jsdom, render tests, `*.test.tsx`) — a **17-test playwright
-  audit suite over 63 derived URLs** (51 stage, 12 reference), lefthook hooks, and CI. Branch
-  protection is on; the repo is public (D-26). Re-derive these rather than quoting them.
+  audit suite over 76 derived URLs** (64 stage — stage 05's thirteen steps now counted in —
+  12 reference), lefthook hooks, and CI. Branch protection is on; the repo is public (D-26).
+  Re-derive these rather than quoting them.
 - **The audit sweeps the ready set automatically** (**TD-12 closed 2026-08-14**).
   `e2e/audit-pages.ts` takes stages from `STAGES.filter(s => s.ready)` and step ids from the
   rail each renders, so a new stage or step is swept without editing a list. A ready stage
@@ -172,15 +189,13 @@ Before doing anything, read these for context:
   including into `develop`. **The user handles pushes.**
   **Cut the next branch from `develop`, never from `main`.** `develop` carries every round
   since stage 03 — the stage 04 doc correction, `RevealList`, TD-12, the two W-6
-  reference-hub merges, the stage 04 port, its two debt branches, and now the **stage 05 doc
+  reference-hub merges, the stage 04 port, its two debt branches, and the **stage 05 doc
   correction** — so a branch cut from `main` builds against a tree many rounds behind.
-  **No branch is in flight.** `fix/stage-05-doc-corrections` merged to `develop` as
-  **`9ef3763`**, `--no-ff`, 2026-08-18 — 29 branch commits plus the merge (30 on `develop`
-  since `07c7045`), full gate green pre-merge, whole-branch review clean after four blocking
-  fixes, then re-gated on `develop` after the merge (same four commands, all exit 0). The
-  branch is **deleted**, per convention. `docs/05-development.md` is corrected on `develop`;
-  the port is a separate round (**W-3.5b**), it has not started, and it is the next branch to
-  cut.
+  **One branch is in flight: `feat/stage-05-app-port`**, cut from `develop` at the stage 05
+  doc round's merge (`9ef3763`). Content complete at `6cdc2c4`, with records commits (this
+  file among them) following. **NOT merged, NOT pushed** — it still needs the whole-branch
+  review and the user's merge decision, the same two steps every prior branch in this project
+  has gone through before landing on `develop`.
 
   **Derive every position rather than reading one here.** Every version of this paragraph
   has gone stale, and the local `origin/*` refs are only as fresh as the last fetch:
@@ -200,74 +215,33 @@ Before doing anything, read these for context:
   Two merged branches still sit on the remote and can be deleted:
   `origin/feat/stage-03-app-port` and `origin/feat/stage-03-standard-practices`.
 
-### Next round's scope: port stage 05 into the app
+### Next round's scope: not yet chosen
 
-**The doc round (W-3.5) is done and merged. The next round is W-3.5b, the port, and it has
-not begun.** `fix/stage-05-doc-corrections` merged to `develop` as `9ef3763`, `--no-ff`,
-2026-08-18, branch deleted, gate re-run green on the merged result. **No merge decision is
-outstanding** — build the port against `docs/05-development.md` as it now stands on `develop`.
+**Stage 05's port is built (this session), not merged. The next round after that lands is
+undecided.** Two things have to happen before a new `W-3` round starts:
 
-Read these before starting the port:
+1. **`feat/stage-05-app-port` needs its whole-branch review and the user's merge decision.**
+   Every per-task review on this branch is clean or clean-after-fix, and the coverage walk's
+   fix wave is closed, but the plan's own Task 16 calls for one more read-only pass over the
+   whole branch before it merges — the doc round's own whole-branch review is what caught a
+   false claim eleven clean per-task reviews had missed, on this exact branch's sibling round.
+   Don't skip it because the per-task reviews were clean; that is exactly the state the doc
+   round's review was run against too.
+2. **Then, which stage is next** — 06 (Testing) is the next number, but stage numbers are
+   filing codes, not a sequence (`CLAUDE.md`), so this is the user's call to make explicitly,
+   the way stage 04 was chosen over stage 15 on checkability rather than on order
+   (`docs/tracker.md`'s "Next up"). Read `docs/task.md`'s `W-3` section and `docs/tracker.md`'s
+   most recent rows before assuming the next number is the next stage.
 
-1. `docs/05-development.md` itself — **587 lines, six `##`, twelve `###`.** Read it as the
-   port's source of truth, not as a cold reader; that pass has run twice and its findings are
-   closed (`docs/verification/cold-reader-stage-05-run2.md`).
-2. `docs/tracker.md`'s **2026-08-18 W-3.5 (doc round, correction)** row — what the twelve
-   tasks, the fix wave and the whole-branch review each caught, and what is still deferred.
-3. `CLAUDE.md`'s "Making a stage interactive" — the three-file trace (`web/src/lib/stages.ts`
-   → `web/src/features/<stage>/` → `web/src/features/stage-content.ts`), read from the source
-   rather than from a summary.
-4. `web/PATTERNS.md` — **must be read before building the stage.** It catalogues which
-   interaction pattern fits which content; the default is something the reader clicks, not a
-   paragraph, and a stage that is only prose blocks is the anti-pattern this repo names.
-5. `docs/learnings/stage-implementation-101.md` — the layout traps, the verification
-   checklist, and the coverage walk added after stage 04's port.
-6. `docs/stage-04-status.md` — what a finished coverage map looks like, as a model for stage 05's.
+**What a stage-05-shaped round costs, for calibration:** the doc round was 29 commits, three
+verification instruments, twelve tasks plus a fix wave, one whole-branch review. The port was
+**30 commits**, sixteen tasks in four waves, thirteen per-task reviews (four needing a second
+scoped re-review), one coverage walk, one verification pass — smaller than stage 04's port
+(23 commits was the *merge*, not the branch total) mainly because the doc is a third the
+length. Expect a similarly-shaped round for whichever stage is chosen next, and expect its
+review to find something, because it has every time so far.
 
-**What the port is working from.** The doc gained three sections this round —
-`### Authorize reads, not just writes`, `### Loading and error states`, `### AI in
-development` — and corrected several others (`'use client'`'s framing, the check-then-act
-authorization example, the throw-vs-return contradiction). It is roughly a third of stage 04's
-711 lines, so expect a seam well under fifteen steps; let the measurement say how much
-smaller, the way D-65 did for stage 04. **D-35 already applies**: an "AI plays" section is
-mandatory per stage, and `### AI in development` already exists in the doc, so the port
-inherits it rather than inventing it.
-
-**Two things carried from the doc round, worth knowing before the port starts:**
-
-- **`getInvoice` has two defensible, different-looking shapes across documents** —
-  `docs/05-development.md` takes the owner as a parameter, `docs/08-security-audit.md`
-  derives it from the session internally — deliberately not harmonised (out of scope for a
-  stage 05 branch to rewrite stage 08). The port only needs stage 05's shape.
-- **A whole-branch review found a false claim introduced by an earlier per-task review's own
-  fix** (`reset` wrongly said to be `undefined`; it exists and does a narrower job than
-  `unstable_retry`). The lesson for the port: verify a framework claim yourself before
-  transcribing it into a component, even one this doc round already "corrected" once.
-
-**Thirteen minors were deferred out of the whole-branch review rather than fixed** — full
-catalogue in `.superpowers/sdd/2026-08-18-stage-05-doc-corrections/final-branch-review.md`,
-"Minor" and "Triage of the thirteen deferred minors". The two or three most likely to matter
-to the port:
-
-- **M9 — `<div aria-busy="true" aria-label="…">` in the `loading.tsx` block has no exposed
-  accessible name** on a role-less `<div>`; the port's actual loading component should not
-  inherit this. `role="status"` on the wrapper, or visible text, fixes it.
-- **M3 — the doc's two route examples (`/invoices` and `/billing`) are now character-identical
-  bodies**, but only `/billing` is downstream-consistent (`revalidatePath`, `loading.tsx`,
-  `error.tsx`, `[id]/page.tsx`); the port needs to pick one route shape rather than port both
-  literally and leave `/invoices` orphaned.
-- **`InvoiceDetail` is imported in one code block and never defined anywhere in the doc** —
-  the review's call was "leave it, but say so", not "produce it"; the port should not treat
-  the missing component as something it owes the reader.
-
-**One defect from this round's method, found in a document this round did not touch, worth
-recording explicitly because it will bite:** `docs/06-testing.md`'s `### Integration tests`
-uses `getInvoice` and `asUser` in its example block without importing either — the same
-"excerpt with its imports and callers removed" defect class this round closed nineteen times
-in stage 05, still alive in stage 06. Not this round's branch to fix; worth a future doc-round
-finding rather than an assumption that stage 06 is clean.
-
-### Three things stage 04 learned that will save this round time
+### Three things stage 04 learned that will save the next round time
 
 **Walk the doc against the app, section by section, before believing a port is complete.**
 This was the single most valuable check of that round and nothing in the gate can replace
@@ -295,31 +269,35 @@ zero looked conclusive and was indistinguishable from a mechanism that always an
 "not focusable" — it needed the widths where the answer should *not* be zero.
 `docs/learnings/quality-gates-101.md` has both.
 
-**Read these first, in this order:**
+**Read these first, whichever stage comes next:**
 
-1. `docs/05-development.md` — the corrected doc, 587 lines, six `##`, twelve `###`.
-   **Do not read it as a cold reader** — that pass has run twice over and its findings are
-   in `docs/verification/`. Read it as the port's source of truth, section by section.
+1. The stage's own doc, `docs/NN-*.md`, as the port's source of truth — not as a cold
+   reader if that pass has already run and closed against it.
 2. `docs/learnings/stage-implementation-101.md` — the layout traps, the verification
-   checklist, and the coverage walk added after stage 04.
+   checklist, and the coverage-walk method, now proven twice (stage 04 found five gaps,
+   stage 05 found ten against a fully green gate and clean per-task reviews both times).
 3. `web/PATTERNS.md` — the interaction patterns and the render-test rule from TD-17, plus
-   `InlineCode`, `RevealList` and `AnnotatedArtifact`. Read before building any stage.
-4. `docs/tracker.md`, the **2026-08-17 W-3.4** row and **D-64**…**D-67** — how the last
-   stage was measured and what it deliberately did not do.
-5. `docs/stage-04-status.md` — what a finished coverage map looks like, and the shape to
-   produce for 05.
-6. `docs/superpowers/{specs,plans}/2026-08-1*-stage-04-*` — the freshest house example of a
-   spec and plan, **read as an example rather than as instructions**.
+   `InlineCode`, `RevealList`, `AnnotatedArtifact` (now in `src/components/`, D-75) and the
+   guess-then-reveal pattern (`QuestionLab`, `AuthorizationDrill`). Read before building any
+   stage.
+4. `docs/tracker.md`'s most recent `W-3` rows and the decisions they cite — how the last
+   two stages were measured and what each deliberately did not do.
+5. `docs/stage-05-status.md` — the freshest finished coverage map, and the shape to
+   produce for whichever stage is next.
+6. `docs/superpowers/{specs,plans}/2026-08-19-stage-05-app-port*` — the freshest house
+   example of a spec and plan, **read as an example rather than as instructions**.
 
 **`docs/learnings/deploying-101.md` is no longer the raw material** — §8 has absorbed it, and
 the round found one entry over-claiming it as a source for material it does not contain. Read
 it for the incident, not as a specification.
 
-**What the doc phase cost, as calibration for the port:** 28 commits (this file's own
-commit not among them), three verification instruments (two runs each), twelve tasks
-plus a five-item fix wave, and a whole-branch review that returned four blocking
-findings after every task had already been reviewed clean. The doc is a third of stage 03's length. Expect the port to be smaller than stage
-03's 106 commits, and expect the review to find something, because it has every time.
+**What stage 05's port confirmed, on top of what stage 04 already taught:** a data-module
+guard against markdown link syntax in authored prose (**D-76**) closes a defect class before
+it repeats a second time; a scored exercise's answer key is fixed in its data when a verdict
+is wrong, not by softening the question around it (**D-77**); and a coverage walk run *blind
+to the branch's own plan and reports* keeps finding real gaps a green gate and clean per-task
+reviews cannot see — ten this time, nine worth fixing. Budget the fix wave into the plan
+rather than treating it as a surprise; both rounds needed one.
 
 **The method that keeps paying, stated as a method rather than a war story.** A recorded piece
 of evidence turning out to be **a check that could not fail** is now this repo's most common
