@@ -137,9 +137,10 @@ Before doing anything, read these for context:
   (**D-80**). Six new decisions, **D-75**…**D-80**. Tests **529/64 → 645/80**, audit **17/17**
   over **76 derived URLs**, all thirteen panels under the 4.0 ceiling (median 2.42, max 3.82).
   Coverage map: `docs/stage-05-status.md`. Full evidence: the **2026-08-19 W-3.5b (port)** row
-  in `docs/tracker.md`. **`feat/stage-05-app-port` is NOT merged, NOT pushed** — 30 branch
-  commits `4bf5edb`…`aab9584` plus records commits; ask before merging, same as every branch
-  in this project.
+  in `docs/tracker.md`. **Merged to `develop` 2026-08-20 as `425381b`, `--no-ff`, branch
+  deleted** — 36 branch commits `4bf5edb`…`af1c8d0` plus the merge. Final tests **648/80**,
+  not the 645/80 above, which predates the last fix wave. The merged result was gated
+  first-hand on `develop`. **`develop` is not pushed; `main` is untouched at `8d5045c`.**
 - **The whole-branch review caught what eleven per-task reviews could not, including its own
   earlier fix.** Four blocking findings: a stale `getInvoice` readback in `docs/06-testing.md`
   that a per-task fix left inconsistent, a form input with no accessible name, the records below
@@ -191,11 +192,9 @@ Before doing anything, read these for context:
   since stage 03 — the stage 04 doc correction, `RevealList`, TD-12, the two W-6
   reference-hub merges, the stage 04 port, its two debt branches, and the **stage 05 doc
   correction** — so a branch cut from `main` builds against a tree many rounds behind.
-  **One branch is in flight: `feat/stage-05-app-port`**, cut from `develop` at the stage 05
-  doc round's merge (`9ef3763`). Content complete at `6cdc2c4`, with records commits (this
-  file among them) following. **NOT merged, NOT pushed** — it still needs the whole-branch
-  review and the user's merge decision, the same two steps every prior branch in this project
-  has gone through before landing on `develop`.
+  and the **stage 05 port** — so a branch cut from `main` builds against a tree many rounds
+  behind. **No branch is in flight.** `feat/stage-05-app-port` merged as `425381b` and was
+  deleted; `develop` is 239 commits ahead of `main` and unpushed.
 
   **Derive every position rather than reading one here.** Every version of this paragraph
   has gone stale, and the local `origin/*` refs are only as fresh as the last fetch:
@@ -217,17 +216,11 @@ Before doing anything, read these for context:
 
 ### Next round's scope: not yet chosen
 
-**Stage 05's port is built (this session), not merged. The next round after that lands is
-undecided.** Two things have to happen before a new `W-3` round starts:
+**Stage 05 is done and merged. The next round is undecided** — the first genuinely open
+choice since stage 03, because nothing is now in flight and no branch is waiting on a
+decision:
 
-1. **`feat/stage-05-app-port` needs its whole-branch review and the user's merge decision.**
-   Every per-task review on this branch is clean or clean-after-fix, and the coverage walk's
-   fix wave is closed, but the plan's own Task 16 calls for one more read-only pass over the
-   whole branch before it merges — the doc round's own whole-branch review is what caught a
-   false claim eleven clean per-task reviews had missed, on this exact branch's sibling round.
-   Don't skip it because the per-task reviews were clean; that is exactly the state the doc
-   round's review was run against too.
-2. **Then, which stage is next** — 06 (Testing) is the next number, but stage numbers are
+1. **Which stage is next** — 06 (Testing) is the next number, but stage numbers are
    filing codes, not a sequence (`CLAUDE.md`), so this is the user's call to make explicitly,
    the way stage 04 was chosen over stage 15 on checkability rather than on order
    (`docs/tracker.md`'s "Next up"). Read `docs/task.md`'s `W-3` section and `docs/tracker.md`'s
@@ -235,7 +228,7 @@ undecided.** Two things have to happen before a new `W-3` round starts:
 
 **What a stage-05-shaped round costs, for calibration:** the doc round was 29 commits, three
 verification instruments, twelve tasks plus a fix wave, one whole-branch review. The port was
-**30 commits**, sixteen tasks in four waves, thirteen per-task reviews (four needing a second
+**36 commits**, sixteen tasks in four waves, thirteen per-task reviews (four needing a second
 scoped re-review), one coverage walk, one verification pass — smaller than stage 04's port
 (23 commits was the *merge*, not the branch total) mainly because the doc is a third the
 length. Expect a similarly-shaped round for whichever stage is chosen next, and expect its
