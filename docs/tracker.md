@@ -1442,6 +1442,14 @@ the strongest evidence the check is not decorative. Teeth-checked three ways: re
 trips its retire assertion; and removing the key again with the pin in place, which
 surfaced three pages the pin does not cover.
 
+**One unexplained failure, recorded rather than rounded off.** `pnpm test:dev-console`
+failed once during final verification, immediately after `pnpm test:e2e`, and the batch
+discarded its output. It then passed three times in isolation and once more in that exact
+back-to-back sequence, so it is not reproducible and the cause is unknown. Kept here
+because a 1-in-9 failure nobody wrote down is how a command earns a reputation for being
+flaky without anyone ever having a log. It is outside the gate (**D-84**), so the cost of a
+bad run is a re-run rather than a blocked merge.
+
 One defect in the spec was mine and is worth keeping. A single console listener writing
 against a mutable "current path" **mislabelled the warning as
 `/stages/04-project-setup#scaffold`** — the page *after* the one that emitted it, because
