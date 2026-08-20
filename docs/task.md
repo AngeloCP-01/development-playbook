@@ -736,8 +736,14 @@ copy-to-clipboard on code rows, which waits for the first sheet that has any.
 
 ## Backlog — not scheduled
 
-- Single source of truth for stage metadata (**TD-2**)
-- Single source of truth for the glossary (**TD-3**)
+- ~~Single source of truth for stage metadata (**TD-2**)~~ ✓ closed 2026-07-27 by **D-36**,
+  and narrowed rather than delivered: only the *title* was genuine duplication, and it is
+  synced by `stage-metadata.test.ts`. `blurb` and `timing` are purpose-built UI strings that
+  diverge from the doc for 15 of 18 stages **by design**. Left listed here as an open want,
+  this line read as unfinished work — and in 2026-08 it contributed to a proposal to sync
+  both fields verbatim, which would have reversed D-36 using D-36's own evidence (**D-81**).
+- ~~Single source of truth for the glossary (**TD-3**)~~ ✓ closed 2026-07-27 by **D-36**:
+  `terms.ts` is the source and `reference/glossary.md` is generated from it by snapshot
 - Search across stages
 - A cadence view: the 18 stages plotted by real frequency rather than by number.
   That is the playbook's central claim and it is still only stated in prose.
