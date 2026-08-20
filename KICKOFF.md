@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
   a recorded decision actually hold
 
-### Project state (as of 2026-08-19 — **stage 05 is interactive**, built on `feat/stage-05-app-port` and **NOT yet merged** — the user's call; W-3 is **5/18**, thirteen stages remain)
+### Project state (as of 2026-08-20 — **stage 05 is interactive and merged** to `develop` as `425381b`; W-3 is **5/18**, thirteen stages remain. Nothing in flight, no branch awaiting a decision)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -205,26 +205,85 @@ Before doing anything, read these for context:
   git rev-list --count origin/develop..develop
   ```
 
-  Two things known to be true at the end of 2026-08-18 and worth checking rather than
-  trusting: `develop` and `origin/develop` were level at `24c412e` — the doc round is
-  pushed — and **local `main` at `8d5045c` was behind `origin/main` at `5d76b8a`**,
-  so something reached the remote `main` that this local repository has not seen.
-  Reconcile that before any promotion.
+  **Measured 2026-08-20, and three of these contradict what earlier versions of this file
+  said. Re-derive them; do not trust this paragraph either.**
+
+  - `develop` **is pushed**. `origin/develop` and `develop` are level at `76254fe`, and
+    `git reflog show origin/develop` records "update by push" for the last several
+    positions. Sessions have repeatedly reported `develop` as unpushed because they did
+    not push it themselves — the user does, and a session that only tracks its own
+    actions will get this wrong every time.
+  - **Production is `origin/main` at `5d76b8a`**, whose subject is
+    `Merge pull request #1 from AngeloCP-01/develop` — a `develop` → `main` promotion
+    merged on GitHub, not locally. So the promotion flow has already run once through the
+    forge rather than through this repository.
+  - **Local `main` at `8d5045c` is 168 commits behind `origin/main`** and is not a useful
+    reference for anything. A session saying "`main` is untouched at `8d5045c`" is
+    describing a stale local ref, not production. `git fetch` first, then reason about
+    `origin/main`.
+  - `develop` is **79 ahead of `origin/main`** and `origin/main` is 1 ahead of `develop`
+    (its own PR merge commit, which never existed locally). The next promotion is
+    therefore another PR, not a fast-forward.
 
   Two merged branches still sit on the remote and can be deleted:
   `origin/feat/stage-03-app-port` and `origin/feat/stage-03-standard-practices`.
 
-### Next round's scope: not yet chosen
+- **A small debt round landed after the stage 05 port** (`76254fe`): **TD-42** closed —
+  `pins.test.ts` was the last file in stage 04 reading its doc by hand — and **D-80
+  superseded by D-81**. D-80 claimed no stage's app carries its doc's front-matter
+  blockquote; three do, verbatim, and **D-36 had already settled the question in July on
+  the identical 15-of-18 evidence**. An approved design to reverse it was under way when
+  D-36 surfaced. The net production change was one comment: `stage-metadata.test.ts` now
+  cites D-36 by number, because reasoning without its decision number reads as an
+  unexamined habit, and a habit is something a later reader will helpfully fix.
 
-**Stage 05 is done and merged. The next round is undecided** — the first genuinely open
-choice since stage 03, because nothing is now in flight and no branch is waiting on a
-decision:
+### Next round's scope: chosen — a short debt round, then a stage
 
-1. **Which stage is next** — 06 (Testing) is the next number, but stage numbers are
-   filing codes, not a sequence (`CLAUDE.md`), so this is the user's call to make explicitly,
-   the way stage 04 was chosen over stage 15 on checkability rather than on order
-   (`docs/tracker.md`'s "Next up"). Read `docs/task.md`'s `W-3` section and `docs/tracker.md`'s
-   most recent rows before assuming the next number is the next stage.
+**Do the debt round first. It is decided, not a suggestion.** Three High-severity debts share
+one shape — *a check that reports success without evaluating the thing* — and this is the
+cheapest they will ever be to fix, because the round that just ended spent itself on exactly
+that failure and wrote the diagnosis down while it was fresh.
+
+| Debt | `docs/tracker.md` | What is wrong |
+|---|---|---|
+| **TD-32** | line ~1320 | Stage 04's §5 hands the **reader** a check that cannot fail |
+| **TD-26** | line ~511 | The audit suite is green about surfaces it never evaluates |
+| **TD-35** | line ~1362 | The audit's console check cannot see a dev-only warning |
+| **TD-27** | line ~468 | The second `pnpm test:e2e` of a session measures a stale build |
+
+**Start with TD-32**, because it is the only one of the four that is a defect in the
+*product* rather than the tooling: the doc teaches a reader to run a check that cannot fail.
+In a project whose docs are the deliverable, that outranks a blind spot in our own suite.
+
+**TD-27 pays for itself immediately** — it bit the stage 05 round mid-flight, where an
+implementer hit `ERR_CONNECTION_REFUSED` from a stale server and correctly called it
+infrastructure rather than a regression. Every future stage round leans on `test:e2e`.
+
+**Read these two before starting, in this order.** They are the round's own output and they
+are about this exact class:
+
+- `docs/learnings/quality-gates-101.md`, the section *"Seven tests that could not fail, in
+  one round"*. It names the cause the vacuous-test patterns share: **the assertion samples
+  the state in which the property cannot be violated.** Four of those seven were written into
+  a plan before any implementer saw them.
+- `docs/learnings/decisions-need-tests-101.md`, the section on a decision whose number is not
+  written next to the code. That one nearly caused a correct decision to be reversed.
+
+**Two statuses in `docs/task.md` look stale and neither has been verified.** Check before
+trusting either:
+
+1. **W-6 (Reference hub) is `PAUSED` with "resume after the stage 04 port"** and says "next
+   active work is the stage 04 port, not this." That port merged 2026-08-17 and stage 05's
+   has since. The pause condition has expired twice over. Its own note says resuming needs no
+   re-decision — pick a sheet from `reference/cheatsheet-sources.md` and fill its `sections`.
+2. **W-3.1b is marked "app port pending W-3.2"**, but W-3.2 is ☑, merged 2026-08-03 with 106
+   commits. Either its content shipped inside that port and the status is stale, or it did
+   not. Nobody has checked. Do not report it either way without looking.
+
+**Then, and only then, which stage is next** — 06 (Testing) is the next number, but stage
+numbers are filing codes, not a sequence (`CLAUDE.md`), so it is the user's call to make
+explicitly, the way stage 04 was chosen over stage 15 on checkability rather than on order.
+Read `docs/task.md`'s `W-3` section and `docs/tracker.md`'s most recent rows first.
 
 **What a stage-05-shaped round costs, for calibration:** the doc round was 29 commits, three
 verification instruments, twelve tasks plus a fix wave, one whole-branch review. The port was
