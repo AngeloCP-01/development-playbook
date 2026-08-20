@@ -234,8 +234,23 @@ for (const scheme of ['light', 'dark'] as const) {
               })
             }
             for (const el of document.querySelectorAll('*')) {
-              const t = el.textContent?.trim()
-              if (!t || t.length < 3 || el.children.length) continue
+              // Own text, not descendant text. The old guard skipped any
+              // element with element children, so a colour set on a container
+              // was only ever measured through its leaves, and a
+              // container-level failure with correctly-coloured children was
+              // invisible (TD-26).
+              //
+              // "Measure containers too" would be wrong in the other
+              // direction: a container whose children all override its colour
+              // shows that colour to nobody, and flagging it would invent a
+              // failure. What matters is whether the element renders text of
+              // its own.
+              const t = [...el.childNodes]
+                .filter((n) => n.nodeType === 3)
+                .map((n) => n.textContent ?? '')
+                .join('')
+                .trim()
+              if (t.length < 3) continue
               const cs = getComputedStyle(el)
               if (
                 cs.visibility === 'hidden' ||
