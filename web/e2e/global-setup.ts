@@ -39,11 +39,17 @@ export default async function globalSetup(config: FullConfig) {
     html,
     buildId,
     buildIdMtimeMs,
+    // App source only. `e2e/` and `playwright.config.ts` were in this list
+    // until the check fired on an edit to `audit.spec.ts` — a false positive,
+    // because a spec runs from source and does not need a rebuild to be
+    // current. A gate that cries wolf is a gate people learn to re-run past,
+    // which is how it would end up as decoration.
     roots: [
       join(webRoot, 'src'),
-      join(webRoot, 'e2e'),
-      join(webRoot, 'playwright.config.ts'),
+      join(webRoot, 'public'),
       join(webRoot, 'next.config.ts'),
+      join(webRoot, 'postcss.config.mjs'),
+      join(webRoot, 'tsconfig.json'),
       join(webRoot, 'package.json'),
     ],
   })
