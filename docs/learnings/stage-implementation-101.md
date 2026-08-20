@@ -265,3 +265,12 @@ reader who pasted it would ship a Retry button that silently does nothing on fai
 So: when you dispatch the walk, forbid the planning documents by name. And expect a fix wave
 after it, not a signature — nine of the ten were real, and the wave itself then dropped a
 sentence, which is the section above.
+
+**The tenth is worth its own warning.** It was recorded as a deferred cross-stage question,
+on the strength of one check: the auditor said two sentences were missing, the controller
+looked at one other stage, found the same silence, and generalised it into a convention. All
+three claims in that deferral were wrong. Three stages carry the content verbatim, and the
+question had already been decided months earlier by a numbered decision that had measured
+the identical evidence and reached the opposite conclusion. See `decisions-need-tests-101.md`
+— the decision was findable, and what made it invisible was that the code enforcing it
+explained its reasoning without citing its number.
