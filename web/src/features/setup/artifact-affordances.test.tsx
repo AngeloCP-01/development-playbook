@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, expect, test, vi } from 'vitest'
-import { AnnotatedArtifact } from './AnnotatedArtifact'
+import { AnnotatedArtifact } from '@/components/AnnotatedArtifact'
 import { ARTIFACTS } from './artifacts'
 
 /**

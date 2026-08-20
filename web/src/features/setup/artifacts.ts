@@ -1,17 +1,4 @@
-export type ArtifactLine = {
-  text: string
-  /** Present only on lines that are a decision. Boilerplate carries no note. */
-  note?: string
-  /** The line the step's judgment turns on. At most one per artifact. */
-  pivot?: boolean
-}
-
-export type Artifact = {
-  id: string
-  filename: string
-  language: 'json' | 'jsonc' | 'yaml' | 'ts' | 'bash'
-  lines: ArtifactLine[]
-}
+import { type Artifact } from '@/components/artifact'
 
 /**
  * The nineteen config blocks stage 04's panels render, line by line, from

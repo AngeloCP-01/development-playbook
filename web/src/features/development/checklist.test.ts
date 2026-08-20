@@ -1,0 +1,113 @@
+import { expect, test } from 'vitest'
+import { DONE, ARTIFACT_ITEMS, TEAM_MOVES } from './checklist'
+import { flat, h2 } from './doc-source'
+
+const DOC_DONE =
+  h2('Definition of done').match(/^- \[ \] .+(\n {6}.+)*/gm) ?? []
+
+test('the doc still lists eleven checkboxes under Definition of done', () => {
+  expect(DOC_DONE).toHaveLength(11)
+})
+
+test('the app ticks exactly the boxes the doc sets', () => {
+  expect(DONE).toHaveLength(DOC_DONE.length)
+})
+
+/**
+ * Four of the eleven boxes carry a markdown link to another stage —
+ * `([06](06-testing.md))` and the like. `checklist.ts`'s `label` values keep
+ * everything about those boxes verbatim except that syntax, which this
+ * directory's `prose.test.ts` forbids in any authored string (`InlineCode`
+ * does not render it, so a surviving link would reach the reader as literal
+ * brackets). Stripping `[06](06-testing.md)` down to `06` removes markup, not
+ * wording — this transform is applied only to the doc side of the comparison
+ * below (`DONE`'s labels are already in that stripped form), so "verbatim"
+ * still means what it says everywhere else.
+ *
+ * `LINK_PATTERN` is the same pattern, exposed separately so the presence
+ * check below (`.test()`) and the strip (`.replace()`) cannot drift apart.
+ */
+const LINK_PATTERN = /\[(\d+)\]\([^)]*\)/
+const stripLinks = (s: string) => s.replace(new RegExp(LINK_PATTERN, 'g'), '$1')
+
+test('each done item is the doc checkbox verbatim, not a paraphrase of it', () => {
+  const doc = DOC_DONE.map((b) => flat(stripLinks(b.replace(/^- \[ \] /, ''))))
+  expect(DONE.map((d) => flat(d.label))).toEqual(doc)
+})
+
+test('the typecheck item keeps the reason the bare tsc form is wrong (D-25)', () => {
+  const item = DONE.find((d) => d.id === 'typecheck')
+  expect(flat(item!.label)).toContain('not a bare')
+  expect(flat(item!.label)).toContain('stale build')
+})
+
+test('ids are slugs, not positions, because progress persists against them', () => {
+  for (const d of DONE) expect(d.id, d.id).toMatch(/^[a-z0-9-]+$/)
+  expect(new Set(DONE.map((d) => d.id)).size).toBe(DONE.length)
+})
+
+test('the four artifacts and four team moves are carried', () => {
+  expect(ARTIFACT_ITEMS).toHaveLength(4)
+  expect(TEAM_MOVES).toHaveLength(4)
+})
+
+test('every team move explains the cost of not doing it', () => {
+  for (const m of TEAM_MOVES) {
+    expect(m.body.trim().length, m.id).toBeGreaterThan(50)
+  }
+})
+
+/**
+ * The four boxes whose link `stripLinks` reduced to a bare number carry the
+ * slug separately in `stage`, mirroring `LoopStage.stage` in `loop.ts`. Same
+ * check as `loop.test.ts`'s: a typo'd slug fails here rather than rendering a
+ * dead link later.
+ */
+test('every stage slug a done item links to is a real stage', async () => {
+  const { STAGES } = await import('@/lib/stages')
+  const slugs = new Set(STAGES.map((s) => s.slug))
+  for (const d of DONE) {
+    if (d.stage) expect(slugs, d.id).toContain(d.stage)
+  }
+})
+
+/**
+ * The slug-validity test above is conditional on `d.stage` being set, so it
+ * cannot fail on a *removed* slug — delete `stage` from an item and that test
+ * stays green while the app silently goes back to rendering a dead bare
+ * number. This test closes both directions by comparing against the doc
+ * itself rather than a second hand-maintained list of "the four ids": every
+ * `DONE` item's `stage` must be defined exactly when that item's own doc
+ * checkbox matched `LINK_PATTERN`, no more and no fewer.
+ */
+test('stage is populated exactly where the doc checkbox carried a link, no more and no fewer', () => {
+  const docHasLink = DOC_DONE.map((b) => LINK_PATTERN.test(b))
+  expect(DONE.map((d) => Boolean(d.stage))).toEqual(docHasLink)
+})
+
+/**
+ * N5 (coverage-walk.md): doc 526 opens the list "before you open the pull
+ * request"; doc 540 breaks it with "Then open it, and after the preview
+ * builds:" ahead of the eleventh box. `phase` carries that split the same
+ * way `stage` already carries the doc's link — structure beside the label,
+ * not folded into it.
+ */
+test('exactly ten boxes belong before the PR and one after the preview, matching the doc split', () => {
+  expect(DONE.filter((d) => d.phase === 'before-pr')).toHaveLength(10)
+  expect(DONE.filter((d) => d.phase === 'after-preview')).toHaveLength(1)
+})
+
+test('the preview-verified item is the one box that comes after the preview', () => {
+  const afterPreview = DONE.filter((d) => d.phase === 'after-preview')
+  expect(afterPreview.map((d) => d.id)).toEqual(['preview-verified'])
+})
+
+test('phase is populated on every item, and the before-pr items all precede the after-preview one', () => {
+  expect(
+    DONE.every((d) => d.phase === 'before-pr' || d.phase === 'after-preview'),
+  ).toBe(true)
+  const phases = DONE.map((d) => d.phase)
+  expect(phases.lastIndexOf('before-pr')).toBeLessThan(
+    phases.indexOf('after-preview'),
+  )
+})

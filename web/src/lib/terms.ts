@@ -619,6 +619,69 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'They trade against each other, so a list of twenty is a list of none — high availability costs money, strong auditability costs write throughput, and cheap-to-run costs both. Three or four chosen deliberately are what turn a structural decision into something you can defend; without them, picking an architecture is picking a preference.',
   },
+  'server-component': {
+    name: 'Server Component',
+    see: '05-development',
+    short:
+      'The default kind of component under the App Router — it renders on the server and never ships its own code to the browser.',
+    full: 'A component that runs during the request, with direct access to whatever the server can reach — a database, a filesystem, a secret. It sends the browser only the HTML it produced; its own source never becomes part of the JavaScript bundle.',
+    soWhat:
+      'It is why a page can query a database with no API route in between: the component and the data live on the same side of the network, so there is nothing to call across.',
+  },
+  'client-component': {
+    name: 'Client Component',
+    see: '05-development',
+    short:
+      'A component whose file opens with the ‘use client’ directive, so it can hold state and respond to clicks.',
+    full: 'A component marked ‘use client’. It still renders once on the server to produce the page’s first HTML, then ships its own code to the browser and takes over there — which is what lets it hold state, run event handlers, and read something like window.',
+    soWhat:
+      'The directive marks a boundary, not a location: everything the marked file imports and renders is pulled into the client bundle along with it, so where the boundary sits decides how much JavaScript the page ships — not whether the page is blank before that JavaScript arrives.',
+  },
+  'server-action': {
+    name: 'Server Action',
+    see: '05-development',
+    short:
+      'A function marked ‘use server’ that runs on the server but is called like an ordinary function from the client.',
+    full: 'A function whose file or body opens with the ‘use server’ directive. Next.js turns it into a public HTTP endpoint behind the scenes, wires it to a form’s action or a plain click handler, and lets the calling code write it as though it were an ordinary async function.',
+    soWhat:
+      'The resemblance to a normal function call is exactly what makes it risky: anyone who can reach the endpoint can call it, so it owes every caller the same authenticate–validate–authorize sequence a route handler would, however innocent the call site looks.',
+  },
+  'feature-flag': {
+    name: 'Feature flag',
+    see: '05-development',
+    short:
+      'A boolean your code checks before running a piece of work, defaulting to off.',
+    full: 'A boolean your code reads before doing something, set to off by default. Code sitting behind one can merge to the main branch without being reachable by anyone. An environment variable is enough to start; a dedicated flag service earns its keep only once you need to flip one without a deploy.',
+    soWhat:
+      'It is what keeps “smallest shippable slice” honest when a feature genuinely takes longer than two days end to end — the alternative is a long-lived branch, and those diverge, conflict, and stop being reviewable.',
+  },
+  zod: {
+    name: 'Zod',
+    see: '05-development',
+    short:
+      'A schema library that parses unknown input into a typed value, or fails.',
+    full: 'A TypeScript schema library used to parse data whose shape you cannot trust — an HTTP request body, an environment variable, a third-party API response — into a value the compiler can rely on. `schema.safeParse(input)` returns either the typed data or a list of what did not match, and nothing downstream sees the input until it has passed.',
+    soWhat:
+      'It is the difference between a type and a check. A TypeScript type disappears at runtime, so annotating unparsed input as a type only names a hope; Zod is the part that actually looks at the value before anything trusts it.',
+  },
+  'error-boundary': {
+    name: 'Error boundary',
+    see: '05-development',
+    short:
+      'A boundary that catches what throws below it and renders a fallback instead of a blank page.',
+    full: 'A segment marked by a file like `error.tsx` in the App Router. It catches an unhandled throw from anything it wraps and renders a fallback in place of the crashed subtree, rather than taking the whole page down. It has to be a Client Component — one of the few places the directive is not a choice.',
+    soWhat:
+      'It is for the unexpected only. A failure you can already name — an invalid amount, a record that is not the caller’s — belongs in a Server Action’s return value instead, because the reader needs the actual message, not a generic retry button.',
+  },
+  rebase: {
+    name: 'Rebase',
+    see: '05-development',
+    short:
+      'Replay a branch’s commits on top of the latest target branch, so history reads in a straight line.',
+    full: 'Move a branch’s commits so they start from the current tip of the branch it will merge into, rather than from wherever it happened to fork. Run before opening the pull request, so the diff a reviewer sees is the diff that will actually land.',
+    soWhat:
+      'A merge without it still works, but the history it leaves behind interleaves two branches’ commits by timestamp instead of by intent — exactly the record `git log` exists to be.',
+  },
 }
 
 export function getTerm(key: string): Term | undefined {

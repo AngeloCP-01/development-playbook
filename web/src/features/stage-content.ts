@@ -3,6 +3,7 @@ import { ProductDiscovery } from './discovery/ProductDiscovery'
 import { Planning } from './planning/Planning'
 import { Architecture } from './architecture/Architecture'
 import { Setup } from './setup/Setup'
+import { Development } from './development/Development'
 
 /**
  * Stage slug → interactive page body. A stage missing from this map renders the
@@ -13,4 +14,5 @@ export const STAGE_CONTENT: Record<string, ComponentType> = {
   '02-planning': Planning,
   '03-architecture': Architecture,
   '04-project-setup': Setup,
+  '05-development': Development,
 }
