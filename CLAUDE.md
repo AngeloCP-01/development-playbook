@@ -14,6 +14,7 @@ pnpm format       # prettier --write (format:check is what CI runs)
 pnpm test         # vitest — two projects: `unit` (node, data invariants), `dom` (jsdom, render tests)
 pnpm test:e2e     # playwright audit suite against a production build on :3100
 pnpm test:prod    # playwright @smoke checks against the DEPLOYED site (docs/14)
+pnpm test:dev-console # React's dev-mode warnings, against `next dev` on :3101 (TD-35)
 pnpm typecheck    # next typegen && tsc --noEmit
 ```
 
@@ -23,6 +24,12 @@ Lefthook runs format+lint on commit and typecheck+test on push. CI
 `pnpm test:prod` is **not** part of that gate. It checks the deployed site, so a green run
 says nothing about the working tree and a red one may have nothing to do with local changes.
 Run it after a promotion to `main`.
+
+`pnpm test:dev-console` is not part of it either, and for the opposite reason: it needs a
+dev server, which the gate deliberately avoids. Run it once per stage round. It is the only
+thing in the repo that can see React's development validation — missing keys, invalid DOM
+nesting, `act()` warnings, hydration detail — because a production build has stripped all of
+it (TD-35). It found a real bug on its first run.
 
 ## Two deliverables, one body of content
 
@@ -114,7 +121,10 @@ touching UI are expected to clear:
 
 - **Contrast** — every distinct text/background pair, both themes, all steps, WCAG AA
 - **Responsive** — 320→2560px, no horizontal overflow, no sub-44px touch target below `lg`
-- **Console** — zero errors in a clean browser context
+- **Console** — zero errors in a clean browser context. Say which build you mean:
+  `pnpm test:e2e` covers a **production** build, where React has stripped its development
+  validation, so that whole family is invisible to it. `pnpm test:dev-console` is the half
+  that sees it, and a green audit is not a claim about missing keys
 
 These checks live in `web/e2e/audit.spec.ts` and run in CI. Two cautions learned
 the hard way: a checker reporting mass failures is usually the checker (a link audit

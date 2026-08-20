@@ -252,6 +252,58 @@ distinguished from doing nothing.
 
 ---
 
+## A constant stales; a property does not
+
+TD-26 asked to be closed by asserting "the sweep opens a known count of expandables on a
+known page". The count would have been 108 when the entry was written. It was 140 ten days
+later, and 191 by the time anyone came to close it, with no defect anywhere in between.
+
+That is the whole problem with a pinned count. It does not fail when the thing it guards
+breaks. It fails when the content grows, which is constantly, and each time somebody
+updates the number and learns to update the number. After the third update it is a
+formality, and the one time it fires for a real reason it gets the same treatment.
+
+The guard that replaced it names a property instead:
+
+> every disclosure inside the panel was observed open in at least one state, on every
+> audited page
+
+There is no number in it. Add a stage, add fifty accordions, and the assertion still means
+exactly what it meant before. It fails when the sweep stops opening things, which is the
+thing TD-26 existed to catch.
+
+**The test is whether the assertion has to be edited when nothing is wrong.** If growing
+the content forces you to change the expected value, you have written a maintenance
+schedule rather than a check.
+
+### The property alone was still vacuous, which is the part worth remembering
+
+The plan for this said: teeth-check it by nulling the sweep's selector, and watch the
+property fail.
+
+It passes. Null the selector and the set of disclosures the page is known to have becomes
+empty, so nothing is missing from the set of disclosures observed open, so the gap check is
+satisfied having looked at nothing. **The regression test reproduced the bug it was written
+to catch, inside itself.**
+
+The fix is a floor on how much the sweep observed. Not a count, a floor, set far enough
+below the measured figure that it never needs touching:
+
+```ts
+expect(observedTotal).toBeGreaterThan(50)   // measured 144 the day this landed
+expect(gaps, gaps.join('\n')).toEqual([])
+```
+
+Both teeth checks then fire, and they fire on different things. A nulled selector trips the
+floor. Neutering only the click loop, which reproduces the pre-fix sweep exactly, trips the
+gap check and names `auth-panel-managed` and `auth-panel-library`, the two panels the debt
+entry said had never been checked.
+
+**A property can be vacuous the same way a constant can be wrong.** Ask what the assertion
+does when the mechanism produces *nothing*, not only when it produces something incorrect.
+Emptiness satisfies most set comparisons, and "no gaps" over an empty set is the quietest
+pass there is.
+
 ## Seven tests that could not fail, in one round
 
 Added after the stage 05 port (W-3.5b, 2026-08-20), which found seven of them: five during
