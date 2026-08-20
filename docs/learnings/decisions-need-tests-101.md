@@ -131,3 +131,54 @@ and they merge as one unit — plus a continuously updated coverage map
   defects *hide*. `terms.ts` defined `Authorization` with the exact defect three tracker
   entries and a cold-reader pass were trying to fix in prose, because all of them were reading
   prose. Grep the source when you fix a concept.
+
+---
+
+## A decision whose number is not written next to the code reads as a habit
+
+Added 2026-08-20, after this nearly reversed a decision that was right.
+
+A coverage audit found two sentences of `docs/05-development.md` missing from its app. The
+fix looked obvious: `stages.ts` has a `blurb` field, the doc has a `>` subtitle, sync them.
+Before proposing it, one other stage was checked — stage 04 — and its blockquote was not
+carried either. One check, generalised into "no stage carries this", recorded as a numbered
+decision, and taken to the user as a design with three options.
+
+All of it was wrong:
+
+- **Three stages carry it verbatim.** Stage 04 was the one stage that paraphrases, so the
+  grep that "confirmed" the rule had picked the single instance that hides it.
+- **The question was already decided.** **D-36** closed TD-2 in July on exactly this: the
+  blurb is "two purpose-built strings (doc subtitle vs UI tooltip) that diverge for 15/18 by
+  design", so the sync test covers the title only and doc-header generation was rejected.
+- **The evidence was identical.** The measurement that looked like drift — 15 of 18 — is the
+  same figure D-36 quotes as the reason the divergence is intentional.
+
+The design was approved and implementation had started before the decision surfaced.
+
+**What made it invisible is the transferable part.** The test file carried the reasoning:
+
+```ts
+// The blurb is deliberately NOT checked: the doc's `>` line is a prose subtitle
+// and stages.ts's `blurb` is a UI tooltip/header string ...
+```
+
+Accurate, well-argued, and it stopped nobody — because reasoning in a comment reads as one
+engineer's opinion, and an opinion is something a later reader will improve on. The same
+sentence ending in `(D-36)` reads as a ruling with a paper trail, and the natural next move
+becomes "read D-36" rather than "write the sync test".
+
+Two habits follow:
+
+- **Cite the decision number in the code it constrains.** Not the argument instead of the
+  number — the argument *and* the number. `decisions-need-tests-101` is about decisions
+  that cannot be checked; this is the narrower case where the check exists, the reasoning
+  exists, and only the provenance is missing.
+- **A negative confirmed once is not confirmed.** "I looked and it wasn't there" is a sample
+  of one. When a check is about to become a rule, sample until you find the counter-example
+  or run out of instances. Here there were seventeen other stages and the answer was in the
+  first three.
+
+This is the second time this project has generalised from one silence — **D-73** records the
+first, where one document's omission was read as the framework's behaviour. Both times the
+controller did the generalising, and both times a written record already held the answer.

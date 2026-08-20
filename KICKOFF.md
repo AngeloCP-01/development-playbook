@@ -134,7 +134,7 @@ Before doing anything, read these for context:
   walk (Task 14), blind to this branch's plan and reports, found ten sections a green gate and
   eleven clean per-task reviews had missed** — nine closed in a fix wave, the tenth (the doc's
   front-matter framing, N9) deferred as a cross-stage question rather than a stage-05 defect
-  (**D-80**). Six new decisions, **D-75**…**D-80**. Tests **529/64 → 645/80**, audit **17/17**
+  (**D-80**, since **superseded by D-81** — that finding was not a defect and **D-36** already governed it). Seven new decisions, **D-75**…**D-81**. Tests **529/64 → 645/80**, audit **17/17**
   over **76 derived URLs**, all thirteen panels under the 4.0 ceiling (median 2.42, max 3.82).
   Coverage map: `docs/stage-05-status.md`. Full evidence: the **2026-08-19 W-3.5b (port)** row
   in `docs/tracker.md`. **Merged to `develop` 2026-08-20 as `425381b`, `--no-ff`, branch

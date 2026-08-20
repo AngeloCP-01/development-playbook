@@ -60,6 +60,12 @@ Naming: `<topic>-101.md`.
   confirmed to have no files in common and that was reported as "zero conflict risk", when the
   question was whether they still meant the same thing. It cost an app shipping the security
   defect its own doc had just fixed.
+  Extended after stage 05 with the narrower case where the check *and* the reasoning both
+  exist and only the decision number is missing: a comment arguing why the blurb is not
+  synced stopped nobody, and an approved design to reverse **D-36** got as far as
+  implementation before the decision surfaced. Reasoning reads as an opinion; a number
+  reads as a ruling. Also: a negative confirmed once is a sample of one — the single stage
+  checked was the single stage that hid the counter-example.
 - `contrast-checkers-lie.md` — the three ways a colour audit reports a failure that is not
   there: reading `getComputedStyle` while a `transition-colors` is still running, parsing
   `oklab()` with a regex instead of rasterizing it, and passing green over surfaces it

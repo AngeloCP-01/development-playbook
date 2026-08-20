@@ -63,11 +63,11 @@ of it than the median panel carries.
 ## Coverage, doc against app
 
 Nine of the ten gaps the coverage walk found are closed here; each is marked. The tenth,
-N9, is the front-matter row below.
+N9, is the front-matter row below, which turned out not to be a defect at all.
 
 | Doc section | App | Notes |
 |---|---|---|
-| Front matter — blockquote | — | **Not ported.** N9, deferred — see below |
+| Front matter — blockquote | `blurb` (partial, by design) | **Not a defect** — D-36 governs; see below |
 | `## Entry criteria` | `loop` | Full. Both criteria in prose, now linked to stages 04 and 02 (**N10** closed) |
 | `### The loop` | `loop` | Full. Fig 1 via `LoopFlow`, a seven-node click-through, four stage links across three handoffs (06/07/12/13), `Term id="feature-flag"` |
 | `### Vertical slices` | `loop` | Full. `Term id="vertical-slice"`, a Horizontal/Vertical `Contrast` on the doc's own user-profiles example, and the schema-narrowing paragraph — the 03/04 handoff and "change the schema for the one case you are shipping" — restored (**N2** closed) |
@@ -90,12 +90,19 @@ N9, is the front-matter row below.
 
 ## Not ported, deliberately
 
-- **The front-matter blockquote (N9).** "Small improvements here compound harder than
-  anywhere else in the playbook" and "this is where most of your hours go" appear nowhere
-  in `stages.ts` or any panel. Checked against stage 04 before deferring it: that stage's
-  doc blockquote is not carried by its app either, so this is a convention question that
-  applies to all eighteen stages, not a stage-05 defect. Carrying it here alone would make
-  stage 05 the inconsistent one rather than the fixed one.
+- **The front-matter blockquote (N9) — not a defect, and the reason this row was first
+  written is wrong.** The audit is right that "Small improvements here compound harder than
+  anywhere else in the playbook" and "this is where most of your hours go" are absent. The
+  original entry here said no stage's app carried its blockquote, so this was a cross-stage
+  question rather than a stage-05 defect. **Three stages carry it verbatim** — `01`, `02`
+  and `03`'s `blurb` is the doc's `>` line character for character. The claim came from
+  checking stage 04, which paraphrases, and generalising one silence into a rule.
+
+  What actually governs is **D-36**, which closed TD-2 in July on this exact question: the
+  blurb is "two purpose-built strings (doc subtitle vs UI tooltip) that diverge for 15/18
+  by design", so `stage-metadata.test.ts` syncs the title only. `blurb` was never meant to
+  carry the whole blockquote, any more than `cadence` is meant to carry `timing`. Under
+  D-36 this is the convention working, not failing. **D-81** records the correction.
 
 ---
 
