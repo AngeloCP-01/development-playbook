@@ -8,6 +8,7 @@ export default defineConfig({
   // deployed site. Without this, `pnpm test:e2e` would run them against
   // localhost:3100 and fail on an origin mismatch that means nothing.
   grepInvert: /@smoke/,
+  globalSetup: './e2e/global-setup.ts',
   use: { baseURL: 'http://localhost:3100' },
   webServer: {
     // Production build: the dev overlay pollutes console checks and the
