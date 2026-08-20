@@ -312,6 +312,19 @@ openssl rand -base64 32      # paste after SESSION_SECRET= in .env.local
 dev`, `production` for `pnpm build`), and pinning it yourself is how you end up with a dev
 server that believes it is in production.
 
+One thing to know before you test this, because the obvious test reports success while
+proving nothing. Blank `SESSION_SECRET` in `.env.local` with `pnpm dev` still running and
+reload the page: it comes back **200**. Reload once more and you get **HTTP 500**, carrying
+the Zod `too_small` thrown from `env.ts`. Turbopack logs `Reload env: .env.local` and
+re-evaluates the module inside the running process, without restarting, but the request
+that arrives before that lands is still answered by the evaluation it already had. Restart
+the server instead and the failure is there on the first request, every time.
+
+The reason is worth more than the instruction, because it outlives the bundler.
+`schema.parse(process.env)` runs once, when the module is first evaluated, so re-testing it
+means causing another module evaluation and then not reading the answer until that has
+finished. Restarting is that with nothing left to race.
+
 That pair, a schema of keys you can actually set and an example file someone can copy, is
 what makes the first Definition of done reachable. A fresh clone, `pnpm install`,
 `cp`, one `openssl rand`, `pnpm dev`, and a page renders, with no database anywhere.
