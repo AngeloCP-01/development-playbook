@@ -202,3 +202,66 @@ The house convention is `fireEvent` from `@testing-library/react` plus plain DOM
 (`el.getAttribute(...)`, `(el as HTMLInputElement).checked`). `src/components/RevealList.test.tsx`
 is the example. `src/test/setup.ts` argues in writing against growing a second
 responsibility, which is the case against adding jest-dom now.
+
+---
+
+## Transcribing prose loses the second sentence
+
+Added after the stage 05 port (W-3.5b, 2026-08-20), where this happened three times, the
+third of them inside the fix wave built to close the first two.
+
+Porting a doc into panels means moving prose by hand. What goes missing is not random. In
+every instance here it was **the second sentence of a two-sentence passage**:
+
+- The AI section's opening kept "the mistakes that survive are the ones that read as correct
+  on the way past" and dropped the list that makes it usable — an authorization predicate, a
+  migration's backfill, a cache key, a regex over unsampled data.
+- The `'use client'` guidance kept "only when you need interactivity" and dropped the
+  four-item test that follows it. The reader got a feeling where the doc gave a checklist,
+  and "effects" appeared nowhere in the stage.
+- A restored cross-section stitch kept "query, then component" and dropped "the test is
+  06's".
+
+The shape is consistent because of how the sentences divide labour: the first carries the
+claim, the second carries the qualifier, the example, or the pointer. Moving the claim feels
+like moving the content, and the second sentence reads as elaboration you can compress. It
+is usually the half that makes the first half actionable.
+
+**A paraphrase is more dangerous than an unanchored quote**, because nothing marks it as
+lossy. A missing sentence and a deliberate edit look identical in a diff, and no test can
+tell them apart — the data module asserted against the doc proves the text it *has* matches,
+and says nothing about text it never received.
+
+Three things that work:
+
+- **Lift, do not retype.** `sed -n 'START,ENDp' docs/NN-*.md` and paste. Retyping is where
+  clauses go.
+- **Where a constant holds doc prose, pin a phrase from each sentence**, not one phrase from
+  the passage. The pin that would have caught all three is a phrase from the *second*
+  sentence.
+- **Count sentences at the boundary.** When you move a paragraph, note how many sentences
+  went in and how many came out. It is a two-second check that catches the whole class.
+
+---
+
+## The coverage walk still earns its place, and it has to be starved of context
+
+Same round. Two coverage walks had already run inside per-task reviews and returned nothing.
+A third, given only `docs/NN-*.md` and the feature directory — with the plan, the spec, every
+task brief, every report and the controller's ledger explicitly withheld — found **ten**
+pieces of content the app did not teach, against a green gate of 645 tests, a 17-test browser
+audit, and fourteen closed per-task reviews.
+
+The difference was not model or effort. The earlier reviewers had been told what the panels
+were *for*. Intentions are exactly what makes a reader of the panels a poor auditor of them,
+and by the end of a round every artifact in the workspace is a record of intentions.
+
+The costliest gap was the inverse of stage 04's famous one. There, the app told readers to
+run a script it never showed them how to create. Here, it **handed them a snippet the doc
+explicitly calls half-written, without saying so** — one panel after four reveal facets
+established that actions return their failures precisely so callers can render them. A
+reader who pasted it would ship a Retry button that silently does nothing on failure.
+
+So: when you dispatch the walk, forbid the planning documents by name. And expect a fix wave
+after it, not a signature — nine of the ten were real, and the wave itself then dropped a
+sentence, which is the section above.

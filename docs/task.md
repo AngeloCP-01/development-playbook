@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05 done; 13 remain — 5/18. Stage 05's doc round is merged to `develop` (`9ef3763`); the port (W-3.5b) is built on `feat/stage-05-app-port`, NOT yet merged)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05 done; 13 remain — 5/18. Stage 05's doc round merged as `9ef3763`; the port (W-3.5b) merged to `develop` 2026-08-20 as `425381b`, `--no-ff`, branch deleted)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; ten sheets still to transcribe)* |
@@ -547,7 +547,7 @@ handing the corrected doc to a cold reader with a task to finish.
       the user's. *(Both numbers moved after this was written: the two W-6 merges took `develop`
       to **131 ahead**, and it has since been **pushed** — `origin/develop` at `49122f5`.)*
 
-### W-3.5 — Stage 05, doc correction then port ◐ *(doc round merged to `develop` 2026-08-18 as `9ef3763`, `--no-ff`; the port (W-3.5b) built 2026-08-19 on `feat/stage-05-app-port`, NOT merged — the user's call)*
+### W-3.5 — Stage 05, doc correction then port ☑ *(doc round merged 2026-08-18 as `9ef3763`; the port (W-3.5b) merged to `develop` 2026-08-20 as `425381b`, both `--no-ff`, both branches deleted)*
 
 **The doc has been corrected.** `docs/05-development.md` is now **587 lines** across
 **six** `##` sections and **twelve** `###` ones (`### Authorize reads, not just writes`,
@@ -612,9 +612,12 @@ the shape of the round:
 - [x] **Merge of the doc phase** ✓ `fix/stage-05-doc-corrections` is in `develop` as
       `9ef3763`, `--no-ff`, branch deleted. Gate re-run on the merged result: `pnpm lint`,
       `pnpm typecheck`, `pnpm test` (**64 files / 529 tests**) and `pnpm build` all exit 0
-- [x] **The port itself (W-3.5b)** ✓ *(built 2026-08-19 on `feat/stage-05-app-port`, content
-      complete at `6cdc2c4`, records commits follow; **NOT merged, NOT pushed** — the user's
-      call)*. Thirteen steps against a doc a third of stage 04's length, which landed close
+- [x] **The port itself (W-3.5b)** ✓ *(built 2026-08-19, **merged to `develop` 2026-08-20 as
+      `425381b`, `--no-ff`, `feat/stage-05-app-port` deleted**. 36 branch commits
+      `4bf5edb`…`af1c8d0` plus the merge. The merged result was gated first-hand on `develop`
+      rather than inferred from the branch: `pnpm lint`, `pnpm typecheck`, `pnpm test`
+      (**80 files / 648 tests**) and `pnpm build` all exit 0. `main` untouched at `8d5045c`;
+      `develop` is not pushed)*. Thirteen steps against a doc a third of stage 04's length, which landed close
       to the prediction on this row: sixteen tasks, sixteen reviews, all clean or clean after
       a fix. Both provisional splits from `steps.ts` survived measurement unchanged — `drill`
       did not merge into `reads` (combined 6.24 against the round's 3.2 target) and

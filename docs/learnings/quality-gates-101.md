@@ -249,3 +249,58 @@ next content change.
 This is the same argument as the teeth check one section up, pointed at a different failure:
 a teeth check asks whether the test can fail, and this asks whether the *fix* can be
 distinguished from doing nothing.
+
+---
+
+## Seven tests that could not fail, in one round
+
+Added after the stage 05 port (W-3.5b, 2026-08-20), which found seven of them: five during
+the round, two more at the whole-branch review after fourteen tasks had already been
+reviewed clean. Four were written by the controller, into the plan, before any implementer
+touched them.
+
+The sections above name three vacuous-test *patterns*. This round says the patterns share a
+cause, and the cause is more useful than the list:
+
+> **The assertion samples the state in which the property cannot be violated.**
+
+Not "the test asserts nothing". Each of these asserted something real, in a state that was
+convenient to construct, and the mutation that mattered was invisible from there.
+
+The four it took here:
+
+- **A doc-slicing test** proved a section bound worked, against a document that did not
+  contain the hazard. The buggy and correct regexes returned byte-identical output. The
+  fix was to run it against the other document, where a fenced `# comment` sits inside the
+  section and the bound actually bites.
+- **A prerendering test** asserted every node stays prerendered — after clicking the
+  control that makes every node ship. In that state `prerendered` and `ships` are both
+  true everywhere, so mirroring one onto the other changed nothing observable. The whole
+  claim was that the two are independent, and the test sampled the one state where they
+  agree.
+- **A conditional guard**, `if (row.stage) expect(...)`, caught a typo'd value and could
+  not catch a deleted one. Removing the field left the suite green and the page rendering
+  a dead reference.
+- **An `aria-checked` assertion** ran only before the reader answers, where the value is
+  `false` for both buttons. A regression to a hardcoded `false` would have left the control
+  never announcing its selection, with every test green.
+
+**The habit that would have prevented all four:** before writing an assertion, name the
+mutation it must catch, and check that the state you are asserting in is one where that
+mutation changes the answer. If the property is *X is independent of Y*, the assertion has
+to run where X and Y disagree. If the property is *this field is present*, asserting its
+value cannot see it removed.
+
+**A teeth check that does not redden is a result, not an inconvenience.** The most valuable
+report of that round came from an implementer whose required mutation produced no failure.
+It did not adjust the test until the check passed, and did not report success. It built a
+throwaway probe to prove the mutation was a genuine defect, restored, and said the guard was
+hollow. That is what the teeth check is for, and the temptation in that moment is to treat
+the non-failure as a formality already satisfied.
+
+**Corollary for prose-shaped assertions.** One fix in that round rewrote a paragraph so its
+load-bearing argument led, and left the test pinning the clause that had just been demoted.
+Deleting the entire new argument would have kept the suite green. When you move what a
+string *means*, move the assertion that guards it in the same commit, and pin a short
+distinctive phrase from the part that carries the meaning rather than from whatever sentence
+happens to be quotable.

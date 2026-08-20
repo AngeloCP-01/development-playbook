@@ -15,14 +15,23 @@ a learning guide says what actually happened here, including the parts that went
 Naming: `<topic>-101.md`.
 
 - `stage-implementation-101.md` — what building stage 01 taught: the layout traps, the
-  contrast method, the JSX gotchas, and the verification checklist. Read it before
-  building stages 02–18.
+  contrast method, the JSX gotchas, and the verification checklist. Extended after stage 04
+  with the section-by-section coverage walk, and again after stage 05 with two things that
+  round cost: transcribing prose loses the **second** sentence of a two-sentence passage —
+  three times, the third inside the wave built to close the first two — and the coverage
+  walk only works when it is starved of context, since the plan and the reports are a
+  record of intentions and intentions are what make a reader of the panels a poor auditor
+  of them. Read it before building stages 06–18.
 - `quality-gates-101.md` — what wiring the gates taught: eslint's warnings-exit-0 trap,
   teeth checks as the method, hooks in a subdirectory repo, and why the committed audit
   suite being stricter than the throwaway scripts was a feature. Extended after stage 02
   with the mutation-testing lesson: one mutation is not a teeth check, and the three
-  vacuous-test patterns that shipped green against broken code. Read it on any new
-  project's day one, and before writing tests for scoring/judgment logic.
+  vacuous-test patterns that shipped green against broken code. Extended again after stage
+  05, which found **seven** tests that could not fail in the direction that mattered — four
+  of them written into the plan before any implementer saw them — and named the cause the
+  patterns share: the assertion samples the state in which the property cannot be violated.
+  Read it on any new project's day one, and before writing tests for scoring/judgment
+  logic.
 - `deploying-101.md` — what W-5's first deploy taught: the three dashboard settings the
   repository cannot express (connected repo, framework preset, root directory), why a green
   build of the *wrong* repository looks exactly like success, `prepare` scripts failing on hosts
