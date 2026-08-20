@@ -4,10 +4,11 @@ export default defineConfig({
   testDir: './e2e',
   timeout: 60_000,
   retries: process.env.CI ? 1 : 0,
-  // `testDir: './e2e'` collects smoke.spec.ts too, and those tests target the
-  // deployed site. Without this, `pnpm test:e2e` would run them against
-  // localhost:3100 and fail on an origin mismatch that means nothing.
-  grepInvert: /@smoke/,
+  // `testDir: './e2e'` collects smoke.spec.ts and dev-console.spec.ts too. The
+  // first targets the deployed site; the second needs a dev server on 3101.
+  // Without this, `pnpm test:e2e` would run both against localhost:3100 and
+  // fail on mismatches that mean nothing.
+  grepInvert: /@smoke|@dev/,
   globalSetup: './e2e/global-setup.ts',
   use: { baseURL: 'http://localhost:3100' },
   webServer: {

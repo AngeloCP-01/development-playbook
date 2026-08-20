@@ -15,7 +15,8 @@
     "gen:cheatsheets": "vitest run src/lib/cheatsheets/render.test.ts --update",
     "prepare": "lefthook install || true",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test:dev-console": "playwright test --config=playwright.dev.ts"
   },
   "dependencies": {
     "lucide-react": "^1.25.0",
