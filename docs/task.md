@@ -645,10 +645,10 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
 - [x] Commit the throwaway audit scripts as a real Playwright suite: contrast in
       both themes, no overflow 320–2560px, touch targets ≥44px
 - [x] `.github/workflows/ci.yml` — lint, typecheck, test, build
-- [ ] Branch protection requiring the gate *(GitHub-side: require `verify` + `audit`,
-      branches up to date)* — **TD-10**
-- [ ] Watch CI go red once: scratch branch, broken commit pushed with `--no-verify`,
-      confirm Actions fails — **TD-10**
+- [x] Branch protection requiring the gate *(GitHub-side: require `verify` + `audit`,
+      branches up to date)* — **TD-10**, closed 2026-07-24
+- [x] Watch CI go red once — happened unprompted rather than deliberately: CI #1 at
+      `e7b3afd` failed at typecheck in 35s on a real bug — **TD-10**, closed 2026-07-24
 - [x] Fix or document whatever the suite reveals
 
 **Amended 2026-08-24 by the four-debt round** (merged `e5c411b`; evidence and decisions
@@ -664,9 +664,12 @@ and one of them was in the reader's hands:
   (**TD-35**, **D-84**). It is the only thing here that can see React's development
   validation, and it found a real bug on its first run — **TD-43**, still open.
 
-The two unticked boxes above are **TD-10** and are unrelated to that round; nobody has
-verified them since, and `KICKOFF.md` asserting "branch protection is on" is not evidence
-that the second one was ever watched going red.
+The two unticked boxes above are stale, not outstanding. **TD-10 is closed** (tracker,
+2026-07-24) with Actions-history evidence: CI went red unprompted on its first real run at
+`e7b3afd`, catching generated route types missing on a clean checkout, which the entry
+rates as stronger than the planned deliberate break. Branch protection is on, and enabling
+it is what surfaced that **GitHub Free enforces rulesets on public repositories only** —
+the reason this repo is public (**D-26**). The boxes were never ticked back.
 
 ### W-5 — Deploy ☑ *(live 2026-08-11 at https://acp-dev-playbook.vercel.app; verified by `pnpm test:prod`)*
 
