@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
   a recorded decision actually hold
 
-### Project state (as of 2026-08-24 — **stage 05 is interactive and merged**; W-3 is **5/18**, thirteen stages remain. The four-debt round **merged to `develop` as `e5c411b`, `--no-ff`, 2026-08-24**. Nothing in flight)
+### Project state (as of 2026-08-24 — **stage 05 is interactive and merged**; W-3 is **5/18**, thirteen stages remain. The four-debt round merged as `e5c411b` and a TD-43 investigation as `0bbd46f`, both `--no-ff`, 2026-08-24. **Nothing in flight; no branch awaiting a decision**)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -210,8 +210,9 @@ Before doing anything, read these for context:
   **Re-measured 2026-08-20, after the debt round. Re-derive these; do not trust this
   paragraph either — every version of it has gone stale.**
 
-  - `develop` is at **`e5c411b`** and `origin/develop` at **`76254fe`**, so `develop` is
-    **16 commits ahead and unpushed**. The previous version of this file said `develop` was
+  - `develop` is at **`0bbd46f`** and `origin/develop` at **`76254fe`**, so `develop` is
+    **21 commits ahead and unpushed**. Re-derive this; it has moved twice since it was
+    first written down in this file, both times because a session recorded something. The previous version of this file said `develop` was
     level with its remote, and it was, at the moment it was measured — then it recorded
     that fact in a commit on `develop`. **The user pushes; a session that tracks only its
     own actions gets this wrong every time.**
@@ -252,11 +253,23 @@ Before doing anything, read these for context:
   the sweep's selector. That *passes*: an empty candidate set has no gaps. The floor that
   fixes it, and the general form of the mistake, are in
   `docs/learnings/quality-gates-101.md`, "A constant stales; a property does not".
-- **TD-43 is open and pinned, not hidden.** A missing key at `/stages/03-architecture#traps`,
-  deterministic, stage-03-only, firing on the hash-driven React update rather than initial
-  paint, and surviving replacement of the whole traps panel with a stub. `dev-console.spec.ts`
-  carries one `KNOWN` entry so the command ships green, and **the pin asserts the warning
-  still fires**, so fixing TD-43 turns the test red telling you to delete the entry (**D-86**).
+- **TD-43 is open, pinned, and was investigated on 2026-08-24 without finding root cause**
+  (`0bbd46f`, records only, tree identical). Eighteen probes with a fresh browser context
+  each. **The entry's original account was wrong on three counts** and has been replaced:
+  it is **not the content of any step** (replace every step's content with a stub at module
+  scope and `#traps` still warns), it **follows the last index** (move `traps` to index 0 and
+  the warning moves to whatever is last), and it is **not step count** (22 steps ending in a
+  synthetic clone is clean). What remains is a discriminator recorded as *suspect rather than
+  as a finding*: the warning needs a step with id `traps` present anywhere in the array, yet
+  stubbing out the tablist — the only thing that renders every step — still warns. One of
+  those two results is unsound. **Re-run the tablist probe first**; a false negative there is
+  what cost that session most of its length. `dev-console.spec.ts` carries one `KNOWN` entry
+  so the command ships green, and **the pin asserts the warning still fires**, so fixing
+  TD-43 turns the test red telling you to delete the entry (**D-86**).
+- **A test that reads clean can be the unsound one.** That session's "all content stubbed →
+  clean" built the stub array *inside* the component, which changes the `steps` identity every
+  render and churns `Stepper`'s effect deps. Hoisting it to module scope reversed the result.
+  Two rounds running, the comforting result was the wrong one.
 
 ### Next round's scope: the debt round is done — the next call is which stage
 
@@ -271,6 +284,10 @@ something a green gate did not. `docs/tracker.md`'s Process observations says wh
 for it and what that does not cover — read that before treating this round's output as
 settled.
 
+**TD-43 was attempted and is not solved**, so do not treat it as the obvious pick again
+without deciding it is worth an unbounded hunt. It is a dev-only warning, pinned, and the
+command it affects is green.
+
 **Which stage next** — 06 (Testing) is the next number, but stage numbers are filing codes
 and not a sequence (`CLAUDE.md`), so it is the user's call to make explicitly, the way stage
 04 was chosen over stage 15 on checkability rather than on order. Read `docs/task.md`'s
@@ -280,7 +297,7 @@ and not a sequence (`CLAUDE.md`), so it is the user's call to make explicitly, t
 
 | Debt | Why it is still here |
 |---|---|
-| **TD-43** | A real missing key at `/stages/03-architecture#traps`, pinned so `test:dev-console` ships green. The pin retires itself. Leads are in the entry; the panel is already excluded |
+| **TD-43** | A real missing key at `/stages/03-architecture#traps`, pinned so `test:dev-console` ships green. The pin retires itself. **Investigated 2026-08-24 and not solved** — read the entry before starting, it rules out content, step count and the panel, and names the one probe to re-run first. Consider it unbounded: it may go in ten minutes or expose that the instrumentation is wrong |
 | **TD-31** | `docs/11-ci-cd.md` pins `@v4` against a current `v7`, and stage 04 §7 points readers at it. Belongs to 11's own correction round |
 | **TD-33** | Unproven without a Sentry org |
 
