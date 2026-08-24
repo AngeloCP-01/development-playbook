@@ -161,7 +161,20 @@ export function Stepper({ steps }: { steps: Step[] }) {
           <span className="tracking-[0.08em] normal-case">{step.hint}</span>
         </p>
 
-        {step.content}
+        {/* Wrapped rather than dropped straight into the panel's children.
+            Stage content is built in a *server* component, so each `content`
+            crosses the RSC boundary and arrives as a lazy chunk — and the last
+            one the server flushes arrives doubly wrapped, because its own
+            children are still pending when it resolves. React's dev-only
+            static-children exemption (`validateChildKeys`) unwraps a lazy once;
+            its reconciler-side key check (`warnOnInvalidKey`) unwraps until it
+            reaches an element. A doubly-lazy child therefore never gets its
+            exemption stamped and is reported as a list child with no key, which
+            is what TD-43 was. Nothing here is a list and nothing is missing a
+            key. The fragment keeps the streamed node out of a multi-child array
+            entirely, so the single-child path runs and the check never applies.
+            Layout is untouched: a fragment renders no DOM. */}
+        <>{step.content}</>
       </div>
 
       <nav

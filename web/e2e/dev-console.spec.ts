@@ -26,29 +26,6 @@ import { auditPages } from './audit-pages'
 const REACT_WARNING =
   /(Each child in a list|unique "key" prop|Encountered two children with the same key|validateDOMNesting|cannot appear as a descendant|cannot be a descendant|Hydration failed|Text content does(?: not|n't) match|not wrapped in act|Invalid DOM property|Received `true` for a non-boolean attribute|Warning: )/
 
-/**
- * One known warning, tracked as **TD-43**, pinned so the rest of the sweep can
- * be green without covering for it.
- *
- * Missing key at `/stages/03-architecture#traps`, deterministic across five
- * fresh-context runs and absent from `04-project-setup#traps` and
- * `05-development#traps`. It fires during the hash-driven React update rather
- * than the initial paint, and it survives replacing the entire traps panel
- * content with a stub, so it is not that panel's markup. Pre-existing: found by
- * this spec on its first honest run, not introduced by the branch that added it.
- *
- * **The entry retires itself.** The assertion below requires it to still fire.
- * Fix TD-43 and this test goes red telling you to delete the entry, which is
- * the difference between a tracked exception and a check that cannot fail. An
- * allowlist nobody is forced to revisit is how a gate becomes decoration, and
- * that is the whole subject of the round this spec shipped in.
- */
-const KNOWN = {
-  path: '/stages/03-architecture#traps',
-  pattern: /Each child in a list should have a unique "key" prop/,
-  debt: 'TD-43',
-}
-
 test('@dev no React development warnings on any audited page, which the production audit cannot see at all', async ({
   browser,
 }) => {
@@ -106,17 +83,5 @@ test('@dev no React development warnings on any audited page, which the producti
     )
   }
 
-  const known = warnings.filter(
-    (w) => w.startsWith(KNOWN.path) && KNOWN.pattern.test(w),
-  )
-  const unknown = warnings.filter((w) => !known.includes(w))
-
-  expect(unknown, unknown.join('\n')).toEqual([])
-
-  // Fails when TD-43 is fixed, on purpose. See the KNOWN docblock.
-  expect(
-    known.length,
-    `${KNOWN.debt} no longer reproduces at ${KNOWN.path}. That is good news: ` +
-      `delete the KNOWN entry in this file and close ${KNOWN.debt}.`,
-  ).toBeGreaterThan(0)
+  expect(warnings, warnings.join('\n')).toEqual([])
 })
