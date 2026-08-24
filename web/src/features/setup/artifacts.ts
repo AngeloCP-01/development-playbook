@@ -280,7 +280,7 @@ export const ARTIFACTS: Record<string, Artifact> = {
       { text: '' },
       {
         text: 'export const env = schema.parse(process.env)',
-        note: "Import `env` everywhere instead of `process.env` — in server modules only, never in a `'use client'` file. `schema.parse(process.env)` is not a static read, so the browser gets an empty object and every key fails at once, on hydration, after a green build.",
+        note: "Import `env` everywhere instead of `process.env` — in server modules only, never in a `'use client'` file. `schema.parse(process.env)` is not a static read, so the browser gets an empty object and every key fails at once, on hydration, after a green build. It also runs exactly once, at module evaluation. Blank a value with `pnpm dev` running and the first reload still returns 200, answered by the evaluation Turbopack already had; the next one returns 500. Restarting is that with nothing left to race.",
       },
     ],
   },

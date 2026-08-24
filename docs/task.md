@@ -235,7 +235,7 @@ designing TD-21 or TD-18 against the current six steps risks redoing that work.
       describe the eight-subsection doc
 - [x] Re-run the cold-reader pass afterwards on the amended doc, and record what it finds
 
-### W-3.1b — Stage 03 completeness: resilience, consistency, evolution ◐ *(doc done 2026-07-30; app port pending W-3.2)*
+### W-3.1b — Stage 03 completeness: resilience, consistency, evolution ☑ *(doc done 2026-07-30; ~~app port pending W-3.2~~ ✓ ported 2026-07-31, verified 2026-08-20)*
 
 Closes **TD-25**. An architecture-completeness audit against standard practice found that five
 clusters of widely-taught material are absent from **all eighteen docs**, not merely deferred
@@ -682,12 +682,18 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
 
 ---
 
-### W-6 — Reference hub ◐ **PAUSED 2026-08-14** *(skeleton `0207fd6` and source graphics `4727dc3` merged; resume after the stage 04 port)*
+### W-6 — Reference hub ◐ **PAUSED 2026-08-14** *(skeleton `0207fd6` and source graphics `4727dc3` merged; ~~resume after the stage 04 port~~ — that condition expired 2026-08-17, and again on 2026-08-20)*
 
 > **Parked deliberately, not abandoned.** The frame is finished and merged — routes,
 > rail, renderer, markdown generation, audit coverage and the source graphics. What
 > remains (W-6.3, W-6.4) is content work that competes with `W-3`, which is the
-> project. **Next active work is the stage 04 port under W-3.4, not this.**
+> project. **Next active work is no longer the stage 04 port** — that merged 2026-08-17, and
+> stage 05's port merged 2026-08-20, so this condition had expired twice. Checked
+> 2026-08-20 rather than assumed: one sheet (`architecture-patterns.ts`) carries
+> content and the rest are still `sections: []` in `planned.ts`, so nothing about the
+> *content* status had drifted. Only the resume condition had. Still parked, now by
+> choice rather than by a pending dependency; what competes with it is whichever
+> `W-3` stage comes next, which is the user's call.
 >
 > Resuming needs no re-decision: read this section, pick a sheet from
 > `reference/cheatsheet-sources.md`, and fill its `sections: []`. Nothing else changes.

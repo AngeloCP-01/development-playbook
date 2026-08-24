@@ -22,9 +22,12 @@
  *   pnpm build && pnpm start -p 3100 &
  *   node e2e/count-expandables.mjs
  *
- * The selector and the one-at-a-time loop mirror `openExpandables()` in
- * `audit.spec.ts`. If that changes, change this with it, or the two stop
- * measuring the same thing. The URL derivation mirrors `audit-pages.ts` for
+ * The selector and the loop mirror `forEachPanelState()` in `panel-states.ts`.
+ * If that changes, change this with it, or the two stop measuring the same
+ * thing. It counted `aria-expanded` alone until TD-26 closed, which is why the
+ * figures it printed before then are not comparable with the ones it prints
+ * now: `AuthPaths`' `aria-selected` tabs and the members of every single-open
+ * group were invisible to both this script and the audit. The URL derivation mirrors `audit-pages.ts` for
  * the same reason; it is duplicated rather than imported because this file is
  * plain `.mjs` and that one is TypeScript.
  */
@@ -32,6 +35,21 @@ import { chromium } from '@playwright/test'
 import { readFileSync } from 'node:fs'
 
 const BASE = process.env.AUDIT_BASE ?? 'http://localhost:3100'
+
+// Kept identical to `panel-states.ts`. Duplicated rather than imported because
+// this file is plain `.mjs` and that one is TypeScript, which is the same trade
+// the stage derivation below already makes.
+const DISCLOSURE_PARTS = [
+  '[role=tabpanel] button[aria-expanded]',
+  '[role=tabpanel] [role=tab][aria-selected]',
+]
+const DISCLOSURE = DISCLOSURE_PARTS.join(', ')
+// A `:not()` has to be appended to *each* part, not to the joined string, or it
+// only ever qualifies the last one. Built here rather than string-patched at the
+// call site, where getting it wrong would silently re-click the same control.
+const UNOPENED = DISCLOSURE_PARTS.map(
+  (part) => `${part}:not([data-audit-opened])`,
+).join(', ')
 
 // Ready stage slugs, from the same flag the router and `audit-pages.ts` use.
 // This file is plain `.mjs` and cannot import the TypeScript module, so it
@@ -108,28 +126,28 @@ for (const url of urls) {
 
   let opened = 0
   for (;;) {
-    const didOpen = await page.evaluate(() => {
-      const button = document.querySelector(
-        '[role=tabpanel] button[aria-expanded="false"]:not([data-audit-opened])',
-      )
+    const didOpen = await page.evaluate((sel) => {
+      const button = document.querySelector(sel)
       if (!button) return false
       button.setAttribute('data-audit-opened', '')
       button.click()
       return true
-    })
+    }, UNOPENED)
     if (!didOpen) break
     opened += 1
-    if (opened > 200) throw new Error(`runaway open loop on ${url}`)
+    if (opened > 400) throw new Error(`runaway open loop on ${url}`)
   }
 
   // The panel ids these disclosures control. A migration that renames one is
   // invisible to the count — the same number of rows still renders — and
   // invisible to the audit, which sweeps *step* hashes and never reads a
   // disclosure's own id. Collected here so one run catches both.
-  for (const id of await page.evaluate(() =>
-    [...document.querySelectorAll('[role=tabpanel] button[aria-controls]')].map(
-      (b) => b.getAttribute('aria-controls'),
-    ),
+  for (const id of await page.evaluate(
+    (sel) =>
+      [...document.querySelectorAll(sel)].map((b) =>
+        b.getAttribute('aria-controls'),
+      ),
+    DISCLOSURE,
   )) {
     if (id) allIds.add(id)
   }

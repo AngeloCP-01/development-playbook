@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
   a recorded decision actually hold
 
-### Project state (as of 2026-08-20 — **stage 05 is interactive and merged** to `develop` as `425381b`; W-3 is **5/18**, thirteen stages remain. Nothing in flight, no branch awaiting a decision)
+### Project state (as of 2026-08-20 — **stage 05 is interactive and merged**; W-3 is **5/18**, thirteen stages remain. **`fix/checks-that-cannot-fail` is in flight and awaits a merge decision**: 12 commits, four High debts closed, gate green)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -156,10 +156,12 @@ Before doing anything, read these for context:
   the caution applies to a controller's own directed fix as much as to an agent's.
 - **Stages 06–18** render a "sheet not drawn" placeholder. Routing works for all 18.
 - **Quality gates live and proven** (`W-4` done): prettier (skips markdown by design),
-  eslint at `--max-warnings 0`, **645 vitest tests across 80 files** in two projects — `unit`
-  (node, data invariants) and `dom` (jsdom, render tests, `*.test.tsx`) — a **17-test playwright
-  audit suite over 76 derived URLs** (64 stage — stage 05's thirteen steps now counted in —
-  12 reference), lefthook hooks, and CI. Branch protection is on; the repo is public (D-26).
+  eslint at `--max-warnings 0`, **660 vitest tests across 82 files** in two projects — `unit`
+  (node, data invariants) and `dom` (jsdom, render tests, `*.test.tsx`) — an **18-test playwright
+  audit suite over 76 derived URLs** (64 stage, 12 reference), lefthook hooks, and CI. Branch
+  protection is on; the repo is public (D-26). **`pnpm test:e2e` now refuses to run against a
+  stale server** (TD-27), and **`pnpm test:dev-console` is a separate command**, outside the
+  gate and outside CI, for React's dev-mode warnings (TD-35, D-84).
   Re-derive these rather than quoting them.
 - **The audit sweeps the ready set automatically** (**TD-12 closed 2026-08-14**).
   `e2e/audit-pages.ts` takes stages from `STAGES.filter(s => s.ready)` and step ids from the
@@ -191,10 +193,9 @@ Before doing anything, read these for context:
   **Cut the next branch from `develop`, never from `main`.** `develop` carries every round
   since stage 03 — the stage 04 doc correction, `RevealList`, TD-12, the two W-6
   reference-hub merges, the stage 04 port, its two debt branches, and the **stage 05 doc
-  correction** — so a branch cut from `main` builds against a tree many rounds behind.
-  and the **stage 05 port** — so a branch cut from `main` builds against a tree many rounds
-  behind. **No branch is in flight.** `feat/stage-05-app-port` merged as `425381b` and was
-  deleted; `develop` is 239 commits ahead of `main` and unpushed.
+  correction** and the **stage 05 port** — so a branch cut from `main` builds against a tree
+  many rounds behind. **One branch is in flight:** `fix/checks-that-cannot-fail`, 12 commits,
+  green on the whole gate, awaiting a merge decision.
 
   **Derive every position rather than reading one here.** Every version of this paragraph
   has gone stale, and the local `origin/*` refs are only as fresh as the last fetch:
@@ -205,25 +206,23 @@ Before doing anything, read these for context:
   git rev-list --count origin/develop..develop
   ```
 
-  **Measured 2026-08-20, and three of these contradict what earlier versions of this file
-  said. Re-derive them; do not trust this paragraph either.**
+  **Re-measured 2026-08-20, after the debt round. Re-derive these; do not trust this
+  paragraph either — every version of it has gone stale.**
 
-  - `develop` **is pushed**. `origin/develop` and `develop` are level at `76254fe`, and
-    `git reflog show origin/develop` records "update by push" for the last several
-    positions. Sessions have repeatedly reported `develop` as unpushed because they did
-    not push it themselves — the user does, and a session that only tracks its own
-    actions will get this wrong every time.
-  - **Production is `origin/main` at `5d76b8a`**, whose subject is
-    `Merge pull request #1 from AngeloCP-01/develop` — a `develop` → `main` promotion
-    merged on GitHub, not locally. So the promotion flow has already run once through the
-    forge rather than through this repository.
+  - `develop` is at **`2ae13f5`** and `origin/develop` at **`76254fe`**, so `develop` is
+    **1 commit ahead and unpushed**. The previous version of this file said `develop` was
+    level with its remote, and it was, at the moment it was measured — then it recorded
+    that fact in a commit on `develop`. **The user pushes; a session that tracks only its
+    own actions gets this wrong every time.**
+  - **Production is `origin/main` at `5d76b8a`**, subject
+    `Merge pull request #1 from AngeloCP-01/develop` — a promotion merged on GitHub rather
+    than locally, so the promotion flow has already run once through the forge.
   - **Local `main` at `8d5045c` is 168 commits behind `origin/main`** and is not a useful
-    reference for anything. A session saying "`main` is untouched at `8d5045c`" is
-    describing a stale local ref, not production. `git fetch` first, then reason about
-    `origin/main`.
-  - `develop` is **79 ahead of `origin/main`** and `origin/main` is 1 ahead of `develop`
-    (its own PR merge commit, which never existed locally). The next promotion is
-    therefore another PR, not a fast-forward.
+    reference for anything. `git fetch` first, then reason about `origin/main`.
+  - `develop` is **80 ahead of `origin/main`**, and `origin/main` is 1 ahead of `develop`
+    (its own PR merge commit, which never existed locally). The next promotion is another
+    PR, not a fast-forward.
+  - `fix/checks-that-cannot-fail` is **12 ahead of `develop`**, unmerged.
 
   Two merged branches still sit on the remote and can be deleted:
   `origin/feat/stage-03-app-port` and `origin/feat/stage-03-standard-practices`.
@@ -236,54 +235,58 @@ Before doing anything, read these for context:
   D-36 surfaced. The net production change was one comment: `stage-metadata.test.ts` now
   cites D-36 by number, because reasoning without its decision number reads as an
   unexamined habit, and a habit is something a later reader will helpfully fix.
+- **The four-debt round is done, on `fix/checks-that-cannot-fail`, and NOT merged.** Twelve
+  commits `49e09b0`…`1da8ebe`. **TD-32, TD-27, TD-26 and TD-35 are all closed**, and
+  **three of the four turned out to be wrong about themselves** — which is the transferable
+  half. TD-32's recorded mechanism ("Turbopack does not re-evaluate `env.ts`") is false;
+  it re-evaluates in place and the window is one request wide (**D-85**,
+  `docs/verification/td-32-env-restart.md`). TD-26's own `Closes with:` asked for a pinned
+  count this repo had already learned not to assert, and named `AuthPaths` while missing
+  `Toolkit` (**D-82**). TD-35's new `pnpm test:dev-console` found a **real pre-existing
+  bug** on its first honest run, now **TD-43**. Five decisions, **D-82**…**D-86**.
+  Tests **648/80 → 660/82**, audit **17 → 18**, dev-console 1/1 in 42s over 76 URLs,
+  expandables 191 → 198. **`docs/task.md`'s two stale statuses were checked and corrected**:
+  W-3.1b's port shipped 2026-07-31, and W-6's pause condition had expired twice.
+- **The round's own plan contained a check that could not fail, and that is worth reading
+  before writing the next one.** It specified teeth-checking TD-26's new guard by nulling
+  the sweep's selector. That *passes*: an empty candidate set has no gaps. The floor that
+  fixes it, and the general form of the mistake, are in
+  `docs/learnings/quality-gates-101.md`, "A constant stales; a property does not".
+- **TD-43 is open and pinned, not hidden.** A missing key at `/stages/03-architecture#traps`,
+  deterministic, stage-03-only, firing on the hash-driven React update rather than initial
+  paint, and surviving replacement of the whole traps panel with a stub. `dev-console.spec.ts`
+  carries one `KNOWN` entry so the command ships green, and **the pin asserts the warning
+  still fires**, so fixing TD-43 turns the test red telling you to delete the entry (**D-86**).
 
-### Next round's scope: chosen — a short debt round, then a stage
+### Next round's scope: the debt round is done — the next call is which stage
 
-**Do the debt round first. It is decided, not a suggestion.** Three High-severity debts share
-one shape — *a check that reports success without evaluating the thing* — and this is the
-cheapest they will ever be to fix, because the round that just ended spent itself on exactly
-that failure and wrote the diagnosis down while it was fresh.
+**The four-debt round closed.** TD-32, TD-27, TD-26 and TD-35 are struck in
+`docs/tracker.md` with evidence, and the branch is waiting on a merge decision. Do not
+re-scope them.
 
-| Debt | `docs/tracker.md` | What is wrong |
-|---|---|---|
-| **TD-32** | line ~1320 | Stage 04's §5 hands the **reader** a check that cannot fail |
-| **TD-26** | line ~511 | The audit suite is green about surfaces it never evaluates |
-| **TD-35** | line ~1362 | The audit's console check cannot see a dev-only warning |
-| **TD-27** | line ~468 | The second `pnpm test:e2e` of a session measures a stale build |
+**First, the merge decision.** `fix/checks-that-cannot-fail` is 12 commits off `develop`,
+green on `pnpm lint`, `pnpm typecheck`, `pnpm test` (660/82), `pnpm build`, `pnpm test:e2e`
+(18/18) and `pnpm test:dev-console` (1/1). It is **not merged and not deployed**, and the
+merge is the user's call as always.
 
-**Start with TD-32**, because it is the only one of the four that is a defect in the
-*product* rather than the tooling: the doc teaches a reader to run a check that cannot fail.
-In a project whose docs are the deliverable, that outranks a blind spot in our own suite.
+**Then, which stage** — 06 (Testing) is the next number, but stage numbers are filing codes
+and not a sequence (`CLAUDE.md`), so it is the user's call to make explicitly, the way stage
+04 was chosen over stage 15 on checkability rather than on order. Read `docs/task.md`'s
+`W-3` section and `docs/tracker.md`'s most recent rows first.
 
-**TD-27 pays for itself immediately** — it bit the stage 05 round mid-flight, where an
-implementer hit `ERR_CONNECTION_REFUSED` from a stale server and correctly called it
-infrastructure rather than a regression. Every future stage round leans on `test:e2e`.
+**What is still open, in the order it will cost you:**
 
-**Read these two before starting, in this order.** They are the round's own output and they
-are about this exact class:
+| Debt | Why it is still here |
+|---|---|
+| **TD-43** | A real missing key at `/stages/03-architecture#traps`, pinned so `test:dev-console` ships green. The pin retires itself. Leads are in the entry; the panel is already excluded |
+| **TD-31** | `docs/11-ci-cd.md` pins `@v4` against a current `v7`, and stage 04 §7 points readers at it. Belongs to 11's own correction round |
+| **TD-33** | Unproven without a Sentry org |
 
-- `docs/learnings/quality-gates-101.md`, the section *"Seven tests that could not fail, in
-  one round"*. It names the cause the vacuous-test patterns share: **the assertion samples
-  the state in which the property cannot be violated.** Four of those seven were written into
-  a plan before any implementer saw them.
-- `docs/learnings/decisions-need-tests-101.md`, the section on a decision whose number is not
-  written next to the code. That one nearly caused a correct decision to be reversed.
-
-**Two statuses in `docs/task.md` look stale and neither has been verified.** Check before
-trusting either:
-
-1. **W-6 (Reference hub) is `PAUSED` with "resume after the stage 04 port"** and says "next
-   active work is the stage 04 port, not this." That port merged 2026-08-17 and stage 05's
-   has since. The pause condition has expired twice over. Its own note says resuming needs no
-   re-decision — pick a sheet from `reference/cheatsheet-sources.md` and fill its `sections`.
-2. **W-3.1b is marked "app port pending W-3.2"**, but W-3.2 is ☑, merged 2026-08-03 with 106
-   commits. Either its content shipped inside that port and the status is stale, or it did
-   not. Nobody has checked. Do not report it either way without looking.
-
-**Then, and only then, which stage is next** — 06 (Testing) is the next number, but stage
-numbers are filing codes, not a sequence (`CLAUDE.md`), so it is the user's call to make
-explicitly, the way stage 04 was chosen over stage 15 on checkability rather than on order.
-Read `docs/task.md`'s `W-3` section and `docs/tracker.md`'s most recent rows first.
+**Two things this round proved that the next one should copy.** Re-run a debt's recorded
+diagnosis before porting it into a deliverable — three of four entries were wrong about
+themselves, and reading them again would have shipped the errors (**D-85**). And when you
+pin a known failure, make the pin assert that the failure still happens, so it cannot
+outlive the bug it covers (**D-86**).
 
 **What a stage-05-shaped round costs, for calibration:** the doc round was 29 commits, three
 verification instruments, twelve tasks plus a fix wave, one whole-branch review. The port was
