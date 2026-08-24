@@ -651,6 +651,23 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
       confirm Actions fails — **TD-10**
 - [x] Fix or document whatever the suite reveals
 
+**Amended 2026-08-24 by the four-debt round** (merged `e5c411b`; evidence and decisions
+D-82…D-86 in `docs/tracker.md`). The gate this milestone signed off had three blind spots
+and one of them was in the reader's hands:
+
+- The audit is **18 tests** now, not 17. The new one is a property: every disclosure inside
+  a step panel was observed open in at least one state. It exists because the sweep had
+  twice been green while opening almost nothing (**TD-26**).
+- `pnpm test:e2e` **refuses to run against a stale server** (**TD-27**). It failed the
+  session that built it, on a real edit, within minutes.
+- `pnpm test:dev-console` is a **new command outside this gate and outside CI**
+  (**TD-35**, **D-84**). It is the only thing here that can see React's development
+  validation, and it found a real bug on its first run — **TD-43**, still open.
+
+The two unticked boxes above are **TD-10** and are unrelated to that round; nobody has
+verified them since, and `KICKOFF.md` asserting "branch protection is on" is not evidence
+that the second one was ever watched going red.
+
 ### W-5 — Deploy ☑ *(live 2026-08-11 at https://acp-dev-playbook.vercel.app; verified by `pnpm test:prod`)*
 
 - [x] Node version pinned where Vercel reads it — `engines.node` in `web/package.json`.

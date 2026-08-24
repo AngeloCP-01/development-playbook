@@ -134,6 +134,74 @@ and they merge as one unit — plus a continuously updated coverage map
 
 ---
 
+## A recorded diagnosis decays the same way, and nothing marks the day it stops being true
+
+This guide is about conventions that decay without a mechanical check. A debt entry's
+**diagnosis** decays for the same reason and is more dangerous, because it reads as
+finished work.
+
+Four High-severity debts were closed in one round. Three of the four were wrong about
+themselves.
+
+The clearest was TD-32. Its entry said, in bold: *"Turbopack does not re-evaluate `env.ts`
+when `.env.local` changes."* It was closing a defect in a teaching document, so that
+sentence was about to become a paragraph a reader would follow.
+
+Running it took twenty minutes and disproved it. Turbopack **does** re-evaluate, in the
+same process, with no restart. What misleads is a window one request wide: the request that
+lands before the reload takes effect is answered by the evaluation already in memory and
+returns 200; every one after returns 500. Four trials, deterministic, on two Next versions.
+
+```
+trial 1 | healthy=200 | after blanking: 200 500 500 500 500 500
+trial 2 | healthy=200 | after blanking: 200 500 500 500 500 500
+trial 3 | healthy=200 | after blanking: 200 500 500 500 500 500
+```
+
+Both the entry and the corrected paragraph tell the reader to restart, so a reader following
+either one ends up in the right place. That is exactly why this is worth a section: **the
+instruction was right and the reason was wrong, and only the reason transfers.** A reader
+told "Turbopack never re-evaluates" carries a false model into their next framework. A
+reader told "the validation runs once at module evaluation, so re-testing it means causing
+another one, and until that finishes the old evaluation answers" can work out what to do
+anywhere.
+
+### Why the entries were wrong, which generalises further than these four
+
+They are not sloppy. They are the most careful records this project keeps, with measured
+numbers and named commits. Each was wrong for the same structural reason:
+
+**Every one was written from a single observation at the moment of discovery, and never
+re-run.** TD-32's entry admits it in its own text — *"Observed there and not re-run for
+this entry, which is why the restart is stated as the fix rather than as the only fix."*
+That sentence is doing real work: the author knew the exposure and wrote it down. It still
+took someone re-running the thing to convert the caveat into a correction.
+
+TD-26 failed differently and worth naming separately. Its `Closes with:` specified
+asserting a **pinned count** of expandables. A file written *after* that entry
+(`e2e/count-expandables.mjs`) records the count moving 108 → 140 in ten days with no defect
+in between, and says outright that the number is not a constant to assert against. Nobody
+reconciled the two. **A debt entry is a snapshot; the repo kept learning after it was
+written, and the entry did not.**
+
+### The rule
+
+**Before a recorded diagnosis becomes a deliverable, re-run it.**
+
+Not before quoting it in conversation, and not before ranking it. Before it turns into a
+paragraph in a document, a test's rationale, or a fix's design. The cost is minutes. The
+failure mode it prevents is publishing a mechanism that is not real, in the document the
+debt exists to correct.
+
+Two cheap habits that would have caught all three:
+
+- **Grep for anything written after the entry that touches the same subject.** The file
+  that contradicted TD-26 was sitting in the same directory as the code it described.
+- **Treat "not re-run" in an entry as a to-do, not a disclaimer.** It is the author telling
+  you where the soft ground is.
+
+Recorded as **D-50** for executable content, extended to recorded diagnoses as **D-85**.
+
 ## A decision whose number is not written next to the code reads as a habit
 
 Added 2026-08-20, after this nearly reversed a decision that was right.

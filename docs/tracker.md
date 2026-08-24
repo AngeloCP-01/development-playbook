@@ -1758,6 +1758,67 @@ looked" case, are written up in `docs/learnings/contrast-checkers-lie.md`.
 Kept separate from the bug ledger because these are about how the work was run, not
 about the code.
 
+### The debt round shipped with no reviewer at any tier, and it is the first one to do so
+
+Every stage round so far ran per-task reviews and a whole-branch review, and every one of
+them found something a green gate did not: fourteen blocking defects on stage 03's port,
+seven more from its whole-branch pass, four on stage 05's including a false claim a
+per-task review's own fix had introduced. **This round ran neither.** Implementation was
+inline in one session, and the merge was taken without a final pass.
+
+What stood in for it, and it is not equivalent: every assertion was teeth-checked, and the
+teeth checks caught three defects in this round's own work. That is a real substitute for
+"does this code do what it says" and no substitute at all for "does this task undermine
+another one", which is the altitude a reviewer occupies and a teeth check cannot reach.
+
+**Read anything this round shipped as less checked than the surrounding history.** The
+tracker rows and `KICKOFF.md` both say so at the point where the evidence is quoted, which
+is the only place a later reader will look.
+
+### Three defects in the round's own work, and two of them were authored before any code
+
+Consistent with what stage 03 found: the plan is wrong about the shape of the work more
+often than the implementation is.
+
+| Defect | Where it came from |
+|---|---|
+| The teeth check for TD-26's new guard could not fail — nulling the sweep's selector empties the candidate set, so the gap check passes having observed nothing | **Plan-authored.** Written into the plan as the proof that the guard had teeth |
+| TD-27's freshness scan included `e2e/` and `playwright.config.ts`, so editing a spec tripped it — a false positive, since a spec runs from source and needs no rebuild | **Plan-authored.** In the spec's Architecture section and copied into the plan |
+| The dev-console spec's path attribution raced: one listener writing against a mutable "current path" reported a warning against the page *after* the one that emitted it | **Implementation.** Mine, in Task 7 |
+
+The count is now past ten for this project's "a check that could not fail" family, and the
+proportion authored by the controller rather than by implementers has not moved. **They are
+written into briefs and plans more often than into code**, and the plan for a round whose
+entire subject was vacuous checks contained one.
+
+### A wrong attribution is worse than a missing one, because it gets acted on
+
+The dev-console spec named `/stages/04-project-setup#scaffold` as the page emitting a
+missing-key warning. It was `/stages/03-architecture#traps`. Console events arrive
+asynchronously and the listener read a variable that had already advanced.
+
+The cost was not the wrong string. It was that **I read `Setup.tsx` looking for an unkeyed
+array, found none, and kept looking**, through `RevealList`, `PinExercise`,
+`AnnotatedArtifact` and `InlineCode`, all of which are correctly keyed. The label was
+believed because a tool produced it. An independent scan with a fresh browser context per
+URL is what disagreed, and only then did the attribution get fixed and start agreeing with
+it.
+
+Same family as the stage 05 caution about not transcribing a subagent's reasoning because
+its conclusion is right. **A machine-produced label is a claim, and it is checkable.**
+
+### Three of four debt entries were wrong about themselves
+
+Not stale. Wrong, in ways that would have propagated into the deliverable if the entries
+had been trusted. TD-32's mechanism was false and the corrected paragraph would have
+taught it. TD-26 specified a closing check this repo had already learned not to write, and
+named one of the two components it missed. TD-35 was accurate.
+
+The entries are not sloppy; they are the most carefully written records this project keeps.
+**What made them wrong is that each was written from a single observation at the moment of
+discovery, and never re-run.** TD-32's own text says so: *"Observed there and not re-run
+for this entry."* Recorded as **D-85**.
+
 ### Most of stage 03's defects were plan-authored, not implementer error
 
 Three of the findings on `feat/stage-03-architecture` originated in the **plan**, and the

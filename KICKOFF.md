@@ -260,14 +260,16 @@ Before doing anything, read these for context:
 
 ### Next round's scope: the debt round is done — the next call is which stage
 
-**The four-debt round closed.** TD-32, TD-27, TD-26 and TD-35 are struck in
-`docs/tracker.md` with evidence, and the branch is waiting on a merge decision. Do not
-re-scope them.
+**The four-debt round closed and merged.** TD-32, TD-27, TD-26 and TD-35 are struck in
+`docs/tracker.md` with evidence. Do not re-scope them. `e5c411b`, `--no-ff`, 2026-08-24,
+branch deleted, and the merged result re-gated on `develop`. **`develop` is unpushed** and
+`main` is untouched.
 
-**The merge is done.** `e5c411b`, `--no-ff`, 2026-08-24, branch deleted, and the merged
-result re-gated on `develop`. **`develop` is unpushed** and `main` is untouched. It was
-merged **without a whole-branch review**, which is a deliberate departure from `CLAUDE.md`
-and is noted here because every previous branch's review found something.
+**It merged without a review at any tier**, per-task or whole-branch, which is a departure
+from `CLAUDE.md` and the first round here to do it. Every previous branch's review found
+something a green gate did not. `docs/tracker.md`'s Process observations says what stood in
+for it and what that does not cover — read that before treating this round's output as
+settled.
 
 **Which stage next** — 06 (Testing) is the next number, but stage numbers are filing codes
 and not a sequence (`CLAUDE.md`), so it is the user's call to make explicitly, the way stage
@@ -282,11 +284,14 @@ and not a sequence (`CLAUDE.md`), so it is the user's call to make explicitly, t
 | **TD-31** | `docs/11-ci-cd.md` pins `@v4` against a current `v7`, and stage 04 §7 points readers at it. Belongs to 11's own correction round |
 | **TD-33** | Unproven without a Sentry org |
 
-**Two things this round proved that the next one should copy.** Re-run a debt's recorded
+**Three things this round proved that the next one should copy.** Re-run a debt's recorded
 diagnosis before porting it into a deliverable — three of four entries were wrong about
-themselves, and reading them again would have shipped the errors (**D-85**). And when you
-pin a known failure, make the pin assert that the failure still happens, so it cannot
-outlive the bug it covers (**D-86**).
+themselves, and reading them again would have shipped the errors (**D-85**, and
+`docs/learnings/decisions-need-tests-101.md` has the long version). When you pin a known
+failure, make the pin assert that the failure still happens, so it cannot outlive the bug
+it covers (**D-86**). And prefer a property to a constant in any guard over content that
+grows, then check that the property is not satisfied by emptiness —
+`docs/learnings/quality-gates-101.md`, "A constant stales; a property does not".
 
 **What a stage-05-shaped round costs, for calibration:** the doc round was 29 commits, three
 verification instruments, twelve tasks plus a fix wave, one whole-branch review. The port was

@@ -30,8 +30,10 @@ Naming: `<topic>-101.md`.
   05, which found **seven** tests that could not fail in the direction that mattered — four
   of them written into the plan before any implementer saw them — and named the cause the
   patterns share: the assertion samples the state in which the property cannot be violated.
-  Read it on any new project's day one, and before writing tests for scoring/judgment
-  logic.
+  Extended again after the 2026-08 debt round with the distinction that round turned on:
+  **a constant stales and a property does not**, and a property can still be vacuous if
+  emptiness satisfies it. Read it on any new project's day one, and before writing tests
+  for scoring/judgment logic.
 - `deploying-101.md` — what W-5's first deploy taught: the three dashboard settings the
   repository cannot express (connected repo, framework preset, root directory), why a green
   build of the *wrong* repository looks exactly like success, `prepare` scripts failing on hosts
@@ -65,7 +67,11 @@ Naming: `<topic>-101.md`.
   synced stopped nobody, and an approved design to reverse **D-36** got as far as
   implementation before the decision surfaced. Reasoning reads as an opinion; a number
   reads as a ruling. Also: a negative confirmed once is a sample of one — the single stage
-  checked was the single stage that hid the counter-example.
+  checked was the single stage that hid the counter-example. Extended after the 2026-08 debt
+  round, where **three of four debt entries turned out to be wrong about themselves** — a
+  recorded *diagnosis* decays the same way a convention does, and one of them was a
+  sentence about to become a paragraph in a teaching document. Read it before turning any
+  recorded finding into a deliverable.
 - `contrast-checkers-lie.md` — the three ways a colour audit reports a failure that is not
   there: reading `getComputedStyle` while a `transition-colors` is still running, parsing
   `oklab()` with a regex instead of rasterizing it, and passing green over surfaces it
