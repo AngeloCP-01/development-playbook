@@ -1690,9 +1690,39 @@ this family at all, which is the whole of TD-35.
 this URL and message so the command ships green, and the pin asserts the warning **still
 fires** (**D-86**). Fix this and that test goes red telling you to delete the entry.
 
-**Closes with:** finding the array. The leads above are the round's output and are worth
-more than starting over. The cheapest next probe is bisecting `Stepper`'s own JSX at
-`active = 21` rather than the panel, since the panel is already excluded.
+**Investigated 2026-08-24, root cause not found, and the characterisation changed
+completely.** Eighteen probes against a live dev server, each in a fresh browser context so
+React's per-session dedup could not hide a result. What that established, and it contradicts
+the paragraph above:
+
+- **It is not the content of any step.** With *every* step's `content` replaced by
+  `<p>{s.id}</p>` at module scope, `#traps` still warns and `#ai` is clean. An earlier
+  version of this test built the stub array inside `Architecture()`, which changes the
+  `steps` identity on every render and churns `Stepper`'s effect deps — it reported clean
+  and was unsound. The module-scope version is the one to believe.
+- **It follows the last index, not the step.** Move `traps` to index 0 and `#traps` goes
+  clean while `#ai`, now last, starts warning.
+- **It is not step count.** Twenty-two steps whose last entry is a synthetic clone of
+  `record` is clean. Truncating to 21 is clean. Stage 04 (15 steps) and stage 05 (13) are
+  clean at their own last steps.
+- **The discriminator is the presence of the step whose `id` is `traps`, anywhere in the
+  array** — with it present, the last step warns wherever `traps` sits; with it absent, the
+  last step is clean.
+
+**That last point is not yet explicable and the next session should treat it as suspect
+rather than as a finding.** Its presence can only reach the render through the tablist,
+which renders every step — and stubbing the tablist out entirely still warns. Either one of
+those two results is unsound, or the mechanism is something neither accounts for.
+
+Also resolved: an earlier note said stubbing the traps panel content "still warns", filed as
+a puzzle. It is not a puzzle. Content is irrelevant, so that result was correct and its
+interpretation was wrong.
+
+**Closes with:** re-running the tablist-stub probe first, because it is the single result
+that makes the rest incoherent, and a false negative there sent this session down a long
+branch. `Stepper`'s own JSX is otherwise exhausted — nav, tablist, panel header and content
+were each removed individually and each still warned, while removing the whole return went
+clean.
 
 ## Bugs found and fixed
 
