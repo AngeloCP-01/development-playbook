@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
   a recorded decision actually hold
 
-### Project state (as of 2026-08-24 — **stage 05 is interactive and merged**; W-3 is **5/18**, thirteen stages remain. The four-debt round merged as `e5c411b`, `--no-ff`, 2026-08-24. **TD-43 is solved and committed on `fix/td-43-lazy-content-key-warning`, which is NOT merged and is awaiting the user's decision**)
+### Project state (as of 2026-08-24 — **stage 05 is interactive and merged**; W-3 is **5/18**, thirteen stages remain. The four-debt round merged as `e5c411b` and the earlier TD-43 investigation as `0bbd46f`, both `--no-ff`, 2026-08-24. **TD-43 is solved and committed on `fix/td-43-lazy-content-key-warning`, which is NOT merged and is awaiting the user's decision**)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -244,7 +244,8 @@ Before doing anything, read these for context:
   `docs/verification/td-32-env-restart.md`). TD-26's own `Closes with:` asked for a pinned
   count this repo had already learned not to assert, and named `AuthPaths` while missing
   `Toolkit` (**D-82**). TD-35's new `pnpm test:dev-console` found a **real pre-existing
-  bug** on its first honest run, now **TD-43**. Five decisions, **D-82**…**D-86**.
+  warning** on its first honest run, now **TD-43** — real and reproducible, though the defect
+  turned out to be in React's dev-only bookkeeping rather than in this app. Five decisions, **D-82**…**D-86**.
   Tests **648/80 → 660/82**, audit **17 → 18**, dev-console 1/1 in 42s over 76 URLs,
   expandables 191 → 198. **`docs/task.md`'s two stale statuses were checked and corrected**:
   W-3.1b's port shipped 2026-07-31, and W-6's pause condition had expired twice.
@@ -258,24 +259,37 @@ Before doing anything, read these for context:
   static-children exemption at element creation and unwraps **one** level, while
   `warnOnInvalidKey` checks at reconciliation and unwraps until it reaches an element.
   `Architecture` is a **server** component, so every step's `content` crosses the RSC
-  boundary as a lazy chunk — and the last content the server flushes arrives wrapped
-  **twice**, because its own children are still pending when it resolves. Fulfilled but
-  holding another lazy, it is never stamped exempt, and the reconciler then walks down to an
-  element with a null key and reports it as a list child. The panel now renders
-  `<>{step.content}</>`, which keeps the streamed node out of a multi-child array.
-  Reproduction: `docs/verification/td-43-lazy-key-warning.md`. Decision **D-87**.
-- **Both discriminators the previous investigation recorded are replaced, not refined.** It
-  does not follow the last *index*; it follows the last content *flushed*, which is the same
-  step only by coincidence. And the id `traps` was never the discriminator — removing that
-  step changed which content was flushed last. Both were true observations with the wrong
-  cause attached, which is why eighteen probes could not close it: they searched for an array
-  with a missing key, and no such array exists. The "`warnOnInvalidKey` recursing, which
+  boundary. When the payload is large enough that the last step's content is still unresolved
+  as the steps array is flushed, it is outlined into its own streamed row and arrives wrapped
+  **twice** — its own children are still pending when it resolves. Fulfilled but holding
+  another lazy, it is never stamped exempt, and the reconciler walks down to an element with a
+  null key and reports it as a list child. The panel now renders
+  `<Fragment key="content">{step.content}</Fragment>`, keyed to match `RevealList`, which
+  reached the same fix on the same warning first. Reproduction:
+  `docs/verification/td-43-lazy-key-warning.md`. Decision **D-87**.
+- **The discriminator is conjunctive and is still not fully characterised.** The last-rendered
+  step's content has to be deferred into its own streamed row *and* still be blocked on its own
+  children when revived; both depend on payload volume and flush timing. Measured: as shipped
+  `#traps` warns, with `traps` at index 0 `#ai` warns, and with `traps` removed the sweep is
+  **clean** — which "it follows the last content flushed" alone does not explain. The size
+  threshold is unmeasured. Eighteen probes could not close it because they searched for an
+  array with a missing key, and no such array exists. The "`warnOnInvalidKey` recursing, which
   suggests a nested array" note was the one real clue, read one word wrong — that function's
   only recursion is its `REACT_LAZY_TYPE` case.
+- **The old entry's content-stub probe is disproved, not confirmed.** Stub every step's content
+  at module scope and the sweep is clean: all 22 contents go inline, no lazy exists, nothing can
+  warn. Content volume is what causes the last content to be outlined at all. A first draft of
+  this closure called that probe correct on the entry's own say-so — inside a document whose
+  subject is a record that could not be trusted — and a reviewer caught it.
 - **The lesson is cheaper than the bug was.** The code that emits a framework warning is
   checked out in `node_modules` and greppable; reading the two functions took minutes, and no
-  amount of bisecting the app could have worked. `web/AGENTS.md` already says to read this
-  framework's shipped source rather than recall it, and that now extends to its warnings.
+  amount of bisecting the app could have worked. `web/AGENTS.md` already applies that rule to
+  Next's bundled docs; this widens it to React's compiled source and to warnings.
+- **A probe can change what it measures, and this round proved it on itself.** The first capture
+  of the RSC payload was taken with an instrumentation component still installed, which shifted
+  the row ids and deferred an extra content — and those figures were written into the record as
+  the shipped shape. A reviewer re-ran the doc's own command on a clean tree and got different
+  numbers. Capture evidence from the build you are diagnosing, not the one you are debugging.
 - **`pnpm test:dev-console` is unpinned and green.** The `KNOWN` entry is deleted and the
   sweep asserts an empty `warnings` array outright, which is **D-86 working as designed** —
   removing the pin is what produced the failing test.
@@ -293,8 +307,11 @@ something a green gate did not. `docs/tracker.md`'s Process observations says wh
 for it and what that does not cover — read that before treating this round's output as
 settled.
 
-**TD-43 is solved and sitting on an unmerged branch.** Ask about that branch before
-starting anything else: it is three commits, one of which is a single production line.
+**TD-43 is solved and sitting on an unmerged branch, now reviewed.** Ask about that branch
+before starting anything else. Two whole-branch reviewers ran on different lenses: the code
+reviewer raised nothing blocking against the production line, and the records auditor raised
+three blocking findings against the *records*, all correct and all fixed. That ratio is the
+point — the code was right and the account of it was not.
 
 **Which stage next** — 06 (Testing) is the next number, but stage numbers are filing codes
 and not a sequence (`CLAUDE.md`), so it is the user's call to make explicitly, the way stage
