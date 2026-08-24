@@ -1,6 +1,13 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react'
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
 
 export type Step = {
@@ -161,7 +168,31 @@ export function Stepper({ steps }: { steps: Step[] }) {
           <span className="tracking-[0.08em] normal-case">{step.hint}</span>
         </p>
 
-        {step.content}
+        {/* Keyed rather than dropped straight into the panel's children, and
+            keyed for the same reason `RevealList` keys its `header`, `title`,
+            `badge` and `footer` slots — see the long note there. TD-43 is why
+            this one is keyed too, and it names the mechanism that note could
+            only guess at.
+
+            Stage content is built in a *server* component, so each `content`
+            crosses the RSC boundary. When the payload is large enough that the
+            last step's content is still unresolved as the steps array is
+            flushed, it is outlined into its own streamed row and arrives as a
+            lazy — then wrapped a second time, because its own children are
+            still pending when it resolves. React's dev-only static-children
+            exemption (`validateChildKeys`) unwraps a lazy once and stamps
+            nothing when what it finds is another lazy; the reconciler's check
+            (`warnOnInvalidKey`) unwraps until it reaches an element, finds a
+            null key with no exemption, and reports a list child with no key.
+            Nothing here is a list and nothing was missing a key.
+
+            The key is what settles it: the reconciler warns only when the
+            exemption is unset *and* `key == null`, so a key closes the gap
+            without depending on the exemption surviving the boundary. The
+            wrapper also keeps the streamed node out of the panel's children
+            array, so it is no longer a candidate for that check at all.
+            `Fragment` renders no DOM: the prerendered HTML is unchanged. */}
+        <Fragment key="content">{step.content}</Fragment>
       </div>
 
       <nav

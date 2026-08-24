@@ -662,7 +662,7 @@ and one of them was in the reader's hands:
   session that built it, on a real edit, within minutes.
 - `pnpm test:dev-console` is a **new command outside this gate and outside CI**
   (**TD-35**, **D-84**). It is the only thing here that can see React's development
-  validation, and it found a real bug on its first run — **TD-43**, still open.
+  validation, and it found a real warning on its first run — **TD-43**, ~~still open~~ ✓ closed 2026-08-24, and it turned out to be a false positive in React's dev-only key bookkeeping rather than a missing key.
 
 The two unticked boxes above are stale, not outstanding. **TD-10 is closed** (tracker,
 2026-07-24) with Actions-history evidence: CI went red unprompted on its first real run at
