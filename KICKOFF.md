@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
   a recorded decision actually hold
 
-### Project state (as of 2026-08-20 — **stage 05 is interactive and merged**; W-3 is **5/18**, thirteen stages remain. **`fix/checks-that-cannot-fail` is in flight and awaits a merge decision**: 12 commits, four High debts closed, gate green)
+### Project state (as of 2026-08-24 — **stage 05 is interactive and merged**; W-3 is **5/18**, thirteen stages remain. The four-debt round **merged to `develop` as `e5c411b`, `--no-ff`, 2026-08-24**. Nothing in flight)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -194,8 +194,9 @@ Before doing anything, read these for context:
   since stage 03 — the stage 04 doc correction, `RevealList`, TD-12, the two W-6
   reference-hub merges, the stage 04 port, its two debt branches, and the **stage 05 doc
   correction** and the **stage 05 port** — so a branch cut from `main` builds against a tree
-  many rounds behind. **One branch is in flight:** `fix/checks-that-cannot-fail`, 12 commits,
-  green on the whole gate, awaiting a merge decision.
+  many rounds behind. **No branch is in flight**: `fix/checks-that-cannot-fail` merged as
+  `e5c411b` on 2026-08-24 and was deleted, and the merged result was re-gated first-hand on
+  `develop` — lint, typecheck, 660/82, build, 18/18 audit, dev-console 1/1.
 
   **Derive every position rather than reading one here.** Every version of this paragraph
   has gone stale, and the local `origin/*` refs are only as fresh as the last fetch:
@@ -209,8 +210,8 @@ Before doing anything, read these for context:
   **Re-measured 2026-08-20, after the debt round. Re-derive these; do not trust this
   paragraph either — every version of it has gone stale.**
 
-  - `develop` is at **`2ae13f5`** and `origin/develop` at **`76254fe`**, so `develop` is
-    **1 commit ahead and unpushed**. The previous version of this file said `develop` was
+  - `develop` is at **`e5c411b`** and `origin/develop` at **`76254fe`**, so `develop` is
+    **16 commits ahead and unpushed**. The previous version of this file said `develop` was
     level with its remote, and it was, at the moment it was measured — then it recorded
     that fact in a commit on `develop`. **The user pushes; a session that tracks only its
     own actions gets this wrong every time.**
@@ -222,7 +223,6 @@ Before doing anything, read these for context:
   - `develop` is **80 ahead of `origin/main`**, and `origin/main` is 1 ahead of `develop`
     (its own PR merge commit, which never existed locally). The next promotion is another
     PR, not a fast-forward.
-  - `fix/checks-that-cannot-fail` is **12 ahead of `develop`**, unmerged.
 
   Two merged branches still sit on the remote and can be deleted:
   `origin/feat/stage-03-app-port` and `origin/feat/stage-03-standard-practices`.
@@ -235,8 +235,8 @@ Before doing anything, read these for context:
   D-36 surfaced. The net production change was one comment: `stage-metadata.test.ts` now
   cites D-36 by number, because reasoning without its decision number reads as an
   unexamined habit, and a habit is something a later reader will helpfully fix.
-- **The four-debt round is done, on `fix/checks-that-cannot-fail`, and NOT merged.** Twelve
-  commits `49e09b0`…`1da8ebe`. **TD-32, TD-27, TD-26 and TD-35 are all closed**, and
+- **The four-debt round is done and merged to `develop` as `e5c411b`, `--no-ff`,
+  2026-08-24**, branch deleted. Fourteen commits `49e09b0`…`9c2acff` plus the merge. **TD-32, TD-27, TD-26 and TD-35 are all closed**, and
   **three of the four turned out to be wrong about themselves** — which is the transferable
   half. TD-32's recorded mechanism ("Turbopack does not re-evaluate `env.ts`") is false;
   it re-evaluates in place and the window is one request wide (**D-85**,
@@ -264,12 +264,12 @@ Before doing anything, read these for context:
 `docs/tracker.md` with evidence, and the branch is waiting on a merge decision. Do not
 re-scope them.
 
-**First, the merge decision.** `fix/checks-that-cannot-fail` is 12 commits off `develop`,
-green on `pnpm lint`, `pnpm typecheck`, `pnpm test` (660/82), `pnpm build`, `pnpm test:e2e`
-(18/18) and `pnpm test:dev-console` (1/1). It is **not merged and not deployed**, and the
-merge is the user's call as always.
+**The merge is done.** `e5c411b`, `--no-ff`, 2026-08-24, branch deleted, and the merged
+result re-gated on `develop`. **`develop` is unpushed** and `main` is untouched. It was
+merged **without a whole-branch review**, which is a deliberate departure from `CLAUDE.md`
+and is noted here because every previous branch's review found something.
 
-**Then, which stage** — 06 (Testing) is the next number, but stage numbers are filing codes
+**Which stage next** — 06 (Testing) is the next number, but stage numbers are filing codes
 and not a sequence (`CLAUDE.md`), so it is the user's call to make explicitly, the way stage
 04 was chosen over stage 15 on checkability rather than on order. Read `docs/task.md`'s
 `W-3` section and `docs/tracker.md`'s most recent rows first.
