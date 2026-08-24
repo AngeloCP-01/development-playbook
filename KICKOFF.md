@@ -31,7 +31,7 @@ Before doing anything, read these for context:
   app rather than after — D-54), and `decisions-need-tests-101.md`, which is about what makes
   a recorded decision actually hold
 
-### Project state (as of 2026-08-24 — **stage 05 is interactive and merged**; W-3 is **5/18**, thirteen stages remain. The four-debt round merged as `e5c411b` and a TD-43 investigation as `0bbd46f`, both `--no-ff`, 2026-08-24. **Nothing in flight; no branch awaiting a decision**)
+### Project state (as of 2026-08-24 — **stage 05 is interactive and merged**; W-3 is **5/18**, thirteen stages remain. The four-debt round merged as `e5c411b`, `--no-ff`, 2026-08-24. **TD-43 is solved and committed on `fix/td-43-lazy-content-key-warning`, which is NOT merged and is awaiting the user's decision**)
 
 - **Playbook content:** all 18 stage docs written (`P-0`…`P-4`).
   **Caution:** the "18/18 pass the seven-section template check" and "124/124 links resolve"
@@ -253,23 +253,32 @@ Before doing anything, read these for context:
   the sweep's selector. That *passes*: an empty candidate set has no gaps. The floor that
   fixes it, and the general form of the mistake, are in
   `docs/learnings/quality-gates-101.md`, "A constant stales; a property does not".
-- **TD-43 is open, pinned, and was investigated on 2026-08-24 without finding root cause**
-  (`0bbd46f`, records only, tree identical). Eighteen probes with a fresh browser context
-  each. **The entry's original account was wrong on three counts** and has been replaced:
-  it is **not the content of any step** (replace every step's content with a stub at module
-  scope and `#traps` still warns), it **follows the last index** (move `traps` to index 0 and
-  the warning moves to whatever is last), and it is **not step count** (22 steps ending in a
-  synthetic clone is clean). What remains is a discriminator recorded as *suspect rather than
-  as a finding*: the warning needs a step with id `traps` present anywhere in the array, yet
-  stubbing out the tablist — the only thing that renders every step — still warns. One of
-  those two results is unsound. **Re-run the tablist probe first**; a false negative there is
-  what cost that session most of its length. `dev-console.spec.ts` carries one `KNOWN` entry
-  so the command ships green, and **the pin asserts the warning still fires**, so fixing
-  TD-43 turns the test red telling you to delete the entry (**D-86**).
-- **A test that reads clean can be the unsound one.** That session's "all content stubbed →
-  clean" built the stub array *inside* the component, which changes the `steps` identity every
-  render and churns `Stepper`'s effect deps. Hoisting it to module scope reversed the result.
-  Two rounds running, the comforting result was the wrong one.
+- **TD-43 is solved, and there was never a missing key.** React validates keys in two
+  places that unwrap lazy nodes to different depths: `validateChildKeys` stamps the
+  static-children exemption at element creation and unwraps **one** level, while
+  `warnOnInvalidKey` checks at reconciliation and unwraps until it reaches an element.
+  `Architecture` is a **server** component, so every step's `content` crosses the RSC
+  boundary as a lazy chunk — and the last content the server flushes arrives wrapped
+  **twice**, because its own children are still pending when it resolves. Fulfilled but
+  holding another lazy, it is never stamped exempt, and the reconciler then walks down to an
+  element with a null key and reports it as a list child. The panel now renders
+  `<>{step.content}</>`, which keeps the streamed node out of a multi-child array.
+  Reproduction: `docs/verification/td-43-lazy-key-warning.md`. Decision **D-87**.
+- **Both discriminators the previous investigation recorded are replaced, not refined.** It
+  does not follow the last *index*; it follows the last content *flushed*, which is the same
+  step only by coincidence. And the id `traps` was never the discriminator — removing that
+  step changed which content was flushed last. Both were true observations with the wrong
+  cause attached, which is why eighteen probes could not close it: they searched for an array
+  with a missing key, and no such array exists. The "`warnOnInvalidKey` recursing, which
+  suggests a nested array" note was the one real clue, read one word wrong — that function's
+  only recursion is its `REACT_LAZY_TYPE` case.
+- **The lesson is cheaper than the bug was.** The code that emits a framework warning is
+  checked out in `node_modules` and greppable; reading the two functions took minutes, and no
+  amount of bisecting the app could have worked. `web/AGENTS.md` already says to read this
+  framework's shipped source rather than recall it, and that now extends to its warnings.
+- **`pnpm test:dev-console` is unpinned and green.** The `KNOWN` entry is deleted and the
+  sweep asserts an empty `warnings` array outright, which is **D-86 working as designed** —
+  removing the pin is what produced the failing test.
 
 ### Next round's scope: the debt round is done — the next call is which stage
 
@@ -284,9 +293,8 @@ something a green gate did not. `docs/tracker.md`'s Process observations says wh
 for it and what that does not cover — read that before treating this round's output as
 settled.
 
-**TD-43 was attempted and is not solved**, so do not treat it as the obvious pick again
-without deciding it is worth an unbounded hunt. It is a dev-only warning, pinned, and the
-command it affects is green.
+**TD-43 is solved and sitting on an unmerged branch.** Ask about that branch before
+starting anything else: it is three commits, one of which is a single production line.
 
 **Which stage next** — 06 (Testing) is the next number, but stage numbers are filing codes
 and not a sequence (`CLAUDE.md`), so it is the user's call to make explicitly, the way stage
@@ -297,7 +305,6 @@ and not a sequence (`CLAUDE.md`), so it is the user's call to make explicitly, t
 
 | Debt | Why it is still here |
 |---|---|
-| **TD-43** | A real missing key at `/stages/03-architecture#traps`, pinned so `test:dev-console` ships green. The pin retires itself. **Investigated 2026-08-24 and not solved** — read the entry before starting, it rules out content, step count and the panel, and names the one probe to re-run first. Consider it unbounded: it may go in ten minutes or expose that the instrumentation is wrong |
 | **TD-31** | `docs/11-ci-cd.md` pins `@v4` against a current `v7`, and stage 04 §7 points readers at it. Belongs to 11's own correction round |
 | **TD-33** | Unproven without a Sentry org |
 
