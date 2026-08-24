@@ -1,5 +1,11 @@
+import { apiDesign } from './api-design'
 import { architecturePatterns } from './architecture-patterns'
+import { codingStandards } from './coding-standards'
+import { designPatterns } from './design-patterns'
+import { gitBranching } from './git-branching'
+import { gitCommands } from './git-commands'
 import { PLANNED } from './planned'
+import { sdlc } from './sdlc'
 import type { Cheatsheet, CheatsheetGroup } from './types'
 
 export type {
@@ -12,7 +18,16 @@ export type {
 } from './types'
 export { CHEATSHEET_GROUPS, isDrawn } from './types'
 
-export const CHEATSHEETS: Cheatsheet[] = [architecturePatterns, ...PLANNED]
+export const CHEATSHEETS: Cheatsheet[] = [
+  architecturePatterns,
+  designPatterns,
+  apiDesign,
+  gitCommands,
+  gitBranching,
+  codingStandards,
+  sdlc,
+  ...PLANNED,
+]
 
 export function cheatsheetBySlug(slug: string): Cheatsheet | undefined {
   return CHEATSHEETS.find((sheet) => sheet.slug === slug)
