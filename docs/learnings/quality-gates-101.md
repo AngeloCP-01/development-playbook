@@ -356,3 +356,35 @@ Deleting the entire new argument would have kept the suite green. When you move 
 string *means*, move the assertion that guards it in the same commit, and pin a short
 distinctive phrase from the part that carries the meaning rather than from whatever sentence
 happens to be quotable.
+
+## Two green gates and a third one that cannot even parse the file
+
+Added building syntax highlighting for the reference sheets (D-91, 2026-08-25). The first
+version computed highlighted HTML via a top-level `await` inside the data module itself.
+`pnpm test` passed. `next build` passed. `pnpm test:e2e` failed outright — not a test
+failure, a `SyntaxError` — because Playwright's own test transform cannot parse a module
+with top-level await, and the audit suite imports the registry directly.
+
+**Two gates agreeing is not confirmation; it can just mean two gates share a module
+loader.** Vitest and Next's bundler both handle top-level await transparently, which made
+their agreement look like real coverage. It was coverage of the same blind spot twice.
+Nothing here was subtle enough to need debugging once found — the fix (compute at generate
+time, the same committed-and-checked pattern `cheatsheets.md`/`glossary.md` already use)
+took minutes. Finding out a third tool disagreed was the entire cost, and it only happened
+because the full gate — all of it, not the fast subset — ran before merging.
+
+**The same round found the same shape of bug one commit later, from the opposite
+direction.** `.prettierignore` exempts `*.md` because reformatting `glossary.md` would
+fight its own generator. The new generated file was `.ts`, so nothing exempted it — the
+pre-commit hook's `format` step rewrote the committed file, and the very next `pnpm test`
+failed its own sync check against content the generator never produces. Same lesson,
+inverted: it is not enough to ask "does this tool run the code correctly" — a formatter
+that never runs the code at all can still silently disagree with what generated the file
+in the first place.
+
+**The general shape, stated once for both:** a change that touches generated artifacts or
+async module evaluation is only verified by the tools that actually exercised it. A green
+`pnpm test` proves Vitest agrees. A green `next build` proves the bundler agrees. Neither
+proves Playwright's transform agrees, or that Prettier's opinion matches the generator's
+output. Run the *whole* gate — including the slow parts — before trusting a change is
+safe, not the fast subset that happened to pass.

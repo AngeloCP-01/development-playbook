@@ -274,3 +274,32 @@ question had already been decided months earlier by a numbered decision that had
 the identical evidence and reached the opposite conclusion. See `decisions-need-tests-101.md`
 — the decision was findable, and what made it invisible was that the code enforcing it
 explained its reasoning without citing its number.
+
+---
+
+## One running example teaches a list of abstract steps better than one example per step
+
+Building the `sdlc` reference sheet (2026-08-25). The first pass gave each of the seven
+SDLC phases its own definition plus its own "typical output" — a list of artifact *types*
+per phase (a requirements doc, an architecture diagram, a test plan). Accurate, and still
+something a reader with no domain background has to already half-know in order to fill in:
+naming that Design produces "an architecture diagram" does not show what decision that
+diagram actually settles.
+
+The fix was not more detail per phase — it was **one small scenario carried through all
+seven**, so each phase's abstract definition became something concrete, and so a reader
+could see one phase's output become the next phase's input rather than seven disconnected
+facts: a Planning-phase risk (could the reset flow itself leak which emails exist)
+becomes a Requirements-phase non-functional requirement (a reset request must look
+identical either way), which forces a specific Design-phase schema decision (store a
+hashed token, never the token), which Development builds as reviewable pieces, which
+Testing has a named case for, which Deployment ships behind a flag, and which Maintenance
+is still fixing months later as a DNS record rather than a code change.
+
+**The continuity is the teaching, not the individual facts.** Seven independent examples
+would each be accurate in isolation and would not show a reader *why* the phases are
+phases of one thing rather than seven unrelated checklists — which is the entire claim
+this playbook's stage numbering rests on (`CLAUDE.md`: "stage numbers are filing codes,
+not a sequence"). Reach for one thread run start to finish before reaching for one example
+per bullet, anywhere a list of steps is claiming to be a single process rather than seven
+separate ones.

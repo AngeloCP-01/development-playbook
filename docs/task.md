@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05 done; 13 remain — 5/18. Stage 05's doc round merged as `9ef3763`; the port (W-3.5b) merged to `develop` 2026-08-20 as `425381b`, `--no-ff`, branch deleted)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05 done; 13 remain — 5/18. Stage 05's doc round merged as `9ef3763`; the port (W-3.5b) merged to `develop` 2026-08-20 as `425381b`, `--no-ff`, branch deleted. **Stage 06 (Testing) chosen next, 2026-08-25** — the user's call, no reason recorded beyond the choice itself; not started)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; nine of the fourteen now-registered sheets drawn 2026-08-24 — six of the original ten, plus `sdlc`, `solid-principles` and `clean-code`, the last two new and split out of `coding-standards` into a fifth group, Design Principles (D-90) — five language sheets remain, D-88)* |
@@ -126,7 +126,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04 and 05 done; 13 remain)*
+### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04 and 05 done; 13 remain — 06 chosen next, 2026-08-25, not started)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
