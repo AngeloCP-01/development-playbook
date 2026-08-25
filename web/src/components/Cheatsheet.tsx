@@ -76,6 +76,22 @@ export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
                           {row.when}
                         </p>
                       )}
+                      {row.example && (
+                        <div className="mt-4 grid min-w-0 gap-3 sm:grid-cols-2">
+                          {row.example.map((ex) => (
+                            <div key={ex.label} className="min-w-0">
+                              <p className="t-label mb-1.5 text-subtle">
+                                {ex.label}
+                              </p>
+                              <pre className="overflow-x-auto border border-line bg-sunken p-3 text-[0.8125rem]">
+                                <code className="t-data whitespace-pre text-fg">
+                                  {ex.code}
+                                </code>
+                              </pre>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </dd>
                   </div>
                 ))}
@@ -133,9 +149,17 @@ export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
           <p className="t-label text-subtle">Source</p>
           <p className="mt-2 text-sm leading-relaxed text-muted">
             {sheet.source.url ? (
+              // The first source in this registry to carry a url — every
+              // earlier sheet left this branch dead. min-h-11 is needed here
+              // and not on the "belongs to stage" link above because that one
+              // sits alone on its own line; this one shares a line with the
+              // author text after it, which the touch-target audit reads as
+              // "not inline in a sentence" once that text is its own element
+              // rather than a bare text node — inline-flex keeps the target
+              // tall without breaking that shared line.
               <a
                 href={sheet.source.url}
-                className="underline decoration-line-strong underline-offset-4 transition-colors duration-150 hover:text-fg"
+                className="inline-flex min-h-11 items-center underline decoration-line-strong underline-offset-4 transition-colors duration-150 hover:text-fg"
               >
                 {sheet.source.title}
               </a>

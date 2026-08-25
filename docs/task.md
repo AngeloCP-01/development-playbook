@@ -60,7 +60,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05 done; 13 remain — 5/18. Stage 05's doc round merged as `9ef3763`; the port (W-3.5b) merged to `develop` 2026-08-20 as `425381b`, `--no-ff`, branch deleted)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; ten sheets still to transcribe)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; nine of the fourteen now-registered sheets drawn 2026-08-24 — six of the original ten, plus `sdlc`, `solid-principles` and `clean-code`, the last two new and split out of `coding-standards` into a fifth group, Design Principles (D-90) — five language sheets remain, D-88)* |
 
 ### Dependency map
 
@@ -702,21 +702,21 @@ the reason this repo is public (**D-26**). The boxes were never ticked back.
 
 ---
 
-### W-6 — Reference hub ◐ **PAUSED 2026-08-14** *(skeleton `0207fd6` and source graphics `4727dc3` merged; ~~resume after the stage 04 port~~ — that condition expired 2026-08-17, and again on 2026-08-20)*
+### W-6 — Reference hub ◐ **RESUMED 2026-08-24, per-stage cadence (D-88)**
 
-> **Parked deliberately, not abandoned.** The frame is finished and merged — routes,
-> rail, renderer, markdown generation, audit coverage and the source graphics. What
-> remains (W-6.3, W-6.4) is content work that competes with `W-3`, which is the
-> project. **Next active work is no longer the stage 04 port** — that merged 2026-08-17, and
-> stage 05's port merged 2026-08-20, so this condition had expired twice. Checked
-> 2026-08-20 rather than assumed: one sheet (`architecture-patterns.ts`) carries
-> content and the rest are still `sections: []` in `planned.ts`, so nothing about the
-> *content* status had drifted. Only the resume condition had. Still parked, now by
-> choice rather than by a pending dependency; what competes with it is whichever
-> `W-3` stage comes next, which is the user's call.
+> **The pause is deliberately overridden, not lifted.** From 2026-08-14 to
+> 2026-08-24 this section was paused because content work competes with `W-3`, the
+> project. That reasoning still holds in general — **W-6 is not "the project" and
+> stage 06 has still not been chosen** — but the user made an explicit, informed call
+> to run a bounded W-6 round after finishing each W-3 stage, when there is reference
+> material naturally related to what was just built. Stage 05 (Development) shipped
+> 2026-08-20; this round follows it. **The standing rule going forward**: after a
+> stage ships, check whether related lookup material is worth adding, and if so run a
+> scoped round before picking the next `W-3` stage — not instead of picking it.
 >
-> Resuming needs no re-decision: read this section, pick a sheet from
-> `reference/cheatsheet-sources.md`, and fill its `sections: []`. Nothing else changes.
+> Resuming needs no re-decision each time: read this section, pick a sheet from
+> `reference/cheatsheet-sources.md` tethered to a finished or in-progress stage, and
+> fill its `sections: []`.
 
 **Why it exists.** Two problems with one shape. `reference/glossary.md` and
 `reference/stack.md` have been unreachable from the app since they were written — no
@@ -742,12 +742,31 @@ decorative on a drawn sheet, descriptive on an undrawn one, both directions test
 Originals stay untracked and gitignored; the conversion recipe and measured savings
 are in `reference/cheatsheet-sources.md`. Evidence in `docs/tracker.md`.
 
-**W-6.3 — Fill the ten empty sheets ☐**
+**W-6.3 — Fill the ten empty sheets ◐** *(six of the original ten drawn 2026-08-24,
+plus three sheets not in the original count; five language sheets remain)*
 
-Content work, not app work, now that the frame exists. Three sources are already
-gathered and logged in `reference/cheatsheet-sources.md`; the rest have search terms
-listed there by priority. Two of the three still need their post URL and author
-recorded before anything derived from them can ship on a public site.
+Content work, not app work, now that the frame exists. **Drawn this round**:
+`design-patterns` (all 23 patterns, three sections), `api-design` (fifteen-step
+roadmap condensed to six sections), `git-commands`, `git-branching`. **A fifth
+`CheatsheetGroup`, Design Principles, was added mid-round (D-90)**: SOLID and
+Clean Code were drafted as two of `coding-standards`'s four planned sections, then
+pulled back out into their own sheets, `solid-principles` and `clean-code`, once it
+became clear they are principles carried across a codebase rather than
+project-specific style rules — each now has its own before/after code examples
+(`Row.example`, a new field, TDD'd). `coding-standards` is left with one section,
+code smells; naming conventions is still held empty — the one gathered source
+turned out to be Godot-specific, wrong domain, and a general or JS/TS replacement is
+still being searched for. `sdlc` is untethered, not in the original ten either.
+**Two real defects surfaced by the audit, not introduced by anything before this
+round**: the new code-example grid blew out past 320px (a classic CSS grid item
+`min-width: auto` case — fixed with `min-w-0` on the grid item), and `coding-standards`
+is the first sheet ever to carry a `source.url`, which exercised a footer link with
+no touch-target sizing for the first time — fixed with the same `min-h-11` treatment
+used elsewhere. Both were caught by the existing audit suite, not a new check.
+**Still `sections: []`**: `javascript`, `python`, `java`, `spring-boot`, `express` —
+the language sheets, lowest priority per the gathering list. Most images gathered for
+this round still have author/URL unrecorded; fix before promoting past `develop`
+(D-63). Evidence in `docs/tracker.md`.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 

@@ -72,7 +72,17 @@ test('every row has a what, since the middle column is the one that carries mean
 
 test('isDrawn distinguishes a sheet with content from a registered placeholder', () => {
   const drawn = CHEATSHEETS.filter(isDrawn)
-  expect(drawn.map((s) => s.slug)).toEqual(['architecture-patterns'])
+  expect(drawn.map((s) => s.slug).sort()).toEqual([
+    'api-design',
+    'architecture-patterns',
+    'clean-code',
+    'coding-standards',
+    'design-patterns',
+    'git-branching',
+    'git-commands',
+    'sdlc',
+    'solid-principles',
+  ])
 })
 
 test('cheatsheetBySlug finds a real sheet and returns undefined for a stranger', () => {
@@ -88,6 +98,7 @@ test('cheatsheetsForStage returns the sheets tethered to stage 03', () => {
     'api-design',
     'architecture-patterns',
     'design-patterns',
+    'solid-principles',
   ])
 })
 
