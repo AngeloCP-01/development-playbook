@@ -42,7 +42,7 @@ site. Log it in the ledger at the bottom of this file as you go.
 
 ## Priority 1 — the ones that pay off immediately
 
-### Git commands · `git-commands` · stage 04
+### ~~Git commands~~ · `git-commands` · stage 04 ✓ transcribed 2026-08-24
 
 ```
 "git commands" cheat sheet
@@ -55,7 +55,7 @@ site. Log it in the ledger at the bottom of this file as you go.
 Most of this you can write from your own conventions without a source at all. Gather
 for structure and for the commands you have forgotten exist, not for wording.
 
-### Git branching and conventions · `git-branching` · stage 04
+### ~~Git branching and conventions~~ · `git-branching` · stage 04 ✓ transcribed 2026-08-24
 
 ```
 "git branching strategy"
@@ -70,16 +70,22 @@ CLAUDE.md already documents this project's own branching policy and commit forma
 so this sheet is largely a restatement of decisions already made. Gather comparisons
 of the alternatives, not the convention itself.
 
-### Coding standards · `coding-standards` · stage 05
+### ~~Coding standards~~ · `coding-standards` · stage 05 ◐ one of four original topics remains here
 
 ```
-"clean code" principles
-"SOLID principles" explained
+"clean code" principles           ✓ CLEAN-CODE-principle.webp — moved to its own sheet, `clean-code` (D-90)
+"SOLID principles" explained      ✓ SOLID-PRINCIPLES-cheatsheet.jpeg — moved to its own sheet, `solid-principles` (D-90)
 "code review checklist"
-"naming conventions" cheat sheet
-"code smells" list
+"naming conventions" cheat sheet  ✗ only found a Godot/GDScript-specific one — wrong domain, keep searching
+"code smells" list                ✓ CodeSmell.jpeg — stayed here
 "refactoring techniques"
 ```
+
+SOLID and Clean Code turned out to be design principles, not style rules specific to
+this codebase — pulled into a new `Design Principles` group, each with its own sheet
+and its own before/after code examples (D-90). `coding-standards` is now just code
+smells, plus room for naming conventions, a code review checklist and refactoring
+techniques, none of which are claimed yet.
 
 ## Priority 2 — the diagram-heavy pair
 
@@ -97,7 +103,7 @@ hexagonal / ports and adapters, CQRS, serverless.
 "monolith vs microservices"
 ```
 
-### Design patterns · `design-patterns` · stage 03
+### ~~Design patterns~~ · `design-patterns` · stage 03 ✓ transcribed 2026-08-24, all 23 patterns
 
 ```
 "design patterns" cheat sheet
@@ -108,7 +114,9 @@ hexagonal / ports and adapters, CQRS, serverless.
 ```
 
 Twenty-three patterns will not fit one readable sheet. Look for graphics that split
-by category, or plan to split it into three sheets at authoring time.
+by category, or plan to split it into three sheets at authoring time. Ended up as one
+sheet with three sections instead of three sheets — a lookup sheet isn't bound by the
+stage panels' four-screen rule, so nothing forced the split.
 
 ## Priority 3 — supporting sheets worth having
 
@@ -124,6 +132,23 @@ by category, or plan to split it into three sheets at authoring time.
 "docker commands" cheat sheet            → containers      · stage 11
 "kubernetes" cheat sheet                 → containers      · stage 11
 ```
+
+`api-reference` and `sql-reference` already have hand-written draft notes —
+`reference/rest-api-best-practices.md` and `reference/10-sql-concepts.md` — gathered
+without an image, same as `git-branching` was. Not yet registered or transcribed into
+the `Cheatsheet` shape; a later round, not this one.
+
+`containers` (Docker/Kubernetes) is deliberately not gathered yet — it tethers to
+stage 11, which has no interactive port. D-62's registered-but-empty pattern would
+allow it, but content work is scoped to stages already built (01–05) for now.
+
+## Untethered
+
+### Software Development Life Cycle · `sdlc` · no stage
+
+Not originally in this list — added 2026-08-24 as a guide to the whole rather than
+lookup material for one stage, the same way the `Languages` group carries no stage.
+Transcribed from `sdlc.png`.
 
 ## Priority 4 — language and framework sheets
 
@@ -187,9 +212,27 @@ than shipping a broken-image box.
 
 ## Ledger
 
-| Target sheet | Source title | Author | URL | File | Captured |
-|---|---|---|---|---|---|
-| `architecture-patterns` | Software Architecture Patterns | Sathish Kumar Subramani | *not recorded* | `Software-Architecture-Patterns.gif` | 2026-08-14 |
-| `design-patterns` | *not recorded* | *not recorded* | *not recorded* | `software_design_patterns.jpeg` | 2026-08-14 |
-| `api-design` | Master Plan for API Design | Shalini Goyal | *not recorded* | `MasterPlan-Api-Design.gif` | 2026-08-14 |
-| `git-commands` | *not recorded* | *not recorded* | *not recorded* | `git-commands.jpeg` | 2026-08-14 |
+Two states below: **displayed** (registered as the sheet's `source.image`, shown
+on the page) and **consulted** (read to inform the transcription, or to
+cross-check a displayed one's coverage, but not itself registered — a second
+and third plate would repeat what the first already shows). Author/URL still
+unrecorded on most of these; fix before promoting past `develop` (D-63).
+
+| Target sheet | Source title | Author | URL | File | Captured | State |
+|---|---|---|---|---|---|---|
+| `architecture-patterns` | Software Architecture Patterns | Sathish Kumar Subramani | *not recorded* | `Software-Architecture-Patterns.gif` | 2026-08-14 | displayed |
+| `design-patterns` | Software Design Patterns | *not recorded* | *not recorded* | `software_design_patterns.jpeg` | 2026-08-14 | displayed |
+| `design-patterns` | GoF Design Patterns — 23 Timeless Solutions | *not recorded* | *not recorded* | `GoF Design Patterns.jpeg` | 2026-08-24 | consulted |
+| `design-patterns` | When to Use Which Design Pattern | GeeksforGeeks | *not recorded* | `Creatational-Structural-Behavioral-DP.jpeg` | 2026-08-24 | consulted |
+| `design-patterns` | Behavioral Design Patterns | *not recorded* | *not recorded* | `behavioral-design-pattern.png` | 2026-08-24 | consulted |
+| `design-patterns` | 15 Design Patterns in Simple Words | Keivan Damirchi | *not recorded* | `15-DesignPatterns.jpeg` | 2026-08-24 | dropped — subset of the above, no category split |
+| `api-design` | Master Plan for API Design | Shalini Goyal | *not recorded* | `MasterPlan-Api-Design.gif` | 2026-08-14 | displayed |
+| `git-commands` | Git Beyond Commit and Push | *not recorded* | *not recorded* | `git-commands.jpeg` | 2026-08-14 | displayed |
+| `git-commands` | Git Cheat Sheet — Essential Commands | *not recorded* | *not recorded* | `git-cheatsheet.jpeg` | 2026-08-24 | consulted |
+| `git-commands` | What is Git? | *not recorded* | *not recorded* | `Git.jpeg` | 2026-08-24 | dropped — redundant with the two above |
+| `git-branching` | Git Branching Strategies | Nikki Siapno (Level Up Coding) | *not recorded* | `git-branching.jpeg` | 2026-08-24 | displayed |
+| `solid-principles` | SOLID Principles — Cheat Sheet | Raja Kumar | *not recorded* | `SOLID-PRINCIPLES-cheatsheet.jpeg` | 2026-08-24 | displayed — moved here from `coding-standards` (D-90) |
+| `coding-standards` | Code Smell | Refactoring.Guru (via AIAI LAB) | https://refactoring.guru/refactoring/smells | `CodeSmell.jpeg` | 2026-08-24 | displayed (text-only `source`, no image plate) |
+| `clean-code` | Clean Code Principles Every Junior Developer Should Know | Unrecorded | *tried, 403 blocked* | `CLEAN-CODE-principle.webp` | 2026-08-24 | displayed — moved here from `coding-standards` (D-90). A specific follow-up URL (`medium.com/@ewniakithma/...`) was requested for this sheet and returned 403 on fetch; the gathered graphic plus original before/after code examples were used instead |
+| `coding-standards` (naming conventions) | Godot Naming Conventions | *not recorded* | *not recorded* | `NamingConventions.png` | 2026-08-24 | wrong domain — Godot/GDScript-specific, not general or JS/TS. Section held empty; still searching |
+| `sdlc` | Software Development Life Cycle (SDLC) | *not recorded* | *not recorded* | `sdlc.png` | 2026-08-24 | displayed |
