@@ -7,14 +7,17 @@ import type { Cheatsheet } from './types'
  * rather than a new group: SDLC is a way this repo does things, same as
  * coding-standards is, just at a wider scope.
  *
- * Two sections rather than one (2026-08-25): the seven phases now carry a
- * concrete deliverable per phase, not just a definition, and a second section
- * covers how three real methodologies run the identical seven phases
- * differently — sequential, iterative, or continuous. No code examples here
- * on purpose; SDLC is a process framework, and forcing a snippet into it
- * would be answering a question nobody asked, the same restraint
- * `coding-standards`'s naming-conventions gap is waiting on a real source
- * for rather than filling with a wrong-domain one.
+ * The seven phases are taught through one running example — adding password
+ * reset to a small app — rather than seven unrelated ones (2026-08-25, user
+ * request: teach the phase, not just name what it produces). A single thread
+ * carried end to end is what makes each phase's abstract definition land: the
+ * reader sees the *same* feature's risk in Planning, its non-functional
+ * requirement in Requirements, the schema decision that requirement forces in
+ * Design, and so on — each phase's output is visibly the input the next one
+ * needed, which a list of seven disconnected artifact types cannot show. No
+ * code examples: SDLC is a process framework, and Shiki tokenising a plain
+ * English sentence as TypeScript would be a mismatch between what a block
+ * looks like and what it is.
  */
 export const sdlc: Cheatsheet = {
   slug: 'sdlc',
@@ -34,42 +37,42 @@ export const sdlc: Cheatsheet = {
   sections: [
     {
       title: 'The seven phases',
-      note: 'A structured process to build software that solves the right problem — not this playbook’s eighteen stages, which are filing codes for the same underlying loop, not a nineteenth sequence to memorise on top of it.',
+      note: 'Followed through one running example — adding password reset to a small app — so each phase shows what it actually produces, and what the next phase does with it, rather than naming its output in the abstract.',
       rows: [
         {
           term: '1. Planning',
           what: 'Define the problem, objectives, scope, resources and risks.',
-          when: 'Typical output: a one-pager or project charter, a rough budget and timeline, a go/no-go decision.',
+          when: 'Password reset: the problem is support tickets from locked-out users, not a feature anyone asked for by name. The objective is cutting those tickets to zero. The scope decision — email links only, no SMS — is made here, and so is the risk that matters most: the reset flow itself could let an attacker learn which emails have an account.',
         },
         {
           term: '2. Requirements analysis',
           what: 'Gather and analyze functional and non-functional requirements.',
-          when: 'Typical output: user stories, acceptance criteria, a requirements specification.',
+          when: 'The functional requirement: a user who forgets their password can request a reset link by email and set a new one. The non-functional requirement is what Planning’s risk turns into something checkable: the link must expire in 30 minutes, and requesting one must say “check your email” whether or not that address has an account — so the flow itself can’t be used to test which emails are registered.',
         },
         {
           term: '3. Design',
           what: 'System architecture, database design, UI/UX and component detail.',
-          when: 'Typical output: an architecture diagram, an ER diagram, wireframes or mockups.',
+          when: 'The non-functional requirement forces a real decision here, not just a nice one: a `password_reset_tokens` table storing a hashed token and an expiry, never the token itself — because a token readable in the database is a token a database leak hands out. One endpoint to request a reset, one to redeem it, and a single “check your email” screen that never says whether the address existed.',
         },
         {
           term: '4. Development',
           what: 'Write clean, efficient code and build the application.',
-          when: 'Typical output: working code, commits and pull requests, a build artifact.',
+          when: 'Four small pull requests rather than one large one: the request endpoint, token generation and hashing, the redeem endpoint, the email template. Small enough that a reviewer can actually check the hashing decision from Design landed in the code, not just that something got built.',
         },
         {
           term: '5. Testing',
           what: 'Test for functionality, performance, security and bugs.',
-          when: 'Typical output: a test plan, a bug list, a coverage report.',
+          when: 'Does a valid token reset the password? Does an expired one get rejected? Requesting five reset emails in a minute — does the sixth get rate-limited? And the one Design exists to prevent: does requesting a reset for an email that isn’t registered look identical to requesting one that is?',
         },
         {
           term: '6. Deployment',
           what: 'Release the application to the production environment.',
-          when: 'Typical output: a release, a deploy runbook, rollback steps.',
+          when: 'Shipped behind a feature flag to 5% of traffic first, watching the error rate and how many reset emails actually arrive, before widening to everyone. A flag exists so a bad rollout is a flip, not a revert.',
         },
         {
           term: '7. Maintenance',
           what: 'Monitor, fix issues, improve performance, and add new features.',
-          when: 'Typical output: monitoring dashboards, incident postmortems, a patch or point release.',
+          when: 'Three months on, support tickets show reset emails landing in spam. The fix is an SPF/DKIM record, not a code change — the kind of fix this phase exists for, and the reason “maintenance” outlasts every other phase rather than closing when they do.',
         },
       ],
     },
