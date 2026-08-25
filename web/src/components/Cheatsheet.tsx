@@ -83,11 +83,21 @@ export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
                               <p className="t-label mb-1.5 text-subtle">
                                 {ex.label}
                               </p>
-                              <pre className="overflow-x-auto border border-line bg-sunken p-3 text-[0.8125rem]">
-                                <code className="t-data whitespace-pre text-fg">
-                                  {ex.code}
-                                </code>
-                              </pre>
+                              {ex.html ? (
+                                // Pre-rendered by src/lib/highlight.ts at
+                                // module load, from this same file's own
+                                // ex.code — not user input.
+                                <div
+                                  className="overflow-x-auto border border-line bg-sunken p-3 text-[0.8125rem] [&_.shiki]:overflow-visible"
+                                  dangerouslySetInnerHTML={{ __html: ex.html }}
+                                />
+                              ) : (
+                                <pre className="overflow-x-auto border border-line bg-sunken p-3 text-[0.8125rem]">
+                                  <code className="t-data whitespace-pre text-fg">
+                                    {ex.code}
+                                  </code>
+                                </pre>
+                              )}
                             </div>
                           ))}
                         </div>

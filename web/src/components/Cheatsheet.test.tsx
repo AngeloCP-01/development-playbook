@@ -190,3 +190,32 @@ test('renders no example block for a row that has none, since most rows do not c
   render(<CheatsheetView sheet={drawn} />)
   expect(document.querySelector('pre')).toBeNull()
 })
+
+// Pre-rendered HTML is computed once at module load (src/lib/highlight.ts),
+// not in the render path — this only asserts the component uses it when
+// present, not that highlighting itself is correct (highlight.test.ts does).
+test('renders the pre-highlighted markup when an example carries it, instead of plain text', () => {
+  const withHighlightedExample: Cheatsheet = {
+    ...drawn,
+    sections: [
+      {
+        title: 'Section',
+        rows: [
+          {
+            term: 'Row',
+            what: 'What.',
+            example: [
+              {
+                label: 'Violation',
+                code: 'class Foo {}',
+                html: '<pre class="shiki"><code><span class="line"><span data-testid="hl-token">class</span></span></code></pre>',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  }
+  render(<CheatsheetView sheet={withHighlightedExample} />)
+  expect(screen.getByTestId('hl-token')).toBeTruthy()
+})
