@@ -768,6 +768,16 @@ the language sheets, lowest priority per the gathering list. Most images gathere
 this round still have author/URL unrecorded; fix before promoting past `develop`
 (D-63). Evidence in `docs/tracker.md`.
 
+**W-6.3b — Real syntax highlighting on the two Design Principles sheets**
+*(2026-08-25)*. Not a new sheet — `solid-principles` and `clean-code`'s existing
+before/after examples now render through Shiki instead of plain mono text, in a
+four-role palette matched to the whiteprint/cyanotype system (**D-91**). One real
+defect found along the way: highlighting computed via a top-level `await` inside the
+data modules passed `pnpm test` and `next build` but broke `pnpm test:e2e`
+outright — fixed by moving highlighting to generate time (`pnpm gen:highlighted`),
+the same committed-snapshot pattern `cheatsheets.md` and `glossary.md` already use.
+Evidence in `docs/tracker.md`.
+
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 
 The reason `/reference` beat `/cheatsheets` as a section name. Closes the original
