@@ -150,3 +150,43 @@ test('renders no graphic for a sheet whose source is text-only', () => {
   render(<CheatsheetView sheet={drawn} />)
   expect(document.querySelector('img')).toBeNull()
 })
+
+// A principle sheet's whole point is showing the violation next to the fix —
+// prose alone is what design-principles content used to be limited to before
+// Row.example existed.
+test('renders a labelled code example when a row has one', () => {
+  const withExample: Cheatsheet = {
+    ...drawn,
+    sections: [
+      {
+        title: 'Single Responsibility',
+        rows: [
+          {
+            term: 'One reason to change',
+            what: 'A class should have only one responsibility.',
+            example: [
+              {
+                label: 'Violation',
+                code: 'class UserManager {\n  saveUser() {}\n  sendEmail() {}\n}',
+              },
+              {
+                label: 'Correct',
+                code: 'class UserRepository {\n  saveUser() {}\n}',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  }
+  render(<CheatsheetView sheet={withExample} />)
+  expect(screen.getByText('Violation')).toBeTruthy()
+  expect(screen.getByText('Correct')).toBeTruthy()
+  expect(screen.getByText(/class UserManager/)).toBeTruthy()
+  expect(screen.getByText(/class UserRepository/)).toBeTruthy()
+})
+
+test('renders no example block for a row that has none, since most rows do not carry code', () => {
+  render(<CheatsheetView sheet={drawn} />)
+  expect(document.querySelector('pre')).toBeNull()
+})

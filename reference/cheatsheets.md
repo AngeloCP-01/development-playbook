@@ -6,7 +6,7 @@
 Lookup material rather than reading material. A stage teaches a decision; a
 sheet answers what that command was.
 
-Drawn: 7 of 12. A sheet listed as not drawn is
+Drawn: 9 of 14. A sheet listed as not drawn is
 registered on purpose — the gap is the point, so it can be seen and filled.
 
 | Sheet | Group | Stage | Status |
@@ -14,6 +14,8 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | Software Architecture Patterns | Architecture | 03 | Drawn |
 | Design Patterns | Architecture | 03 | Drawn |
 | API Design | Architecture | 03 | Drawn |
+| SOLID Principles | Design Principles | 03 | Drawn |
+| Clean Code | Design Principles | 05 | Drawn |
 | Git Commands | Git | 04 | Drawn |
 | Git Branching & Conventions | Git | 04 | Drawn |
 | Coding Standards | Standards | 05 | Drawn |
@@ -173,6 +175,209 @@ Belongs to [03 — Architecture](../docs/03-architecture.md).
 
 Source: Master Plan for API Design — Shalini Goyal.
 
+## SOLID Principles
+
+Five rules for code that stays easy to change, test and extend.
+
+Belongs to [03 — Architecture](../docs/03-architecture.md).
+
+### The five principles
+
+- **Single Responsibility** — A class should have only one reason to change. — A class handling users, email and reports together is three responsibilities pretending to be one.
+
+  *Violation*
+
+  ```
+  class UserManager {
+    saveUser(u: User) { /* … */ }
+    sendWelcomeEmail(u: User) { /* … */ }
+    generateReport(u: User) { /* … */ }
+  }
+  ```
+
+  *Correct*
+
+  ```
+  class UserRepository {
+    save(u: User) { /* … */ }
+  }
+  class WelcomeEmailer {
+    send(u: User) { /* … */ }
+  }
+  class UserReport {
+    generate(u: User) { /* … */ }
+  }
+  ```
+
+- **Open/Closed** — Open for extension, closed for modification — add behavior without editing what already works. — A new type keeps requiring an `if`/`else if` added to existing code instead of a new class.
+
+  *Violation*
+
+  ```
+  function area(shape: Shape) {
+    if (shape.kind === "circle") return Math.PI * shape.r ** 2
+    if (shape.kind === "rect") return shape.w * shape.h
+    // every new shape edits this function
+  }
+  ```
+
+  *Correct*
+
+  ```
+  interface Shape { area(): number }
+  class Circle implements Shape {
+    area() { return Math.PI * this.r ** 2 }
+  }
+  // a new shape adds a class, this function never changes
+  ```
+
+- **Liskov Substitution** — A subclass must be usable anywhere its superclass is, without breaking the caller’s expectations. — A subclass throws on a method its parent’s contract promises will work — Ostrich extending Bird and refusing to fly.
+
+  *Violation*
+
+  ```
+  class Bird { fly() { /* … */ } }
+  class Ostrich extends Bird {
+    fly() { throw new Error("Ostriches can’t fly") }
+  }
+  ```
+
+  *Correct*
+
+  ```
+  class Bird {}
+  class FlyingBird extends Bird { fly() { /* … */ } }
+  class Ostrich extends Bird {} // never promises flight
+  ```
+
+- **Interface Segregation** — Clients should not be forced to depend on methods they do not use. — One fat interface makes every implementer stub out methods that do not apply to it.
+
+  *Violation*
+
+  ```
+  interface Worker {
+    work(): void
+    eat(): void
+  }
+  class Robot implements Worker {
+    work() { /* … */ }
+    eat() { throw new Error("Robots don’t eat") }
+  }
+  ```
+
+  *Correct*
+
+  ```
+  interface Workable { work(): void }
+  interface Eatable { eat(): void }
+  class Robot implements Workable {
+    work() { /* … */ }
+  }
+  ```
+
+- **Dependency Inversion** — High-level modules depend on abstractions, not on concrete low-level modules. — Swapping an implementation — a database, a payment provider — should not require editing the code that uses it.
+
+  *Violation*
+
+  ```
+  class UserService {
+    private db = new MySqlDatabase()
+  }
+  ```
+
+  *Correct*
+
+  ```
+  interface Database { connect(): void }
+  class UserService {
+    constructor(private db: Database) {}
+  }
+  ```
+
+
+Source: SOLID Principles — Cheat Sheet — Raja Kumar.
+
+## Clean Code
+
+Five habits that separate code that works from code that lasts.
+
+Belongs to [05 — Development](../docs/05-development.md).
+
+### Five habits
+
+- **Write for humans** — Code is read far more often than it is written — optimise for the next reader, not the interpreter.
+
+  *Before*
+
+  ```
+  const d = (a: number, b: number) => a * b * 0.1
+  ```
+
+  *After*
+
+  ```
+  const calculateDiscount = (price: number, quantity: number) =>
+    price * quantity * DISCOUNT_RATE
+  ```
+
+- **Keep it simple** — The straightforward solution beats the clever one once someone else has to maintain it.
+
+  *Before*
+
+  ```
+  const isEven = (n: number) => !(n & 1) === !0
+  ```
+
+  *After*
+
+  ```
+  const isEven = (n: number) => n % 2 === 0
+  ```
+
+- **Avoid duplicates** — The same logic in two places is one bug waiting to be fixed in only one of them.
+
+  *Before*
+
+  ```
+  function total(items) {
+    return items.reduce((s, i) => s + i.price * i.qty, 0)
+  }
+  function subtotal(cart) {
+    return cart.reduce((s, i) => s + i.price * i.qty, 0)
+  }
+  ```
+
+  *After*
+
+  ```
+  function lineTotal(item: LineItem) { return item.price * item.qty }
+  function total(items: LineItem[]) {
+    return items.reduce((s, i) => s + lineTotal(i), 0)
+  }
+  ```
+
+- **Be consistent** — One naming style, one structure, one way of doing a repeated thing — consistency is what makes code skimmable.
+
+  *Before*
+
+  ```
+  function get_user(id) { /* … */ }
+  function fetchOrder(id) { /* … */ }
+  function Load_Invoice(id) { /* … */ }
+  ```
+
+  *After*
+
+  ```
+  function getUser(id: string) { /* … */ }
+  function getOrder(id: string) { /* … */ }
+  function getInvoice(id: string) { /* … */ }
+  ```
+
+- **Refactor regularly** — Clean code is a habit applied continuously, not a one-time pass before a release. — The Boy Scout Rule: leave the code a little cleaner than you found it, every time you touch it.
+
+Source: Clean Code Principles Every Junior Developer Should Know — Unrecorded — see reference/cheatsheet-sources.md.
+
 ## Git Commands
 
 The ones worth memorising, and the ones worth looking up.
@@ -237,19 +442,9 @@ Source: Git Branching Strategies — Nikki Siapno.
 
 ## Coding Standards
 
-Naming, structure and the smells worth refactoring on sight.
+The smells worth refactoring on sight.
 
 Belongs to [05 — Development](../docs/05-development.md).
-
-### SOLID principles
-
-Five principles for code that stays easy to change, test and extend.
-
-- **Single Responsibility** — A class should have only one reason to change. — A class handling users, email and reports together is three responsibilities pretending to be one.
-- **Open/Closed** — Open for extension, closed for modification — add behavior without editing what already works. — A new type keeps requiring an `if`/`else if` added to existing code instead of a new class.
-- **Liskov Substitution** — A subclass must be usable anywhere its superclass is, without breaking the caller’s expectations. — A subclass throws on a method its parent’s contract promises will work — Ostrich extending Bird and refusing to fly.
-- **Interface Segregation** — Clients should not be forced to depend on methods they do not use. — One fat interface makes every implementer stub out methods that do not apply to it.
-- **Dependency Inversion** — High-level modules depend on abstractions, not on concrete low-level modules. — Swapping an implementation — a database, a payment provider — should not require editing the code that uses it.
 
 ### Code smells
 
@@ -261,15 +456,7 @@ From Refactoring.Guru’s taxonomy, condensed to five categories. Not bugs — s
 - **Dispensables** — Code that provides little or no value — duplicate code, dead code, unnecessary abstraction. — Deleting it would not be missed, and keeping it costs a reader’s attention every time they pass it.
 - **Couplers** — Classes or modules that depend on each other more than their job requires. — Feature envy (a method more interested in another class than its own) or a message chain three calls deep.
 
-### Writing clean code
-
-- **Write for humans** — Code is read far more often than it is written — optimise for the next reader, not the interpreter.
-- **Keep it simple** — The straightforward solution beats the clever one once someone else has to maintain it.
-- **Avoid duplicates** — The same logic in two places is one bug waiting to be fixed in only one of them.
-- **Be consistent** — One naming style, one structure, one way of doing a repeated thing — consistency is what makes code skimmable.
-- **Refactor regularly** — Clean code is a habit applied continuously, not a one-time pass before a release.
-
-Source: SOLID Principles — Cheat Sheet — Raja Kumar.
+Source: [Code Smell](https://refactoring.guru/refactoring/smells) — AIAI LAB, citing Refactoring.Guru.
 
 ## Software Development Life Cycle
 

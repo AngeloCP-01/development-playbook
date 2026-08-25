@@ -1,17 +1,20 @@
 import { apiDesign } from './api-design'
 import { architecturePatterns } from './architecture-patterns'
+import { cleanCode } from './clean-code'
 import { codingStandards } from './coding-standards'
 import { designPatterns } from './design-patterns'
 import { gitBranching } from './git-branching'
 import { gitCommands } from './git-commands'
 import { PLANNED } from './planned'
 import { sdlc } from './sdlc'
+import { solidPrinciples } from './solid-principles'
 import type { Cheatsheet, CheatsheetGroup } from './types'
 
 export type {
   Cheatsheet,
   CheatsheetGroup,
   Row,
+  RowExample,
   Section,
   Source,
   SourceImage,
@@ -22,6 +25,8 @@ export const CHEATSHEETS: Cheatsheet[] = [
   architecturePatterns,
   designPatterns,
   apiDesign,
+  solidPrinciples,
+  cleanCode,
   gitCommands,
   gitBranching,
   codingStandards,

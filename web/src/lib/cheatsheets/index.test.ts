@@ -75,11 +75,13 @@ test('isDrawn distinguishes a sheet with content from a registered placeholder',
   expect(drawn.map((s) => s.slug).sort()).toEqual([
     'api-design',
     'architecture-patterns',
+    'clean-code',
     'coding-standards',
     'design-patterns',
     'git-branching',
     'git-commands',
     'sdlc',
+    'solid-principles',
   ])
 })
 
@@ -96,6 +98,7 @@ test('cheatsheetsForStage returns the sheets tethered to stage 03', () => {
     'api-design',
     'architecture-patterns',
     'design-patterns',
+    'solid-principles',
   ])
 })
 

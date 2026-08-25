@@ -34,6 +34,19 @@ function renderSheet(sheet: Cheatsheet): string {
       const left = row.code ? `\`${row.code}\`` : `**${row.term}**`
       const when = row.when ? ` — ${row.when}` : ''
       lines.push(`- ${left} — ${row.what}${when}`)
+      if (row.example) {
+        lines.push('')
+        for (const ex of row.example) {
+          lines.push(
+            `  *${ex.label}*`,
+            '',
+            '  ```',
+            ...ex.code.split('\n').map((l) => `  ${l}`),
+            '  ```',
+            '',
+          )
+        }
+      }
     }
     lines.push('')
   }
