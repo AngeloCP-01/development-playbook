@@ -778,6 +778,13 @@ outright — fixed by moving highlighting to generate time (`pnpm gen:highlighte
 the same committed-snapshot pattern `cheatsheets.md` and `glossary.md` already use.
 Evidence in `docs/tracker.md`.
 
+**W-6.3c — `sdlc` expanded into a two-section guide** *(2026-08-25, user request)*.
+Not a new sheet either — the seven phases gained a concrete deliverable each, and a
+second section compares Waterfall, Agile/Scrum and DevOps/Continuous against the
+same seven phases. No code examples: SDLC is a process framework, and the user's own
+scope call (asked, not assumed) was deliverables plus methodology comparison, not
+code. Evidence in `docs/tracker.md`.
+
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 
 The reason `/reference` beat `/cheatsheets` as a section name. Closes the original
