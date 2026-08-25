@@ -21,7 +21,10 @@ Naming: `<topic>-101.md`.
   three times, the third inside the wave built to close the first two — and the coverage
   walk only works when it is starved of context, since the plan and the reports are a
   record of intentions and intentions are what make a reader of the panels a poor auditor
-  of them. Read it before building stages 06–18.
+  of them. Extended again after building the `sdlc` reference sheet: one running example
+  threaded through a list of abstract steps teaches the *relationship* between the steps —
+  one phase's output becoming the next phase's input — in a way seven independent examples,
+  however accurate each one is alone, cannot. Read it before building stages 06–18.
 - `quality-gates-101.md` — what wiring the gates taught: eslint's warnings-exit-0 trap,
   teeth checks as the method, hooks in a subdirectory repo, and why the committed audit
   suite being stricter than the throwaway scripts was a feature. Extended after stage 02
@@ -32,8 +35,13 @@ Naming: `<topic>-101.md`.
   patterns share: the assertion samples the state in which the property cannot be violated.
   Extended again after the 2026-08 debt round with the distinction that round turned on:
   **a constant stales and a property does not**, and a property can still be vacuous if
-  emptiness satisfies it. Read it on any new project's day one, and before writing tests
-  for scoring/judgment logic.
+  emptiness satisfies it. Extended again after building syntax highlighting (D-91): two
+  gates agreeing is not confirmation when both share a module loader — a top-level-await
+  change passed `pnpm test` and `next build` but broke `pnpm test:e2e` outright, because
+  Playwright's own transform cannot parse top-level await. The same round found the
+  inverse a commit later: a generated file Prettier was never told to skip, reformatted
+  into something its own generator disagreed with. Read it on any new project's day one,
+  and before writing tests for scoring/judgment logic.
 - `deploying-101.md` — what W-5's first deploy taught: the three dashboard settings the
   repository cannot express (connected repo, framework preset, root directory), why a green
   build of the *wrong* repository looks exactly like success, `prepare` scripts failing on hosts
@@ -77,6 +85,12 @@ Naming: `<topic>-101.md`.
   `oklab()` with a regex instead of rasterizing it, and passing green over surfaces it
   never looked at. Each has happened here. Read it before changing a token in response to
   a contrast number.
+- `branch-discipline-101.md` — a session merged a branch, stayed checked out on `develop`,
+  and committed the next round of work there — caught before it compounded, fixed, written
+  up. **The identical mistake happened again in the same session, the very next round**,
+  because a write-up is a sentence a future session does not read; only checking
+  `git branch --show-current` before the first edit, every time, especially right after a
+  merge, actually holds. Read it before starting any new round of work, not just once.
 - `rules-measure-the-wrong-thing-101.md` — what superseding D-38 taught: a rule can be right
   about what it cares about and wrong about what it counts. D-38 capped a stage's step count,
   reasoning that "a stepper stops being navigable when a step is a scroll" — a claim about
