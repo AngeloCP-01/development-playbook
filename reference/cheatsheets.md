@@ -466,13 +466,21 @@ The seven phases every stage in this playbook is a close-up of.
 
 A structured process to build software that solves the right problem — not this playbook’s eighteen stages, which are filing codes for the same underlying loop, not a nineteenth sequence to memorise on top of it.
 
-- **1. Planning** — Define the problem, objectives, scope, resources and risks.
-- **2. Requirements analysis** — Gather and analyze functional and non-functional requirements.
-- **3. Design** — System architecture, database design, UI/UX and component detail.
-- **4. Development** — Write clean, efficient code and build the application.
-- **5. Testing** — Test for functionality, performance, security and bugs.
-- **6. Deployment** — Release the application to the production environment.
-- **7. Maintenance** — Monitor, fix issues, improve performance, and add new features.
+- **1. Planning** — Define the problem, objectives, scope, resources and risks. — Typical output: a one-pager or project charter, a rough budget and timeline, a go/no-go decision.
+- **2. Requirements analysis** — Gather and analyze functional and non-functional requirements. — Typical output: user stories, acceptance criteria, a requirements specification.
+- **3. Design** — System architecture, database design, UI/UX and component detail. — Typical output: an architecture diagram, an ER diagram, wireframes or mockups.
+- **4. Development** — Write clean, efficient code and build the application. — Typical output: working code, commits and pull requests, a build artifact.
+- **5. Testing** — Test for functionality, performance, security and bugs. — Typical output: a test plan, a bug list, a coverage report.
+- **6. Deployment** — Release the application to the production environment. — Typical output: a release, a deploy runbook, rollback steps.
+- **7. Maintenance** — Monitor, fix issues, improve performance, and add new features. — Typical output: monitoring dashboards, incident postmortems, a patch or point release.
+
+### How different methodologies run the loop
+
+Same seven phases every time — what changes is whether they run once, in a short repeating slice, or continuously.
+
+- **Waterfall** — Runs the seven phases once, in strict sequence — each phase finishes and is signed off before the next starts. — Requirements that are genuinely fixed and unlikely to change: regulated or safety-critical builds, fixed-price contracts.
+- **Agile / Scrum** — Runs a thin slice of all seven phases every sprint (one to four weeks), re-planning and re-prioritising each time. — Requirements that will keep changing as the product is used — most product work, this playbook’s own stage 02 included.
+- **DevOps / Continuous** — Collapses development, testing and deployment into one automated pipeline; a change can go from commit to production the same day. — A team with the automation to make releasing safe often — this playbook’s own default, see stage 11 (CI/CD).
 
 Source: Software Development Life Cycle (SDLC) — Unrecorded — see reference/cheatsheet-sources.md.
 
