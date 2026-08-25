@@ -464,15 +464,15 @@ The seven phases every stage in this playbook is a close-up of.
 
 ### The seven phases
 
-A structured process to build software that solves the right problem — not this playbook’s eighteen stages, which are filing codes for the same underlying loop, not a nineteenth sequence to memorise on top of it.
+Followed through one running example — adding password reset to a small app — so each phase shows what it actually produces, and what the next phase does with it, rather than naming its output in the abstract.
 
-- **1. Planning** — Define the problem, objectives, scope, resources and risks. — Typical output: a one-pager or project charter, a rough budget and timeline, a go/no-go decision.
-- **2. Requirements analysis** — Gather and analyze functional and non-functional requirements. — Typical output: user stories, acceptance criteria, a requirements specification.
-- **3. Design** — System architecture, database design, UI/UX and component detail. — Typical output: an architecture diagram, an ER diagram, wireframes or mockups.
-- **4. Development** — Write clean, efficient code and build the application. — Typical output: working code, commits and pull requests, a build artifact.
-- **5. Testing** — Test for functionality, performance, security and bugs. — Typical output: a test plan, a bug list, a coverage report.
-- **6. Deployment** — Release the application to the production environment. — Typical output: a release, a deploy runbook, rollback steps.
-- **7. Maintenance** — Monitor, fix issues, improve performance, and add new features. — Typical output: monitoring dashboards, incident postmortems, a patch or point release.
+- **1. Planning** — Define the problem, objectives, scope, resources and risks. — Password reset: the problem is support tickets from locked-out users, not a feature anyone asked for by name. The objective is cutting those tickets to zero. The scope decision — email links only, no SMS — is made here, and so is the risk that matters most: the reset flow itself could let an attacker learn which emails have an account.
+- **2. Requirements analysis** — Gather and analyze functional and non-functional requirements. — The functional requirement: a user who forgets their password can request a reset link by email and set a new one. The non-functional requirement is what Planning’s risk turns into something checkable: the link must expire in 30 minutes, and requesting one must say “check your email” whether or not that address has an account — so the flow itself can’t be used to test which emails are registered.
+- **3. Design** — System architecture, database design, UI/UX and component detail. — The non-functional requirement forces a real decision here, not just a nice one: a `password_reset_tokens` table storing a hashed token and an expiry, never the token itself — because a token readable in the database is a token a database leak hands out. One endpoint to request a reset, one to redeem it, and a single “check your email” screen that never says whether the address existed.
+- **4. Development** — Write clean, efficient code and build the application. — Four small pull requests rather than one large one: the request endpoint, token generation and hashing, the redeem endpoint, the email template. Small enough that a reviewer can actually check the hashing decision from Design landed in the code, not just that something got built.
+- **5. Testing** — Test for functionality, performance, security and bugs. — Does a valid token reset the password? Does an expired one get rejected? Requesting five reset emails in a minute — does the sixth get rate-limited? And the one Design exists to prevent: does requesting a reset for an email that isn’t registered look identical to requesting one that is?
+- **6. Deployment** — Release the application to the production environment. — Shipped behind a feature flag to 5% of traffic first, watching the error rate and how many reset emails actually arrive, before widening to everyone. A flag exists so a bad rollout is a flip, not a revert.
+- **7. Maintenance** — Monitor, fix issues, improve performance, and add new features. — Three months on, support tickets show reset emails landing in spam. The fix is an SPF/DKIM record, not a code change — the kind of fix this phase exists for, and the reason “maintenance” outlasts every other phase rather than closing when they do.
 
 ### How different methodologies run the loop
 
