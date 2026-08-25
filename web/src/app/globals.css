@@ -38,6 +38,7 @@
   --stop-wash: #f3ddda;
   --warn: #8a5a06;
   --warn-wash: #f6ead1;
+  --syntax-string: #5d5a14;
 
   color-scheme: light;
 }
@@ -62,6 +63,7 @@
     --stop-wash: #3d1815;
     --warn: #e3ab4d;
     --warn-wash: #362708;
+    --syntax-string: #beb937;
 
     color-scheme: dark;
   }
@@ -85,6 +87,7 @@
   --stop-wash: #f3ddda;
   --warn: #8a5a06;
   --warn-wash: #f6ead1;
+  --syntax-string: #5d5a14;
 
   color-scheme: light;
 }
@@ -107,6 +110,7 @@
   --stop-wash: #3d1815;
   --warn: #e3ab4d;
   --warn-wash: #362708;
+  --syntax-string: #beb937;
 
   color-scheme: dark;
 }
@@ -269,4 +273,39 @@ main .measure-full {
 .rule-draw {
   transform-origin: left;
   animation: draw-rule 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── syntax highlighting ────────────────────────────────────────────────── */
+/* Shiki's own <pre> carries an inline background and padding — reset both,
+   since the block sits inside this app's own bg-sunken panel already. Colour
+   picks between the light/dark variables Shiki emits per token the same way
+   every other token in this file does: default to light, override under
+   prefers-color-scheme unless data-theme='light' pins it, override again
+   under data-theme='dark'. */
+.shiki,
+.shiki code {
+  background-color: transparent !important;
+  padding: 0;
+}
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+  font-style: var(--shiki-light-font-style, normal);
+  font-weight: var(--shiki-light-font-weight, inherit);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .shiki,
+  :root:not([data-theme='light']) .shiki span {
+    color: var(--shiki-dark);
+    font-style: var(--shiki-dark-font-style, normal);
+    font-weight: var(--shiki-dark-font-weight, inherit);
+  }
+}
+
+:root[data-theme='dark'] .shiki,
+:root[data-theme='dark'] .shiki span {
+  color: var(--shiki-dark);
+  font-style: var(--shiki-dark-font-style, normal);
+  font-weight: var(--shiki-dark-font-weight, inherit);
 }

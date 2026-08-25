@@ -13,6 +13,7 @@
     "test:prod": "playwright test --config=playwright.prod.ts",
     "gen:glossary": "vitest run src/lib/glossary.test.ts --update",
     "gen:cheatsheets": "vitest run src/lib/cheatsheets/render.test.ts --update",
+    "gen:highlighted": "vitest run src/lib/cheatsheets/generate-highlighted.test.ts --update",
     "prepare": "lefthook install || true",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -22,7 +23,8 @@
     "lucide-react": "^1.25.0",
     "next": "16.2.10",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "shiki": "^4.4.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",

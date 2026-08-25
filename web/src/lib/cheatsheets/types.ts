@@ -27,7 +27,13 @@ export const CHEATSHEET_GROUPS: CheatsheetGroup[] = [
  */
 export type RowExample = {
   label: string
+  /** Plain text — the copy-paste source of truth, and what render.ts's
+   *  generated markdown quotes. */
   code: string
+  /** Pre-rendered syntax-highlighted markup, computed once at module load
+   *  (see src/lib/highlight.ts) rather than in the render path. Optional so a
+   *  future non-TypeScript example can still ship as plain code. */
+  html?: string
 }
 
 export type Row = {
