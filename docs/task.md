@@ -785,6 +785,12 @@ same seven phases. No code examples: SDLC is a process framework, and the user's
 scope call (asked, not assumed) was deliverables plus methodology comparison, not
 code. Evidence in `docs/tracker.md`.
 
+**W-6.3d — `sdlc`'s phases retaught through one running example** *(2026-08-25, user
+request)*. The deliverable lists W-6.3c added named artifact types; this round
+replaced them with one small scenario (adding password reset) carried through all
+seven phases, so each phase's output visibly becomes the next phase's input rather
+than seven disconnected examples. Evidence in `docs/tracker.md`.
+
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 
 The reason `/reference` beat `/cheatsheets` as a section name. Closes the original
