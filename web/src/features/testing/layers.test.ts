@@ -31,10 +31,26 @@ test("every layer names what it cannot see, because that is the next layer's rea
   }
 })
 
+/**
+ * A prior version of this test only ever read `docs/06-testing.md` — it
+ * never touched `LAYERS`, so it stayed green through a rewrite that dropped
+ * the figure entirely. The doc's "best value-per-test" ranking claim itself
+ * is restored into the app in Figure 1 (`triage`'s `DISTRIBUTION`, not this
+ * module — `unit`'s panel has no headroom left for it), so the app-side
+ * check here is a different, already-true `LAYERS` literal that carries the
+ * same "bugs live between the layers" idea this test is named for: the
+ * integration layer's own blind spot, which is exactly a bug a layer below
+ * cannot see. Hand-typed, not sliced out of `LAYERS` at runtime.
+ */
 test("the doc's claim about integration tests is carried, both halves", () => {
   const s = flat(section('The distribution'))
   expect(s).toMatch(/best value-per-test in the whole suite/i)
   expect(s).toMatch(
     /most real bugs live between the layers rather than inside them/i,
+  )
+
+  const integration = LAYERS.find((l) => l.id === 'integration')
+  expect(integration?.blind).toMatch(
+    /it calls the action directly, so it cannot see a form that never submits/i,
   )
 })

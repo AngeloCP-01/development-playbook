@@ -44,7 +44,13 @@ test('the answers mirror the distribution the doc describes', () => {
 })
 
 /**
- * Pins against the doc, one phrase per sentence.
+ * Pins against the doc, one phrase per sentence — and, since Task 14's
+ * coverage walk, against the drill itself. A prior version of this test only
+ * ever read `docs/06-testing.md`: it never touched `CHANGES` or `OPTIONS`, so
+ * it stayed green through a rewrite that dropped the drill entirely. The two
+ * app-side checks below are hand-typed literals, not values sliced out of
+ * `CHANGES`/`OPTIONS` at runtime, for the same reason the doc pins are
+ * hand-typed rather than re-derived from the section they guard.
  *
  * The first sentence of the doc's sorting question is the famous half and the
  * one a transcription keeps. The second is the half that makes it usable —
@@ -62,6 +68,15 @@ test('the sorting question keeps both halves, not just the memorable one', () =>
   expect(s).toMatch(
     /the typechecker\s+catches it.{0,60}you already have that coverage for free/i,
   )
+
+  // The drill teaches both halves by letting the reader hit them rather than
+  // by restating the sentence, so the app-side check lands on the two rows
+  // that carry each half: the "none" tier's own free-coverage framing, and
+  // the discount row's explanation of the trigger to write one.
+  const none = OPTIONS.find((o) => o.id === 'none')
+  expect(none?.label).toMatch(/coverage is already free/i)
+  const discount = CHANGES.find((c) => c.id === 'discount')
+  expect(discount?.explanation).toMatch(/doc.s own trigger for writing a test/i)
 })
 
 /**

@@ -1,6 +1,7 @@
+import { TriangleAlert } from 'lucide-react'
 import { InlineCode } from '@/components/InlineCode'
 import { RevealList } from '@/components/RevealList'
-import { AI_PREMISE, PLAYS, type Play } from './ai-plays'
+import { AI_LIMIT, AI_PREMISE, PLAYS, type Play } from './ai-plays'
 
 /**
  * Source: `docs/06-testing.md`, "### AI in testing".
@@ -25,6 +26,12 @@ import { AI_PREMISE, PLAYS, type Play } from './ai-plays'
  *
  * Titles and bodies go through `InlineCode`, since `ai-plays.ts` keeps the
  * doc's bold bullet leads and named tools verbatim, backticks included.
+ *
+ * `AI_LIMIT` renders as a sibling callout after the `RevealList`, not inside
+ * it — same shape as stage 04 and 05's `AIPlays`. `AI_PREMISE` says what
+ * makes generation risky; `AI_LIMIT` says what nothing on this list replaces,
+ * and folding it into the list's header or footer would bury the answer to
+ * "what nothing here replaces" inside the very thing it is qualifying.
  */
 
 const KIND_LABEL: Record<Play['kind'], string> = {
@@ -36,31 +43,41 @@ const KIND_LABEL: Record<Play['kind'], string> = {
 
 export function AIPlays() {
   return (
-    <RevealList
-      idPrefix="testing-ai"
-      header={
-        <p className="border-b border-line px-5 py-3.5 text-sm leading-6 text-muted">
-          {AI_PREMISE}
-        </p>
-      }
-      rows={PLAYS.map((play) => ({
-        id: play.id,
-        title: (
-          <span className="font-medium">
-            <InlineCode text={play.title} />
-          </span>
-        ),
-        badge: (
-          <span className="t-label shrink-0 border border-line px-1.5 py-0.5 text-subtle">
-            {KIND_LABEL[play.kind]}
-          </span>
-        ),
-        body: (
-          <p className="measure text-sm leading-6 text-muted">
-            <InlineCode text={play.body} />
+    <div className="space-y-4">
+      <RevealList
+        idPrefix="testing-ai"
+        header={
+          <p className="border-b border-line px-5 py-3.5 text-sm leading-6 text-muted">
+            {AI_PREMISE}
           </p>
-        ),
-      }))}
-    />
+        }
+        rows={PLAYS.map((play) => ({
+          id: play.id,
+          title: (
+            <span className="font-medium">
+              <InlineCode text={play.title} />
+            </span>
+          ),
+          badge: (
+            <span className="t-label shrink-0 border border-line px-1.5 py-0.5 text-subtle">
+              {KIND_LABEL[play.kind]}
+            </span>
+          ),
+          body: (
+            <p className="measure text-sm leading-6 text-muted">
+              <InlineCode text={play.body} />
+            </p>
+          ),
+        }))}
+      />
+
+      <div className="border border-line bg-raised p-4 sm:p-5">
+        <p className="mb-2 flex items-center gap-2 text-sm font-semibold text-fg">
+          <TriangleAlert className="size-4 shrink-0 text-warn" aria-hidden />
+          What none of this replaces
+        </p>
+        <p className="measure text-sm leading-6 text-muted">{AI_LIMIT}</p>
+      </div>
+    </div>
   )
 }

@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { AI_PREMISE, PLAYS } from './ai-plays'
+import { AI_LIMIT, AI_PREMISE, PLAYS } from './ai-plays'
 import { flat, section } from './doc-source'
 
 test("every bullet in the doc's AI section is carried, and the count comes from the doc", () => {
@@ -39,11 +39,25 @@ test('the jest-dom play keeps the specific number, which is what makes it eviden
   expect(p?.body).toMatch(/Invalid Chai property/)
 })
 
+/**
+ * A prior version of this test only ever read `docs/06-testing.md` — it
+ * never touched an app export, so it stayed green through a rewrite that
+ * dropped the closing paragraph entirely, which is exactly what happened
+ * (Task 14's coverage walk, finding 5). `AI_LIMIT` is that paragraph,
+ * restored into the app; the three checks below repeat against it, as
+ * literals, not derived from `AI_LIMIT` itself.
+ */
 test('the closing claim survives: a generated test that has never been red is a decoration', () => {
   const s = flat(section('AI in testing'))
   expect(s).toMatch(/watching the test fail/i)
   expect(s).toMatch(/never been red is a decoration/i)
   expect(s).toMatch(/assuming it happened is how a suite becomes ballast/i)
+
+  expect(AI_LIMIT).toMatch(/watching the test fail/i)
+  expect(AI_LIMIT).toMatch(/never been red is a decoration/i)
+  expect(AI_LIMIT).toMatch(
+    /assuming it happened is how a suite becomes ballast/i,
+  )
 })
 
 test("kinds are drawn from the doc's own parenthetical, and every play has one", () => {

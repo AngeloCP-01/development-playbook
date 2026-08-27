@@ -22,6 +22,17 @@
 export const AI_PREMISE =
   'Generating tests is the most tempting thing to hand over on this page and the most dangerous, for one reason: the output is green either way. A test that cannot fail looks exactly like a test that passes, and a suite grown that way gets larger without anyone\'s confidence growing with it. The question to keep asking is not "did it write a test" but "has this test ever been red".'
 
+/**
+ * The doc's closing paragraph for this section — verbatim, all three
+ * sentences. `AI_PREMISE` names the failure mode; this names the one move
+ * that catches it, and the panel had never carried it (Task 14's coverage
+ * walk, finding 5). Mirrors `AI_LIMIT` in stage 04 and 05's `ai-plays.ts`:
+ * same name, same "the one thing generation does not replace" job, a
+ * different specific claim.
+ */
+export const AI_LIMIT =
+  'What none of this replaces: watching the test fail. A generated test that has never been red is a decoration, and the teeth check above is the only thing that tells the two apart. Asking for the failing run is cheap; assuming it happened is how a suite becomes ballast.'
+
 export type Play = {
   id: string
   title: string
