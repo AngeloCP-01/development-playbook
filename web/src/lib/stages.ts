@@ -78,7 +78,7 @@ export const STAGES: Stage[] = [
     blurb: 'Enough confidence to change code without fear.',
     group: 'Building',
     timing: 'During development — usually before the code.',
-    ready: false,
+    ready: true,
   },
   {
     num: '07',
