@@ -2,14 +2,21 @@ import Link from 'next/link'
 import { Stepper, type Step } from '@/components/Stepper'
 import { Callout, Contrast, Prose, Section } from '@/components/ui'
 import { Figure } from '@/components/Figure'
+import { Term } from '@/components/Term'
+import { InlineCode } from '@/components/InlineCode'
+import { References } from '@/components/References'
 import { RevealList, type RevealRow } from '@/components/RevealList'
 import { RevealFacet } from '@/components/RevealFacet'
 import { AnnotatedArtifact } from '@/components/AnnotatedArtifact'
 import { getStage } from '@/lib/stages'
 import { TriageDrill } from './TriageDrill'
 import { LayerThread } from './LayerThread'
+import { TeethCheck } from './TeethCheck'
+import { TestingChecklist } from './TestingChecklist'
+import { AIPlays } from './AIPlays'
 import { ARTIFACTS } from './artifacts'
 import { PROBES } from './probes'
+import { TRAPS } from './traps'
 import { type StepId } from './steps'
 
 /**
@@ -127,6 +134,48 @@ const RESTRAINT_ROWS: RevealRow[] = [
     body: (
       <RevealFacet label="Test your usage" tone="subtle">
         Test your usage, not their correctness.
+      </RevealFacet>
+    ),
+  },
+]
+
+/**
+ * The three "where it genuinely earns its keep" cases for test-first,
+ * hand-authored here for the same reason as `DISTRIBUTION` and
+ * `RESTRAINT_ROWS` above: nothing else in this feature needs these three
+ * rows independently of this one panel.
+ */
+const TEST_FIRST_ROWS: RevealRow[] = [
+  {
+    id: 'bug-fixes',
+    title: 'Bug fixes',
+    summary: 'Always.',
+    body: (
+      <RevealFacet label="Reproduce first" tone="blueprint">
+        Reproduce with a failing test first, then fix. Otherwise you cannot
+        prove you fixed it, and nothing stops it regressing.
+      </RevealFacet>
+    ),
+  },
+  {
+    id: 'business-logic',
+    title: 'Business logic with clear inputs and outputs',
+    summary: 'Business logic with clear inputs and outputs.',
+    body: (
+      <RevealFacet label="Where it fits cleanly" tone="subtle">
+        The input and the expected output are both known before a line of
+        implementation exists.
+      </RevealFacet>
+    ),
+  },
+  {
+    id: 'unsure-how',
+    title: 'Anything you are unsure how to structure',
+    summary: 'Anything you are unsure how to structure.',
+    body: (
+      <RevealFacet label="Design work" tone="blueprint">
+        Writing the call site first is design work &mdash; it forces the shape
+        of the interface before the implementation commits to one.
       </RevealFacet>
     ),
   },
@@ -402,37 +451,208 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
   {
     id: 'e2e',
     label: 'On top: the money path',
-    hint: 'Placeholder',
+    hint: 'Selectors that break when the user notices',
     content: (
-      <Section title="Placeholder">
-        <Prose>
-          <p>Panel under construction.</p>
-        </Prose>
-      </Section>
+      <div className="space-y-16">
+        <Section eyebrow="On top" title="The same feature, on top">
+          <Prose>
+            <p>
+              The same feature, on top: an end-to-end test drives a real browser
+              through the checkout a user actually sees, rather than a function
+              or an action underneath it.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <AnnotatedArtifact artifact={ARTIFACTS.checkout} />
+          </div>
+        </Section>
+
+        <Section
+          eyebrow="Selectors"
+          title="Role and accessible name, never a class"
+        >
+          <div className="mt-5">
+            <Contrast
+              badLabel=".btn-primary-2"
+              goodLabel="getByRole('button', { name: 'Buy now' })"
+              bad={
+                <p>
+                  Breaks on restyle and tells you nothing about user-visible
+                  behavior.
+                  <span className="mt-2 block text-subtle">
+                    A class rename ships with no behavior change at all, and the
+                    test fails anyway &mdash; for a reason nobody watching the
+                    app would recognize.
+                  </span>
+                </p>
+              }
+              good={
+                <p>
+                  Survives restyling.
+                  <span className="mt-2 block text-subtle">
+                    It breaks only when the user-visible thing actually changes
+                    &mdash; which is when you want it to break. An inaccessible
+                    UI producing failing tests is a useful accident, not a false
+                    alarm.
+                  </span>
+                </p>
+              }
+            />
+          </div>
+        </Section>
+
+        <Section eyebrow="Running it again" title="Tag the critical few">
+          <Prose>
+            <p>
+              Tag the critical few with{' '}
+              <Term id="smoke-test">
+                <code className="t-data break-words">@smoke</code>
+              </Term>{' '}
+              so they can run again against production after a deploy, during{' '}
+              <Link
+                href="/stages/14-post-deployment-verification"
+                className={stageLinkClass}
+              >
+                {stageTitle('14-post-deployment-verification')}
+              </Link>
+              .
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <Callout kind="trap" title="Never use waitForTimeout">
+              Playwright&rsquo;s assertions auto-retry. An arbitrary sleep is
+              either too short (flaky) or too long (slow), and usually manages
+              both across different machines.
+            </Callout>
+          </div>
+        </Section>
+      </div>
     ),
   },
   {
     id: 'teeth',
     label: 'Proving a test bites',
-    hint: 'Placeholder',
+    hint: 'Two of these three read as passes',
     content: (
-      <Section title="Placeholder">
-        <Prose>
-          <p>Panel under construction.</p>
-        </Prose>
-      </Section>
+      <div className="space-y-16">
+        <Section eyebrow="Order of operations" title="Test-first, mostly">
+          <Prose>
+            <p>
+              Writing the test first works because it forces you to define
+              &ldquo;done&rdquo; before you can be influenced by what you
+              happened to build. Test-after tends to test the code you wrote
+              rather than the behavior you wanted.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <RevealList idPrefix="test-first" rows={TEST_FIRST_ROWS} />
+          </div>
+          <Prose>
+            <p className="mt-6">
+              Where it is less useful: exploratory UI work, where you are
+              discovering the shape as you go. Spike it, then write tests before
+              it merges.
+            </p>
+          </Prose>
+        </Section>
+
+        <Section eyebrow="Proving it bites" title="The teeth check">
+          <Prose>
+            <p>
+              When a test is written <em>after</em> the code it covers &mdash; a
+              regression test, or tests added to an existing module &mdash;
+              green proves nothing, because the test never failed. Prove it
+              bites: deliberately break the implementation, confirm the new test
+              &mdash; and only that test &mdash; fails, then restore. Both
+              outputs go in the task report.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <TeethCheck />
+          </div>
+          <Prose>
+            <p className="mt-6">
+              This is not ceremony. This playbook&rsquo;s own gate passed a
+              deliberately bad commit twice before a teeth check exposed that
+              ESLint exits 0 on warnings; the check is what separates a safety
+              net from a decoration.
+            </p>
+          </Prose>
+        </Section>
+
+        <Section
+          eyebrow="A second class of bug"
+          title="Invariant tests over hand-edited data"
+        >
+          <Prose>
+            <p>
+              Content-heavy projects have a class of bug no behavior test
+              catches: a config or data file edited by hand, wrongly. Duplicate
+              keys, an id that stopped matching its slug, an entry registered
+              nowhere. Write tests that assert the <em>shape</em> of the data
+              &mdash; counts, uniqueness, cross-references between files &mdash;
+              not its values.
+            </p>
+            <p>
+              Thirteen such tests guard this playbook&rsquo;s own stage
+              registry, and a corrupted slug fails exactly four of them with
+              messages naming the slug. They cost minutes to write and run in
+              milliseconds, and they fire precisely when a human is editing data
+              by hand &mdash; the moment reviews are at their weakest.
+            </p>
+          </Prose>
+        </Section>
+      </div>
     ),
   },
   {
     id: 'done',
     label: 'Done, and done on a team',
-    hint: 'Placeholder',
+    hint: 'What one stage owes before it ships',
     content: (
-      <Section title="Placeholder">
-        <Prose>
-          <p>Panel under construction.</p>
-        </Prose>
-      </Section>
+      <div className="space-y-16">
+        <Section eyebrow="Closing" title="What one slice owes before it ships">
+          <Prose>
+            <p>
+              The four artifacts this stage produces, and the seven boxes
+              checked against them. Progress is saved in this browser as you
+              tick.
+            </p>
+          </Prose>
+          <div className="mt-5">
+            <TestingChecklist />
+          </div>
+        </Section>
+
+        <Section
+          eyebrow="AI in testing"
+          title="Where it earns its place, and where it does not"
+        >
+          <div className="mt-5">
+            <AIPlays />
+          </div>
+        </Section>
+
+        <Section eyebrow="Closing" title="Traps">
+          <Prose>
+            <p>
+              Each of these has a specific cost and a specific tell, in the
+              order the doc lists them.
+            </p>
+          </Prose>
+          <div className="mt-5 space-y-4">
+            {TRAPS.map((trap) => (
+              <Callout key={trap.id} kind="trap" title={trap.title}>
+                <p>
+                  <InlineCode text={trap.body} />
+                </p>
+              </Callout>
+            ))}
+          </div>
+        </Section>
+
+        <References slug="06-testing" />
+      </div>
     ),
   },
 ]
