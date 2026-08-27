@@ -50,6 +50,12 @@ layers read as one thing at three heights rather than three unrelated snippets.
 - **Panel ceiling:** `PANEL_SCREENS_MAX = 4.0` at 1024×768, enforced in
   `web/e2e/audit.spec.ts`. This round targets **3.2**. **No new `PANEL_EXCEPTIONS` entry.**
 - **No `setState` in an effect body.** `react-hooks/set-state-in-effect` is an error here.
+- **Teeth-check the committed file, not an untracked one.** Commit first, then mutate, then
+  `git diff` — which shows exactly the mutation — then `git checkout --` to restore and
+  confirm the diff is empty. `git add -N` does NOT work for this: on a new file it stages an
+  empty blob, so the pre- and post-mutation states both diff against the same empty baseline
+  and the mutation is not isolated. Three tasks in this round supplied reconstructed or
+  grep-substituted evidence before this was understood.
 - **No dotAll (`s`) regex flag.** This repo targets ES2017 and `tsc` rejects it outright
   (TS1501) — `pnpm typecheck` fails, not lint. Where a pattern needs to span the doc's hard
   wrap, flatten the haystack with `flat()` from `./doc-source` (it collapses whitespace runs
