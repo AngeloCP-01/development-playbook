@@ -51,11 +51,11 @@ export function LayerThread() {
                 </div>
                 <div>
                   <dt className="t-label text-subtle">Volume</dt>
-                  <dd className="t-data text-fg">{layer.volume}</dd>
+                  <dd className="t-data break-words text-fg">{layer.volume}</dd>
                 </div>
                 <div>
                   <dt className="t-label text-subtle">Speed</dt>
-                  <dd className="t-data text-fg">{layer.speed}</dd>
+                  <dd className="t-data break-words text-fg">{layer.speed}</dd>
                 </div>
               </dl>
             </div>
