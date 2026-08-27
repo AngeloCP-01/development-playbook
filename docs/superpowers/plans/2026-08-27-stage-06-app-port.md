@@ -110,6 +110,7 @@ layers read as one thing at three heights rather than three unrelated snippets.
 - Create: `web/src/features/testing/Testing.tsx`
 - Modify: `web/src/lib/stages.ts` (the `06-testing` entry, `ready: false` → `true`)
 - Modify: `web/src/features/stage-content.ts`
+- Modify: `web/src/features/step-ids.ts` (`STEP_IDS_BY_SLUG`)
 
 **Interfaces:**
 - Produces: `STEP_IDS` (a `readonly` tuple of seven ids), `type StepId`, and
@@ -247,11 +248,13 @@ export function Testing() {
 rather than the ones above if they differ. If they differ, say so in the task report — this
 plan's version is written from stage 05 and could be stale.
 
-- [ ] **Step 7: Register the stage**
+- [ ] **Step 7: Register the stage — four files, not three**
 
-In `src/lib/stages.ts`, the `06-testing` entry: `ready: false` → `ready: true`.
+`CLAUDE.md` describes a three-file trace. It is stale: TD-36 added a fourth, and
+`src/features/rails.test.tsx:51` fails the build without it.
 
-In `src/features/stage-content.ts`, add the import and the map entry:
+1. `src/lib/stages.ts`, the `06-testing` entry: `ready: false` → `ready: true`.
+2. `src/features/stage-content.ts` — the import and the map entry:
 
 ```ts
 import { Testing } from './testing/Testing'
@@ -260,6 +263,23 @@ import { Testing } from './testing/Testing'
 ```ts
   '06-testing': Testing,
 ```
+
+3. `src/features/step-ids.ts` — the rail declaration:
+
+```ts
+import { STEP_IDS as TESTING } from './testing/steps'
+```
+
+```ts
+  '06-testing': TESTING,
+```
+
+`STEP_IDS_BY_SLUG` is a *declaration*; `rails.test.tsx` and `e2e/audit-pages` are both
+observations compared against it. That is why a third copy is not acceptable and why the file
+exists at all — read its docblock before editing it.
+
+Registering here also adds seven URLs to the audit sweep. That is expected, and it is why
+Task 11 is the first task that runs `test:e2e`.
 
 - [ ] **Step 8: Gate it**
 
@@ -302,10 +322,19 @@ none and does not mention AI once. D-35 makes AI plays a mandatory per-stage con
 the docs are the canonical deliverable — so the app cannot carry a panel the doc has no
 source for. Found while planning this port, not by a reader.
 
-**This is prose, so there is no failing test to write first.** That is the documented
-exception, not a shortcut: the TDD iron law governs production code. The test comes in Task
-8, where `ai-plays.test.ts` counts this section's bullets out of the doc rather than trusting
-a number written into this plan.
+**There is a failing test to write first, and it already exists.**
+`src/lib/stage-metadata.test.ts:50` holds `AI_SECTION_STAGES`, an explicit slug list whose own
+comment says it "grows by one slug per stage built... so the section lands with the doc
+amendment at the start of a stage round rather than at the end when `ready` flips". That is
+this task. So this is a normal red-green cycle, not the prose exception.
+
+**Two constraints on this section, both binding, both because a later task depends on them:**
+
+- **Exactly six bullets.** Task 7's `ai-plays.test.ts` counts them out of the doc. The
+  humanizer pass may reword a bullet; it may not merge, split, add or remove one. If it
+  proposes such a change, decline it and say so in the report.
+- **No fenced code block.** Task 3 asserts the doc still has exactly three fences. A fourth
+  would fail it.
 
 - [ ] **Step 1: Confirm the insertion point**
 
@@ -317,7 +346,19 @@ Expected: `### Coverage` around line 211, `## Artifacts` around line 223, with a
 them. The new section goes **after** Coverage's last paragraph and **before** that `---`, so
 it stays inside "## The work" — which is where every other stage puts it.
 
-- [ ] **Step 2: Write the section**
+- [ ] **Step 2: Write the failing test**
+
+Add `'06-testing'` to `AI_SECTION_STAGES` in `src/lib/stage-metadata.test.ts`, after
+`'05-development'`.
+
+```bash
+cd web && pnpm vitest run src/lib/stage-metadata.test.ts
+```
+
+Expected: FAIL — `06-testing has no "### AI in ..." subsection`. That is the right failure.
+Anything else means the list was edited in the wrong place.
+
+- [ ] **Step 3: Write the section**
 
 Insert verbatim:
 
@@ -360,27 +401,28 @@ is a decoration, and the teeth check above is the only thing that tells the two 
 for the failing run is cheap; assuming it happened is how a suite becomes ballast.
 ```
 
-- [ ] **Step 3: Run the prose pass**
+- [ ] **Step 4: Run the prose pass**
 
 Invoke `humanizer:humanizer` over the new section only. Apply the fixes that make it clearer;
 skip any that would flatten the voice the surrounding doc already has. Say in the report which
 flags you accepted and which you declined, with a reason for each declined one.
 
-- [ ] **Step 4: Check nothing downstream broke**
+- [ ] **Step 5: Check nothing downstream broke**
 
 ```bash
 cd web && pnpm test
 ```
 
-Expected: green, and **the same count as Task 1**. Several stage-05 tests read
+Expected: green, and **one more passing test than Task 1** — the `stage-metadata` case
+added in Step 2 now passes rather than failing. Several stage-05 tests read
 `docs/06-testing.md` indirectly through cross-stage link checks; a heading inserted in the
 wrong place can move a section boundary. If the count changed, stop and report — that is a
 real finding, not noise to push through.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 6: Commit**
 
 ```bash
-git add docs/06-testing.md
+git add docs/06-testing.md web/src/lib/stage-metadata.test.ts
 git commit -m "docs(testing): add the AI in testing section stage 06 was missing
 
 Stages 01-05 each carry an 'AI in <stage>' section; 06 did not mention AI at
