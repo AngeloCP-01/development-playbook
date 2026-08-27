@@ -61,12 +61,27 @@ test('a typed presentational prop scored as a unit test is wrong', () => {
   expect(screen.getByText('0/1 right')).toBeDefined()
 })
 
+/**
+ * The needle is a literal typed out here, not a slice of `CHANGES[0].explanation`
+ * — `TeethCheck.test.tsx`'s equivalent test was already fixed to this shape
+ * for the same reason: this stage is the codebase's canonical example of not
+ * reading both sides off one source, and a derived needle here would teach
+ * the wrong habit by resemblance even though nothing here is hollow (it
+ * gates on presence/absence, not on a value the data could move to match
+ * itself). Scoped to this one row via `within(...)`, not the whole document,
+ * so a false pass can't hide behind some other row already showing text
+ * that happens to match.
+ */
 test('the explanation is hidden until the reader commits, because a revealed answer teaches nothing', () => {
   render(<TriageDrill />)
   const c = CHANGES[0]
-  expect(screen.queryByText(new RegExp(c.explanation.slice(0, 40)))).toBeNull()
+  const explanationPhrase =
+    /cheapest place to catch it is also the most precise/
+  const row = rowFor(c.change).closest('li') as HTMLElement
+
+  expect(within(row).queryByText(explanationPhrase)).toBeNull()
   pick(c.change, 'A unit test over a pure function')
-  expect(screen.getByText(new RegExp(c.explanation.slice(0, 40)))).toBeDefined()
+  expect(within(row).getByText(explanationPhrase)).toBeDefined()
 })
 
 test('a committed row locks, so a second guess cannot score hindsight', () => {
