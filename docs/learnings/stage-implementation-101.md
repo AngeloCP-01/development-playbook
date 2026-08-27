@@ -329,10 +329,10 @@ that same signal points the wrong way.
 
 Late in the round, one panel (`done`) measured 4.69 screens against the 4.0 ceiling and was
 split into two. Splitting does not delete a sentence — it moves some of them into a second
-panel — so the stage's *median* panel weight went down (2.74, against stage 05's 2.42)
-purely from the split, with every clause of content still present. A stage reading light on
-this measure after hitting the ceiling and splitting will always look lighter than an
-equally deep stage that never needed to.
+panel — so the stage's *median* panel weight dropped, from 3.48 before the split to 2.74
+after, purely from the split, with every clause of content still present. A stage reading
+light on this measure after hitting the ceiling and splitting will always look lighter than
+an equally deep stage that never needed to.
 
 **The metric has decoupled from what it was built to measure.** It answers "how much has
 this stage been chopped to fit a panel," not "how much content is here" — the two only

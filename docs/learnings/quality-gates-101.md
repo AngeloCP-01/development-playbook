@@ -365,7 +365,7 @@ comparing `docs/06-testing.md` against itself and never touching an app export:
 
 ```ts
 // the shape all three shared
-expect(section('### The distribution')).toMatch(/best value-per-test/i)
+expect(section('The distribution')).toMatch(/best value-per-test/i)
 ```
 
 Every one of these had been green from the day it was written, and two of them stayed
