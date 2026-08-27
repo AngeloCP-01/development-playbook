@@ -659,7 +659,12 @@ component work, an assembly wave, a coverage walk, and a verification pass.
       closed in a six-commit fix wave. **The ninth is structural and the one worth
       naming**: three tests asserted only against the doc and never touched an app
       export, so each was green for a reason unrelated to what it claimed to guard —
-      inside the stage that teaches "has this test ever been red." See **D-93**
+      inside the stage that teaches "has this test ever been red." See **D-93**. The
+      tenth is a paste hazard the doc doesn't even have: `ARTIFACTS.actions` calls
+      `asUser`/`getInvoice` behind a one-click copy button with neither imported,
+      defined or annotated, so accepting the paste throws `ReferenceError` before any
+      assertion runs — fixed by annotation, the quoted fence itself untouched per the
+      whole-fence rule (D-66)
 - [x] **Task 15 — verification** ✓ lint, typecheck, `753/100` tests, build, `test:e2e`
       **18/18**, `test:dev-console` **1/1** (run once for the round, per house convention),
       a standalone committed-drill contrast sweep (0 failures, 16/16), responsive across

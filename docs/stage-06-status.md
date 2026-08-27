@@ -137,12 +137,17 @@ to the app, drawn from `docs/learnings/stage-implementation-101.md`'s own catalo
 a teeth check lies, rather than from the doc. Its correctness rests on review rather than a
 sync test, the same position stage 05's `snippets.ts` was in.
 
-`prose.test.ts`, new this round, is not scoped to stage 06 at all: it walks every
-hand-authored data module in the feature folder and fails on any authored string carrying
-markdown link syntax, since `InlineCode` does not render it and a link ships as literal
-bracket-and-paren text on the page (the same failure class **D-67** named for backticks).
-It discovers modules structurally rather than by a maintained filename list, so a data
-module added in a later stage-06 fix does not need this file edited to be covered.
+`prose.test.ts` is not scoped to stage 06 at all: it walks every hand-authored data module
+in the feature folder and fails on any authored string carrying markdown link syntax, since
+`InlineCode` does not render it and a link ships as literal bracket-and-paren text on the
+page (the same failure class **D-67** named for backticks). It discovers modules
+structurally rather than by a maintained filename list, so a data module added in a later
+stage-06 fix does not need this file edited to be covered. It is a near-verbatim port of
+stage 05's `prose.test.ts` rather than new writing — the doc-filename swaps and this stage's
+own doc-anchor examples travelled across, and the whole-branch review's M10 caught three
+references (`Development.tsx`'s `STUCK_MOVES`, `snippets.ts`'s `code` field) the port had
+left pointing at stage 05's files instead of `Testing.tsx`'s `DISTRIBUTION`/`RESTRAINT_ROWS`
+and this stage's own `teeth.ts`.
 
 `Testing.test.tsx`, added in the coverage walk's fix wave, is the newest guard and closes
 the round's own headline defect: `DISTRIBUTION` and `RESTRAINT_ROWS` are hand-authored
