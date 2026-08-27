@@ -63,3 +63,26 @@ test('the e2e panel pivots on the role-and-name selector', () => {
     "getByRole('button', { name: 'Buy now' })",
   )
 })
+
+/**
+ * Finding 9 of Task 14's coverage walk: `actions`' code calls `asUser(...)`
+ * and `getInvoice(...)`, neither imported, defined or annotated anywhere —
+ * and unlike the doc, this panel offers a one-click copy of the block
+ * (`AnnotatedArtifact`'s `CopyArtifact`), so a reader who accepts the paste
+ * offer gets `ReferenceError: asUser is not defined` before any assertion
+ * runs. Fixed by annotation, not by editing the quoted code — the block
+ * stays verbatim, since `artifacts.test.ts` above asserts whole-fence
+ * equality against the doc (D-66) — so a note on the line that first calls
+ * each names both as helpers the reader supplies, alongside the three
+ * (`resetDb`, `seedUser`, `seedInvoice`) the doc does import.
+ */
+test('a note names asUser and getInvoice as reader-supplied helpers, since the code never imports them', () => {
+  const line = ARTIFACTS.actions.lines.find((l) =>
+    l.text.includes('await asUser(user,'),
+  )
+  expect(line?.note).toMatch(/asUser/)
+  expect(line?.note).toMatch(/getInvoice/)
+  expect(line?.note).toMatch(
+    /resetDb.*seedUser.*seedInvoice|helpers? the reader supplies/i,
+  )
+})

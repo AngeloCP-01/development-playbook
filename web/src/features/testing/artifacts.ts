@@ -79,6 +79,7 @@ export const ARTIFACTS: Record<string, Artifact> = {
       { text: '' },
       {
         text: '    await asUser(user, () => updateInvoice({ invoiceId: invoice.id, amount: 250 }))',
+        note: '`asUser` and `getInvoice` below are helpers the reader supplies, the same as `resetDb`/`seedUser`/`seedInvoice` — not shown in this fence, but needed to run it. Copying this block without them fails on `ReferenceError`, not on anything the test is about.',
       },
       { text: '' },
       { text: '    const updated = await getInvoice(invoice.id, user.id)' },
