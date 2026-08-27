@@ -357,6 +357,41 @@ string *means*, move the assertion that guards it in the same commit, and pin a 
 distinctive phrase from the part that carries the meaning rather than from whatever sentence
 happens to be quotable.
 
+## A doc-anchored test proves the doc, not the app
+
+Added after the stage 06 port (W-3.6, 2026-08-27), inside the very stage that teaches "has
+this test ever been red." A coverage walk found three tests — one per data module —
+comparing `docs/06-testing.md` against itself and never touching an app export:
+
+```ts
+// the shape all three shared
+expect(section('### The distribution')).toMatch(/best value-per-test/i)
+```
+
+Every one of these had been green from the day it was written, and two of them stayed
+green through a fix wave that restored the exact phrase they name — to the doc, not the
+app — because nothing about the assertion could tell the difference. `DOC` is read off the
+filesystem at load time; comparing it to itself proves the file has not changed, which is
+not the same claim as "the app teaches this."
+
+This is the vacuous-test family from the sections above, with the sampled state moved one
+level up. Earlier entries here found an assertion sampling the state where a property
+cannot be violated. This is an assertion sampling the wrong *source* entirely — the doc
+instead of the thing built from it — and it is harder to see than the others, because a
+`doc-source.ts` read looks exactly like due diligence.
+
+**The fix, and why it generalises.** Every doc-anchored module needs a second assertion,
+against an app export, before it counts as covered — `OPTIONS`, `LAYERS`, a rendered
+constant, whatever the panel actually reads from. Teeth-check the app side directly:
+mutate the export, not the doc, and confirm the test reddens for that reason. One gap this
+exposed had no module to pin at all — two restored findings lived in `DISTRIBUTION` and
+`RESTRAINT_ROWS`, hand-authored inside the panel component rather than in a data module,
+because nothing else needed them independently of the one figure each renders. No
+doc-source test could ever have reached them. The fix there was a render test —
+`Testing.test.tsx` — asserting each restored finding against `#panel-<id>` textContent,
+which is strictly stronger than pinning a module: it cannot pass while the component
+ignores the data underneath it.
+
 ## Two green gates and a third one that cannot even parse the file
 
 Added building syntax highlighting for the reference sheets (D-91, 2026-08-25). The first

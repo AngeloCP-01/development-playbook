@@ -24,7 +24,15 @@ Naming: `<topic>-101.md`.
   of them. Extended again after building the `sdlc` reference sheet: one running example
   threaded through a list of abstract steps teaches the *relationship* between the steps —
   one phase's output becoming the next phase's input — in a way seven independent examples,
-  however accurate each one is alone, cannot. Read it before building stages 06–18.
+  however accurate each one is alone, cannot. Extended again after stage 06 with three
+  things that round cost: a panel split lowers a stage's median panel weight without
+  removing a sentence, so the median-comparison shortcut stops being a completeness signal
+  the moment any panel has ever split; a doc-anchored regex has to survive the doc's own
+  hard line-wraps, which bit three times and taught that two instances of one defect family
+  is the signal to sweep the rest of the plan rather than patch the instance in front of
+  you; and a third way a teeth check can lie — `git add -N` stages a new file as an empty
+  blob, so a mutation diffs against nothing and proves nothing, until the file is committed
+  first. Read it before building stages 07–18.
 - `quality-gates-101.md` — what wiring the gates taught: eslint's warnings-exit-0 trap,
   teeth checks as the method, hooks in a subdirectory repo, and why the committed audit
   suite being stricter than the throwaway scripts was a feature. Extended after stage 02
@@ -40,7 +48,11 @@ Naming: `<topic>-101.md`.
   change passed `pnpm test` and `next build` but broke `pnpm test:e2e` outright, because
   Playwright's own transform cannot parse top-level await. The same round found the
   inverse a commit later: a generated file Prettier was never told to skip, reformatted
-  into something its own generator disagreed with. Read it on any new project's day one,
+  into something its own generator disagreed with. Extended again after stage 06 with a
+  vacuous-test shape one level up from the rest: three tests compared a doc-anchored
+  constant to the doc it was read from and never touched an app export, so each stayed
+  green through a fix wave that restored the very content it was named for. A doc-source
+  read proves the doc, not the app built from it. Read it on any new project's day one,
   and before writing tests for scoring/judgment logic.
 - `deploying-101.md` — what W-5's first deploy taught: the three dashboard settings the
   repository cannot express (connected repo, framework preset, root directory), why a green
@@ -83,8 +95,13 @@ Naming: `<topic>-101.md`.
 - `contrast-checkers-lie.md` — the three ways a colour audit reports a failure that is not
   there: reading `getComputedStyle` while a `transition-colors` is still running, parsing
   `oklab()` with a regex instead of rasterizing it, and passing green over surfaces it
-  never looked at. Each has happened here. Read it before changing a token in response to
-  a contrast number.
+  never looked at. Each has happened here. Extended after stage 06 with two recurrences of
+  traps already in the file: the mid-transition read happened again, on a different script
+  in a different session, producing six failures that all matched the *other* theme's known
+  values; and the "cannot see the thing at all" trap turned out to still be true of a
+  `role="radio"` verdict surface the shared audit walker was never taught to commit, though
+  a standalone sweep found nothing actually broken there. Read it before changing a token
+  in response to a contrast number.
 - `branch-discipline-101.md` — a session merged a branch, stayed checked out on `develop`,
   and committed the next round of work there — caught before it compounded, fixed, written
   up. **The identical mistake happened again in the same session, the very next round**,

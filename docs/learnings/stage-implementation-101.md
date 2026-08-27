@@ -189,6 +189,20 @@ prescribed mutation proved nothing at all. The fix is a literal: *exactly one ga
 and it is the browser*. Any assertion shaped `expect(rendered).toBe(String(row.flag))` has
 this hole.
 
+**A third way, added after stage 06 (2026-08-27): the file being mutated was never really
+diffed, because it was never really committed.** `git add -N <file>` stages a new file with
+an empty blob, meant to let `git diff` show the file as newly added. It does that, but it
+also means the "before" state a teeth check diffs against is empty — so a mutation and the
+original both diff against nothing, and the diff cannot isolate what changed. It looked
+like proof twice before the cause was understood: a hand-annotated snippet standing in for
+a real diff, in each case backed by a genuine test failure so the substantive claim held,
+but the "mutation is isolated" evidence was never real. **The fix is to commit the file
+first.** Commit, mutate, `git diff` (a real diff against a real baseline), `git checkout --`
+to restore. Two instances of the wrong advice being followed is what surfaced that the
+advice itself, not the implementers applying it, was the defect — see "A doc-pin regex has
+to survive a hard line-wrap, and two instances means stop and sweep," further down this
+file, for the general shape.
+
 ---
 
 ## Check which testing libraries the project actually installs
@@ -303,3 +317,52 @@ this playbook's stage numbering rests on (`CLAUDE.md`: "stage numbers are filing
 not a sequence"). Reach for one thread run start to finish before reaching for one example
 per bullet, anywhere a list of steps is claiming to be a single process rather than seven
 separate ones.
+
+---
+
+## A panel split breaks the median comparison, not the completeness guard underneath it
+
+Added after the stage 06 port (W-3.6, 2026-08-27). The "Ask what the doc teaches" section
+above treats a stage's median panel weight as a signal: measuring well under a comparable
+stage's median meant content had gone missing, at stage 04. Stage 06 is the case where
+that same signal points the wrong way.
+
+Late in the round, one panel (`done`) measured 4.69 screens against the 4.0 ceiling and was
+split into two. Splitting does not delete a sentence — it moves some of them into a second
+panel — so the stage's *median* panel weight went down (2.74, against stage 05's 2.42)
+purely from the split, with every clause of content still present. A stage reading light on
+this measure after hitting the ceiling and splitting will always look lighter than an
+equally deep stage that never needed to.
+
+**The metric has decoupled from what it was built to measure.** It answers "how much has
+this stage been chopped to fit a panel," not "how much content is here" — the two only
+agree when nothing has ever needed splitting. Trust panel weight as a shape-and-pacing
+smell, worth a look when it is unusually low *and* nothing has split. The coverage walk
+described earlier in this file is the check that still answers the completeness question
+directly, and it is now the only one that does once a stage has any split panels in it.
+
+---
+
+## A doc-pin regex has to survive a hard line-wrap, and two instances means stop and sweep
+
+Added after the stage 06 port. `docs/NN-*.md` hard-wraps prose at roughly 80 columns, so a
+sentence a test wants to pin often crosses a line break the source file has and the reader
+never sees. A regex built from the sentence as written fails against the file as stored.
+
+It hit three times, each slightly different:
+
+- A dotAll (`s`) flag on a doc-anchored regex — this project targets ES2017, and `tsc`
+  rejects the flag outright (`TS1501`), so the first instance failed typecheck rather than
+  the test. The fix already existed for this: `flat(section(...))`, a helper that collapses
+  a section's whitespace before matching, built for exactly this problem.
+- A single-space regex matching "between the layers / rather than inside them" — no flag
+  to reject, so this one failed silently as a test, not loudly as a type error, on the same
+  doc's own hard wrap two files later.
+- The identical shape a third time, on a different sentence, found **by sweeping the
+  remaining tasks after the second instance** rather than by an implementer hitting it.
+
+**Two instances of one defect family is the signal to sweep the remaining work, not to
+patch the instance in front of you.** The first fix closed one file. The second fix closed
+a Global Constraint and every task still ahead — which is what caught the third instance
+before anyone wrote the test that would have failed on it. Waiting for a third occurrence
+to justify the sweep means paying for the sweep and the instance both.
