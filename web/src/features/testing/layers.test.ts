@@ -38,11 +38,16 @@ test("every layer names what it cannot see, because that is the next layer's rea
  * is restored into the app in Figure 1 (`triage`'s `DISTRIBUTION`, not this
  * module — `unit`'s panel has no headroom left for it), so the app-side
  * check here is a different, already-true `LAYERS` literal that carries the
- * same "bugs live between the layers" idea this test is named for: the
- * integration layer's own blind spot, which is exactly a bug a layer below
- * cannot see. Hand-typed, not sliced out of `LAYERS` at runtime.
+ * same "bugs live between the layers" idea the doc-side check above pins:
+ * the integration layer's own blind spot, which is exactly a bug a layer
+ * below cannot see. Hand-typed, not sliced out of `LAYERS` at runtime.
+ *
+ * The ranking claim itself ("best value-per-test in the whole suite") is
+ * pinned against the app in `Testing.test.tsx`'s Figure 1 integration-tier
+ * test, not here — follow the trail there rather than assuming it is
+ * unguarded.
  */
-test("the doc's claim about integration tests is carried, both halves", () => {
+test('the doc still ranks integration tests highest, and the integration layer names what it cannot see', () => {
   const s = flat(section('The distribution'))
   expect(s).toMatch(/best value-per-test in the whole suite/i)
   expect(s).toMatch(
