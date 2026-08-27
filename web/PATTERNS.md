@@ -370,7 +370,11 @@ Notes that make each land:
   safe/unsafe code snippets, one binary judgment per row, locked before the verdict shows,
   scored across the set — the same shape as `QuestionLab` with code where the quiz had
   text. Named here rather than given its own row because the row it already fits was
-  written for exactly this generalisation.
+  written for exactly this generalisation. Stage 06 adds two more instances, not two more
+  rows: `TriageDrill` (six changes, a four-option radiogroup per row rather than binary,
+  because the doc's own distribution has four tiers) and `TeethCheck` (three teeth-check
+  transcripts, proven/not-proven, structurally `AuthorizationDrill`'s binary radiogroup
+  again with a different question). Four instances now share this one row.
 - **Click-node inspector** pairs a diagram with a detail panel that updates on selection.
   Colour-code levels but always add a second signal (a dot, a label) so the coding is not
   the only cue.

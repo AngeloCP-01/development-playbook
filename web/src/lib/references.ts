@@ -163,6 +163,32 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: 'The origin of the two-day number this stage states as a rule, plus what it implies once a team exists: the branch-length limit holds regardless of team size, but trunk-based development itself stops meaning direct commits somewhere around fifteen people. Also lays out the rebase-vs-stash choice for catching a branch up before merging, which this stage names as “rebase before you open the pull request” without showing the alternative.',
     },
   ],
+  '06-testing': [
+    {
+      title: 'Write tests. Not too many. Mostly integration.',
+      source: 'Kent C. Dodds',
+      url: 'https://kentcdodds.com/blog/write-tests',
+      adds: 'The origin of weighting toward integration tests, argued against the classic pyramid rather than alongside it. Useful tension against this stage’s “many unit, some integration” distribution — read it for the case that a unit-heavy suite buys less confidence per test than this stage assumes.',
+    },
+    {
+      title: 'Locators',
+      source: 'Playwright Docs',
+      url: 'https://playwright.dev/docs/locators',
+      adds: 'The mechanics behind `getByRole` and accessible-name matching that this stage’s checkout test uses without explaining: how Playwright resolves a role and a name to one element, and the built-in auto-waiting that is the actual reason `waitForTimeout` is never necessary.',
+    },
+    {
+      title: 'Accessible name',
+      source: 'MDN Web Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Glossary/Accessible_name',
+      adds: 'How the browser actually computes the string a role selector matches against — visible text, then a label, then `aria-label` — which is the computation this stage’s “role and accessible name, never a class” line assumes the reader already knows.',
+    },
+    {
+      title: 'Mocks Aren’t Stubs',
+      source: 'Martin Fowler',
+      url: 'https://martinfowler.com/articles/mocksArentStubs.html',
+      adds: 'The classic breakdown this stage’s one line — “mocking the database tests your mock” — compresses into a sentence: the difference between a stub and a mock, state verification against behavior verification, and the classicist-versus-mockist split over how much of a system a test should replace.',
+    },
+  ],
 }
 
 export function getReferences(slug: string): Reference[] {

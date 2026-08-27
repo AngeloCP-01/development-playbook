@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05 done; 13 remain — 5/18. Stage 05's doc round merged as `9ef3763`; the port (W-3.5b) merged to `develop` 2026-08-20 as `425381b`, `--no-ff`, branch deleted. **Stage 06 (Testing) chosen next, 2026-08-25** — the user's call, no reason recorded beyond the choice itself; not started)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06 done; 12 remain — 6/18. Stage 05's port merged to `develop` 2026-08-20 as `425381b`, `--no-ff`. **Stage 06 (Testing) built 2026-08-27** on `feat/stage-06-testing`, 28 commits, 753/100 tests, audit 18/18 — not yet merged)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; nine of the fourteen now-registered sheets drawn 2026-08-24 — six of the original ten, plus `sdlc`, `solid-principles` and `clean-code`, the last two new and split out of `coding-standards` into a fifth group, Design Principles (D-90) — five language sheets remain, D-88)* |
@@ -126,7 +126,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04 and 05 done; 13 remain — 06 chosen next, 2026-08-25, not started)*
+### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05 and 06 done; 12 remain — 6/18)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -635,6 +635,52 @@ the shape of the round:
 a bare `pnpm tsc --noEmit`, which **violated D-25** and contradicted `docs/11-ci-cd.md`,
 where the same trap is taught under `## Traps` and credited to this playbook's own CI.
 `## Definition of done` now reads `pnpm typecheck` clean, with the reasoning inline.
+
+### W-3.6 — Stage 06, port ☑ *(built 2026-08-27 on `feat/stage-06-testing`, 28 commits, not yet merged)*
+
+`docs/06-testing.md` needed no correction phase — unlike 04 and 05, it went straight to
+port. **316 lines, six `##` sections, eleven `###` ones**, ported to
+`web/src/features/testing/` as **eight steps** (planned as seven; see the panel-split
+decision below). Sixteen tasks against
+`docs/superpowers/plans/2026-08-27-stage-06-app-port.md`, run as two waves of content and
+component work, an assembly wave, a coverage walk, and a verification pass.
+
+- [x] **Waves 1–2 — data, components** ✓ eight data modules, each with a sibling test
+      deriving its expectation from `docs/06-testing.md` at run time rather than from a
+      count typed into a brief. Task 2's `AI in testing` section landed as a real
+      red-green cycle rather than the "prose, no failing test" the plan first assumed —
+      `stage-metadata.test.ts`'s `AI_SECTION_STAGES` list already existed to force exactly
+      that ordering
+- [x] **Wave 3 — assembly** ✓ seven panels built, one split into two on measurement (below)
+- [x] **Task 14 — the coverage walk** ✓ a context-starved read of the doc and the code,
+      no plan or reports in sight, found **ten** problems against a green gate of 739
+      tests and thirteen closed per-task reviews — the third time this check has earned
+      its place (04 found five, 05 found ten). Eight were missing or drifted content,
+      closed in a six-commit fix wave. **The ninth is structural and the one worth
+      naming**: three tests asserted only against the doc and never touched an app
+      export, so each was green for a reason unrelated to what it claimed to guard —
+      inside the stage that teaches "has this test ever been red." See **D-93**. The
+      tenth is a paste hazard the doc doesn't even have: `ARTIFACTS.actions` calls
+      `asUser`/`getInvoice` behind a one-click copy button with neither imported,
+      defined or annotated, so accepting the paste throws `ReferenceError` before any
+      assertion runs — fixed by annotation, the quoted fence itself untouched per the
+      whole-fence rule (D-66)
+- [x] **Task 15 — verification** ✓ lint, typecheck, `753/100` tests, build, `test:e2e`
+      **18/18**, `test:dev-console` **1/1** (run once for the round, per house convention),
+      a standalone committed-drill contrast sweep (0 failures, 16/16), responsive across
+      18 widths, humanizer run with one decline recorded
+- [ ] **Merge into `develop`** — not yet asked for. Records only, at this point
+
+**The panel split, D-92.** `done` was planned as one panel holding three of the doc's
+closing sections; wiring in `<References>` (its own required scope) took it to **4.69**
+against the 4.0 ceiling. The fix was to split along the doc's own section boundaries — a
+new `traps` panel closes the stage last with the trap callouts and the references — rather
+than compress further, which would have hidden that the overage was never really about the
+references. Eight panels is unremarkable here: stage 03 has 22, stage 04 has 15, stage 05
+has 13.
+
+Evidence, the full panel table and the coverage table are in `docs/tracker.md`'s **W-3.6**
+row and in `docs/stage-06-status.md`. **Not merged, NOT pushed.**
 
 ### W-4 — Quality gates ☑
 

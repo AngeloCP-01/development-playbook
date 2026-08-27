@@ -218,6 +218,43 @@ problem. A settings page at 40% probably is not.
 
 If you enforce a threshold in CI, scope it to the modules that matter.
 
+### AI in testing
+
+Generating tests is the most tempting thing to hand over on this page and the most dangerous,
+for one reason: the output is green either way. A test that cannot fail looks exactly like a
+test that passes, and a suite grown that way gets larger without anyone's confidence growing
+with it. The question to keep asking is not "did it write a test" but "has this test ever been
+red".
+
+Where it earns its place:
+
+- **Enumerate the edge cases for a function you describe** (a saved command). Empty, zero,
+  negative, very large, null, duplicates — producing the *list* is a different job from
+  producing the assertions, and it is the half that gets skipped when you are tired.
+- **Turn a bug report into a failing test before anything is fixed** (a skill).
+  `test-driven-development` enforces the order, and a bug report is already a description of
+  behaviour, which is the input that method wants.
+- **Write the seeding and reset helpers** (a saved command). `src/test/helpers.ts` is
+  mechanical once the schema exists, and mechanical translation is where models are reliable.
+- **Turn a manual QA script into a Playwright spec** (a saved command). Ask for role and
+  accessible-name selectors explicitly; left alone, a model will reach for the CSS class it
+  can see in the markup.
+- **Check a testing API against the version actually installed** (an MCP). This repository
+  installs neither `@testing-library/jest-dom` nor `@testing-library/user-event`, and a model
+  writing from memory reaches for `toBeInTheDocument` by default — about twenty tests in one
+  stage's plan here were written that way and would have failed on `Invalid Chai property`
+  rather than on anything real. `context7` reads the installed version instead of guessing.
+- **Check what flaked before** (memory). `claude-mem` answers "have I seen this test go red
+  intermittently, and what was it", which is the question a retry-rate dashboard answers on a
+  team and nothing answers alone.
+
+Named tools, so this is actionable: `test-driven-development` from the Superpowers plugin,
+`context7` for version-accurate docs, `claude-mem` for what flaked before.
+
+What none of this replaces: watching the test fail. A generated test that has never been red
+is a decoration, and the teeth check above is the only thing that tells the two apart. Asking
+for the failing run is cheap; assuming it happened is how a suite becomes ballast.
+
 ---
 
 ## Artifacts

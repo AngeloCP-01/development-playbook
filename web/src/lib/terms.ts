@@ -682,6 +682,71 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'A merge without it still works, but the history it leaves behind interleaves two branches’ commits by timestamp instead of by intent — exactly the record `git log` exists to be.',
   },
+  mock: {
+    name: 'Mock',
+    see: '06-testing',
+    short: 'A stand-in for a real dependency that returns what you told it to.',
+    full: 'A stand-in for a real dependency — a database, an API — that returns exactly what you told it to, rather than what a real one would.',
+    soWhat:
+      'Mocking the database means your test asserts against your own instructions — it cannot see a constraint violation, a transaction bug, or a malformed query.',
+  },
+  'test-fixture': {
+    name: 'Test fixture',
+    see: '06-testing',
+    short: 'The known starting state a test runs against.',
+    full: 'The known starting state a test runs against — seeded rows, a database reset to a clean slate before the run starts.',
+    soWhat:
+      'Without a reset between tests, tests pass in one order and fail in another, and the failure looks like a bug in the code rather than in the setup.',
+  },
+  'regression-test': {
+    name: 'Regression test',
+    see: '06-testing',
+    short: 'A test written to reproduce a specific bug.',
+    full: 'A test written to reproduce a specific bug, which must fail before the fix lands and pass after.',
+    soWhat:
+      'Skipping it means you cannot prove the fix works, and nothing stops the same bug coming back.',
+  },
+  'invariant-test': {
+    name: 'Invariant test',
+    see: '06-testing',
+    short: 'A test asserting the shape of data rather than its values.',
+    full: 'A test asserting the shape of data rather than its values — counts, uniqueness, cross-references between files, rather than what any one field contains.',
+    soWhat:
+      'It fires exactly when a human is hand-editing a config or data file, which is the moment reviews are at their weakest.',
+  },
+  'teeth-check': {
+    name: 'Teeth check',
+    see: '06-testing',
+    short:
+      'Deliberately breaking the implementation to confirm a test fails, then restoring it.',
+    full: 'Deliberately breaking the implementation a test covers to confirm the test actually fails, then restoring the code.',
+    soWhat:
+      'A test written after the code it covers has never been red, so a green result proves nothing until you have seen it bite.',
+  },
+  'code-coverage': {
+    name: 'Code coverage',
+    see: '06-testing',
+    short: 'The percentage of lines or branches a test suite executes.',
+    full: 'The percentage of lines or branches a test suite executes when it runs.',
+    soWhat:
+      'Useful as a diagnostic, useless as a target — a blanket threshold is satisfied by testing whatever is easiest, which is rarely whatever is riskiest.',
+  },
+  'flaky-test': {
+    name: 'Flaky test',
+    see: '06-testing',
+    short: 'A test that passes and fails on the same code.',
+    full: 'A test that passes and fails on the same code, with nothing about the code itself changing between runs.',
+    soWhat:
+      'On a team it gets tolerated because everyone assumes someone else owns it, and once a suite is known to be unreliable a real failure stops being believed.',
+  },
+  'accessible-name': {
+    name: 'Accessible name',
+    see: '06-testing',
+    short: 'The name assistive technology reports for an element.',
+    full: 'The name assistive technology reports for an element — usually its visible text or its label.',
+    soWhat:
+      'Selecting by it in an E2E test means the test breaks when what the user sees changes and not when the styling does, and it makes an inaccessible UI produce failing tests.',
+  },
 }
 
 export function getTerm(key: string): Term | undefined {

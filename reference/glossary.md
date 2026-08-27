@@ -9,6 +9,8 @@ drift apart.
 
 ---
 
+**Accessible name** — The name assistive technology reports for an element — usually its visible text or its label. See [06 — Testing](../docs/06-testing.md).
+
 **ADR (Architecture Decision Record)** — A short record of a single architecture decision — the context, the choice, and the consequences — written when the decision is made and never edited afterward. Superseded by a new ADR rather than revised. See [03 — Architecture](../docs/03-architecture.md).
 
 **Appetite** — A fixed budget of time you are willing to spend, which the solution is then shaped to fit. An estimate starts with a design and ends with a number; an appetite starts with a number and ends with a design. See [02 — Product Planning](../docs/02-planning.md).
@@ -30,6 +32,8 @@ drift apart.
 **Circuit breaker** — A wrapper that counts consecutive failures, and once past a threshold stops attempting the call at all for a cooldown period, failing fast instead. After the cooldown it lets one request through to test whether the dependency recovered. See [03 — Architecture](../docs/03-architecture.md).
 
 **Client Component** — A component marked ‘use client’. It still renders once on the server to produce the page’s first HTML, then ships its own code to the browser and takes over there — which is what lets it hold state, run event handlers, and read something like window. See [05 — Development](../docs/05-development.md).
+
+**Code coverage** — The percentage of lines or branches a test suite executes when it runs. See [06 — Testing](../docs/06-testing.md).
 
 **Concierge test** — You do the work manually for a handful of real users — spreadsheets, emails, your own labour — while they experience the result as if it were a product.
 
@@ -67,6 +71,8 @@ drift apart.
 
 **Fitness function** — From evolutionary architecture: a test asserting a property of the system rather than a behaviour of a function. A rule that no module imports across a feature boundary, a build-size budget that fails the pipeline, an assertion that a page issues one query rather than forty. See [03 — Architecture](../docs/03-architecture.md).
 
+**Flaky test** — A test that passes and fails on the same code, with nothing about the code itself changing between runs. See [06 — Testing](../docs/06-testing.md).
+
 **Golden signals** — The four measurements to instrument before any others: latency, traffic, errors, and saturation. If you watch only four things, watch these. See [15 — Observability](../docs/15-observability.md).
 
 **Graceful degradation** — Designing so that the loss of one component removes one capability rather than the whole system. Search goes down and browsing still works; the PDF renderer goes down and the invoice still sends. See [03 — Architecture](../docs/03-architecture.md).
@@ -76,6 +82,8 @@ drift apart.
 **Horizontal scaling** — Adding instances behind a load balancer so work spreads across them. The alternative, vertical scaling, is moving to a larger machine: simpler, requiring no statelessness, and eventually running out of machine. See [03 — Architecture](../docs/03-architecture.md).
 
 **Idempotency** — A property of an operation: running it repeatedly with the same input leaves the system in the same state as running it once. Usually achieved by having the caller supply a key, and recording which keys have already been processed. See [03 — Architecture](../docs/03-architecture.md).
+
+**Invariant test** — A test asserting the shape of data rather than its values — counts, uniqueness, cross-references between files, rather than what any one field contains. See [06 — Testing](../docs/06-testing.md).
 
 **Isolation level** — A per-transaction setting trading strictness against concurrency. Postgres defaults to read committed: you never see uncommitted rows, but you do see rows others commit while you are still running. Serializable behaves as though transactions ran one at a time, and aborts one when it cannot guarantee that. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -88,6 +96,8 @@ drift apart.
 **Merge gate** — The set of automated checks that must pass before code merges to the main branch. Distinct from deployment: the gate protects the branch, the deploy ships it. See [11 — CI/CD](../docs/11-ci-cd.md).
 
 **Microservices** — An architecture where services are deployed and scaled independently and communicate over the network. Each owns its own storage; sharing a database between services undoes most of what the split was for. See [03 — Architecture](../docs/03-architecture.md).
+
+**Mock** — A stand-in for a real dependency — a database, an API — that returns exactly what you told it to, rather than what a real one would. See [06 — Testing](../docs/06-testing.md).
 
 **Modular monolith** — A monolith whose features own their data and talk to each other through published functions rather than by reaching into each other’s tables. One process and one deploy, but the seams are real and maintained. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -127,6 +137,8 @@ drift apart.
 
 **Rebase** — Move a branch’s commits so they start from the current tip of the branch it will merge into, rather than from wherever it happened to fork. Run before opening the pull request, so the diff a reviewer sees is the diff that will actually land. See [05 — Development](../docs/05-development.md).
 
+**Regression test** — A test written to reproduce a specific bug, which must fail before the fix lands and pass after. See [06 — Testing](../docs/06-testing.md).
+
 **Rollback** — Returning production to the last known-good state. On Vercel it is promoting a prior deployment, which takes seconds — but it is not automatic for database migrations, which is why migrations get careful, separate treatment. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **Server Action** — A function whose file or body opens with the ‘use server’ directive. Next.js turns it into a public HTTP endpoint behind the scenes, wires it to a form’s action or a plain click handler, and lets the calling code write it as though it were an ordinary async function. See [05 — Development](../docs/05-development.md).
@@ -156,6 +168,10 @@ drift apart.
 **System design** — The activity between knowing what a product must do and writing the code that does it: choose the qualities the system has to have, model the data, pick a deployment shape, draw what depends on what, and settle the interfaces and access rules. The phrase is most often heard as the name of an interview format, which follows roughly that sequence. See [03 — Architecture](../docs/03-architecture.md).
 
 **TAM (Total Addressable Market)** — Total Addressable Market — every person or business who could conceivably buy this, if you had no competitors and perfect reach. Usually paired with SAM (the slice you could realistically serve) and SOM (the slice you could realistically win).
+
+**Teeth check** — Deliberately breaking the implementation a test covers to confirm the test actually fails, then restoring the code. See [06 — Testing](../docs/06-testing.md).
+
+**Test fixture** — The known starting state a test runs against — seeded rows, a database reset to a clean slate before the run starts. See [06 — Testing](../docs/06-testing.md).
 
 **Timeout** — An explicit limit on how long you will wait for a network call before treating it as failed. Most HTTP clients and database drivers default to waiting indefinitely. See [03 — Architecture](../docs/03-architecture.md).
 
