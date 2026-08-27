@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest'
 import { STEP_IDS } from './steps'
 
-test('seven panels, in the order the doc builds its argument', () => {
+test('eight panels, in the order the doc builds its argument', () => {
   expect(STEP_IDS).toEqual([
     'triage',
     'restraint',
@@ -10,6 +10,7 @@ test('seven panels, in the order the doc builds its argument', () => {
     'e2e',
     'teeth',
     'done',
+    'traps',
   ])
 })
 

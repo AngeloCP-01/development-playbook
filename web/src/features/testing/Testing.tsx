@@ -641,7 +641,15 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
             <AIPlays />
           </div>
         </Section>
-
+      </div>
+    ),
+  },
+  {
+    id: 'traps',
+    label: 'Where a suite stops helping',
+    hint: 'Eight ways a suite stops helping',
+    content: (
+      <div className="space-y-16">
         <Section eyebrow="Closing" title="Traps">
           <Prose>
             <p>
