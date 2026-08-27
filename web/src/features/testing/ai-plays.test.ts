@@ -65,3 +65,15 @@ test("kinds are drawn from the doc's own parenthetical, and every play has one",
     expect(['skill', 'command', 'mcp', 'memory'], p.id).toContain(p.kind)
   }
 })
+
+/**
+ * Finding 7 of Task 14's coverage walk: the doc's closing line names
+ * `test-driven-development` as "from the Superpowers plugin" so a reader
+ * knows it is something installable, not a generic principle. Stage 05 has
+ * the same test for the same reason (N6, coverage-walk.md); stage 06
+ * reintroduced the gap.
+ */
+test('the skill play says it ships from the Superpowers plugin, not just its own name', () => {
+  const skill = PLAYS.find((p) => p.kind === 'skill')
+  expect(skill?.body).toContain('Superpowers plugin')
+})

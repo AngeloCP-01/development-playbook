@@ -51,7 +51,7 @@ export const PLAYS: Play[] = [
     id: 'bug-to-test',
     title: 'Turn a bug report into a failing test before anything is fixed',
     kind: 'skill',
-    body: '`test-driven-development` enforces the order, and a bug report is already a description of behaviour, which is the input that method wants.',
+    body: '`test-driven-development`, from the Superpowers plugin, enforces the order, and a bug report is already a description of behaviour, which is the input that method wants.',
   },
   {
     id: 'seed-helpers',

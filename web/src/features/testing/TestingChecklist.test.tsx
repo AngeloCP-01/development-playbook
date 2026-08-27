@@ -1,7 +1,12 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { beforeEach, expect, test } from 'vitest'
+import { STAGES } from '@/lib/stages'
 import { TestingChecklist } from './TestingChecklist'
-import { ARTIFACT_LIST, DONE } from './checklist'
+import { ARTIFACT_LIST, DONE, TEAM } from './checklist'
+
+function stageTitle(slug: string): string {
+  return STAGES.find((s) => s.slug === slug)!.title
+}
 
 /**
  * jsdom hands every test in this file the same `localStorage`, and
@@ -62,4 +67,19 @@ test('the four artifacts are listed, since the panel claims to name the outputs'
       a,
     ).toBeDefined()
   }
+})
+
+/**
+ * Finding 6 of Task 14's coverage walk: the review-requirement note's `(07)`
+ * rendered as a bare number while 04, 05 and 14 render as real links
+ * elsewhere in this stage. Mirrors `DevChecklist.test.tsx`'s stage-link test.
+ */
+test("links the review-requirement note to stage 07, named for the stage's real title", () => {
+  render(<TestingChecklist />)
+  // The team notes live inside `TeamNotes`, a disclosure collapsed by
+  // default — its children are not in the DOM until it opens.
+  fireEvent.click(screen.getByRole('button', { name: /if you are not solo/i }))
+  const withStage = TEAM.find((t) => t.id === 'require-tests')!
+  const link = screen.getByRole('link', { name: stageTitle(withStage.stage!) })
+  expect(link.getAttribute('href')).toBe(`/stages/${withStage.stage}`)
 })

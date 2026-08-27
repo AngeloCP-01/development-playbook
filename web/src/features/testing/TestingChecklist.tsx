@@ -1,11 +1,13 @@
 'use client'
 
 import { useId } from 'react'
+import Link from 'next/link'
 import { Check, RotateCcw, Save } from 'lucide-react'
 import { InlineCode } from '@/components/InlineCode'
 import { TeamNotes } from '@/components/TeamNotes'
 import { Card } from '@/components/ui'
 import { useLocalStorage } from '@/lib/useLocalStorage'
+import { getStage } from '@/lib/stages'
 import { ARTIFACT_LIST, DONE, TEAM } from './checklist'
 
 /**
@@ -32,6 +34,12 @@ import { ARTIFACT_LIST, DONE, TEAM } from './checklist'
  *
  * Labels go through `InlineCode`, since `checklist.ts` keeps the doc's
  * checkboxes verbatim, backticks included (`waitForTimeout`).
+ *
+ * `require-tests` carries `TeamNote.stage`, so its `(07)` renders as a real
+ * `next/link` beside the note rather than the dead bare number the body text
+ * still contains — same device as stage 05's `DevChecklist`, and the same
+ * reasoning: nesting the link inside the note's own text would fold it into
+ * an unrelated string instead of standing on its own.
  */
 
 export const TESTING_CHECKLIST_KEY = 'testing-checklist'
@@ -148,14 +156,27 @@ export function TestingChecklist() {
 
       <TeamNotes>
         <ul className="space-y-3">
-          {TEAM.map((note) => (
-            <li key={note.id}>
-              <p className="text-sm font-medium text-fg">{note.title}</p>
-              <p className="mt-0.5">
-                <InlineCode text={note.body} />
-              </p>
-            </li>
-          ))}
+          {TEAM.map((note) => {
+            const stage = note.stage ? getStage(note.stage) : undefined
+            return (
+              <li key={note.id}>
+                <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                  <p className="text-sm font-medium text-fg">{note.title}</p>
+                  {stage && (
+                    <Link
+                      href={`/stages/${stage.slug}`}
+                      className="t-label flex min-h-11 shrink-0 items-center border border-line px-1.5 py-0.5 text-brand transition-colors duration-150 hover:border-brand lg:min-h-9"
+                    >
+                      {stage.title}
+                    </Link>
+                  )}
+                </div>
+                <p className="mt-0.5">
+                  <InlineCode text={note.body} />
+                </p>
+              </li>
+            )
+          })}
         </ul>
       </TeamNotes>
     </div>

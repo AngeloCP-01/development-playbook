@@ -41,3 +41,17 @@ test('ids are unique across all three lists', () => {
   const ids = [...DONE.map((d) => d.id), ...TEAM.map((t) => t.id)]
   expect(new Set(ids).size).toBe(ids.length)
 })
+
+/**
+ * Finding 6 of Task 14's coverage walk: the "Require tests in review" note's
+ * `(07)` was a bare, dead number while 04, 05 and 14 render as real links
+ * elsewhere in this stage. `stage` mirrors `DoneItem.stage` in stage 05's
+ * `checklist.ts` — a slug held beside the label so a component can render a
+ * real cross-reference instead of scraping the bare number back into one.
+ */
+test('the review-requirement note points at a real stage', async () => {
+  const { STAGES } = await import('@/lib/stages')
+  const note = TEAM.find((t) => t.id === 'require-tests')
+  expect(note?.stage).toBe('07-code-review')
+  expect(STAGES.map((s) => s.slug)).toContain(note?.stage)
+})

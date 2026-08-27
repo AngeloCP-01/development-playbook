@@ -13,10 +13,21 @@
  * `([07](07-code-review.md))`, and this directory's `prose.test.ts` forbids
  * markdown link syntax in an authored string (`InlineCode` does not render
  * it) — stripped to the bare stage number, `(07)`.
+ *
+ * `stage` on that same note mirrors `DoneItem.stage` in stage 05's
+ * `checklist.ts`: a slug held separately from the label, so `TestingChecklist`
+ * can render a real `next/link` beside the note instead of leaving the
+ * stripped `(07)` as a dead number while 04, 05 and 14 render as working
+ * links elsewhere in this stage (Task 14 coverage walk, finding 6).
  */
 
 export type DoneItem = { id: string; label: string }
-export type TeamNote = { id: string; title: string; body: string }
+export type TeamNote = {
+  id: string
+  title: string
+  body: string
+  stage?: string
+}
 
 export const DONE: DoneItem[] = [
   {
@@ -77,5 +88,6 @@ export const TEAM: TeamNote[] = [
     id: 'require-tests',
     title: 'Require tests in review.',
     body: '"Where\'s the test for this?" is the highest-value review comment (07).',
+    stage: '07-code-review',
   },
 ]
