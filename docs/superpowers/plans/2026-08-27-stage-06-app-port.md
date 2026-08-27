@@ -1472,7 +1472,7 @@ test('the waitForTimeout trap keeps both the verdict and the mechanism', () => {
 ```ts
 import { expect, test } from 'vitest'
 import { AI_PREMISE, PLAYS } from './ai-plays'
-import { section } from './doc-source'
+import { flat, section } from './doc-source'
 
 test("every bullet in the doc's AI section is carried, and the count comes from the doc", () => {
   const bullets = section('AI in testing')
@@ -1492,7 +1492,8 @@ test("every bullet in the doc's AI section is carried, and the count comes from 
 test('the premise keeps the question, not only the warning', () => {
   expect(AI_PREMISE).toMatch(/green either way/i)
   expect(AI_PREMISE).toMatch(/has this test ever been red/i)
-  expect(section('AI in testing')).toContain(AI_PREMISE.split('\n')[0].slice(0, 60))
+  // Both sides flattened: `AI_PREMISE` is one line, the doc hard-wraps at ~90 columns.
+  expect(flat(section('AI in testing'))).toContain(flat(AI_PREMISE).slice(0, 120))
 })
 
 test('the jest-dom play keeps the specific number, which is what makes it evidence', () => {
@@ -1503,7 +1504,7 @@ test('the jest-dom play keeps the specific number, which is what makes it eviden
 })
 
 test('the closing claim survives: a generated test that has never been red is a decoration', () => {
-  const s = section('AI in testing')
+  const s = flat(section('AI in testing'))
   expect(s).toMatch(/watching the test fail/i)
   expect(s).toMatch(/never been red is a decoration/i)
   expect(s).toMatch(/assuming it happened is how a suite becomes ballast/i)
