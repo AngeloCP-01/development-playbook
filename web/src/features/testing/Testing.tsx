@@ -52,14 +52,16 @@ const DISTRIBUTION: DistributionTier[] = [
     id: 'unit',
     volume: 'Many',
     label: 'Unit tests',
-    detail: 'Pure functions, business logic, Zod schemas, calculations.',
+    detail:
+      'Pure functions, business logic, Zod schemas, calculations. Push logic into pure functions specifically so it can be tested this way.',
     width: 'w-full',
   },
   {
     id: 'integration',
     volume: 'Some',
     label: 'Integration tests',
-    detail: 'A Server Action end to end against a real test database.',
+    detail:
+      'A Server Action end to end against a real test database. The best value-per-test in the whole suite.',
     width: 'w-2/3',
   },
   {
@@ -122,8 +124,10 @@ const RESTRAINT_ROWS: RevealRow[] = [
     title: 'Trivial presentational components',
     summary: 'Trivial presentational components.',
     body: (
-      <RevealFacet label="Covered incidentally" tone="subtle">
-        Covered incidentally by E2E.
+      <RevealFacet label="Test the logic, not the render" tone="subtle">
+        Testing that a component renders a prop tests React, not your
+        application. Test components with real logic; let the rest be covered by
+        E2E.
       </RevealFacet>
     ),
   },
@@ -252,7 +256,7 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
         <Section eyebrow="The shape" title="Four tiers, in descending volume">
           <Figure
             n={1}
-            caption="The distribution the six changes above were being sorted into — many unit tests, some integration tests, few E2E tests, almost no component tests."
+            caption="Roughly, for a Next.js application: the distribution the six changes above were being sorted into — many unit tests, some integration tests, few E2E tests, almost no component tests."
           >
             <div className="divide-y divide-line border border-line">
               {DISTRIBUTION.map((tier) => (
@@ -326,8 +330,9 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
           <Prose>
             <p className="mt-6">
               Coverage is useful as a diagnostic and useless as a target. A
-              blanket threshold is satisfied by testing whatever is easiest,
-              which is rarely whatever is riskiest.
+              blanket 80% threshold is satisfied by testing whatever is easiest,
+              which is rarely whatever is riskiest. If you enforce a threshold
+              in CI, scope it to the modules that matter.
             </p>
           </Prose>
         </Section>
