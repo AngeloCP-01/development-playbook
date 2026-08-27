@@ -161,6 +161,22 @@ Eight new entries in `src/lib/terms.ts`: `mock`, `flaky-test`, `regression-test`
 `smoke-test` already exists and is wrapped on first appearance in panel 5. `pnpm
 gen:glossary` regenerates `reference/glossary.md`.
 
+### The doc gains a section before the port reads it
+
+`docs/06-testing.md` has no `### AI in testing` section and does not mention AI once. Stages
+01–05 each carry one (`docs/01-product-discovery.md:114`, `02:170`, `03:1332`, `04:611`,
+`05:474`), and D-35 makes the convention mandatory. Found while planning the port.
+
+The app cannot carry a panel the canonical doc has no source for, so the round opens with a
+small doc task that writes the section, committed on its own with a `docs(testing)` scope
+before any data module anchors to the doc. Panel 7's AI plays then read it like every other
+section and get a doc-anchored test.
+
+Rejected: shipping the port without AI plays and recording a D-35 exception as debt — it
+would make stage 06 the one stage a reader finds the convention missing from. Also rejected:
+a separate doc round first, which is cleaner against D-54 but costs a full round before any
+of stage 06 is visible. Put to the user during planning; the in-branch doc task was chosen.
+
 ## Testing
 
 **Doc-anchored data tests.** Each authored module gets a sibling `*.test.ts` holding its
@@ -229,6 +245,7 @@ checker (a link audit here once reported 124 false breaks), and any colour parse
 
 ## Documentation updates
 
+- `docs/06-testing.md` — gains `### AI in testing`, committed before the port reads it.
 - `docs/stage-06-status.md` — new, carrying the coverage table above as its coverage
   section, plus anything the walk finds and what was deliberately not ported, with reasons.
 - `docs/tracker.md` — the W-3.6 entry with evidence (commit, test counts, what review
