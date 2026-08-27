@@ -87,7 +87,7 @@ export const TEAM: TeamNote[] = [
   {
     id: 'require-tests',
     title: 'Require tests in review.',
-    body: '"Where\'s the test for this?" is the highest-value review comment (07).',
+    body: '"Where’s the test for this?" is the highest-value review comment (07).',
     stage: '07-code-review',
   },
 ]

@@ -69,7 +69,7 @@ export const PLAYS: Play[] = [
     id: 'installed-version',
     title: 'Check a testing API against the version actually installed',
     kind: 'mcp',
-    body: "This repository installs neither `@testing-library/jest-dom` nor `@testing-library/user-event`, and a model writing from memory reaches for `toBeInTheDocument` by default — about twenty tests in one stage's plan here were written that way and would have failed on `Invalid Chai property` rather than on anything real. `context7` reads the installed version instead of guessing.",
+    body: 'This repository installs neither `@testing-library/jest-dom` nor `@testing-library/user-event`, and a model writing from memory reaches for `toBeInTheDocument` by default — about twenty tests in one stage’s plan here were written that way and would have failed on `Invalid Chai property` rather than on anything real. `context7` reads the installed version instead of guessing.',
   },
   {
     id: 'what-flaked',

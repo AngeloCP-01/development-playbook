@@ -20,7 +20,7 @@ test('the doc still has seven boxes, so a silent addition surfaces here', () => 
 test('every artifact bullet is carried verbatim', () => {
   const items = bullets(h2('Artifacts'), /^- /)
   expect(ARTIFACT_LIST).toHaveLength(items.length)
-  expect(ARTIFACT_LIST).toHaveLength(4)
+  expect(ARTIFACT_LIST).toEqual(items.map((b) => b.replace(/^- /, '').trim()))
 })
 
 test('four team notes, each keeping the second sentence that makes it actionable', () => {

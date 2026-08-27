@@ -33,7 +33,7 @@ export const ARTIFACTS: Record<string, Artifact> = {
       { text: '    })' },
       {
         text: '    expect(result).toBe(19_440)   // 20000 - 10% = 18000, +8% = 19440',
-        note: "The arithmetic is in the doc's own trailing comment: 20000 less 10% is 18000, plus 8% is 19440. Money is in integer cents throughout, never floats — `0.1 + 0.2 !== 0.3` is a real bug that reaches real invoices.",
+        note: 'The arithmetic is in the doc’s own trailing comment: 20000 less 10% is 18000, plus 8% is 19440. Money is in integer cents throughout, never floats — `0.1 + 0.2 !== 0.3` is a real bug that reaches real invoices.',
       },
       { text: '  })' },
       { text: '' },
@@ -79,7 +79,7 @@ export const ARTIFACTS: Record<string, Artifact> = {
       { text: '' },
       {
         text: '    await asUser(user, () => updateInvoice({ invoiceId: invoice.id, amount: 250 }))',
-        note: '`asUser` and `getInvoice` below are helpers the reader supplies, the same as `resetDb`/`seedUser`/`seedInvoice` — not shown in this fence, but needed to run it. Copying this block without them fails on `ReferenceError`, not on anything the test is about.',
+        note: '`asUser` and `getInvoice` are helpers the reader supplies — neither is imported or defined anywhere in this fence, unlike `resetDb`, `seedUser` and `seedInvoice` above, which are imported and just need that helpers file written. Copying this block without `asUser`/`getInvoice` fails on `ReferenceError` regardless, not on anything the test is about.',
       },
       { text: '' },
       { text: '    const updated = await getInvoice(invoice.id, user.id)' },

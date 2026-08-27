@@ -32,15 +32,17 @@ import { expect, test } from 'vitest'
  * object or array is checked. Two field names this test knows are `text` and
  * `code`, both excluded because they hold code rather than authored prose —
  * `text` is lifted verbatim from the doc's fenced blocks (`artifacts.ts`),
- * `code` is the authored-but-not-prose drill snippets (`snippets.ts`) — and a
+ * `code` is the authored-but-not-prose drill snippets (`teeth.ts`) — and a
  * code line can legitimately contain `](` (a destructured array pattern, a
  * call passed a computed member). Everything that is not `text` or `code` is
  * prose and is in scope.
  *
- * M3 (final whole-branch review): the walk above only ever reached data
- * modules — it never saw prose authored directly in a `.tsx` file, such as
- * `Development.tsx`'s `STUCK_MOVES` (a `RevealRow[]` written inline rather
- * than lifted to a sibling module) or the `title`/`summary` object literals
+ * M3 (stage 05's final whole-branch review — this module is ported from
+ * that stage's `prose.test.ts`, and the finding travelled with it): the walk
+ * above only ever reached data modules — it never saw prose authored
+ * directly in a `.tsx` file, such as `Testing.tsx`'s `DISTRIBUTION` and
+ * `RESTRAINT_ROWS` (`RevealRow[]` written inline rather than lifted to a
+ * sibling module) or the `title`/`summary` object literals
  * built inline inside several `<RevealList rows={[...]} />` calls. Those
  * strings reach the page exactly the same way — `RevealList` renders
  * `title`/`summary` as-is, no markdown handling — so a stray link there is
@@ -69,7 +71,7 @@ import { expect, test } from 'vitest'
  * they are not where this bug class comes from either. The same `text`/`code`
  * key exemption applies, keyed off the enclosing property or JSX attribute
  * name, so a `code` block written inline in a `.tsx` file is exempt on the
- * same grounds as `snippets.ts`'s `code` field.
+ * same grounds as `teeth.ts`'s `code` field.
  */
 const dir = fileURLToPath(new URL('.', import.meta.url))
 

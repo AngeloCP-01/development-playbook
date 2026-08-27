@@ -82,10 +82,15 @@ const DISTRIBUTION: DistributionTier[] = [
 
 /**
  * The five things the doc says not to test, hand-authored here for the same
- * reason as `DISTRIBUTION` above. `summary` is the doc's bold lead verbatim;
- * `body` is the sentence that follows it, also verbatim. `title` is a plain
- * label repeating the lead without its trailing full stop, since `RevealRow`
- * requires one and the doc's lead is naturally short enough to double as it.
+ * reason as `DISTRIBUTION` above. `summary` is the doc's bold lead verbatim.
+ * For four of the five, `body` is the sentence that follows the lead in
+ * "What not to test", also verbatim. `presentational` is the exception: the
+ * doc's own follow-on there is one line — "Covered incidentally by E2E." —
+ * which names no reasoning, so its `body` instead carries the two sentences
+ * "### The distribution" gives for the same claim, verbatim from there.
+ * `title` is a plain label repeating the lead without its trailing full
+ * stop, since `RevealRow` requires one and the doc's lead is naturally
+ * short enough to double as it.
  */
 const RESTRAINT_ROWS: RevealRow[] = [
   {
@@ -294,7 +299,7 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
           <Prose>
             <p>
               Deleting a bad test is as valuable as writing a good one. Expand
-              each of the five for the sentence that follows it.
+              each of the five for the doc’s own reasoning.
             </p>
           </Prose>
           <div className="mt-5">
@@ -360,7 +365,7 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
           </Prose>
           <Figure
             n={2}
-            caption="One feature, three altitudes. Each layer's blind spot is the next layer's reason to exist."
+            caption="One feature, three altitudes. Each layer’s blind spot is the next layer’s reason to exist."
           >
             <LayerThread />
           </Figure>
@@ -622,7 +627,7 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
   {
     id: 'done',
     label: 'Done, and done on a team',
-    hint: 'What one stage owes before it ships',
+    hint: 'What one slice owes before it ships',
     content: (
       <div className="space-y-16">
         <Section eyebrow="Closing" title="What one slice owes before it ships">

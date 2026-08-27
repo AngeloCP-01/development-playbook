@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { expect, test } from 'vitest'
 import { AIPlays } from './AIPlays'
 import { PLAYS } from './ai-plays'
@@ -8,10 +8,20 @@ import { PLAYS } from './ai-plays'
  * doc. This file proves the component actually renders them.
  */
 
-test('renders every play, derived from the data', () => {
+/**
+ * Whole-branch review M5: this used to match on `p.title.slice(0, 30)` — a
+ * slice of the field the component renders, the same defect family the
+ * review's own fix wave already swept out of the hard-wrap tests once it saw
+ * it twice. None of these titles carries a backtick, so `InlineCode` renders
+ * each whole, in one text node; asserting the full literal title, scoped to
+ * its own row, proves the title reached the page in full rather than reading
+ * both sides off a truncated echo of the same string.
+ */
+test('renders every play, with each title in full', () => {
   render(<AIPlays />)
   for (const p of PLAYS) {
-    expect(screen.getByText(new RegExp(p.title.slice(0, 30)))).toBeDefined()
+    const row = screen.getByText(p.title).closest('li') as HTMLElement
+    expect(within(row).getByText(p.title)).toBeDefined()
   }
 })
 

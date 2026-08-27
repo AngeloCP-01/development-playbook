@@ -25,7 +25,7 @@ test('renders one card per reference the stage declares', () => {
   )
 })
 
-// The component is dropped into every stage, including the thirteen with no
+// The component is dropped into every stage, including the twelve with no
 // entries, so rendering nothing has to stay a supported state rather than an
 // empty heading with a rule under it.
 test('renders nothing for a stage with no references, since it ships in all eighteen', () => {
