@@ -238,7 +238,8 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
         >
           <Prose>
             <p>
-              Not &ldquo;what is my coverage?&rdquo; but:{' '}
+              Not &ldquo;what is my <Term id="code-coverage">coverage</Term>
+              ?&rdquo; but:{' '}
               <strong>if this breaks, how will I find out?</strong> Sort each
               change below by that question, not by habit.
             </p>
@@ -440,8 +441,11 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
           </div>
           <Prose>
             <p className="mt-6">
-              Use a real Postgres instance, not mocks. Mocking the database
-              tests your mock. Docker locally, a service container in CI.
+              Use a real Postgres instance, not <Term id="mock">mocks</Term>.
+              Mocking the database tests your mock. Reset the database before
+              each test — the <Term id="test-fixture">fixture</Term> it runs
+              against — so tests pass in the same order every time. Docker
+              locally, a service container in CI.
             </p>
           </Prose>
         </Section>
@@ -490,7 +494,9 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
                 <p>
                   Survives restyling.
                   <span className="mt-2 block text-subtle">
-                    It breaks only when the user-visible thing actually changes
+                    It targets the{' '}
+                    <Term id="accessible-name">accessible name</Term>, so it
+                    breaks only when the user-visible thing actually changes
                     &mdash; which is when you want it to break. An inaccessible
                     UI producing failing tests is a useful accident, not a false
                     alarm.
@@ -520,9 +526,11 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
           </Prose>
           <div className="mt-5">
             <Callout kind="trap" title="Never use waitForTimeout">
-              Playwright&rsquo;s assertions auto-retry. An arbitrary sleep is
-              either too short (flaky) or too long (slow), and usually manages
-              both across different machines.
+              <p>
+                Playwright&rsquo;s assertions auto-retry. An arbitrary sleep is
+                either too short (<Term id="flaky-test">flaky</Term>) or too
+                long (slow), and usually manages both across different machines.
+              </p>
             </Callout>
           </div>
         </Section>
@@ -559,12 +567,12 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
         <Section eyebrow="Proving it bites" title="The teeth check">
           <Prose>
             <p>
-              When a test is written <em>after</em> the code it covers &mdash; a
-              regression test, or tests added to an existing module &mdash;
-              green proves nothing, because the test never failed. Prove it
-              bites: deliberately break the implementation, confirm the new test
-              &mdash; and only that test &mdash; fails, then restore. Both
-              outputs go in the task report.
+              When a test is written <em>after</em> the code it covers &mdash; a{' '}
+              <Term id="regression-test">regression test</Term>, or tests added
+              to an existing module &mdash; green proves nothing, because the
+              test never failed. Prove it bites: deliberately break the
+              implementation, confirm the new test &mdash; and only that test
+              &mdash; fails, then restore. Both outputs go in the task report.
             </p>
           </Prose>
           <div className="mt-5">
@@ -573,9 +581,10 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
           <Prose>
             <p className="mt-6">
               This is not ceremony. This playbook&rsquo;s own gate passed a
-              deliberately bad commit twice before a teeth check exposed that
-              ESLint exits 0 on warnings; the check is what separates a safety
-              net from a decoration.
+              deliberately bad commit twice before a{' '}
+              <Term id="teeth-check">teeth check</Term> exposed that ESLint
+              exits 0 on warnings; the check is what separates a safety net from
+              a decoration.
             </p>
           </Prose>
         </Section>
@@ -589,9 +598,9 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
               Content-heavy projects have a class of bug no behavior test
               catches: a config or data file edited by hand, wrongly. Duplicate
               keys, an id that stopped matching its slug, an entry registered
-              nowhere. Write tests that assert the <em>shape</em> of the data
-              &mdash; counts, uniqueness, cross-references between files &mdash;
-              not its values.
+              nowhere. Write <Term id="invariant-test">invariant tests</Term>{' '}
+              that assert the <em>shape</em> of the data &mdash; counts,
+              uniqueness, cross-references between files &mdash; not its values.
             </p>
             <p>
               Thirteen such tests guard this playbook&rsquo;s own stage

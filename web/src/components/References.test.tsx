@@ -29,6 +29,6 @@ test('renders one card per reference the stage declares', () => {
 // entries, so rendering nothing has to stay a supported state rather than an
 // empty heading with a rule under it.
 test('renders nothing for a stage with no references, since it ships in all eighteen', () => {
-  const { container } = render(<References slug="06-testing" />)
+  const { container } = render(<References slug="07-code-review" />)
   expect(container.innerHTML).toBe('')
 })
