@@ -50,6 +50,10 @@ layers read as one thing at three heights rather than three unrelated snippets.
 - **Panel ceiling:** `PANEL_SCREENS_MAX = 4.0` at 1024×768, enforced in
   `web/e2e/audit.spec.ts`. This round targets **3.2**. **No new `PANEL_EXCEPTIONS` entry.**
 - **No `setState` in an effect body.** `react-hooks/set-state-in-effect` is an error here.
+- **No dotAll (`s`) regex flag.** This repo targets ES2017 and `tsc` rejects it outright
+  (TS1501) — `pnpm typecheck` fails, not lint. Where a pattern needs to span the doc's hard
+  wrap, flatten the haystack with `flat()` from `./doc-source` (it collapses whitespace runs
+  and exists for exactly this) and write the pattern against one line. Found in Task 4.
 - **Typecheck through `pnpm typecheck`**, never bare `tsc --noEmit` — route types come from
   `next typegen`.
 - **`reference/glossary.md` is generated.** Never hand-edit. Run `pnpm gen:glossary`.
@@ -662,7 +666,7 @@ Create `web/src/features/testing/triage.test.ts`:
 ```ts
 import { expect, test } from 'vitest'
 import { CHANGES, OPTIONS } from './triage'
-import { section } from './doc-source'
+import { flat, section } from './doc-source'
 
 /**
  * The four options are the doc's four tiers, so the drill teaches the
@@ -714,10 +718,10 @@ test('the answers mirror the distribution the doc describes', () => {
  * lost three times over. Both are pinned; the second is why this test exists.
  */
 test('the sorting question keeps both halves, not just the memorable one', () => {
-  const s = section('The one question worth asking')
+  const s = flat(section('The one question worth asking'))
   expect(s).toMatch(/if this breaks, how will I find out/i)
-  expect(s).toMatch(/a user emails me.{0,40}write a test/is)
-  expect(s).toMatch(/the typechecker\s+catches it.{0,60}you already have that coverage for free/is)
+  expect(s).toMatch(/a user emails me.{0,40}write a test/i)
+  expect(s).toMatch(/the typechecker catches it.{0,60}you already have that coverage for free/i)
 })
 
 /**
@@ -914,7 +918,7 @@ Create `web/src/features/testing/teeth.test.ts`:
 ```ts
 import { expect, test } from 'vitest'
 import { CASES } from './teeth'
-import { section } from './doc-source'
+import { flat, section } from './doc-source'
 
 /**
  * The verdict assertion is a literal, on purpose. A test shaped
@@ -947,10 +951,10 @@ test('ids are unique, because the drill keys its state on them', () => {
  * kind of trailing clause that goes missing in a transcription.
  */
 test('the teeth-check section keeps the procedure and the reporting requirement', () => {
-  const s = section('The teeth check')
+  const s = flat(section('The teeth check'))
   expect(s).toMatch(/green proves nothing, because the test never failed/i)
   expect(s).toMatch(/deliberately break the implementation/i)
-  expect(s).toMatch(/and only that test.{0,20}fails/is)
+  expect(s).toMatch(/and only that test.{0,20}fails/i)
   expect(s).toMatch(/Both outputs go in the task report/i)
 })
 
@@ -960,7 +964,7 @@ test('the teeth-check section keeps the procedure and the reporting requirement'
  * instead of advice — so it is pinned separately.
  */
 test('the section keeps the evidence that the gate passed a bad commit twice', () => {
-  const s = section('The teeth check')
+  const s = flat(section('The teeth check'))
   expect(s).toMatch(/passed a deliberately bad commit twice/i)
   expect(s).toMatch(/eslint exits 0 on warnings/i)
 })
@@ -1154,7 +1158,7 @@ test("the doc's claim about integration tests is carried, both halves", () => {
 ```ts
 import { expect, test } from 'vitest'
 import { PROBES } from './probes'
-import { section } from './doc-source'
+import { flat, section } from './doc-source'
 
 /**
  * The six are the doc's own list, in the doc's order, pinned as literals. The
@@ -1171,9 +1175,9 @@ test("the six probes are the doc's list, in the doc's order", () => {
     'null',
     'duplicates',
   ])
-  const s = section('Unit tests')
-  expect(s).toMatch(/Happy paths tend to work; edge cases are where\s+bugs live/is)
-  expect(s).toMatch(/empty input, zero, negative, very large, null,\s+duplicates/is)
+  const s = flat(section('Unit tests'))
+  expect(s).toMatch(/Happy paths tend to work; edge cases are where bugs live/i)
+  expect(s).toMatch(/empty input, zero, negative, very large, null, duplicates/i)
 })
 
 test('every probe says what it would catch in the running example, not what it is', () => {
@@ -1384,7 +1388,7 @@ number written into this plan.**
 ```ts
 import { expect, test } from 'vitest'
 import { ARTIFACT_LIST, DONE, TEAM } from './checklist'
-import { h2 } from './doc-source'
+import { flat, h2 } from './doc-source'
 
 const bullets = (s: string, marker: RegExp) =>
   s.split('\n').filter((l) => marker.test(l))
@@ -1410,7 +1414,7 @@ test('every artifact bullet is carried verbatim', () => {
 test('four team notes, each keeping the second sentence that makes it actionable', () => {
   expect(TEAM).toHaveLength(4)
   const flaky = TEAM.find((t) => t.id === 'flakiness')
-  expect(flaky?.body).toMatch(/everyone\s+assumes someone else owns them/is)
+  expect(flat(flaky?.body ?? '')).toMatch(/everyone assumes someone else owns them/i)
   expect(flaky?.body).toMatch(/retry-rate dashboard/i)
   const docs = TEAM.find((t) => t.id === 'documentation')
   expect(docs?.body).toMatch(/how a new engineer learns intended behavior/i)
