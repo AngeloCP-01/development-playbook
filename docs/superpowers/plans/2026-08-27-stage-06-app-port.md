@@ -2089,8 +2089,40 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 - Produces: nothing new. Task 12 replaces the remaining three bodies.
 
 **Read `src/features/development/Development.tsx` before starting.** It is the assembly
-reference: how `Step` bodies are built, how `Figure` numbers are passed explicitly, how
+reference: how `Step` contents are built, how `Figure` numbers are passed explicitly, how
 `stageTitle(slug)` renders a cross-stage link without an `as` cast.
+
+**Correction to this plan, confirmed against the code in Task 1.** `Step`
+(`src/components/Stepper.tsx:13`) is not generic and has no `body`. It is:
+
+```ts
+export type Step = {
+  id: string
+  label: string
+  hint: string
+  content: ReactNode
+}
+```
+
+So a panel's JSX goes in `content`, and every step needs a `hint` — a short subtitle the rail
+shows under the label. Task 1 left all seven as `'Placeholder'`; replacing them is part of
+Tasks 11 and 12, not an afterthought. Stage 05's are the voice to match: `'Six snippets,
+scored'`, `'The rule says nothing about the verb'`, `'What one slice owes before the PR'` —
+they say what the reader will *do* or *decide*, not what the panel is about.
+
+Use these seven, which are written to that standard:
+
+| Step | `hint` |
+|---|---|
+| `triage` | `'Six changes, scored'` |
+| `restraint` | `'The coverage you already have'` |
+| `unit` | `'Edge cases, and money in cents'` |
+| `integration` | `'The second test, and why it matters most'` |
+| `e2e` | `'Selectors that break when the user notices'` |
+| `teeth` | `'Two of these three read as passes'` |
+| `done` | `'What one stage owes before it ships'` |
+
+`Section` also takes a **required** `title` prop (`src/components/ui.tsx:9`).
 
 Panel contents:
 
@@ -2163,6 +2195,9 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 
 **Files:**
 - Modify: `web/src/features/testing/Testing.tsx` (replace the last three placeholder bodies)
+
+**The `Step` shape and the `hint` values are given in Task 11 — reread that block before
+starting.** Panels 5–7 take `content`, not `body`, and their three hints are in that table.
 
 **Panel 5 `e2e`** — the stitch to F2 ("the same feature, on top"), then
 `<AnnotatedArtifact artifact={ARTIFACTS.checkout} />`, then the selector lesson as a
