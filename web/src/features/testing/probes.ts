@@ -29,7 +29,7 @@ export const PROBES: Probe[] = [
     id: 'negative',
     input: 'discountPercent: 200',
     catches:
-      "A negative total. This is the doc's own second test, and it is the one that found the missing branch.",
+      'A negative total, here from a discount over 100% — or from a negative price nothing else rejects. This is the doc’s own second test, and it is the one that found the missing branch.',
   },
   {
     id: 'large',

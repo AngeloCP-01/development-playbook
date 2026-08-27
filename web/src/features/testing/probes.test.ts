@@ -33,3 +33,27 @@ test('every probe says what it would catch in the running example, not what it i
 test('ids are unique', () => {
   expect(new Set(PROBES.map((p) => p.id)).size).toBe(PROBES.length)
 })
+
+/**
+ * Finding 8 (minor drift) of Task 14's coverage walk: the negative probe's
+ * input is `discountPercent: 200`, a negative *total* forced by an
+ * over-100% discount, so a reader is never prompted to try a negative
+ * *price* — a distinct edge case the doc's own edge-case list also asks
+ * for. `catches` (hidden until the reader expands the row, so this costs
+ * `unit`'s panel no headroom) now names both.
+ */
+test('the negative probe also prompts a negative price, not only a negative total from the discount', () => {
+  const negative = PROBES.find((p) => p.id === 'negative')
+  expect(negative?.catches).toMatch(/negative price/i)
+})
+
+/**
+ * Rendered strings in this stage use the typographic apostrophe (`’`), the
+ * same convention `triage.ts` follows — a straight `'` here was the one
+ * exception.
+ */
+test('the negative probe uses the typographic apostrophe, matching triage.ts', () => {
+  const negative = PROBES.find((p) => p.id === 'negative')
+  expect(negative?.catches).toContain('doc’s own second test')
+  expect(negative?.catches).not.toContain("doc's own second test")
+})
