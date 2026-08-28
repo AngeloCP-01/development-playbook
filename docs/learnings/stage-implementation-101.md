@@ -366,3 +366,67 @@ patch the instance in front of you.** The first fix closed one file. The second 
 a Global Constraint and every task still ahead — which is what caught the third instance
 before anyone wrote the test that would have failed on it. Waiting for a third occurrence
 to justify the sweep means paying for the sweep and the instance both.
+
+---
+
+## Tailwind v4 token naming is not what you expect
+
+Added after the stage 07 port (W-3.7, 2026-08-28). The plan specified `border-rule` and
+`bg-surface-sunken` across eight instances in three drill components. Neither class exists.
+
+The project's Tailwind v4 theme (`@theme inline` in `globals.css`) maps
+`--color-line: var(--rule)` and `--color-sunken: var(--sunk)`. The generated utility
+classes are `border-line` and `bg-sunken` — the names come from the `@theme` keys, not
+from the CSS custom property names they reference. `--rule` is a custom property value;
+`line` is the token name Tailwind sees. Writing `border-rule` is guessing at the indirection
+rather than reading the theme.
+
+None of the eight per-task reviews caught it. The e2e audit checks contrast and overflow,
+not token validity — a class that produces no styling simply falls through to the browser's
+default, which happens to be `currentColor` for borders (close enough to look right in light
+mode) and transparent for backgrounds (invisible on the code blocks). Only the final
+whole-branch review, reading the diff against `globals.css`, found it.
+
+**Check the generated utility class name against `globals.css`'s `@theme` block before
+writing it into a plan.** A plan that specifies wrong tokens infects every task that
+transcribes it, and the per-task review's scope is too narrow to notice the theme is never
+consulted.
+
+---
+
+## The three-file registration trace is one atomic operation
+
+Added after the stage 07 port. The plan's Task 2 (scaffold) prescribed adding
+`'07-code-review'` to `STEP_IDS_BY_SLUG` in `step-ids.ts`, six tasks before the content
+component existed. `rails.test.tsx` iterates every entry in `STEP_IDS_BY_SLUG` and requires
+a matching `STAGE_CONTENT[slug]` — so the test broke immediately.
+
+The three-file registration trace described in `CLAUDE.md` — `stages.ts` (`ready: true`),
+`stage-content.ts` (the component), `step-ids.ts` (the step IDs) — is really one atomic
+operation. Splitting it across tasks means one of the intermediate states fails a test that
+guards the invariant the trace exists to maintain.
+
+**Register all three in the assembly task, not the scaffold.** The scaffold creates
+`steps.ts` (the tuple and the type), which is an internal export later tasks import
+directly. `STEP_IDS_BY_SLUG` is the cross-stage registry, and it should move in lockstep
+with the component it references.
+
+---
+
+## An always-rendered score region breaks consistency, and the test should change instead
+
+Added after the stage 07 port. The plan's drill components guarded the score display behind
+`{answered > 0 && (...)}`, matching `TriageDrill` from stage 06. Three independent
+implementers changed it to always render `0/0 right` because their render tests needed to
+find the `aria-live` region before any picks.
+
+The tests were looking for the score element on initial render. `TriageDrill`'s test does
+not do this — it checks `aria-live` after the first pick, when the element exists. The
+implementers took the path of least resistance: change the component to satisfy the test
+rather than change the test to match the established pattern. The result is three exercises
+showing "0/0 right" on first load while every other exercise in the app shows nothing.
+
+**When a test forces a component change that creates a UX inconsistency, change the test.**
+The aria-live assertion should fire after a pick, not before — that is when the score
+element has something to announce. The established pattern (`TriageDrill`) already does this
+correctly, and the whole point of having a pattern is that the instances match it.
