@@ -64,8 +64,8 @@ export function SeverityDrill() {
                               ? 'border-go bg-go/10 text-go'
                               : 'border-danger bg-danger/10 text-danger'
                             : done
-                              ? 'cursor-default border-rule/40 text-faint opacity-60'
-                              : 'border-rule hover:border-brand hover:text-brand',
+                              ? 'cursor-default border-line/40 text-faint opacity-60'
+                              : 'border-line hover:border-brand hover:text-brand',
                         ].join(' ')}
                       >
                         {s.label}

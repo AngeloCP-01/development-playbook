@@ -39,7 +39,7 @@ export function ReviewDrill() {
             return (
               <li key={s.id} className="space-y-2">
                 <p className="font-semibold">{s.label}</p>
-                <pre className="overflow-x-auto rounded-md border border-rule bg-surface-sunken p-3 text-sm">
+                <pre className="overflow-x-auto rounded-md border border-line bg-sunken p-3 text-sm">
                   <code>{s.code}</code>
                 </pre>
 
@@ -65,8 +65,8 @@ export function ReviewDrill() {
                               ? 'border-go bg-go/10 text-go'
                               : 'border-danger bg-danger/10 text-danger'
                             : done
-                              ? 'cursor-default border-rule/40 text-faint opacity-60'
-                              : 'border-rule hover:border-brand hover:text-brand',
+                              ? 'cursor-default border-line/40 text-faint opacity-60'
+                              : 'border-line hover:border-brand hover:text-brand',
                         ].join(' ')}
                       >
                         {c.label}
