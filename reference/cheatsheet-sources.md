@@ -134,10 +134,15 @@ stage panels' four-screen rule, so nothing forced the split.
 
 ### ~~Testing~~ · `testing` + `playwright` · stage 06 ✓ transcribed 2026-08-28
 
-Gathered ahead of stage 06's interactive port — the stage is chosen as the next `W-3`
-round but not yet built, which is a real departure from the "finished or ongoing
-stage" reading `containers` above was held back on. Justified here because the
-gathering list already carried a stage-06 entry before the stage was even chosen.
+Gathering started believing stage 06 was chosen but not yet built — a real departure
+from the "finished or ongoing stage" reading `containers` above was held back on,
+justified at the time because the gathering list already carried a stage-06 entry
+before the stage was even chosen. **The port actually shipped and merged the day
+before** (2026-08-27, `cad21c1`, `feat/stage-06-testing` deleted) — this round's own
+kickoff was working from a status that had gone stale overnight, and did not notice
+until after this content was already written. The "ahead of the port" framing below
+and in this round's commit is accordingly wrong about its own timing, kept rather than
+rewritten, since fixing the record silently would repeat the exact mistake it names.
 
 ```
 "testing pyramid" explained              ✓ Levels-of-testing-1.jpeg (concept only, not displayed)
