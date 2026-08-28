@@ -6,8 +6,10 @@ import { designPatterns } from './design-patterns'
 import { gitBranching } from './git-branching'
 import { gitCommands } from './git-commands'
 import { PLANNED } from './planned'
+import { playwright } from './playwright'
 import { sdlc } from './sdlc'
 import { solidPrinciples } from './solid-principles'
+import { testing } from './testing'
 import type { Cheatsheet, CheatsheetGroup } from './types'
 
 export type {
@@ -31,6 +33,8 @@ export const CHEATSHEETS: Cheatsheet[] = [
   gitBranching,
   codingStandards,
   sdlc,
+  testing,
+  playwright,
   ...PLANNED,
 ]
 
