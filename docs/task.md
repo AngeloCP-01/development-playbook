@@ -847,6 +847,12 @@ where a "not yet merged" claim on stage 06 itself, sitting unnoticed in this fil
 `docs/tracker.md` since the merge, was found and corrected. Evidence in
 `docs/tracker.md`.
 
+**W-6.3f — `clean-code` gains four more principles** *(2026-08-28, user request)*. Not
+a new sheet — a second section, SOC/DYC/TDD/YAGNI, from a second gathered source (Neo
+Kim), consulted rather than displayed as a second plate (D-89). Two cross-references
+added: SOC to `solid-principles`, TDD to `CLAUDE.md`'s iron law and the new `testing`
+sheet. Evidence in `docs/tracker.md`.
+
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 
 The reason `/reference` beat `/cheatsheets` as a section name. Closes the original

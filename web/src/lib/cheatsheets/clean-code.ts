@@ -7,6 +7,13 @@ import type { Cheatsheet, RowExample } from './types'
  * code; the before/after examples below are original, written to show each
  * habit rather than transcribed from anywhere.
  *
+ * A second section (2026-08-28) draws on a second gathered graphic — "6
+ * Golden Rules to Write Clean Code" by Neo Kim — named and credited in that
+ * section's own note rather than displayed as a second plate (D-89). Two of
+ * its six rules, DRY and KISS, are already covered above as "Avoid
+ * duplicates" and "Keep it simple"; only the four not already here are
+ * transcribed.
+ *
  * `html` is looked up from the generated table — see the fuller comment in
  * `solid-principles.ts`, which this mirrors.
  */
@@ -94,6 +101,30 @@ export const cleanCode: Cheatsheet = {
           term: 'Refactor regularly',
           what: 'Clean code is a habit applied continuously, not a one-time pass before a release.',
           when: 'The Boy Scout Rule: leave the code a little cleaner than you found it, every time you touch it.',
+        },
+      ],
+    },
+    {
+      title: 'Four more, named as acronyms',
+      note: 'From a second gathered source — "6 Golden Rules to Write Clean Code" by Neo Kim. Its other two rules, DRY and KISS, are the same ideas as "Avoid duplicates" and "Keep it simple" above.',
+      rows: [
+        {
+          term: 'SOC — Separation of concerns',
+          what: 'Keep distinct responsibilities in distinct places, so a change to one does not ripple into the other.',
+          when: 'The class-level version of this is SOLID’s Single Responsibility Principle — see `solid-principles`.',
+        },
+        {
+          term: 'DYC — Document your code',
+          what: 'Comments and docs explain *why* a decision was made — the code itself already says what it does.',
+        },
+        {
+          term: 'TDD — Test-driven development',
+          what: 'Write the failing test before the code that makes it pass.',
+          when: 'This repo’s own iron law: "NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST" (`CLAUDE.md`) — see `testing`.',
+        },
+        {
+          term: 'YAGNI — You ain’t gonna need it',
+          what: 'Do not build for a requirement that does not exist yet — speculative flexibility is a cost paid today for a maybe.',
         },
       ],
     },
