@@ -36,9 +36,9 @@ Before doing anything, read these for context:
   bear on whichever stage comes next.
 
 ### Project state (as of 2026-08-28 — **stage 06 is interactive and merged**; W-3 is
-**6/18**, twelve stages remain. **Which stage comes next has not been chosen.** TD-43 is
-closed and merged. W-6 (reference hub) has shipped five rounds since 2026-08-24, most
-recently `testing` and `playwright`, tethered to stage 06.)
+**6/18**, twelve stages remain. **Stage 07 (Code Review) is chosen as the next W-3
+round and has not been started.** TD-43 is closed and merged. W-6 (reference hub) has
+shipped six rounds since 2026-08-24, most recently a second `clean-code` section.)
 
 **Start here, in order:**
 
@@ -50,11 +50,13 @@ recently `testing` and `playwright`, tethered to stage 06.)
    being unmerged, for a full day, because nobody re-derived it — see
    `docs/learnings/decisions-need-tests-101.md`'s newest section. This file is a starting
    point, not a source of truth for git state.
-3. **Which stage comes next (07 onward) has not been chosen.** Read `docs/task.md`'s
-   `W-3` section and `docs/tracker.md`'s most recent rows first, the way stage 06 was
-   chosen over the rest — it is the user's call, not a default. Read
-   `docs/learnings/stage-implementation-101.md` in full before porting anything, once a
-   stage is picked.
+3. **Stage 07 (Code Review) is the chosen next round, not yet started.** Picked over 08
+   (Security Audit), 09 (Performance Optimization) and 10 (Documentation) on the same
+   grounds stage 04 was picked over 15 — shortest doc of the four (196 lines) and the
+   natural adjacency from 06 in the daily loop, not the next integer by default. Read
+   `docs/07-code-review.md`, then `docs/learnings/stage-implementation-101.md` in full
+   before porting anything — it carries the worked-example teaching pattern and the
+   coverage-walk method, now proven on three stages running.
 4. Run `git fetch` and re-derive `develop`'s position against `origin/develop` and
    `origin/main` — the exact commands are in "Branch state" below. Do not trust any commit
    SHA quoted in this file; every version of this paragraph has gone stale, including the
@@ -98,7 +100,7 @@ before trusting any "merged"/"not merged" claim, including in this file, check
 **W-6 (reference hub) resumed on a per-stage cadence, by explicit user override of the
 2026-08-14 pause** (**D-88**). The standing rule now: after a `W-3` stage ships, check
 for related reference material and run a bounded W-6 round before picking the next stage
-— not instead of picking it. Five rounds have run since 2026-08-24:
+— not instead of picking it. Six rounds have run since 2026-08-24:
 
 - **W-6.3a** — six of the original ten empty cheatsheets drawn: `design-patterns` (all 23
   GoF patterns), `api-design` (fifteen-step roadmap condensed to six sections),
@@ -131,6 +133,10 @@ for related reference material and run a bounded W-6 round before picking the ne
   grounded in a real test name quoted from `e2e/audit.spec.ts`. Two converted assets
   were deleted rather than shipped — `public-assets.test.ts` caught them as orphaned,
   the first time that check has fired in this registry.
+- **W-6.3f** — a second section on `clean-code` (SOC, DYC, TDD, YAGNI), from a second
+  gathered source (Neo Kim), consulted rather than displayed as a second plate (D-89
+  again). Cross-references `solid-principles` and the new `testing` sheet rather than
+  repeating them.
 
 `coding-standards` is now down to one section (code smells) with room to grow. Sixteen
 `/reference/*` routes are registered, **eleven drawn** (`architecture-patterns`,
@@ -199,15 +205,14 @@ git log --oneline -1 develop origin/develop main origin/main
 git rev-list --count origin/develop..develop
 ```
 
-**Last measured at the end of this session**: `develop` at `5de23f0`, **5 commits ahead**
-of `origin/develop` (`cad21c1`, the stage 06 merge — the user has not pushed since).
-`origin/main` unchanged at `5d76b8a`, so `develop` is ahead of production by everything
-since that promotion. Local `main` is a stale ref, far behind `origin/main` — `git fetch`
-first, then reason about `origin/main`, never local `main`. **No branch was left in
-flight** — the last two merges (`feat/testing-reference-sheets`,
-`docs/2026-08-28-testing-round-evidence`) both completed, were gated on the merged
-result, and both branches were deleted. **This exact paragraph was itself the source of
-a day-long stale claim two versions ago** (see the correction above) — re-derive before
+**Last measured at the end of this session**: `develop` at `f4da226`, **10 commits
+ahead** of `origin/develop` (`cad21c1`, the stage 06 merge — the user has not pushed
+since). `origin/main` unchanged at `5d76b8a`, so `develop` is ahead of production by
+everything since that promotion. Local `main` is a stale ref, far behind `origin/main`
+— `git fetch` first, then reason about `origin/main`, never local `main`. **No branch
+was left in flight** — every merge this session completed, was gated on the merged
+result, and had its branch deleted. **This exact paragraph was itself the source of a
+day-long stale claim two versions ago** (see the correction above) — re-derive before
 trusting anything here, including this sentence.
 
 **Branch/push convention, unchanged:** work on `feat/`|`fix/`|`docs/<date>-` branches, cut
