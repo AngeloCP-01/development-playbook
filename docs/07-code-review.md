@@ -131,6 +131,29 @@ Use them as an *additional* pass, not a replacement. They are poor at judging wh
 change was worth making, whether the abstraction fits the domain, or whether the
 authorization model is right. Those are the parts that matter most.
 
+### AI in code review
+
+AI review tools — GitHub Copilot, CodeRabbit, or a custom static-analysis pass — catch a
+real class of issue: null-reference paths, missing error handling, unhandled promise
+rejections, simple logic inversions. They do not get tired, and they do not assume they
+already know what the code does.
+
+What they miss is everything that requires judgment. Whether the authorization model is
+right. Whether the abstraction fits the domain. Whether the change should have been made at
+all. Whether a test is vacuous — passing for the wrong reason. AI-generated code produces
+roughly 1.7× more issues per PR than human-written code, and the natural instinct is to
+review it *less* carefully, because it looks clean.
+
+Use AI review as a first pass: let it run before you request human review. Fix the
+mechanical issues it surfaces — the leftover `console.log`, the missing null check — so the
+human reviewer gets a cleaner diff and spends their attention on the parts machines cannot
+judge. That split is the point: AI handles the checklist items, humans handle the judgment
+calls.
+
+The anti-pattern is treating AI review as the review. Agent-authored PRs get reviewed less
+often, merged faster, and discussed less — which is exactly the erosion that turns review
+from a quality gate into ceremony.
+
 ---
 
 ## Artifacts
@@ -167,6 +190,33 @@ authorization model is right. Those are the parts that matter most.
 - **On receiving review:** verify claims rather than complying reflexively. A reviewer can
   be wrong, and agreeing with a wrong suggestion to be agreeable puts a bug in the
   codebase with two names on it. Check, then agree or explain.
+
+### Comment with severity
+
+Label every review comment so the author knows what blocks the merge and what does not.
+Without labels, every comment reads as a same-weight demand and reviews turn adversarial.
+
+Three blocking tiers and one non-blocking:
+
+- **Critical** — data loss, security breach, or production outage if merged. The migration
+  that drops a column before backfilling the new one. The query filtered by a client-supplied
+  ID with no ownership check.
+- **Important** — a correctness or UX bug the user will hit. The empty catch block that
+  leaves a loading spinner stuck. A test that passes without the change.
+- **Minor** — a real issue, not blocking. Duplicated logic across three handlers. A name
+  that is vague but not misleading.
+- **Nit** — polish. A rename suggestion. A formatting preference the linter does not
+  enforce.
+
+Tag each finding with an ID (`C1`, `I1`, `M1`, `N1`) so follow-ups can reference it
+without quoting the whole comment. Where provenance matters — and it does — mark whether the
+finding is new in this PR, pre-existing (`PRE-EXISTING`), or introduced by the plan rather
+than the implementer (`PLAN-AUTHORED ERROR`). The distinction changes who fixes it and
+whether it blocks this merge.
+
+A reviewer is expected to disprove as well as confirm. If you wrote "this is a security
+issue" and then discover it is not, say so and retract the finding — a retracted finding is
+more useful than a wrong one left standing.
 
 ---
 
