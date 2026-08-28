@@ -20,7 +20,7 @@ export function ReviewDrill() {
 
   return (
     <Card>
-      <div className="space-y-10">
+      <div className="space-y-8">
         <div className="flex items-baseline justify-between gap-4">
           <p className="t-label text-faint">
             What is the issue in each snippet?
@@ -30,16 +30,16 @@ export function ReviewDrill() {
           </p>
         </div>
 
-        <ol className="space-y-10">
+        <ol className="space-y-6">
           {SNIPPETS.map((s) => {
             const done = s.id in choices
             const picked = choices[s.id]
             const right = picked === s.answer
 
             return (
-              <li key={s.id} className="space-y-3">
+              <li key={s.id} className="space-y-2">
                 <p className="font-semibold">{s.label}</p>
-                <pre className="overflow-x-auto rounded-md border border-rule bg-surface-sunken p-4 text-sm">
+                <pre className="overflow-x-auto rounded-md border border-rule bg-surface-sunken p-3 text-sm">
                   <code>{s.code}</code>
                 </pre>
 
@@ -58,7 +58,7 @@ export function ReviewDrill() {
                         disabled={done}
                         onClick={() => commit(s.id, c.id)}
                         className={[
-                          'rounded-md border px-3 py-1.5 text-sm transition-colors',
+                          'inline-flex min-h-11 items-center rounded-md border px-3 py-1.5 text-sm transition-colors lg:min-h-9',
                           'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand',
                           selected
                             ? right

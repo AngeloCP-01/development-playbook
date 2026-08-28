@@ -88,7 +88,7 @@ export const STAGES: Stage[] = [
     blurb: 'A deliberate second look before code becomes permanent.',
     group: 'Building',
     timing: 'Before every merge.',
-    ready: false,
+    ready: true,
   },
   {
     num: '08',

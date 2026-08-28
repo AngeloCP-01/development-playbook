@@ -60,7 +60,7 @@ export function SelfReviewMatch() {
                         disabled={done}
                         onClick={() => commit(t.id, b.id)}
                         className={[
-                          'rounded-md border px-3 py-1.5 text-sm transition-colors',
+                          'inline-flex min-h-11 items-center rounded-md border px-3 py-1.5 text-sm transition-colors lg:min-h-9',
                           'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand',
                           selected
                             ? right
