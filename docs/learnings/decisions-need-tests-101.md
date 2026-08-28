@@ -250,3 +250,30 @@ Two habits follow:
 This is the second time this project has generalised from one silence — **D-73** records the
 first, where one document's omission was read as the framework's behaviour. Both times the
 controller did the generalising, and both times a written record already held the answer.
+
+## A merge status is a claim about git, and only git can confirm it
+
+Stage 06 (Testing) shipped and merged to `develop` on 2026-08-27. `docs/task.md`'s W-3 line
+and `docs/tracker.md`'s own evidence row for that round both still read "not yet merged" —
+written, presumably, in the window between the branch finishing and the merge landing, and
+never revisited afterward. A new session opened the next day, read those two files, and
+started a follow-on round believing the same thing: chosen, not built.
+
+**The record did not just go stale — it was actively contradicted by evidence already
+sitting one command away.** `git log --oneline -5` puts the merge commit on screen; nobody
+ran it, because the two files that exist specifically to answer "what's the state of this
+project" both agreed with each other. Two wrong sources confirming each other reads as
+corroboration and is really the same mistake counted twice.
+
+It was caught by accident, not by process — an unrelated `git log` during the new round
+surfaced a commit subject that did not match what the session believed. Once looked for,
+`git merge-base --is-ancestor <merge-sha> develop` confirmed it in one line.
+
+**The generalisation:** a status claim about git state (merged, pushed, deployed) is not
+a fact to record and reuse — it is a query to re-run. `KICKOFF.md` already says this about
+commit SHAs ("derive every position rather than reading one here") and treats
+`git log --oneline -1 develop origin/develop main origin/main` as the source of truth over
+its own prose. The same discipline did not extend to `docs/task.md` and `docs/tracker.md`,
+which is exactly the gap this round fell into. **Before trusting "merged" or "not merged"
+anywhere, check the branch it names against git directly** — the same one-line habit
+`branch-discipline-101.md` asks for before committing applies just as well before reading.
