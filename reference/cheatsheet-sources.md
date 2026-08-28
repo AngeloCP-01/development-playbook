@@ -127,11 +127,32 @@ stage panels' four-screen rule, so nothing forced the split.
 "database indexing" explained            → sql-reference   · stage 03
 "caching strategies" explained           → caching         · stage 09
 "load balancing" algorithms              → scaling         · stage 09
-"testing pyramid" explained              → testing         · stage 06
 "OWASP top 10" visual                    → security        · stage 08
 "docker commands" cheat sheet            → containers      · stage 11
 "kubernetes" cheat sheet                 → containers      · stage 11
 ```
+
+### ~~Testing~~ · `testing` + `playwright` · stage 06 ✓ transcribed 2026-08-28
+
+Gathering started believing stage 06 was chosen but not yet built — a real departure
+from the "finished or ongoing stage" reading `containers` above was held back on,
+justified at the time because the gathering list already carried a stage-06 entry
+before the stage was even chosen. **The port actually shipped and merged the day
+before** (2026-08-27, `cad21c1`, `feat/stage-06-testing` deleted) — this round's own
+kickoff was working from a status that had gone stale overnight, and did not notice
+until after this content was already written. The "ahead of the port" framing below
+and in this round's commit is accordingly wrong about its own timing, kept rather than
+rewritten, since fixing the record silently would repeat the exact mistake it names.
+
+```
+"testing pyramid" explained              ✓ Levels-of-testing-1.jpeg (concept only, not displayed)
+"5 types of testing"                     ✓ 5types-of-testing.webp + matching dev.to article, both Prateek Agrawal
+"playwright cheat sheet"                 ✓ playwright1/2/3.jpeg (3-page series, page 1 displayed)
+```
+
+`testing` and `playwright` are two sheets, not one — the same split `git-commands` and
+`git-branching` already use, since a tool-specific quick reference (locators,
+fixtures, debugging) is a different shape of content than general testing concepts.
 
 `api-reference` and `sql-reference` already have hand-written draft notes —
 `reference/rest-api-best-practices.md` and `reference/10-sql-concepts.md` — gathered
@@ -236,3 +257,7 @@ unrecorded on most of these; fix before promoting past `develop` (D-63).
 | `clean-code` | Clean Code Principles Every Junior Developer Should Know | Unrecorded | *tried, 403 blocked* | `CLEAN-CODE-principle.webp` | 2026-08-24 | displayed — moved here from `coding-standards` (D-90). A specific follow-up URL (`medium.com/@ewniakithma/...`) was requested for this sheet and returned 403 on fetch; the gathered graphic plus original before/after code examples were used instead |
 | `coding-standards` (naming conventions) | Godot Naming Conventions | *not recorded* | *not recorded* | `NamingConventions.png` | 2026-08-24 | wrong domain — Godot/GDScript-specific, not general or JS/TS. Section held empty; still searching |
 | `sdlc` | Software Development Life Cycle (SDLC) | *not recorded* | *not recorded* | `sdlc.png` | 2026-08-24 | displayed |
+| `testing` | The 5 Pillars of Testing | Prateek Agrawal | https://dev.to/prateekbka/the-5-pillars-of-testing-a-senior-developers-cheat-sheet-1ckj | `5types-of-testing.webp` | 2026-08-28 | displayed — article and graphic corroborate each other, same author |
+| `testing` | Levels of Testing (pyramid) | *not recorded* | *not recorded* | `Levels-of-testing-1.jpeg` | 2026-08-28 | consulted — concept transcribed into the second section's rows, no second plate |
+| `playwright` | Playwright Quick Revision Cheat Sheet, page 1/3 | *not recorded* | *not recorded* | `playwright1.jpeg` | 2026-08-28 | displayed |
+| `playwright` | Playwright Quick Revision Cheat Sheet, pages 2–3/3 | *not recorded* | *not recorded* | `playwright2.jpeg`, `playwright3.jpeg` | 2026-08-28 | consulted — content transcribed into rows, converted webp deleted rather than left as an unreferenced asset (`public-assets.test.ts` caught it) |
