@@ -90,8 +90,13 @@ Naming: `<topic>-101.md`.
   checked was the single stage that hid the counter-example. Extended after the 2026-08 debt
   round, where **three of four debt entries turned out to be wrong about themselves** — a
   recorded *diagnosis* decays the same way a convention does, and one of them was a
-  sentence about to become a paragraph in a teaching document. Read it before turning any
-  recorded finding into a deliverable.
+  sentence about to become a paragraph in a teaching document. Extended again after a
+  merge status went stale: two files both said a stage "wasn't merged yet" while its merge
+  commit sat in `develop`'s own history, and a new round started from that belief the next
+  day. **A claim about git state is a query to re-run, not a fact to reuse** — the same
+  `git log` discipline `KICKOFF.md` already applies to commit SHAs, extended to prose
+  status lines. Read it before turning any recorded finding into a deliverable, and before
+  trusting "merged" or "not merged" anywhere without checking git directly.
 - `contrast-checkers-lie.md` — the three ways a colour audit reports a failure that is not
   there: reading `getComputedStyle` while a `transition-colors` is still running, parsing
   `oklab()` with a regex instead of rasterizing it, and passing green over surfaces it

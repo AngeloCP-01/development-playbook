@@ -26,30 +26,39 @@ Before doing anything, read these for context:
 - `web/AGENTS.md` — this Next.js version postdates your training data; read
   `node_modules/next/dist/docs/` before writing framework code
 - `docs/learnings/README.md` — eight guides written after rounds that cost real time.
-  **Read `branch-discipline-101.md` first, before touching git at all** — the mistake it
-  documents happened twice in the session just before this one, the second time right
-  after the first had been written up. `stage-implementation-101.md` (layout traps,
-  verification checklist, and now the worked-example pattern for teaching a list of
-  steps) and `quality-gates-101.md` (now including "two gates agreeing can mean they
-  share a blind spot, not that the change is safe") both bear directly on stage 06.
+  **Read `branch-discipline-101.md` first, before touching git at all**, and
+  **`decisions-need-tests-101.md`'s newest section before trusting any "merged" or "not
+  merged" claim anywhere, including in this file** — a stage's merge status went stale
+  in both `docs/task.md` and `docs/tracker.md` and was believed for a full day, by a
+  session that had no reason to doubt it, until an unrelated `git log` surfaced the
+  merge commit sitting in `develop`'s own history the whole time. `stage-implementation-101.md`
+  (worked-example teaching pattern) and `quality-gates-101.md` (gate blind spots) both
+  bear on whichever stage comes next.
 
-### Project state (as of 2026-08-25 — **stage 05 is interactive and merged**; W-3 is
-**5/18**, thirteen stages remain. **Stage 06 (Testing) is chosen as the next W-3 round
-and has not been started.** TD-43 is closed and merged. W-6 (reference hub) resumed and
-shipped four rounds this session.)
+### Project state (as of 2026-08-28 — **stage 06 is interactive and merged**; W-3 is
+**6/18**, twelve stages remain. **Which stage comes next has not been chosen.** TD-43 is
+closed and merged. W-6 (reference hub) has shipped five rounds since 2026-08-24, most
+recently `testing` and `playwright`, tethered to stage 06.)
 
 **Start here, in order:**
 
 1. **Check the branch before editing anything.** `git branch --show-current`. If it says
-   `develop` or `main`, branch first (`git checkout -b feat/stage-06-...`). This bit twice
-   in the session that just ended — see `docs/learnings/branch-discipline-101.md`.
-2. **Stage 06 is the chosen next round, not yet started.** Read `docs/06-testing.md`,
-   then `docs/learnings/stage-implementation-101.md` in full before porting anything —
-   it now carries the worked-example lesson from `sdlc` on top of the stage 04/05 coverage
-   walk method.
-3. Run `git fetch` and re-derive `develop`'s position against `origin/develop` and
+   `develop` or `main`, branch first. This bit twice in one session two days ago — see
+   `docs/learnings/branch-discipline-101.md`.
+2. **Before trusting anything this file says about merge status, run `git log`
+   yourself.** The previous version of this exact file was itself wrong about stage 06
+   being unmerged, for a full day, because nobody re-derived it — see
+   `docs/learnings/decisions-need-tests-101.md`'s newest section. This file is a starting
+   point, not a source of truth for git state.
+3. **Which stage comes next (07 onward) has not been chosen.** Read `docs/task.md`'s
+   `W-3` section and `docs/tracker.md`'s most recent rows first, the way stage 06 was
+   chosen over the rest — it is the user's call, not a default. Read
+   `docs/learnings/stage-implementation-101.md` in full before porting anything, once a
+   stage is picked.
+4. Run `git fetch` and re-derive `develop`'s position against `origin/develop` and
    `origin/main` — the exact commands are in "Branch state" below. Do not trust any commit
-   SHA quoted in this file; every version of this paragraph has gone stale.
+   SHA quoted in this file; every version of this paragraph has gone stale, including the
+   one two sessions ago that got a whole stage's merge status wrong.
 
 ---
 
@@ -61,10 +70,35 @@ a false positive in React's own key-validation bookkeeping, not a missing key �
 decision **D-87**. Two whole-branch reviewers ran on it; the code was right, three
 records-level findings were fixed. Not open work — do not re-scope it.
 
+**Stage 06 (Testing) is interactive and merged**, `cad21c1`, `--no-ff`, 2026-08-27, by a
+session this kickoff has no other record of — 28 commits, eight panels
+(`docs/06-testing.md`, 316 lines, ported to `web/src/features/testing/`), a context-starved
+coverage walk that found ten problems against an already-green gate (the third time that
+exact check has earned its place — stage 04 found five, stage 05 found ten), and two new
+decisions: **D-92** (a panel over the 4.0 ceiling splits along the doc's own section
+boundaries rather than compressing further) and **D-93** (a data-module test asserting
+only against the source doc, never an app export, is vacuous by construction). Full
+account: `docs/tracker.md`'s W-3.6 row. **This merge sat unnoticed in two status files for
+a full day** — see the correction note below and
+`docs/learnings/decisions-need-tests-101.md`. `docs/stage-06-status.md` has the coverage
+map. Stages 07–18 render a "sheet not drawn" placeholder now, not 06–18.
+
+**A stage's merge status went stale in `docs/task.md` and `docs/tracker.md`, and stayed
+wrong for a full day.** Both files said stage 06 was "not yet merged" after `cad21c1` had
+already landed in `develop`. A new round the next day, working from those two files
+(this kickoff among them, at the time), believed it too and opened its own content
+framed around a port that had actually shipped the day before. Caught by an unrelated
+`git log`, not by process. Corrected in both files with the correction stated plainly,
+and the round that had already started from the wrong belief left its own framing
+uncorrected with a note attached, rather than silently rewritten. Full account:
+`docs/learnings/decisions-need-tests-101.md`'s newest section. **The rule going forward:
+before trusting any "merged"/"not merged" claim, including in this file, check
+`git log` directly.**
+
 **W-6 (reference hub) resumed on a per-stage cadence, by explicit user override of the
 2026-08-14 pause** (**D-88**). The standing rule now: after a `W-3` stage ships, check
 for related reference material and run a bounded W-6 round before picking the next stage
-— not instead of picking it. Four rounds ran this session:
+— not instead of picking it. Five rounds have run since 2026-08-24:
 
 - **W-6.3a** — six of the original ten empty cheatsheets drawn: `design-patterns` (all 23
   GoF patterns), `api-design` (fifteen-step roadmap condensed to six sections),
@@ -88,13 +122,23 @@ for related reference material and run a bounded W-6 round before picking the ne
   app) through all seven phases, because naming deliverable types is not the same as
   teaching what they contain. `docs/learnings/stage-implementation-101.md` has the
   general lesson.
+- **W-6.3e** — `testing` and `playwright`, both tethered to stage 06 (built the day
+  before this round started, though the round did not know that yet — see the
+  correction above). `testing` covers the five types plus the pyramid concept, sourced
+  from a graphic and a matching dev.to article by the same author — the first
+  cheatsheet source in this registry with a real URL from day one. `playwright` is a
+  tool-specific companion, the same split `git-commands`/`git-branching` already use,
+  grounded in a real test name quoted from `e2e/audit.spec.ts`. Two converted assets
+  were deleted rather than shipped — `public-assets.test.ts` caught them as orphaned,
+  the first time that check has fired in this registry.
 
-`coding-standards` is now down to one section (code smells) with room to grow. Fourteen
-`/reference/*` routes are registered, **nine drawn** (`architecture-patterns`,
+`coding-standards` is now down to one section (code smells) with room to grow. Sixteen
+`/reference/*` routes are registered, **eleven drawn** (`architecture-patterns`,
 `design-patterns`, `api-design`, `solid-principles`, `clean-code`, `git-commands`,
-`git-branching`, `coding-standards`, `sdlc`) and five still empty (the language sheets).
-Every round above was gated first-hand on the merged result, not inferred from the
-branch: lint 0, typecheck 0, 667 tests / 84 files, build clean, audit 18/18.
+`git-branching`, `coding-standards`, `sdlc`, `testing`, `playwright`) and five still
+empty (the language sheets). Every round above was gated first-hand on the merged
+result, not inferred from the branch: lint 0, typecheck 0, 754 tests / 100 files, build
+clean, audit 18/18.
 
 **Still open in W-6, unclaimed:** naming conventions in `coding-standards` (the one
 gathered source was Godot/GDScript-specific, wrong domain); `sql-reference` and
@@ -102,26 +146,28 @@ gathered source was Godot/GDScript-specific, wrong domain); `sql-reference` and
 `reference/rest-api-best-practices.md` — gathered without an image, still untracked,
 still unregistered); the five language sheets (`javascript`, `python`, `java`,
 `spring-boot`, `express`); `containers` (Docker/Kubernetes), deliberately not gathered
-since it tethers to stage 11, which has no interactive port yet. Attribution is
-unrecorded on most sources gathered this session — real per **D-63**, fix before
-promoting past `develop`.
+since it tethers to stage 11, which has no interactive port yet. Two gathered images
+also sit unclaimed for any registered sheet: `JWT.png` and `reverse-proxy.jpg`, neither
+testing-related. Attribution is unrecorded on most sources gathered across these
+rounds — real per **D-63**, fix before promoting past `develop`.
 
-**A branch-hygiene mistake happened twice in this session, on the same day, the second
-time right after the first was fixed and written up.** Read
-`docs/learnings/branch-discipline-101.md` before starting stage 06 — the fix is checking
-`git branch --show-current` before the first edit of every new round, especially right
-after a merge, not remembering a rule.
+**A branch-hygiene mistake happened twice in one session two days ago, the second time
+right after the first was fixed and written up** — `docs/learnings/branch-discipline-101.md`.
+It was nearly a third time this session: an edit landed on `develop` right after a merge,
+caught before it was committed. The fix is checking `git branch --show-current` before
+the first edit of every new round, especially right after a merge, every single time —
+not remembering a rule, and not trusting a prior write-up to have fixed it.
 
 ---
 
-#### The condensed history (03/04/05, TD-43, the four-debt round)
+#### The condensed history (03–06, TD-43, the four-debt round)
 
 Full detail lives in `docs/tracker.md`; this is what a new session needs without
 re-reading the whole log.
 
-- **Stages 01–05 are interactive and merged.** 03 is 22 steps, 04 is 15, 05 is 13. Each
-  port's coverage map: `docs/stage-03-status.md`, `-04-status.md`, `-05-status.md`.
-  Stages 06–18 render a "sheet not drawn" placeholder; routing works for all 18.
+- **Stages 01–06 are interactive and merged.** 03 is 22 steps, 04 is 15, 05 is 13, 06 is
+  8. Each port's coverage map: `docs/stage-03-status.md` through `-06-status.md`.
+  Stages 07–18 render a "sheet not drawn" placeholder; routing works for all 18.
 - **A per-task reviewer subagent, plus a whole-branch review, is the standard** — every
   reviewed round has found something a green gate did not (fourteen blocking defects on
   stage 03, seven more at whole-branch; four on stage 05 including a false claim a
@@ -153,15 +199,16 @@ git log --oneline -1 develop origin/develop main origin/main
 git rev-list --count origin/develop..develop
 ```
 
-**Last measured at the end of this session**: `develop` and `origin/develop` were
-**level**, both at `73ba558` — the user pushed at some point during the session; this
-file's draft assumed unpushed until re-checked and was wrong. `origin/main` was untouched
-by anything in this session, so `develop` is still ahead of production by everything since
-the last promotion. **No branch was left in flight** — the last merge
-(`feat/sdlc-worked-example`) completed, was gated on the merged result, and the branch was
-deleted. If this file is more than a session old, treat every number in this paragraph as
-wrong until re-derived — that has been true of every prior version of this paragraph,
-without exception, including the number this replaced within the same session.
+**Last measured at the end of this session**: `develop` at `5de23f0`, **5 commits ahead**
+of `origin/develop` (`cad21c1`, the stage 06 merge — the user has not pushed since).
+`origin/main` unchanged at `5d76b8a`, so `develop` is ahead of production by everything
+since that promotion. Local `main` is a stale ref, far behind `origin/main` — `git fetch`
+first, then reason about `origin/main`, never local `main`. **No branch was left in
+flight** — the last two merges (`feat/testing-reference-sheets`,
+`docs/2026-08-28-testing-round-evidence`) both completed, were gated on the merged
+result, and both branches were deleted. **This exact paragraph was itself the source of
+a day-long stale claim two versions ago** (see the correction above) — re-derive before
+trusting anything here, including this sentence.
 
 **Branch/push convention, unchanged:** work on `feat/`|`fix/`|`docs/<date>-` branches, cut
 from `develop`, never from `main`. Merge with `--no-ff` and a hand-written subject, never
@@ -188,6 +235,11 @@ Notes for whoever is preparing this handoff:
     round**, not just once. It documents the same mistake happening twice in one session,
     the second time immediately after the first was written up — the write-up alone did
     not prevent the repeat; only checking the branch, every time, does.
+  - **A "merged"/"not merged" claim is a query to re-run, not a fact to reuse** —
+    `docs/learnings/decisions-need-tests-101.md`'s newest section. A stage's merge status
+    was wrong in two files for a full day, and a session believed it without checking
+    `git log`. This file (`KICKOFF.md`) is exactly the kind of document that claim lived
+    in — treat its own git-state claims the same way.
   - **Cold-reader testing** (`docs/learnings/cold-reader-testing.md`) validates a stage
     doc before the interactive port starts, not after (D-54).
   - **Cite doc sections by heading, never by line number** (D-42) — nothing in the gate
