@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06 done; 12 remain — 6/18. Stage 05's port merged to `develop` 2026-08-20 as `425381b`, `--no-ff`. **Stage 06 (Testing) built and merged 2026-08-27** as `cad21c1`, `--no-ff`, `feat/stage-06-testing` deleted — 28 commits, 753/100 tests, audit 18/18. This row said "not yet merged" until 2026-08-28, contradicted by `cad21c1` sitting in `develop`'s own history the whole time — corrected on discovery, not on a fresh check. **Stage 07 (Code Review) chosen next, 2026-08-28** — shortest doc of the four candidates (07/08/09/10) at 196 lines, and the natural adjacency from 06 in the daily loop; not started)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07 done; 11 remain — 7/18. **Stage 07 (Code Review) built and merged 2026-08-28** as `--no-ff` into `develop`, `feat/stage-07-code-review` deleted — 9 commits, 854/117 tests, audit 18/18. Three scored exercises: SelfReviewMatch, ReviewDrill (signature), SeverityDrill. P-6 severity conventions taught interactively. Doc gained two sections (D-35 AI mandate, P-6 severity). Next stage not yet chosen)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; eleven of sixteen now-registered sheets drawn — `testing` and `playwright` added 2026-08-28, tethered to stage 06, alongside the nine from 2026-08-24/25 across Architecture/Git/Standards/Design Principles (D-90) — five language sheets remain, D-88)* |
@@ -126,7 +126,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05 and 06 done; 12 remain — 6/18. 07 chosen next, 2026-08-28, not started)*
+### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06 and 07 done; 11 remain — 7/18. Next stage not yet chosen)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
