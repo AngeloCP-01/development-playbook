@@ -189,6 +189,32 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: 'The classic breakdown this stage’s one line — “mocking the database tests your mock” — compresses into a sentence: the difference between a stub and a mock, state verification against behavior verification, and the classicist-versus-mockist split over how much of a system a test should replace.',
     },
   ],
+  '07-code-review': [
+    {
+      title: 'Best Practices for Code Review',
+      source: 'SmartBear / Cisco Systems',
+      url: 'https://smartbear.com/learn/code-review/best-practices-for-peer-code-review/',
+      adds: 'The canonical study: 2,500 reviews across 50 developers over 10 months. Source for the 200–400 LOC ceiling and the 60-minute session limit.',
+    },
+    {
+      title: 'How to do a code review',
+      source: 'Google Engineering Practices',
+      url: 'https://google.github.io/eng-practices/review/',
+      adds: 'Google’s minimalist severity system (Nit / Optional / FYI / unmarked) and the principle that every CL should leave the codebase better than it found it.',
+    },
+    {
+      title: 'Conventional Comments',
+      source: 'conventionalcomments.org',
+      url: 'https://conventionalcomments.org/',
+      adds: 'The label-decorated review comment format adopted by GitLab. Nine labels with blocking/non-blocking decorations.',
+    },
+    {
+      title: 'Expectations, Outcomes, and Challenges of Modern Code Review',
+      source: 'Bacchelli & Bird, ICSE 2013',
+      url: 'https://dl.acm.org/doi/10.5555/2486788.2486882',
+      adds: 'The Microsoft study showing knowledge transfer — not defect detection — is the primary actual outcome of review.',
+    },
+  ],
 }
 
 export function getReferences(slug: string): Reference[] {

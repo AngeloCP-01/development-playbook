@@ -747,6 +747,36 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'Selecting by it in an E2E test means the test breaks when what the user sees changes and not when the styling does, and it makes an inaccessible UI produce failing tests.',
   },
+  'rubber-stamping': {
+    name: 'Rubber-stamping',
+    short: 'Approving a change without genuine review.',
+    full: 'Approving code changes without reading them carefully — clicking "approve" based on green CI, a clean-looking diff, or trust in the author rather than on what the code actually does.',
+    soWhat:
+      'The merge gate exists to catch what the author missed. Bypassing it means defects reach production with two names on them.',
+    see: '07-code-review',
+  },
+  provenance: {
+    name: 'Provenance (review)',
+    short:
+      'Tracking whether a finding was introduced, pre-existing, or plan-authored.',
+    full: 'A tag on a review finding that says where the defect came from: new in this PR, already present in the codebase (PRE-EXISTING), or introduced by the plan itself (PLAN-AUTHORED ERROR). The distinction changes who fixes it and whether it blocks this merge.',
+    see: '07-code-review',
+  },
+  'finding-severity': {
+    name: 'Finding severity',
+    short:
+      'Critical / Important / Minor / Nit classification for review comments.',
+    full: 'A label on every review comment that tells the author what blocks the merge and what does not. Critical means data loss or security breach. Important means a bug the user will hit. Minor is real but non-blocking. Nit is polish.',
+    soWhat:
+      'Without labels, every comment reads as a same-weight demand and reviews turn adversarial.',
+    see: '07-code-review',
+  },
+  'self-review': {
+    name: 'Self-review',
+    short: 'Reviewing your own code with techniques to defeat cognitive bias.',
+    full: 'Deliberately breaking the state that makes reviewing your own code useless — you are still holding the intent, so you read what you meant rather than what you wrote. Three techniques: create distance, read the diff not the code, and explain it out loud.',
+    see: '07-code-review',
+  },
 }
 
 export function getTerm(key: string): Term | undefined {
