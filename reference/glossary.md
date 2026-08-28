@@ -69,6 +69,8 @@ drift apart.
 
 **Feature flag** — A boolean your code reads before doing something, set to off by default. Code sitting behind one can merge to the main branch without being reachable by anyone. An environment variable is enough to start; a dedicated flag service earns its keep only once you need to flip one without a deploy. See [05 — Development](../docs/05-development.md).
 
+**Finding severity** — A label on every review comment that tells the author what blocks the merge and what does not. Critical means data loss or security breach. Important means a bug the user will hit. Minor is real but non-blocking. Nit is polish. See [07 — Code Review](../docs/07-code-review.md).
+
 **Fitness function** — From evolutionary architecture: a test asserting a property of the system rather than a behaviour of a function. A rule that no module imports across a feature boundary, a build-size budget that fails the pipeline, an assertion that a page issues one query rather than forty. See [03 — Architecture](../docs/03-architecture.md).
 
 **Flaky test** — A test that passes and fails on the same code, with nothing about the code itself changing between runs. See [06 — Testing](../docs/06-testing.md).
@@ -133,6 +135,8 @@ drift apart.
 
 **Production-grade** — The state where someone other than you depends on the software working. It is about consequences, not scale: ten paying users make software production-grade; ten thousand on a toy do not.
 
+**Provenance (review)** — A tag on a review finding that says where the defect came from: new in this PR, already present in the codebase (PRE-EXISTING), or introduced by the plan itself (PLAN-AUTHORED ERROR). The distinction changes who fixes it and whether it blocks this merge. See [07 — Code Review](../docs/07-code-review.md).
+
 **Read replica** — A secondary instance kept up to date from the primary, used to spread read load. Writes still go to one place, so replicas scale reads and do nothing for write throughput. See [03 — Architecture](../docs/03-architecture.md).
 
 **Rebase** — Move a branch’s commits so they start from the current tip of the branch it will merge into, rather than from wherever it happened to fork. Run before opening the pull request, so the diff a reviewer sees is the diff that will actually land. See [05 — Development](../docs/05-development.md).
@@ -140,6 +144,10 @@ drift apart.
 **Regression test** — A test written to reproduce a specific bug, which must fail before the fix lands and pass after. See [06 — Testing](../docs/06-testing.md).
 
 **Rollback** — Returning production to the last known-good state. On Vercel it is promoting a prior deployment, which takes seconds — but it is not automatic for database migrations, which is why migrations get careful, separate treatment. See [13 — Production Deployment](../docs/13-production-deployment.md).
+
+**Rubber-stamping** — Approving code changes without reading them carefully — clicking "approve" based on green CI, a clean-looking diff, or trust in the author rather than on what the code actually does. See [07 — Code Review](../docs/07-code-review.md).
+
+**Self-review** — Deliberately breaking the state that makes reviewing your own code useless — you are still holding the intent, so you read what you meant rather than what you wrote. Three techniques: create distance, read the diff not the code, and explain it out loud. See [07 — Code Review](../docs/07-code-review.md).
 
 **Server Action** — A function whose file or body opens with the ‘use server’ directive. Next.js turns it into a public HTTP endpoint behind the scenes, wires it to a form’s action or a plain click handler, and lets the calling code write it as though it were an ordinary async function. See [05 — Development](../docs/05-development.md).
 
