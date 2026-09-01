@@ -199,6 +199,12 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
           </Figure>
           <Prose>
             <p>
+              Because the branch starts as a copy of production&rsquo;s schema,
+              run migrations during the build so the preview reflects the
+              changes in that commit. Set this in Vercel&rsquo;s Build Command
+              (Settings &rarr; General &rarr; Build &amp; Development).
+            </p>
+            <p>
               This is the single highest-value thing in this stage. A
               per-preview database branch means you can run destructive
               migrations, seed weird data, and delete everything &mdash; with a
@@ -369,6 +375,17 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
 
         <Section title="Done">
           <StagingChecklist />
+          <Callout kind="info" title="E2E against a preview URL in CI">
+            <p>
+              Wire the preview URL from Vercel&rsquo;s{' '}
+              <InlineCode text="`repository_dispatch`" /> event (
+              <InlineCode text="`github.event.client_payload.url`" />
+              ). If deployment protection is on, set{' '}
+              <InlineCode text="`x-vercel-protection-bypass`" /> from a{' '}
+              <InlineCode text="`VERCEL_AUTOMATION_BYPASS_SECRET`" /> so
+              Playwright can reach the page.
+            </p>
+          </Callout>
         </Section>
 
         <References slug="12-staging" />
