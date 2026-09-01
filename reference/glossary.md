@@ -41,9 +41,13 @@ drift apart.
 
 **CQRS (Command Query Responsibility Segregation)** — Splitting the write path and the read path so each can be shaped for its own job — writes validated against one model, reads served from another built for the queries the screens make. Often paired with event sourcing, though neither requires the other. See [03 — Architecture](../docs/03-architecture.md).
 
+**Database branching** — An isolated database branch (e.g. via Neon) that starts as a copy of the production schema and data. Changes in the branch do not touch the parent. Created automatically per preview deployment and cleaned up when the Git branch is deleted. See [12 — Staging](../docs/12-staging.md).
+
 **Database constraint** — NOT NULL, UNIQUE, CHECK, and foreign keys with their delete behaviour. Declared in the schema, so the database refuses to store a row that breaks them. See [03 — Architecture](../docs/03-architecture.md).
 
 **Definition of done** — A specific, checkable statement of what "done" means for a piece of work — a state you can hold the running product up against and confirm, yes or no. Every stage doc has one.
+
+**Deployment protection** — A setting (e.g. Vercel Deployment Protection) that requires authentication before a preview URL loads. Preview URLs are unlisted, not secret — they end up in Slack, issue trackers, and occasionally search indexes. See [12 — Staging](../docs/12-staging.md).
 
 **Derived state** — Anything you could work out on demand — whether an invoice is overdue, how many items are in a cart, a running total — that is written into a column instead. Storing it means something has to keep it up to date. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -164,6 +168,8 @@ drift apart.
 **Soft delete** — A deleted_at timestamp or a boolean flag, set instead of issuing a DELETE. The row stays; every query that should not see it has to filter it out. See [03 — Architecture](../docs/03-architecture.md).
 
 **Spike** — A short, deliberately bounded piece of exploration answering one specific question — can this integration do what we need, is this approach fast enough — with a hard stop and a written answer. See [02 — Product Planning](../docs/02-planning.md).
+
+**Staging environment** — A persistent deployment at a stable URL, usually tracking a shared branch like staging or develop. Unlike a preview deployment, it is not per-branch or ephemeral. See [12 — Staging](../docs/12-staging.md).
 
 **Statelessness** — Every request carries or looks up whatever it needs, and anything that must persist between requests lives in a cookie, a database or a shared store rather than a local variable. Any instance can serve any request. See [03 — Architecture](../docs/03-architecture.md).
 

@@ -243,6 +243,31 @@ export const TERMS: Record<string, Term> = {
       'It lets anyone see the change running as a real build before it merges, which catches what a local dev server cannot.',
     see: '12-staging',
   },
+  'staging-environment': {
+    name: 'Staging environment',
+    short: 'A single long-lived deployment tracking a shared branch.',
+    full: 'A persistent deployment at a stable URL, usually tracking a shared branch like staging or develop. Unlike a preview deployment, it is not per-branch or ephemeral.',
+    soWhat:
+      'Solo, you usually do not need one. Preview deployments cover the need. Add staging only when something concrete demands a stable URL — a third-party integration, a stakeholder demo, or a sandbox account with an external provider.',
+    see: '12-staging',
+  },
+  'database-branching': {
+    name: 'Database branching',
+    short: 'A copy-on-write database clone created per preview deployment.',
+    full: 'An isolated database branch (e.g. via Neon) that starts as a copy of the production schema and data. Changes in the branch do not touch the parent. Created automatically per preview deployment and cleaned up when the Git branch is deleted.',
+    soWhat:
+      'It lets you run destructive migrations, seed hostile data, and delete everything with a production-shaped dataset and no risk to production. The single highest-value technique in the staging stage.',
+    see: '12-staging',
+  },
+  'deployment-protection': {
+    name: 'Deployment protection',
+    short:
+      'Authentication on preview URLs so they are not publicly accessible.',
+    full: 'A setting (e.g. Vercel Deployment Protection) that requires authentication before a preview URL loads. Preview URLs are unlisted, not secret — they end up in Slack, issue trackers, and occasionally search indexes.',
+    soWhat:
+      'If the product is not public yet or previews touch anything sensitive, protection keeps casual visitors out. For CI, a bypass secret lets Playwright reach the page without a login.',
+    see: '12-staging',
+  },
   'production-grade': {
     name: 'Production-grade',
     short: 'Someone other than you depends on it working.',
