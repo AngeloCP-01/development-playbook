@@ -45,12 +45,19 @@ The default question: does the preview point at production data?
 migration that can destroy production data, and preview environments get treated
 casually by definition.
 
-With Neon, branch the database per preview:
+With Neon, branch the database per preview. The Neon–Vercel integration (install
+through the Vercel Marketplace or connect an existing Neon account) does this
+automatically: on every preview deployment, Neon creates an isolated branch named
+`preview/<git-branch>` from your production database, and Vercel injects
+`DATABASE_URL` pointing at it — no application code changes needed. When the Git
+branch is deleted, the database branch cleans up with it.
 
-```ts
-// The preview gets its own copy-on-write branch, seconds to create,
-// costing only the diff. Set DATABASE_URL per preview via the
-// Neon–Vercel integration rather than hardcoding it.
+Because the branch starts as a copy of production's schema, run migrations during
+the build so the preview reflects the changes in that commit:
+
+```bash
+# In Vercel's Build Command (Settings → General → Build & Development)
+npx prisma migrate deploy && npm run build
 ```
 
 This is the single highest-value thing in this doc. A per-preview database branch means
@@ -104,11 +111,62 @@ const users = [
 Every one of those has broken a layout or a query somewhere. Seeding `Alice`, `Bob`, and
 `Carol` tests nothing.
 
+### Environment variables for previews
+
+Preview deploys often need different credentials from production — a sandbox Stripe
+key, a test OAuth provider, a development webhook URL. Vercel scopes environment
+variables by environment: **Production**, **Preview**, and **Development**. Set
+preview-specific values under the Preview scope so they apply automatically to every
+preview deployment without touching production.
+
+The most common "works locally, broken in preview" cause is a missing or wrong
+environment variable. Two habits that prevent it:
+
+- When you add a new secret to production, add its preview equivalent in the same
+  sitting. A variable that exists only in Production is invisible in every preview,
+  and the failure looks like a code bug.
+- When a third-party integration offers a sandbox or test mode, use it for previews.
+  A preview that hits the live Stripe API is a preview that can charge a real card.
+
 ### Password-protect previews
 
 If the product is not public yet, or previews touch anything sensitive, enable Vercel's
 deployment protection. Preview URLs are unlisted, not secret — they end up in Slack, in
 issue trackers, and occasionally in search indexes.
+
+### AI in staging
+
+An agent can walk a preview URL methodically — every viewport, every state, every
+checklist item — without getting bored and without skipping the signed-out check because
+it "probably still works." What it cannot do is notice that the empty state feels
+confusing, that the loading skeleton implies a layout the page does not deliver, or that
+the error message makes sense only to someone who has read the codebase. Mechanical
+coverage is the strength; judgment about what a user actually experiences is the gap.
+
+Where it earns its place:
+
+- **Drive the preview checklist** (a browser tool). Open the preview URL, walk the
+  primary flow, then walk it signed out, throttled, at 320px and at 2560px. A browser
+  MCP does this faster and more consistently than a human, and it does not skip the
+  narrow viewport because the feature "is not mobile."
+- **Run the smoke suite against the preview URL** (a saved command). `BASE_URL=<url>
+  pnpm test:e2e` — the same suite CI runs locally, pointed at the live preview. Catches
+  regressions the preview checklist's manual walk would miss.
+- **Generate hostile seed data** (a prompt). Describe the schema; ask for seed records
+  that break layouts — long names, empty fields, Unicode, null avatars, extreme counts.
+  Faster than inventing them by hand, and it produces combinations you would not think
+  to try.
+- **Diff environment variables across scopes** (a CLI command). `vercel env ls` shows
+  what is set for Production, Preview, and Development. A missing Preview variable is
+  invisible until the preview fails; listing them side by side surfaces the gap.
+
+Named tools, so this is actionable: `claude-in-chrome` or `playwright` for driving the
+preview, `pnpm test:e2e` with `BASE_URL` for the smoke run, `vercel env ls` for the
+variable check.
+
+None of this replaces opening the preview yourself and asking "does this feel right."
+The two hardest checklist items — "does it actually work" and "did anything else break"
+— require noticing what is absent, which is the one thing a mechanical pass cannot do.
 
 ---
 
@@ -128,7 +186,11 @@ issue trackers, and occasionally in search indexes.
 - [ ] Checked one narrow viewport and one wide one
 - [ ] Checked one adjacent feature for regressions
 - [ ] Any migration ran cleanly against a branched database, not production
-- [ ] E2E passed against this preview URL ([11](11-ci-cd.md))
+- [ ] E2E passed against this preview URL — `BASE_URL=<preview-url> pnpm test:e2e`
+      ([11](11-ci-cd.md)). In CI, wire the preview URL from Vercel's
+      `repository_dispatch` event (`github.event.client_payload.url`); if deployment
+      protection is on, set `x-vercel-protection-bypass` from a
+      `VERCEL_AUTOMATION_BYPASS_SECRET` so Playwright can reach the page
 
 ---
 
