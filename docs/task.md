@@ -57,10 +57,10 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07 done; 11 remain — 7/18. **Stage 07 (Code Review) built and merged 2026-08-28** as `--no-ff` into `develop`, `feat/stage-07-code-review` deleted — 9 commits, 854/117 tests, audit 18/18. Three scored exercises: SelfReviewMatch, ReviewDrill (signature), SeverityDrill. P-6 severity conventions taught interactively. Doc gained two sections (D-35 AI mandate, P-6 severity). Next stage not yet chosen)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07 and 12 done; 10 remain — 8/18. **Stage 12 (Staging) built and merged 2026-09-01** as `--no-ff` into `develop`, `feat/stage-12-staging` deleted — 8 commits, 924/129 tests, audit 18/18. One scored exercise: PreviewOrStaging. Doc correction phase preceded the port. Coverage walk ran, fix wave merged. Next stage not yet chosen)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; twelve of seventeen now-registered sheets drawn — `code-review` added 2026-09-01 tethered to stage 07, `testing` and `playwright` added 2026-08-28 tethered to stage 06, alongside the nine from 2026-08-24/25 across Architecture/Git/Standards/Design Principles (D-90) — five language sheets remain, D-88)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; thirteen of eighteen now-registered sheets drawn — `deployment-environments` added 2026-09-01 tethered to stage 12, `code-review` added 2026-09-01 tethered to stage 07, `testing` and `playwright` added 2026-08-28 tethered to stage 06, alongside the nine from 2026-08-24/25 across Architecture/Git/Standards/Design Principles (D-90) — five language sheets remain, D-88)* |
 
 ### Dependency map
 
