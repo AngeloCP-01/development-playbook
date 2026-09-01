@@ -6,7 +6,7 @@
 Lookup material rather than reading material. A stage teaches a decision; a
 sheet answers what that command was.
 
-Drawn: 11 of 16. A sheet listed as not drawn is
+Drawn: 12 of 17. A sheet listed as not drawn is
 registered on purpose — the gap is the point, so it can be seen and filled.
 
 | Sheet | Group | Stage | Status |
@@ -22,6 +22,7 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | Software Development Life Cycle | Standards | — | Drawn |
 | Testing | Standards | 06 | Drawn |
 | Playwright | Standards | 06 | Drawn |
+| Code Review | Standards | 07 | Drawn |
 | JavaScript | Languages | — | Not drawn |
 | Python | Languages | — | Not drawn |
 | Java | Languages | — | Not drawn |
@@ -576,6 +577,46 @@ Belongs to [06 — Testing](../docs/06-testing.md).
 - **CI/CD integration** — Run headless, fail fast on the first failure, and collect a trace only on failure rather than on every run. — This repo's own audit runs a fresh production build via `webServer`, on a port that stays clear of the dev server (TD-27).
 
 Source: Playwright Quick Revision Cheat Sheet — Unrecorded — see reference/cheatsheet-sources.md.
+
+## Code Review
+
+Five review axes, the severity system, and how large a PR should be.
+
+Belongs to [07 — Code Review](../docs/07-code-review.md).
+
+### Review process
+
+- **1. Understand the context** — Read the PR description and linked ticket before touching the diff. Know what the change is trying to do.
+- **2. Read the tests first** — Tests show what the author thinks the code should do. Mismatches between intent and test are the highest-signal findings.
+- **3. Walk the implementation** — Read the diff file by file. The implementation is where the edge cases, authorization gaps, and naming issues live.
+- **4. Label every finding** — Every comment carries a severity — Critical, Required, Consider, Nit, or FYI — so the author knows what blocks the merge.
+- **5. Check the verification** — Confirm the author tested what they claim. A preview URL, a screenshot, a test run — not just "it works on my machine."
+
+### Five review axes
+
+- **Correctness** — Does it do what it claims? Edge cases and error paths, not just the happy path. Do the tests test the right thing, or the implementation?
+- **Readability** — Could another engineer follow it without you? 1000 lines where 100 suffice is a failure. Abstractions have to earn their complexity.
+- **Architecture** — Does it fit the system? Does the refactor reduce complexity, or relocate it? Is feature logic leaking into a shared module?
+- **Security** — Input validated at the boundary. Secrets out of code, logs and version control. External data is untrusted until proven otherwise.
+- **Performance** — N+1 query patterns. Unbounded loops and unconstrained fetching. Missing pagination. Large objects in hot paths.
+
+### Severity labels
+
+Lead with leverage. If you have one structural problem and ten nits, the structural problem is the review.
+
+- **Critical** — Blocks the merge. Data loss, security breach, production outage.
+- **Required** — No prefix — must fix. A correctness or UX bug the user will hit.
+- **Consider** — Worth thinking about. A real alternative the author may not have seen.
+- **Nit** — The author may ignore. Polish, naming preferences, style the linter does not enforce.
+- **FYI** — No action needed. Context for the author — a related decision, a known limitation, a pointer to prior art.
+
+### Change sizing
+
+- **~100 lines** — Good. Reviewable in one pass, easy to revert, high comment density.
+- **~300 lines** — Acceptable if it is one logical change. Past this, reviewers start skimming.
+- **~1000 lines** — Split it. Schema in one PR, backend in another, UI in a third. Each merges independently behind a flag.
+
+Source: [Code Review and Quality](https://github.com/nicepkg/agent-skills) — Addy Osmani.
 
 ## JavaScript
 

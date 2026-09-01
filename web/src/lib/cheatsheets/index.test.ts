@@ -76,6 +76,7 @@ test('isDrawn distinguishes a sheet with content from a registered placeholder',
     'api-design',
     'architecture-patterns',
     'clean-code',
+    'code-review',
     'coding-standards',
     'design-patterns',
     'git-branching',
@@ -107,6 +108,11 @@ test('cheatsheetsForStage returns the sheets tethered to stage 03', () => {
 test('cheatsheetsForStage returns the sheets tethered to stage 06', () => {
   const slugs = cheatsheetsForStage('06-testing').map((s) => s.slug)
   expect(slugs.sort()).toEqual(['playwright', 'testing'])
+})
+
+test('cheatsheetsForStage returns the sheet tethered to stage 07', () => {
+  const slugs = cheatsheetsForStage('07-code-review').map((s) => s.slug)
+  expect(slugs).toEqual(['code-review'])
 })
 
 // A sheet transcribed from someone else's graphic must credit them. The site is

@@ -1,4 +1,5 @@
 import { apiDesign } from './api-design'
+import { codeReview } from './code-review'
 import { architecturePatterns } from './architecture-patterns'
 import { cleanCode } from './clean-code'
 import { codingStandards } from './coding-standards'
@@ -35,6 +36,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   sdlc,
   testing,
   playwright,
+  codeReview,
   ...PLANNED,
 ]
 
