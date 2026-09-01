@@ -140,7 +140,7 @@ export const STAGES: Stage[] = [
       'See the change running as a real build before anyone who matters can reach it.',
     group: 'Shipping',
     timing: 'Automatically, on every pull request.',
-    ready: false,
+    ready: true,
   },
   {
     num: '13',
