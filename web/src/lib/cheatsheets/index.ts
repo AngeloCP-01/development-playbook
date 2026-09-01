@@ -3,6 +3,7 @@ import { codeReview } from './code-review'
 import { architecturePatterns } from './architecture-patterns'
 import { cleanCode } from './clean-code'
 import { codingStandards } from './coding-standards'
+import { deploymentEnvironments } from './deployment-environments'
 import { designPatterns } from './design-patterns'
 import { gitBranching } from './git-branching'
 import { gitCommands } from './git-commands'
@@ -37,6 +38,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   testing,
   playwright,
   codeReview,
+  deploymentEnvironments,
   ...PLANNED,
 ]
 
