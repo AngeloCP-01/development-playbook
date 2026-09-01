@@ -94,6 +94,16 @@ standard for any inline component:
 - Definitions are plain strings, so a straight double-quote inside one breaks the JSX
   attribute. Use typographic quotes in `terms.ts` copy.
 
+**Added after stage 12 (2026-09-01): `{' '}` is not always stable.** Prettier can
+silently collapse an explicit `{' '}` back into a plain text node when reformatting,
+which means the space disappears in the committed file even though it was present when
+you wrote it. The shape that triggers it: a verb immediately following `</Term>`, as in
+`<Term id="staging-environment">staging environment</Term> is a single…`. The fix that
+survives Prettier is to restructure the sentence so only punctuation (a colon, a comma,
+a period) follows the closing tag, not a word. Check by running `pnpm format` and
+confirming the file comes back unchanged, then inspecting the prerendered HTML for
+glued words.
+
 ---
 
 ## React 19 forbids setState in an effect

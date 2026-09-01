@@ -126,7 +126,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06 and 07 done; 11 remain — 7/18. Next stage not yet chosen)*
+### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07 and 12 done; 10 remain — 8/18. **Stage 12 (Staging) built and merged 2026-09-01** as `--no-ff` into `develop`, `feat/stage-12-staging` deleted — 8 commits, 924/129 tests, audit 18/18. One scored exercise: PreviewOrStaging (5 scenarios, binary preview/staging choice). Annotated artifact for hostile seed data. One figure (Neon branching lifecycle). Doc correction phase preceded the port: AI plays section, env vars section, Neon integration details added. Next stage not yet chosen)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -409,7 +409,11 @@ plan"; architecture's, testing's and so on will each have their own). Status:
 | 02 Product Planning | ☑ | ☑ | Done: 7th step + `### AI in planning` |
 | 03 Architecture | ☑ | ☑ | `### AI in architecture`, its own step — the 21st of 22 after the D-52 reshape, and the 6th when it was written. The doc had **no** AI section — the round had to write one before it could mirror it, which is why `stage-metadata.test.ts` now fails any stage whose doc lacks the heading |
 | 04 Project Setup | ☑ | ☑ | `### AI in project setup` was written test-first during the doc-correction round: `stage-metadata.test.ts` failed with `04-project-setup has no "### AI in ..." subsection` before the section existed, and the teeth check renamed the heading to `### AI for project setup` to confirm the assertion could still fail. The app step arrives with the port |
-| 05–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
+| 05 Development | ☑ | ☑ | Done: 13th step + `### AI in development` |
+| 06 Testing | ☑ | ☑ | Done: 8th step + `### AI in testing` |
+| 07 Code Review | ☑ | ☑ | Done: 6th step + `### AI in code review`. `AI_SECTION_STAGES` updated to include `07-code-review` in the stage 12 doc correction round |
+| 12 Staging | ☑ | ☑ | Done: 6th step + `### AI in staging`. Doc correction phase first (AI plays, env vars, Neon details), then port. Test-first: `12-staging` added to `AI_SECTION_STAGES` before the section existed |
+| 08–11, 13–18 (exc. 12) | ☐ | ☐ | Build with each stage, per the checklist item above |
 
 Suggested order. Revised 2026-07-24 (D-27): the first pass ranked purely by teaching
 value and put 02 fifth. That ignored the reader's journey and the risk of proving the
