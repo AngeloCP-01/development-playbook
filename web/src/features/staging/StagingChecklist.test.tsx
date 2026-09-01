@@ -1,0 +1,37 @@
+import { describe, expect, test, beforeEach } from 'vitest'
+import { render, screen, fireEvent } from '@testing-library/react'
+import { StagingChecklist } from './StagingChecklist'
+import { DONE, ARTIFACT_LIST } from './checklist'
+
+beforeEach(() => {
+  window.localStorage.clear()
+})
+
+describe('StagingChecklist', () => {
+  test('renders all done checkboxes', () => {
+    render(<StagingChecklist />)
+    expect(screen.getAllByRole('checkbox')).toHaveLength(DONE.length)
+  })
+
+  test('ticking a checkbox persists and shows count', () => {
+    render(<StagingChecklist />)
+    const boxes = screen.getAllByRole('checkbox')
+    fireEvent.click(boxes[0])
+    expect((boxes[0] as HTMLInputElement).checked).toBe(true)
+    expect(screen.getByText(/1 of \d/)).toBeTruthy()
+  })
+
+  test('artifact list renders all items', () => {
+    render(<StagingChecklist />)
+    for (const a of ARTIFACT_LIST) {
+      expect(screen.getByText(new RegExp(a.slice(0, 30)))).toBeTruthy()
+    }
+  })
+
+  test('team notes disclosure exists', () => {
+    render(<StagingChecklist />)
+    expect(
+      screen.getByRole('button', { name: /if you are not solo/i }),
+    ).toBeTruthy()
+  })
+})
