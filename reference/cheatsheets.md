@@ -6,7 +6,7 @@
 Lookup material rather than reading material. A stage teaches a decision; a
 sheet answers what that command was.
 
-Drawn: 12 of 17. A sheet listed as not drawn is
+Drawn: 13 of 18. A sheet listed as not drawn is
 registered on purpose — the gap is the point, so it can be seen and filled.
 
 | Sheet | Group | Stage | Status |
@@ -23,6 +23,7 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | Testing | Standards | 06 | Drawn |
 | Playwright | Standards | 06 | Drawn |
 | Code Review | Standards | 07 | Drawn |
+| Deployment Environments | Standards | 12 | Drawn |
 | JavaScript | Languages | — | Not drawn |
 | Python | Languages | — | Not drawn |
 | Java | Languages | — | Not drawn |
@@ -617,6 +618,37 @@ Lead with leverage. If you have one structural problem and ten nits, the structu
 - **~1000 lines** — Split it. Schema in one PR, backend in another, UI in a third. Each merges independently behind a flag.
 
 Source: [Code Review and Quality](https://github.com/nicepkg/agent-skills) — Addy Osmani.
+
+## Deployment Environments
+
+Six environments from local to production — what each catches and what it cannot.
+
+Belongs to [12 — Staging](../docs/12-staging.md).
+
+### Six environments
+
+Not every project uses all six. Solo, you typically run local, preview and production. The middle three earn their place when a team, a compliance process, or a third-party integration demands them.
+
+- **Local / Dev** — Your machine. Fast iteration, expected errors, no shared state. The only environment where a broken build costs nobody else. — Always. Every change starts here.
+- **Preview** — A per-branch deploy at its own URL, created automatically on every pull request and torn down on merge. Fully isolated from other branches. — Every pull request. The default pre-production check for solo and small-team work.
+- **QA** — A structured testing hub owned by a QA function. A release candidate is deployed here, tested against production-shaped data, and signed off before promotion. — When a dedicated QA role owns regression sign-off and needs a stable target that is not production.
+- **Test / Integration** — Validates that components talk to each other. Runs integration and contract tests against real (or realistic) dependencies rather than mocks. — When integration tests need infrastructure CI cannot provide — a real database, a message queue, an external API sandbox.
+- **Staging** — A long-lived deploy mirroring production as closely as possible. Tracks a shared branch, runs production-equivalent infrastructure, connects to production-shaped data. — When something demands a stable URL: a third-party callback, a client demo, a compliance sign-off, or a QA process that compares one release to the last.
+- **Production** — Live, serving real users. The only environment whose failures have real consequences. — After every other environment has done its job. Changes arrive here via the deployment pipeline, never directly.
+
+### Preview vs staging
+
+The choice stage 12 teaches. Most solo developers need preview and not staging. Add staging when something concrete demands a stable URL.
+
+- **Isolation** — Preview: one per PR, fully isolated — your work cannot break another branch. Staging: shared, all in-flight work deploys to the same environment.
+- **Lifecycle** — Preview: spins up on PR open, torn down on merge. Staging: long-lived, maintained continuously whether or not anyone is using it.
+- **Who tests** — Preview: the author and their reviewers. Staging: QA engineers, stakeholders, third-party integrators who need a stable URL.
+- **Feedback speed** — Preview: minutes from push to a live URL. Staging: hours to days, because deploys are queued and shared state must be coordinated.
+- **Cost model** — Preview: pay per use, scales to zero when no PRs are open. Staging: fixed cost, runs idle, still drifts and still generates alerts.
+- **Confidence** — Preview: high confidence that one change works. Staging: lower for any single change, higher for the release as a whole.
+- **What breaks when it fails** — Preview: one PR's review is blocked. Staging: the whole team's deployment queue backs up, and isolating the cause is forensic work.
+
+Source: [Dev, QA, preview, test, staging, and production environments](https://northflank.com/blog/what-are-dev-qa-preview-test-staging-and-production-environments) — Northflank.
 
 ## JavaScript
 
