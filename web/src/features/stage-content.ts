@@ -6,6 +6,7 @@ import { Setup } from './setup/Setup'
 import { Development } from './development/Development'
 import { Testing } from './testing/Testing'
 import { CodeReview } from './code-review/CodeReview'
+import { Staging } from './staging/Staging'
 
 /**
  * Stage slug → interactive page body. A stage missing from this map renders the
@@ -19,4 +20,5 @@ export const STAGE_CONTENT: Record<string, ComponentType> = {
   '05-development': Development,
   '06-testing': Testing,
   '07-code-review': CodeReview,
+  '12-staging': Staging,
 }

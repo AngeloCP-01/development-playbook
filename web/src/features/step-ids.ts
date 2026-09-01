@@ -5,6 +5,7 @@ import { STEP_IDS as SETUP } from './setup/steps'
 import { STEP_IDS as DEVELOPMENT } from './development/steps'
 import { STEP_IDS as TESTING } from './testing/steps'
 import { STEP_IDS as CODE_REVIEW } from './code-review/steps'
+import { STEP_IDS as STAGING } from './staging/steps'
 
 /**
  * Every built stage's rail, keyed by slug — the *declaration* of what each
@@ -31,4 +32,5 @@ export const STEP_IDS_BY_SLUG: Record<string, readonly string[]> = {
   '05-development': DEVELOPMENT,
   '06-testing': TESTING,
   '07-code-review': CODE_REVIEW,
+  '12-staging': STAGING,
 }

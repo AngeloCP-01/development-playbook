@@ -215,6 +215,26 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: 'The Microsoft study showing knowledge transfer — not defect detection — is the primary actual outcome of review.',
     },
   ],
+  '12-staging': [
+    {
+      title: 'Preview Deployments',
+      source: 'Vercel Docs',
+      url: 'https://vercel.com/docs/deployments/environments#preview-environment-pre-production',
+      adds: 'The mechanics this stage teaches: how preview URLs are generated, what environment variables they inherit, and the deployment lifecycle.',
+    },
+    {
+      title: 'Database Branching',
+      source: 'Neon Docs',
+      url: 'https://neon.com/docs/introduction/branching',
+      adds: 'The highest-value technique in this stage. Goes deeper on copy-on-write semantics, parent-child relationships, and the cost model.',
+    },
+    {
+      title: 'Deployment Protection',
+      source: 'Vercel Docs',
+      url: 'https://vercel.com/docs/deployment-protection',
+      adds: 'Authentication options for preview URLs, including the automation bypass secret that lets Playwright reach protected pages in CI.',
+    },
+  ],
 }
 
 export function getReferences(slug: string): Reference[] {
