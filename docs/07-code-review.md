@@ -150,6 +150,11 @@ human reviewer gets a cleaner diff and spends their attention on the parts machi
 judge. That split is the point: AI handles the checklist items, humans handle the judgment
 calls.
 
+Concrete tools: `/code-review` in Claude Code runs a local review before you push — five
+effort levels from `low` to `ultra`, and `--fix` auto-applies findings. `/security-review`
+is a dedicated security pass. On GitHub, CodeRabbit and Copilot review PRs automatically;
+Greptile indexes the full repository and catches cross-file bugs other tools miss.
+
 The anti-pattern is treating AI review as the review. Agent-authored PRs get reviewed less
 often, merged faster, and discussed less — which is exactly the erosion that turns review
 from a quality gate into ceremony.

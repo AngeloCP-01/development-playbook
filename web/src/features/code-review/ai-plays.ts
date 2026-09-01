@@ -56,4 +56,28 @@ export const PLAYS: Play[] = [
     kind: 'command',
     body: 'An AI review of your own PR creates the second perspective that self-review struggles to manufacture. It is not the same as a human reviewer, but it is better than none.',
   },
+  {
+    id: 'code-review-command',
+    title: '`/code-review` — local review before push',
+    kind: 'command',
+    body: 'Run `/code-review` in Claude Code for a local review before pushing. Five effort levels from `low` to `ultra`. Add `--fix` to auto-apply findings, `--comment` to post them as inline PR comments.',
+  },
+  {
+    id: 'security-review-command',
+    title: '`/security-review` — security-focused pass',
+    kind: 'command',
+    body: 'Run `/security-review` for a dedicated security pass. Catches authorization gaps, exposed secrets, and injection vectors that a general review may deprioritize.',
+  },
+  {
+    id: 'ultra-review',
+    title: '`/code-review ultra` — multi-agent deep review',
+    kind: 'command',
+    body: 'For high-stakes PRs, `/code-review ultra` dispatches multiple agents in the cloud for a deep review. Add `--post` to publish the findings to the PR as a single comment.',
+  },
+  {
+    id: 'pr-review-bots',
+    title: 'PR review bots — CodeRabbit, Copilot, Greptile',
+    kind: 'skill',
+    body: 'Install a PR review bot that runs automatically on every PR. CodeRabbit learns from team feedback over weeks. Copilot reviews diffs natively in GitHub. Greptile indexes the full repo and catches cross-file bugs other tools miss.',
+  },
 ]

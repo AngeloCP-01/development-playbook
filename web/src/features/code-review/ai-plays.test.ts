@@ -21,8 +21,8 @@ describe('AI plays data', () => {
     )
   })
 
-  test('five plays', () => {
-    expect(PLAYS).toHaveLength(5)
+  test('nine plays', () => {
+    expect(PLAYS).toHaveLength(9)
   })
 
   test('unique play IDs', () => {
