@@ -430,3 +430,23 @@ showing "0/0 right" on first load while every other exercise in the app shows no
 The aria-live assertion should fire after a pick, not before — that is when the score
 element has something to announce. The established pattern (`TriageDrill`) already does this
 correctly, and the whole point of having a pattern is that the instances match it.
+
+---
+
+## An AI plays section with only workflow philosophy feels incomplete
+
+Added after the stage 07 port (W-3.7, 2026-09-01). The initial AI plays section had five
+plays — all about the human+AI workflow (AI as first pass, human for judgment, heightened
+scrutiny). On manual review the section felt thin: a reader who agreed with the philosophy
+still did not know which button to press.
+
+The fix was four concrete tool plays: `/code-review` (five effort levels, `--fix`
+auto-applies), `/security-review` (dedicated security pass), `/code-review ultra`
+(multi-agent deep review), and PR review bots (CodeRabbit, Copilot, Greptile). The
+section went from five abstract plays to nine mixing philosophy with actionable
+commands.
+
+**Every AI plays section needs at least one "run this command" play.** The philosophy
+plays tell the reader how to think about AI review; the tool plays tell them what to
+type. Without the second kind, the section reads as an opinion piece rather than a
+reference a working developer consults between PRs.
