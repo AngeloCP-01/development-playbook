@@ -335,6 +335,10 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
     content: (
       <div className="space-y-16">
         <Section title="Traps">
+          {/* InlineCode wraps every trap body so that any body carrying
+              backticks gets <code> spans. The five bodies without backticks
+              pass through unchanged (InlineCode returns a plain Fragment
+              when there is nothing to split). */}
           <div className="space-y-4">
             {TRAPS.map((trap) => {
               const pdvTitle = stageTitle('14-post-deployment-verification')

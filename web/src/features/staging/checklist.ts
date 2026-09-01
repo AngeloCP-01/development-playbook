@@ -39,7 +39,8 @@ export const DONE: DoneItem[] = [
   },
   {
     id: 'e2e',
-    label: 'E2E passed against this preview URL',
+    label:
+      'E2E passed against this preview URL — `BASE_URL=<preview-url> pnpm test:e2e`',
   },
 ]
 
