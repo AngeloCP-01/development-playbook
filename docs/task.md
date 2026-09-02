@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07 and 12 done; 10 remain — 8/18. **Stage 12 (Staging) built and merged 2026-09-01** as `--no-ff` into `develop`, `feat/stage-12-staging` deleted — 8 commits, 924/129 tests, audit 18/18. One scored exercise: PreviewOrStaging. Doc correction phase preceded the port. Coverage walk ran, fix wave merged. Next stage not yet chosen)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 12 and 13 done; 9 remain — 9/18. **Stage 13 (Production Deployment) built and merged 2026-09-02** as `--no-ff` into `develop`, branch deleted — 7 commits, 974/138 tests, e2e 17/18 (1 pre-existing). Six panels, annotated expand/migrate/contract SQL, DeploymentChecklist. Doc correction phase preceded the port. **Next: AWS deployment content expansion** — restructure into platform-agnostic + platform-specific steps (Vercel / AWS))* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; thirteen of eighteen now-registered sheets drawn — `deployment-environments` added 2026-09-01 tethered to stage 12, `code-review` added 2026-09-01 tethered to stage 07, `testing` and `playwright` added 2026-08-28 tethered to stage 06, alongside the nine from 2026-08-24/25 across Architecture/Git/Standards/Design Principles (D-90) — five language sheets remain, D-88)* |
@@ -126,7 +126,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07 and 12 done; 10 remain — 8/18. **Stage 12 (Staging) built and merged 2026-09-01** as `--no-ff` into `develop`, `feat/stage-12-staging` deleted — 8 commits, 924/129 tests, audit 18/18. One scored exercise: PreviewOrStaging (5 scenarios, binary preview/staging choice). Annotated artifact for hostile seed data. One figure (Neon branching lifecycle). Doc correction phase preceded the port: AI plays section, env vars section, Neon integration details added. Next stage not yet chosen)*
+### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07, 12 and 13 done; 9 remain — 9/18. **Stage 13 (Production Deployment) built and merged 2026-09-02** as `--no-ff` into `develop`, branch deleted — 7 commits, 974/138 tests, e2e 17/18 (1 pre-existing). Six panels, annotated expand/migrate/contract SQL artifact, DeploymentChecklist. Doc correction phase preceded the port. **Next: AWS deployment content expansion** — restructure into platform-agnostic + platform-specific steps (Vercel / AWS))*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -413,7 +413,8 @@ plan"; architecture's, testing's and so on will each have their own). Status:
 | 06 Testing | ☑ | ☑ | Done: 8th step + `### AI in testing` |
 | 07 Code Review | ☑ | ☑ | Done: 6th step + `### AI in code review`. `AI_SECTION_STAGES` updated to include `07-code-review` in the stage 12 doc correction round |
 | 12 Staging | ☑ | ☑ | Done: 6th step + `### AI in staging`. Doc correction phase first (AI plays, env vars, Neon details), then port. Test-first: `12-staging` added to `AI_SECTION_STAGES` before the section existed |
-| 08–11, 13–18 (exc. 12) | ☐ | ☐ | Build with each stage, per the checklist item above |
+| 13 Production Deployment | ☑ | ☑ | Done: 6th step + `### AI in production deployment`. Doc correction phase first (four tool plays: generate migrations, dry-run, verify skew, rehearse rollback), then port. Test-first: `13-production-deployment` added to `AI_SECTION_STAGES` before the section existed. AWS expansion planned next round |
+| 08–11, 14–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
 
 Suggested order. Revised 2026-07-24 (D-27): the first pass ranked purely by teaching
 value and put 02 fifth. That ignored the reader's journey and the risk of proving the
@@ -429,8 +430,9 @@ pattern library on the hardest stage.
 | **6 ☑** | **04 Project Setup** | **Decided 2026-08-11**, against this table's earlier answer of 15. Reading 04 to compare the two found its Vercel section factually wrong — it says to match the Node version to `.nvmrc`, which Vercel does not read — and silent on the three things that broke this project's own first deploy (**TD-28**). So the round is *fix a doc that misleads* rather than *port a doc that is fine*, and it is the one stage checkable against this repository. **Scoped as a doc-correction phase before the port.** 15's case is recorded in `docs/tracker.md`'s Next up; it lost on having nothing to ground it against. **Doc phase complete 2026-08-13** on `fix/stage-04-doc-corrections`, unmerged: 323 → 711 lines at `38765e7`, TD-28 closed, **31 defects against the four TD-28 named**. **`RevealList` done 2026-08-14**, merged to `develop` as `e29f3fe`: eleven stage-03 accordions collapsed onto one component, not the five the plan scoped. **TD-12 closed the same day** on `fix/derive-audit-pages`, also merged — the audit's page list derives from the ready set, so the port will not be adding hashes by hand. **Port done 2026-08-17** and merged to `develop` as `bb3c119`: fifteen steps, all under the 3.2 ceiling, W-3 to 4/18. See W-3.4. |
 | **7 ☑** | **05 Development** | **Done.** Decided 2026-08-18. Thirteen steps, doc correction phase first. |
 | **8 ☑** | **12 Staging** | **Done.** Decided 2026-09-01. Six steps, doc correction phase first (AI plays, env vars, Neon details). Natural adjacency from stage 07 (stage 07's DoD says "Preview URL checked (12)"). Coverage walk ran same session, fix wave merged. |
-| **9 (next)** | **13 Production Deployment** | **Decided 2026-09-02.** Natural adjacency from stage 12 — the reader finishes previews and asks "how do I promote to production?" 217 lines, same shape as stage 12. Expand/migrate/contract needs a visual (annotated artifact or click-node inspector). Doc needs AI plays section (D-35 mandate) and has no references. Doc correction phase first, then port. **Reference research done** — four candidates: Vercel Instant Rollback, Vercel Skew Protection, Prisma's Expand and Contract Pattern guide, AWS Deployment Strategies whitepaper; plus a user-sourced zero-downtime guide (verify URL resolves from browser). Details in KICKOFF.md. |
-| 10 | 16 Incident Management | Procedural, so a stepper fits naturally |
+| ~~9~~ ✓ | 13 Production Deployment | **Done.** Decided 2026-09-02. Six steps, doc correction phase first. Vercel-focused; **AWS expansion planned as a follow-up round** restructuring into platform-agnostic + platform-specific steps (Vercel / AWS — blue/green, canary, rolling, CodeDeploy/ECS). |
+| 10 (next) | **AWS expansion for stage 13** | Restructure into 7 steps: deploys + migrations (agnostic), Vercel (consolidated), AWS (new, deeper — pipeline + strategies + rollback), flags (extracted), AI (both platforms), traps (updated). Needs research pass on AWS deployment services. |
+| 11 | 16 Incident Management | Procedural, so a stepper fits naturally |
 | — | remainder | 06–12, 14, 17, 18 |
 
 **~~Settle before stage 03:~~ ✓ resolved 2026-07-27 (D-36).** TD-2 and TD-3 are closed:

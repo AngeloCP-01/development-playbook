@@ -34,10 +34,11 @@ Before doing anything, read these for context:
   naming, atomic registration) and `quality-gates-101.md` (gate blind spots) both bear
   on whichever stage comes next.
 
-### Project state (as of 2026-09-02 — **stage 12 (Staging) is interactive and merged**;
-W-3 is **8/18**, ten stages remain. **Stage 13 (Production Deployment) is the recommended
-next W-3 round — 217 lines, natural adjacency from stage 12 (the reader finishes
-previews and asks "how do I promote to production?").** Not yet started.)
+### Project state (as of 2026-09-02 — **stage 13 (Production Deployment) is interactive and merged**;
+W-3 is **9/18**, nine stages remain. **The AWS deployment content expansion is the
+recommended next round** — restructure stage 13 into platform-agnostic + platform-specific
+steps (Vercel / AWS). The user uses Vercel for personal projects and wants deeper AWS
+coverage for work: blue/green, canary, rolling, CodeDeploy, ECS.)
 
 **Start here, in order:**
 
@@ -48,28 +49,23 @@ previews and asks "how do I promote to production?").** Not yet started.)
    yourself.** The previous version of this exact file was itself wrong about stage 06
    being unmerged, for a full day — see
    `docs/learnings/decisions-need-tests-101.md`'s newest section.
-3. **Stage 13 (Production Deployment) is the recommended next round, not yet started.**
-   The doc has no `### AI in ...` section (D-35 mandate) and no references — a doc
-   correction phase is needed first, same shape as stages 04, 05, and 12. Read
-   `docs/13-production-deployment.md`, then `docs/learnings/stage-implementation-101.md`
-   in full before porting anything — it now carries five lessons from the stage 07 and 12
-   rounds (Tailwind v4 token naming, atomic three-file registration, the "always render
-   score" consistency trap, AI plays needing concrete tool plays, and `{' '}` spacers
-   collapsing under Prettier).
+3. **The AWS deployment expansion is the next round.** Stage 13 is interactive and merged
+   (six steps, Vercel-focused). The approved design restructures it from 6 → 7 steps:
+   - `deploys` — keep (platform-agnostic)
+   - `migrations` — keep (platform-agnostic)
+   - `vercel` — consolidate old `safety` + `rollback` (skew protection, Vercel rollback)
+   - `aws` — **new, deeper**: pipeline (CodeDeploy/ECS/Lambda, GitHub Actions), blue/green
+     (ALB target groups, traffic swap), canary/linear (traffic shifting, CloudWatch alarms),
+     rolling (ECS `minimumHealthyPercent`/`maximumPercent`), rollback, "costs Vercel hides"
+   - `flags` — extract from old `safety` (platform-agnostic)
+   - `ai` — update for both platforms
+   - `traps` — update with AWS-relevant traps
 
-   **Reference research (done 2026-09-02).** Four candidates for `references.ts`, each
-   verified as resolving and relevant:
-
-   | Candidate | Source | What it adds | URL |
-   |---|---|---|---|
-   | Instant Rollback | Vercel Docs | The rollback mechanics the doc teaches — UI and CLI, eligible deployments, the auto-assignment caveat, undo flow | `https://vercel.com/docs/instant-rollback` |
-   | Skew Protection | Vercel Docs | The version-skew problem and Vercel's deployment-ID-based fix — what the doc's one-paragraph section covers in depth: how it works, cookie pinning, maximum age, monitoring | `https://vercel.com/docs/skew-protection` |
-   | Expand and Contract Pattern | Prisma Data Guide | The pattern's seven-step breakdown with diagrams and a worked example (playground equipment schema) — stack-agnostic despite the Prisma framing, and deeper than the doc's three-deploy summary | `https://www.prisma.io/dataguide/types/relational/expand-and-contract-pattern` |
-   | Deployment Strategies | AWS Whitepapers | Five strategies (in-place, blue/green, canary, linear, all-at-once) the doc does not cover — the broader landscape a reader from an AWS background will reach for | `https://docs.aws.amazon.com/whitepapers/latest/introduction-devops-aws/deployment-strategies.html` |
-
-   | Zero-Downtime Deployments Explained Simply | DevOps.dev | Accessible general-purpose walkthrough of zero-downtime strategies — the broader context the doc's Vercel-specific advice sits inside | `https://blog.devops.dev/zero-downtime-deployments-explained-simply-340809c1e7b0` |
-
-   Five candidates total, pick 3–5 for `references.ts`. The cap is enforced by test.
+   **This needs a research pass first** — verify current AWS service specifics (CodeDeploy
+   appspec format, ECS deployment controller options, current CLI commands). Then doc
+   expansion (`docs/13-production-deployment.md`), then interactive port update. Same
+   doc-correction-then-port pattern. Read `docs/learnings/stage-implementation-101.md`
+   in full before porting anything.
 4. Run `git fetch` and re-derive `develop`'s position against `origin/develop` and
    `origin/main` — the exact commands are in "Branch state" below. Do not trust any commit
    SHA quoted in this file.
@@ -78,32 +74,32 @@ previews and asks "how do I promote to production?").** Not yet started.)
 
 #### What shipped since the last kickoff
 
-**Stage 12 (Staging) is interactive and merged**, `--no-ff` into `develop`,
-2026-09-01, branch deleted. Eight commits, six panels, one scored exercise:
-- **PreviewOrStaging** — five scenarios, binary preview/staging choice, scored 0–5
+**Stage 13 (Production Deployment) is interactive and merged**, `--no-ff` into
+`develop`, 2026-09-02, branch deleted. Seven commits, six panels:
+- Annotated expand/migrate/contract SQL artifact (three deploys, one pivot on
+  irreversible `DROP COLUMN`)
+- DeploymentChecklist (five DoD items, five artifacts, four team notes)
+- RevealList for safety nets (skew protection + feature flags)
+- AIPlays (four tool plays: generate migrations, dry-run, verify skew, rehearse rollback)
+- Eight trap callouts
+- Four references (Vercel Rollback, Skew Protection, Prisma Expand/Contract, AWS Strategies)
 
-Doc correction phase preceded the port: `### AI in staging` (four tool plays),
-`### Environment variables for previews`, Neon integration details replacing a
-comment-only code block, expanded E2E DoD with `BASE_URL` command pattern.
-Also fixed `07-code-review` missing from `AI_SECTION_STAGES` (pre-existing oversight).
-Three glossary terms (staging-environment, database-branching, deployment-protection).
-Three references (Vercel Preview Deployments, Neon Database Branching, Vercel
-Deployment Protection). Annotated artifact for hostile seed data. Figure 1: Neon
-branching lifecycle (five nodes). RevealList for the four preview checklist categories.
+Doc correction phase preceded the port: `### AI in production deployment` (D-35
+mandate), stage added to `AI_SECTION_STAGES`. `'sql'` added to `Artifact.language` union.
 
-Final whole-branch review (opus) returned Ready to merge, no Critical, no Important.
-Assembly task found and fixed a real JSX whitespace bug: `{' '}` spacers collapsing
-under Prettier (new learning in `stage-implementation-101.md`).
+Final whole-branch review (opus) returned Ready with fixes — two missing render tests
+(DeploymentChecklist + AIPlays), both fixed in one round. One plan defect caught by TDD
+(team-note regex didn't match doc's list-item format).
 
-**Coverage walk ran** (opus, context-starved) — six drops found, three fixed (migration
-directive, build command placement, CI wiring for E2E against preview URLs), two
-skipped as redundant, one deferred ("Named tools" summary).
+**User feedback**: stage is too Vercel-focused. Approved design for an AWS expansion
+round restructuring into platform-agnostic + platform-specific steps.
 
-**`deployment-environments` cheatsheet shipped** (W-6.3h) — thirteenth drawn sheet,
-tethered to stage 12. Two sections: six environments from local to production, plus a
-seven-dimension preview-vs-staging comparison. Sourced from Northflank + Autonoma.
+Previously shipped (same session, before stage 13):
+- Stage 12 (Staging) — six panels, PreviewOrStaging scored exercise, coverage walk ran
+- `deployment-environments` cheatsheet (W-6.3h) tethered to stage 12
 
-**924 tests across 129 files, build clean, e2e 18/18, dev-console 1/1.**
+**974 tests across 138 files, build clean, e2e 17/18 (1 pre-existing on
+/reference/deployment-environments at 320px), dev-console 1/1.**
 
 ---
 
@@ -112,10 +108,11 @@ seven-dimension preview-vs-staging comparison. Sourced from Northflank + Autonom
 Full detail lives in `docs/tracker.md`; this is what a new session needs without
 re-reading the whole log.
 
-- **Stages 01–07 and 12 are interactive and merged.** 03 is 22 steps, 04 is 15, 05 is 13,
-  06 is 8, 07 is 6, 12 is 6. Each port's coverage map: `docs/stage-03-status.md` through
-  `-06-status.md` (stage 12's walk ran in the same session). Stages 08–11 and 13–18 render
-  a "sheet not drawn" placeholder; routing works for all 18.
+- **Stages 01–07, 12 and 13 are interactive and merged.** 03 is 22 steps, 04 is 15, 05
+  is 13, 06 is 8, 07 is 6, 12 is 6, 13 is 6. Each port's coverage map:
+  `docs/stage-03-status.md` through `-06-status.md` (stage 12's walk ran in the same
+  session; stage 13's has not). Stages 08–11 and 14–18 render a "sheet not drawn"
+  placeholder; routing works for all 18.
 - **A per-task reviewer subagent, plus a whole-branch review, is the standard** — every
   reviewed round has found something a green gate did not. Stage 07's final review caught
   dead CSS classes across three files that no per-task review or e2e audit saw.
@@ -130,6 +127,8 @@ re-reading the whole log.
   `test:e2e` (18-test Playwright audit, refuses a stale server per TD-27),
   `test:dev-console` (React dev-mode warnings, outside the gate, run once per stage
   round — TD-35, D-84). Re-derive current counts rather than quoting them.
+- **974 tests across 138 files**, build clean, e2e 17/18 (1 pre-existing on
+  `/reference/deployment-environments` at 320px).
 - **Deployed**: `W-5` complete, live at https://acp-dev-playbook.vercel.app since
   2026-08-11. `pnpm test:prod` verifies the deployment itself, outside the merge gate.
   `docs/learnings/deploying-101.md` before touching deploy config.
