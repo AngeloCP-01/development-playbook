@@ -34,10 +34,10 @@ Before doing anything, read these for context:
   naming, atomic registration) and `quality-gates-101.md` (gate blind spots) both bear
   on whichever stage comes next.
 
-### Project state (as of 2026-09-01 — **stage 07 is interactive and merged**; W-3 is
-**7/18**, eleven stages remain. **Stage 12 (Staging) is the recommended next W-3
-round — shortest doc at 169 lines, and stage 07's definition of done links to it.**
-Not yet started.)
+### Project state (as of 2026-09-02 — **stage 12 (Staging) is interactive and merged**;
+W-3 is **8/18**, ten stages remain. **Stage 13 (Production Deployment) is the recommended
+next W-3 round — 217 lines, natural adjacency from stage 12 (the reader finishes
+previews and asks "how do I promote to production?").** Not yet started.)
 
 **Start here, in order:**
 
@@ -48,13 +48,14 @@ Not yet started.)
    yourself.** The previous version of this exact file was itself wrong about stage 06
    being unmerged, for a full day — see
    `docs/learnings/decisions-need-tests-101.md`'s newest section.
-3. **Stage 12 (Staging) is the recommended next round, not yet started.** Picked on the
-   same grounds as the last three stages — shortest doc (169 lines) and natural adjacency
-   from 07 (stage 07's definition of done says "Preview URL checked (12)"). Read
-   `docs/12-staging.md`, then `docs/learnings/stage-implementation-101.md` in full
-   before porting anything — it now carries four new lessons from the stage 07 round
-   (Tailwind v4 token naming, atomic three-file registration, the "always render score"
-   consistency trap, and AI plays needing concrete tool plays).
+3. **Stage 13 (Production Deployment) is the recommended next round, not yet started.**
+   The doc has no `### AI in ...` section (D-35 mandate) and no references — a doc
+   correction phase is needed first, same shape as stages 04, 05, and 12. Read
+   `docs/13-production-deployment.md`, then `docs/learnings/stage-implementation-101.md`
+   in full before porting anything — it now carries five lessons from the stage 07 and 12
+   rounds (Tailwind v4 token naming, atomic three-file registration, the "always render
+   score" consistency trap, AI plays needing concrete tool plays, and `{' '}` spacers
+   collapsing under Prettier).
 4. Run `git fetch` and re-derive `develop`'s position against `origin/develop` and
    `origin/main` — the exact commands are in "Branch state" below. Do not trust any commit
    SHA quoted in this file.
@@ -63,52 +64,44 @@ Not yet started.)
 
 #### What shipped since the last kickoff
 
-**Stage 07 (Code Review) is interactive and merged**, `--no-ff` into `develop`,
-2026-08-28, branch deleted. Nine commits, six panels, three scored exercises:
-- **SelfReviewMatch** — three self-review techniques matched to cognitive biases
-- **ReviewDrill** (signature) — six code snippets with planted issues, reader classifies
-  by checklist category
-- **SeverityDrill** — five review comments classified by Critical/Important/Minor/Nit,
-  teaching P-6 severity conventions interactively
+**Stage 12 (Staging) is interactive and merged**, `--no-ff` into `develop`,
+2026-09-01, branch deleted. Eight commits, six panels, one scored exercise:
+- **PreviewOrStaging** — five scenarios, binary preview/staging choice, scored 0–5
 
-Doc gained two sections: `### AI in code review` (D-35 mandate) and
-`### Comment with severity` (P-6 review conventions). Four glossary terms
-(rubber-stamping, provenance, finding-severity, self-review). Four outward references
-(SmartBear/Cisco, Google Engineering Practices, Conventional Comments, Bacchelli & Bird).
+Doc correction phase preceded the port: `### AI in staging` (four tool plays),
+`### Environment variables for previews`, Neon integration details replacing a
+comment-only code block, expanded E2E DoD with `BASE_URL` command pattern.
+Also fixed `07-code-review` missing from `AI_SECTION_STAGES` (pre-existing oversight).
+Three glossary terms (staging-environment, database-branching, deployment-protection).
+Three references (Vercel Preview Deployments, Neon Database Branching, Vercel
+Deployment Protection). Annotated artifact for hostile seed data. Figure 1: Neon
+branching lifecycle (five nodes). RevealList for the four preview checklist categories.
 
-AI plays expanded post-merge from 5 to 9 — four concrete tool plays added:
-`/code-review` (five effort levels), `/security-review`, `/code-review ultra`
-(multi-agent deep review), and PR review bots (CodeRabbit, Copilot, Greptile).
+Final whole-branch review (opus) returned Ready to merge, no Critical, no Important.
+Assembly task found and fixed a real JSX whitespace bug: `{' '}` spacers collapsing
+under Prettier (new learning in `stage-implementation-101.md`).
 
-Final whole-branch review (opus) caught one Important: dead CSS classes `border-rule`
-and `bg-surface-sunken` (correct tokens: `border-line` / `bg-sunken`). Assembly task's
-own e2e run caught three defects (sub-44px touch targets, panel over D-52 cap,
-placeholder test repoint). Full account: `docs/tracker.md`'s W-3.7 row.
+**Coverage walk ran** (opus, context-starved) — six drops found, three fixed (migration
+directive, build command placement, CI wiring for E2E against preview URLs), two
+skipped as redundant, one deferred ("Named tools" summary).
 
-**W-6 code-review cheatsheet shipped** (2026-09-01) — twelfth drawn sheet, tethered to
-stage 07. Four sections: review process (five steps), five review axes, severity labels
-(Critical→FYI), change sizing. Source plate: Addy Osmani's "Code Review and Quality".
-Twelve of seventeen registered sheets are now drawn; five language sheets remain.
+**`deployment-environments` cheatsheet shipped** (W-6.3h) — thirteenth drawn sheet,
+tethered to stage 12. Two sections: six environments from local to production, plus a
+seven-dimension preview-vs-staging comparison. Sourced from Northflank + Autonoma.
 
-**Still deferred from the stage 07 round:** coverage walk (mid-round, context-starved —
-not yet run), `humanizer:humanizer` over panel prose, `test:dev-console`, live
-contrast/responsive/console verification passes. M1 deferred: `pr-template.ts` sets
-`language: 'yaml'` on a markdown template. M2 deferred: three drills render "0/0 right"
-before first pick, inconsistent with TriageDrill.
-
-**855 tests across 117 files, build clean, e2e 18/18.**
+**924 tests across 129 files, build clean, e2e 18/18, dev-console 1/1.**
 
 ---
 
-#### The condensed history (01–07, the reference hub)
+#### The condensed history (01–07, 12, the reference hub)
 
 Full detail lives in `docs/tracker.md`; this is what a new session needs without
 re-reading the whole log.
 
-- **Stages 01–07 are interactive and merged.** 03 is 22 steps, 04 is 15, 05 is 13,
-  06 is 8, 07 is 6. Each port's coverage map: `docs/stage-03-status.md` through
-  `-06-status.md` (stage 07's walk has not run yet). Stages 08–18 render a "sheet not
-  drawn" placeholder; routing works for all 18.
+- **Stages 01–07 and 12 are interactive and merged.** 03 is 22 steps, 04 is 15, 05 is 13,
+  06 is 8, 07 is 6, 12 is 6. Each port's coverage map: `docs/stage-03-status.md` through
+  `-06-status.md` (stage 12's walk ran in the same session). Stages 08–11 and 13–18 render
+  a "sheet not drawn" placeholder; routing works for all 18.
 - **A per-task reviewer subagent, plus a whole-branch review, is the standard** — every
   reviewed round has found something a green gate did not. Stage 07's final review caught
   dead CSS classes across three files that no per-task review or e2e audit saw.
