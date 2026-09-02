@@ -27,7 +27,8 @@ fix.
 A deploy containing one change has one suspect when something breaks. A deploy containing
 thirty changes has thirty, and you will bisect under pressure while users are affected.
 
-Merge to `main`, Vercel builds and promotes. The whole ceremony is a squash merge.
+Merge to `main`, the CI/CD pipeline builds and promotes. The whole ceremony is a squash
+merge.
 
 ### The asymmetry that governs everything
 
@@ -106,7 +107,11 @@ pnpm drizzle-kit migrate   # against production, then deploy
 Because of expand/migrate/contract, running the migration *before* the code deploy is
 safe: the schema change is always backward compatible with the code currently running.
 
-### Skew protection
+### Vercel deployment mechanics
+
+On Vercel, two mechanisms make deploys routine: skew protection keeps
+active sessions alive across deploys, and instant rollback reverts to
+a previous deployment in seconds.
 
 When you deploy, browsers mid-session are still running the previous build's JavaScript.
 It will request assets and call server actions from a version that no longer exists.
@@ -114,6 +119,24 @@ It will request assets and call server actions from a version that no longer exi
 Enable skew protection in Vercel. Without it, every deploy hands an error to every active
 user — a class of bug that is invisible to you (your browser is always freshly loaded)
 and consistently reported by users as "it randomly broke."
+
+Know this cold, before you need it:
+
+```bash
+vercel rollback                    # to the previous production deployment
+vercel ls                          # list deployments
+vercel promote <deployment-url>    # promote a specific one
+```
+
+**Roll back first, diagnose second.** The instinct to find the bug before reverting is
+the wrong order — every minute spent diagnosing is a minute users stay broken. Revert,
+then investigate calmly on a branch.
+
+If the deploy included a contract-phase migration, rollback is not safe. That is exactly
+why contract deploys are separated and small: when the risky deploy contains only a
+`DROP COLUMN` and nothing else, you know precisely what you are dealing with.
+
+### AWS deployment strategies
 
 ### Feature flags decouple deploy from release
 
@@ -135,24 +158,6 @@ turning off takes seconds and needs no deploy, and you can enable for yourself f
 
 Delete flags once a feature is fully rolled out. Stale flags are dead branches that
 accumulate until nobody knows which combinations are still real.
-
-### Rollback
-
-Know this cold, before you need it:
-
-```bash
-vercel rollback                    # to the previous production deployment
-vercel ls                          # list deployments
-vercel promote <deployment-url>    # promote a specific one
-```
-
-**Roll back first, diagnose second.** The instinct to find the bug before reverting is
-the wrong order — every minute spent diagnosing is a minute users stay broken. Revert,
-then investigate calmly on a branch.
-
-If the deploy included a contract-phase migration, rollback is not safe. That is exactly
-why contract deploys are separated and small: when the risky deploy contains only a
-`DROP COLUMN` and nothing else, you know precisely what you are dealing with.
 
 ### AI in production deployment
 
