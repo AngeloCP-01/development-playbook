@@ -138,6 +138,192 @@ why contract deploys are separated and small: when the risky deploy contains onl
 
 ### AWS deployment strategies
 
+Where Vercel is a single command, AWS gives you the machinery — and asks you
+to understand it. The payoff is control: you pick the deployment strategy, set
+the rollback threshold, and decide how much traffic the canary sees. The cost
+is that every piece has a price tag Vercel never showed you.
+
+#### The pipeline
+
+A production deploy on AWS starts with a CI/CD workflow. GitHub Actions with
+OIDC — no long-lived AWS credentials stored anywhere.
+
+The workflow chain:
+
+1. **Checkout** — `actions/checkout@v4`.
+2. **Configure AWS credentials** — `aws-actions/configure-aws-credentials@v4`
+   with `role-to-assume`. GitHub mints a short-lived OIDC token; AWS STS
+   exchanges it for temporary credentials.
+3. **Login to ECR** — `aws-actions/amazon-ecr-login@v2`. Authenticates Docker
+   to your Elastic Container Registry.
+4. **Build and push** — `docker build`, `docker push` with
+   `${{ github.sha }}` as the image tag. Every image is traceable to a commit.
+5. **Render task definition** — `aws-actions/amazon-ecs-render-task-definition@v1`.
+   Takes your task definition JSON and swaps the image field to the new tag.
+6. **Deploy** — `aws-actions/amazon-ecs-deploy-task-definition@v2`. Registers
+   the new task definition revision and calls `UpdateService`.
+
+Set `wait-for-service-stability: true` or the workflow reports success while
+the deployment circuit breaker silently rolls back. Set
+`wait-max-delay-seconds: 30` or the SDK's exponential backoff grows pauses
+to ten minutes between polls.
+
+#### Rolling updates
+
+The ECS default. New tasks start before old tasks stop.
+
+Two numbers govern it:
+
+- **`minimumHealthyPercent`** (default 100) — the floor. With four tasks and
+  100%, all four stay running while new ones start. No capacity dip.
+- **`maximumPercent`** (default 200) — the ceiling. With four tasks and 200%,
+  up to eight can run simultaneously. The new four start, pass their health
+  checks, then the old four drain.
+
+The combination requires enough cluster capacity to run both sets. If
+capacity is tight, `minimumHealthyPercent: 50` allows killing half the old
+tasks before starting new ones — faster, but half your users see reduced
+capacity during the roll.
+
+**The deadlock trap:** `minimumHealthyPercent: 100` with `maximumPercent: 100`
+and `desiredCount: 1`. The scheduler cannot start the new task (would exceed
+max) and cannot stop the old one (would violate min). The deployment hangs
+forever.
+
+**Deployment circuit breaker.** Add it to every service:
+
+```json
+{
+  "deploymentCircuitBreaker": {
+    "enable": true,
+    "rollback": true
+  }
+}
+```
+
+If new tasks repeatedly fail health checks, ECS stops the deployment and
+rolls back to the last successful revision. Without it, a bad image loops
+through start-crash-restart indefinitely while you watch.
+
+#### Blue/green deployments
+
+A full parallel environment, verified before traffic moves.
+
+The setup: an Application Load Balancer with two target groups (blue and
+green). Blue serves production. When you deploy, ECS launches a complete
+replacement task set behind green. Both run simultaneously. When green's
+health checks pass, the ALB listener switches from blue to green. Blue drains
+and terminates.
+
+**ECS-native blue/green** (the simpler path):
+
+```json
+{
+  "deploymentConfiguration": {
+    "strategy": "BLUE_GREEN",
+    "bakeTimeInMinutes": 10
+  }
+}
+```
+
+The bake time is the window after traffic shifts where both task sets run.
+Roll back during the bake and traffic reverts to blue instantly — no new
+deployment needed.
+
+**CodeDeploy blue/green** (the established path): a separate CodeDeploy
+application, deployment group, and appspec file. More infrastructure to
+maintain, but adds lifecycle hooks — Lambda functions that run at each stage
+of the deployment (before install, after test traffic, before production
+traffic). Use it when you need automated validation between stages.
+
+Both approaches swap ALB target groups. The difference is who orchestrates
+the swap: ECS natively, or CodeDeploy as a coordinator.
+
+#### Canary and linear traffic shifting
+
+Not all-or-nothing. Send a fraction of traffic to the new version first.
+
+**Canary:** 10% of traffic goes to the new version. Watch error rates and
+latency for five minutes. If the metrics hold, shift the remaining 90%.
+A failure at 10% means 90% of users never saw it.
+
+**Linear:** traffic shifts in equal steps — 10% every minute, or 10% every
+three minutes. Slower than canary, but gives you ten data points instead of
+one before full rollout.
+
+Both integrate with CloudWatch alarms. Attach up to ten alarms to the
+deployment — error rate, latency p99, custom business metrics. If any alarm
+fires during the shift, the deployment stops and traffic reverts. This is the
+closest thing to an automatic "undo" that exists in deployment.
+
+The predefined configurations:
+
+| Configuration | Pattern |
+|---|---|
+| `ECSCanary10Percent5Minutes` | 10% first, rest after 5 min |
+| `ECSCanary10Percent15Minutes` | 10% first, rest after 15 min |
+| `ECSLinear10PercentEvery1Minutes` | 10% every 1 min (~10 min total) |
+| `ECSLinear10PercentEvery3Minutes` | 10% every 3 min (~30 min total) |
+| `ECSAllAtOnce` | Immediate full cutover |
+
+#### Rollback on AWS
+
+Three paths, depending on what you deployed with.
+
+**Rolling update:** the deployment circuit breaker handles it automatically if
+enabled. Manual rollback:
+
+```bash
+aws ecs update-service \
+  --cluster my-cluster \
+  --service my-service \
+  --task-definition my-task:PREVIOUS_REVISION
+```
+
+ECS starts a new rolling deployment to the previous task definition revision.
+
+**Blue/green (ECS-native):** during the bake time, rollback reverts the ALB to
+the blue target group. After bake time ends and blue terminates, rollback is a
+new deployment — same as rolling.
+
+**CodeDeploy:** stop the deployment or let a CloudWatch alarm stop it. Traffic
+reverts to the original task set.
+
+```bash
+aws deploy stop-deployment --deployment-id d-XXXXXXXXX
+```
+
+The same rule from the Vercel section applies, universally: roll back first,
+diagnose second. The AWS-specific nuance is that "roll back" might mean
+waiting for a rolling update to complete, which takes minutes rather than
+seconds. Blue/green reverts are instant during the bake window.
+
+#### Costs Vercel hides
+
+On Vercel, you pay per seat. On AWS, you pay per component. A small
+application on ECS/Fargate behind an ALB:
+
+| Service | Monthly | What Vercel includes |
+|---|---|---|
+| Application Load Balancer | $22–27 | Routing, TLS, load balancing |
+| NAT Gateway | $35–100 | Outbound internet from private subnets |
+| Fargate (one task) | $18–40 | Compute |
+| Data transfer | $5–20 | Inter-AZ, egress, NAT processing |
+| CloudWatch | $5–15 | Logs, metrics, alarms |
+| ECR | $1–2 | Container registry |
+| **Total** | **$85–204** | **Vercel Pro: $20/seat** |
+
+NAT Gateway is the classic surprise. Private subnets — standard security
+practice — cannot reach the internet directly. A NAT Gateway costs $0.045 per
+hour ($32/month) just to exist, plus $0.045 per GB processed. Every container
+image pull, every AWS API call from your task, every outbound request flows
+through it unless you set up VPC endpoints.
+
+The point is not that AWS costs more. It is that Vercel bundles these costs
+invisibly, and a team moving from Vercel to AWS encounters them one invoice
+line at a time, with no single document listing them all. This table is that
+document.
+
 ### Feature flags decouple deploy from release
 
 For anything large or risky, ship the code disabled and turn it on separately.
