@@ -37,9 +37,29 @@ describe('production deployment prose pins', () => {
     )
   })
 
-  test('skew protection — invisible to you', () => {
-    const src = section('Skew protection')
+  test('vercel — skew protection invisible to you', () => {
+    const src = section('Vercel deployment mechanics')
     expect(flat(src)).toContain(flat('invisible to you'))
+  })
+
+  test('vercel — rollback diagnose second', () => {
+    const src = section('Vercel deployment mechanics')
+    expect(flat(src)).toContain(flat('Roll back first, diagnose second'))
+  })
+
+  test('aws — wait-for-service-stability', () => {
+    const src = section('AWS deployment strategies')
+    expect(flat(src)).toContain(flat('wait-for-service-stability'))
+  })
+
+  test('aws — minimumHealthyPercent', () => {
+    const src = section('AWS deployment strategies')
+    expect(flat(src)).toContain(flat('minimumHealthyPercent'))
+  })
+
+  test('aws — costs Vercel hides', () => {
+    const src = section('AWS deployment strategies')
+    expect(flat(src)).toContain(flat('Costs Vercel hides'))
   })
 
   test('feature flags — ship disabled', () => {
@@ -47,11 +67,6 @@ describe('production deployment prose pins', () => {
     expect(flat(src)).toContain(
       flat('ship the code disabled and turn it on separately'),
     )
-  })
-
-  test('rollback — diagnose second', () => {
-    const src = section('Rollback')
-    expect(flat(src)).toContain(flat('Roll back first, diagnose second'))
   })
 
   test('scaling — deploy your own changes', () => {
