@@ -56,6 +56,22 @@ previews and asks "how do I promote to production?").** Not yet started.)
    rounds (Tailwind v4 token naming, atomic three-file registration, the "always render
    score" consistency trap, AI plays needing concrete tool plays, and `{' '}` spacers
    collapsing under Prettier).
+
+   **Reference research (done 2026-09-02).** Four candidates for `references.ts`, each
+   verified as resolving and relevant:
+
+   | Candidate | Source | What it adds | URL |
+   |---|---|---|---|
+   | Instant Rollback | Vercel Docs | The rollback mechanics the doc teaches — UI and CLI, eligible deployments, the auto-assignment caveat, undo flow | `https://vercel.com/docs/instant-rollback` |
+   | Skew Protection | Vercel Docs | The version-skew problem and Vercel's deployment-ID-based fix — what the doc's one-paragraph section covers in depth: how it works, cookie pinning, maximum age, monitoring | `https://vercel.com/docs/skew-protection` |
+   | Expand and Contract Pattern | Prisma Data Guide | The pattern's seven-step breakdown with diagrams and a worked example (playground equipment schema) — stack-agnostic despite the Prisma framing, and deeper than the doc's three-deploy summary | `https://www.prisma.io/dataguide/types/relational/expand-and-contract-pattern` |
+   | Deployment Strategies | AWS Whitepapers | Five strategies (in-place, blue/green, canary, linear, all-at-once) the doc does not cover — the broader landscape a reader from an AWS background will reach for | `https://docs.aws.amazon.com/whitepapers/latest/introduction-devops-aws/deployment-strategies.html` |
+
+   **Also found (user-sourced, not yet fetchable — 403):**
+   `https://blog.devops.dev/zero-downtime-deployments-explained-simply-340809c1e7b0` —
+   zero-downtime deployment strategies explained. The user found this valuable; verify it
+   resolves from a browser before adding. If it does, it may replace or supplement the AWS
+   whitepaper as a more accessible general-purpose reference.
 4. Run `git fetch` and re-derive `develop`'s position against `origin/develop` and
    `origin/main` — the exact commands are in "Branch state" below. Do not trust any commit
    SHA quoted in this file.
