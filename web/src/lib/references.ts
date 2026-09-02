@@ -235,6 +235,32 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: 'Authentication options for preview URLs, including the automation bypass secret that lets Playwright reach protected pages in CI.',
     },
   ],
+  '13-production-deployment': [
+    {
+      title: 'Instant Rollback',
+      source: 'Vercel Docs',
+      url: 'https://vercel.com/docs/instant-rollback',
+      adds: 'The rollback mechanics this stage teaches — UI and CLI flows, eligible deployments, the auto-assignment caveat, and the undo flow.',
+    },
+    {
+      title: 'Skew Protection',
+      source: 'Vercel Docs',
+      url: 'https://vercel.com/docs/skew-protection',
+      adds: 'The version-skew problem in depth: how deployment-ID-based cookie pinning works, maximum age, monitoring, and why mid-session users break without it.',
+    },
+    {
+      title: 'Expand and Contract Pattern',
+      source: 'Prisma Data Guide',
+      url: 'https://www.prisma.io/dataguide/types/relational/expand-and-contract-pattern',
+      adds: "The seven-step breakdown with diagrams and a worked example — stack-agnostic despite the Prisma framing, and deeper than this stage's three-deploy summary.",
+    },
+    {
+      title: 'Deployment Strategies',
+      source: 'AWS Whitepapers',
+      url: 'https://docs.aws.amazon.com/whitepapers/latest/introduction-devops-aws/deployment-strategies.html',
+      adds: 'Five strategies (in-place, blue/green, canary, linear, all-at-once) this stage does not cover — the broader landscape for a reader from an AWS background.',
+    },
+  ],
 }
 
 export function getReferences(slug: string): Reference[] {
