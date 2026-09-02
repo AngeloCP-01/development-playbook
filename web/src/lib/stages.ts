@@ -150,7 +150,7 @@ export const STAGES: Stage[] = [
     blurb: 'Shipping should be routine, reversible, and boring.',
     group: 'Shipping',
     timing: 'On every merge to main, several times a day.',
-    ready: false,
+    ready: true,
   },
   {
     num: '14',

@@ -154,6 +154,34 @@ If the deploy included a contract-phase migration, rollback is not safe. That is
 why contract deploys are separated and small: when the risky deploy contains only a
 `DROP COLUMN` and nothing else, you know precisely what you are dealing with.
 
+### AI in production deployment
+
+An agent handles migration mechanics well — generating SQL, checking schema compatibility,
+verifying that expand/migrate/contract steps are in order — because the rules are explicit
+and the inputs are structured. It handles the judgment calls poorly: whether this change
+needs a feature flag, whether a backfill is large enough to batch, whether a deploy window
+matters. Those stay yours.
+
+Where it earns its place:
+
+- **Generate expand/migrate/contract SQL from a schema diff.** Describe the change you
+  want — "rename `users.name` to `users.full_name`" — and the agent writes the three
+  migration files, each deployable alone. Review the SQL; do not run it unread. (A prompt.)
+- **Dry-run a migration against the preview database.** Run the migration against a Neon
+  branch database before touching production, so schema errors surface where they cost
+  nothing. (A CLI command.)
+- **Verify skew protection after a deploy.** Check that the deployment-ID header is present
+  on a production response — `curl -sI https://your-app.vercel.app | grep -i
+  x-deployment-id` — confirming the deploy is pinned. (A CLI command.)
+- **Rehearse rollback on a preview deployment.** Run `vercel promote <previous-url>` against
+  a non-production deployment to confirm the command works and you know the output before
+  you need it under pressure. (A saved command.)
+
+The tools are the Vercel CLI, `curl`, and whichever editor the agent runs in. The gap is
+the same one the rest of this stage names: data does not roll back. An agent that runs a
+contract migration against production because the expand step passed is doing exactly what
+it was told, and the data is gone.
+
 ---
 
 ## Artifacts
