@@ -368,10 +368,25 @@ Where it earns its place:
   a non-production deployment to confirm the command works and you know the output before
   you need it under pressure. (A saved command.)
 
-The tools are the Vercel CLI, `curl`, and whichever editor the agent runs in. The gap is
-the same one the rest of this stage names: data does not roll back. An agent that runs a
-contract migration against production because the expand step passed is doing exactly what
-it was told, and the data is gone.
+Where it earns its place on AWS:
+
+- **Generate an ECS task definition from a Dockerfile.** Describe the container
+  requirements — port, memory, CPU, environment variables — and the agent writes the task
+  definition JSON. Review the resource limits; do not deploy unread. (A prompt.)
+- **Validate deployment configuration.** Paste your `deploymentConfiguration` JSON and ask
+  whether `minimumHealthyPercent` and `maximumPercent` can deadlock at your `desiredCount`.
+  The agent checks the arithmetic. (A prompt.)
+- **Generate a GitHub Actions ECS deploy workflow.** Describe the pipeline — ECR repo,
+  cluster name, service name — and the agent writes the workflow YAML with OIDC, no
+  long-lived secrets. (A prompt.)
+- **Audit CloudWatch alarm coverage for a deployment.** List the alarms attached to your
+  CodeDeploy deployment group and ask whether error rate, latency, and availability are
+  covered. The gap is always the alarm you did not write. (A prompt.)
+
+The tools are the Vercel CLI, the AWS CLI, `curl`, and whichever editor the agent runs in.
+The gap is the same one the rest of this stage names: data does not roll back. An agent
+that runs a contract migration against production because the expand step passed is doing
+exactly what it was told, and the data is gone.
 
 ---
 
@@ -391,6 +406,8 @@ it was told, and the data is gone.
 - [ ] Migrations applied cleanly, with expand/migrate/contract respected
 - [ ] Skew protection is on
 - [ ] Rollback command is known without looking it up
+- [ ] Deployment strategy matches the service risk profile (rolling for routine, blue/green
+      or canary for critical)
 - [ ] [14 — Post-Deployment Verification](14-post-deployment-verification.md) is next,
       not optional
 
@@ -433,3 +450,22 @@ effectively as any bug.
 
 **Flags that never get deleted.** Every stale flag doubles the state space of your
 application. Removing them is part of finishing a feature.
+
+**Health check grace period too short.** ECS kills tasks before they finish starting. The
+default grace period is zero seconds — a container that takes thirty seconds to boot fails
+its first health check and restarts in a loop. Set `healthCheckGracePeriodSeconds` to
+longer than your startup time.
+
+**NAT Gateway without VPC endpoints.** Every AWS API call from a private subnet goes
+through the NAT Gateway at $0.045/GB. ECR image pulls, CloudWatch log writes, SSM parameter
+reads — all NAT traffic unless you create VPC endpoints for those services. The endpoints
+cost $7/month each; the NAT traffic they replace costs more.
+
+**minimumHealthyPercent and maximumPercent deadlock.** Both at 100% with `desiredCount: 1`.
+The scheduler cannot start the new task (exceeds max) or stop the old one (violates min).
+The deployment hangs with no error.
+
+**Deploying without `wait-for-service-stability`.** The GitHub Actions workflow reports
+success after calling `UpdateService`. Meanwhile, the deployment circuit breaker detects
+failing health checks and rolls back. Your pipeline is green; your production is on the old
+version.
