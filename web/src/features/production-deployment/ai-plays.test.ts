@@ -11,12 +11,12 @@ describe('production deployment AI plays data', () => {
     )
   })
 
-  test('limit pins against doc', () => {
-    expect(flat(src)).toContain(flat('data does not roll back'))
+  test('limit pins against doc — includes AWS CLI', () => {
+    expect(flat(src)).toContain(flat('the AWS CLI'))
   })
 
-  test('four plays', () => {
-    expect(PLAYS).toHaveLength(4)
+  test('eight plays', () => {
+    expect(PLAYS).toHaveLength(8)
   })
 
   test('unique IDs', () => {
@@ -41,5 +41,13 @@ describe('production deployment AI plays data', () => {
   test('premise and limit are non-trivial', () => {
     expect(AI_PREMISE.length).toBeGreaterThan(20)
     expect(AI_LIMIT.length).toBeGreaterThan(20)
+  })
+
+  test('has an AWS task definition play', () => {
+    expect(PLAYS.some((p) => p.id === 'generate-task-def')).toBe(true)
+  })
+
+  test('has an AWS workflow play', () => {
+    expect(PLAYS.some((p) => p.id === 'generate-workflow')).toBe(true)
   })
 })

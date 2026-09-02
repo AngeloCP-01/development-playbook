@@ -3,11 +3,11 @@ import { DONE, ARTIFACT_LIST, TEAM } from './checklist'
 import { flat, h2 } from './doc-source'
 
 describe('deployment checklist data', () => {
-  test('five done items from definition of done', () => {
+  test('six done items from definition of done', () => {
     const src = h2('Definition of done')
     const checks = src.split('\n').filter((l) => /^- \[/.test(l))
-    expect(checks).toHaveLength(5)
-    expect(DONE).toHaveLength(5)
+    expect(checks).toHaveLength(6)
+    expect(DONE).toHaveLength(6)
   })
 
   test('unique done item IDs', () => {
