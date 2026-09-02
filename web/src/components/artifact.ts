@@ -17,6 +17,6 @@ export type ArtifactLine = {
 export type Artifact = {
   id: string
   filename: string
-  language: 'json' | 'jsonc' | 'yaml' | 'ts' | 'tsx' | 'bash'
+  language: 'json' | 'jsonc' | 'yaml' | 'ts' | 'tsx' | 'bash' | 'sql'
   lines: ArtifactLine[]
 }
