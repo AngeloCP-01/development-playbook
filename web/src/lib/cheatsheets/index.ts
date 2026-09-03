@@ -1,4 +1,5 @@
 import { apiDesign } from './api-design'
+import { awsDeployment } from './aws-deployment'
 import { codeReview } from './code-review'
 import { architecturePatterns } from './architecture-patterns'
 import { cleanCode } from './clean-code'
@@ -39,6 +40,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   playwright,
   codeReview,
   deploymentEnvironments,
+  awsDeployment,
   ...PLANNED,
 ]
 

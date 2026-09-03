@@ -75,6 +75,7 @@ test('isDrawn distinguishes a sheet with content from a registered placeholder',
   expect(drawn.map((s) => s.slug).sort()).toEqual([
     'api-design',
     'architecture-patterns',
+    'aws-deployment',
     'clean-code',
     'code-review',
     'coding-standards',
@@ -114,6 +115,13 @@ test('cheatsheetsForStage returns the sheets tethered to stage 06', () => {
 test('cheatsheetsForStage returns the sheet tethered to stage 07', () => {
   const slugs = cheatsheetsForStage('07-code-review').map((s) => s.slug)
   expect(slugs).toEqual(['code-review'])
+})
+
+test('cheatsheetsForStage returns the sheet tethered to stage 13', () => {
+  const slugs = cheatsheetsForStage('13-production-deployment').map(
+    (s) => s.slug,
+  )
+  expect(slugs).toEqual(['aws-deployment'])
 })
 
 // A sheet transcribed from someone else's graphic must credit them. The site is
