@@ -60,7 +60,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 12 and 13 done; 9 remain — 9/18. **Stage 13 AWS expansion complete 2026-09-03**: 8 steps (deploys, migrations, vercel, aws, aws-ops, flags, ai, traps), 1003/140 tests, coverage walk ran (3 blocking fixed), all verification green. Nine stages remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(thirteen of eighteen registered sheets drawn. **Next: AWS deployment cheatsheet** tethered to stage 13 (D-88 pattern). Five language sheets remain)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(fourteen of eighteen registered sheets drawn — `aws-deployment` added 2026-09-03 tethered to stage 13. Four language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
 
 ### Dependency map
 

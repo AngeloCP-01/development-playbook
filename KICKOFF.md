@@ -34,11 +34,12 @@ Before doing anything, read these for context:
   naming, atomic registration) and `quality-gates-101.md` (gate blind spots) both bear
   on whichever stage comes next.
 
-### Project state (as of 2026-09-03 — **stage 13 AWS expansion + verification complete**;
-W-3 is **9/18**, nine stages remain. Stage 13 is platform-aware with 8 steps: deploys,
-migrations, vercel, aws, aws-ops, flags, ai, traps. Coverage walk ran (3 blocking fixed),
-all verification passes green. **The next round is a W-6 AWS-focused reference
-cheatsheet**, tethered to stage 13.)
+### Project state (as of 2026-09-03 — **stage 13 AWS expansion, verification, and W-6
+cheatsheet all complete**; W-3 is **9/18**, nine stages remain. Stage 13 is platform-aware
+with 8 steps. `aws-deployment` cheatsheet shipped (14th drawn). **The recommended next
+round is stage 14 (Post-Deployment Verification)** — it chains directly from stage 13,
+whose DoD says "14 is next, not optional." Short doc (176 lines), likely needs a
+doc-correction phase to add AWS verification content matching stage 13's expansion.)
 
 **Start here, in order:**
 
@@ -49,10 +50,13 @@ cheatsheet**, tethered to stage 13.)
    yourself.** The previous version of this exact file was itself wrong about stage 06
    being unmerged, for a full day — see
    `docs/learnings/decisions-need-tests-101.md`'s newest section.
-3. **W-6 AWS reference cheatsheet** is the next round (D-88 pattern: a W-6 reference
-   sheet ships after each W-3 stage). The stage 13 AWS expansion provides the content to
-   draw from. Candidates: `aws-deployment` (ECS strategies, pipeline, costs comparison)
-   or `aws-ecs` (ECS-focused operations reference).
+3. **Stage 14 (Post-Deployment Verification) is the recommended next round.** 176 lines,
+   the shortest remaining doc. Chains from stage 13: deploy → verify. Likely needs a
+   doc-correction phase (the doc is probably Vercel-only, like stage 13 was before its
+   expansion — add AWS verification content). Then interactive port. Same
+   doc-correction-then-port pattern. Other candidates: 11 (CI/CD, heavily referenced by
+   04/12/13), 08 (Security Audit, clean break), 15 (Observability, completes the
+   shipping loop).
 4. Run `git fetch` and re-derive `develop`'s position against `origin/develop` and
    `origin/main` — the exact commands are in "Branch state" below. Do not trust any commit
    SHA quoted in this file.
@@ -88,7 +92,11 @@ Previously shipped (same session, 2026-09-02):
 - Stage 12 (Staging) — six panels, PreviewOrStaging scored exercise, coverage walk ran
 - `deployment-environments` cheatsheet (W-6.3h) tethered to stage 12
 
-**1003 tests across 140 files, build clean, e2e 17/18 (1 pre-existing),
+**`aws-deployment` cheatsheet shipped** (W-6.3i), tethered to stage 13. Three sections:
+ECS deployment strategies (five configs), GitHub Actions pipeline (six steps), costs
+Vercel hides (six rows). Fourteenth drawn sheet. No source plate — original content.
+
+**1004 tests across 140 files, build clean, e2e 17/18 (1 pre-existing),
 dev-console 1/1.**
 
 ---
