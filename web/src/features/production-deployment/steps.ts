@@ -3,6 +3,7 @@ export const STEP_IDS = [
   'migrations',
   'vercel',
   'aws',
+  'aws-ops',
   'flags',
   'ai',
   'traps',

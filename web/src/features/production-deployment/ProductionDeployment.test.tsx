@@ -4,10 +4,10 @@ import { render, screen } from '@testing-library/react'
 import { ProductionDeployment } from './ProductionDeployment'
 
 describe('ProductionDeployment page', () => {
-  test('renders seven steps in the rail', () => {
+  test('renders eight steps in the rail', () => {
     render(<ProductionDeployment />)
     const steps = screen.getAllByRole('tab')
-    expect(steps).toHaveLength(7)
+    expect(steps).toHaveLength(8)
   })
 
   test('first step label contains "Small"', () => {
@@ -22,7 +22,12 @@ describe('ProductionDeployment page', () => {
 
   test('has an AWS step', () => {
     render(<ProductionDeployment />)
-    expect(screen.getByRole('tab', { name: /aws/i })).toBeTruthy()
+    expect(screen.getByRole('tab', { name: /aws \/ ecs/i })).toBeTruthy()
+  })
+
+  test('has an AWS Ops step', () => {
+    render(<ProductionDeployment />)
+    expect(screen.getByRole('tab', { name: /aws ops/i })).toBeTruthy()
   })
 
   test('has a Feature flags step', () => {

@@ -254,7 +254,7 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
   {
     id: 'aws',
     label: 'AWS / ECS',
-    hint: 'Pipeline, strategies, costs',
+    hint: 'Pipeline, rolling, blue/green',
     content: (
       <div className="space-y-16">
         <Section title="The pipeline">
@@ -349,12 +349,84 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
           </div>
           <Prose>
             <p>
+              Both canary and linear strategies integrate with CloudWatch
+              alarms. Attach up to ten alarms &mdash; error rate, latency p99,
+              custom business metrics &mdash; and if any alarm fires during the
+              shift, the deployment stops and traffic reverts automatically.
+            </p>
+          </Prose>
+          <Prose>
+            <p>
               <Term id="canary">Canary</Term> strategies send a small slice of
               traffic first and wait, catching failures before the full fleet
               switches. Linear strategies widen gradually instead of jumping
               from the canary slice to 100%.
             </p>
           </Prose>
+        </Section>
+      </div>
+    ),
+  },
+
+  /* ---- Panel 5: aws-ops ---- */
+  {
+    id: 'aws-ops',
+    label: 'AWS Ops',
+    hint: 'Rollback and costs',
+    content: (
+      <div className="space-y-16">
+        <Section title="Rollback on AWS">
+          <Prose>
+            <p>Three paths, depending on what you deployed with.</p>
+            <p>
+              <strong>Rolling update:</strong> the{' '}
+              <Term id="deployment-circuit-breaker">
+                deployment circuit breaker
+              </Term>{' '}
+              handles it automatically if enabled. Manual rollback:
+            </p>
+          </Prose>
+          <Card className="overflow-x-auto">
+            <pre className="text-sm leading-7">
+              <code>
+                {'aws ecs update-service \\\n'}
+                {'  --cluster my-cluster \\\n'}
+                {'  --service my-service \\\n'}
+                {'  --task-definition my-task:PREVIOUS_REVISION'}
+              </code>
+            </pre>
+          </Card>
+          <Prose>
+            <p>
+              <strong>Blue/green (ECS-native):</strong> during the bake time,{' '}
+              <Term id="rollback">rollback</Term> reverts the ALB to the blue
+              target group. After bake time ends and blue terminates, rollback
+              is a new deployment &mdash; same as rolling.
+            </p>
+            <p>
+              <strong>CodeDeploy:</strong> stop the deployment or let a
+              CloudWatch alarm stop it. Traffic reverts to the original task
+              set.
+            </p>
+          </Prose>
+          <Card className="overflow-x-auto">
+            <pre className="text-sm leading-7">
+              <code>
+                {'aws deploy stop-deployment --deployment-id d-XXXXXXXXX'}
+              </code>
+            </pre>
+          </Card>
+          <Callout
+            kind="warn"
+            title="Roll back first, diagnose second — on any platform"
+          >
+            <p>
+              The same rule from the Vercel section applies universally. The
+              AWS-specific nuance: &ldquo;roll back&rdquo; might mean waiting
+              for a rolling update to complete, which takes minutes rather than
+              seconds. Blue/green reverts are instant during the bake window.
+            </p>
+          </Callout>
         </Section>
 
         <Section title="Costs Vercel hides">
@@ -411,7 +483,7 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
     ),
   },
 
-  /* ---- Panel 5: flags ---- */
+  /* ---- Panel 6: flags ---- */
   {
     id: 'flags',
     label: 'Feature flags',
@@ -431,12 +503,16 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
           <Card className="overflow-x-auto">
             <pre className="text-sm leading-7">
               <code>
-                <span className="text-muted">
-                  {'// Read from Edge Config at the edge — no cold start\n'}
-                </span>
+                <span className="text-muted">{'// src/lib/flags.ts\n'}</span>
                 {
-                  "import { get } from '@vercel/edge-config'\n\nconst enabled = await get('new-dashboard')"
+                  'export async function isEnabled(flag: string, userId?: string) {\n'
                 }
+                {'  const config = await getEdgeConfig()\n'}
+                {'  const rule = config.flags[flag]\n'}
+                {'  if (!rule) return false\n'}
+                {'  if (rule.enabled === true) return true\n'}
+                {"  return rule.allowlist?.includes(userId ?? '') ?? false\n"}
+                {'}'}
               </code>
             </pre>
           </Card>
@@ -452,7 +528,7 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
     ),
   },
 
-  /* ---- Panel 6: ai ---- */
+  /* ---- Panel 7: ai ---- */
   {
     id: 'ai',
     label: 'AI in Deployment',
@@ -466,7 +542,7 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
     ),
   },
 
-  /* ---- Panel 7: traps ---- */
+  /* ---- Panel 8: traps ---- */
   {
     id: 'traps',
     label: 'Traps',
@@ -475,7 +551,7 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
       <div className="space-y-16">
         <Section title="Traps">
           <div className="space-y-4">
-            {TRAPS.map((trap) => (
+            {TRAPS.slice(0, 8).map((trap) => (
               <Callout key={trap.id} kind="trap" title={trap.title}>
                 <p>
                   <InlineCode text={trap.body} />
@@ -483,6 +559,20 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
               </Callout>
             ))}
           </div>
+          <details className="mt-6 rounded-md border border-line">
+            <summary className="cursor-pointer px-4 py-3 text-sm font-medium">
+              AWS-specific traps (4)
+            </summary>
+            <div className="space-y-4 px-4 pb-4 pt-2">
+              {TRAPS.slice(8).map((trap) => (
+                <Callout key={trap.id} kind="trap" title={trap.title}>
+                  <p>
+                    <InlineCode text={trap.body} />
+                  </p>
+                </Callout>
+              ))}
+            </div>
+          </details>
         </Section>
 
         <Section title="Done">
