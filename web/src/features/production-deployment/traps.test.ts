@@ -5,10 +5,10 @@ import { flat, h2 } from './doc-source'
 describe('production deployment traps data', () => {
   const src = h2('Traps')
 
-  test('eight traps from doc', () => {
+  test('twelve traps from doc', () => {
     const boldLeads = src.match(/^\*\*.+?\*\*/gm) ?? []
-    expect(boldLeads).toHaveLength(8)
-    expect(TRAPS).toHaveLength(8)
+    expect(boldLeads).toHaveLength(12)
+    expect(TRAPS).toHaveLength(12)
   })
 
   test('unique IDs', () => {
@@ -38,6 +38,16 @@ describe('production deployment traps data', () => {
     expect(flat(src)).toContain(
       flat('A procedure you have never run is a hypothesis'),
     )
+  })
+
+  test('body pin: health-check-grace', () => {
+    expect(flat(src)).toContain(
+      flat('ECS kills tasks before they finish starting'),
+    )
+  })
+
+  test('body pin: min-max-deadlock', () => {
+    expect(flat(src)).toContain(flat('The scheduler cannot start the new task'))
   })
 
   test('every trap has text content', () => {

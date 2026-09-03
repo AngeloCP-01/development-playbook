@@ -255,10 +255,16 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: "The seven-step breakdown with diagrams and a worked example — stack-agnostic despite the Prisma framing, and deeper than this stage's three-deploy summary.",
     },
     {
+      title: 'Amazon ECS Deployment Strategies',
+      source: 'AWS Docs',
+      url: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-ecs.html',
+      adds: 'The rolling-update mechanics in full — minimumHealthyPercent/maximumPercent arithmetic, deployment circuit breaker thresholds, and unhealthy-task handling during deployments.',
+    },
+    {
       title: 'Deployment Strategies',
       source: 'AWS Whitepapers',
       url: 'https://docs.aws.amazon.com/whitepapers/latest/introduction-devops-aws/deployment-strategies.html',
-      adds: 'Five strategies (in-place, blue/green, canary, linear, all-at-once) this stage does not cover — the broader landscape for a reader from an AWS background.',
+      adds: 'The broader strategic landscape — in-place, immutable, and traffic-shifting categories — for a reader comparing AWS approaches beyond what ECS offers natively.',
     },
   ],
 }

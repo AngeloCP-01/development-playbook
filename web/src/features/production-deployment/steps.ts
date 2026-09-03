@@ -1,8 +1,9 @@
 export const STEP_IDS = [
   'deploys',
   'migrations',
-  'safety',
-  'rollback',
+  'vercel',
+  'aws',
+  'flags',
   'ai',
   'traps',
 ] as const

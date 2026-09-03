@@ -334,6 +334,14 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'It is the decision that outlives every framework choice, because migrating code is easy and migrating data is not. Getting it wrong is the most expensive kind of wrong available before you have users.',
   },
+  'deployment-circuit-breaker': {
+    name: 'Deployment circuit breaker',
+    short: 'Auto-rollback when new tasks repeatedly fail health checks.',
+    full: 'An ECS feature that monitors new tasks during a rolling deployment. If they repeatedly fail to reach a healthy state, ECS stops the deployment and rolls back to the last successful revision. Without it, a bad image loops through start-crash-restart indefinitely.',
+    soWhat:
+      'A safety net that turns a silent failure into an automatic recovery. Enable it on every ECS service with rollback: true.',
+    see: '13-production-deployment',
+  },
   'derived-state': {
     name: 'Derived state',
     see: '03-architecture',
@@ -433,6 +441,15 @@ export const TERMS: Record<string, Term> = {
     full: 'A property of an operation: running it repeatedly with the same input leaves the system in the same state as running it once. Usually achieved by having the caller supply a key, and recording which keys have already been processed.',
     soWhat:
       'Anything that can be retried will eventually be retried, and anything delivered over a network will eventually arrive twice. Without it, a payment webhook that fires twice charges twice — and the second delivery is not a bug you can fix on your side.',
+  },
+  'blue-green-deployment': {
+    name: 'Blue/green deployment',
+    short:
+      'Running two identical environments and switching traffic between them.',
+    full: 'A deployment strategy where two complete environments (blue and green) run in parallel. The new version deploys to the idle environment, gets verified, then traffic switches from the active to the idle. Rollback is switching back.',
+    soWhat:
+      'The trade-off is infrastructure cost — you need capacity for both environments during the switch — in exchange for instant, zero-downtime rollback during the bake window.',
+    see: '13-production-deployment',
   },
   'bounded-context': {
     name: 'Bounded context',
@@ -771,6 +788,14 @@ export const TERMS: Record<string, Term> = {
     full: 'The name assistive technology reports for an element — usually its visible text or its label.',
     soWhat:
       'Selecting by it in an E2E test means the test breaks when what the user sees changes and not when the styling does, and it makes an inaccessible UI produce failing tests.',
+  },
+  'rolling-deployment': {
+    name: 'Rolling deployment',
+    short: 'Replacing instances of the old version one at a time.',
+    full: 'A deployment strategy where new tasks start alongside old tasks, pass health checks, and then old tasks drain. On ECS, governed by minimumHealthyPercent and maximumPercent.',
+    soWhat:
+      'The simplest strategy and the ECS default. No extra infrastructure, but rollback means deploying the previous version forward — there is no instant switch back.',
+    see: '13-production-deployment',
   },
   'rubber-stamping': {
     name: 'Rubber-stamping',

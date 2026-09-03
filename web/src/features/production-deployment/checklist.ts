@@ -30,6 +30,10 @@ export const DONE: DoneItem[] = [
     label: 'Rollback command is known without looking it up',
   },
   {
+    id: 'strategy-matches',
+    label: 'Deployment strategy matches the service risk profile',
+  },
+  {
     id: 'pdv-next',
     label: 'Post-Deployment Verification is next, not optional',
   },

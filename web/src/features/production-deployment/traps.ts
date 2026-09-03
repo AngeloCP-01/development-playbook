@@ -45,4 +45,24 @@ export const TRAPS: Trap[] = [
     title: 'Flags that never get deleted.',
     body: 'Every stale flag doubles the state space of your application. Removing them is part of finishing a feature.',
   },
+  {
+    id: 'health-check-grace',
+    title: 'Health check grace period too short.',
+    body: 'ECS kills tasks before they finish starting. The default grace period is zero seconds — a container that takes thirty seconds to boot fails its first health check and restarts in a loop. Set `healthCheckGracePeriodSeconds` to longer than your startup time.',
+  },
+  {
+    id: 'nat-without-endpoints',
+    title: 'NAT Gateway without VPC endpoints.',
+    body: 'Every AWS API call from a private subnet goes through the NAT Gateway at $0.045/GB. ECR image pulls, CloudWatch log writes, SSM parameter reads — all NAT traffic unless you create VPC endpoints for those services.',
+  },
+  {
+    id: 'min-max-deadlock',
+    title: 'minimumHealthyPercent and maximumPercent deadlock.',
+    body: 'Both at 100% with `desiredCount: 1`. The scheduler cannot start the new task (exceeds max) or stop the old one (violates min). The deployment hangs with no error.',
+  },
+  {
+    id: 'no-wait-for-stability',
+    title: 'Deploying without `wait-for-service-stability`.',
+    body: 'The GitHub Actions workflow reports success after calling `UpdateService`. Meanwhile, the deployment circuit breaker detects failing health checks and rolls back. Your pipeline is green; your production is on the old version.',
+  },
 ]
