@@ -21,6 +21,8 @@ drift apart.
 
 **Blast radius** — The reach of a change or a failure: how much of the system is affected when this one piece goes wrong. See [03 — Architecture](../docs/03-architecture.md).
 
+**Blue/green deployment** — A deployment strategy where two complete environments (blue and green) run in parallel. The new version deploys to the idle environment, gets verified, then traffic switches from the active to the idle. Rollback is switching back. See [13 — Production Deployment](../docs/13-production-deployment.md).
+
 **Bounded context** — From domain-driven design: a section of the system with its own model, where the terms have a single agreed meaning. "Invoice" in billing and "invoice" in a customer-support view are often not the same object, and a bounded context is the admission that forcing them together costs more than keeping them apart. See [03 — Architecture](../docs/03-architecture.md).
 
 **C4 model** — Simon Brown’s convention for architecture diagrams. Context shows your system and the outside world it talks to. Container shows the deployable things inside it — the application, the database, the worker. Component shows the pieces inside one container. Code is classes and functions. See [03 — Architecture](../docs/03-architecture.md).
@@ -46,6 +48,8 @@ drift apart.
 **Database constraint** — NOT NULL, UNIQUE, CHECK, and foreign keys with their delete behaviour. Declared in the schema, so the database refuses to store a row that breaks them. See [03 — Architecture](../docs/03-architecture.md).
 
 **Definition of done** — A specific, checkable statement of what "done" means for a piece of work — a state you can hold the running product up against and confirm, yes or no. Every stage doc has one.
+
+**Deployment circuit breaker** — An ECS feature that monitors new tasks during a rolling deployment. If they repeatedly fail to reach a healthy state, ECS stops the deployment and rolls back to the last successful revision. Without it, a bad image loops through start-crash-restart indefinitely. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **Deployment protection** — A setting (e.g. Vercel Deployment Protection) that requires authentication before a preview URL loads. Preview URLs are unlisted, not secret — they end up in Slack, issue trackers, and occasionally search indexes. See [12 — Staging](../docs/12-staging.md).
 
@@ -148,6 +152,8 @@ drift apart.
 **Regression test** — A test written to reproduce a specific bug, which must fail before the fix lands and pass after. See [06 — Testing](../docs/06-testing.md).
 
 **Rollback** — Returning production to the last known-good state. On Vercel it is promoting a prior deployment, which takes seconds — but it is not automatic for database migrations, which is why migrations get careful, separate treatment. See [13 — Production Deployment](../docs/13-production-deployment.md).
+
+**Rolling deployment** — A deployment strategy where new tasks start alongside old tasks, pass health checks, and then old tasks drain. On ECS, governed by minimumHealthyPercent and maximumPercent. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **Rubber-stamping** — Approving code changes without reading them carefully — clicking "approve" based on green CI, a clean-looking diff, or trust in the author rather than on what the code actually does. See [07 — Code Review](../docs/07-code-review.md).
 

@@ -4,13 +4,19 @@ import { Stepper, type Step } from '@/components/Stepper'
 import { Callout, Card, Prose, Section } from '@/components/ui'
 import { Term } from '@/components/Term'
 import { InlineCode } from '@/components/InlineCode'
-import { RevealList, type RevealRow } from '@/components/RevealList'
 import { AnnotatedArtifact } from '@/components/AnnotatedArtifact'
 import { Figure } from '@/components/Figure'
 import { References } from '@/components/References'
 import { getStage } from '@/lib/stages'
 import { AIPlays } from './AIPlays'
 import { MIGRATION_ARTIFACT } from './migration-artifact'
+import { PIPELINE_ARTIFACT } from './pipeline-artifact'
+import {
+  AWS_COSTS,
+  STRATEGIES,
+  ROLLING_CONFIG,
+  CIRCUIT_BREAKER_CONFIG,
+} from './aws-data'
 import { DeploymentChecklist } from './DeploymentChecklist'
 import { TRAPS } from './traps'
 import type { StepId } from './steps'
@@ -20,55 +26,6 @@ const stageLinkClass = 'underline hover:text-brand'
 function stageTitle(slug: string) {
   return getStage(slug)?.title ?? slug
 }
-
-/* ------------------------------------------------------------------ */
-/*  Step 3 (safety) data — two rows, inline because it is only two    */
-/* ------------------------------------------------------------------ */
-
-const SAFETY_ROWS: RevealRow[] = [
-  {
-    id: 'skew-protection',
-    title: 'Skew protection',
-    summary:
-      'Browsers mid-session are still running the previous build’s JavaScript.',
-    body: (
-      <div className="space-y-3 text-sm leading-6 text-muted">
-        <p>
-          When you deploy, browsers mid-session are still running the previous
-          build&rsquo;s JavaScript. They will request assets and call server
-          actions from a version that no longer exists.
-        </p>
-        <p>
-          Enable <Term id="skew-protection">skew protection</Term> in Vercel.
-          Without it, every deploy hands an error to every active user &mdash; a
-          class of bug that is invisible to you (your browser is always freshly
-          loaded) and consistently reported by users as &ldquo;it randomly
-          broke.&rdquo;
-        </p>
-      </div>
-    ),
-  },
-  {
-    id: 'feature-flags',
-    title: 'Feature flags decouple deploy from release',
-    summary: 'Ship the code disabled, toggle on separately.',
-    body: (
-      <div className="space-y-3 text-sm leading-6 text-muted">
-        <p>
-          For anything large or risky, ship the code disabled and turn it on
-          separately. Edge Config reads are fast enough to call per request. Now
-          &ldquo;release&rdquo; is a config toggle, turning off takes seconds
-          and needs no deploy, and you can enable for yourself first.
-        </p>
-        <p>
-          Delete <Term id="feature-flag">flags</Term> once a feature is fully
-          rolled out. Stale flags are dead branches that accumulate until nobody
-          knows which combinations are still real.
-        </p>
-      </div>
-    ),
-  },
-]
 
 /* ------------------------------------------------------------------ */
 /*  Steps                                                             */
@@ -124,8 +81,8 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
               will bisect under pressure while users are affected.
             </p>
             <p>
-              Merge to <InlineCode text="`main`" />, Vercel builds and promotes.
-              The whole ceremony is a squash merge.
+              Merge to <InlineCode text="`main`" />, the CI/CD pipeline builds
+              and promotes. The whole ceremony is a squash merge.
             </p>
           </Prose>
         </Section>
@@ -135,7 +92,7 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
             <Card>
               <p className="t-label text-go">Code</p>
               <p className="mt-2 text-sm leading-6 text-muted">
-                Rolls back in seconds. Promoting a previous Vercel deployment is
+                Rolls back in seconds. Promoting a previous deployment is
                 near-instant.
               </p>
             </Card>
@@ -222,34 +179,30 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
     ),
   },
 
-  /* ---- Panel 3: safety ---- */
+  /* ---- Panel 3: vercel ---- */
   {
-    id: 'safety',
-    label: 'Safety nets',
-    hint: 'Skew protection + feature flags',
+    id: 'vercel',
+    label: 'Vercel',
+    hint: 'Skew protection + rollback',
     content: (
       <div className="space-y-16">
-        <Section title="Two mechanisms that make deploys routine">
+        <Section title="On Vercel, two mechanisms make deploys routine">
           <Prose>
             <p>
-              Deploying several times a day is safe only if two things are true:
-              active users survive the switch, and risky features can be turned
-              off without a deploy.
+              When you deploy, browsers mid-session are still running the
+              previous build&rsquo;s JavaScript. They will request assets and
+              call server actions from a version that no longer exists.
+            </p>
+            <p>
+              Enable <Term id="skew-protection">skew protection</Term> in
+              Vercel. Without it, every deploy hands an error to every active
+              user &mdash; a class of bug that is invisible to you (your browser
+              is always freshly loaded) and consistently reported by users as
+              &ldquo;it randomly broke.&rdquo;
             </p>
           </Prose>
-          <RevealList idPrefix="deployment-safety" rows={SAFETY_ROWS} />
         </Section>
-      </div>
-    ),
-  },
 
-  /* ---- Panel 4: rollback ---- */
-  {
-    id: 'rollback',
-    label: 'Rollback',
-    hint: 'Roll back first, diagnose second',
-    content: (
-      <div className="space-y-16">
         <Section title="Know this cold">
           <Prose>
             <p>
@@ -297,7 +250,207 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
     ),
   },
 
-  /* ---- Panel 5: ai ---- */
+  /* ---- Panel 4: aws ---- */
+  {
+    id: 'aws',
+    label: 'AWS / ECS',
+    hint: 'Pipeline, strategies, costs',
+    content: (
+      <div className="space-y-16">
+        <Section title="The pipeline">
+          <Prose>
+            <p>
+              A push to <InlineCode text="`main`" /> triggers a GitHub Actions
+              workflow that builds a Docker image, pushes it to ECR, renders a
+              new task definition, and tells ECS to deploy it. No long-lived
+              secrets: GitHub mints an OIDC token and AWS STS exchanges it for
+              temporary credentials.
+            </p>
+          </Prose>
+          <Figure
+            n={2}
+            caption="Six steps from push to stable. The pivot is wait-for-service-stability — without it, the pipeline reports success while the circuit breaker silently rolls back."
+          >
+            <AnnotatedArtifact artifact={PIPELINE_ARTIFACT} />
+          </Figure>
+        </Section>
+
+        <Section title="Rolling updates">
+          <Prose>
+            <p>
+              The ECS default is a{' '}
+              <Term id="rolling-deployment">rolling deployment</Term>: new tasks
+              start alongside old tasks, pass health checks, and then old tasks
+              drain. Two numbers govern it:{' '}
+              <InlineCode text="`minimumHealthyPercent`" /> (how many old tasks
+              must stay up during the switch) and{' '}
+              <InlineCode text="`maximumPercent`" /> (how many total tasks can
+              exist at once).
+            </p>
+          </Prose>
+          <Card className="overflow-x-auto">
+            <pre className="text-sm leading-7">
+              <code>
+                <span className="text-muted">
+                  {'// deploymentConfiguration\n'}
+                </span>
+                {JSON.stringify(
+                  {
+                    minimumHealthyPercent: ROLLING_CONFIG.minimumHealthyPercent,
+                    maximumPercent: ROLLING_CONFIG.maximumPercent,
+                    deploymentCircuitBreaker: CIRCUIT_BREAKER_CONFIG,
+                  },
+                  null,
+                  2,
+                )}
+              </code>
+            </pre>
+          </Card>
+          <Prose>
+            <p>
+              Enable the{' '}
+              <Term id="deployment-circuit-breaker">
+                deployment circuit breaker
+              </Term>{' '}
+              on every service. Without it, a bad image loops through
+              start-crash-restart indefinitely and ECS never stops trying.
+            </p>
+          </Prose>
+        </Section>
+
+        <Section title="Blue/green and traffic shifting">
+          <Prose>
+            <p>
+              For services where rolling updates are too coarse, ECS supports{' '}
+              <Term id="blue-green-deployment">blue/green deployments</Term>{' '}
+              through CodeDeploy. Traffic shifts from the old target group to
+              the new one according to a preset schedule.
+            </p>
+          </Prose>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-line">
+                  <th className="py-2 pr-4 text-left font-medium">Strategy</th>
+                  <th className="py-2 text-left font-medium">Pattern</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {STRATEGIES.map((s) => (
+                  <tr key={s.id}>
+                    <td className="py-2 pr-4 font-mono text-xs">{s.name}</td>
+                    <td className="py-2 text-muted">{s.pattern}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <Prose>
+            <p>
+              <Term id="canary">Canary</Term> strategies send a small slice of
+              traffic first and wait, catching failures before the full fleet
+              switches. Linear strategies widen gradually instead of jumping
+              from the canary slice to 100%.
+            </p>
+          </Prose>
+        </Section>
+
+        <Section title="Costs Vercel hides">
+          <Prose>
+            <p>
+              Vercel bundles routing, TLS, load balancing, compute, and egress
+              into a single price. On AWS, each layer bills separately. A
+              minimal ECS Fargate service in US East costs roughly $85&ndash;200
+              per month before your application does anything interesting.
+            </p>
+          </Prose>
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-line">
+                  <th className="py-2 pr-4 text-left font-medium">Service</th>
+                  <th className="py-2 pr-4 text-right font-medium">
+                    Low&nbsp;$/mo
+                  </th>
+                  <th className="py-2 pr-4 text-right font-medium">
+                    High&nbsp;$/mo
+                  </th>
+                  <th className="py-2 text-left font-medium">
+                    On Vercel, included in
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {AWS_COSTS.map((row) => (
+                  <tr key={row.id}>
+                    <td className="py-2 pr-4 font-medium">{row.service}</td>
+                    <td className="py-2 pr-4 text-right font-mono text-xs">
+                      ${row.low}
+                    </td>
+                    <td className="py-2 pr-4 text-right font-mono text-xs">
+                      ${row.high}
+                    </td>
+                    <td className="py-2 text-muted">{row.vercelIncludes}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <Callout kind="warn" title="NAT Gateway is the surprise">
+            <p>
+              Every AWS API call from a private subnet goes through the NAT
+              Gateway at $0.045/GB. ECR image pulls, CloudWatch log writes, SSM
+              parameter reads &mdash; all NAT traffic unless you create VPC
+              endpoints for those services.
+            </p>
+          </Callout>
+        </Section>
+      </div>
+    ),
+  },
+
+  /* ---- Panel 5: flags ---- */
+  {
+    id: 'flags',
+    label: 'Feature flags',
+    hint: 'Decouple deploy from release',
+    content: (
+      <div className="space-y-16">
+        <Section title="Feature flags decouple deploy from release">
+          <Prose>
+            <p>
+              For anything large or risky, ship the code disabled and turn it on
+              separately. Edge Config reads are fast enough to call per request.
+              Now &ldquo;release&rdquo; is a config toggle, turning off takes
+              seconds and needs no deploy, and you can enable for yourself
+              first.
+            </p>
+          </Prose>
+          <Card className="overflow-x-auto">
+            <pre className="text-sm leading-7">
+              <code>
+                <span className="text-muted">
+                  {'// Read from Edge Config at the edge — no cold start\n'}
+                </span>
+                {
+                  "import { get } from '@vercel/edge-config'\n\nconst enabled = await get('new-dashboard')"
+                }
+              </code>
+            </pre>
+          </Card>
+          <Prose>
+            <p>
+              Delete <Term id="feature-flag">flags</Term> once a feature is
+              fully rolled out. Stale flags are dead branches that accumulate
+              until nobody knows which combinations are still real.
+            </p>
+          </Prose>
+        </Section>
+      </div>
+    ),
+  },
+
+  /* ---- Panel 6: ai ---- */
   {
     id: 'ai',
     label: 'AI in Deployment',
@@ -311,7 +464,7 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
     ),
   },
 
-  /* ---- Panel 6: traps ---- */
+  /* ---- Panel 7: traps ---- */
   {
     id: 'traps',
     label: 'Traps',
