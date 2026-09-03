@@ -322,9 +322,11 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
           <Prose>
             <p>
               For services where rolling updates are too coarse, ECS supports{' '}
-              <Term id="blue-green-deployment">blue/green deployments</Term>{' '}
-              through CodeDeploy. Traffic shifts from the old target group to
-              the new one according to a preset schedule.
+              <Term id="blue-green-deployment">blue/green deployments</Term> —
+              natively with <code>bakeTimeInMinutes</code> for simplicity, or
+              through CodeDeploy for teams that need lifecycle hooks. Either
+              way, traffic shifts from the old target group to the new one
+              according to a preset schedule.
             </p>
           </Prose>
           <div className="overflow-x-auto">
