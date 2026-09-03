@@ -34,11 +34,11 @@ Before doing anything, read these for context:
   naming, atomic registration) and `quality-gates-101.md` (gate blind spots) both bear
   on whichever stage comes next.
 
-### Project state (as of 2026-09-02 — **stage 13 (Production Deployment) is interactive and merged**;
-W-3 is **9/18**, nine stages remain. **The AWS deployment content expansion is the
-recommended next round** — restructure stage 13 into platform-agnostic + platform-specific
-steps (Vercel / AWS). The user uses Vercel for personal projects and wants deeper AWS
-coverage for work: blue/green, canary, rolling, CodeDeploy, ECS.)
+### Project state (as of 2026-09-03 — **stage 13 (Production Deployment) AWS expansion is merged**;
+W-3 is **9/18**, nine stages remain. Stage 13 is now platform-aware (7 steps: deploys,
+migrations, vercel, aws, flags, ai, traps). **The next round is open** — choose the next
+stage to port, or run the deferred verification passes on stage 13 (coverage walk,
+humanizer, panel measurement, e2e, dev-console).)
 
 **Start here, in order:**
 
@@ -49,23 +49,14 @@ coverage for work: blue/green, canary, rolling, CodeDeploy, ECS.)
    yourself.** The previous version of this exact file was itself wrong about stage 06
    being unmerged, for a full day — see
    `docs/learnings/decisions-need-tests-101.md`'s newest section.
-3. **The AWS deployment expansion is the next round.** Stage 13 is interactive and merged
-   (six steps, Vercel-focused). The approved design restructures it from 6 → 7 steps:
-   - `deploys` — keep (platform-agnostic)
-   - `migrations` — keep (platform-agnostic)
-   - `vercel` — consolidate old `safety` + `rollback` (skew protection, Vercel rollback)
-   - `aws` — **new, deeper**: pipeline (CodeDeploy/ECS/Lambda, GitHub Actions), blue/green
-     (ALB target groups, traffic swap), canary/linear (traffic shifting, CloudWatch alarms),
-     rolling (ECS `minimumHealthyPercent`/`maximumPercent`), rollback, "costs Vercel hides"
-   - `flags` — extract from old `safety` (platform-agnostic)
-   - `ai` — update for both platforms
-   - `traps` — update with AWS-relevant traps
-
-   **This needs a research pass first** — verify current AWS service specifics (CodeDeploy
-   appspec format, ECS deployment controller options, current CLI commands). Then doc
-   expansion (`docs/13-production-deployment.md`), then interactive port update. Same
-   doc-correction-then-port pattern. Read `docs/learnings/stage-implementation-101.md`
-   in full before porting anything.
+3. **Stage 13's deferred verification passes.** The AWS expansion round shipped without:
+   - **Coverage walk** — first-ever for stage 13. Context-starved, cold reader.
+   - **Humanizer** — first for stage 13.
+   - **Panel measurement** — the `aws` panel is content-dense and may need splitting (D-65).
+   - **`pnpm test:e2e`** — the Playwright audit suite.
+   - **`pnpm test:dev-console`** — React dev-mode warnings (TD-35).
+   - **M1 (deferred):** AWS rollback commands (three paths by deployment type) in doc but
+     not in the interactive component — add in a coverage-walk fix wave or future round.
 4. Run `git fetch` and re-derive `develop`'s position against `origin/develop` and
    `origin/main` — the exact commands are in "Branch state" below. Do not trust any commit
    SHA quoted in this file.
@@ -74,32 +65,31 @@ coverage for work: blue/green, canary, rolling, CodeDeploy, ECS.)
 
 #### What shipped since the last kickoff
 
-**Stage 13 (Production Deployment) is interactive and merged**, `--no-ff` into
-`develop`, 2026-09-02, branch deleted. Seven commits, six panels:
-- Annotated expand/migrate/contract SQL artifact (three deploys, one pivot on
-  irreversible `DROP COLUMN`)
-- DeploymentChecklist (five DoD items, five artifacts, four team notes)
-- RevealList for safety nets (skew protection + feature flags)
-- AIPlays (four tool plays: generate migrations, dry-run, verify skew, rehearse rollback)
-- Eight trap callouts
-- Four references (Vercel Rollback, Skew Protection, Prisma Expand/Contract, AWS Strategies)
+**Stage 13 AWS expansion merged** (W-3.9b), `--no-ff` into `develop`, 2026-09-03.
+Nine commits, restructured from 6 to 7 steps:
+- Doc expanded from 245 to ~430 lines: six AWS subsections (pipeline, rolling, blue/green,
+  canary/linear, rollback, costs Vercel hides)
+- Vercel step consolidates old safety + rollback
+- AWS step: pipeline annotated artifact (GitHub Actions YAML), costs table (six rows,
+  $85–204/month), strategies comparison (five configs), circuit breaker JSON card, NAT
+  Gateway warning callout
+- Feature flags extracted to own step (platform-agnostic)
+- AI plays 4→8 (four AWS plays), traps 8→12 (four AWS traps), DoD 5→6
+- Three glossary terms, one new reference (5 at cap)
 
-Doc correction phase preceded the port: `### AI in production deployment` (D-35
-mandate), stage added to `AI_SECTION_STAGES`. `'sql'` added to `Artifact.language` union.
+Research pass preceded implementation: four parallel agents verified current AWS docs
+(ECS strategies, CodeDeploy/AppSpec, pricing, GitHub Actions). Key finding: ECS now has
+native blue/green/canary/linear without CodeDeploy.
 
-Final whole-branch review (opus) returned Ready with fixes — two missing render tests
-(DeploymentChecklist + AIPlays), both fixed in one round. One plan defect caught by TDD
-(team-note regex didn't match doc's list-item format).
+Final whole-branch review (opus): Ready with fixes — I1 (blue/green prose omitted
+ECS-native) fixed. Three minors deferred/resolved.
 
-**User feedback**: stage is too Vercel-focused. Approved design for an AWS expansion
-round restructuring into platform-agnostic + platform-specific steps.
-
-Previously shipped (same session, before stage 13):
+Previously shipped (same session, 2026-09-02):
+- Stage 13 initial interactive port (W-3.9) — six Vercel-focused steps
 - Stage 12 (Staging) — six panels, PreviewOrStaging scored exercise, coverage walk ran
 - `deployment-environments` cheatsheet (W-6.3h) tethered to stage 12
 
-**974 tests across 138 files, build clean, e2e 17/18 (1 pre-existing on
-/reference/deployment-environments at 320px), dev-console 1/1.**
+**1002 tests across 140 files, build clean.**
 
 ---
 
