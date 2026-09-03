@@ -57,10 +57,10 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 12 and 13 done; 9 remain — 9/18. **Stage 13 (Production Deployment) built and merged 2026-09-02** as `--no-ff` into `develop`, branch deleted — 7 commits, 974/138 tests, e2e 17/18 (1 pre-existing). Six panels, annotated expand/migrate/contract SQL, DeploymentChecklist. Doc correction phase preceded the port. **Next: AWS deployment content expansion** — restructure into platform-agnostic + platform-specific steps (Vercel / AWS))* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 12 and 13 done; 9 remain — 9/18. **Stage 13 AWS expansion complete 2026-09-03**: 8 steps (deploys, migrations, vercel, aws, aws-ops, flags, ai, traps), 1003/140 tests, coverage walk ran (3 blocking fixed), all verification green. Nine stages remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; thirteen of eighteen now-registered sheets drawn — `deployment-environments` added 2026-09-01 tethered to stage 12, `code-review` added 2026-09-01 tethered to stage 07, `testing` and `playwright` added 2026-08-28 tethered to stage 06, alongside the nine from 2026-08-24/25 across Architecture/Git/Standards/Design Principles (D-90) — five language sheets remain, D-88)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(thirteen of eighteen registered sheets drawn. **Next: AWS deployment cheatsheet** tethered to stage 13 (D-88 pattern). Five language sheets remain)* |
 
 ### Dependency map
 
@@ -126,7 +126,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07, 12 and 13 done; 9 remain — 9/18. **Stage 13 (Production Deployment) built and merged 2026-09-02** as `--no-ff` into `develop`, branch deleted — 7 commits, 974/138 tests, e2e 17/18 (1 pre-existing). Six panels, annotated expand/migrate/contract SQL artifact, DeploymentChecklist. Doc correction phase preceded the port. **Next: AWS deployment content expansion** — restructure into platform-agnostic + platform-specific steps (Vercel / AWS))*
+### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07, 12 and 13 done; 9 remain — 9/18. **Stage 13 AWS expansion complete 2026-09-03**: 8 steps (platform-aware, Vercel + AWS), 1003/140 tests, coverage walk ran and all 3 blocking fixed, all verification green)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 

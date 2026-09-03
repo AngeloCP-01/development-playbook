@@ -34,11 +34,11 @@ Before doing anything, read these for context:
   naming, atomic registration) and `quality-gates-101.md` (gate blind spots) both bear
   on whichever stage comes next.
 
-### Project state (as of 2026-09-03 — **stage 13 (Production Deployment) AWS expansion is merged**;
-W-3 is **9/18**, nine stages remain. Stage 13 is now platform-aware (7 steps: deploys,
-migrations, vercel, aws, flags, ai, traps). **The next round is open** — choose the next
-stage to port, or run the deferred verification passes on stage 13 (coverage walk,
-humanizer, panel measurement, e2e, dev-console).)
+### Project state (as of 2026-09-03 — **stage 13 AWS expansion + verification complete**;
+W-3 is **9/18**, nine stages remain. Stage 13 is platform-aware with 8 steps: deploys,
+migrations, vercel, aws, aws-ops, flags, ai, traps. Coverage walk ran (3 blocking fixed),
+all verification passes green. **The next round is a W-6 AWS-focused reference
+cheatsheet**, tethered to stage 13.)
 
 **Start here, in order:**
 
@@ -49,14 +49,10 @@ humanizer, panel measurement, e2e, dev-console).)
    yourself.** The previous version of this exact file was itself wrong about stage 06
    being unmerged, for a full day — see
    `docs/learnings/decisions-need-tests-101.md`'s newest section.
-3. **Stage 13's deferred verification passes.** The AWS expansion round shipped without:
-   - **Coverage walk** — first-ever for stage 13. Context-starved, cold reader.
-   - **Humanizer** — first for stage 13.
-   - **Panel measurement** — the `aws` panel is content-dense and may need splitting (D-65).
-   - **`pnpm test:e2e`** — the Playwright audit suite.
-   - **`pnpm test:dev-console`** — React dev-mode warnings (TD-35).
-   - **M1 (deferred):** AWS rollback commands (three paths by deployment type) in doc but
-     not in the interactive component — add in a coverage-walk fix wave or future round.
+3. **W-6 AWS reference cheatsheet** is the next round (D-88 pattern: a W-6 reference
+   sheet ships after each W-3 stage). The stage 13 AWS expansion provides the content to
+   draw from. Candidates: `aws-deployment` (ECS strategies, pipeline, costs comparison)
+   or `aws-ecs` (ECS-focused operations reference).
 4. Run `git fetch` and re-derive `develop`'s position against `origin/develop` and
    `origin/main` — the exact commands are in "Branch state" below. Do not trust any commit
    SHA quoted in this file.
@@ -81,15 +77,19 @@ Research pass preceded implementation: four parallel agents verified current AWS
 (ECS strategies, CodeDeploy/AppSpec, pricing, GitHub Actions). Key finding: ECS now has
 native blue/green/canary/linear without CodeDeploy.
 
-Final whole-branch review (opus): Ready with fixes — I1 (blue/green prose omitted
-ECS-native) fixed. Three minors deferred/resolved.
+**Coverage walk + verification (same session):** 15 findings (3 blocking, 12 non-blocking).
+All 3 blocking fixed: aws panel split into aws+aws-ops (B-1, rollback section added),
+CloudWatch alarm content added (B-2), feature flags code fixed to match doc (B-3).
+Panel heights fixed (aws split, traps compressed). 8 steps total.
+e2e 17/18, dev-console 1/1, humanizer clean.
 
 Previously shipped (same session, 2026-09-02):
 - Stage 13 initial interactive port (W-3.9) — six Vercel-focused steps
 - Stage 12 (Staging) — six panels, PreviewOrStaging scored exercise, coverage walk ran
 - `deployment-environments` cheatsheet (W-6.3h) tethered to stage 12
 
-**1002 tests across 140 files, build clean.**
+**1003 tests across 140 files, build clean, e2e 17/18 (1 pre-existing),
+dev-console 1/1.**
 
 ---
 
@@ -99,10 +99,10 @@ Full detail lives in `docs/tracker.md`; this is what a new session needs without
 re-reading the whole log.
 
 - **Stages 01–07, 12 and 13 are interactive and merged.** 03 is 22 steps, 04 is 15, 05
-  is 13, 06 is 8, 07 is 6, 12 is 6, 13 is 6. Each port's coverage map:
-  `docs/stage-03-status.md` through `-06-status.md` (stage 12's walk ran in the same
-  session; stage 13's has not). Stages 08–11 and 14–18 render a "sheet not drawn"
-  placeholder; routing works for all 18.
+  is 13, 06 is 8, 07 is 6, 12 is 6, 13 is 8 (platform-aware: Vercel + AWS). Each port's
+  coverage map: `docs/stage-03-status.md` through `-06-status.md` (stage 12's walk ran
+  2026-09-01; stage 13's ran 2026-09-03 — 3 blocking fixed). Stages 08–11 and 14–18
+  render a "sheet not drawn" placeholder; routing works for all 18.
 - **A per-task reviewer subagent, plus a whole-branch review, is the standard** — every
   reviewed round has found something a green gate did not. Stage 07's final review caught
   dead CSS classes across three files that no per-task review or e2e audit saw.
@@ -117,8 +117,8 @@ re-reading the whole log.
   `test:e2e` (18-test Playwright audit, refuses a stale server per TD-27),
   `test:dev-console` (React dev-mode warnings, outside the gate, run once per stage
   round — TD-35, D-84). Re-derive current counts rather than quoting them.
-- **974 tests across 138 files**, build clean, e2e 17/18 (1 pre-existing on
-  `/reference/deployment-environments` at 320px).
+- **1003 tests across 140 files**, build clean, e2e 17/18 (1 pre-existing on
+  `/reference/deployment-environments` at 320px), dev-console 1/1.
 - **Deployed**: `W-5` complete, live at https://acp-dev-playbook.vercel.app since
   2026-08-11. `pnpm test:prod` verifies the deployment itself, outside the merge gate.
   `docs/learnings/deploying-101.md` before touching deploy config.

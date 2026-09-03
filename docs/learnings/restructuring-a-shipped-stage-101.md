@@ -111,3 +111,56 @@ The order-of-magnitude ranges (`$22–27`, not `$22.43`) are deliberate — AWS 
 changes, and a precise number becomes stale faster than a range. The total (`$85–204`)
 is the headline, and it is the one sentence a reader should be able to quote from memory
 after reading the stage.
+
+---
+
+## The coverage walk caught three things the final review did not
+
+Added after the verification round. The final whole-branch review (opus) found one
+blocking issue (blue/green prose omitted ECS-native). The coverage walk, running
+afterwards with only the doc and the code, found three more:
+
+1. **The entire `#### Rollback on AWS` section was missing.** Three rollback paths, two
+   CLI commands, and the AWS-specific restatement of "roll back first, diagnose second."
+   The final review had noted this as M1 (minor, deferred). The coverage walk escalated
+   it to blocking, correctly: rollback is the stage's central concern.
+
+2. **CloudWatch alarm integration was missing.** The safety mechanism that makes
+   canary/linear strategies useful. The strategies table was present; the alarm gates
+   that make them automatic were not.
+
+3. **The feature flags code block drifted.** The app showed `get('new-dashboard')` (a
+   simple key-value lookup); the doc shows `isEnabled(flag, userId?)` with an allowlist.
+   The surrounding prose says "you can enable for yourself first," which requires the
+   allowlist the app's code did not demonstrate.
+
+The final review saw all three pieces of content in the doc and in the diff. It marked
+B-1 as a minor (the principle was already in the Vercel panel), did not notice B-2 at
+all, and did not catch B-3's semantic drift (code that compiles and looks related is the
+hardest thing for a diff-scoped review to evaluate against a doc).
+
+The coverage walk found all three because it does not read the diff. It reads the doc
+heading by heading and asks "does the interactive app teach this specific claim?" A
+diff-scoped review asks a different question: "is the diff correct?" Both questions
+are needed, and they find different things.
+
+**The panel-height failures were the bonus.** The e2e audit caught `aws` at 4.0 screens
+and `traps` at 4.2. Splitting `aws` into `aws` + `aws-ops` both fixed the height and
+created a natural home for the rollback content (B-1). The coverage walk and the panel
+measurement reinforced each other: one said "content is missing" and the other said
+"the panel is too tall," and the fix for both was the same split.
+
+---
+
+## Run verification in the same session, not a later one
+
+The original plan deferred verification passes (e2e, dev-console, coverage walk,
+humanizer, panel measurement) to "the next round." Running them in the same session
+was the right call because it caught three blocking issues while the context was fresh.
+A later session would have re-read the component from scratch, without knowing which
+content was moved from where, and would have been slower to trace each finding back to
+its cause.
+
+The cost of deferral is not the round itself but the context rebuild. A coverage walk
+finding like "the feature flags code does not match the doc" is immediate when you just
+wrote the code. It is an investigation when you are reading it for the first time.
