@@ -2,12 +2,13 @@ import { describe, expect, test } from 'vitest'
 import { STEP_IDS } from './steps'
 
 describe('production deployment steps', () => {
-  test('seven steps in order', () => {
+  test('eight steps in order', () => {
     expect(STEP_IDS).toEqual([
       'deploys',
       'migrations',
       'vercel',
       'aws',
+      'aws-ops',
       'flags',
       'ai',
       'traps',
