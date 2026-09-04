@@ -19,6 +19,10 @@ drift apart.
 
 **Authorization** — Distinct from authentication, which establishes who the caller is: authentication gets you a user id, authorization decides whether that user id may read invoice 42. Three patterns: ownership — the row carries the caller’s id and you compare them; role — the caller holds a role that grants the action, whoever owns the row; membership — the caller and the row belong to the same group. They combine, and one entity often needs two of them joined by an “and”: a manager may approve a claim only if they hold the manager role and the shift belongs to a team they belong to. See [03 — Architecture](../docs/03-architecture.md).
 
+**Bake time** — A period after new ECS tasks go healthy during which CloudWatch alarms are monitored. If an alarm fires during the bake window, the deployment is marked FAILED and can auto-rollback. If no alarm fires, the deployment is marked COMPLETED. See [14 — Post-Deployment Verification](../docs/14-post-deployment-verification.md).
+
+**Baseline** — The normal error rate, latency, and traffic volume before a deploy. Without one, post-deploy numbers are unreadable — 12 errors in the last hour could be a catastrophe or a Tuesday. See [14 — Post-Deployment Verification](../docs/14-post-deployment-verification.md).
+
 **Blast radius** — The reach of a change or a failure: how much of the system is affected when this one piece goes wrong. See [03 — Architecture](../docs/03-architecture.md).
 
 **Blue/green deployment** — A deployment strategy where two complete environments (blue and green) run in parallel. The new version deploys to the idle environment, gets verified, then traffic switches from the active to the idle. Rollback is switching back. See [13 — Production Deployment](../docs/13-production-deployment.md).
@@ -48,6 +52,8 @@ drift apart.
 **Database constraint** — NOT NULL, UNIQUE, CHECK, and foreign keys with their delete behaviour. Declared in the schema, so the database refuses to store a row that breaks them. See [03 — Architecture](../docs/03-architecture.md).
 
 **Definition of done** — A specific, checkable statement of what "done" means for a piece of work — a state you can hold the running product up against and confirm, yes or no. Every stage doc has one.
+
+**Deployment alarm** — A CloudWatch alarm attached to an ECS deployment configuration. ECS polls these alarms during the bake period after new tasks go healthy. Key metrics: HTTPCode_ELB_5XX_Count, TargetResponseTime, CPUUtilization, MemoryUtilization. See [14 — Post-Deployment Verification](../docs/14-post-deployment-verification.md).
 
 **Deployment circuit breaker** — An ECS feature that monitors new tasks during a rolling deployment. If they repeatedly fail to reach a healthy state, ECS stops the deployment and rolls back to the last successful revision. Without it, a bad image loops through start-crash-restart indefinitely. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
