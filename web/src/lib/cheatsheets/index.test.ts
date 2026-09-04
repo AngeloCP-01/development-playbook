@@ -84,6 +84,7 @@ test('isDrawn distinguishes a sheet with content from a registered placeholder',
     'git-branching',
     'git-cheatsheet',
     'git-commands',
+    'github-actions',
     'playwright',
     'post-deploy-verification',
     'sdlc',
@@ -117,6 +118,11 @@ test('cheatsheetsForStage returns the sheets tethered to stage 06', () => {
 test('cheatsheetsForStage returns the sheet tethered to stage 07', () => {
   const slugs = cheatsheetsForStage('07-code-review').map((s) => s.slug)
   expect(slugs).toEqual(['code-review'])
+})
+
+test('cheatsheetsForStage returns the sheet tethered to stage 11', () => {
+  const slugs = cheatsheetsForStage('11-ci-cd').map((s) => s.slug)
+  expect(slugs).toEqual(['github-actions'])
 })
 
 test('cheatsheetsForStage returns the sheet tethered to stage 13', () => {

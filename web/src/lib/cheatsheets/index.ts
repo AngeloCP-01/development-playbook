@@ -9,6 +9,7 @@ import { designPatterns } from './design-patterns'
 import { gitBranching } from './git-branching'
 import { gitCheatsheet } from './git-cheatsheet'
 import { gitCommands } from './git-commands'
+import { githubActions } from './github-actions'
 import { PLANNED } from './planned'
 import { postDeployVerification } from './post-deploy-verification'
 import { playwright } from './playwright'
@@ -45,6 +46,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   deploymentEnvironments,
   awsDeployment,
   postDeployVerification,
+  githubActions,
   ...PLANNED,
 ]
 
