@@ -84,6 +84,7 @@ test('isDrawn distinguishes a sheet with content from a registered placeholder',
     'git-branching',
     'git-commands',
     'playwright',
+    'post-deploy-verification',
     'sdlc',
     'solid-principles',
     'testing',
@@ -122,6 +123,13 @@ test('cheatsheetsForStage returns the sheet tethered to stage 13', () => {
     (s) => s.slug,
   )
   expect(slugs).toEqual(['aws-deployment'])
+})
+
+test('cheatsheetsForStage returns the sheet tethered to stage 14', () => {
+  const slugs = cheatsheetsForStage('14-post-deployment-verification').map(
+    (s) => s.slug,
+  )
+  expect(slugs).toEqual(['post-deploy-verification'])
 })
 
 // A sheet transcribed from someone else's graphic must credit them. The site is
