@@ -57,10 +57,10 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 12 and 13 done; 9 remain — 9/18. **Stage 13 AWS expansion complete 2026-09-03**: 8 steps (deploys, migrations, vercel, aws, aws-ops, flags, ai, traps), 1003/140 tests, coverage walk ran (3 blocking fixed), all verification green. Nine stages remain)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 12, 13 and 14 done; 8 remain — 10/18. **Stage 14 complete 2026-09-04**: 6 steps (verify, vercel, aws, recovery, ai, done), doc correction first (AWS ECS verification, AI plays, references), 1064/149 tests, all verification green. Eight stages remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(fourteen of eighteen registered sheets drawn — `aws-deployment` added 2026-09-03 tethered to stage 13. Four language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(fifteen of twenty registered sheets drawn — `post-deploy-verification` added 2026-09-04 tethered to stage 14. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
 
 ### Dependency map
 
@@ -126,7 +126,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07, 12 and 13 done; 9 remain — 9/18. **Stage 13 AWS expansion complete 2026-09-03**: 8 steps (platform-aware, Vercel + AWS), 1003/140 tests, coverage walk ran and all 3 blocking fixed, all verification green)*
+### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07, 12, 13 and 14 done; 8 remain — 10/18. **Stage 14 complete 2026-09-04**: 6 steps, doc correction first (AWS ECS verification, AI plays, references), 1064/149 tests, all verification green)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -414,7 +414,8 @@ plan"; architecture's, testing's and so on will each have their own). Status:
 | 07 Code Review | ☑ | ☑ | Done: 6th step + `### AI in code review`. `AI_SECTION_STAGES` updated to include `07-code-review` in the stage 12 doc correction round |
 | 12 Staging | ☑ | ☑ | Done: 6th step + `### AI in staging`. Doc correction phase first (AI plays, env vars, Neon details), then port. Test-first: `12-staging` added to `AI_SECTION_STAGES` before the section existed |
 | 13 Production Deployment | ☑ | ☑ | Done: 6th step + `### AI in production deployment`. Doc correction phase first (four tool plays: generate migrations, dry-run, verify skew, rehearse rollback), then port. Test-first: `13-production-deployment` added to `AI_SECTION_STAGES` before the section existed. AWS expansion planned next round |
-| 08–11, 14–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
+| 14 Post-Deployment Verification | ☑ | ☑ | Done: 6th step + `### AI in post-deployment verification`. Doc correction phase first (AWS ECS verification, four tool plays: generate smoke suite, parse anomalies, run ten-minute check, compare baseline), then port. Test-first: `14-post-deployment-verification` added to `AI_SECTION_STAGES` before the section existed |
+| 08–11, 15–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
 
 Suggested order. Revised 2026-07-24 (D-27): the first pass ranked purely by teaching
 value and put 02 fifth. That ignored the reader's journey and the risk of proving the
@@ -431,9 +432,11 @@ pattern library on the hardest stage.
 | **7 ☑** | **05 Development** | **Done.** Decided 2026-08-18. Thirteen steps, doc correction phase first. |
 | **8 ☑** | **12 Staging** | **Done.** Decided 2026-09-01. Six steps, doc correction phase first (AI plays, env vars, Neon details). Natural adjacency from stage 07 (stage 07's DoD says "Preview URL checked (12)"). Coverage walk ran same session, fix wave merged. |
 | ~~9~~ ✓ | 13 Production Deployment | **Done.** Decided 2026-09-02. Six steps, doc correction phase first. Vercel-focused; **AWS expansion planned as a follow-up round** restructuring into platform-agnostic + platform-specific steps (Vercel / AWS — blue/green, canary, rolling, CodeDeploy/ECS). |
-| 10 (next) | **AWS expansion for stage 13** | Restructure into 7 steps: deploys + migrations (agnostic), Vercel (consolidated), AWS (new, deeper — pipeline + strategies + rollback), flags (extracted), AI (both platforms), traps (updated). Needs research pass on AWS deployment services. |
-| 11 | 16 Incident Management | Procedural, so a stepper fits naturally |
-| — | remainder | 06–12, 14, 17, 18 |
+| ~~10~~ ✓ | AWS expansion for stage 13 | **Done.** 2026-09-03. Restructured to 8 steps (platform-aware: Vercel + AWS). Coverage walk ran, 3 blocking fixed. |
+| ~~11~~ ✓ | 14 Post-Deployment Verification | **Done.** 2026-09-04. Six steps, doc correction first (AWS ECS verification, AI plays). Chains from stage 13. |
+| 12 (next) | 11 CI/CD | Heavily referenced by stages 04, 12, 13, 14. Fills the gap others point to. |
+| 13 | 16 Incident Management | Procedural, so a stepper fits naturally. Chains from stage 14's recovery step. |
+| — | remainder | 08–10, 15, 17, 18 |
 
 **~~Settle before stage 03:~~ ✓ resolved 2026-07-27 (D-36).** TD-2 and TD-3 are closed:
 `terms.ts` is the single glossary source (`reference/glossary.md` generated via
