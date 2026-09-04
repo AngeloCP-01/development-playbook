@@ -60,7 +60,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 12, 13 and 14 done; 8 remain — 10/18. **Stage 14 complete 2026-09-04**: 6 steps (verify, vercel, aws, recovery, ai, done), doc correction first (AWS ECS verification, AI plays, references), 1064/149 tests, all verification green. Eight stages remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(fifteen of twenty registered sheets drawn — `post-deploy-verification` added 2026-09-04 tethered to stage 14. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(sixteen of twenty registered sheets drawn — `git-cheatsheet` added 2026-09-04 before `git-commands`. Four language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
 
 ### Dependency map
 
