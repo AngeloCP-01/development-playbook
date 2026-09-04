@@ -47,6 +47,7 @@ Two rules govern everything:
 | `go`              | `#1a6b4f` | `#4fc296` | Semantic yes                |
 | `stop`            | `#a52218` | `#f2776d` | Semantic no                 |
 | `warn`            | `#8a5a06` | `#e3ab4d` | Caution                     |
+| `syntax-string`   | `#5d5a14` | `#beb937` | String literals in code examples only |
 
 Each semantic colour has a `-wash` companion for fills.
 
@@ -54,6 +55,17 @@ Each semantic colour has a `-wash` companion for fills.
 darkest light surface, `signal` was 4.11:1 at small sizes. Solve numerically against the
 _worst-case_ surface before changing either: for dark text that is `sunk`, for light text
 it is `surface`.
+
+**Syntax highlighting (`solid-principles`, `clean-code`) reuses three existing tokens
+rather than inventing a palette.** Keywords take `blueprint` (its own stated meaning,
+"structure, diagram linework", already fits code structure), type/class names take
+`ink` at bold weight rather than a colour, comments take `faint` italicised. `signal`,
+`go`, `stop` and `warn` are never reused for plain syntax colour — a string is not an
+error state and a keyword is not an approval. `syntax-string` is the one new token this
+required, checked against `sunk` specifically (the code panel's real background, not the
+general worst-case surface above): 5.61:1 light, 9.05:1 dark. Same ~58° hue in both
+themes — lightness and saturation move, the hue does not, matching every other pair on
+this page.
 
 ---
 

@@ -1,21 +1,19 @@
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { expect, test } from 'vitest'
+import { DOC, flat } from './doc-source'
 import { PIN_RULE, PIN_TARGETS } from './pins'
-
-const DOC = readFileSync(
-  fileURLToPath(
-    new URL('../../../../docs/04-project-setup.md', import.meta.url),
-  ),
-  'utf8',
-)
 
 // The doc is hard-wrapped at 90 characters, so its sentences carry newlines the
 // app has no use for. Collapsing runs of whitespace lets one constant be both
 // the string a panel renders and the string the doc contains; it still catches
 // a paraphrase, a dropped clause or a changed capital, which is what the check
 // below is for.
-const DOC_UNWRAPPED = DOC.replace(/\s+/g, ' ')
+//
+// This file used to read the doc itself and collapse it by hand, which made it
+// the last copy of a helper stage 05 extracted to `src/test/doc-source.ts`
+// (TD-42). `flat` is that same collapse, and reaching it through `doc-source`
+// means a fix to the reader reaches this file too — the divergence between
+// copies is exactly what the extraction was for.
+const DOC_UNWRAPPED = flat(DOC)
 
 test('three environments, because the doc names three and the whole lesson is that they differ', () => {
   expect(PIN_TARGETS).toHaveLength(3)

@@ -80,13 +80,14 @@ test('refuses to sweep a stage that is ready but renders no steps, since silence
   // exported separately from `auditPages` so this can exercise the guard
   // against one stage without flipping a real `ready` flag.
   //
-  // This used to name `04-project-setup`, which made it a second armed
-  // tripwire beside the deleted literal — stage 04 going ready turns a stage
-  // that must render nothing into one that renders fifteen steps, and the test
-  // goes red having found no defect. It names `05-development` for no reason
-  // beyond it being the next stage that is not built; when 05 is ported, move
-  // this to whatever is still unbuilt rather than deleting it.
-  await expect(readStepIds(page, '05-development')).rejects.toThrow(
+  // This used to name `04-project-setup`, then `05-development`, then
+  // `06-testing`, then `07-code-review` — each time, porting that stage
+  // flipped `ready` and gave it a full rail, turning a stage that must render
+  // nothing into one that renders steps, so the test went red having found no
+  // defect and got moved rather than deleted. It names `08-security-audit`
+  // for no reason beyond it being the next stage that is not built; when 08
+  // is ported, move this again rather than deleting it.
+  await expect(readStepIds(page, '08-security-audit')).rejects.toThrow(
     /renders no steps/,
   )
 })

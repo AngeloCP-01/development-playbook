@@ -249,3 +249,177 @@ next content change.
 This is the same argument as the teeth check one section up, pointed at a different failure:
 a teeth check asks whether the test can fail, and this asks whether the *fix* can be
 distinguished from doing nothing.
+
+---
+
+## A constant stales; a property does not
+
+TD-26 asked to be closed by asserting "the sweep opens a known count of expandables on a
+known page". The count would have been 108 when the entry was written. It was 140 ten days
+later, and 191 by the time anyone came to close it, with no defect anywhere in between.
+
+That is the whole problem with a pinned count. It does not fail when the thing it guards
+breaks. It fails when the content grows, which is constantly, and each time somebody
+updates the number and learns to update the number. After the third update it is a
+formality, and the one time it fires for a real reason it gets the same treatment.
+
+The guard that replaced it names a property instead:
+
+> every disclosure inside the panel was observed open in at least one state, on every
+> audited page
+
+There is no number in it. Add a stage, add fifty accordions, and the assertion still means
+exactly what it meant before. It fails when the sweep stops opening things, which is the
+thing TD-26 existed to catch.
+
+**The test is whether the assertion has to be edited when nothing is wrong.** If growing
+the content forces you to change the expected value, you have written a maintenance
+schedule rather than a check.
+
+### The property alone was still vacuous, which is the part worth remembering
+
+The plan for this said: teeth-check it by nulling the sweep's selector, and watch the
+property fail.
+
+It passes. Null the selector and the set of disclosures the page is known to have becomes
+empty, so nothing is missing from the set of disclosures observed open, so the gap check is
+satisfied having looked at nothing. **The regression test reproduced the bug it was written
+to catch, inside itself.**
+
+The fix is a floor on how much the sweep observed. Not a count, a floor, set far enough
+below the measured figure that it never needs touching:
+
+```ts
+expect(observedTotal).toBeGreaterThan(50)   // measured 144 the day this landed
+expect(gaps, gaps.join('\n')).toEqual([])
+```
+
+Both teeth checks then fire, and they fire on different things. A nulled selector trips the
+floor. Neutering only the click loop, which reproduces the pre-fix sweep exactly, trips the
+gap check and names `auth-panel-managed` and `auth-panel-library`, the two panels the debt
+entry said had never been checked.
+
+**A property can be vacuous the same way a constant can be wrong.** Ask what the assertion
+does when the mechanism produces *nothing*, not only when it produces something incorrect.
+Emptiness satisfies most set comparisons, and "no gaps" over an empty set is the quietest
+pass there is.
+
+## Seven tests that could not fail, in one round
+
+Added after the stage 05 port (W-3.5b, 2026-08-20), which found seven of them: five during
+the round, two more at the whole-branch review after fourteen tasks had already been
+reviewed clean. Four were written by the controller, into the plan, before any implementer
+touched them.
+
+The sections above name three vacuous-test *patterns*. This round says the patterns share a
+cause, and the cause is more useful than the list:
+
+> **The assertion samples the state in which the property cannot be violated.**
+
+Not "the test asserts nothing". Each of these asserted something real, in a state that was
+convenient to construct, and the mutation that mattered was invisible from there.
+
+The four it took here:
+
+- **A doc-slicing test** proved a section bound worked, against a document that did not
+  contain the hazard. The buggy and correct regexes returned byte-identical output. The
+  fix was to run it against the other document, where a fenced `# comment` sits inside the
+  section and the bound actually bites.
+- **A prerendering test** asserted every node stays prerendered — after clicking the
+  control that makes every node ship. In that state `prerendered` and `ships` are both
+  true everywhere, so mirroring one onto the other changed nothing observable. The whole
+  claim was that the two are independent, and the test sampled the one state where they
+  agree.
+- **A conditional guard**, `if (row.stage) expect(...)`, caught a typo'd value and could
+  not catch a deleted one. Removing the field left the suite green and the page rendering
+  a dead reference.
+- **An `aria-checked` assertion** ran only before the reader answers, where the value is
+  `false` for both buttons. A regression to a hardcoded `false` would have left the control
+  never announcing its selection, with every test green.
+
+**The habit that would have prevented all four:** before writing an assertion, name the
+mutation it must catch, and check that the state you are asserting in is one where that
+mutation changes the answer. If the property is *X is independent of Y*, the assertion has
+to run where X and Y disagree. If the property is *this field is present*, asserting its
+value cannot see it removed.
+
+**A teeth check that does not redden is a result, not an inconvenience.** The most valuable
+report of that round came from an implementer whose required mutation produced no failure.
+It did not adjust the test until the check passed, and did not report success. It built a
+throwaway probe to prove the mutation was a genuine defect, restored, and said the guard was
+hollow. That is what the teeth check is for, and the temptation in that moment is to treat
+the non-failure as a formality already satisfied.
+
+**Corollary for prose-shaped assertions.** One fix in that round rewrote a paragraph so its
+load-bearing argument led, and left the test pinning the clause that had just been demoted.
+Deleting the entire new argument would have kept the suite green. When you move what a
+string *means*, move the assertion that guards it in the same commit, and pin a short
+distinctive phrase from the part that carries the meaning rather than from whatever sentence
+happens to be quotable.
+
+## A doc-anchored test proves the doc, not the app
+
+Added after the stage 06 port (W-3.6, 2026-08-27), inside the very stage that teaches "has
+this test ever been red." A coverage walk found three tests — one per data module —
+comparing `docs/06-testing.md` against itself and never touching an app export:
+
+```ts
+// the shape all three shared
+expect(section('The distribution')).toMatch(/best value-per-test/i)
+```
+
+Every one of these had been green from the day it was written, and two of them stayed
+green through a fix wave that restored the exact phrase they name — to the doc, not the
+app — because nothing about the assertion could tell the difference. `DOC` is read off the
+filesystem at load time; comparing it to itself proves the file has not changed, which is
+not the same claim as "the app teaches this."
+
+This is the vacuous-test family from the sections above, with the sampled state moved one
+level up. Earlier entries here found an assertion sampling the state where a property
+cannot be violated. This is an assertion sampling the wrong *source* entirely — the doc
+instead of the thing built from it — and it is harder to see than the others, because a
+`doc-source.ts` read looks exactly like due diligence.
+
+**The fix, and why it generalises.** Every doc-anchored module needs a second assertion,
+against an app export, before it counts as covered — `OPTIONS`, `LAYERS`, a rendered
+constant, whatever the panel actually reads from. Teeth-check the app side directly:
+mutate the export, not the doc, and confirm the test reddens for that reason. One gap this
+exposed had no module to pin at all — two restored findings lived in `DISTRIBUTION` and
+`RESTRAINT_ROWS`, hand-authored inside the panel component rather than in a data module,
+because nothing else needed them independently of the one figure each renders. No
+doc-source test could ever have reached them. The fix there was a render test —
+`Testing.test.tsx` — asserting each restored finding against `#panel-<id>` textContent,
+which is strictly stronger than pinning a module: it cannot pass while the component
+ignores the data underneath it.
+
+## Two green gates and a third one that cannot even parse the file
+
+Added building syntax highlighting for the reference sheets (D-91, 2026-08-25). The first
+version computed highlighted HTML via a top-level `await` inside the data module itself.
+`pnpm test` passed. `next build` passed. `pnpm test:e2e` failed outright — not a test
+failure, a `SyntaxError` — because Playwright's own test transform cannot parse a module
+with top-level await, and the audit suite imports the registry directly.
+
+**Two gates agreeing is not confirmation; it can just mean two gates share a module
+loader.** Vitest and Next's bundler both handle top-level await transparently, which made
+their agreement look like real coverage. It was coverage of the same blind spot twice.
+Nothing here was subtle enough to need debugging once found — the fix (compute at generate
+time, the same committed-and-checked pattern `cheatsheets.md`/`glossary.md` already use)
+took minutes. Finding out a third tool disagreed was the entire cost, and it only happened
+because the full gate — all of it, not the fast subset — ran before merging.
+
+**The same round found the same shape of bug one commit later, from the opposite
+direction.** `.prettierignore` exempts `*.md` because reformatting `glossary.md` would
+fight its own generator. The new generated file was `.ts`, so nothing exempted it — the
+pre-commit hook's `format` step rewrote the committed file, and the very next `pnpm test`
+failed its own sync check against content the generator never produces. Same lesson,
+inverted: it is not enough to ask "does this tool run the code correctly" — a formatter
+that never runs the code at all can still silently disagree with what generated the file
+in the first place.
+
+**The general shape, stated once for both:** a change that touches generated artifacts or
+async module evaluation is only verified by the tools that actually exercised it. A green
+`pnpm test` proves Vitest agrees. A green `next build` proves the bundler agrees. Neither
+proves Playwright's transform agrees, or that Prettier's opinion matches the generator's
+output. Run the *whole* gate — including the slow parts — before trusting a change is
+safe, not the fast subset that happened to pass.

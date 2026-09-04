@@ -27,7 +27,8 @@ fix.
 A deploy containing one change has one suspect when something breaks. A deploy containing
 thirty changes has thirty, and you will bisect under pressure while users are affected.
 
-Merge to `main`, Vercel builds and promotes. The whole ceremony is a squash merge.
+Merge to `main`, the CI/CD pipeline builds and promotes. The whole ceremony is a squash
+merge.
 
 ### The asymmetry that governs everything
 
@@ -106,7 +107,11 @@ pnpm drizzle-kit migrate   # against production, then deploy
 Because of expand/migrate/contract, running the migration *before* the code deploy is
 safe: the schema change is always backward compatible with the code currently running.
 
-### Skew protection
+### Vercel deployment mechanics
+
+On Vercel, two mechanisms make deploys routine: skew protection keeps
+active sessions alive across deploys, and instant rollback reverts to
+a previous deployment in seconds.
 
 When you deploy, browsers mid-session are still running the previous build's JavaScript.
 It will request assets and call server actions from a version that no longer exists.
@@ -114,6 +119,210 @@ It will request assets and call server actions from a version that no longer exi
 Enable skew protection in Vercel. Without it, every deploy hands an error to every active
 user — a class of bug that is invisible to you (your browser is always freshly loaded)
 and consistently reported by users as "it randomly broke."
+
+Know this cold, before you need it:
+
+```bash
+vercel rollback                    # to the previous production deployment
+vercel ls                          # list deployments
+vercel promote <deployment-url>    # promote a specific one
+```
+
+**Roll back first, diagnose second.** The instinct to find the bug before reverting is
+the wrong order — every minute spent diagnosing is a minute users stay broken. Revert,
+then investigate calmly on a branch.
+
+If the deploy included a contract-phase migration, rollback is not safe. That is exactly
+why contract deploys are separated and small: when the risky deploy contains only a
+`DROP COLUMN` and nothing else, you know precisely what you are dealing with.
+
+### AWS deployment strategies
+
+Where Vercel is a single command, AWS gives you the machinery — and asks you
+to understand it. The payoff is control: you pick the deployment strategy, set
+the rollback threshold, and decide how much traffic the canary sees. The cost
+is that every piece has a price tag Vercel never showed you.
+
+#### The pipeline
+
+A production deploy on AWS starts with a CI/CD workflow. GitHub Actions with
+OIDC — no long-lived AWS credentials stored anywhere.
+
+The workflow chain:
+
+1. **Checkout** — `actions/checkout@v4`.
+2. **Configure AWS credentials** — `aws-actions/configure-aws-credentials@v4`
+   with `role-to-assume`. GitHub mints a short-lived OIDC token; AWS STS
+   exchanges it for temporary credentials.
+3. **Login to ECR** — `aws-actions/amazon-ecr-login@v2`. Authenticates Docker
+   to your Elastic Container Registry.
+4. **Build and push** — `docker build`, `docker push` with
+   `${{ github.sha }}` as the image tag. Every image is traceable to a commit.
+5. **Render task definition** — `aws-actions/amazon-ecs-render-task-definition@v1`.
+   Takes your task definition JSON and swaps the image field to the new tag.
+6. **Deploy** — `aws-actions/amazon-ecs-deploy-task-definition@v2`. Registers
+   the new task definition revision and calls `UpdateService`.
+
+Set `wait-for-service-stability: true` or the workflow reports success while
+the deployment circuit breaker silently rolls back. Set
+`wait-max-delay-seconds: 30` or the SDK's exponential backoff grows pauses
+to ten minutes between polls.
+
+#### Rolling updates
+
+The ECS default. New tasks start before old tasks stop.
+
+Two numbers govern it:
+
+- **`minimumHealthyPercent`** (default 100) — the floor. With four tasks and
+  100%, all four stay running while new ones start. No capacity dip.
+- **`maximumPercent`** (default 200) — the ceiling. With four tasks and 200%,
+  up to eight can run simultaneously. The new four start, pass their health
+  checks, then the old four drain.
+
+The combination requires enough cluster capacity to run both sets. If
+capacity is tight, `minimumHealthyPercent: 50` allows killing half the old
+tasks before starting new ones — faster, but half your users see reduced
+capacity during the roll.
+
+**The deadlock trap:** `minimumHealthyPercent: 100` with `maximumPercent: 100`
+and `desiredCount: 1`. The scheduler cannot start the new task (would exceed
+max) and cannot stop the old one (would violate min). The deployment hangs
+forever.
+
+**Deployment circuit breaker.** Add it to every service:
+
+```json
+{
+  "deploymentCircuitBreaker": {
+    "enable": true,
+    "rollback": true
+  }
+}
+```
+
+If new tasks repeatedly fail health checks, ECS stops the deployment and
+rolls back to the last successful revision. Without it, a bad image loops
+through start-crash-restart indefinitely while you watch.
+
+#### Blue/green deployments
+
+A full parallel environment, verified before traffic moves.
+
+The setup: an Application Load Balancer with two target groups (blue and
+green). Blue serves production. When you deploy, ECS launches a complete
+replacement task set behind green. Both run simultaneously. When green's
+health checks pass, the ALB listener switches from blue to green. Blue drains
+and terminates.
+
+**ECS-native blue/green** (the simpler path):
+
+```json
+{
+  "deploymentConfiguration": {
+    "strategy": "BLUE_GREEN",
+    "bakeTimeInMinutes": 10
+  }
+}
+```
+
+The bake time is the window after traffic shifts where both task sets run.
+Roll back during the bake and traffic reverts to blue instantly — no new
+deployment needed.
+
+**CodeDeploy blue/green** (the established path): a separate CodeDeploy
+application, deployment group, and appspec file. More infrastructure to
+maintain, but adds lifecycle hooks — Lambda functions that run at each stage
+of the deployment (before install, after test traffic, before production
+traffic). Use it when you need automated validation between stages.
+
+Both approaches swap ALB target groups. The difference is who orchestrates
+the swap: ECS natively, or CodeDeploy as a coordinator.
+
+#### Canary and linear traffic shifting
+
+Not all-or-nothing. Send a fraction of traffic to the new version first.
+
+**Canary:** 10% of traffic goes to the new version. Watch error rates and
+latency for five minutes. If the metrics hold, shift the remaining 90%.
+A failure at 10% means 90% of users never saw it.
+
+**Linear:** traffic shifts in equal steps — 10% every minute, or 10% every
+three minutes. Slower than canary, but gives you ten data points instead of
+one before full rollout.
+
+Both integrate with CloudWatch alarms. Attach up to ten alarms to the
+deployment — error rate, latency p99, custom business metrics. If any alarm
+fires during the shift, the deployment stops and traffic reverts. This is the
+closest thing to an automatic "undo" that exists in deployment.
+
+The predefined configurations:
+
+| Configuration | Pattern |
+|---|---|
+| `ECSCanary10Percent5Minutes` | 10% first, rest after 5 min |
+| `ECSCanary10Percent15Minutes` | 10% first, rest after 15 min |
+| `ECSLinear10PercentEvery1Minutes` | 10% every 1 min (~10 min total) |
+| `ECSLinear10PercentEvery3Minutes` | 10% every 3 min (~30 min total) |
+| `ECSAllAtOnce` | Immediate full cutover |
+
+#### Rollback on AWS
+
+Three paths, depending on what you deployed with.
+
+**Rolling update:** the deployment circuit breaker handles it automatically if
+enabled. Manual rollback:
+
+```bash
+aws ecs update-service \
+  --cluster my-cluster \
+  --service my-service \
+  --task-definition my-task:PREVIOUS_REVISION
+```
+
+ECS starts a new rolling deployment to the previous task definition revision.
+
+**Blue/green (ECS-native):** during the bake time, rollback reverts the ALB to
+the blue target group. After bake time ends and blue terminates, rollback is a
+new deployment — same as rolling.
+
+**CodeDeploy:** stop the deployment or let a CloudWatch alarm stop it. Traffic
+reverts to the original task set.
+
+```bash
+aws deploy stop-deployment --deployment-id d-XXXXXXXXX
+```
+
+The same rule from the Vercel section applies, universally: roll back first,
+diagnose second. The AWS-specific nuance is that "roll back" might mean
+waiting for a rolling update to complete, which takes minutes rather than
+seconds. Blue/green reverts are instant during the bake window.
+
+#### Costs Vercel hides
+
+On Vercel, you pay per seat. On AWS, you pay per component. A small
+application on ECS/Fargate behind an ALB:
+
+| Service | Monthly | What Vercel includes |
+|---|---|---|
+| Application Load Balancer | $22–27 | Routing, TLS, load balancing |
+| NAT Gateway | $35–100 | Outbound internet from private subnets |
+| Fargate (one task) | $18–40 | Compute |
+| Data transfer | $5–20 | Inter-AZ, egress, NAT processing |
+| CloudWatch | $5–15 | Logs, metrics, alarms |
+| ECR | $1–2 | Container registry |
+| **Total** | **$85–204** | **Vercel Pro: $20/seat** |
+
+NAT Gateway is the classic surprise. Private subnets — standard security
+practice — cannot reach the internet directly. A NAT Gateway costs $0.045 per
+hour ($32/month) just to exist, plus $0.045 per GB processed. Every container
+image pull, every AWS API call from your task, every outbound request flows
+through it unless you set up VPC endpoints.
+
+The point is not that AWS costs more. It is that Vercel bundles these costs
+invisibly, and a team moving from Vercel to AWS encounters them one invoice
+line at a time, with no single document listing them all. This table is that
+document.
 
 ### Feature flags decouple deploy from release
 
@@ -136,23 +345,48 @@ turning off takes seconds and needs no deploy, and you can enable for yourself f
 Delete flags once a feature is fully rolled out. Stale flags are dead branches that
 accumulate until nobody knows which combinations are still real.
 
-### Rollback
+### AI in production deployment
 
-Know this cold, before you need it:
+An agent handles migration mechanics well — generating SQL, checking schema compatibility,
+verifying that expand/migrate/contract steps are in order — because the rules are explicit
+and the inputs are structured. It handles the judgment calls poorly: whether this change
+needs a feature flag, whether a backfill is large enough to batch, whether a deploy window
+matters. Those stay yours.
 
-```bash
-vercel rollback                    # to the previous production deployment
-vercel ls                          # list deployments
-vercel promote <deployment-url>    # promote a specific one
-```
+Where it earns its place:
 
-**Roll back first, diagnose second.** The instinct to find the bug before reverting is
-the wrong order — every minute spent diagnosing is a minute users stay broken. Revert,
-then investigate calmly on a branch.
+- **Generate expand/migrate/contract SQL from a schema diff.** Describe the change you
+  want — "rename `users.name` to `users.full_name`" — and the agent writes the three
+  migration files, each deployable alone. Review the SQL; do not run it unread. (A prompt.)
+- **Dry-run a migration against the preview database.** Run the migration against a Neon
+  branch database before touching production, so schema errors surface where they cost
+  nothing. (A CLI command.)
+- **Verify skew protection after a deploy.** Check that the deployment-ID header is present
+  on a production response — `curl -sI https://your-app.vercel.app | grep -i
+  x-deployment-id` — confirming the deploy is pinned. (A CLI command.)
+- **Rehearse rollback on a preview deployment.** Run `vercel promote <previous-url>` against
+  a non-production deployment to confirm the command works and you know the output before
+  you need it under pressure. (A saved command.)
 
-If the deploy included a contract-phase migration, rollback is not safe. That is exactly
-why contract deploys are separated and small: when the risky deploy contains only a
-`DROP COLUMN` and nothing else, you know precisely what you are dealing with.
+Where it earns its place on AWS:
+
+- **Generate an ECS task definition from a Dockerfile.** Describe the container
+  requirements — port, memory, CPU, environment variables — and the agent writes the task
+  definition JSON. Review the resource limits; do not deploy unread. (A prompt.)
+- **Validate deployment configuration.** Paste your `deploymentConfiguration` JSON and ask
+  whether `minimumHealthyPercent` and `maximumPercent` can deadlock at your `desiredCount`.
+  The agent checks the arithmetic. (A prompt.)
+- **Generate a GitHub Actions ECS deploy workflow.** Describe the pipeline — ECR repo,
+  cluster name, service name — and the agent writes the workflow YAML with OIDC, no
+  long-lived secrets. (A prompt.)
+- **Audit CloudWatch alarm coverage for a deployment.** List the alarms attached to your
+  CodeDeploy deployment group and ask whether error rate, latency, and availability are
+  covered. The gap is always the alarm you did not write. (A prompt.)
+
+The tools are the Vercel CLI, the AWS CLI, `curl`, and whichever editor the agent runs in.
+The gap is the same one the rest of this stage names: data does not roll back. An agent
+that runs a contract migration against production because the expand step passed is doing
+exactly what it was told, and the data is gone.
 
 ---
 
@@ -172,6 +406,8 @@ why contract deploys are separated and small: when the risky deploy contains onl
 - [ ] Migrations applied cleanly, with expand/migrate/contract respected
 - [ ] Skew protection is on
 - [ ] Rollback command is known without looking it up
+- [ ] Deployment strategy matches the service risk profile (rolling for routine, blue/green
+      or canary for critical)
 - [ ] [14 — Post-Deployment Verification](14-post-deployment-verification.md) is next,
       not optional
 
@@ -214,3 +450,22 @@ effectively as any bug.
 
 **Flags that never get deleted.** Every stale flag doubles the state space of your
 application. Removing them is part of finishing a feature.
+
+**Health check grace period too short.** ECS kills tasks before they finish starting. The
+default grace period is zero seconds — a container that takes thirty seconds to boot fails
+its first health check and restarts in a loop. Set `healthCheckGracePeriodSeconds` to
+longer than your startup time.
+
+**NAT Gateway without VPC endpoints.** Every AWS API call from a private subnet goes
+through the NAT Gateway at $0.045/GB. ECR image pulls, CloudWatch log writes, SSM parameter
+reads — all NAT traffic unless you create VPC endpoints for those services. The endpoints
+cost $7/month each; the NAT traffic they replace costs more.
+
+**minimumHealthyPercent and maximumPercent deadlock.** Both at 100% with `desiredCount: 1`.
+The scheduler cannot start the new task (exceeds max) or stop the old one (violates min).
+The deployment hangs with no error.
+
+**Deploying without `wait-for-service-stability`.** The GitHub Actions workflow reports
+success after calling `UpdateService`. Meanwhile, the deployment circuit breaker detects
+failing health checks and rolls back. Your pipeline is green; your production is on the old
+version.

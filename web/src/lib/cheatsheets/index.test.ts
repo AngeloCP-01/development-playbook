@@ -72,7 +72,23 @@ test('every row has a what, since the middle column is the one that carries mean
 
 test('isDrawn distinguishes a sheet with content from a registered placeholder', () => {
   const drawn = CHEATSHEETS.filter(isDrawn)
-  expect(drawn.map((s) => s.slug)).toEqual(['architecture-patterns'])
+  expect(drawn.map((s) => s.slug).sort()).toEqual([
+    'api-design',
+    'architecture-patterns',
+    'aws-deployment',
+    'clean-code',
+    'code-review',
+    'coding-standards',
+    'deployment-environments',
+    'design-patterns',
+    'git-branching',
+    'git-commands',
+    'playwright',
+    'post-deploy-verification',
+    'sdlc',
+    'solid-principles',
+    'testing',
+  ])
 })
 
 test('cheatsheetBySlug finds a real sheet and returns undefined for a stranger', () => {
@@ -88,7 +104,32 @@ test('cheatsheetsForStage returns the sheets tethered to stage 03', () => {
     'api-design',
     'architecture-patterns',
     'design-patterns',
+    'solid-principles',
   ])
+})
+
+test('cheatsheetsForStage returns the sheets tethered to stage 06', () => {
+  const slugs = cheatsheetsForStage('06-testing').map((s) => s.slug)
+  expect(slugs.sort()).toEqual(['playwright', 'testing'])
+})
+
+test('cheatsheetsForStage returns the sheet tethered to stage 07', () => {
+  const slugs = cheatsheetsForStage('07-code-review').map((s) => s.slug)
+  expect(slugs).toEqual(['code-review'])
+})
+
+test('cheatsheetsForStage returns the sheet tethered to stage 13', () => {
+  const slugs = cheatsheetsForStage('13-production-deployment').map(
+    (s) => s.slug,
+  )
+  expect(slugs).toEqual(['aws-deployment'])
+})
+
+test('cheatsheetsForStage returns the sheet tethered to stage 14', () => {
+  const slugs = cheatsheetsForStage('14-post-deployment-verification').map(
+    (s) => s.slug,
+  )
+  expect(slugs).toEqual(['post-deploy-verification'])
 })
 
 // A sheet transcribed from someone else's graphic must credit them. The site is

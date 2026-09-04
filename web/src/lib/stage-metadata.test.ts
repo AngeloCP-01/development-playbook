@@ -8,10 +8,20 @@ import { STAGES } from './stages'
 // match for every stage, so renaming one side without the other fails here
 // instead of drifting silently.
 //
-// The blurb is deliberately NOT checked: the doc's `>` line is a prose subtitle
-// and stages.ts's `blurb` is a UI tooltip/header string (see its own comment).
-// They are two purpose-built strings for two surfaces, like `timing` vs
-// `cadence`, and diverge on purpose for most stages — not duplication.
+// The blurb is deliberately NOT checked, and that is **D-36**, not an oversight:
+// the doc's `>` line is a prose subtitle and stages.ts's `blurb` is a UI
+// tooltip/header string (see its own comment). They are two purpose-built
+// strings for two surfaces, like `timing` vs `cadence`, and diverge for 15 of 18
+// stages by design — not duplication. `timing` is unchecked for the same reason.
+//
+// The decision number matters more than the reasoning here, and this comment
+// used to carry only the reasoning. A later round measured the same 15/18,
+// read it as drift, and got as far as an approved design to sync both fields
+// verbatim before finding D-36 — which had reached the opposite conclusion from
+// the identical evidence. Reasoning without its decision number reads as an
+// unexamined habit, and an unexamined habit is something a reader will helpfully
+// "fix". If you are about to add that sync test, read D-36 first and supersede
+// it on purpose.
 
 const docPath = (slug: string) =>
   fileURLToPath(new URL(`../../../docs/${slug}.md`, import.meta.url))
@@ -42,6 +52,12 @@ const AI_SECTION_STAGES = [
   '02-planning',
   '03-architecture',
   '04-project-setup',
+  '05-development',
+  '06-testing',
+  '07-code-review',
+  '12-staging',
+  '13-production-deployment',
+  '14-post-deployment-verification',
 ]
 
 test.each(AI_SECTION_STAGES)(

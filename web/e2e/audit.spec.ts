@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { auditPages } from './audit-pages'
+import { forEachPanelState } from './panel-states'
 
 /**
  * The committed version of the audits that caught eleven bugs while stage 01
@@ -22,47 +23,6 @@ function luminance([r, g, b]: number[]) {
 function ratio(a: number[], b: number[]) {
   const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x)
   return (hi + 0.05) / (lo + 0.05)
-}
-
-/**
- * Open every expandable inside the current step panel, so the checks below see
- * revealed surfaces rather than the collapsed shell.
- *
- * This used to be one line — `button[aria-controls]`, clicked in a single
- * `forEach`. Two things were wrong with it. `Stepper` puts `aria-controls` on
- * all 22 rail tabs and the rail precedes the panel in DOM order, so the loop
- * walked the tabs first; each tab click unmounted the panel, and the accordion
- * buttons captured in the static NodeList were detached before the loop reached
- * them. Measured on `#trace`: 11 expandables before the loop, 0 opened, and the
- * page left sitting on `#traps`. Across the 36 entries the sweep opened five
- * expandables in total.
- *
- * So: scoped to `[role=tabpanel]`, which excludes the rail; re-queried between
- * passes, because a click that opens an accordion reveals more of them; and
- * marked, because clicking a closed button in a single-open group closes its
- * sibling and an unmarked re-query oscillates instead of terminating. The pass
- * cap is a backstop, not the exit condition.
- *
- * After: 108 expandables opened, and the contrast sweep collects 867 distinct
- * colour pairs against 717.
- */
-async function openExpandables(page: import('@playwright/test').Page) {
-  for (let pass = 0; pass < 6; pass++) {
-    const opened = await page.evaluate(() => {
-      const closed = [
-        ...document.querySelectorAll<HTMLButtonElement>(
-          '[role=tabpanel] button[aria-expanded="false"]:not([data-audit-opened])',
-        ),
-      ]
-      for (const b of closed) {
-        b.setAttribute('data-audit-opened', '')
-        b.click()
-      }
-      return closed.length
-    })
-    if (!opened) return
-    await page.waitForTimeout(60)
-  }
 }
 
 // ── overflow ───────────────────────────────────────────────────────────────
@@ -94,75 +54,80 @@ test('interactive elements are at least 44px tall below lg', async ({
     // A target that is only reachable behind an accordion is still a target.
     // This check never expanded anything either, which is how a sub-44px
     // <Term> inside a collapsed TeamNotes stayed unmeasured.
-    await openExpandables(page)
-    const small = await page.evaluate(() => {
-      /** Inline in a sentence: somewhere between the target and the `p` or
-       *  `li` holding it, there is running text beside it. `Term` wraps itself
-       *  in a span, so the text is a level or two up rather than a direct
-       *  sibling — an accordion control never finds any, because its heading
-       *  and its row hold nothing but the control. */
-      const inlineInSentence = (el: Element) => {
-        const sentence = el.closest('p, li')
-        if (!sentence) return false
-        let node: Element | null = el
-        while (node && node !== sentence) {
-          const beside = [...(node.parentElement?.childNodes ?? [])].some(
-            (n) => n.nodeType === 3 && (n.textContent ?? '').trim().length > 0,
-          )
-          if (beside) return true
-          node = node.parentElement
-        }
-        return false
-      }
+    const small: string[] = []
+    await forEachPanelState(page, async () => {
+      small.push(
+        ...(await page.evaluate(() => {
+          /** Inline in a sentence: somewhere between the target and the `p` or
+           *  `li` holding it, there is running text beside it. `Term` wraps itself
+           *  in a span, so the text is a level or two up rather than a direct
+           *  sibling — an accordion control never finds any, because its heading
+           *  and its row hold nothing but the control. */
+          const inlineInSentence = (el: Element) => {
+            const sentence = el.closest('p, li')
+            if (!sentence) return false
+            let node: Element | null = el
+            while (node && node !== sentence) {
+              const beside = [...(node.parentElement?.childNodes ?? [])].some(
+                (n) =>
+                  n.nodeType === 3 && (n.textContent ?? '').trim().length > 0,
+              )
+              if (beside) return true
+              node = node.parentElement
+            }
+            return false
+          }
 
-      const inScroller = (el: Element) => {
-        let e = el.parentElement
-        while (e) {
-          const o = getComputedStyle(e).overflowX
-          if (o === 'auto' || o === 'scroll') return true
-          e = e.parentElement
-        }
-        return false
-      }
-      return [
-        ...document.querySelectorAll(
-          'a,button,[role=tab],[role=radio],textarea',
-        ),
-      ]
-        .filter((el) => {
-          const b = el.getBoundingClientRect()
-          return (
-            b.width > 0 &&
-            b.height > 0 &&
-            b.height < 44 &&
-            !String(el.className).includes('sr-only') &&
-            !inScroller(el) &&
-            // WCAG 2.5.8 exempts targets sitting inline in a sentence — their
-            // size is constrained by the surrounding text's line-height. This
-            // covers <Term> buttons inside prose, and `li` as well as `p`
-            // because a sentence in a list is still a sentence.
-            //
-            // But "inside a sentence element" is not "inline in a sentence". A
-            // bare `p, li` exempted 880 elements to excuse one — including 74
-            // accordion controls and 67 exercise radios and checkboxes, which
-            // are list-wrapped by construction. That is the same hole the
-            // earlier aria-controls exemption had, which this comment used to
-            // disown while reproducing it.
-            //
-            // Role does not separate them either: `Term` is itself a
-            // disclosure, so excluding `aria-expanded` re-gates the very
-            // buttons this exemption exists for. What actually distinguishes
-            // them is whether the control sits *among text* — a `Term` has
-            // sentence either side of it, while an accordion control is the
-            // only thing its heading or row contains.
-            !inlineInSentence(el)
-          )
-        })
-        .map((el) =>
-          (el.textContent || el.getAttribute('aria-label') || '?')
-            .trim()
-            .slice(0, 30),
-        )
+          const inScroller = (el: Element) => {
+            let e = el.parentElement
+            while (e) {
+              const o = getComputedStyle(e).overflowX
+              if (o === 'auto' || o === 'scroll') return true
+              e = e.parentElement
+            }
+            return false
+          }
+          return [
+            ...document.querySelectorAll(
+              'a,button,[role=tab],[role=radio],textarea',
+            ),
+          ]
+            .filter((el) => {
+              const b = el.getBoundingClientRect()
+              return (
+                b.width > 0 &&
+                b.height > 0 &&
+                b.height < 44 &&
+                !String(el.className).includes('sr-only') &&
+                !inScroller(el) &&
+                // WCAG 2.5.8 exempts targets sitting inline in a sentence — their
+                // size is constrained by the surrounding text's line-height. This
+                // covers <Term> buttons inside prose, and `li` as well as `p`
+                // because a sentence in a list is still a sentence.
+                //
+                // But "inside a sentence element" is not "inline in a sentence". A
+                // bare `p, li` exempted 880 elements to excuse one — including 74
+                // accordion controls and 67 exercise radios and checkboxes, which
+                // are list-wrapped by construction. That is the same hole the
+                // earlier aria-controls exemption had, which this comment used to
+                // disown while reproducing it.
+                //
+                // Role does not separate them either: `Term` is itself a
+                // disclosure, so excluding `aria-expanded` re-gates the very
+                // buttons this exemption exists for. What actually distinguishes
+                // them is whether the control sits *among text* — a `Term` has
+                // sentence either side of it, while an accordion control is the
+                // only thing its heading or row contains.
+                !inlineInSentence(el)
+              )
+            })
+            .map((el) =>
+              (el.textContent || el.getAttribute('aria-label') || '?')
+                .trim()
+                .slice(0, 30),
+            )
+        })),
+      )
     })
     expect(small, `${path}: ${small.join(', ')}`).toEqual([])
   }
@@ -181,113 +146,136 @@ for (const scheme of ['light', 'dark'] as const) {
     for (const path of await auditPages(page)) {
       await page.goto(path, { waitUntil: 'networkidle' })
       // Term definition panels and accordion bodies are surfaces too.
-      await openExpandables(page)
-      await page.waitForTimeout(150)
+      const rows: {
+        fg: number[]
+        bg: number[]
+        size: number
+        weight: number
+        sample: string
+      }[] = []
+      await forEachPanelState(page, async () => {
+        rows.push(
+          ...(await page.evaluate(() => {
+            // This comment used to claim the parser resolved oklab "via the browser
+            // itself". It did not — it *rejected* oklab and returned null, so every
+            // such colour was skipped rather than checked. Tailwind emits oklab for
+            // any alpha colour, so the rule was: add an opacity and leave the audit.
+            //
+            // Rasterising is the honest version of what the comment promised. Paint
+            // the background, paint the colour over it, read the pixel: the browser
+            // resolves whatever colour space it likes and composites the alpha in
+            // the same step, and what comes back is what the eye receives. It is
+            // also the technique TD-16 was originally measured with by hand.
+            const raster = (color: string, bg: number[]) => {
+              const cv = document.createElement('canvas')
+              cv.width = cv.height = 1
+              const ctx = cv.getContext('2d', { willReadFrequently: true })!
+              ctx.fillStyle = `rgb(${bg[0]},${bg[1]},${bg[2]})`
+              ctx.fillRect(0, 0, 1, 1)
+              const before = ctx.fillStyle
+              ctx.fillStyle = color
+              // On a colour the browser cannot parse, fillStyle keeps its previous
+              // value — which would silently report the background as the
+              // foreground and pass at 1:1. Refuse to guess instead.
+              if (ctx.fillStyle === before && color !== `rgb(${bg.join(', ')}`)
+                return null
+              ctx.fillRect(0, 0, 1, 1)
+              const d = ctx.getImageData(0, 0, 1, 1).data
+              return [d[0], d[1], d[2]]
+            }
 
-      const rows = await page.evaluate(() => {
-        // This comment used to claim the parser resolved oklab "via the browser
-        // itself". It did not — it *rejected* oklab and returned null, so every
-        // such colour was skipped rather than checked. Tailwind emits oklab for
-        // any alpha colour, so the rule was: add an opacity and leave the audit.
-        //
-        // Rasterising is the honest version of what the comment promised. Paint
-        // the background, paint the colour over it, read the pixel: the browser
-        // resolves whatever colour space it likes and composites the alpha in
-        // the same step, and what comes back is what the eye receives. It is
-        // also the technique TD-16 was originally measured with by hand.
-        const raster = (color: string, bg: number[]) => {
-          const cv = document.createElement('canvas')
-          cv.width = cv.height = 1
-          const ctx = cv.getContext('2d', { willReadFrequently: true })!
-          ctx.fillStyle = `rgb(${bg[0]},${bg[1]},${bg[2]})`
-          ctx.fillRect(0, 0, 1, 1)
-          const before = ctx.fillStyle
-          ctx.fillStyle = color
-          // On a colour the browser cannot parse, fillStyle keeps its previous
-          // value — which would silently report the background as the
-          // foreground and pass at 1:1. Refuse to guess instead.
-          if (ctx.fillStyle === before && color !== `rgb(${bg.join(', ')}`)
-            return null
-          ctx.fillRect(0, 0, 1, 1)
-          const d = ctx.getImageData(0, 0, 1, 1).data
-          return [d[0], d[1], d[2]]
-        }
+            const parse = (c: string) => {
+              const m = (c.match(/-?[\d.]+/g) || []).map(Number)
+              return m.length >= 3 && !/okl|lab|lch/.test(c)
+                ? { rgb: m.slice(0, 3), a: m[3] ?? 1 }
+                : null
+            }
 
-        const parse = (c: string) => {
-          const m = (c.match(/-?[\d.]+/g) || []).map(Number)
-          return m.length >= 3 && !/okl|lab|lch/.test(c)
-            ? { rgb: m.slice(0, 3), a: m[3] ?? 1 }
-            : null
-        }
+            const out: {
+              fg: number[]
+              bg: number[]
+              size: number
+              weight: number
+              sample: string
+            }[] = []
+            const seen = new Set<string>()
 
-        const out: {
-          fg: number[]
-          bg: number[]
-          size: number
-          weight: number
-          sample: string
-        }[] = []
-        const seen = new Set<string>()
+            const bgUnder = (start: Element): number[] | null => {
+              let e: Element | null = start
+              while (e) {
+                const c = parse(getComputedStyle(e).backgroundColor)
+                if (c && c.a > 0.5) return c.rgb
+                e = e.parentElement
+              }
+              return null
+            }
 
-        const bgUnder = (start: Element): number[] | null => {
-          let e: Element | null = start
-          while (e) {
-            const c = parse(getComputedStyle(e).backgroundColor)
-            if (c && c.a > 0.5) return c.rgb
-            e = e.parentElement
-          }
-          return null
-        }
-
-        // Placeholders are text, and the loop below cannot see them: it keys
-        // off `el.textContent`, and an empty field has none. They are also the
-        // worst thing to lose, because in this app the placeholder carries the
-        // worked example — it shows the reader what a good answer looks like.
-        for (const el of document.querySelectorAll('input, textarea')) {
-          const ph = (el as HTMLInputElement).placeholder
-          if (!ph) continue
-          const cs = getComputedStyle(el, '::placeholder')
-          const bg = bgUnder(el)
-          if (!bg) continue
-          const rgb = raster(cs.color, bg)
-          if (!rgb) continue
-          const key = `ph|${rgb}|${bg}|${Math.round(parseFloat(cs.fontSize))}`
-          if (seen.has(key)) continue
-          seen.add(key)
-          out.push({
-            fg: rgb,
-            bg,
-            size: parseFloat(cs.fontSize),
-            weight: parseInt(cs.fontWeight) || 400,
-            sample: `placeholder: ${ph.slice(0, 20)}`,
-          })
-        }
-        for (const el of document.querySelectorAll('*')) {
-          const t = el.textContent?.trim()
-          if (!t || t.length < 3 || el.children.length) continue
-          const cs = getComputedStyle(el)
-          if (
-            cs.visibility === 'hidden' ||
-            cs.display === 'none' ||
-            +cs.opacity < 0.5
-          )
-            continue
-          const bg = bgUnder(el)
-          if (!bg) continue
-          const rgb = raster(cs.color, bg)
-          if (!rgb) continue
-          const key = `${rgb}|${bg}|${Math.round(parseFloat(cs.fontSize))}`
-          if (seen.has(key)) continue
-          seen.add(key)
-          out.push({
-            fg: rgb,
-            bg,
-            size: parseFloat(cs.fontSize),
-            weight: parseInt(cs.fontWeight) || 400,
-            sample: t.slice(0, 24),
-          })
-        }
-        return out
+            // Placeholders are text, and the loop below cannot see them: it keys
+            // off `el.textContent`, and an empty field has none. They are also the
+            // worst thing to lose, because in this app the placeholder carries the
+            // worked example — it shows the reader what a good answer looks like.
+            for (const el of document.querySelectorAll('input, textarea')) {
+              const ph = (el as HTMLInputElement).placeholder
+              if (!ph) continue
+              const cs = getComputedStyle(el, '::placeholder')
+              const bg = bgUnder(el)
+              if (!bg) continue
+              const rgb = raster(cs.color, bg)
+              if (!rgb) continue
+              const key = `ph|${rgb}|${bg}|${Math.round(parseFloat(cs.fontSize))}`
+              if (seen.has(key)) continue
+              seen.add(key)
+              out.push({
+                fg: rgb,
+                bg,
+                size: parseFloat(cs.fontSize),
+                weight: parseInt(cs.fontWeight) || 400,
+                sample: `placeholder: ${ph.slice(0, 20)}`,
+              })
+            }
+            for (const el of document.querySelectorAll('*')) {
+              // Own text, not descendant text. The old guard skipped any
+              // element with element children, so a colour set on a container
+              // was only ever measured through its leaves, and a
+              // container-level failure with correctly-coloured children was
+              // invisible (TD-26).
+              //
+              // "Measure containers too" would be wrong in the other
+              // direction: a container whose children all override its colour
+              // shows that colour to nobody, and flagging it would invent a
+              // failure. What matters is whether the element renders text of
+              // its own.
+              const t = [...el.childNodes]
+                .filter((n) => n.nodeType === 3)
+                .map((n) => n.textContent ?? '')
+                .join('')
+                .trim()
+              if (t.length < 3) continue
+              const cs = getComputedStyle(el)
+              if (
+                cs.visibility === 'hidden' ||
+                cs.display === 'none' ||
+                +cs.opacity < 0.5
+              )
+                continue
+              const bg = bgUnder(el)
+              if (!bg) continue
+              const rgb = raster(cs.color, bg)
+              if (!rgb) continue
+              const key = `${rgb}|${bg}|${Math.round(parseFloat(cs.fontSize))}`
+              if (seen.has(key)) continue
+              seen.add(key)
+              out.push({
+                fg: rgb,
+                bg,
+                size: parseFloat(cs.fontSize),
+                weight: parseInt(cs.fontWeight) || 400,
+                sample: t.slice(0, 24),
+              })
+            }
+            return out
+          })),
+        )
       })
 
       for (const r of rows) {
@@ -305,6 +293,55 @@ for (const scheme of ['light', 'dark'] as const) {
     expect(failures, failures.join('\n')).toEqual([])
   })
 }
+
+// ── the test of the test ───────────────────────────────────────────────────
+
+/**
+ * TD-26.
+ *
+ * The contrast gate spent three stages measuring one surface per stage while
+ * reporting a clean pass. It opened expandables by clicking every
+ * `button[aria-controls]`, and `Stepper` puts that attribute on all the rail
+ * tabs, so the loop walked the rail and unmounted the panel it was about to
+ * measure. Nothing noticed, because a sweep that opens nothing produces exactly
+ * the green a sweep that opens everything and finds no failures produces.
+ *
+ * TD-26's entry asks for a pinned count on a known page. That was rejected on
+ * this repo's own evidence: `count-expandables.mjs` records 108 on 2026-08-03
+ * and 140 on 2026-08-13 with no defect in between, and says in its header that
+ * the number is not a constant to assert against. A pinned count stales the way
+ * a step name in prose stales, and it stales silently.
+ *
+ * The property does not stale. Every disclosure the panel renders must be
+ * observed open in at least one state, however many of them there are.
+ */
+test('the sweep observes every disclosure open at least once, since a sweep that quietly stops opening things is indistinguishable from a clean pass', async ({
+  page,
+}) => {
+  const gaps: string[] = []
+  let observedTotal = 0
+
+  for (const path of await auditPages(page)) {
+    await page.goto(path, { waitUntil: 'networkidle' })
+    const { all, observed } = await forEachPanelState(page, async () => {})
+    observedTotal += observed.length
+    const missed = all.filter((key) => !observed.includes(key))
+    if (missed.length) gaps.push(`${path}: ${missed.join(', ')}`)
+  }
+
+  // The gap check alone is vacuous under the failure it exists to catch. Null
+  // the sweep's selector and `all` is empty on every page, so nothing is
+  // missing and the test passes having observed nothing — the same shape as the
+  // bug, reproduced inside its own regression test. This floor is what notices.
+  //
+  // A floor, deliberately, not a count. `count-expandables.mjs` measured 191
+  // opens over 144 ids the day this landed and the entry it closes records the
+  // figure moving 108 to 140 in ten days with no defect in between. Fifty is far
+  // enough below to never stale upward and far enough above zero to fail the
+  // moment the sweep stops seeing disclosures.
+  expect(observedTotal).toBeGreaterThan(50)
+  expect(gaps, gaps.join('\n')).toEqual([])
+})
 
 // ── console ────────────────────────────────────────────────────────────────
 

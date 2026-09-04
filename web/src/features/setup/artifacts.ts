@@ -1,17 +1,4 @@
-export type ArtifactLine = {
-  text: string
-  /** Present only on lines that are a decision. Boilerplate carries no note. */
-  note?: string
-  /** The line the step's judgment turns on. At most one per artifact. */
-  pivot?: boolean
-}
-
-export type Artifact = {
-  id: string
-  filename: string
-  language: 'json' | 'jsonc' | 'yaml' | 'ts' | 'bash'
-  lines: ArtifactLine[]
-}
+import { type Artifact } from '@/components/artifact'
 
 /**
  * The nineteen config blocks stage 04's panels render, line by line, from
@@ -293,7 +280,7 @@ export const ARTIFACTS: Record<string, Artifact> = {
       { text: '' },
       {
         text: 'export const env = schema.parse(process.env)',
-        note: "Import `env` everywhere instead of `process.env` — in server modules only, never in a `'use client'` file. `schema.parse(process.env)` is not a static read, so the browser gets an empty object and every key fails at once, on hydration, after a green build.",
+        note: "Import `env` everywhere instead of `process.env` — in server modules only, never in a `'use client'` file. `schema.parse(process.env)` is not a static read, so the browser gets an empty object and every key fails at once, on hydration, after a green build. It also runs exactly once, at module evaluation. Blank a value with `pnpm dev` running and the first reload still returns 200, answered by the evaluation Turbopack already had; the next one returns 500. Restarting is that with nothing left to race.",
       },
     ],
   },

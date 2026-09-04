@@ -85,3 +85,25 @@ test('no term definition ships literal markdown emphasis, since the panel render
     expect(t.full, `${id}.full`).not.toMatch(/\*/)
   }
 })
+
+test('stage 06 defines the vocabulary it introduces', () => {
+  for (const id of [
+    'mock',
+    'test-fixture',
+    'regression-test',
+    'invariant-test',
+    'teeth-check',
+    'code-coverage',
+    'flaky-test',
+    'accessible-name',
+  ]) {
+    expect(TERMS[id], id).toBeDefined()
+    expect(TERMS[id].see, id).toBe('06-testing')
+    expect(TERMS[id].soWhat, id).toBeTruthy()
+  }
+})
+
+test('smoke-test is reused rather than redefined', () => {
+  expect(TERMS['smoke-test']).toBeDefined()
+  expect(TERMS['smoke-test'].see).not.toBe('06-testing')
+})

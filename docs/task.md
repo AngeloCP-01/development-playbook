@@ -57,10 +57,10 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04 done; 14 remain)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 12, 13 and 14 done; 8 remain — 10/18. **Stage 14 complete 2026-09-04**: 6 steps (verify, vercel, aws, recovery, ai, done), doc correction first (AWS ECS verification, AI plays, references), 1064/149 tests, all verification green. Eight stages remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(skeleton `0207fd6` and source graphics `4727dc3` merged 2026-08-14; ten sheets still to transcribe)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(fifteen of twenty registered sheets drawn — `post-deploy-verification` added 2026-09-04 tethered to stage 14. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
 
 ### Dependency map
 
@@ -126,7 +126,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02, 03 and 04 done; 14 remain)*
+### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07, 12, 13 and 14 done; 8 remain — 10/18. **Stage 14 complete 2026-09-04**: 6 steps, doc correction first (AWS ECS verification, AI plays, references), 1064/149 tests, all verification green)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -235,7 +235,7 @@ designing TD-21 or TD-18 against the current six steps risks redoing that work.
       describe the eight-subsection doc
 - [x] Re-run the cold-reader pass afterwards on the amended doc, and record what it finds
 
-### W-3.1b — Stage 03 completeness: resilience, consistency, evolution ◐ *(doc done 2026-07-30; app port pending W-3.2)*
+### W-3.1b — Stage 03 completeness: resilience, consistency, evolution ☑ *(doc done 2026-07-30; ~~app port pending W-3.2~~ ✓ ported 2026-07-31, verified 2026-08-20)*
 
 Closes **TD-25**. An architecture-completeness audit against standard practice found that five
 clusters of widely-taught material are absent from **all eighteen docs**, not merely deferred
@@ -409,7 +409,13 @@ plan"; architecture's, testing's and so on will each have their own). Status:
 | 02 Product Planning | ☑ | ☑ | Done: 7th step + `### AI in planning` |
 | 03 Architecture | ☑ | ☑ | `### AI in architecture`, its own step — the 21st of 22 after the D-52 reshape, and the 6th when it was written. The doc had **no** AI section — the round had to write one before it could mirror it, which is why `stage-metadata.test.ts` now fails any stage whose doc lacks the heading |
 | 04 Project Setup | ☑ | ☑ | `### AI in project setup` was written test-first during the doc-correction round: `stage-metadata.test.ts` failed with `04-project-setup has no "### AI in ..." subsection` before the section existed, and the teeth check renamed the heading to `### AI for project setup` to confirm the assertion could still fail. The app step arrives with the port |
-| 05–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
+| 05 Development | ☑ | ☑ | Done: 13th step + `### AI in development` |
+| 06 Testing | ☑ | ☑ | Done: 8th step + `### AI in testing` |
+| 07 Code Review | ☑ | ☑ | Done: 6th step + `### AI in code review`. `AI_SECTION_STAGES` updated to include `07-code-review` in the stage 12 doc correction round |
+| 12 Staging | ☑ | ☑ | Done: 6th step + `### AI in staging`. Doc correction phase first (AI plays, env vars, Neon details), then port. Test-first: `12-staging` added to `AI_SECTION_STAGES` before the section existed |
+| 13 Production Deployment | ☑ | ☑ | Done: 6th step + `### AI in production deployment`. Doc correction phase first (four tool plays: generate migrations, dry-run, verify skew, rehearse rollback), then port. Test-first: `13-production-deployment` added to `AI_SECTION_STAGES` before the section existed. AWS expansion planned next round |
+| 14 Post-Deployment Verification | ☑ | ☑ | Done: 6th step + `### AI in post-deployment verification`. Doc correction phase first (AWS ECS verification, four tool plays: generate smoke suite, parse anomalies, run ten-minute check, compare baseline), then port. Test-first: `14-post-deployment-verification` added to `AI_SECTION_STAGES` before the section existed |
+| 08–11, 15–18 | ☐ | ☐ | Build with each stage, per the checklist item above |
 
 Suggested order. Revised 2026-07-24 (D-27): the first pass ranked purely by teaching
 value and put 02 fifth. That ignored the reader's journey and the risk of proving the
@@ -423,10 +429,14 @@ pattern library on the hardest stage.
 | ~~4~~ ✓ | — | **W-3.2 + W-3.3 merged** to `main` as `790b3e4` (`--no-ff`, 106 commits, branch deleted). Gate re-run on the merged result: 313/313, 14/14 audit, lint, typecheck and format clean. **Not pushed** — the user handles that. |
 | ~~5~~ ✓ | — | **W-5 complete** — live at https://acp-dev-playbook.vercel.app, verified by `pnpm test:prod`. Every `W-` milestone except W-3 is now closed. |
 | **6 ☑** | **04 Project Setup** | **Decided 2026-08-11**, against this table's earlier answer of 15. Reading 04 to compare the two found its Vercel section factually wrong — it says to match the Node version to `.nvmrc`, which Vercel does not read — and silent on the three things that broke this project's own first deploy (**TD-28**). So the round is *fix a doc that misleads* rather than *port a doc that is fine*, and it is the one stage checkable against this repository. **Scoped as a doc-correction phase before the port.** 15's case is recorded in `docs/tracker.md`'s Next up; it lost on having nothing to ground it against. **Doc phase complete 2026-08-13** on `fix/stage-04-doc-corrections`, unmerged: 323 → 711 lines at `38765e7`, TD-28 closed, **31 defects against the four TD-28 named**. **`RevealList` done 2026-08-14**, merged to `develop` as `e29f3fe`: eleven stage-03 accordions collapsed onto one component, not the five the plan scoped. **TD-12 closed the same day** on `fix/derive-audit-pages`, also merged — the audit's page list derives from the ready set, so the port will not be adding hashes by hand. **Port done 2026-08-17** and merged to `develop` as `bb3c119`: fifteen steps, all under the 3.2 ceiling, W-3 to 4/18. See W-3.4. |
-| **7 (next)** | **05 Development** | **Decided 2026-08-18**, against this table's own answer of 16 or 13. Those two were ranked on how well a stepper fits their shape; 05 is chosen on sequence instead. It is the stage a reader reaches immediately after 04 — setup ends with a repository that builds and deploys, and 05 is the loop they then run dozens of times a day — so shipping them adjacent means the first two interactive stages past discovery and planning read as continuous. 16 and 13 keep their case and their priority; they are now 8. |
-| 8 | 16 Incident Management | Procedural, so a stepper fits naturally |
-| 8 | 13 Production Deployment | Expand/migrate/contract needs a visual |
-| — | remainder | 06–12, 14, 17, 18 |
+| **7 ☑** | **05 Development** | **Done.** Decided 2026-08-18. Thirteen steps, doc correction phase first. |
+| **8 ☑** | **12 Staging** | **Done.** Decided 2026-09-01. Six steps, doc correction phase first (AI plays, env vars, Neon details). Natural adjacency from stage 07 (stage 07's DoD says "Preview URL checked (12)"). Coverage walk ran same session, fix wave merged. |
+| ~~9~~ ✓ | 13 Production Deployment | **Done.** Decided 2026-09-02. Six steps, doc correction phase first. Vercel-focused; **AWS expansion planned as a follow-up round** restructuring into platform-agnostic + platform-specific steps (Vercel / AWS — blue/green, canary, rolling, CodeDeploy/ECS). |
+| ~~10~~ ✓ | AWS expansion for stage 13 | **Done.** 2026-09-03. Restructured to 8 steps (platform-aware: Vercel + AWS). Coverage walk ran, 3 blocking fixed. |
+| ~~11~~ ✓ | 14 Post-Deployment Verification | **Done.** 2026-09-04. Six steps, doc correction first (AWS ECS verification, AI plays). Chains from stage 13. |
+| 12 (next) | 11 CI/CD | Heavily referenced by stages 04, 12, 13, 14. Fills the gap others point to. |
+| 13 | 16 Incident Management | Procedural, so a stepper fits naturally. Chains from stage 14's recovery step. |
+| — | remainder | 08–10, 15, 17, 18 |
 
 **~~Settle before stage 03:~~ ✓ resolved 2026-07-27 (D-36).** TD-2 and TD-3 are closed:
 `terms.ts` is the single glossary source (`reference/glossary.md` generated via
@@ -547,6 +557,141 @@ handing the corrected doc to a cold reader with a task to finish.
       the user's. *(Both numbers moved after this was written: the two W-6 merges took `develop`
       to **131 ahead**, and it has since been **pushed** — `origin/develop` at `49122f5`.)*
 
+### W-3.5 — Stage 05, doc correction then port ☑ *(doc round merged 2026-08-18 as `9ef3763`; the port (W-3.5b) merged to `develop` 2026-08-20 as `425381b`, both `--no-ff`, both branches deleted)*
+
+**The doc has been corrected.** `docs/05-development.md` is now **587 lines** across
+**six** `##` sections and **twelve** `###` ones (`### Authorize reads, not just writes`,
+`### Loading and error states` and `### AI in development` are the three new ones). Twelve
+tasks closed nineteen of the twenty defects the pre-round verification found; the fix
+wave (Task 11, five commits) closed the twentieth. A whole-branch review then found and
+closed four blocking findings of its own, on top of the twenty. **`fix/stage-05-doc-corrections`
+merged to `develop` as `9ef3763`, `--no-ff`, 2026-08-18** — 29 branch commits plus the merge,
+branch deleted, and the merged result re-gated on `develop`: `pnpm lint`, `pnpm typecheck`,
+`pnpm test` (64 files / 529 tests) and `pnpm build` all exit 0. At this point
+`05-development` still stayed `ready: false` and absent from `STAGE_CONTENT` on purpose —
+merging the doc round is not the port, it is what the port now builds against (**D-74**) —
+so W-3 stayed at 4/18 until the port itself landed (W-3.5b, below): built 2026-08-19, `ready:
+true`, W-3 now **5/18**.
+
+**D-54** put the cold-reader pass before the port, and it found twenty defects. Three
+instruments ran, two dispatched read-only and blind to each other, and **three defects were
+found twice** — which is the strongest signal the round produced. The doc's judgement is
+good and it scored 4/5 on consultability; what is wrong with it is narrower and more
+mechanical. **Its code blocks are excerpts with their imports and their callers removed**,
+and its checklist has drifted away from its own body. A cold reader given only the doc could
+not produce one compiling file for its first slice.
+
+Evidence is in `docs/tracker.md`'s **2026-08-18 W-3.5** row. The two findings that decide
+the shape of the round:
+
+- **The `## Definition of done` requires what the body forbids.** It asks for "loading and
+  error states" while `### Server Components by default` teaches "no loading state", and
+  neither `loading.tsx`, `error.tsx` nor `Suspense` appears anywhere. This is the pattern
+  `cold-reader-testing.md` names from stage 03 — a checkbox gating on a concept the body
+  never taught — except here the body teaches its negation.
+- **`'use client'` does not do what the doc says.** Stated wrongly in two places. Next's
+  shipped docs say Client Components are used to *prerender* HTML. The advice is right and
+  the reason is wrong, which sends a reader debugging a slow page looking for HTML that is
+  already there.
+
+- [x] **Run the three instruments before correcting anything** (**D-54**, **D-50**) ✓
+      `docs/verification/stage-05-doc-execution.md` and
+      `docs/verification/cold-reader-stage-05-run1.md`. The compiler pass runs twice, as
+      printed and with the gaps filled (**D-68**), because those measure different things
+- [x] **Classify each finding defect or boundary, disagreeing where warranted** ✓ nineteen
+      defects, eight boundaries. Two agent claims corrected rather than transcribed: an
+      unconfirmable digest-masking mechanism dropped, and a low-confidence `tsc` guess
+      promoted to confirmed
+- [x] **Settle the two open scope calls** ✓ full close, and read-path authorization is this
+      stage's job (**D-69**)
+- [x] **Spec and plan** ✓ `2026-08-18-stage-05-doc-corrections-design.md` and its
+      twelve-task plan
+- [x] **Task 1 — the anchor guard** (**D-71**) ✓ `source-citations.test.ts` extended to
+      every `](NN-name.md#anchor)` across `docs/`; caught the rename below by real RED
+- [x] **Tasks 2–9 — the corrections** ✓ the doc gained `### Authorize reads, not just
+      writes`, `### Loading and error states` and `### AI in development`, and reached
+      587 lines
+- [x] **Task 10 — re-run all three instruments** ✓ `docs/verification/cold-reader-stage-05-run2.md`
+      and `docs/verification/stage-05-doc-execution-run2.md`: completeness 8 BLOCKING → 0,
+      consultability 4/5 → 5/5, nineteen of twenty defects closed
+- [x] **Task 11 — the fix wave** (**D-48**) ✓ five commits closed the twentieth defect
+      (`InvoiceTable` produced) and the last two run-2 findings
+- [x] **Task 12 — records, humanizer, whole-branch review** ✓ humanizer pass found nothing
+      to change; whole-branch review returned four blocking findings, all fixed (one of
+      them a false claim the per-task process itself had introduced — see the tracker row)
+- [x] **Merge of the doc phase** ✓ `fix/stage-05-doc-corrections` is in `develop` as
+      `9ef3763`, `--no-ff`, branch deleted. Gate re-run on the merged result: `pnpm lint`,
+      `pnpm typecheck`, `pnpm test` (**64 files / 529 tests**) and `pnpm build` all exit 0
+- [x] **The port itself (W-3.5b)** ✓ *(built 2026-08-19, **merged to `develop` 2026-08-20 as
+      `425381b`, `--no-ff`, `feat/stage-05-app-port` deleted**. 36 branch commits
+      `4bf5edb`…`af1c8d0` plus the merge. The merged result was gated first-hand on `develop`
+      rather than inferred from the branch: `pnpm lint`, `pnpm typecheck`, `pnpm test`
+      (**80 files / 648 tests**) and `pnpm build` all exit 0. `main` untouched at `8d5045c`;
+      `develop` is not pushed)*. Thirteen steps against a doc a third of stage 04's length, which landed close
+      to the prediction on this row: sixteen tasks, sixteen reviews, all clean or clean after
+      a fix. Both provisional splits from `steps.ts` survived measurement unchanged — `drill`
+      did not merge into `reads` (combined 6.24 against the round's 3.2 target) and
+      `boundaries` did not merge into `action` (which measured 3.16, no room left) — the
+      second time in this repo a provisional seam has survived intact; stage 03 re-cut five of
+      six. A read-only coverage walk (Task 14), given only the doc and the code, found ten
+      sections a fully green gate and eleven clean per-task reviews had missed; nine are
+      closed, the tenth (the doc's opening framing) deferred as a cross-stage question rather
+      than a stage-05 defect. Tests 529/64 → **645/80**, audit **17/17** over **76 derived
+      URLs**, build clean, no new `PANEL_EXCEPTIONS` entry. Coverage map:
+      `docs/stage-05-status.md`. Full evidence, the panel table and the new decisions are in
+      `docs/tracker.md`'s W-3.5b row
+
+**One finding from before this round, now closed.** Stage 05's checklist used to prescribe
+a bare `pnpm tsc --noEmit`, which **violated D-25** and contradicted `docs/11-ci-cd.md`,
+where the same trap is taught under `## Traps` and credited to this playbook's own CI.
+`## Definition of done` now reads `pnpm typecheck` clean, with the reasoning inline.
+
+### W-3.6 — Stage 06, port ☑ *(built 2026-08-27 on `feat/stage-06-testing`, 28 commits, not yet merged)*
+
+`docs/06-testing.md` needed no correction phase — unlike 04 and 05, it went straight to
+port. **316 lines, six `##` sections, eleven `###` ones**, ported to
+`web/src/features/testing/` as **eight steps** (planned as seven; see the panel-split
+decision below). Sixteen tasks against
+`docs/superpowers/plans/2026-08-27-stage-06-app-port.md`, run as two waves of content and
+component work, an assembly wave, a coverage walk, and a verification pass.
+
+- [x] **Waves 1–2 — data, components** ✓ eight data modules, each with a sibling test
+      deriving its expectation from `docs/06-testing.md` at run time rather than from a
+      count typed into a brief. Task 2's `AI in testing` section landed as a real
+      red-green cycle rather than the "prose, no failing test" the plan first assumed —
+      `stage-metadata.test.ts`'s `AI_SECTION_STAGES` list already existed to force exactly
+      that ordering
+- [x] **Wave 3 — assembly** ✓ seven panels built, one split into two on measurement (below)
+- [x] **Task 14 — the coverage walk** ✓ a context-starved read of the doc and the code,
+      no plan or reports in sight, found **ten** problems against a green gate of 739
+      tests and thirteen closed per-task reviews — the third time this check has earned
+      its place (04 found five, 05 found ten). Eight were missing or drifted content,
+      closed in a six-commit fix wave. **The ninth is structural and the one worth
+      naming**: three tests asserted only against the doc and never touched an app
+      export, so each was green for a reason unrelated to what it claimed to guard —
+      inside the stage that teaches "has this test ever been red." See **D-93**. The
+      tenth is a paste hazard the doc doesn't even have: `ARTIFACTS.actions` calls
+      `asUser`/`getInvoice` behind a one-click copy button with neither imported,
+      defined or annotated, so accepting the paste throws `ReferenceError` before any
+      assertion runs — fixed by annotation, the quoted fence itself untouched per the
+      whole-fence rule (D-66)
+- [x] **Task 15 — verification** ✓ lint, typecheck, `753/100` tests, build, `test:e2e`
+      **18/18**, `test:dev-console` **1/1** (run once for the round, per house convention),
+      a standalone committed-drill contrast sweep (0 failures, 16/16), responsive across
+      18 widths, humanizer run with one decline recorded
+- [ ] **Merge into `develop`** — not yet asked for. Records only, at this point
+
+**The panel split, D-92.** `done` was planned as one panel holding three of the doc's
+closing sections; wiring in `<References>` (its own required scope) took it to **4.69**
+against the 4.0 ceiling. The fix was to split along the doc's own section boundaries — a
+new `traps` panel closes the stage last with the trap callouts and the references — rather
+than compress further, which would have hidden that the overage was never really about the
+references. Eight panels is unremarkable here: stage 03 has 22, stage 04 has 15, stage 05
+has 13.
+
+Evidence, the full panel table and the coverage table are in `docs/tracker.md`'s **W-3.6**
+row and in `docs/stage-06-status.md`. **Not merged, NOT pushed.**
+
 ### W-4 — Quality gates ☑
 
 The playbook says CI on day one. The app does not have it. Closing this is also
@@ -556,11 +701,31 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
 - [x] Commit the throwaway audit scripts as a real Playwright suite: contrast in
       both themes, no overflow 320–2560px, touch targets ≥44px
 - [x] `.github/workflows/ci.yml` — lint, typecheck, test, build
-- [ ] Branch protection requiring the gate *(GitHub-side: require `verify` + `audit`,
-      branches up to date)* — **TD-10**
-- [ ] Watch CI go red once: scratch branch, broken commit pushed with `--no-verify`,
-      confirm Actions fails — **TD-10**
+- [x] Branch protection requiring the gate *(GitHub-side: require `verify` + `audit`,
+      branches up to date)* — **TD-10**, closed 2026-07-24
+- [x] Watch CI go red once — happened unprompted rather than deliberately: CI #1 at
+      `e7b3afd` failed at typecheck in 35s on a real bug — **TD-10**, closed 2026-07-24
 - [x] Fix or document whatever the suite reveals
+
+**Amended 2026-08-24 by the four-debt round** (merged `e5c411b`; evidence and decisions
+D-82…D-86 in `docs/tracker.md`). The gate this milestone signed off had three blind spots
+and one of them was in the reader's hands:
+
+- The audit is **18 tests** now, not 17. The new one is a property: every disclosure inside
+  a step panel was observed open in at least one state. It exists because the sweep had
+  twice been green while opening almost nothing (**TD-26**).
+- `pnpm test:e2e` **refuses to run against a stale server** (**TD-27**). It failed the
+  session that built it, on a real edit, within minutes.
+- `pnpm test:dev-console` is a **new command outside this gate and outside CI**
+  (**TD-35**, **D-84**). It is the only thing here that can see React's development
+  validation, and it found a real warning on its first run — **TD-43**, ~~still open~~ ✓ closed 2026-08-24, and it turned out to be a false positive in React's dev-only key bookkeeping rather than a missing key.
+
+The two unticked boxes above are stale, not outstanding. **TD-10 is closed** (tracker,
+2026-07-24) with Actions-history evidence: CI went red unprompted on its first real run at
+`e7b3afd`, catching generated route types missing on a clean checkout, which the entry
+rates as stronger than the planned deliberate break. Branch protection is on, and enabling
+it is what surfaced that **GitHub Free enforces rulesets on public repositories only** —
+the reason this repo is public (**D-26**). The boxes were never ticked back.
 
 ### W-5 — Deploy ☑ *(live 2026-08-11 at https://acp-dev-playbook.vercel.app; verified by `pnpm test:prod`)*
 
@@ -593,15 +758,21 @@ how the project stops contradicting its own advice. See **TD-4**, **TD-5**.
 
 ---
 
-### W-6 — Reference hub ◐ **PAUSED 2026-08-14** *(skeleton `0207fd6` and source graphics `4727dc3` merged; resume after the stage 04 port)*
+### W-6 — Reference hub ◐ **RESUMED 2026-08-24, per-stage cadence (D-88)**
 
-> **Parked deliberately, not abandoned.** The frame is finished and merged — routes,
-> rail, renderer, markdown generation, audit coverage and the source graphics. What
-> remains (W-6.3, W-6.4) is content work that competes with `W-3`, which is the
-> project. **Next active work is the stage 04 port under W-3.4, not this.**
+> **The pause is deliberately overridden, not lifted.** From 2026-08-14 to
+> 2026-08-24 this section was paused because content work competes with `W-3`, the
+> project. That reasoning still holds in general — **W-6 is not "the project" and
+> stage 06 has still not been chosen** — but the user made an explicit, informed call
+> to run a bounded W-6 round after finishing each W-3 stage, when there is reference
+> material naturally related to what was just built. Stage 05 (Development) shipped
+> 2026-08-20; this round follows it. **The standing rule going forward**: after a
+> stage ships, check whether related lookup material is worth adding, and if so run a
+> scoped round before picking the next `W-3` stage — not instead of picking it.
 >
-> Resuming needs no re-decision: read this section, pick a sheet from
-> `reference/cheatsheet-sources.md`, and fill its `sections: []`. Nothing else changes.
+> Resuming needs no re-decision each time: read this section, pick a sheet from
+> `reference/cheatsheet-sources.md` tethered to a finished or in-progress stage, and
+> fill its `sections: []`.
 
 **Why it exists.** Two problems with one shape. `reference/glossary.md` and
 `reference/stack.md` have been unreachable from the app since they were written — no
@@ -627,12 +798,70 @@ decorative on a drawn sheet, descriptive on an undrawn one, both directions test
 Originals stay untracked and gitignored; the conversion recipe and measured savings
 are in `reference/cheatsheet-sources.md`. Evidence in `docs/tracker.md`.
 
-**W-6.3 — Fill the ten empty sheets ☐**
+**W-6.3 — Fill the ten empty sheets ◐** *(six of the original ten drawn 2026-08-24,
+plus three sheets not in the original count; five language sheets remain)*
 
-Content work, not app work, now that the frame exists. Three sources are already
-gathered and logged in `reference/cheatsheet-sources.md`; the rest have search terms
-listed there by priority. Two of the three still need their post URL and author
-recorded before anything derived from them can ship on a public site.
+Content work, not app work, now that the frame exists. **Drawn this round**:
+`design-patterns` (all 23 patterns, three sections), `api-design` (fifteen-step
+roadmap condensed to six sections), `git-commands`, `git-branching`. **A fifth
+`CheatsheetGroup`, Design Principles, was added mid-round (D-90)**: SOLID and
+Clean Code were drafted as two of `coding-standards`'s four planned sections, then
+pulled back out into their own sheets, `solid-principles` and `clean-code`, once it
+became clear they are principles carried across a codebase rather than
+project-specific style rules — each now has its own before/after code examples
+(`Row.example`, a new field, TDD'd). `coding-standards` is left with one section,
+code smells; naming conventions is still held empty — the one gathered source
+turned out to be Godot-specific, wrong domain, and a general or JS/TS replacement is
+still being searched for. `sdlc` is untethered, not in the original ten either.
+**Two real defects surfaced by the audit, not introduced by anything before this
+round**: the new code-example grid blew out past 320px (a classic CSS grid item
+`min-width: auto` case — fixed with `min-w-0` on the grid item), and `coding-standards`
+is the first sheet ever to carry a `source.url`, which exercised a footer link with
+no touch-target sizing for the first time — fixed with the same `min-h-11` treatment
+used elsewhere. Both were caught by the existing audit suite, not a new check.
+**Still `sections: []`**: `javascript`, `python`, `java`, `spring-boot`, `express` —
+the language sheets, lowest priority per the gathering list. Most images gathered for
+this round still have author/URL unrecorded; fix before promoting past `develop`
+(D-63). Evidence in `docs/tracker.md`.
+
+**W-6.3b — Real syntax highlighting on the two Design Principles sheets**
+*(2026-08-25)*. Not a new sheet — `solid-principles` and `clean-code`'s existing
+before/after examples now render through Shiki instead of plain mono text, in a
+four-role palette matched to the whiteprint/cyanotype system (**D-91**). One real
+defect found along the way: highlighting computed via a top-level `await` inside the
+data modules passed `pnpm test` and `next build` but broke `pnpm test:e2e`
+outright — fixed by moving highlighting to generate time (`pnpm gen:highlighted`),
+the same committed-snapshot pattern `cheatsheets.md` and `glossary.md` already use.
+Evidence in `docs/tracker.md`.
+
+**W-6.3c — `sdlc` expanded into a two-section guide** *(2026-08-25, user request)*.
+Not a new sheet either — the seven phases gained a concrete deliverable each, and a
+second section compares Waterfall, Agile/Scrum and DevOps/Continuous against the
+same seven phases. No code examples: SDLC is a process framework, and the user's own
+scope call (asked, not assumed) was deliverables plus methodology comparison, not
+code. Evidence in `docs/tracker.md`.
+
+**W-6.3d — `sdlc`'s phases retaught through one running example** *(2026-08-25, user
+request)*. The deliverable lists W-6.3c added named artifact types; this round
+replaced them with one small scenario (adding password reset) carried through all
+seven phases, so each phase's output visibly becomes the next phase's input rather
+than seven disconnected examples. Evidence in `docs/tracker.md`.
+
+**W-6.3e — Two new sheets, `testing` and `playwright`** *(2026-08-28, tethered to
+stage 06)*. `testing` (five types plus the pyramid concept) and `playwright` (a
+tool-specific companion, same split as `git-commands`/`git-branching`) — eleven of
+sixteen registered sheets now drawn. Gathered from a status that read stage 06 as
+"chosen but not built"; the port had actually shipped and merged the day before, and
+this round's own commit is honest about having started from stale information. Also
+where a "not yet merged" claim on stage 06 itself, sitting unnoticed in this file and
+`docs/tracker.md` since the merge, was found and corrected. Evidence in
+`docs/tracker.md`.
+
+**W-6.3f — `clean-code` gains four more principles** *(2026-08-28, user request)*. Not
+a new sheet — a second section, SOC/DYC/TDD/YAGNI, from a second gathered source (Neo
+Kim), consulted rather than displayed as a second plate (D-89). Two cross-references
+added: SOC to `solid-principles`, TDD to `CLAUDE.md`'s iron law and the new `testing`
+sheet. Evidence in `docs/tracker.md`.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 
@@ -647,8 +876,14 @@ copy-to-clipboard on code rows, which waits for the first sheet that has any.
 
 ## Backlog — not scheduled
 
-- Single source of truth for stage metadata (**TD-2**)
-- Single source of truth for the glossary (**TD-3**)
+- ~~Single source of truth for stage metadata (**TD-2**)~~ ✓ closed 2026-07-27 by **D-36**,
+  and narrowed rather than delivered: only the *title* was genuine duplication, and it is
+  synced by `stage-metadata.test.ts`. `blurb` and `timing` are purpose-built UI strings that
+  diverge from the doc for 15 of 18 stages **by design**. Left listed here as an open want,
+  this line read as unfinished work — and in 2026-08 it contributed to a proposal to sync
+  both fields verbatim, which would have reversed D-36 using D-36's own evidence (**D-81**).
+- ~~Single source of truth for the glossary (**TD-3**)~~ ✓ closed 2026-07-27 by **D-36**:
+  `terms.ts` is the source and `reference/glossary.md` is generated from it by snapshot
 - Search across stages
 - A cadence view: the 18 stages plotted by real frequency rather than by number.
   That is the playbook's central claim and it is still only stated in prose.

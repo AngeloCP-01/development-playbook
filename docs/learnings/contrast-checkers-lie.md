@@ -1,6 +1,6 @@
 # When the contrast checker is the bug
 
-Three times now a colour audit in this repo has reported a failure that did not exist. Each
+Four times now a colour audit in this repo has reported a failure that did not exist. Each
 one cost real time before it was disproved. The failures have nothing in common except the
 thing that matters: **the checker was wrong, not the design.**
 
@@ -58,6 +58,15 @@ before reading anything.
 The same caution applies to any read of a computed style after a class change, not only
 colour. Layout reads are usually safe because layout is not transitioned here; colour reads
 are not.
+
+**It recurred on the stage 06 branch (2026-08-27).** A standalone committed-drill contrast
+sweep drove the theme toggle with a script, then read six pairs — and reported six
+failures, every one matching a stale light-mode token exactly, in what the sweep's own
+context claimed was dark mode. Nothing had regressed; the read landed mid-transition again,
+for the identical reason as the first instance, on a different script written by a
+different session. Resolved the same way: reproduce clean-loaded per theme instead of
+toggling and reading in the same call, and treat a token match to the *other* theme's known
+value as the tell rather than trusting the label the script put on the run.
 
 ---
 
@@ -137,6 +146,17 @@ in either theme. They are also the worst ones to lose here, because in this app 
 placeholder *is* the worked example — it shows the reader what a good answer looks like.
 `input, textarea` are now sampled explicitly through `getComputedStyle(el, '::placeholder')`
 (**TD-16**).
+
+**Confirmed still true on stage 06 (2026-08-27), one radio button later.** The committed
+audit walks `aria-expanded` and `aria-selected` to open every disclosure before sampling,
+but a locked `TriageDrill`/`TeethCheck` row is a `role="radio"` set to `disabled` — neither
+attribute the walker looks for, so a locked option and its revealed verdict block go
+unsampled the same way the uncommitted `button[aria-controls]` verdicts did at the stage
+this trap was first written for. A standalone committed-state sweep built to check found
+**zero failures across all eight panels, both themes** — so nothing is actually broken
+today — but the audit itself still cannot see the surface, and a future stage's colours
+there are unverified by the suite until the walker learns to commit a radiogroup the way it
+already opens a disclosure. Flagged for stage 07 to budget for, not fixed here.
 
 ---
 

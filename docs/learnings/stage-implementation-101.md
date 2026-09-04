@@ -94,6 +94,16 @@ standard for any inline component:
 - Definitions are plain strings, so a straight double-quote inside one breaks the JSX
   attribute. Use typographic quotes in `terms.ts` copy.
 
+**Added after stage 12 (2026-09-01): `{' '}` is not always stable.** Prettier can
+silently collapse an explicit `{' '}` back into a plain text node when reformatting,
+which means the space disappears in the committed file even though it was present when
+you wrote it. The shape that triggers it: a verb immediately following `</Term>`, as in
+`<Term id="staging-environment">staging environment</Term> is a single…`. The fix that
+survives Prettier is to restructure the sentence so only punctuation (a colon, a comma,
+a period) follows the closing tag, not a word. Check by running `pnpm format` and
+confirming the file comes back unchanged, then inspecting the prerendered HTML for
+glued words.
+
 ---
 
 ## React 19 forbids setState in an effect
@@ -189,6 +199,20 @@ prescribed mutation proved nothing at all. The fix is a literal: *exactly one ga
 and it is the browser*. Any assertion shaped `expect(rendered).toBe(String(row.flag))` has
 this hole.
 
+**A third way, added after stage 06 (2026-08-27): the file being mutated was never really
+diffed, because it was never really committed.** `git add -N <file>` stages a new file with
+an empty blob, meant to let `git diff` show the file as newly added. It does that, but it
+also means the "before" state a teeth check diffs against is empty — so a mutation and the
+original both diff against nothing, and the diff cannot isolate what changed. It looked
+like proof twice before the cause was understood: a hand-annotated snippet standing in for
+a real diff, in each case backed by a genuine test failure so the substantive claim held,
+but the "mutation is isolated" evidence was never real. **The fix is to commit the file
+first.** Commit, mutate, `git diff` (a real diff against a real baseline), `git checkout --`
+to restore. Two instances of the wrong advice being followed is what surfaced that the
+advice itself, not the implementers applying it, was the defect — see "A doc-pin regex has
+to survive a hard line-wrap, and two instances means stop and sweep," further down this
+file, for the general shape.
+
 ---
 
 ## Check which testing libraries the project actually installs
@@ -202,3 +226,237 @@ The house convention is `fireEvent` from `@testing-library/react` plus plain DOM
 (`el.getAttribute(...)`, `(el as HTMLInputElement).checked`). `src/components/RevealList.test.tsx`
 is the example. `src/test/setup.ts` argues in writing against growing a second
 responsibility, which is the case against adding jest-dom now.
+
+---
+
+## Transcribing prose loses the second sentence
+
+Added after the stage 05 port (W-3.5b, 2026-08-20), where this happened three times, the
+third of them inside the fix wave built to close the first two.
+
+Porting a doc into panels means moving prose by hand. What goes missing is not random. In
+every instance here it was **the second sentence of a two-sentence passage**:
+
+- The AI section's opening kept "the mistakes that survive are the ones that read as correct
+  on the way past" and dropped the list that makes it usable — an authorization predicate, a
+  migration's backfill, a cache key, a regex over unsampled data.
+- The `'use client'` guidance kept "only when you need interactivity" and dropped the
+  four-item test that follows it. The reader got a feeling where the doc gave a checklist,
+  and "effects" appeared nowhere in the stage.
+- A restored cross-section stitch kept "query, then component" and dropped "the test is
+  06's".
+
+The shape is consistent because of how the sentences divide labour: the first carries the
+claim, the second carries the qualifier, the example, or the pointer. Moving the claim feels
+like moving the content, and the second sentence reads as elaboration you can compress. It
+is usually the half that makes the first half actionable.
+
+**A paraphrase is more dangerous than an unanchored quote**, because nothing marks it as
+lossy. A missing sentence and a deliberate edit look identical in a diff, and no test can
+tell them apart — the data module asserted against the doc proves the text it *has* matches,
+and says nothing about text it never received.
+
+Three things that work:
+
+- **Lift, do not retype.** `sed -n 'START,ENDp' docs/NN-*.md` and paste. Retyping is where
+  clauses go.
+- **Where a constant holds doc prose, pin a phrase from each sentence**, not one phrase from
+  the passage. The pin that would have caught all three is a phrase from the *second*
+  sentence.
+- **Count sentences at the boundary.** When you move a paragraph, note how many sentences
+  went in and how many came out. It is a two-second check that catches the whole class.
+
+---
+
+## The coverage walk still earns its place, and it has to be starved of context
+
+Same round. Two coverage walks had already run inside per-task reviews and returned nothing.
+A third, given only `docs/NN-*.md` and the feature directory — with the plan, the spec, every
+task brief, every report and the controller's ledger explicitly withheld — found **ten**
+pieces of content the app did not teach, against a green gate of 645 tests, a 17-test browser
+audit, and fourteen closed per-task reviews.
+
+The difference was not model or effort. The earlier reviewers had been told what the panels
+were *for*. Intentions are exactly what makes a reader of the panels a poor auditor of them,
+and by the end of a round every artifact in the workspace is a record of intentions.
+
+The costliest gap was the inverse of stage 04's famous one. There, the app told readers to
+run a script it never showed them how to create. Here, it **handed them a snippet the doc
+explicitly calls half-written, without saying so** — one panel after four reveal facets
+established that actions return their failures precisely so callers can render them. A
+reader who pasted it would ship a Retry button that silently does nothing on failure.
+
+So: when you dispatch the walk, forbid the planning documents by name. And expect a fix wave
+after it, not a signature — nine of the ten were real, and the wave itself then dropped a
+sentence, which is the section above.
+
+**The tenth is worth its own warning.** It was recorded as a deferred cross-stage question,
+on the strength of one check: the auditor said two sentences were missing, the controller
+looked at one other stage, found the same silence, and generalised it into a convention. All
+three claims in that deferral were wrong. Three stages carry the content verbatim, and the
+question had already been decided months earlier by a numbered decision that had measured
+the identical evidence and reached the opposite conclusion. See `decisions-need-tests-101.md`
+— the decision was findable, and what made it invisible was that the code enforcing it
+explained its reasoning without citing its number.
+
+---
+
+## One running example teaches a list of abstract steps better than one example per step
+
+Building the `sdlc` reference sheet (2026-08-25). The first pass gave each of the seven
+SDLC phases its own definition plus its own "typical output" — a list of artifact *types*
+per phase (a requirements doc, an architecture diagram, a test plan). Accurate, and still
+something a reader with no domain background has to already half-know in order to fill in:
+naming that Design produces "an architecture diagram" does not show what decision that
+diagram actually settles.
+
+The fix was not more detail per phase — it was **one small scenario carried through all
+seven**, so each phase's abstract definition became something concrete, and so a reader
+could see one phase's output become the next phase's input rather than seven disconnected
+facts: a Planning-phase risk (could the reset flow itself leak which emails exist)
+becomes a Requirements-phase non-functional requirement (a reset request must look
+identical either way), which forces a specific Design-phase schema decision (store a
+hashed token, never the token), which Development builds as reviewable pieces, which
+Testing has a named case for, which Deployment ships behind a flag, and which Maintenance
+is still fixing months later as a DNS record rather than a code change.
+
+**The continuity is the teaching, not the individual facts.** Seven independent examples
+would each be accurate in isolation and would not show a reader *why* the phases are
+phases of one thing rather than seven unrelated checklists — which is the entire claim
+this playbook's stage numbering rests on (`CLAUDE.md`: "stage numbers are filing codes,
+not a sequence"). Reach for one thread run start to finish before reaching for one example
+per bullet, anywhere a list of steps is claiming to be a single process rather than seven
+separate ones.
+
+---
+
+## A panel split breaks the median comparison, not the completeness guard underneath it
+
+Added after the stage 06 port (W-3.6, 2026-08-27). The "Ask what the doc teaches" section
+above treats a stage's median panel weight as a signal: measuring well under a comparable
+stage's median meant content had gone missing, at stage 04. Stage 06 is the case where
+that same signal points the wrong way.
+
+Late in the round, one panel (`done`) measured 4.69 screens against the 4.0 ceiling and was
+split into two. Splitting does not delete a sentence — it moves some of them into a second
+panel — so the stage's *median* panel weight dropped, from 3.48 before the split to 2.74
+after, purely from the split, with every clause of content still present. A stage reading
+light on this measure after hitting the ceiling and splitting will always look lighter than
+an equally deep stage that never needed to.
+
+**The metric has decoupled from what it was built to measure.** It answers "how much has
+this stage been chopped to fit a panel," not "how much content is here" — the two only
+agree when nothing has ever needed splitting. Trust panel weight as a shape-and-pacing
+smell, worth a look when it is unusually low *and* nothing has split. The coverage walk
+described earlier in this file is the check that still answers the completeness question
+directly, and it is now the only one that does once a stage has any split panels in it.
+
+---
+
+## A doc-pin regex has to survive a hard line-wrap, and two instances means stop and sweep
+
+Added after the stage 06 port. `docs/NN-*.md` hard-wraps prose at roughly 80 columns, so a
+sentence a test wants to pin often crosses a line break the source file has and the reader
+never sees. A regex built from the sentence as written fails against the file as stored.
+
+It hit three times, each slightly different:
+
+- A dotAll (`s`) flag on a doc-anchored regex — this project targets ES2017, and `tsc`
+  rejects the flag outright (`TS1501`), so the first instance failed typecheck rather than
+  the test. The fix already existed for this: `flat(section(...))`, a helper that collapses
+  a section's whitespace before matching, built for exactly this problem.
+- A single-space regex matching "between the layers / rather than inside them" — no flag
+  to reject, so this one failed silently as a test, not loudly as a type error, on the same
+  doc's own hard wrap two files later.
+- The identical shape a third time, on a different sentence, found **by sweeping the
+  remaining tasks after the second instance** rather than by an implementer hitting it.
+
+**Two instances of one defect family is the signal to sweep the remaining work, not to
+patch the instance in front of you.** The first fix closed one file. The second fix closed
+a Global Constraint and every task still ahead — which is what caught the third instance
+before anyone wrote the test that would have failed on it. Waiting for a third occurrence
+to justify the sweep means paying for the sweep and the instance both.
+
+---
+
+## Tailwind v4 token naming is not what you expect
+
+Added after the stage 07 port (W-3.7, 2026-08-28). The plan specified `border-rule` and
+`bg-surface-sunken` across eight instances in three drill components. Neither class exists.
+
+The project's Tailwind v4 theme (`@theme inline` in `globals.css`) maps
+`--color-line: var(--rule)` and `--color-sunken: var(--sunk)`. The generated utility
+classes are `border-line` and `bg-sunken` — the names come from the `@theme` keys, not
+from the CSS custom property names they reference. `--rule` is a custom property value;
+`line` is the token name Tailwind sees. Writing `border-rule` is guessing at the indirection
+rather than reading the theme.
+
+None of the eight per-task reviews caught it. The e2e audit checks contrast and overflow,
+not token validity — a class that produces no styling simply falls through to the browser's
+default, which happens to be `currentColor` for borders (close enough to look right in light
+mode) and transparent for backgrounds (invisible on the code blocks). Only the final
+whole-branch review, reading the diff against `globals.css`, found it.
+
+**Check the generated utility class name against `globals.css`'s `@theme` block before
+writing it into a plan.** A plan that specifies wrong tokens infects every task that
+transcribes it, and the per-task review's scope is too narrow to notice the theme is never
+consulted.
+
+---
+
+## The three-file registration trace is one atomic operation
+
+Added after the stage 07 port. The plan's Task 2 (scaffold) prescribed adding
+`'07-code-review'` to `STEP_IDS_BY_SLUG` in `step-ids.ts`, six tasks before the content
+component existed. `rails.test.tsx` iterates every entry in `STEP_IDS_BY_SLUG` and requires
+a matching `STAGE_CONTENT[slug]` — so the test broke immediately.
+
+The three-file registration trace described in `CLAUDE.md` — `stages.ts` (`ready: true`),
+`stage-content.ts` (the component), `step-ids.ts` (the step IDs) — is really one atomic
+operation. Splitting it across tasks means one of the intermediate states fails a test that
+guards the invariant the trace exists to maintain.
+
+**Register all three in the assembly task, not the scaffold.** The scaffold creates
+`steps.ts` (the tuple and the type), which is an internal export later tasks import
+directly. `STEP_IDS_BY_SLUG` is the cross-stage registry, and it should move in lockstep
+with the component it references.
+
+---
+
+## An always-rendered score region breaks consistency, and the test should change instead
+
+Added after the stage 07 port. The plan's drill components guarded the score display behind
+`{answered > 0 && (...)}`, matching `TriageDrill` from stage 06. Three independent
+implementers changed it to always render `0/0 right` because their render tests needed to
+find the `aria-live` region before any picks.
+
+The tests were looking for the score element on initial render. `TriageDrill`'s test does
+not do this — it checks `aria-live` after the first pick, when the element exists. The
+implementers took the path of least resistance: change the component to satisfy the test
+rather than change the test to match the established pattern. The result is three exercises
+showing "0/0 right" on first load while every other exercise in the app shows nothing.
+
+**When a test forces a component change that creates a UX inconsistency, change the test.**
+The aria-live assertion should fire after a pick, not before — that is when the score
+element has something to announce. The established pattern (`TriageDrill`) already does this
+correctly, and the whole point of having a pattern is that the instances match it.
+
+---
+
+## An AI plays section with only workflow philosophy feels incomplete
+
+Added after the stage 07 port (W-3.7, 2026-09-01). The initial AI plays section had five
+plays — all about the human+AI workflow (AI as first pass, human for judgment, heightened
+scrutiny). On manual review the section felt thin: a reader who agreed with the philosophy
+still did not know which button to press.
+
+The fix was four concrete tool plays: `/code-review` (five effort levels, `--fix`
+auto-applies), `/security-review` (dedicated security pass), `/code-review ultra`
+(multi-agent deep review), and PR review bots (CodeRabbit, Copilot, Greptile). The
+section went from five abstract plays to nine mixing philosophy with actionable
+commands.
+
+**Every AI plays section needs at least one "run this command" play.** The philosophy
+plays tell the reader how to think about AI review; the tool plays tell them what to
+type. Without the second kind, the section reads as an opinion piece rather than a
+reference a working developer consults between PRs.

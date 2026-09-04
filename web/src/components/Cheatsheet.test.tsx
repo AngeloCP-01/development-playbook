@@ -150,3 +150,72 @@ test('renders no graphic for a sheet whose source is text-only', () => {
   render(<CheatsheetView sheet={drawn} />)
   expect(document.querySelector('img')).toBeNull()
 })
+
+// A principle sheet's whole point is showing the violation next to the fix —
+// prose alone is what design-principles content used to be limited to before
+// Row.example existed.
+test('renders a labelled code example when a row has one', () => {
+  const withExample: Cheatsheet = {
+    ...drawn,
+    sections: [
+      {
+        title: 'Single Responsibility',
+        rows: [
+          {
+            term: 'One reason to change',
+            what: 'A class should have only one responsibility.',
+            example: [
+              {
+                label: 'Violation',
+                code: 'class UserManager {\n  saveUser() {}\n  sendEmail() {}\n}',
+              },
+              {
+                label: 'Correct',
+                code: 'class UserRepository {\n  saveUser() {}\n}',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  }
+  render(<CheatsheetView sheet={withExample} />)
+  expect(screen.getByText('Violation')).toBeTruthy()
+  expect(screen.getByText('Correct')).toBeTruthy()
+  expect(screen.getByText(/class UserManager/)).toBeTruthy()
+  expect(screen.getByText(/class UserRepository/)).toBeTruthy()
+})
+
+test('renders no example block for a row that has none, since most rows do not carry code', () => {
+  render(<CheatsheetView sheet={drawn} />)
+  expect(document.querySelector('pre')).toBeNull()
+})
+
+// Pre-rendered HTML is computed once at module load (src/lib/highlight.ts),
+// not in the render path — this only asserts the component uses it when
+// present, not that highlighting itself is correct (highlight.test.ts does).
+test('renders the pre-highlighted markup when an example carries it, instead of plain text', () => {
+  const withHighlightedExample: Cheatsheet = {
+    ...drawn,
+    sections: [
+      {
+        title: 'Section',
+        rows: [
+          {
+            term: 'Row',
+            what: 'What.',
+            example: [
+              {
+                label: 'Violation',
+                code: 'class Foo {}',
+                html: '<pre class="shiki"><code><span class="line"><span data-testid="hl-token">class</span></span></code></pre>',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  }
+  render(<CheatsheetView sheet={withHighlightedExample} />)
+  expect(screen.getByTestId('hl-token')).toBeTruthy()
+})

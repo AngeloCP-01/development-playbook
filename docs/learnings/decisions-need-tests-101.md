@@ -131,3 +131,149 @@ and they merge as one unit — plus a continuously updated coverage map
   defects *hide*. `terms.ts` defined `Authorization` with the exact defect three tracker
   entries and a cold-reader pass were trying to fix in prose, because all of them were reading
   prose. Grep the source when you fix a concept.
+
+---
+
+## A recorded diagnosis decays the same way, and nothing marks the day it stops being true
+
+This guide is about conventions that decay without a mechanical check. A debt entry's
+**diagnosis** decays for the same reason and is more dangerous, because it reads as
+finished work.
+
+Four High-severity debts were closed in one round. Three of the four were wrong about
+themselves.
+
+The clearest was TD-32. Its entry said, in bold: *"Turbopack does not re-evaluate `env.ts`
+when `.env.local` changes."* It was closing a defect in a teaching document, so that
+sentence was about to become a paragraph a reader would follow.
+
+Running it took twenty minutes and disproved it. Turbopack **does** re-evaluate, in the
+same process, with no restart. What misleads is a window one request wide: the request that
+lands before the reload takes effect is answered by the evaluation already in memory and
+returns 200; every one after returns 500. Four trials, deterministic, on two Next versions.
+
+```
+trial 1 | healthy=200 | after blanking: 200 500 500 500 500 500
+trial 2 | healthy=200 | after blanking: 200 500 500 500 500 500
+trial 3 | healthy=200 | after blanking: 200 500 500 500 500 500
+```
+
+Both the entry and the corrected paragraph tell the reader to restart, so a reader following
+either one ends up in the right place. That is exactly why this is worth a section: **the
+instruction was right and the reason was wrong, and only the reason transfers.** A reader
+told "Turbopack never re-evaluates" carries a false model into their next framework. A
+reader told "the validation runs once at module evaluation, so re-testing it means causing
+another one, and until that finishes the old evaluation answers" can work out what to do
+anywhere.
+
+### Why the entries were wrong, which generalises further than these four
+
+They are not sloppy. They are the most careful records this project keeps, with measured
+numbers and named commits. Each was wrong for the same structural reason:
+
+**Every one was written from a single observation at the moment of discovery, and never
+re-run.** TD-32's entry admits it in its own text — *"Observed there and not re-run for
+this entry, which is why the restart is stated as the fix rather than as the only fix."*
+That sentence is doing real work: the author knew the exposure and wrote it down. It still
+took someone re-running the thing to convert the caveat into a correction.
+
+TD-26 failed differently and worth naming separately. Its `Closes with:` specified
+asserting a **pinned count** of expandables. A file written *after* that entry
+(`e2e/count-expandables.mjs`) records the count moving 108 → 140 in ten days with no defect
+in between, and says outright that the number is not a constant to assert against. Nobody
+reconciled the two. **A debt entry is a snapshot; the repo kept learning after it was
+written, and the entry did not.**
+
+### The rule
+
+**Before a recorded diagnosis becomes a deliverable, re-run it.**
+
+Not before quoting it in conversation, and not before ranking it. Before it turns into a
+paragraph in a document, a test's rationale, or a fix's design. The cost is minutes. The
+failure mode it prevents is publishing a mechanism that is not real, in the document the
+debt exists to correct.
+
+Two cheap habits that would have caught all three:
+
+- **Grep for anything written after the entry that touches the same subject.** The file
+  that contradicted TD-26 was sitting in the same directory as the code it described.
+- **Treat "not re-run" in an entry as a to-do, not a disclaimer.** It is the author telling
+  you where the soft ground is.
+
+Recorded as **D-50** for executable content, extended to recorded diagnoses as **D-85**.
+
+## A decision whose number is not written next to the code reads as a habit
+
+Added 2026-08-20, after this nearly reversed a decision that was right.
+
+A coverage audit found two sentences of `docs/05-development.md` missing from its app. The
+fix looked obvious: `stages.ts` has a `blurb` field, the doc has a `>` subtitle, sync them.
+Before proposing it, one other stage was checked — stage 04 — and its blockquote was not
+carried either. One check, generalised into "no stage carries this", recorded as a numbered
+decision, and taken to the user as a design with three options.
+
+All of it was wrong:
+
+- **Three stages carry it verbatim.** Stage 04 was the one stage that paraphrases, so the
+  grep that "confirmed" the rule had picked the single instance that hides it.
+- **The question was already decided.** **D-36** closed TD-2 in July on exactly this: the
+  blurb is "two purpose-built strings (doc subtitle vs UI tooltip) that diverge for 15/18 by
+  design", so the sync test covers the title only and doc-header generation was rejected.
+- **The evidence was identical.** The measurement that looked like drift — 15 of 18 — is the
+  same figure D-36 quotes as the reason the divergence is intentional.
+
+The design was approved and implementation had started before the decision surfaced.
+
+**What made it invisible is the transferable part.** The test file carried the reasoning:
+
+```ts
+// The blurb is deliberately NOT checked: the doc's `>` line is a prose subtitle
+// and stages.ts's `blurb` is a UI tooltip/header string ...
+```
+
+Accurate, well-argued, and it stopped nobody — because reasoning in a comment reads as one
+engineer's opinion, and an opinion is something a later reader will improve on. The same
+sentence ending in `(D-36)` reads as a ruling with a paper trail, and the natural next move
+becomes "read D-36" rather than "write the sync test".
+
+Two habits follow:
+
+- **Cite the decision number in the code it constrains.** Not the argument instead of the
+  number — the argument *and* the number. `decisions-need-tests-101` is about decisions
+  that cannot be checked; this is the narrower case where the check exists, the reasoning
+  exists, and only the provenance is missing.
+- **A negative confirmed once is not confirmed.** "I looked and it wasn't there" is a sample
+  of one. When a check is about to become a rule, sample until you find the counter-example
+  or run out of instances. Here there were seventeen other stages and the answer was in the
+  first three.
+
+This is the second time this project has generalised from one silence — **D-73** records the
+first, where one document's omission was read as the framework's behaviour. Both times the
+controller did the generalising, and both times a written record already held the answer.
+
+## A merge status is a claim about git, and only git can confirm it
+
+Stage 06 (Testing) shipped and merged to `develop` on 2026-08-27. `docs/task.md`'s W-3 line
+and `docs/tracker.md`'s own evidence row for that round both still read "not yet merged" —
+written, presumably, in the window between the branch finishing and the merge landing, and
+never revisited afterward. A new session opened the next day, read those two files, and
+started a follow-on round believing the same thing: chosen, not built.
+
+**The record did not just go stale — it was actively contradicted by evidence already
+sitting one command away.** `git log --oneline -5` puts the merge commit on screen; nobody
+ran it, because the two files that exist specifically to answer "what's the state of this
+project" both agreed with each other. Two wrong sources confirming each other reads as
+corroboration and is really the same mistake counted twice.
+
+It was caught by accident, not by process — an unrelated `git log` during the new round
+surfaced a commit subject that did not match what the session believed. Once looked for,
+`git merge-base --is-ancestor <merge-sha> develop` confirmed it in one line.
+
+**The generalisation:** a status claim about git state (merged, pushed, deployed) is not
+a fact to record and reuse — it is a query to re-run. `KICKOFF.md` already says this about
+commit SHAs ("derive every position rather than reading one here") and treats
+`git log --oneline -1 develop origin/develop main origin/main` as the source of truth over
+its own prose. The same discipline did not extend to `docs/task.md` and `docs/tracker.md`,
+which is exactly the gap this round fell into. **Before trusting "merged" or "not merged"
+anywhere, check the branch it names against git directly** — the same one-line habit
+`branch-discipline-101.md` asks for before committing applies just as well before reading.

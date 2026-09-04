@@ -68,7 +68,7 @@ export const STAGES: Stage[] = [
     blurb: 'The loop you run dozens of times a day.',
     group: 'Building',
     timing: 'Continuously.',
-    ready: false,
+    ready: true,
   },
   {
     num: '06',
@@ -78,7 +78,7 @@ export const STAGES: Stage[] = [
     blurb: 'Enough confidence to change code without fear.',
     group: 'Building',
     timing: 'During development — usually before the code.',
-    ready: false,
+    ready: true,
   },
   {
     num: '07',
@@ -88,7 +88,7 @@ export const STAGES: Stage[] = [
     blurb: 'A deliberate second look before code becomes permanent.',
     group: 'Building',
     timing: 'Before every merge.',
-    ready: false,
+    ready: true,
   },
   {
     num: '08',
@@ -140,7 +140,7 @@ export const STAGES: Stage[] = [
       'See the change running as a real build before anyone who matters can reach it.',
     group: 'Shipping',
     timing: 'Automatically, on every pull request.',
-    ready: false,
+    ready: true,
   },
   {
     num: '13',
@@ -150,7 +150,7 @@ export const STAGES: Stage[] = [
     blurb: 'Shipping should be routine, reversible, and boring.',
     group: 'Shipping',
     timing: 'On every merge to main, several times a day.',
-    ready: false,
+    ready: true,
   },
   {
     num: '14',
@@ -160,7 +160,7 @@ export const STAGES: Stage[] = [
     blurb: 'The deploy is not finished when it succeeds.',
     group: 'Shipping',
     timing: 'The ten minutes after every production deploy.',
-    ready: false,
+    ready: true,
   },
   {
     num: '15',

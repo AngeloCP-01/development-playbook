@@ -243,6 +243,31 @@ export const TERMS: Record<string, Term> = {
       'It lets anyone see the change running as a real build before it merges, which catches what a local dev server cannot.',
     see: '12-staging',
   },
+  'staging-environment': {
+    name: 'Staging environment',
+    short: 'A single long-lived deployment tracking a shared branch.',
+    full: 'A persistent deployment at a stable URL, usually tracking a shared branch like staging or develop. Unlike a preview deployment, it is not per-branch or ephemeral.',
+    soWhat:
+      'Solo, you usually do not need one. Preview deployments cover the need. Add staging only when something concrete demands a stable URL — a third-party integration, a stakeholder demo, or a sandbox account with an external provider.',
+    see: '12-staging',
+  },
+  'database-branching': {
+    name: 'Database branching',
+    short: 'A copy-on-write database clone created per preview deployment.',
+    full: 'An isolated database branch (e.g. via Neon) that starts as a copy of the production schema and data. Changes in the branch do not touch the parent. Created automatically per preview deployment and cleaned up when the Git branch is deleted.',
+    soWhat:
+      'It lets you run destructive migrations, seed hostile data, and delete everything with a production-shaped dataset and no risk to production. The single highest-value technique in the staging stage.',
+    see: '12-staging',
+  },
+  'deployment-protection': {
+    name: 'Deployment protection',
+    short:
+      'Authentication on preview URLs so they are not publicly accessible.',
+    full: 'A setting (e.g. Vercel Deployment Protection) that requires authentication before a preview URL loads. Preview URLs are unlisted, not secret — they end up in Slack, issue trackers, and occasionally search indexes.',
+    soWhat:
+      'If the product is not public yet or previews touch anything sensitive, protection keeps casual visitors out. For CI, a bypass secret lets Playwright reach the page without a login.',
+    see: '12-staging',
+  },
   'production-grade': {
     name: 'Production-grade',
     short: 'Someone other than you depends on it working.',
@@ -308,6 +333,14 @@ export const TERMS: Record<string, Term> = {
     full: 'A description of the system in entities and relationships — a user has many clients, a client has many invoices — written in the language of the problem rather than the language of the database. Tables come after, as one way of storing it.',
     soWhat:
       'It is the decision that outlives every framework choice, because migrating code is easy and migrating data is not. Getting it wrong is the most expensive kind of wrong available before you have users.',
+  },
+  'deployment-circuit-breaker': {
+    name: 'Deployment circuit breaker',
+    short: 'Auto-rollback when new tasks repeatedly fail health checks.',
+    full: 'An ECS feature that monitors new tasks during a rolling deployment. If they repeatedly fail to reach a healthy state, ECS stops the deployment and rolls back to the last successful revision. Without it, a bad image loops through start-crash-restart indefinitely.',
+    soWhat:
+      'A safety net that turns a silent failure into an automatic recovery. Enable it on every ECS service with rollback: true.',
+    see: '13-production-deployment',
   },
   'derived-state': {
     name: 'Derived state',
@@ -408,6 +441,15 @@ export const TERMS: Record<string, Term> = {
     full: 'A property of an operation: running it repeatedly with the same input leaves the system in the same state as running it once. Usually achieved by having the caller supply a key, and recording which keys have already been processed.',
     soWhat:
       'Anything that can be retried will eventually be retried, and anything delivered over a network will eventually arrive twice. Without it, a payment webhook that fires twice charges twice — and the second delivery is not a bug you can fix on your side.',
+  },
+  'blue-green-deployment': {
+    name: 'Blue/green deployment',
+    short:
+      'Running two identical environments and switching traffic between them.',
+    full: 'A deployment strategy where two complete environments (blue and green) run in parallel. The new version deploys to the idle environment, gets verified, then traffic switches from the active to the idle. Rollback is switching back.',
+    soWhat:
+      'The trade-off is infrastructure cost — you need capacity for both environments during the switch — in exchange for instant, zero-downtime rollback during the bake window.',
+    see: '13-production-deployment',
   },
   'bounded-context': {
     name: 'Bounded context',
@@ -618,6 +660,199 @@ export const TERMS: Record<string, Term> = {
     full: 'Availability, correctness, auditability, latency, security, cost to run — the qualities a design has to satisfy, separate from the features it delivers. Richards and Ford call them architecture characteristics; most job descriptions and specifications call the same thing non-functional requirements. One idea, two vocabularies.',
     soWhat:
       'They trade against each other, so a list of twenty is a list of none — high availability costs money, strong auditability costs write throughput, and cheap-to-run costs both. Three or four chosen deliberately are what turn a structural decision into something you can defend; without them, picking an architecture is picking a preference.',
+  },
+  'server-component': {
+    name: 'Server Component',
+    see: '05-development',
+    short:
+      'The default kind of component under the App Router — it renders on the server and never ships its own code to the browser.',
+    full: 'A component that runs during the request, with direct access to whatever the server can reach — a database, a filesystem, a secret. It sends the browser only the HTML it produced; its own source never becomes part of the JavaScript bundle.',
+    soWhat:
+      'It is why a page can query a database with no API route in between: the component and the data live on the same side of the network, so there is nothing to call across.',
+  },
+  'client-component': {
+    name: 'Client Component',
+    see: '05-development',
+    short:
+      'A component whose file opens with the ‘use client’ directive, so it can hold state and respond to clicks.',
+    full: 'A component marked ‘use client’. It still renders once on the server to produce the page’s first HTML, then ships its own code to the browser and takes over there — which is what lets it hold state, run event handlers, and read something like window.',
+    soWhat:
+      'The directive marks a boundary, not a location: everything the marked file imports and renders is pulled into the client bundle along with it, so where the boundary sits decides how much JavaScript the page ships — not whether the page is blank before that JavaScript arrives.',
+  },
+  'server-action': {
+    name: 'Server Action',
+    see: '05-development',
+    short:
+      'A function marked ‘use server’ that runs on the server but is called like an ordinary function from the client.',
+    full: 'A function whose file or body opens with the ‘use server’ directive. Next.js turns it into a public HTTP endpoint behind the scenes, wires it to a form’s action or a plain click handler, and lets the calling code write it as though it were an ordinary async function.',
+    soWhat:
+      'The resemblance to a normal function call is exactly what makes it risky: anyone who can reach the endpoint can call it, so it owes every caller the same authenticate–validate–authorize sequence a route handler would, however innocent the call site looks.',
+  },
+  'feature-flag': {
+    name: 'Feature flag',
+    see: '05-development',
+    short:
+      'A boolean your code checks before running a piece of work, defaulting to off.',
+    full: 'A boolean your code reads before doing something, set to off by default. Code sitting behind one can merge to the main branch without being reachable by anyone. An environment variable is enough to start; a dedicated flag service earns its keep only once you need to flip one without a deploy.',
+    soWhat:
+      'It is what keeps “smallest shippable slice” honest when a feature genuinely takes longer than two days end to end — the alternative is a long-lived branch, and those diverge, conflict, and stop being reviewable.',
+  },
+  zod: {
+    name: 'Zod',
+    see: '05-development',
+    short:
+      'A schema library that parses unknown input into a typed value, or fails.',
+    full: 'A TypeScript schema library used to parse data whose shape you cannot trust — an HTTP request body, an environment variable, a third-party API response — into a value the compiler can rely on. `schema.safeParse(input)` returns either the typed data or a list of what did not match, and nothing downstream sees the input until it has passed.',
+    soWhat:
+      'It is the difference between a type and a check. A TypeScript type disappears at runtime, so annotating unparsed input as a type only names a hope; Zod is the part that actually looks at the value before anything trusts it.',
+  },
+  'error-boundary': {
+    name: 'Error boundary',
+    see: '05-development',
+    short:
+      'A boundary that catches what throws below it and renders a fallback instead of a blank page.',
+    full: 'A segment marked by a file like `error.tsx` in the App Router. It catches an unhandled throw from anything it wraps and renders a fallback in place of the crashed subtree, rather than taking the whole page down. It has to be a Client Component — one of the few places the directive is not a choice.',
+    soWhat:
+      'It is for the unexpected only. A failure you can already name — an invalid amount, a record that is not the caller’s — belongs in a Server Action’s return value instead, because the reader needs the actual message, not a generic retry button.',
+  },
+  rebase: {
+    name: 'Rebase',
+    see: '05-development',
+    short:
+      'Replay a branch’s commits on top of the latest target branch, so history reads in a straight line.',
+    full: 'Move a branch’s commits so they start from the current tip of the branch it will merge into, rather than from wherever it happened to fork. Run before opening the pull request, so the diff a reviewer sees is the diff that will actually land.',
+    soWhat:
+      'A merge without it still works, but the history it leaves behind interleaves two branches’ commits by timestamp instead of by intent — exactly the record `git log` exists to be.',
+  },
+  mock: {
+    name: 'Mock',
+    see: '06-testing',
+    short: 'A stand-in for a real dependency that returns what you told it to.',
+    full: 'A stand-in for a real dependency — a database, an API — that returns exactly what you told it to, rather than what a real one would.',
+    soWhat:
+      'Mocking the database means your test asserts against your own instructions — it cannot see a constraint violation, a transaction bug, or a malformed query.',
+  },
+  'test-fixture': {
+    name: 'Test fixture',
+    see: '06-testing',
+    short: 'The known starting state a test runs against.',
+    full: 'The known starting state a test runs against — seeded rows, a database reset to a clean slate before the run starts.',
+    soWhat:
+      'Without a reset between tests, tests pass in one order and fail in another, and the failure looks like a bug in the code rather than in the setup.',
+  },
+  'regression-test': {
+    name: 'Regression test',
+    see: '06-testing',
+    short: 'A test written to reproduce a specific bug.',
+    full: 'A test written to reproduce a specific bug, which must fail before the fix lands and pass after.',
+    soWhat:
+      'Skipping it means you cannot prove the fix works, and nothing stops the same bug coming back.',
+  },
+  'invariant-test': {
+    name: 'Invariant test',
+    see: '06-testing',
+    short: 'A test asserting the shape of data rather than its values.',
+    full: 'A test asserting the shape of data rather than its values — counts, uniqueness, cross-references between files, rather than what any one field contains.',
+    soWhat:
+      'It fires exactly when a human is hand-editing a config or data file, which is the moment reviews are at their weakest.',
+  },
+  'teeth-check': {
+    name: 'Teeth check',
+    see: '06-testing',
+    short:
+      'Deliberately breaking the implementation to confirm a test fails, then restoring it.',
+    full: 'Deliberately breaking the implementation a test covers to confirm the test actually fails, then restoring the code.',
+    soWhat:
+      'A test written after the code it covers has never been red, so a green result proves nothing until you have seen it bite.',
+  },
+  'code-coverage': {
+    name: 'Code coverage',
+    see: '06-testing',
+    short: 'The percentage of lines or branches a test suite executes.',
+    full: 'The percentage of lines or branches a test suite executes when it runs.',
+    soWhat:
+      'Useful as a diagnostic, useless as a target — a blanket threshold is satisfied by testing whatever is easiest, which is rarely whatever is riskiest.',
+  },
+  'flaky-test': {
+    name: 'Flaky test',
+    see: '06-testing',
+    short: 'A test that passes and fails on the same code.',
+    full: 'A test that passes and fails on the same code, with nothing about the code itself changing between runs.',
+    soWhat:
+      'On a team it gets tolerated because everyone assumes someone else owns it, and once a suite is known to be unreliable a real failure stops being believed.',
+  },
+  'accessible-name': {
+    name: 'Accessible name',
+    see: '06-testing',
+    short: 'The name assistive technology reports for an element.',
+    full: 'The name assistive technology reports for an element — usually its visible text or its label.',
+    soWhat:
+      'Selecting by it in an E2E test means the test breaks when what the user sees changes and not when the styling does, and it makes an inaccessible UI produce failing tests.',
+  },
+  'rolling-deployment': {
+    name: 'Rolling deployment',
+    short: 'Replacing instances of the old version one at a time.',
+    full: 'A deployment strategy where new tasks start alongside old tasks, pass health checks, and then old tasks drain. On ECS, governed by minimumHealthyPercent and maximumPercent.',
+    soWhat:
+      'The simplest strategy and the ECS default. No extra infrastructure, but rollback means deploying the previous version forward — there is no instant switch back.',
+    see: '13-production-deployment',
+  },
+  'rubber-stamping': {
+    name: 'Rubber-stamping',
+    short: 'Approving a change without genuine review.',
+    full: 'Approving code changes without reading them carefully — clicking "approve" based on green CI, a clean-looking diff, or trust in the author rather than on what the code actually does.',
+    soWhat:
+      'The merge gate exists to catch what the author missed. Bypassing it means defects reach production with two names on them.',
+    see: '07-code-review',
+  },
+  provenance: {
+    name: 'Provenance (review)',
+    short:
+      'Tracking whether a finding was introduced, pre-existing, or plan-authored.',
+    full: 'A tag on a review finding that says where the defect came from: new in this PR, already present in the codebase (PRE-EXISTING), or introduced by the plan itself (PLAN-AUTHORED ERROR). The distinction changes who fixes it and whether it blocks this merge.',
+    see: '07-code-review',
+  },
+  'finding-severity': {
+    name: 'Finding severity',
+    short:
+      'Critical / Important / Minor / Nit classification for review comments.',
+    full: 'A label on every review comment that tells the author what blocks the merge and what does not. Critical means data loss or security breach. Important means a bug the user will hit. Minor is real but non-blocking. Nit is polish.',
+    soWhat:
+      'Without labels, every comment reads as a same-weight demand and reviews turn adversarial.',
+    see: '07-code-review',
+  },
+  'self-review': {
+    name: 'Self-review',
+    short: 'Reviewing your own code with techniques to defeat cognitive bias.',
+    full: 'Deliberately breaking the state that makes reviewing your own code useless — you are still holding the intent, so you read what you meant rather than what you wrote. Three techniques: create distance, read the diff not the code, and explain it out loud.',
+    see: '07-code-review',
+  },
+  baseline: {
+    name: 'Baseline',
+    short:
+      'The normal error rate and latency before a deploy, used to judge whether a change made things worse.',
+    full: 'The normal error rate, latency, and traffic volume before a deploy. Without one, post-deploy numbers are unreadable — 12 errors in the last hour could be a catastrophe or a Tuesday.',
+    soWhat:
+      'A deploy without a baseline is a deploy you cannot verify. You will either panic at nothing or ignore something real.',
+    see: '14-post-deployment-verification',
+  },
+  'bake-time': {
+    name: 'Bake time',
+    short:
+      'A waiting period after deployment during which CloudWatch alarms are monitored before the deploy is marked complete.',
+    full: 'A period after new ECS tasks go healthy during which CloudWatch alarms are monitored. If an alarm fires during the bake window, the deployment is marked FAILED and can auto-rollback. If no alarm fires, the deployment is marked COMPLETED.',
+    soWhat:
+      'Too short a bake time means slow-onset problems — memory leaks, cache expiration bugs — slip through and the deployment is marked healthy with a live defect.',
+    see: '14-post-deployment-verification',
+  },
+  'deployment-alarm': {
+    name: 'Deployment alarm',
+    short:
+      'A CloudWatch alarm wired to an ECS deployment that can trigger automatic rollback.',
+    full: 'A CloudWatch alarm attached to an ECS deployment configuration. ECS polls these alarms during the bake period after new tasks go healthy. Key metrics: HTTPCode_ELB_5XX_Count, TargetResponseTime, CPUUtilization, MemoryUtilization.',
+    soWhat:
+      'Without deployment alarms, ECS reports success based on task health checks alone. A service can be healthy (tasks running, health checks passing) while throwing 5XX errors to users.',
+    see: '14-post-deployment-verification',
   },
 }
 

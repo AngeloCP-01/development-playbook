@@ -110,6 +110,15 @@ export function RevealList({
                       which JSX runtime compiled this file. `Fragment` adds no
                       DOM node, so the string-title branch renders
                       byte-identically to before.
+
+                      TD-43 later found the mechanism this note could only
+                      attribute to the bundler, in `Stepper` and on the same
+                      warning: a server-built node crossing the RSC boundary
+                      can arrive wrapped in two lazies, and React's exemption
+                      unwraps one while its check unwraps all of them. That is
+                      a second way to reach `key == null` with no exemption,
+                      which is why keying the slot is the fix in both places.
+                      `docs/verification/td-43-lazy-key-warning.md`.
                     */}
                     <span className="flex flex-wrap items-center gap-2">
                       {typeof row.title === 'string' ? (

@@ -7,14 +7,34 @@
  * reference/glossary.md (D-36). That is also what keeps every row searchable
  * later — a diagram of the same content would not be.
  */
-export type CheatsheetGroup = 'Architecture' | 'Git' | 'Standards' | 'Languages'
+export type CheatsheetGroup =
+  'Architecture' | 'Design Principles' | 'Git' | 'Standards' | 'Languages'
 
 export const CHEATSHEET_GROUPS: CheatsheetGroup[] = [
   'Architecture',
+  'Design Principles',
   'Git',
   'Standards',
   'Languages',
 ]
+
+/**
+ * A labelled code snippet, for a row where prose alone does not show the
+ * thing being named — a principle's violation next to its correction, mainly.
+ * Deliberately not markdown or a language field: this repo's rows are short
+ * enough that mono text and a label carry the same information without
+ * needing a syntax highlighter for a handful of sheets.
+ */
+export type RowExample = {
+  label: string
+  /** Plain text — the copy-paste source of truth, and what render.ts's
+   *  generated markdown quotes. */
+  code: string
+  /** Pre-rendered syntax-highlighted markup, computed once at module load
+   *  (see src/lib/highlight.ts) rather than in the render path. Optional so a
+   *  future non-TypeScript example can still ship as plain code. */
+  html?: string
+}
 
 export type Row = {
   /** Set in mono when present — a command, signature, or literal. */
@@ -25,6 +45,8 @@ export type Row = {
   what: string
   /** When you reach for it, which is the part a syntax list omits. */
   when?: string
+  /** Labelled code blocks — a violation next to its correction, typically. */
+  example?: RowExample[]
 }
 
 export type Section = {

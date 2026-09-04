@@ -137,6 +137,168 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: 'A per-flag argument for the compiler options this stage turns on without much justification, and for several it leaves out. The clearest short case for `noUncheckedIndexedAccess` being worth its first week of friction.',
     },
   ],
+  '05-development': [
+    {
+      title: 'Server and Client Components',
+      source: 'Next.js Docs',
+      url: 'https://nextjs.org/docs/app/getting-started/server-and-client-components',
+      adds: "The source for a claim this stage makes but does not walk through: a Server Component passed as `children` (or any other prop) to a Client Component is never pulled into that component's client module graph — it renders on the server and arrives as already-rendered output. Also the fuller decision list — state, browser APIs, secrets, bundle size — behind the one example shown here.",
+    },
+    {
+      title: 'How to think about data security in Next.js',
+      source: 'Next.js Docs',
+      url: 'https://nextjs.org/docs/app/guides/data-security',
+      adds: 'The framework’s own reasoning for authenticate-validate-authorize, not just this stage’s restatement of it: a Server Action is reachable by direct POST whether or not anything imports it, secured only by non-deterministic action IDs, which is why re-checking auth inside the action is load-bearing rather than defensive. Covers the IDOR framing by name and the case for returning only what the UI needs, both of which this stage’s `updateInvoice` follows without citing.',
+    },
+    {
+      title: 'Basic usage',
+      source: 'Zod Docs',
+      url: 'https://zod.dev/basics',
+      adds: 'The mechanics behind the one call this stage shows: `.parse` throws a `ZodError`, `.safeParse` returns a discriminated union instead, and `z.infer<>` is how the compiler-side type gets derived from the same schema rather than written twice. Worth reading before reaching for a refinement or a transform, neither of which this stage touches.',
+    },
+    {
+      title: 'Short-Lived Feature Branches',
+      source: 'trunkbaseddevelopment.com',
+      url: 'https://trunkbaseddevelopment.com/short-lived-feature-branches/',
+      adds: 'The origin of the two-day number this stage states as a rule, plus what it implies once a team exists: the branch-length limit holds regardless of team size, but trunk-based development itself stops meaning direct commits somewhere around fifteen people. Also lays out the rebase-vs-stash choice for catching a branch up before merging, which this stage names as “rebase before you open the pull request” without showing the alternative.',
+    },
+  ],
+  '06-testing': [
+    {
+      title: 'Write tests. Not too many. Mostly integration.',
+      source: 'Kent C. Dodds',
+      url: 'https://kentcdodds.com/blog/write-tests',
+      adds: 'The origin of weighting toward integration tests, argued against the classic pyramid rather than alongside it. Useful tension against this stage’s “many unit, some integration” distribution — read it for the case that a unit-heavy suite buys less confidence per test than this stage assumes.',
+    },
+    {
+      title: 'Locators',
+      source: 'Playwright Docs',
+      url: 'https://playwright.dev/docs/locators',
+      adds: 'The mechanics behind `getByRole` and accessible-name matching that this stage’s checkout test uses without explaining: how Playwright resolves a role and a name to one element, and the built-in auto-waiting that is the actual reason `waitForTimeout` is never necessary.',
+    },
+    {
+      title: 'Accessible name',
+      source: 'MDN Web Docs',
+      url: 'https://developer.mozilla.org/en-US/docs/Glossary/Accessible_name',
+      adds: 'How the browser actually computes the string a role selector matches against — visible text, then a label, then `aria-label` — which is the computation this stage’s “role and accessible name, never a class” line assumes the reader already knows.',
+    },
+    {
+      title: 'Mocks Aren’t Stubs',
+      source: 'Martin Fowler',
+      url: 'https://martinfowler.com/articles/mocksArentStubs.html',
+      adds: 'The classic breakdown this stage’s one line — “mocking the database tests your mock” — compresses into a sentence: the difference between a stub and a mock, state verification against behavior verification, and the classicist-versus-mockist split over how much of a system a test should replace.',
+    },
+  ],
+  '07-code-review': [
+    {
+      title: 'Best Practices for Code Review',
+      source: 'SmartBear / Cisco Systems',
+      url: 'https://smartbear.com/learn/code-review/best-practices-for-peer-code-review/',
+      adds: 'The canonical study: 2,500 reviews across 50 developers over 10 months. Source for the 200–400 LOC ceiling and the 60-minute session limit.',
+    },
+    {
+      title: 'How to do a code review',
+      source: 'Google Engineering Practices',
+      url: 'https://google.github.io/eng-practices/review/',
+      adds: 'Google’s minimalist severity system (Nit / Optional / FYI / unmarked) and the principle that every CL should leave the codebase better than it found it.',
+    },
+    {
+      title: 'Conventional Comments',
+      source: 'conventionalcomments.org',
+      url: 'https://conventionalcomments.org/',
+      adds: 'The label-decorated review comment format adopted by GitLab. Nine labels with blocking/non-blocking decorations.',
+    },
+    {
+      title: 'Expectations, Outcomes, and Challenges of Modern Code Review',
+      source: 'Bacchelli & Bird, ICSE 2013',
+      url: 'https://dl.acm.org/doi/10.5555/2486788.2486882',
+      adds: 'The Microsoft study showing knowledge transfer — not defect detection — is the primary actual outcome of review.',
+    },
+  ],
+  '12-staging': [
+    {
+      title: 'Preview Deployments',
+      source: 'Vercel Docs',
+      url: 'https://vercel.com/docs/deployments/environments#preview-environment-pre-production',
+      adds: 'The mechanics this stage teaches: how preview URLs are generated, what environment variables they inherit, and the deployment lifecycle.',
+    },
+    {
+      title: 'Database Branching',
+      source: 'Neon Docs',
+      url: 'https://neon.com/docs/introduction/branching',
+      adds: 'The highest-value technique in this stage. Goes deeper on copy-on-write semantics, parent-child relationships, and the cost model.',
+    },
+    {
+      title: 'Deployment Protection',
+      source: 'Vercel Docs',
+      url: 'https://vercel.com/docs/deployment-protection',
+      adds: 'Authentication options for preview URLs, including the automation bypass secret that lets Playwright reach protected pages in CI.',
+    },
+  ],
+  '13-production-deployment': [
+    {
+      title: 'Instant Rollback',
+      source: 'Vercel Docs',
+      url: 'https://vercel.com/docs/instant-rollback',
+      adds: 'The rollback mechanics this stage teaches — UI and CLI flows, eligible deployments, the auto-assignment caveat, and the undo flow.',
+    },
+    {
+      title: 'Skew Protection',
+      source: 'Vercel Docs',
+      url: 'https://vercel.com/docs/skew-protection',
+      adds: 'The version-skew problem in depth: how deployment-ID-based cookie pinning works, maximum age, monitoring, and why mid-session users break without it.',
+    },
+    {
+      title: 'Expand and Contract Pattern',
+      source: 'Prisma Data Guide',
+      url: 'https://www.prisma.io/dataguide/types/relational/expand-and-contract-pattern',
+      adds: "The seven-step breakdown with diagrams and a worked example — stack-agnostic despite the Prisma framing, and deeper than this stage's three-deploy summary.",
+    },
+    {
+      title: 'Amazon ECS Deployment Strategies',
+      source: 'AWS Docs',
+      url: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-ecs.html',
+      adds: 'The rolling-update mechanics in full — minimumHealthyPercent/maximumPercent arithmetic, deployment circuit breaker thresholds, and unhealthy-task handling during deployments.',
+    },
+    {
+      title: 'Deployment Strategies',
+      source: 'AWS Whitepapers',
+      url: 'https://docs.aws.amazon.com/whitepapers/latest/introduction-devops-aws/deployment-strategies.html',
+      adds: 'The broader strategic landscape — in-place, immutable, and traffic-shifting categories — for a reader comparing AWS approaches beyond what ECS offers natively.',
+    },
+  ],
+  '14-post-deployment-verification': [
+    {
+      title: 'Smoke Testing',
+      source: 'AltexSoft',
+      url: 'https://www.altexsoft.com/blog/smoke-testing/',
+      adds: 'The smoke vs. sanity vs. regression distinction, and how to size a smoke suite (5–10 critical-path scenarios, unambiguous pass/fail).',
+    },
+    {
+      title: 'Post-Deployment Monitoring Checklist',
+      source: 'PingSLA',
+      url: 'https://pingsla.com/blog/post-deployment-monitoring-checklist/',
+      adds: 'A monitoring timeline (first 15–20 minutes at highest risk), alerting thresholds, and common failure patterns by frequency.',
+    },
+    {
+      title: 'How CloudWatch Alarms Detect ECS Deployment Failures',
+      source: 'AWS',
+      url: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-alarm-failure.html',
+      adds: 'How ECS watches CloudWatch alarms during the bake period and auto-rolls back when one fires.',
+    },
+    {
+      title: 'ECS Describe Services',
+      source: 'AWS CLI Reference',
+      url: 'https://docs.aws.amazon.com/cli/latest/reference/ecs/describe-services.html',
+      adds: 'The primary CLI command for checking rolloutState, deployment status, and service events after a deploy.',
+    },
+    {
+      title: 'Troubleshoot ECS Tasks Failing ALB Health Checks',
+      source: 'AWS re:Post',
+      url: 'https://repost.aws/knowledge-center/troubleshoot-unhealthy-checks-ecs',
+      adds: 'Diagnostic steps when ALB health checks fail post-deploy — the most common AWS-side verification failure.',
+    },
+  ],
 }
 
 export function getReferences(slug: string): Reference[] {

@@ -9,6 +9,8 @@ drift apart.
 
 ---
 
+**Accessible name** — The name assistive technology reports for an element — usually its visible text or its label. See [06 — Testing](../docs/06-testing.md).
+
 **ADR (Architecture Decision Record)** — A short record of a single architecture decision — the context, the choice, and the consequences — written when the decision is made and never edited afterward. Superseded by a new ADR rather than revised. See [03 — Architecture](../docs/03-architecture.md).
 
 **Appetite** — A fixed budget of time you are willing to spend, which the solution is then shaped to fit. An estimate starts with a design and ends with a number; an appetite starts with a number and ends with a design. See [02 — Product Planning](../docs/02-planning.md).
@@ -17,7 +19,13 @@ drift apart.
 
 **Authorization** — Distinct from authentication, which establishes who the caller is: authentication gets you a user id, authorization decides whether that user id may read invoice 42. Three patterns: ownership — the row carries the caller’s id and you compare them; role — the caller holds a role that grants the action, whoever owns the row; membership — the caller and the row belong to the same group. They combine, and one entity often needs two of them joined by an “and”: a manager may approve a claim only if they hold the manager role and the shift belongs to a team they belong to. See [03 — Architecture](../docs/03-architecture.md).
 
+**Bake time** — A period after new ECS tasks go healthy during which CloudWatch alarms are monitored. If an alarm fires during the bake window, the deployment is marked FAILED and can auto-rollback. If no alarm fires, the deployment is marked COMPLETED. See [14 — Post-Deployment Verification](../docs/14-post-deployment-verification.md).
+
+**Baseline** — The normal error rate, latency, and traffic volume before a deploy. Without one, post-deploy numbers are unreadable — 12 errors in the last hour could be a catastrophe or a Tuesday. See [14 — Post-Deployment Verification](../docs/14-post-deployment-verification.md).
+
 **Blast radius** — The reach of a change or a failure: how much of the system is affected when this one piece goes wrong. See [03 — Architecture](../docs/03-architecture.md).
+
+**Blue/green deployment** — A deployment strategy where two complete environments (blue and green) run in parallel. The new version deploys to the idle environment, gets verified, then traffic switches from the active to the idle. Rollback is switching back. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **Bounded context** — From domain-driven design: a section of the system with its own model, where the terms have a single agreed meaning. "Invoice" in billing and "invoice" in a customer-support view are often not the same object, and a bounded context is the admission that forcing them together costs more than keeping them apart. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -29,19 +37,33 @@ drift apart.
 
 **Circuit breaker** — A wrapper that counts consecutive failures, and once past a threshold stops attempting the call at all for a cooldown period, failing fast instead. After the cooldown it lets one request through to test whether the dependency recovered. See [03 — Architecture](../docs/03-architecture.md).
 
+**Client Component** — A component marked ‘use client’. It still renders once on the server to produce the page’s first HTML, then ships its own code to the browser and takes over there — which is what lets it hold state, run event handlers, and read something like window. See [05 — Development](../docs/05-development.md).
+
+**Code coverage** — The percentage of lines or branches a test suite executes when it runs. See [06 — Testing](../docs/06-testing.md).
+
 **Concierge test** — You do the work manually for a handful of real users — spreadsheets, emails, your own labour — while they experience the result as if it were a product.
 
 **Connection pooling** — A pooler sits between the application and the database, holding a limited number of real connections and multiplexing client requests onto them, instead of each caller opening its own. See [03 — Architecture](../docs/03-architecture.md).
 
 **CQRS (Command Query Responsibility Segregation)** — Splitting the write path and the read path so each can be shaped for its own job — writes validated against one model, reads served from another built for the queries the screens make. Often paired with event sourcing, though neither requires the other. See [03 — Architecture](../docs/03-architecture.md).
 
+**Database branching** — An isolated database branch (e.g. via Neon) that starts as a copy of the production schema and data. Changes in the branch do not touch the parent. Created automatically per preview deployment and cleaned up when the Git branch is deleted. See [12 — Staging](../docs/12-staging.md).
+
 **Database constraint** — NOT NULL, UNIQUE, CHECK, and foreign keys with their delete behaviour. Declared in the schema, so the database refuses to store a row that breaks them. See [03 — Architecture](../docs/03-architecture.md).
 
 **Definition of done** — A specific, checkable statement of what "done" means for a piece of work — a state you can hold the running product up against and confirm, yes or no. Every stage doc has one.
 
+**Deployment alarm** — A CloudWatch alarm attached to an ECS deployment configuration. ECS polls these alarms during the bake period after new tasks go healthy. Key metrics: HTTPCode_ELB_5XX_Count, TargetResponseTime, CPUUtilization, MemoryUtilization. See [14 — Post-Deployment Verification](../docs/14-post-deployment-verification.md).
+
+**Deployment circuit breaker** — An ECS feature that monitors new tasks during a rolling deployment. If they repeatedly fail to reach a healthy state, ECS stops the deployment and rolls back to the last successful revision. Without it, a bad image loops through start-crash-restart indefinitely. See [13 — Production Deployment](../docs/13-production-deployment.md).
+
+**Deployment protection** — A setting (e.g. Vercel Deployment Protection) that requires authentication before a preview URL loads. Preview URLs are unlisted, not secret — they end up in Slack, issue trackers, and occasionally search indexes. See [12 — Staging](../docs/12-staging.md).
+
 **Derived state** — Anything you could work out on demand — whether an invoice is overdue, how many items are in a cart, a running total — that is written into a column instead. Storing it means something has to keep it up to date. See [03 — Architecture](../docs/03-architecture.md).
 
 **Domain model** — A description of the system in entities and relationships — a user has many clients, a client has many invoices — written in the language of the problem rather than the language of the database. Tables come after, as one way of storing it. See [03 — Architecture](../docs/03-architecture.md).
+
+**Error boundary** — A segment marked by a file like `error.tsx` in the App Router. It catches an unhandled throw from anything it wraps and renders a fallback in place of the crashed subtree, rather than taking the whole page down. It has to be a Client Component — one of the few places the directive is not a choice. See [05 — Development](../docs/05-development.md).
 
 **Error budget** — The failure you have decided is acceptable over a window. A 99.9% uptime target is roughly a 43-minute monthly budget. Spending it is allowed — that is what a budget is for; exceeding it means stop shipping features and fix reliability. See [15 — Observability](../docs/15-observability.md).
 
@@ -59,7 +81,13 @@ drift apart.
 
 **Feasibility risk** — One of the standard product risks, alongside whether people want it and whether it makes business sense. It asks whether the technology, data, budget and time actually permit the solution. See [02 — Product Planning](../docs/02-planning.md).
 
+**Feature flag** — A boolean your code reads before doing something, set to off by default. Code sitting behind one can merge to the main branch without being reachable by anyone. An environment variable is enough to start; a dedicated flag service earns its keep only once you need to flip one without a deploy. See [05 — Development](../docs/05-development.md).
+
+**Finding severity** — A label on every review comment that tells the author what blocks the merge and what does not. Critical means data loss or security breach. Important means a bug the user will hit. Minor is real but non-blocking. Nit is polish. See [07 — Code Review](../docs/07-code-review.md).
+
 **Fitness function** — From evolutionary architecture: a test asserting a property of the system rather than a behaviour of a function. A rule that no module imports across a feature boundary, a build-size budget that fails the pipeline, an assertion that a page issues one query rather than forty. See [03 — Architecture](../docs/03-architecture.md).
+
+**Flaky test** — A test that passes and fails on the same code, with nothing about the code itself changing between runs. See [06 — Testing](../docs/06-testing.md).
 
 **Golden signals** — The four measurements to instrument before any others: latency, traffic, errors, and saturation. If you watch only four things, watch these. See [15 — Observability](../docs/15-observability.md).
 
@@ -70,6 +98,8 @@ drift apart.
 **Horizontal scaling** — Adding instances behind a load balancer so work spreads across them. The alternative, vertical scaling, is moving to a larger machine: simpler, requiring no statelessness, and eventually running out of machine. See [03 — Architecture](../docs/03-architecture.md).
 
 **Idempotency** — A property of an operation: running it repeatedly with the same input leaves the system in the same state as running it once. Usually achieved by having the caller supply a key, and recording which keys have already been processed. See [03 — Architecture](../docs/03-architecture.md).
+
+**Invariant test** — A test asserting the shape of data rather than its values — counts, uniqueness, cross-references between files, rather than what any one field contains. See [06 — Testing](../docs/06-testing.md).
 
 **Isolation level** — A per-transaction setting trading strictness against concurrency. Postgres defaults to read committed: you never see uncommitted rows, but you do see rows others commit while you are still running. Serializable behaves as though transactions ran one at a time, and aborts one when it cannot guarantee that. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -82,6 +112,8 @@ drift apart.
 **Merge gate** — The set of automated checks that must pass before code merges to the main branch. Distinct from deployment: the gate protects the branch, the deploy ships it. See [11 — CI/CD](../docs/11-ci-cd.md).
 
 **Microservices** — An architecture where services are deployed and scaled independently and communicate over the network. Each owns its own storage; sharing a database between services undoes most of what the split was for. See [03 — Architecture](../docs/03-architecture.md).
+
+**Mock** — A stand-in for a real dependency — a database, an API — that returns exactly what you told it to, rather than what a real one would. See [06 — Testing](../docs/06-testing.md).
 
 **Modular monolith** — A monolith whose features own their data and talk to each other through published functions rather than by reaching into each other’s tables. One process and one deploy, but the seams are real and maintained. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -117,9 +149,25 @@ drift apart.
 
 **Production-grade** — The state where someone other than you depends on the software working. It is about consequences, not scale: ten paying users make software production-grade; ten thousand on a toy do not.
 
+**Provenance (review)** — A tag on a review finding that says where the defect came from: new in this PR, already present in the codebase (PRE-EXISTING), or introduced by the plan itself (PLAN-AUTHORED ERROR). The distinction changes who fixes it and whether it blocks this merge. See [07 — Code Review](../docs/07-code-review.md).
+
 **Read replica** — A secondary instance kept up to date from the primary, used to spread read load. Writes still go to one place, so replicas scale reads and do nothing for write throughput. See [03 — Architecture](../docs/03-architecture.md).
 
+**Rebase** — Move a branch’s commits so they start from the current tip of the branch it will merge into, rather than from wherever it happened to fork. Run before opening the pull request, so the diff a reviewer sees is the diff that will actually land. See [05 — Development](../docs/05-development.md).
+
+**Regression test** — A test written to reproduce a specific bug, which must fail before the fix lands and pass after. See [06 — Testing](../docs/06-testing.md).
+
 **Rollback** — Returning production to the last known-good state. On Vercel it is promoting a prior deployment, which takes seconds — but it is not automatic for database migrations, which is why migrations get careful, separate treatment. See [13 — Production Deployment](../docs/13-production-deployment.md).
+
+**Rolling deployment** — A deployment strategy where new tasks start alongside old tasks, pass health checks, and then old tasks drain. On ECS, governed by minimumHealthyPercent and maximumPercent. See [13 — Production Deployment](../docs/13-production-deployment.md).
+
+**Rubber-stamping** — Approving code changes without reading them carefully — clicking "approve" based on green CI, a clean-looking diff, or trust in the author rather than on what the code actually does. See [07 — Code Review](../docs/07-code-review.md).
+
+**Self-review** — Deliberately breaking the state that makes reviewing your own code useless — you are still holding the intent, so you read what you meant rather than what you wrote. Three techniques: create distance, read the diff not the code, and explain it out loud. See [07 — Code Review](../docs/07-code-review.md).
+
+**Server Action** — A function whose file or body opens with the ‘use server’ directive. Next.js turns it into a public HTTP endpoint behind the scenes, wires it to a form’s action or a plain click handler, and lets the calling code write it as though it were an ordinary async function. See [05 — Development](../docs/05-development.md).
+
+**Server Component** — A component that runs during the request, with direct access to whatever the server can reach — a database, a filesystem, a secret. It sends the browser only the HTML it produced; its own source never becomes part of the JavaScript bundle. See [05 — Development](../docs/05-development.md).
 
 **Serverless** — Code deployed as individual functions the platform starts when a request arrives and stops afterwards, billed per invocation rather than per hour. Vercel’s deployment model for a Next.js application is this. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -133,6 +181,8 @@ drift apart.
 
 **Spike** — A short, deliberately bounded piece of exploration answering one specific question — can this integration do what we need, is this approach fast enough — with a hard stop and a written answer. See [02 — Product Planning](../docs/02-planning.md).
 
+**Staging environment** — A persistent deployment at a stable URL, usually tracking a shared branch like staging or develop. Unlike a preview deployment, it is not per-branch or ephemeral. See [12 — Staging](../docs/12-staging.md).
+
 **Statelessness** — Every request carries or looks up whatever it needs, and anything that must persist between requests lives in a cookie, a database or a shared store rather than a local variable. Any instance can serve any request. See [03 — Architecture](../docs/03-architecture.md).
 
 **Strangler fig** — Put something in front of the existing system, route one path at a time to the replacement, and delete the old code once nothing reaches it. Named after the vine that grows around a tree and eventually stands without it. See [03 — Architecture](../docs/03-architecture.md).
@@ -145,6 +195,10 @@ drift apart.
 
 **TAM (Total Addressable Market)** — Total Addressable Market — every person or business who could conceivably buy this, if you had no competitors and perfect reach. Usually paired with SAM (the slice you could realistically serve) and SOM (the slice you could realistically win).
 
+**Teeth check** — Deliberately breaking the implementation a test covers to confirm the test actually fails, then restoring the code. See [06 — Testing](../docs/06-testing.md).
+
+**Test fixture** — The known starting state a test runs against — seeded rows, a database reset to a clean slate before the run starts. See [06 — Testing](../docs/06-testing.md).
+
 **Timeout** — An explicit limit on how long you will wait for a network call before treating it as failed. Most HTTP clients and database drivers default to waiting indefinitely. See [03 — Architecture](../docs/03-architecture.md).
 
 **Traps** — The closing section of every stage doc — the failure modes worth naming. They accumulate from real experience and become the most valuable part of the playbook over time.
@@ -154,3 +208,5 @@ drift apart.
 **Vertical slice** — Work sequenced so each step goes through storage, logic and interface at once, rather than building each layer across the whole product before starting the next. See [02 — Product Planning](../docs/02-planning.md).
 
 **YAGNI (You Aren’t Gonna Need It)** — You Aren’t Gonna Need It: do not build for requirements you have imagined rather than met. The most common cause of accidental complexity.
+
+**Zod** — A TypeScript schema library used to parse data whose shape you cannot trust — an HTTP request body, an environment variable, a third-party API response — into a value the compiler can rely on. `schema.safeParse(input)` returns either the typed data or a list of what did not match, and nothing downstream sees the input until it has passed. See [05 — Development](../docs/05-development.md).
