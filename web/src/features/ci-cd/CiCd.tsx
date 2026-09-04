@@ -70,10 +70,6 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
           >
             <OrderingExercise />
           </Figure>
-          <Contrast
-            bad="Build first — wait 2 minutes to learn about a missing semicolon."
-            good="Format first — 3 seconds to the same answer."
-          />
           <Prose>
             <p>
               Sequential steps in one job, not parallel jobs. Parallel jobs each
