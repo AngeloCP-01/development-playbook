@@ -129,7 +129,7 @@ export const STAGES: Stage[] = [
     blurb: 'An automated gate that makes "works on my machine" irrelevant.',
     group: 'Shipping',
     timing: 'Wired during Project Setup, on day one.',
-    ready: false,
+    ready: true,
   },
   {
     num: '12',
