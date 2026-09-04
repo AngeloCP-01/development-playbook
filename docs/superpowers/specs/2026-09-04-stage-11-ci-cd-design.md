@@ -153,7 +153,6 @@ web/src/features/ci-cd/
 ├── ordering-exercise.test.ts     # Data invariants, doc pins
 ├── OrderingExercise.tsx           # Guess-then-reveal component
 ├── OrderingExercise.test.tsx      # Render: scoring, lock, reveal
-├── protection.ts                 # Branch protection rows
 ├── scaling.ts                    # Scaling move rows
 ├── traps.ts                      # Trap rows
 ├── traps.test.ts                 # Doc-pinned trap assertions
