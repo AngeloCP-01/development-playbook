@@ -854,6 +854,60 @@ export const TERMS: Record<string, Term> = {
       'Without deployment alarms, ECS reports success based on task health checks alone. A service can be healthy (tasks running, health checks passing) while throwing 5XX errors to users.',
     see: '14-post-deployment-verification',
   },
+  'branch-protection': {
+    name: 'Branch protection',
+    short:
+      'Repository rules that enforce who can push to a branch and what checks must pass first.',
+    full: 'A set of rules applied to a branch (typically main) requiring status checks to pass, reviews to be approved, and branches to be current before a merge is allowed. Without it, a CI pipeline is advisory — anyone can merge regardless of what the checks say.',
+    soWhat:
+      'The pipeline is decoration until merging is actually blocked. Enforcement is the difference between a gate and a suggestion.',
+    see: '11-ci-cd',
+  },
+  'concurrency-group': {
+    name: 'Concurrency group',
+    short:
+      'A GitHub Actions key that groups workflow runs so only one runs at a time per group.',
+    full: 'A string key (typically including the branch ref) that tells GitHub Actions to cancel in-progress runs when a new one starts for the same group. Without it, pushing three times to a branch queues three full CI runs.',
+    soWhat:
+      'Three pushes cost one run instead of three. Free savings on both minutes and queue time.',
+    see: '11-ci-cd',
+  },
+  'deployment-status': {
+    name: 'Deployment status event',
+    short:
+      'A GitHub webhook event fired when a deployment (like a Vercel preview) finishes.',
+    full: 'The `deployment_status` event fires after an external deployment platform reports success or failure. Using it as a workflow trigger means E2E tests run against the real deployed URL — a real build, real edge network, real database — rather than a dev server.',
+    soWhat:
+      'Tests the thing you actually ship, not a local approximation of it.',
+    see: '11-ci-cd',
+  },
+  'frozen-lockfile': {
+    name: 'Frozen lockfile',
+    short:
+      'An install flag that fails if the lockfile disagrees with package.json.',
+    full: '`pnpm install --frozen-lockfile` (or `npm ci`) refuses to resolve dependencies and fails if the lockfile is out of sync with package.json. Without it, CI silently resolves different versions than you tested with locally.',
+    soWhat:
+      'A green CI build means the exact same versions you tested. Without it, you get a green build for code that may not run.',
+    see: '11-ci-cd',
+  },
+  'merge-queue': {
+    name: 'Merge queue',
+    short:
+      'A GitHub feature that tests each PR against the actual post-merge state before merging.',
+    full: 'When multiple PRs target the same branch, a merge queue serialises them: each PR is tested against a temporary merge of everything ahead of it, not just its own branch point. This catches conflicts between PRs that are each green on their own.',
+    soWhat:
+      'Two PRs that each pass independently can still break when merged together. The queue catches that before it reaches main.',
+    see: '11-ci-cd',
+  },
+  oidc: {
+    name: 'OIDC',
+    short:
+      'A protocol for exchanging short-lived identity tokens, used in CI to avoid storing long-lived secrets.',
+    full: 'OpenID Connect lets a CI runner (like GitHub Actions) mint a short-lived JWT proving its identity. A cloud provider (like AWS) exchanges that JWT for temporary credentials scoped to one run. No long-lived access key sits in a config file waiting to be leaked.',
+    soWhat:
+      'Short-lived credentials minted per run cannot leak from a config file that no longer holds them.',
+    see: '11-ci-cd',
+  },
 }
 
 export function getTerm(key: string): Term | undefined {
