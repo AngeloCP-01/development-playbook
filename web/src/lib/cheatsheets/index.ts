@@ -7,6 +7,7 @@ import { codingStandards } from './coding-standards'
 import { deploymentEnvironments } from './deployment-environments'
 import { designPatterns } from './design-patterns'
 import { gitBranching } from './git-branching'
+import { gitCheatsheet } from './git-cheatsheet'
 import { gitCommands } from './git-commands'
 import { PLANNED } from './planned'
 import { postDeployVerification } from './post-deploy-verification'
@@ -33,6 +34,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   apiDesign,
   solidPrinciples,
   cleanCode,
+  gitCheatsheet,
   gitCommands,
   gitBranching,
   codingStandards,
