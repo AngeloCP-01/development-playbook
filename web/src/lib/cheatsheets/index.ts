@@ -9,6 +9,7 @@ import { designPatterns } from './design-patterns'
 import { gitBranching } from './git-branching'
 import { gitCommands } from './git-commands'
 import { PLANNED } from './planned'
+import { postDeployVerification } from './post-deploy-verification'
 import { playwright } from './playwright'
 import { sdlc } from './sdlc'
 import { solidPrinciples } from './solid-principles'
@@ -41,6 +42,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   codeReview,
   deploymentEnvironments,
   awsDeployment,
+  postDeployVerification,
   ...PLANNED,
 ]
 
