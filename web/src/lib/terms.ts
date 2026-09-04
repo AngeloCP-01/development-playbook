@@ -827,6 +827,33 @@ export const TERMS: Record<string, Term> = {
     full: 'Deliberately breaking the state that makes reviewing your own code useless — you are still holding the intent, so you read what you meant rather than what you wrote. Three techniques: create distance, read the diff not the code, and explain it out loud.',
     see: '07-code-review',
   },
+  baseline: {
+    name: 'Baseline',
+    short:
+      'The normal error rate and latency before a deploy, used to judge whether a change made things worse.',
+    full: 'The normal error rate, latency, and traffic volume before a deploy. Without one, post-deploy numbers are unreadable — 12 errors in the last hour could be a catastrophe or a Tuesday.',
+    soWhat:
+      'A deploy without a baseline is a deploy you cannot verify. You will either panic at nothing or ignore something real.',
+    see: '14-post-deployment-verification',
+  },
+  'bake-time': {
+    name: 'Bake time',
+    short:
+      'A waiting period after deployment during which CloudWatch alarms are monitored before the deploy is marked complete.',
+    full: 'A period after new ECS tasks go healthy during which CloudWatch alarms are monitored. If an alarm fires during the bake window, the deployment is marked FAILED and can auto-rollback. If no alarm fires, the deployment is marked COMPLETED.',
+    soWhat:
+      'Too short a bake time means slow-onset problems — memory leaks, cache expiration bugs — slip through and the deployment is marked healthy with a live defect.',
+    see: '14-post-deployment-verification',
+  },
+  'deployment-alarm': {
+    name: 'Deployment alarm',
+    short:
+      'A CloudWatch alarm wired to an ECS deployment that can trigger automatic rollback.',
+    full: 'A CloudWatch alarm attached to an ECS deployment configuration. ECS polls these alarms during the bake period after new tasks go healthy. Key metrics: HTTPCode_ELB_5XX_Count, TargetResponseTime, CPUUtilization, MemoryUtilization.',
+    soWhat:
+      'Without deployment alarms, ECS reports success based on task health checks alone. A service can be healthy (tasks running, health checks passing) while throwing 5XX errors to users.',
+    see: '14-post-deployment-verification',
+  },
 }
 
 export function getTerm(key: string): Term | undefined {

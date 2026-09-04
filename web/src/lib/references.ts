@@ -267,6 +267,38 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: 'The broader strategic landscape — in-place, immutable, and traffic-shifting categories — for a reader comparing AWS approaches beyond what ECS offers natively.',
     },
   ],
+  '14-post-deployment-verification': [
+    {
+      title: 'Smoke Testing',
+      source: 'AltexSoft',
+      url: 'https://www.altexsoft.com/blog/smoke-testing/',
+      adds: 'The smoke vs. sanity vs. regression distinction, and how to size a smoke suite (5–10 critical-path scenarios, unambiguous pass/fail).',
+    },
+    {
+      title: 'Post-Deployment Monitoring Checklist',
+      source: 'PingSLA',
+      url: 'https://pingsla.com/blog/post-deployment-monitoring-checklist/',
+      adds: 'A monitoring timeline (first 15–20 minutes at highest risk), alerting thresholds, and common failure patterns by frequency.',
+    },
+    {
+      title: 'How CloudWatch Alarms Detect ECS Deployment Failures',
+      source: 'AWS',
+      url: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-alarm-failure.html',
+      adds: 'How ECS watches CloudWatch alarms during the bake period and auto-rolls back when one fires.',
+    },
+    {
+      title: 'ECS Describe Services',
+      source: 'AWS CLI Reference',
+      url: 'https://docs.aws.amazon.com/cli/latest/reference/ecs/describe-services.html',
+      adds: 'The primary CLI command for checking rolloutState, deployment status, and service events after a deploy.',
+    },
+    {
+      title: 'Troubleshoot ECS Tasks Failing ALB Health Checks',
+      source: 'AWS re:Post',
+      url: 'https://repost.aws/knowledge-center/troubleshoot-unhealthy-checks-ecs',
+      adds: 'Diagnostic steps when ALB health checks fail post-deploy — the most common AWS-side verification failure.',
+    },
+  ],
 }
 
 export function getReferences(slug: string): Reference[] {

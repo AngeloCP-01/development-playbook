@@ -160,7 +160,7 @@ export const STAGES: Stage[] = [
     blurb: 'The deploy is not finished when it succeeds.',
     group: 'Shipping',
     timing: 'The ten minutes after every production deploy.',
-    ready: false,
+    ready: true,
   },
   {
     num: '15',
