@@ -6,7 +6,7 @@
 Lookup material rather than reading material. A stage teaches a decision; a
 sheet answers what that command was.
 
-Drawn: 15 of 20. A sheet listed as not drawn is
+Drawn: 16 of 21. A sheet listed as not drawn is
 registered on purpose — the gap is the point, so it can be seen and filled.
 
 | Sheet | Group | Stage | Status |
@@ -16,6 +16,7 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | API Design | Architecture | 03 | Drawn |
 | SOLID Principles | Design Principles | 03 | Drawn |
 | Clean Code | Design Principles | 05 | Drawn |
+| Git Cheat Sheet | Git | 04 | Drawn |
 | Git Commands | Git | 04 | Drawn |
 | Git Branching & Conventions | Git | 04 | Drawn |
 | Coding Standards | Standards | 05 | Drawn |
@@ -392,6 +393,77 @@ From a second gathered source — "6 Golden Rules to Write Clean Code" by Neo Ki
 - **YAGNI — You ain’t gonna need it** — Do not build for a requirement that does not exist yet — speculative flexibility is a cost paid today for a maybe.
 
 Source: Clean Code Principles Every Junior Developer Should Know — Unrecorded — see reference/cheatsheet-sources.md.
+
+## Git Cheat Sheet
+
+Essential commands from init to push, plus the four-area mental model.
+
+Belongs to [04 — Project Setup](../docs/04-project-setup.md).
+
+### Start a repository
+
+- `git init` — Create a new Git repository in the current directory. — Starting a brand-new project. Run once, at the beginning.
+- `git clone <repo-url>` — Clone an existing repository into a new directory. — Joining a project that already exists on GitHub, GitLab, or another remote.
+
+### Check your changes
+
+- `git status` — See modified, staged, and untracked files. — Before staging, before committing, before switching branches. The single most-typed git command.
+- `git diff` — See changes that have not been staged yet. — Reviewing what you changed before deciding what to stage.
+
+### Stage and commit
+
+- `git add <file>` — Stage a specific file for the next commit. — When you want to commit some changes but not all of them.
+- `git add .` — Stage all changes in the current directory. — When every change belongs in the same commit. Check git status first.
+- `git commit -m "message"` — Save staged changes with a meaningful message. — After staging. The message describes what changed, not what you did to the diff.
+- `git log --oneline` — View a compact commit history (one line per commit). — Finding a recent commit, checking what landed, verifying branch state.
+
+### Branches
+
+- `git branch` — List local branches. The current branch is marked with an asterisk. — Checking which branch you are on, or seeing what branches exist.
+- `git branch <branch-name>` — Create a new branch at the current commit. — Starting a feature or fix. Does not switch to the new branch.
+- `git switch <branch-name>` — Switch to another branch. — Moving between branches. Replaces the older git checkout for branch switching.
+- `git switch -c <branch-name>` — Create and switch to a new branch in one step. — The common case: you want a new branch and you want to be on it immediately.
+- `git branch -d <branch-name>` — Delete a branch that has been merged. — After merging. Use -D (capital) to force-delete an unmerged branch.
+
+### Sync with remote
+
+- `git fetch` — Download remote changes without merging them. — When you want to see what changed on the remote before integrating.
+- `git pull` — Fetch and integrate changes from remote into your current branch. — Getting the latest changes. Equivalent to git fetch + git merge.
+- `git push` — Upload your local commits to the remote. — After committing locally and wanting others to see the work.
+- `git push -u origin <branch>` — Push a new branch to the remote and set it as the upstream. — The first push of a new branch. After this, plain git push works.
+
+### Merge and rebase
+
+Use merge to preserve history. Use rebase for a cleaner, linear history (it rewrites commits). This project uses merge (--no-ff) and never rebases.
+
+- `git merge <branch-name>` — Merge another branch into your current branch. Creates a merge commit. — Integrating finished work. The merge commit records when and what was integrated.
+- `git rebase <branch-name>` — Reapply your commits on top of another branch. Rewrites commit history. — Cleaning up a feature branch before merging, when a linear history matters more than preserving the original commit sequence.
+
+### Undo changes
+
+Be careful with git reset --hard. It permanently discards local changes.
+
+- `git restore <file>` — Discard unstaged changes in a file, reverting it to the last committed state. — When you edited a file and want to throw those changes away.
+- `git restore --staged <file>` — Unstage a file without deleting the changes. — When you staged something by mistake but still want to keep the edits.
+- `git revert <commit-id>` — Create a new commit that undoes an earlier commit. — Safely undoing a change that has already been pushed. Preserves history.
+- `git reset --soft HEAD~1` — Undo the last commit while keeping the changes staged. — When you committed too early and want to amend or re-split the work.
+
+### Tags
+
+- `git tag` — List all tags. — Checking which versions have been tagged.
+- `git tag v1.0.0` — Create a lightweight tag at the current commit. — Marking a release or milestone.
+- `git push origin v1.0.0` — Push a specific tag to the remote. — Tags are not pushed by default. Push them explicitly after creating.
+
+### The Git model
+
+The four areas: Working Directory (your local files) → Staging Area (changes ready to commit) → Local Repository (your Git history) → Remote Repository (e.g. GitHub). The workflow is: modify files, git add, git commit, git push.
+
+- **Working Directory** — Your local files. Every edit starts here.
+- **Staging Area** — Changes you have selected for the next commit with git add.
+- **Local Repository** — Your commit history, stored in the .git directory.
+- **Remote Repository** — The shared history on GitHub, GitLab, or another host.
+
+Source: Git Cheat Sheet — Essential Commands Every Developer Should Know — Unrecorded.
 
 ## Git Commands
 
