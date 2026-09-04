@@ -59,7 +59,7 @@ STEP_IDS = ['verify', 'vercel', 'aws', 'recovery', 'ai', 'done'] as const
 | `aws` | AWS | Where to look | Doc: "AWS: where to look". Six-command sequence as an AnnotatedArtifact (bash). CloudWatch deployment alarm paragraph below. |
 | `recovery` | Recovery | When something goes wrong | Doc: "When something is wrong" (rollback-first + four failure patterns as RevealList) + "The half-hour follow-up" + "Automate what you repeat". |
 | `ai` | AI plays | Where agents help | Standard AIPlays: premise, 4 plays, limit. |
-| `done` | Traps & checklist | The last step | 10 traps (7 general + 3 AWS in details disclosure) + VerificationChecklist (11 DoD, 3 artifacts, 4 team notes) + References. |
+| `done` | Traps & checklist | The last step | 11 traps (8 general + 3 AWS in details disclosure) + VerificationChecklist (11 DoD, 3 artifacts, 4 team notes) + References. |
 
 ### Stage-specific artifact: AWS verification sequence
 
@@ -107,7 +107,7 @@ PostDeploymentVerification.tsx
 |---|---|---|
 | `steps.ts` | `STEP_IDS`, `StepId` | `['verify','vercel','aws','recovery','ai','done'] as const` |
 | `ai-plays.ts` | `AI_PREMISE`, `AI_LIMIT`, `PLAYS` | `Play[]` (4 plays, kinds: prompt ×3, cli+mcp ×1) |
-| `traps.ts` | `TRAPS` | `Trap[]` (10 traps: 7 general + 3 AWS) |
+| `traps.ts` | `TRAPS` | `Trap[]` (11 traps: 8 general + 3 AWS) |
 | `checklist.ts` | `DONE`, `ARTIFACT_LIST`, `TEAM` | `DoneItem[]` (11), `string[]` (3), `TeamNote[]` (4) |
 | `aws-verification.ts` | `AWS_VERIFICATION` | `Artifact` (bash, ~24 lines, 6 annotated, 1 pivot) |
 | `doc-source.ts` | `DOC`, `section`, `h2`, `flat`, `fences` | `docSource('docs/14-post-deployment-verification.md')` |
@@ -142,7 +142,7 @@ Each needs: `name`, `short`, `full`, `soWhat`, `see`.
 |---|---|
 | `steps.test.ts` | 6 steps in exact order; unique IDs |
 | `ai-plays.test.ts` | Premise/limit phrases in doc; 4 plays with unique IDs and valid kinds; title text matches doc bold leads |
-| `traps.test.ts` | 10 traps matching 10 bold leads in doc; unique IDs; title pins; body phrase pins |
+| `traps.test.ts` | 11 traps matching 11 bold leads in doc; unique IDs; title pins; body phrase pins |
 | `checklist.test.ts` | 11 DoD items matching doc checkboxes; 3 artifacts matching doc list; 4 team notes matching doc bullets |
 | `aws-verification.test.ts` | 6 commands match doc fenced code blocks; 6 annotated lines; 1 pivot on describe-target-health; language is bash |
 | `prose.test.ts` | ~8–10 key phrases across all major doc sections |
