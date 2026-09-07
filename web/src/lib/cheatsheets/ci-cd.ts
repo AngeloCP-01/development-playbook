@@ -48,6 +48,16 @@ export const ciCd: Cheatsheet = {
           when: 'Only once the verification of stage 14 and the rollback of stage 13 are already in place. Teams arrive here after those exist, not before.',
         },
         {
+          term: 'Why automate any of it',
+          what: 'A defect found minutes after the push that caused it costs a fraction of the same defect found three days later in someone else’s branch.',
+          when: 'Compressing that interval is the whole return. Every other benefit follows from it.',
+        },
+        {
+          term: 'What it does not buy',
+          what: 'A pipeline does not improve code. It tells you sooner what the code already is.',
+          when: 'Teams that add CI without changing review or test habits get faster news about the same defects, and are surprised.',
+        },
+        {
           term: 'The feedback loop',
           what: 'Each stage reports back to whoever pushed, by the route they actually read.',
           when: 'A failure nobody sees is a failure that ships, and this is the half of the pipeline most often left unfinished.',
@@ -133,6 +143,139 @@ export const ciCd: Cheatsheet = {
           term: 'Configuration management',
           what: 'Ansible, Chef, Puppet.',
           when: 'Shapes long-lived servers after provisioning. Largely displaced by immutable images wherever containers are used.',
+        },
+      ],
+    },
+    {
+      title: 'Commands worth knowing',
+      note: 'The pipeline runs these; you run the same ones locally when it goes red. Tool-agnostic on purpose — swap the build and deploy lines for your stack, the shape does not move.',
+      rows: [
+        {
+          code: 'pnpm install --frozen-lockfile',
+          what: 'Installs exactly what the lockfile pins, and fails if it has drifted.',
+          when: 'Every CI install. Plain `pnpm install` may quietly update the lockfile on a runner, so the build tests something the repo does not contain.',
+        },
+        {
+          code: 'mvn clean install',
+          what: 'Cleans, compiles, runs tests, packages, installs to the local repo.',
+          when: 'The JVM equivalent. `mvn clean package` when nothing downstream needs the local install.',
+        },
+        {
+          code: 'mvn sonar:sonar',
+          what: 'Publishes analysis to SonarQube and applies the configured quality gate.',
+          when: 'A threshold is what makes it a gate. Analysis published without one changes nothing about whether the build passes.',
+        },
+        {
+          code: 'docker build -t app:$GIT_SHA .',
+          what: 'Builds the image and tags it with the commit it came from.',
+          when: 'Always tag with the SHA. See the Docker section for why `latest` cannot serve here.',
+        },
+        {
+          code: 'docker push registry/app:$GIT_SHA',
+          what: 'Uploads the tagged image to the registry the deploy target pulls from.',
+          when: 'After the gate passes, before the deploy step. The registry is the handoff between CI and CD.',
+        },
+        {
+          code: 'kubectl apply -f deployment.yml',
+          what: 'Applies the manifest, creating or updating what it describes.',
+          when: 'Declarative deploys. It returns as soon as the API accepts the change, not when the rollout finishes.',
+        },
+        {
+          code: 'kubectl rollout status deploy/app',
+          what: 'Blocks until the rollout completes or times out, exiting non-zero on failure.',
+          when: 'The line that makes a deploy step actually fail when the deploy fails. Without it `apply` exits 0 and a crash-looping pod ships green.',
+        },
+        {
+          code: 'kubectl rollout undo deploy/app',
+          what: 'Reverts to the previous ReplicaSet.',
+          when: 'The fastest rollback Kubernetes offers. Works only while the previous ReplicaSet is still retained.',
+        },
+        {
+          code: 'terraform plan -out=tfplan',
+          what: 'Computes the change set and writes it to a file.',
+          when: 'In CI, always to a file. Applying a freshly recomputed plan can apply something the reviewer never saw.',
+        },
+        {
+          code: 'terraform apply tfplan',
+          what: 'Applies exactly the saved plan, with no recomputation.',
+          when: 'The half that changes infrastructure, and the half worth putting behind a manual approval.',
+        },
+        {
+          code: 'ansible-playbook -i inventory deploy.yml',
+          what: 'Runs the playbook against the hosts in the inventory.',
+          when: 'Long-lived servers. Add `--check` for a dry run before the real one.',
+        },
+      ],
+    },
+    {
+      title: 'Docker in the pipeline',
+      note: 'The artifact most pipelines actually produce. What is worth knowing here is what makes an image reproducible and rollback-able, not the Dockerfile syntax.',
+      rows: [
+        {
+          term: 'Tag with the commit, never `latest`',
+          what: 'Every image carries the SHA it was built from.',
+          when: '`latest` is a moving pointer, so it cannot name a rollback target and cannot tell you what is running.',
+        },
+        {
+          term: 'Multi-stage build',
+          what: 'Build in one stage with the full toolchain, then copy only the artifact into a slim runtime stage.',
+          when: 'Cuts image size sharply and keeps compilers, build secrets and dev dependencies out of what ships.',
+        },
+        {
+          term: 'Layer order is cache strategy',
+          what: 'Copy the lockfile and install dependencies *before* copying source.',
+          when: 'A source-only change then reuses the dependency layer. Copying everything first invalidates the install on every commit.',
+        },
+        {
+          term: '`.dockerignore`',
+          what: 'Keeps `.git`, `node_modules` and local env files out of the build context.',
+          when: 'Both a speed and a safety measure — anything in the context can end up in a layer.',
+        },
+        {
+          term: 'Scan the image, not only the source',
+          what: 'Dependency scanning reads your lockfile; image scanning also reads the base image’s OS packages.',
+          when: 'A clean lockfile on a stale base image is a common and invisible gap.',
+        },
+        {
+          term: 'Registry retention is part of rollback',
+          what: 'Rollback pulls from the registry, so retention decides how far back you can actually go.',
+          when: 'A policy shorter than your rollback window silently deletes the thing you would roll back to. Check it against stage 13, do not assume.',
+        },
+      ],
+    },
+    {
+      title: 'Traps',
+      note: 'The failures that make a pipeline stop being trusted. Most are not pipeline bugs — they are ways a green run can mean less than it appears to.',
+      rows: [
+        {
+          term: 'Green because nothing ran',
+          what: 'A path filter, an early exit or a misconfigured matrix reports success without executing the tests.',
+          when: 'Assert that the tests *ran*, not only that the step exited 0. This repo hit the same shape twice — see TD-26 and TD-45 in `docs/tracker.md`.',
+        },
+        {
+          term: 'Passes locally, fails on the runner',
+          what: 'Almost always an undeclared dependency, a file never committed, or a test that depended on execution order.',
+          when: 'The runner’s clean checkout is the honest environment. Your machine is the one with the state.',
+        },
+        {
+          term: 'Secrets echoed into logs',
+          what: 'A `set -x`, a debug print or a failing command that dumps its environment puts the token into a retained log.',
+          when: 'Not recoverable by re-running. Rotate the credential; the log may already be read.',
+        },
+        {
+          term: 'A pipeline nobody can run locally',
+          what: 'If the only way to reproduce a failure is to push again, every debug cycle costs a full run.',
+          when: 'Keep the steps as scripts the developer can invoke directly, with the workflow file calling them.',
+        },
+        {
+          term: 'Flaky tests retried into green',
+          what: 'A blanket retry that turns red into green teaches the team that red means "try again".',
+          when: 'Quarantine the flake and fix it. A blanket retry defers the decision without ever making it.',
+        },
+        {
+          term: 'Bypassing the gate under deadline',
+          what: 'The gate gets skipped exactly when the pressure that causes mistakes is highest.',
+          when: 'If it is bypassable it will be bypassed; branch protection is the mechanism, not team discipline.',
         },
       ],
     },
