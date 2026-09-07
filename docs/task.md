@@ -57,10 +57,10 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 12, 13 and 14 done; 8 remain — 10/18. **Stage 14 complete 2026-09-04**: 6 steps (verify, vercel, aws, recovery, ai, done), doc correction first (AWS ECS verification, AI plays, references), 1064/149 tests, all verification green. Eight stages remain)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13 and 14 done; 7 remain — 11/18. **Stage 11 complete 2026-09-07**: 8 steps (gate, ordering, e2e, protection, deps, scaling, ai, traps), doc correction + ordering exercise signature piece, 1143/160 tests, all verification green. Seven stages remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(sixteen of twenty registered sheets drawn — `git-cheatsheet` added 2026-09-04 before `git-commands`. Four language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(seventeen of twenty-two registered sheets drawn — `github-actions` added 2026-09-07 tethered to stage 11. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
 
 ### Dependency map
 
@@ -126,7 +126,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07, 12, 13 and 14 done; 8 remain — 10/18. **Stage 14 complete 2026-09-04**: 6 steps, doc correction first (AWS ECS verification, AI plays, references), 1064/149 tests, all verification green)*
+### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13 and 14 done; 7 remain — 11/18. **Stage 11 complete 2026-09-07**: 8 steps, doc correction + ordering exercise, 1143/160 tests, e2e 17/18 (1 pre-existing), all verification green)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
