@@ -60,7 +60,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13 and 14 done; 7 remain — 11/18. **Stage 11 complete 2026-09-07**: 8 steps (gate, ordering, e2e, protection, deps, scaling, ai, traps), doc correction + ordering exercise signature piece, 1143/160 tests, all verification green. Seven stages remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(seventeen of twenty-two registered sheets drawn — `github-actions` added 2026-09-07 tethered to stage 11. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(eighteen of twenty-three registered sheets drawn — `github-actions` and `ci-cd` both added 2026-09-07, tethered to stage 11. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
 
 ### Dependency map
 
@@ -862,6 +862,25 @@ a new sheet — a second section, SOC/DYC/TDD/YAGNI, from a second gathered sour
 Kim), consulted rather than displayed as a second plate (D-89). Two cross-references
 added: SOC to `solid-principles`, TDD to `CLAUDE.md`'s iron law and the new `testing`
 sheet. Evidence in `docs/tracker.md`.
+
+**W-6.3g through W-6.3l** are recorded in `docs/tracker.md` only, not narrated here:
+`code-review`, `deployment-environments`, `aws-deployment`, `post-deploy-verification`,
+`git-cheatsheet`, `github-actions`. Sheets seven through seventeen.
+
+**W-6.3m — `ci-cd`, the concept half of stage 11's pair** *(2026-09-07, tethered to
+stage 11)*. The eighteenth sheet drawn, and the third time the registry has split a
+topic into a concept sheet and a tool sheet — `git-commands`/`git-branching`,
+`testing`/`playwright`, now `ci-cd`/`github-actions`. Four sections: what CI, continuous
+delivery and continuous deployment each actually automate; the seven pipeline stages
+ordered cheapest-failure-first, each with what fails there; which tool plays which role
+(runner, build, quality gate, registry, runtime, provisioning, config management); and
+six practices. Built from three gathered graphics — ByteByteGo's workflow plate
+displayed, two others consulted, the D-89 convention D-90 kept on file for exactly this
+case. The displayed plate shows Jenkins and Kubernetes rather than this project's own
+GitHub Actions and Vercel, accepted deliberately because the flow shape is what a
+concept sheet teaches and the tool-landscape section makes the substitution explicit.
+`github-actions` gained cross-references but no new sections. Evidence in
+`docs/tracker.md`.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 
