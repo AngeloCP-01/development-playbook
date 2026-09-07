@@ -16,18 +16,21 @@ export const AWS_VERIFICATION: Artifact = {
   lines: [
     {
       text: '# 1. Wait for the service to stabilize',
-      note: 'Polls every 15s, times out after ~10 minutes. A timeout means tasks are failing to start or failing health checks.',
+      note: 'Polls every 15s, times out after ~10 minutes. A timeout means tasks are failing to start or failing health checks — check the events next (step 4).',
     },
     { text: 'aws ecs wait services-stable \\' },
     { text: '  --cluster <cluster> --services <service>' },
     { text: '' },
     {
       text: '# 2. Verify the deployment completed',
-      note: 'One PRIMARY deployment, rolloutState COMPLETED, runningCount matches desiredCount, failedTasks 0.',
+      note: 'One PRIMARY deployment, rolloutState COMPLETED, runningCount matches desiredCount, failedTasks 0. Two PRIMARY entries means an older deployment is still draining.',
     },
     { text: 'aws ecs describe-services --cluster <cluster> \\' },
     { text: "  --services <service> --query 'services[0].deployments[*].\\" },
-    { text: "  [status,rolloutState,runningCount,desiredCount,failedTasks]'" },
+    {
+      text: "  [status,rolloutState,runningCount,desiredCount,failedTasks]' \\",
+    },
+    { text: '  --output table' },
     { text: '' },
     { text: '# 3. Check ALB target health' },
     {

@@ -8,6 +8,7 @@ const KIND_LABEL: Record<Play['kind'], string> = {
   command: 'Saved command',
   prompt: 'Prompt',
   cli: 'CLI command',
+  'cli-mcp': 'CLI + browser tool',
 }
 
 export function AIPlays() {

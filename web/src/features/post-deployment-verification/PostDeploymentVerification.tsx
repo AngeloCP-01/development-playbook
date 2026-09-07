@@ -33,6 +33,26 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
     hint: 'Five phases, one flow',
     content: (
       <div className="space-y-16">
+        <Section
+          eyebrow="Why this stage exists"
+          title="What a green deploy hides"
+        >
+          <Prose>
+            <p>
+              &ldquo;Deployment succeeded&rdquo; means the build compiled and
+              the files uploaded. It says nothing about whether the application
+              works. A successful deploy can still produce a page that throws on
+              load, an action that fails for logged-in users only, a query that
+              times out at production data volumes, or a missing environment
+              variable that breaks one route.
+            </p>
+            <p>
+              None of that shows up in a deploy log. All of it shows up in the
+              ten minutes after.
+            </p>
+          </Prose>
+        </Section>
+
         <Section eyebrow="Before you begin" title="Entry criteria">
           <ul className="list-disc space-y-1 pl-5 text-sm">
             <li>
@@ -295,7 +315,14 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
           <Prose>
             <p>
               If you have <Term id="deployment-alarm">deployment alarms</Term>{' '}
-              configured, ECS watches CloudWatch metrics during a{' '}
+              configured (they are set up in{' '}
+              <Link
+                className="underline decoration-line underline-offset-4 hover:decoration-brand"
+                href="/stages/13-production-deployment"
+              >
+                {stageTitle('13-production-deployment')}
+              </Link>
+              ), ECS watches CloudWatch metrics during a{' '}
               <Term id="bake-time">bake period</Term> after the new tasks go
               healthy. The key metrics:{' '}
               <InlineCode text="`HTTPCode_ELB_5XX_Count`" />,{' '}
@@ -424,6 +451,30 @@ const CONTENT_STEPS: (Step & { id: StepId })[] = [
               But keep doing the manual walk-through for the specific change you
               shipped. Automation covers what you already knew to check; your
               eyes catch what you did not.
+            </p>
+          </Prose>
+        </Section>
+
+        <Section eyebrow="Where this stage ends" title="Suspicious, or broken?">
+          <Prose>
+            <p>
+              Everything above assumes production is <em>suspicious</em> — a
+              metric looks wrong, a page feels slow, something wants a second
+              look. That is still this stage.
+            </p>
+            <p>
+              If it is genuinely broken rather than merely suspicious, you are
+              now in{' '}
+              <Link
+                className="underline decoration-line underline-offset-4 hover:decoration-brand"
+                href="/stages/16-incident-management"
+              >
+                {stageTitle('16-incident-management')}
+              </Link>
+              , which is a different process with different priorities:
+              communication, a declared owner, and a written timeline. Rolling
+              back is the last thing this stage asks of you and the first thing
+              that one does.
             </p>
           </Prose>
         </Section>
