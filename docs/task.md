@@ -887,6 +887,18 @@ concept sheet teaches and the tool-landscape section makes the substitution expl
 `github-actions` gained cross-references but no new sections. Evidence in
 `docs/tracker.md`.
 
+**W-6.3n — `ci-cd` expanded to seven sections** *(2026-09-07, user request)*. Not a new
+sheet — the W-6.3m round displayed one plate and consulted two others, then took tool
+*names* from the consulted pair and little else. The user noticed the two densest sources
+were barely used. Three sections added, 24 rows → 49: **Commands worth knowing** (eleven
+rows set in `code`), **Docker in the pipeline** (six), and **Traps** (six, the convention
+every interactive stage carries and this sheet lacked), plus two "why" rows in the opening
+section. The commands gap was the real defect: `types.ts` states a sheet "answers 'what
+was that command again' in one screen", and the sheet named Maven, Terraform, Ansible and
+kubectl while giving the reader nothing to type. Plate unchanged, since the 16-section
+source is exactly what this repo's capture rule calls a prompt rather than something to
+reproduce. Evidence in `docs/tracker.md`.
+
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 
 The reason `/reference` beat `/cheatsheets` as a section name. Closes the original

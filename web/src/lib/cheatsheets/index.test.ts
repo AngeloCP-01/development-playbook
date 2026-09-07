@@ -70,6 +70,38 @@ test('every row has a what, since the middle column is the one that carries mean
   }
 })
 
+// types.ts states the registry's purpose: a sheet "answers 'what was that
+// command again' in one screen". `ci-cd` shipped failing that — it named Maven,
+// Terraform, Ansible and kubectl across its roles section and gave the reader
+// nothing to type. Commands belong in `code`, which Cheatsheet.tsx sets in mono
+// and render.ts quotes into cheatsheets.md; `term` is for when the thing being
+// named is not code.
+test('ci-cd teaches commands, and sets them in `code` rather than `term`', () => {
+  const commands = cheatsheetBySlug('ci-cd')?.sections.find((s) =>
+    /command/i.test(s.title),
+  )
+  expect(commands, 'ci-cd has no commands section').toBeDefined()
+  for (const row of commands!.rows) {
+    expect(row.code, `"${row.what.slice(0, 45)}" has no code`).toBeDefined()
+  }
+})
+
+// The left column comes from `code` or `term`, both optional on the type. A row
+// carrying neither still renders — as a blank cell beside prose, which reads as
+// a styling bug rather than missing data.
+test('every row names itself with a term or a code, since a row with neither renders an empty left column', () => {
+  for (const sheet of CHEATSHEETS) {
+    for (const section of sheet.sections) {
+      for (const row of section.rows) {
+        expect(
+          row.code ?? row.term,
+          `${sheet.slug} / ${section.title} / "${row.what.slice(0, 40)}"`,
+        ).toBeDefined()
+      }
+    }
+  }
+})
+
 test('isDrawn distinguishes a sheet with content from a registered placeholder', () => {
   const drawn = CHEATSHEETS.filter(isDrawn)
   expect(drawn.map((s) => s.slug).sort()).toEqual([
