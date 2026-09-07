@@ -210,14 +210,29 @@ the three things an AI draft gets wrong are the three that matter:
   deploy workflow should not cancel a running deploy. The AI does not know your merge
   cadence.
 
-Two AI-powered capabilities earn their place in a CI pipeline:
+Beyond drafting, six AI-powered capabilities earn their place in a CI pipeline:
 
-- **Copilot Autofix** reviews Dependabot security alerts and opens a PR with a fix.
-  Faster than reading the advisory yourself and correct often enough to be worth
-  reviewing.
-- **Flakiness detection** across test runs surfaces tests that fail intermittently
-  before the team learns to ignore red builds. This is a pattern-recognition problem
-  AI handles better than people do.
+- **Copilot code review.** Mention `@copilot` in a PR comment and it runs an agentic
+  analysis — exploring the repo, tracing cross-file dependencies, and posting
+  line-specific feedback. It runs on GitHub Actions minutes and cannot gate a merge,
+  so treat it as a fast first pass before the human reviewer.
+- **Copilot Autofix.** Reviews Dependabot security alerts, explores your codebase,
+  generates a fix, reruns CodeQL to verify it closes the vulnerability, iterates if
+  needed, and opens a draft PR. The human touchpoint is at the end, not the beginning.
+- **Claude Code in CI.** `anthropics/claude-code-action@v1` runs a headless
+  `claude -p` inside a workflow step — automated PR review, test generation, or
+  documentation checks on every push. Pass instructions via `prompt`, scope the run
+  with `--max-turns`, and let the agent commit to a branch for human review.
+- **Build failure diagnosis.** Pipe a failed CI log into Claude Code and it identifies
+  the root cause category (missing dependency, version mismatch, environment variable
+  not set) and proposes a fix with the exact file path and line number. Faster than
+  reading the log yourself when the failure is three pages of webpack output.
+- **Flakiness detection.** Pattern recognition across test runs surfaces tests that
+  fail intermittently before the team learns to ignore red builds. Tools like Trunk
+  Flaky Tests, BuildPulse, and Datadog CI Visibility automate quarantine and tracking.
+- **Test gap analysis.** Point Claude Code at a coverage report and it identifies
+  untested code paths — not just uncovered lines, but the specific conditions and
+  edge cases no test exercises. Useful after a coverage gate flags a drop.
 
 ---
 

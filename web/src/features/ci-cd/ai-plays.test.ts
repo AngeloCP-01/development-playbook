@@ -13,8 +13,8 @@ describe('ci-cd AI plays data', () => {
     expect(flat(src)).toContain(flat('Trigger conditions'))
   })
 
-  test('at least four plays', () => {
-    expect(PLAYS.length).toBeGreaterThanOrEqual(4)
+  test('eight plays', () => {
+    expect(PLAYS).toHaveLength(8)
   })
 
   test('unique IDs', () => {
@@ -46,5 +46,33 @@ describe('ci-cd AI plays data', () => {
     expect(PLAYS.some((p) => p.kind === 'command' || p.kind === 'cli')).toBe(
       true,
     )
+  })
+
+  test('has claude-code-ci play', () => {
+    expect(PLAYS.some((p) => p.id === 'claude-code-ci')).toBe(true)
+  })
+
+  test('has copilot-review play', () => {
+    expect(PLAYS.some((p) => p.id === 'copilot-review')).toBe(true)
+  })
+
+  test('has build-diagnosis play', () => {
+    expect(PLAYS.some((p) => p.id === 'build-diagnosis')).toBe(true)
+  })
+
+  test('doc pin: Copilot code review', () => {
+    expect(flat(src)).toContain(flat('Copilot code review'))
+  })
+
+  test('doc pin: claude-code-action', () => {
+    expect(flat(src)).toContain(flat('claude-code-action'))
+  })
+
+  test('doc pin: Build failure diagnosis', () => {
+    expect(flat(src)).toContain(flat('Build failure diagnosis'))
+  })
+
+  test('doc pin: Test gap analysis', () => {
+    expect(flat(src)).toContain(flat('Test gap analysis'))
   })
 })

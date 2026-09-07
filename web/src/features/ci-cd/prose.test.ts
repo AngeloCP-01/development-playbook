@@ -71,6 +71,16 @@ describe('ci-cd prose pins', () => {
     expect(flat(src)).toContain(flat('Secrets boundaries'))
   })
 
+  test('AI section — Claude Code in CI', () => {
+    const src = section('AI in CI/CD')
+    expect(flat(src)).toContain(flat('claude-code-action'))
+  })
+
+  test('AI section — build failure diagnosis', () => {
+    const src = section('AI in CI/CD')
+    expect(flat(src)).toContain(flat('Build failure diagnosis'))
+  })
+
   test('scaling — merge queue', () => {
     const src = h2('Scaling to a team')
     expect(flat(src)).toContain(flat('merge queue'))
