@@ -77,7 +77,7 @@ export function OrderingExercise() {
                   <button
                     type="button"
                     aria-label={`Position ${i + 1}: ${step.name}`}
-                    className={`flex w-full items-center justify-between rounded border px-3 py-2 text-left text-sm ${
+                    className={`flex min-h-11 w-full items-center justify-between rounded border px-3 py-2 text-left text-sm lg:min-h-0 ${
                       correct
                         ? 'border-go bg-go-tint text-fg'
                         : incorrect
@@ -98,7 +98,7 @@ export function OrderingExercise() {
                   <button
                     type="button"
                     aria-label={`Position ${i + 1}: empty`}
-                    className="w-full rounded border border-dashed border-line px-3 py-2 text-left text-sm text-subtle"
+                    className="min-h-11 w-full rounded border border-dashed border-line px-3 py-2 text-left text-sm text-subtle lg:min-h-0"
                     disabled
                   >
                     —
@@ -138,7 +138,7 @@ export function OrderingExercise() {
                   key={id}
                   type="button"
                   aria-label={`Place ${step.name}`}
-                  className="rounded border border-line bg-raised px-3 py-2 text-sm font-medium text-fg hover:border-line-strong"
+                  className="min-h-11 rounded border border-line bg-raised px-3 py-2 text-sm font-medium text-fg hover:border-line-strong lg:min-h-0"
                   onClick={() => placeStep(id)}
                 >
                   {step.name}
@@ -151,7 +151,7 @@ export function OrderingExercise() {
         {/* Check button */}
         <button
           type="button"
-          className="rounded border border-brand bg-brand-tint px-4 py-2 text-sm font-medium text-fg disabled:cursor-not-allowed disabled:opacity-40"
+          className="min-h-11 rounded border border-brand bg-brand-tint px-4 py-2 text-sm font-medium text-fg disabled:cursor-not-allowed disabled:opacity-40 lg:min-h-0"
           disabled={!allFilled || locked}
           onClick={check}
         >
