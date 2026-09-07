@@ -2,6 +2,7 @@ import { apiDesign } from './api-design'
 import { awsDeployment } from './aws-deployment'
 import { codeReview } from './code-review'
 import { architecturePatterns } from './architecture-patterns'
+import { ciCd } from './ci-cd'
 import { cleanCode } from './clean-code'
 import { codingStandards } from './coding-standards'
 import { deploymentEnvironments } from './deployment-environments'
@@ -46,6 +47,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   deploymentEnvironments,
   awsDeployment,
   postDeployVerification,
+  ciCd,
   githubActions,
   ...PLANNED,
 ]

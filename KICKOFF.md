@@ -36,8 +36,10 @@ Before doing anything, read these for context:
 
 ### Project state (as of 2026-09-07 — W-3 is **11/18**, seven stages remain.
 Stages 01–07, 11, 12, 13 and 14 are interactive. Stage 13 is platform-aware (8 steps,
-Vercel + AWS). Seventeen of twenty-two reference sheets drawn. **The recommended next
-round is stage 15 (Observability)** — completes the deploy→verify→observe pipeline
+Vercel + AWS). **Eighteen of twenty-three** reference sheets drawn. The W-6 round that
+D-88 puts after a shipped stage has already run for stage 11 (two sheets, `github-actions`
+and `ci-cd`), so the next round is a `W-3` stage, not another sheet. **The recommended
+next round is stage 15 (Observability)** — completes the deploy→verify→observe pipeline
 (12→13→14→15). The doc exists but has not been assessed. Other candidates:
 08 (Security Audit, clean break), 09 (Performance, Core Web Vitals),
 10 (Documentation, never stops).)
@@ -63,6 +65,17 @@ round is stage 15 (Observability)** — completes the deploy→verify→observe 
 
 #### What shipped since the last kickoff
 
+**`ci-cd` cheatsheet** (W-6.3m) — eighteenth drawn sheet, tethered to stage 11, and the
+registry's **third concept/tool split** after `git-commands`÷`git-branching` and
+`testing`÷`playwright`. Four sections: CI vs continuous delivery vs continuous
+deployment; seven pipeline stages ordered cheapest-failure-first; who plays each role
+across seven tool categories; six practices. Three gathered graphics, one displayed and
+two consulted — the first use of D-89's convention since D-90 superseded its premise but
+kept the reasoning on file. **On `feat/ci-cd-cheatsheet`, 2 commits, NOT merged.**
+
+That round also opened **TD-44** and **TD-45** and corrected two stale records. All of
+that matters more than the sheet does: see "Open threads" below.
+
 **Stage 11 (CI/CD) is interactive** (W-3.11), merged 2026-09-07.
 Eight steps: annotated ci.yml/e2e.yml/dependabot.yml, click-to-place ordering
 exercise (cheapest-failure-first), branch protection RevealList, scaling moves,
@@ -83,7 +96,7 @@ Previously shipped (2026-09-02/03):
 - Stage 12 (Staging, W-3.8) — six panels, coverage walk ran
 - `aws-deployment` (W-6.3i), `deployment-environments` (W-6.3h)
 
-**1143 tests across 160 files, build clean, e2e 17/18 (1 pre-existing),
+**1152 tests across 160 files, build clean, e2e 17/18 (1 pre-existing),
 dev-console 1/1.**
 
 ---
@@ -113,8 +126,10 @@ re-reading the whole log.
   `test:e2e` (18-test Playwright audit, refuses a stale server per TD-27),
   `test:dev-console` (React dev-mode warnings, outside the gate, run once per stage
   round — TD-35, D-84). Re-derive current counts rather than quoting them.
-- **1143 tests across 160 files**, build clean, e2e 17/18 (1 pre-existing on
-  `/reference/deployment-environments` at 320px), dev-console 1/1.
+- **1152 tests across 160 files** (the previous kickoff said 1143, which was already
+  wrong when written), build clean, e2e 17/18 (1 pre-existing on
+  `/reference/deployment-environments` at 320px), dev-console 1/1. That one failure
+  hides the rest of the 320px sweep behind it — **TD-45**.
 - **Deployed**: `W-5` complete, live at https://acp-dev-playbook.vercel.app since
   2026-08-11. `pnpm test:prod` verifies the deployment itself, outside the merge gate.
   `docs/learnings/deploying-101.md` before touching deploy config.
@@ -129,10 +144,20 @@ git log --oneline -1 develop origin/develop main origin/main
 git rev-list --count origin/develop..develop
 ```
 
-**Last measured at the end of this session**: `develop` well ahead of `origin/develop`
-(the user has not pushed since several rounds ago). `origin/main` unchanged. **No branch
-was left in flight** — every merge this session completed, was gated on the merged
-result, and had its branch deleted. **Re-derive before trusting anything here.**
+**Last measured at the end of this session (2026-09-07), and the previous version of
+this paragraph was wrong**: it said "`develop` well ahead of `origin/develop` (the user
+has not pushed since several rounds ago)". Measured now, `develop` and `origin/develop`
+are **identical** at `f465597` — the user has pushed since. `main` and `origin/main` are
+identical at `d659d32`. `develop` is **27 commits ahead of `main`**, so a promotion is
+pending; `main` is 2 ahead of `develop`, which is just its own `--no-ff` merge commits.
+
+**One branch is in flight**: `feat/ci-cd-cheatsheet`, 2 commits off `develop`, gated
+green, **not merged, not pushed, and not reviewed** — the whole-branch review has not
+run, and the session that built it cannot run it. Everything else this session merged
+was gated on the merged result and had its branch deleted.
+
+**Re-derive before trusting anything here.** That instruction is not boilerplate: this
+paragraph has now been wrong twice, about two different things.
 
 **Branch/push convention, unchanged:** work on `feat/`|`fix/`|`docs/<date>-` branches, cut
 from `develop`, never from `main`. Merge with `--no-ff` and a hand-written subject, never
@@ -153,6 +178,23 @@ Notes for whoever is preparing this handoff:
 - If a round is already scoped, add a per-round sibling — `KICKOFF-W4.md` — rather than
   overwriting this one. The generic version stays useful.
 - Open threads worth carrying forward:
+  - **`feat/ci-cd-cheatsheet` is unmerged and unreviewed.** Decide that before starting
+    stage 15, not after.
+  - **TD-44 is a question, not a chore, and it is the user's to answer.** Two records
+    say gathered originals are untracked and gitignored; all 62 files under `reference/`
+    are tracked and `.gitignore` covers only `.DS_Store` and `.playwright-mcp/`. Either
+    add the ignore rule and drop them from the index, or rewrite both paragraphs to
+    describe tracking. Do not pick one silently. Opened as **TD-44**.
+  - **A green `pnpm test:e2e` is not a claim about every page.** The overflow tests loop
+    over paths inside a single test and throw at the first bad one, so every path after
+    it goes unchecked. `/reference/deployment-environments` fails at 320px and sits
+    early in the registry order, which means **the 320px sweep currently stops before
+    reaching any sheet registered after it**. W-6.3m's new sheet had to be verified with
+    a throwaway spec for that reason. Worth fixing properly — collect failures and
+    assert once at the end, rather than failing fast. Opened as **TD-45**.
+  - **Two numbers in the records were wrong when written, both found by re-deriving.**
+    The test count (`1143` against a real `1152`) and the originals-are-untracked claim.
+    Re-run the query; do not copy the answer.
   - **Read `docs/learnings/branch-discipline-101.md` before the first commit of any new
     round**, not just once.
   - **A "merged"/"not merged" claim is a query to re-run, not a fact to reuse** —

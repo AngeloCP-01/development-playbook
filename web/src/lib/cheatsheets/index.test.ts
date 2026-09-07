@@ -76,6 +76,7 @@ test('isDrawn distinguishes a sheet with content from a registered placeholder',
     'api-design',
     'architecture-patterns',
     'aws-deployment',
+    'ci-cd',
     'clean-code',
     'code-review',
     'coding-standards',
@@ -120,9 +121,13 @@ test('cheatsheetsForStage returns the sheet tethered to stage 07', () => {
   expect(slugs).toEqual(['code-review'])
 })
 
-test('cheatsheetsForStage returns the sheet tethered to stage 11', () => {
+// Stage 11 carries the concept/tool pair the registry uses elsewhere
+// (git-commands ÷ git-branching, testing ÷ playwright): `ci-cd` is the
+// platform-agnostic pipeline, `github-actions` the syntax for one runner.
+// Sorted like the stage 03 and 06 cases, so registry order is not load-bearing.
+test('cheatsheetsForStage returns the sheets tethered to stage 11', () => {
   const slugs = cheatsheetsForStage('11-ci-cd').map((s) => s.slug)
-  expect(slugs).toEqual(['github-actions'])
+  expect(slugs.sort()).toEqual(['ci-cd', 'github-actions'])
 })
 
 test('cheatsheetsForStage returns the sheet tethered to stage 13', () => {

@@ -83,6 +83,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-09-07 | W-6.3m | **`ci-cd` cheatsheet shipped** — eighteenth drawn sheet, tethered to stage 11, and the **third concept/tool split** in the registry after `git-commands`/`git-branching` and `testing`/`playwright`. Four sections: integration vs continuous delivery vs continuous deployment (what each automates, and the human gate that separates the last two); the seven pipeline stages ordered cheapest-failure-first, each row carrying *what fails here* rather than only what runs; who plays each role (runner, build tool, quality gate, artifact registry, runtime target, provisioning, configuration management); and six practices. Built from **three** gathered graphics, one displayed and two consulted — the D-89 convention that D-90 superseded in premise but deliberately kept on file "for the next sheet that does draw on more than one graphic". This is that sheet, and the first to use it since D-90 was written. **Scope corrected before implementation**: the round opened intending to add two sections to `github-actions` instead, which would have filed Maven/Terraform/Ansible material under a tool-specific title and hung a Jenkins plate on a sheet named for GitHub Actions. `github-actions` gained two cross-references and no new sections. **Provenance**: `blog.bytebytego.com` is printed on the displayed plate, making this only the second sheet in the registry gathered with a real author and URL rather than *not recorded* (D-63) | RED-first: `index.test.ts`'s `isDrawn` slug list and its stage-11 tethering case were edited before the module existed and failed for the right reason (`- "ci-cd"` absent from both). **Teeth check ran twice** — removing `stage: '11-ci-cd'` failed the tethering test and only it (1 failed / 17 passed); typoing the plate `src` failed the on-disk test and only it (1 failed / 17 passed). Gate: lint 0, typecheck 0, **1152/160**, build clean (23 `/reference/*` routes, up from 22), audit **17/18**. **The one audit failure is the documented pre-existing `/reference/deployment-environments` 320px overflow — but that test throws at its first bad path, and `deployment-environments` sits *before* `ci-cd` in the registry, so the 320px sweep never reached the new page.** Verified independently with a throwaway spec: overflow 0 at all five widths, console clean, plate loads. The other four widths and the touch-target, contrast and console sweeps did cover it in the full run. Plate 1997K → 211K (89.4%, the largest saving in the ledger), read back at full size to confirm the small labels survive quality 82 | **Corrected a stale number rather than copying it**: W-6.3l's row cites `1143/160`, and `develop` measures `1152/160` on a clean worktree with nothing of this branch in it. The 1143 was already wrong when it was written; this branch adds no tests. **Deliberately left out of the sheet**: the DevOps source's Linux, Maven and AWS CLI command tables and its interview-questions block (study-guide material, and outside stage 11's domain), and the second source's deployment-strategy and environment-flow sections (already covered by `aws-deployment` and `deployment-environments`). **Not converted to webp**: both consulted graphics, so `public-assets.test.ts` has no orphan to catch — the trap W-6.3e tripped twice. **Still undrawn**: the five language sheets and `containers`. **NOT merged, NOT pushed, NOT deployed** |
 | 2026-09-07 | W-3.11 | **Stage 11 is interactive.** `docs/11-ci-cd.md` (306 lines after doc correction that updated action versions @v4→@v7/@v6/@v7 and added `### AI in CI/CD`) is ported to `web/src/features/ci-cd/` as **eight steps**, taking **W-3 to 11/18**. Six tasks against `docs/superpowers/plans/2026-09-04-stage-11-ci-cd.md`: doc correction, scaffold + data modules, ordering exercise, AI plays, main component + assembly + terms + references, github-actions cheatsheet. **The doc correction phase preceded the port**: bumped `actions/checkout` @v4→@v7, `pnpm/action-setup` @v4→@v6, `actions/setup-node` @v4→@v7 across both CI and E2E workflow YAML blocks (aligning with stage 04's web app), and added `### AI in CI/CD` (D-35 mandate — trigger conditions, secrets boundaries, concurrency, Copilot Autofix, flakiness detection). **Signature piece: OrderingExercise** — a click-to-place guess-then-reveal where the reader arranges five CI steps (format, lint, typecheck, test, build) cheapest-failure-first, locks, and sees cost reasoning per step with a Contrast ("Build first: 2 min for a semicolon" vs "Format first: 3 seconds"). New interaction pattern — no prior stage has ranking. **Three annotated YAML artifacts**: ci.yml (concurrency, frozen-lockfile, timeout-minutes, node-version-file, cache — pivot on frozen-lockfile), e2e.yml (deployment_status trigger, Playwright install, BASE_URL, upload-artifact on failure — pivot on deployment_status), dependabot.yml (groups, open-pull-requests-limit — pivot on groups). **RevealList for branch protection** (four rows: status checks, up-to-date branches, linear history + auto-merge, secrets + OIDC, each with RevealFacet "what it prevents" / "the catch"). Callout warn for GitHub Free/private repo caveat. **RevealList for scaling** (five moves: approvals, split jobs, merge queue, remote cache, flakiness data — each with "trigger" and "why not sooner" facets). **AIPlays** (four plays: Copilot workflow draft, Copilot Autofix, `/code-review` on workflow changes, flakiness detection). **Nine traps** as individual Callouts (plan said 7, doc has 9 — two additional: unenforced branch protection, ungrouped Dependabot). TeamNotes in scaling step. References (GitHub Actions syntax, Vercel Git integration, Playwright CI, Dependabot grouping). Six glossary terms: branch-protection, concurrency-group, deployment-status, frozen-lockfile, merge-queue, oidc. **Final whole-branch review (opus) returned Ready to merge**: 0 Critical, 0 Important, 2 Minor. M1 (fixed): duplicate Contrast in ordering step spoiled the exercise — removed outer, kept inner post-lock version. M2 (deferred): concurrency-group and frozen-lockfile terms not wrappable as `<Term>` — they appear in data strings, not JSX. **Touch target fix**: ordering exercise buttons were ~36px, added `min-h-11` below lg — confirmed by e2e. **Coverage walk (opus)**: 14 sections checked, 0 gaps — all teaching content ported. Seven rulings made during execution (all documented in SDD ledger): traps count 7→9, reversed-order score fix, regex collision fix, backtick removal from play title, render test selector fix, Callout title prop addition, trap title rendering convention | **19 commits** `f5bdf95`…`2d45305` on `feat/stage-11-ci-cd`, cut from `develop` at `a898068`; 36 files, **+4383/−8**. Tests **1064/149 → 1143/160** (79 new tests across 11 new test files). Full gate on merged result: `pnpm lint` clean, `pnpm typecheck` clean, `pnpm test` **1143/160**, `pnpm build` clean (stage 11 prerendered). `pnpm test:e2e` **17/18** (1 pre-existing on `/reference/deployment-environments` at 320px). Coverage walk: 14/14 sections, 0 gaps. `reference/glossary.md` regenerated (+6 terms). `reference/cheatsheets.md` regenerated (+1 sheet). **Merged to `develop`, `--no-ff`, branch deleted** | ~~**Coverage walk**~~ ✓ 14 sections, 0 gaps. ~~**Touch targets**~~ ✓ fixed and verified. **`pnpm test:dev-console`** — not yet run this round. **Humanizer** — not yet run on panel prose. **Pre-existing e2e failure**: `/reference/deployment-environments` overflows by 2px at 320px — unrelated |
 | 2026-09-07 | W-6.3l | **`github-actions` cheatsheet shipped** — seventeenth drawn sheet, tethered to stage 11. Three sections: workflow syntax (seven triggers: push, pull_request, deployment_status, schedule, workflow_dispatch, jobs/steps, uses/run), common patterns (concurrency + cancel-in-progress, matrix strategy, conditional steps, artifact upload/download, cache, reusable workflows), secrets and permissions (secrets.* context, OIDC token exchange, permissions block, environment protection rules). No source plate image — content original to this playbook. Filed under Standards alongside `code-review`, `testing`, `playwright`, `deployment-environments`, `aws-deployment`, `post-deploy-verification`, and `sdlc` | Committed to `develop` as part of `feat/stage-11-ci-cd`, merged `--no-ff`. Gate: 1143/160, lint/typecheck/build clean. `reference/cheatsheets.md` regenerated. `web/src/lib/cheatsheets/index.test.ts` updated (isDrawn slug list + stage-tethering case). Seventeen of twenty-two registered sheets now drawn | **Five language sheets remain** (`javascript`, `python`, `java`, `spring-boot`, `express`). **`containers`** (Docker/Kubernetes, originally planned for stage 11) remains undrawn — `github-actions` shipped instead as a closer match to what stage 11 actually teaches |
 | 2026-09-04 | W-6.3k | **`git-cheatsheet` foundations sheet shipped** — sixteenth drawn sheet, tethered to stage 04. Nine sections transcribed from a gathered infographic: start a repo (init, clone), check changes (status, diff), stage and commit (add, commit, log), branches (branch, switch, switch -c, branch -d), sync with remote (fetch, pull, push, push -u), merge and rebase (with this-project-uses-merge note), undo changes (restore, restore --staged, revert, reset --soft, --hard warning), tags (tag, tag v1.0.0, push origin), and the four-area Git model (working directory, staging area, local repo, remote repo). Placed before `git-commands` so the Git group reads foundations first. Source plate: "Git Cheat Sheet — Essential Commands Every Developer Should Know" (author unrecorded). Filed under Git alongside `git-commands` and `git-branching` | Committed to `develop` as `5e46cf7`, merged `--no-ff`. Gate: 1064/149, lint/typecheck/build clean. `reference/cheatsheets.md` regenerated. Sixteen of twenty registered sheets now drawn | **Four language sheets remain** (`javascript`, `python`, `java`, `spring-boot`, `express`) |
@@ -267,6 +268,67 @@ of what was believed at the time is the point.
 ## Technical debt
 
 Ordered by cost of leaving it. Each names where it lives and what closes it.
+
+### TD-45 — The audit's sweeps fail fast, so one known failure blinds every path behind it · **Medium**
+
+`e2e/audit.spec.ts`'s overflow tests loop over `auditPages(page)` **inside a single
+test** and assert per path:
+
+```ts
+for (const path of await auditPages(page)) {
+  await page.goto(path, { waitUntil: 'networkidle' })
+  expect(overflow, `${path} @ ${width}px`).toBe(0)
+}
+```
+
+The first failing path throws, and every path after it in the list is never loaded. The
+suite reports `1 failed`, which reads as one broken page and is actually *one broken page
+plus an unmeasured tail*.
+
+This is live right now, not hypothetical. `/reference/deployment-environments` fails at
+320px and is a known pre-existing failure. It sits at index 13 in `CHEATSHEETS`, so at
+320px **every sheet registered after it is currently unswept** — `aws-deployment`,
+`post-deploy-verification`, `ci-cd`, `github-actions`, and the five language placeholders.
+W-6.3m's new sheet had to be checked with a throwaway spec, and only that spec is why its
+320px result is known at all. The other four widths pass, so they do sweep the whole list;
+it is 320px alone, and 320px is the width that catches overflow.
+
+Same family as ~~TD-26~~ — a check that is green about surfaces it never evaluated — and
+ranked **Medium** for the same reason that one was: the failure mode is silence, and the
+longer a known failure sits early in the list, the more pages hide behind it.
+
+Closes by collecting failures across the loop and asserting once at the end
+(`expect(failures).toEqual([])`), so a run reports *every* bad path rather than the first.
+The touch-target sweep already accumulates into a `small[]` array and asserts after the
+loop; this is that pattern applied to the four sweeps that do not. Fixing it will likely
+surface more than the one failure visible today, which is the point.
+
+### TD-44 — Two records say gathered originals are untracked; all 62 of them are tracked · **Low**
+
+`reference/cheatsheet-sources.md`'s **Filing** section says captures "are **not
+committed** — the originals run 1–4MB each and git keeps every version forever."
+`docs/task.md`'s **W-6.2** entry says the same thing in different words: "Originals stay
+untracked and gitignored."
+
+Neither is true, and neither has been. `git ls-files reference/` returns **62 entries**,
+including every gathered original the ledger names — `git-commands.jpeg`,
+`CLEAN-CODE-principle.webp`, `playwright1.jpeg`, `sdlc.png`, `5types-of-testing.webp`.
+`.gitignore` is six lines and covers `.DS_Store` and `.playwright-mcp/` and nothing else.
+There is no rule that could have excluded them and no evidence one was ever written.
+
+Ranked **Low** because nothing is broken: the site serves the converted WebP either way,
+and the extra history costs disk, not correctness. What it costs is trust in the file
+that new sheets are gathered against, which is the same class of problem as the stale
+merge status `decisions-need-tests-101.md` was written about — a record believed because
+it is specific.
+
+**Closes either way, and which way is the user's call, not a reviewer's.** Option A:
+`.gitignore` grows a `reference/*.jpeg|png|gif|webp` rule, the tracked originals are
+removed from the index, and the ledger becomes the only record that an original ever
+existed. Option B: both paragraphs are rewritten to describe tracking, and the disk cost
+is accepted as the price of a ledger whose filenames resolve in a fresh clone. Opened by
+W-6.3m, which hit the question when deciding whether to commit its own three captures,
+and committed them to match observed practice rather than the record.
 
 ### TD-1 — The playbook prescribes tooling the app does not use · **Closed 2026-07-23**
 

@@ -163,6 +163,36 @@ the `Cheatsheet` shape; a later round, not this one.
 stage 11, which has no interactive port. D-62's registered-but-empty pattern would
 allow it, but content work is scoped to stages already built (01–05) for now.
 
+> **Correction appended 2026-09-07, not rewritten.** The clause above about stage 11
+> having no interactive port stopped being true on 2026-09-07, when stage 11 shipped
+> (W-3.11). `containers` is still ungathered, but the reason is now simply that no
+> Docker/Kubernetes source has been captured — not the stage's status. The three CI/CD
+> graphics gathered for the entry below all *touch* containers and none is about them.
+
+### ~~CI/CD pipeline~~ · `ci-cd` + `github-actions` · stage 11 ✓ transcribed 2026-09-07
+
+```
+"CI/CD pipeline" visual guide            ✓ 0141-ci-cd-workflow.png — ByteByteGo, displayed
+"CI/CD cheat sheet"                      ✓ cicd-cheatsheet2.jpeg (12-section) — consulted
+"devops cheat sheet"                     ✓ cicd-cheatsheet.jpeg (Jenkins/Maven/Terraform/Ansible) — consulted
+```
+
+Two sheets again, the `git-commands`/`git-branching` and `testing`/`playwright` split
+for the third time: `ci-cd` carries the platform-agnostic pipeline and `github-actions`
+the syntax for one runner. `github-actions` was written first, in the stage 11 round,
+with no source at all; these three graphics arrived afterwards and are all
+tool-agnostic, so they built the concept sheet rather than being forced onto the tool
+one.
+
+**Displayed plate shows Jenkins, not GitHub Actions.** Accepted deliberately: on a
+concept sheet the flow shape is the content, and the "who plays each role" section is
+where the substitution to this project's own runner and platform is made explicit.
+
+Deliberately left out of `ci-cd`: the DevOps sheet's Linux basics, Maven and AWS CLI
+command tables, and its interview-questions block. The same call `playwright` made on
+its own source — study-guide material, not lookup material — plus a domain question,
+since none of it is what stage 11 teaches.
+
 ## Untethered
 
 ### Software Development Life Cycle · `sdlc` · no stage
@@ -208,6 +238,19 @@ annotation lifecycle.
 Captures land in `reference/` as gathered. They are **not committed** — the originals
 run 1–4MB each and git keeps every version forever.
 
+> **Correction appended 2026-09-07, not rewritten.** The paragraph above is false, and
+> has been since it was written. Every gathered original *is* tracked: `git ls-files
+> reference/` returns 62 entries including `git-commands.jpeg`,
+> `CLEAN-CODE-principle.webp`, `playwright1.jpeg`, `sdlc.png` and
+> `5types-of-testing.webp`, and `.gitignore` holds nothing that would cover them (only
+> `.DS_Store` and `.playwright-mcp/`). W-6.2's entry in `docs/task.md` repeats the same
+> claim. The three CI/CD captures were committed to match what the repo actually does
+> rather than what this file says it does, since a ledger row naming a file that a
+> fresh clone does not have is worse than the disk cost. **Which side should change is
+> a real open question and the user's call**: either `.gitignore` grows a rule and the
+> ledger becomes the only record an original ever existed, or these two paragraphs are
+> rewritten to describe tracking. This note decides neither.
+
 What is committed is the converted copy in `web/public/reference/`, which is what the
 site serves. Convert with `sharp` before wiring a sheet to it:
 
@@ -225,9 +268,14 @@ Measured on this batch:
 | `Software-Architecture-Patterns.gif` | 1024K | 121K | 88.2% |
 | `git-commands.jpeg` | 210K | 138K | 34.2% |
 | `software_design_patterns.jpeg` | 262K | 182K | 30.6% |
+| `0141-ci-cd-workflow.png` | 1997K | 211K | 89.4% |
 
 The two GIFs are static images that were stored as GIF, which is why they collapse
-so far. Name the output `<target-slug>.webp`, all lowercase and hyphenated — a test
+so far. The PNG collapses further still, for a related reason: a flat-colour
+infographic stored losslessly is close to the worst case for PNG and close to the best
+case for lossy WebP. Reading the output back mattered here — at 1344×1846 the small
+labels ("Security Scanning", "Integration Tests") are what quality 82 is being judged
+on, not the large hand-lettered title. Name the output `<target-slug>.webp`, all lowercase and hyphenated — a test
 asserts every registered `src` exists on disk, so a mismatch fails the suite rather
 than shipping a broken-image box.
 
@@ -248,6 +296,9 @@ unrecorded on most of these; fix before promoting past `develop` (D-63).
 | `design-patterns` | Behavioral Design Patterns | *not recorded* | *not recorded* | `behavioral-design-pattern.png` | 2026-08-24 | consulted |
 | `design-patterns` | 15 Design Patterns in Simple Words | Keivan Damirchi | *not recorded* | `15-DesignPatterns.jpeg` | 2026-08-24 | dropped — subset of the above, no category split |
 | `api-design` | Master Plan for API Design | Shalini Goyal | *not recorded* | `MasterPlan-Api-Design.gif` | 2026-08-14 | displayed |
+| `ci-cd` | CI/CD Workflow — Simplified Visual Guide | ByteByteGo | https://blog.bytebytego.com | `0141-ci-cd-workflow.png` | 2026-09-07 | displayed — the URL is printed on the plate itself, so this is only the second entry here gathered with real provenance rather than *not recorded* |
+| `ci-cd` | CI/CD Complete Cheat Sheet (12 sections) | *not recorded* | *not recorded* | `cicd-cheatsheet2.jpeg` | 2026-09-07 | consulted — its pipeline-stage and best-practice sections became rows; its deployment-strategy and environment-flow sections were skipped as already covered by `aws-deployment` and `deployment-environments`. Not converted to webp |
+| `ci-cd` | CI/CD Cheat Sheet (DevOps tooling) | *not recorded* | *not recorded* | `cicd-cheatsheet.jpeg` | 2026-09-07 | consulted — source for the "who plays each role" section only. Its Linux, Maven and AWS CLI command tables were left out as outside stage 11's domain. Not converted to webp |
 | `git-commands` | Git Beyond Commit and Push | *not recorded* | *not recorded* | `git-commands.jpeg` | 2026-08-14 | displayed |
 | `git-commands` | Git Cheat Sheet — Essential Commands | *not recorded* | *not recorded* | `git-cheatsheet.jpeg` | 2026-08-24 | consulted |
 | `git-commands` | What is Git? | *not recorded* | *not recorded* | `Git.jpeg` | 2026-08-24 | dropped — redundant with the two above |
