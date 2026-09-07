@@ -71,10 +71,15 @@ registry's **third concept/tool split** after `git-commands`÷`git-branching` an
 deployment; seven pipeline stages ordered cheapest-failure-first; who plays each role
 across seven tool categories; six practices. Three gathered graphics, one displayed and
 two consulted — the first use of D-89's convention since D-90 superseded its premise but
-kept the reasoning on file. **On `feat/ci-cd-cheatsheet`, 2 commits, NOT merged.**
+kept the reasoning on file. **Merged to `develop` as `6f52212`, branch deleted.**
 
-That round also opened **TD-44** and **TD-45** and corrected two stale records. All of
-that matters more than the sheet does: see "Open threads" below.
+**TD-45 closed** (merged as `99f6145`): the audit's overflow, touch-target and step-hash
+sweeps asserted inside their path loop, so the first failing path threw and the rest of
+the list was never loaded — nine sheets had never been measured at 320px. All sweeps now
+collect and assert once. The one failure it was hiding is fixed, and **the audit is
+18/18 for the first time**.
+
+**TD-44 is still open and is a question for you**, not a chore: see "Open threads".
 
 **Stage 11 (CI/CD) is interactive** (W-3.11), merged 2026-09-07.
 Eight steps: annotated ci.yml/e2e.yml/dependabot.yml, click-to-place ordering
@@ -145,17 +150,25 @@ git log --oneline -1 develop origin/develop main origin/main
 git rev-list --count origin/develop..develop
 ```
 
-**Last measured at the end of this session (2026-09-07), and the previous version of
-this paragraph was wrong**: it said "`develop` well ahead of `origin/develop` (the user
-has not pushed since several rounds ago)". Measured now, `develop` and `origin/develop`
-are **identical** at `f465597` — the user has pushed since. `main` and `origin/main` are
-identical at `d659d32`. `develop` is **27 commits ahead of `main`**, so a promotion is
-pending; `main` is 2 ahead of `develop`, which is just its own `--no-ff` merge commits.
+**Last measured at the end of this session (2026-09-07), after both merges.** `develop`
+is at `99f6145`, **7 commits ahead of `origin/develop`** (`f465597`) and **34 ahead of
+`main`** (`d659d32`), so a promotion is pending. `main` is 2 ahead of `develop`, which is
+just its own `--no-ff` merge commits.
 
-**One branch is in flight**: `feat/ci-cd-cheatsheet`, 2 commits off `develop`, gated
-green, **not merged, not pushed, and not reviewed** — the whole-branch review has not
-run, and the session that built it cannot run it. Everything else this session merged
-was gated on the merged result and had its branch deleted.
+The previous version of this paragraph was wrong, which is why the numbers above are
+measured rather than carried forward: it claimed `develop` was "well ahead of
+`origin/develop` (the user has not pushed since several rounds ago)" when the two were
+identical.
+
+**No branch is in flight.** Both of this session's branches merged `--no-ff` and were
+deleted: `feat/ci-cd-cheatsheet` as `6f52212`, `fix/audit-fail-fast` as `99f6145`. The
+merged result was re-gated first-hand — lint 0, typecheck 0, 1152/160, build clean,
+audit 18/18.
+
+**Both merged without a whole-branch review, on the user's call.** Every previous
+branch's review found something a green gate did not, so treat both as less checked than
+usual. `pnpm test:dev-console` did not run either: a `next dev` server was already up on
+:3200 and Next refuses a second one for the same directory.
 
 **Re-derive before trusting anything here.** That instruction is not boilerplate: this
 paragraph has now been wrong twice, about two different things.
@@ -179,8 +192,10 @@ Notes for whoever is preparing this handoff:
 - If a round is already scoped, add a per-round sibling — `KICKOFF-W4.md` — rather than
   overwriting this one. The generic version stays useful.
 - Open threads worth carrying forward:
-  - **`feat/ci-cd-cheatsheet` is unmerged and unreviewed.** Decide that before starting
-    stage 15, not after.
+  - **Two branches merged unreviewed this session** (`6f52212`, `99f6145`). Nothing is
+    in flight, but neither got the whole-branch pass the standard calls for.
+  - **`develop` is 34 commits ahead of `main`** and 7 ahead of `origin/develop`. The
+    promotion PR is the user's.
   - **TD-44 is a question, not a chore, and it is the user's to answer.** Two records
     say gathered originals are untracked and gitignored; all 62 files under `reference/`
     are tracked and `.gitignore` covers only `.DS_Store` and `.playwright-mcp/`. Either
