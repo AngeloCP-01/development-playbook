@@ -101,7 +101,7 @@ Previously shipped (2026-09-02/03):
 - Stage 12 (Staging, W-3.8) — six panels, coverage walk ran
 - `aws-deployment` (W-6.3i), `deployment-environments` (W-6.3h)
 
-**1154 tests across 160 files, build clean, e2e 18/18, dev-console 1/1.**
+**1161 tests across 160 files, build clean, e2e 18/18, dev-console 1/1.**
 The audit is fully green for the first time — it read 17/18 for weeks, and TD-45 is
 why that number was not what it appeared to be.
 
@@ -115,8 +115,9 @@ re-reading the whole log.
 - **Stages 01–07, 11, 12, 13 and 14 are interactive and merged.** 03 is 22 steps, 04 is
   15, 05 is 13, 06 is 8, 07 is 6, 11 is 8 (ordering exercise signature piece), 12 is 6,
   13 is 8 (platform-aware: Vercel + AWS), 14 is 6. Coverage walks ran on stages 03–06,
-  11, 12, 13 (3 blocking fixed on 13). Stage 11: 14 sections, 0 gaps. Stage 14's
-  coverage walk has not run. Stages 08–10 and 15–18 render a "sheet not drawn"
+  11, 12, 13, 14 (3 blocking fixed on 13). Stage 11: 14 sections, 0 gaps. Stage 14's
+  walk ran 2026-09-07 and returned seven findings, 12 of 16 sections covered; five were
+  fixed, one downgraded and one rejected on verification. Stages 08–10 and 15–18 render a "sheet not drawn"
   placeholder; routing works for all 18.
 - **A per-task reviewer subagent, plus a whole-branch review, is the standard** — every
   reviewed round has found something a green gate did not. Stage 07's final review caught
@@ -132,7 +133,7 @@ re-reading the whole log.
   `test:e2e` (18-test Playwright audit, refuses a stale server per TD-27),
   `test:dev-console` (React dev-mode warnings, outside the gate, run once per stage
   round — TD-35, D-84). Re-derive current counts rather than quoting them.
-- **1154 tests across 160 files** (the previous kickoff said 1143, which was already
+- **1161 tests across 160 files** (the previous kickoff said 1143, which was already
   wrong when written), build clean, **e2e 18/18**, dev-console 1/1. The long-standing
   "17/18, 1 pre-existing" is closed: the overflow was real and is fixed, and TD-45 —
   the reason the other 320px results were unknown rather than passing — is closed too.
