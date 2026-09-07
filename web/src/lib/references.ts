@@ -215,6 +215,32 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: 'The Microsoft study showing knowledge transfer — not defect detection — is the primary actual outcome of review.',
     },
   ],
+  '11-ci-cd': [
+    {
+      title: 'Workflow syntax for GitHub Actions',
+      source: 'GitHub Docs',
+      url: 'https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions',
+      adds: 'The complete trigger, job, and step reference this stage condenses into the three patterns that matter.',
+    },
+    {
+      title: 'Vercel Git Integration',
+      source: 'Vercel Docs',
+      url: 'https://vercel.com/docs/deployments/git',
+      adds: 'How Vercel builds and deploys on every push — the deployer half this stage deliberately leaves to Vercel.',
+    },
+    {
+      title: 'Playwright CI guide',
+      source: 'Playwright Docs',
+      url: 'https://playwright.dev/docs/ci-intro',
+      adds: 'CI-specific configuration: sharding, retries, trace collection, and the container images that skip browser install.',
+    },
+    {
+      title: 'Dependabot grouped updates',
+      source: 'GitHub Docs',
+      url: 'https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#groups',
+      adds: 'The full grouping syntax and filtering options beyond the two-group pattern this stage teaches.',
+    },
+  ],
   '12-staging': [
     {
       title: 'Preview Deployments',

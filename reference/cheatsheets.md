@@ -6,7 +6,7 @@
 Lookup material rather than reading material. A stage teaches a decision; a
 sheet answers what that command was.
 
-Drawn: 16 of 21. A sheet listed as not drawn is
+Drawn: 17 of 22. A sheet listed as not drawn is
 registered on purpose — the gap is the point, so it can be seen and filled.
 
 | Sheet | Group | Stage | Status |
@@ -27,6 +27,7 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | Deployment Environments | Standards | 12 | Drawn |
 | AWS Deployment | Standards | 13 | Drawn |
 | Post-Deploy Verification | Standards | 14 | Drawn |
+| GitHub Actions | Standards | 11 | Drawn |
 | JavaScript | Languages | — | Not drawn |
 | Python | Languages | — | Not drawn |
 | Java | Languages | — | Not drawn |
@@ -799,6 +800,44 @@ Six commands, in order. The pivot is describe-target-health: the check that serv
 - `aws logs tail /ecs/<log-group> --since 15m` — Inspect logs for error bursts. Use filter-log-events with --filter-pattern "ERROR" for targeted search. — Last. Even if everything above is green, an error burst in the logs means something is wrong.
 
 Source: [Smoke Testing vs Sanity Testing vs Regression Testing](https://www.altexsoft.com/blog/smoke-testing/) — AltexSoft.
+
+## GitHub Actions
+
+Workflow syntax, common patterns, and secrets handling for the CI gate this playbook teaches.
+
+Belongs to [11 — CI/CD](../docs/11-ci-cd.md).
+
+### Workflow syntax
+
+The skeleton every workflow starts from — the seven triggers this playbook actually uses.
+
+- **`on: push`** — Runs on every push to matched branches. — The CI gate — `push: { branches: [main] }` plus `pull_request`.
+- **`on: pull_request`** — Runs when a PR is opened, updated, or reopened. — Every PR gets a gate run. Pairs with `push` on the main branch.
+- **`on: deployment_status`** — Fires when an external deploy (Vercel) reports success or failure. — E2E tests against the real preview URL, not a dev server.
+- **`on: schedule`** — Cron-syntax trigger — `schedule: [{ cron: "0 6 * * 1" }]`. — Weekly tasks: dependency audits, stale-branch cleanup.
+- **`on: workflow_dispatch`** — Manual trigger with optional input parameters. — One-off tasks: database migrations, manual deploys, cache clears.
+- **`jobs:` → `steps:`** — A job runs on one runner. Steps run sequentially inside it. — One job for a pipeline under five minutes. Split to parallel jobs past that.
+- **`uses:` vs `run:`** — `uses` calls a published action. `run` executes a shell command. — `uses` for checkout, setup, and artifact upload. `run` for your own scripts.
+
+### Common patterns
+
+Patterns that keep a pipeline fast, cheap, and maintainable.
+
+- **Concurrency + cancel-in-progress** — `concurrency: { group: ci-${{ github.ref }}, cancel-in-progress: true }` — one run per branch. — Every CI workflow. Three pushes cost one run, not three.
+- **Matrix strategy** — `strategy: { matrix: { node: [18, 20] } }` — runs the job once per combination. — Testing across Node versions or OS variants. Not needed for a single-target pipeline.
+- **Conditional steps** — `if: failure()` or `if: github.event_name == 'pull_request'` — run a step only when a condition holds. — Upload artifacts on failure. Skip expensive steps on draft PRs.
+- **Artifact upload/download** — `actions/upload-artifact` saves files between jobs or for download. `download-artifact` retrieves them. — Playwright traces on failure. Build output passed to a deploy job.
+- **Cache** — `actions/setup-node` with `cache: pnpm` caches the package store across runs. — Every Node.js workflow. Cuts install from ~25s to ~5s on a warm cache.
+- **Reusable workflows** — `on: workflow_call` turns a workflow into a callable subroutine with inputs and secrets. — Monorepos or multiple services sharing the same CI shape.
+
+### Secrets and permissions
+
+Credential handling — the part where mistakes are not recoverable by re-running.
+
+- **`secrets.*` context** — Repository or environment secrets, never echoed to logs. — API tokens, deploy keys, any credential. Never in the workflow file itself.
+- **OIDC token exchange** — `permissions: { id-token: write }` lets the runner mint a short-lived JWT. The cloud provider exchanges it for temporary credentials. — AWS, GCP, Azure deployments. Replaces long-lived access keys with per-run tokens that cannot leak.
+- **`permissions:` block** — Scopes the `GITHUB_TOKEN` to only what the workflow needs. — Every workflow. Principle of least privilege — `contents: read` unless you need to push.
+- **Environment protection rules** — Require manual approval, restrict to specific branches, add wait timers. — Production deploy workflows. A human gate before the automated one ships.
 
 ## JavaScript
 

@@ -29,6 +29,8 @@ drift apart.
 
 **Bounded context** — From domain-driven design: a section of the system with its own model, where the terms have a single agreed meaning. "Invoice" in billing and "invoice" in a customer-support view are often not the same object, and a bounded context is the admission that forcing them together costs more than keeping them apart. See [03 — Architecture](../docs/03-architecture.md).
 
+**Branch protection** — A set of rules applied to a branch (typically main) requiring status checks to pass, reviews to be approved, and branches to be current before a merge is allowed. Without it, a CI pipeline is advisory — anyone can merge regardless of what the checks say. See [11 — CI/CD](../docs/11-ci-cd.md).
+
 **C4 model** — Simon Brown’s convention for architecture diagrams. Context shows your system and the outside world it talks to. Container shows the deployable things inside it — the application, the database, the worker. Component shows the pieces inside one container. Code is classes and functions. See [03 — Architecture](../docs/03-architecture.md).
 
 **Canary** — Releasing a change to a small slice of traffic first, watching it, then widening. On Vercel it is approximated with skew protection and staged rollouts rather than true traffic splitting. See [13 — Production Deployment](../docs/13-production-deployment.md).
@@ -42,6 +44,8 @@ drift apart.
 **Code coverage** — The percentage of lines or branches a test suite executes when it runs. See [06 — Testing](../docs/06-testing.md).
 
 **Concierge test** — You do the work manually for a handful of real users — spreadsheets, emails, your own labour — while they experience the result as if it were a product.
+
+**Concurrency group** — A string key (typically including the branch ref) that tells GitHub Actions to cancel in-progress runs when a new one starts for the same group. Without it, pushing three times to a branch queues three full CI runs. See [11 — CI/CD](../docs/11-ci-cd.md).
 
 **Connection pooling** — A pooler sits between the application and the database, holding a limited number of real connections and multiplexing client requests onto them, instead of each caller opening its own. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -58,6 +62,8 @@ drift apart.
 **Deployment circuit breaker** — An ECS feature that monitors new tasks during a rolling deployment. If they repeatedly fail to reach a healthy state, ECS stops the deployment and rolls back to the last successful revision. Without it, a bad image loops through start-crash-restart indefinitely. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **Deployment protection** — A setting (e.g. Vercel Deployment Protection) that requires authentication before a preview URL loads. Preview URLs are unlisted, not secret — they end up in Slack, issue trackers, and occasionally search indexes. See [12 — Staging](../docs/12-staging.md).
+
+**Deployment status event** — The `deployment_status` event fires after an external deployment platform reports success or failure. Using it as a workflow trigger means E2E tests run against the real deployed URL — a real build, real edge network, real database — rather than a dev server. See [11 — CI/CD](../docs/11-ci-cd.md).
 
 **Derived state** — Anything you could work out on demand — whether an invoice is overdue, how many items are in a cart, a running total — that is written into a column instead. Storing it means something has to keep it up to date. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -89,6 +95,8 @@ drift apart.
 
 **Flaky test** — A test that passes and fails on the same code, with nothing about the code itself changing between runs. See [06 — Testing](../docs/06-testing.md).
 
+**Frozen lockfile** — `pnpm install --frozen-lockfile` (or `npm ci`) refuses to resolve dependencies and fails if the lockfile is out of sync with package.json. Without it, CI silently resolves different versions than you tested with locally. See [11 — CI/CD](../docs/11-ci-cd.md).
+
 **Golden signals** — The four measurements to instrument before any others: latency, traffic, errors, and saturation. If you watch only four things, watch these. See [15 — Observability](../docs/15-observability.md).
 
 **Graceful degradation** — Designing so that the loss of one component removes one capability rather than the whole system. Search goes down and browsing still works; the PDF renderer goes down and the invoice still sends. See [03 — Architecture](../docs/03-architecture.md).
@@ -111,6 +119,8 @@ drift apart.
 
 **Merge gate** — The set of automated checks that must pass before code merges to the main branch. Distinct from deployment: the gate protects the branch, the deploy ships it. See [11 — CI/CD](../docs/11-ci-cd.md).
 
+**Merge queue** — When multiple PRs target the same branch, a merge queue serialises them: each PR is tested against a temporary merge of everything ahead of it, not just its own branch point. This catches conflicts between PRs that are each green on their own. See [11 — CI/CD](../docs/11-ci-cd.md).
+
 **Microservices** — An architecture where services are deployed and scaled independently and communicate over the network. Each owns its own storage; sharing a database between services undoes most of what the split was for. See [03 — Architecture](../docs/03-architecture.md).
 
 **Mock** — A stand-in for a real dependency — a database, an API — that returns exactly what you told it to, rather than what a real one would. See [06 — Testing](../docs/06-testing.md).
@@ -124,6 +134,8 @@ drift apart.
 **Normalisation** — A series of increasingly strict forms — first, second and third normal form are the ones that matter in practice — describing how far a schema has removed duplicated facts. Third normal form roughly means every column depends on the key, the whole key, and nothing but the key. See [03 — Architecture](../docs/03-architecture.md).
 
 **npm** — Reads your package.json, downloads every package it names (and everything those packages need) from the npm registry, and copies the whole tree into the project’s node_modules folder. Every project gets its own full copy, hoisted into one flat pile. See [04 — Project Setup](../docs/04-project-setup.md).
+
+**OIDC** — OpenID Connect lets a CI runner (like GitHub Actions) mint a short-lived JWT proving its identity. A cloud provider (like AWS) exchanges that JWT for temporary credentials scoped to one run. No long-lived access key sits in a config file waiting to be leaked. See [11 — CI/CD](../docs/11-ci-cd.md).
 
 **Opportunity solution tree** — A diagram by Teresa Torres with four levels: the outcome you want to move, the customer opportunities (problems, needs, desires) that could move it, the solutions that address each opportunity, and the experiments that test each solution. See [01 — Product Discovery](../docs/01-product-discovery.md).
 

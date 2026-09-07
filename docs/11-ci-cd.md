@@ -50,9 +50,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
@@ -115,9 +115,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
@@ -191,6 +191,33 @@ repository, never in workflow files, never echoed to logs.
 
 Prefer OIDC over long-lived tokens where the provider supports it — short-lived
 credentials minted per run cannot leak from a config file that no longer holds them.
+
+### AI in CI/CD
+
+AI generates a working first draft of a workflow file faster than writing it from
+scratch. GitHub Copilot will fill in the `on:` triggers, the step sequence, and the
+caching configuration from a one-line comment. Use it. Then read every line, because
+the three things an AI draft gets wrong are the three that matter:
+
+- **Trigger conditions.** A workflow that runs on `push` to every branch, or fires
+  `workflow_dispatch` with no guard, or is missing `concurrency` will waste minutes
+  on every push. The draft optimises for a file that parses, not one that saves you
+  time.
+- **Secrets boundaries.** An AI will put a token inline, reference `secrets.*` without
+  OIDC, or set `permissions` wider than needed. Treat every credential line as wrong
+  until verified.
+- **Concurrency and ordering.** `cancel-in-progress` is not always what you want: a
+  deploy workflow should not cancel a running deploy. The AI does not know your merge
+  cadence.
+
+Two AI-powered capabilities earn their place in a CI pipeline:
+
+- **Copilot Autofix** reviews Dependabot security alerts and opens a PR with a fix.
+  Faster than reading the advisory yourself and correct often enough to be worth
+  reviewing.
+- **Flakiness detection** across test runs surfaces tests that fail intermittently
+  before the team learns to ignore red builds. This is a pattern-recognition problem
+  AI handles better than people do.
 
 ---
 
