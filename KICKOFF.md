@@ -152,8 +152,9 @@ git rev-list --count origin/develop..develop
 ```
 
 **Last measured at the end of this session (2026-09-07), after both merges.** `develop`
-is at `4fdb9bd`, **3 commits ahead of `origin/develop`** (`b9ab404`, which the user
-pushed mid-session) and **38 ahead of `main`** (`d659d32`), so a promotion is pending. `main` is 2 ahead of `develop`, which is
+is at `a8f56de`, **3 commits ahead of `origin/develop`** (`32c1613`) and **42 ahead of
+`main`** (`d659d32`), so a promotion is pending. The user pushed once mid-session, which
+is why this number reset rather than climbing. `main` is 2 ahead of `develop`, which is
 just its own `--no-ff` merge commits.
 
 The previous version of this paragraph was wrong, which is why the numbers above are
@@ -161,10 +162,11 @@ measured rather than carried forward: it claimed `develop` was "well ahead of
 `origin/develop` (the user has not pushed since several rounds ago)" when the two were
 identical.
 
-**No branch is in flight.** All three of this session's branches merged `--no-ff` and
-were deleted: `feat/ci-cd-cheatsheet` as `6f52212`, `fix/audit-fail-fast` as `99f6145`,
-`feat/ci-cd-sheet-expansion` as `4fdb9bd`. Each merged result was re-gated first-hand —
-lint 0, typecheck 0, 1154/160, build clean, audit 18/18.
+**No branch is in flight.** All four of this session's branches merged `--no-ff` and were
+deleted: `feat/ci-cd-cheatsheet` as `6f52212`, `fix/audit-fail-fast` as `99f6145`,
+`feat/ci-cd-sheet-expansion` as `4fdb9bd`, `fix/stage-14-coverage-walk` as `a8f56de`.
+Each merged result was re-gated first-hand — lint 0, typecheck 0, 1161/160, build clean,
+audit 18/18.
 
 **Both merged without a whole-branch review, on the user's call.** Every previous
 branch's review found something a green gate did not, so treat both as less checked than
@@ -193,10 +195,16 @@ Notes for whoever is preparing this handoff:
 - If a round is already scoped, add a per-round sibling — `KICKOFF-W4.md` — rather than
   overwriting this one. The generic version stays useful.
 - Open threads worth carrying forward:
-  - **Three branches merged unreviewed this session** (`6f52212`, `99f6145`, `4fdb9bd`).
-    Nothing is in flight, but none got the whole-branch pass the standard calls for.
-  - **`develop` is 38 commits ahead of `main`** and 3 ahead of `origin/develop`. The
+  - **Four branches merged unreviewed this session** (`6f52212`, `99f6145`, `4fdb9bd`,
+    `a8f56de`). Nothing is in flight, but none got the whole-branch pass the standard
+    calls for.
+  - **`develop` is 42 commits ahead of `main`** and 3 ahead of `origin/develop`. The
     promotion PR is the user's.
+  - **Panel content is testable now.** `Element.prototype.scrollIntoView` is stubbed in
+    `src/test/setup.ts`; without it any test activating a step other than the first threw
+    from inside a `Stepper` effect. That is why stage 14's component test had six tests
+    that only inspected the rail. Assume other stages' component tests have the same
+    shape and the same blind spot.
   - **Grep `NOT merged, NOT pushed, NOT deployed` in `docs/tracker.md` at every merge.**
     Doing it once this session found three rows carrying the phrase: one merely out of
     date, and two false for weeks (W-6.3e, TD-43). It costs one command.
