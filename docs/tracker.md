@@ -83,6 +83,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-09-07 | TD-45 | **The audit stopped reporting one failure and started reporting all of them — and the first fully green audit run followed.** Three sweeps asserted inside their path loop (overflow ×5 widths, touch targets, step-hash resolution: seven of eighteen tests), so the first bad path threw and the rest of the list was never loaded. `/reference/deployment-environments` overflows at 320px and sits at index 13 of `CHEATSHEETS`, so **the nine sheets behind it had never been measured at 320px** — including two added the same day, while the suite reported a steady "1 failed". All three now collect into `failures[]` and assert once, matching what contrast, console, disclosure and panel-height already did. Then the one real failure it was hiding was fixed: `<h1 class="t-display">` on `/reference/[slug]` measured 298px against a 272px box, because ENVIRONMENTS is one unbreakable word in Archivo at `wdth` 118 and `px-6` leaves 272px at 320px — `24 + 298 = 322`, exactly the reported 2px. `hyphens-auto break-words`, on that h1 only, since it renders `sheet.title` (data of unknown length) while `/reference`'s h1 is the literal "Cheatsheets" | **RED by planting**, the method TD-26 established: two synthetic overflows on `/reference/ci-cd` and `/reference/github-actions`, both behind `deployment-environments` in registry order. Fail-fast loop with three failures present reported **one**; accumulating loop reported **all three, by name**. Plant removed before the fix wave. The layout fix was diagnosed rather than guessed — the first probe looked for elements past the right edge and found **zero**, because the overflow was internal (`scrollWidth` 298 vs `clientWidth` 272 on the h1). **Teeth check**: reverting only the className and leaving the comment returned the identical `@ 320px by 2px`, on the 320px test alone, other four widths green; restored. Gate: lint 0, typecheck 0, **1152/160**, build clean, **audit 18/18 — the first fully green run**, where it had read 17/18 since the overflow appeared | **The entry's own prediction was wrong, and that is the result worth keeping.** TD-45 said fixing it "will likely surface more than the one failure visible today, which is the point." It surfaced nothing new: across five widths, 23 sheets and every stage step, that 2px was the only real overflow, and the nine never-measured sheets are all clean. The fix bought known-good rather than merely unreported, plus the guarantee a future one cannot hide. **TD-45's first draft was also wrong twice about the code it described** — it claimed the touch-target sweep already asserted after its loop (it did not; `expect(small, ...)` was inside it at `audit.spec.ts:132`) and miscounted "four sweeps" for three. Both corrected in the closed entry rather than left standing. **Deferred:** TD-44 (the untracked-originals contradiction) is untouched and still needs the user's call |
 | 2026-09-07 | W-6.3m | **`ci-cd` cheatsheet shipped** — eighteenth drawn sheet, tethered to stage 11, and the **third concept/tool split** in the registry after `git-commands`/`git-branching` and `testing`/`playwright`. Four sections: integration vs continuous delivery vs continuous deployment (what each automates, and the human gate that separates the last two); the seven pipeline stages ordered cheapest-failure-first, each row carrying *what fails here* rather than only what runs; who plays each role (runner, build tool, quality gate, artifact registry, runtime target, provisioning, configuration management); and six practices. Built from **three** gathered graphics, one displayed and two consulted — the D-89 convention that D-90 superseded in premise but deliberately kept on file "for the next sheet that does draw on more than one graphic". This is that sheet, and the first to use it since D-90 was written. **Scope corrected before implementation**: the round opened intending to add two sections to `github-actions` instead, which would have filed Maven/Terraform/Ansible material under a tool-specific title and hung a Jenkins plate on a sheet named for GitHub Actions. `github-actions` gained two cross-references and no new sections. **Provenance**: `blog.bytebytego.com` is printed on the displayed plate, making this only the second sheet in the registry gathered with a real author and URL rather than *not recorded* (D-63) | RED-first: `index.test.ts`'s `isDrawn` slug list and its stage-11 tethering case were edited before the module existed and failed for the right reason (`- "ci-cd"` absent from both). **Teeth check ran twice** — removing `stage: '11-ci-cd'` failed the tethering test and only it (1 failed / 17 passed); typoing the plate `src` failed the on-disk test and only it (1 failed / 17 passed). Gate: lint 0, typecheck 0, **1152/160**, build clean (23 `/reference/*` routes, up from 22), audit **17/18**. **The one audit failure is the documented pre-existing `/reference/deployment-environments` 320px overflow — but that test throws at its first bad path, and `deployment-environments` sits *before* `ci-cd` in the registry, so the 320px sweep never reached the new page.** Verified independently with a throwaway spec: overflow 0 at all five widths, console clean, plate loads. The other four widths and the touch-target, contrast and console sweeps did cover it in the full run. Plate 1997K → 211K (89.4%, the largest saving in the ledger), read back at full size to confirm the small labels survive quality 82 | **Corrected a stale number rather than copying it**: W-6.3l's row cites `1143/160`, and `develop` measures `1152/160` on a clean worktree with nothing of this branch in it. The 1143 was already wrong when it was written; this branch adds no tests. **Deliberately left out of the sheet**: the DevOps source's Linux, Maven and AWS CLI command tables and its interview-questions block (study-guide material, and outside stage 11's domain), and the second source's deployment-strategy and environment-flow sections (already covered by `aws-deployment` and `deployment-environments`). **Not converted to webp**: both consulted graphics, so `public-assets.test.ts` has no orphan to catch — the trap W-6.3e tripped twice. **Still undrawn**: the five language sheets and `containers`. **NOT merged, NOT pushed, NOT deployed** |
 | 2026-09-07 | W-3.11 | **Stage 11 is interactive.** `docs/11-ci-cd.md` (306 lines after doc correction that updated action versions @v4→@v7/@v6/@v7 and added `### AI in CI/CD`) is ported to `web/src/features/ci-cd/` as **eight steps**, taking **W-3 to 11/18**. Six tasks against `docs/superpowers/plans/2026-09-04-stage-11-ci-cd.md`: doc correction, scaffold + data modules, ordering exercise, AI plays, main component + assembly + terms + references, github-actions cheatsheet. **The doc correction phase preceded the port**: bumped `actions/checkout` @v4→@v7, `pnpm/action-setup` @v4→@v6, `actions/setup-node` @v4→@v7 across both CI and E2E workflow YAML blocks (aligning with stage 04's web app), and added `### AI in CI/CD` (D-35 mandate — trigger conditions, secrets boundaries, concurrency, Copilot Autofix, flakiness detection). **Signature piece: OrderingExercise** — a click-to-place guess-then-reveal where the reader arranges five CI steps (format, lint, typecheck, test, build) cheapest-failure-first, locks, and sees cost reasoning per step with a Contrast ("Build first: 2 min for a semicolon" vs "Format first: 3 seconds"). New interaction pattern — no prior stage has ranking. **Three annotated YAML artifacts**: ci.yml (concurrency, frozen-lockfile, timeout-minutes, node-version-file, cache — pivot on frozen-lockfile), e2e.yml (deployment_status trigger, Playwright install, BASE_URL, upload-artifact on failure — pivot on deployment_status), dependabot.yml (groups, open-pull-requests-limit — pivot on groups). **RevealList for branch protection** (four rows: status checks, up-to-date branches, linear history + auto-merge, secrets + OIDC, each with RevealFacet "what it prevents" / "the catch"). Callout warn for GitHub Free/private repo caveat. **RevealList for scaling** (five moves: approvals, split jobs, merge queue, remote cache, flakiness data — each with "trigger" and "why not sooner" facets). **AIPlays** (four plays: Copilot workflow draft, Copilot Autofix, `/code-review` on workflow changes, flakiness detection). **Nine traps** as individual Callouts (plan said 7, doc has 9 — two additional: unenforced branch protection, ungrouped Dependabot). TeamNotes in scaling step. References (GitHub Actions syntax, Vercel Git integration, Playwright CI, Dependabot grouping). Six glossary terms: branch-protection, concurrency-group, deployment-status, frozen-lockfile, merge-queue, oidc. **Final whole-branch review (opus) returned Ready to merge**: 0 Critical, 0 Important, 2 Minor. M1 (fixed): duplicate Contrast in ordering step spoiled the exercise — removed outer, kept inner post-lock version. M2 (deferred): concurrency-group and frozen-lockfile terms not wrappable as `<Term>` — they appear in data strings, not JSX. **Touch target fix**: ordering exercise buttons were ~36px, added `min-h-11` below lg — confirmed by e2e. **Coverage walk (opus)**: 14 sections checked, 0 gaps — all teaching content ported. Seven rulings made during execution (all documented in SDD ledger): traps count 7→9, reversed-order score fix, regex collision fix, backtick removal from play title, render test selector fix, Callout title prop addition, trap title rendering convention | **19 commits** `f5bdf95`…`2d45305` on `feat/stage-11-ci-cd`, cut from `develop` at `a898068`; 36 files, **+4383/−8**. Tests **1064/149 → 1143/160** (79 new tests across 11 new test files). Full gate on merged result: `pnpm lint` clean, `pnpm typecheck` clean, `pnpm test` **1143/160**, `pnpm build` clean (stage 11 prerendered). `pnpm test:e2e` **17/18** (1 pre-existing on `/reference/deployment-environments` at 320px). Coverage walk: 14/14 sections, 0 gaps. `reference/glossary.md` regenerated (+6 terms). `reference/cheatsheets.md` regenerated (+1 sheet). **Merged to `develop`, `--no-ff`, branch deleted** | ~~**Coverage walk**~~ ✓ 14 sections, 0 gaps. ~~**Touch targets**~~ ✓ fixed and verified. **`pnpm test:dev-console`** — not yet run this round. **Humanizer** — not yet run on panel prose. **Pre-existing e2e failure**: `/reference/deployment-environments` overflows by 2px at 320px — unrelated |
 | 2026-09-07 | W-6.3l | **`github-actions` cheatsheet shipped** — seventeenth drawn sheet, tethered to stage 11. Three sections: workflow syntax (seven triggers: push, pull_request, deployment_status, schedule, workflow_dispatch, jobs/steps, uses/run), common patterns (concurrency + cancel-in-progress, matrix strategy, conditional steps, artifact upload/download, cache, reusable workflows), secrets and permissions (secrets.* context, OIDC token exchange, permissions block, environment protection rules). No source plate image — content original to this playbook. Filed under Standards alongside `code-review`, `testing`, `playwright`, `deployment-environments`, `aws-deployment`, `post-deploy-verification`, and `sdlc` | Committed to `develop` as part of `feat/stage-11-ci-cd`, merged `--no-ff`. Gate: 1143/160, lint/typecheck/build clean. `reference/cheatsheets.md` regenerated. `web/src/lib/cheatsheets/index.test.ts` updated (isDrawn slug list + stage-tethering case). Seventeen of twenty-two registered sheets now drawn | **Five language sheets remain** (`javascript`, `python`, `java`, `spring-boot`, `express`). **`containers`** (Docker/Kubernetes, originally planned for stage 11) remains undrawn — `github-actions` shipped instead as a closer match to what stage 11 actually teaches |
@@ -269,39 +270,55 @@ of what was believed at the time is the point.
 
 Ordered by cost of leaving it. Each names where it lives and what closes it.
 
-### TD-45 — The audit's sweeps fail fast, so one known failure blinds every path behind it · **Medium**
+### ~~TD-45~~ — The audit's sweeps fail fast, so one known failure blinds every path behind it · **CLOSED 2026-09-07**
 
-`e2e/audit.spec.ts`'s overflow tests loop over `auditPages(page)` **inside a single
-test** and assert per path:
+`e2e/audit.spec.ts`'s overflow, touch-target and step-hash sweeps looped over
+`auditPages(page)` and asserted **inside** the loop. The first failing path threw, and
+every path after it was never loaded. The suite reported `1 failed`, which reads as one
+broken page and was actually one broken page plus an unmeasured tail.
 
-```ts
-for (const path of await auditPages(page)) {
-  await page.goto(path, { waitUntil: 'networkidle' })
-  expect(overflow, `${path} @ ${width}px`).toBe(0)
-}
-```
+Three sweeps, seven of the eighteen tests: overflow (five, one per width), touch targets
+(one), step-hash resolution (one). All three now collect into a `failures[]` and assert
+once after the loop, which is what the contrast, console, disclosure and panel-height
+sweeps already did.
 
-The first failing path throws, and every path after it in the list is never loaded. The
-suite reports `1 failed`, which reads as one broken page and is actually *one broken page
-plus an unmeasured tail*.
+**Two corrections to this entry's own first draft, which was wrong twice.** It said "the
+touch-target sweep already accumulates into a `small[]` array and asserts after the loop"
+— it does not; `small` was per-path and `expect(small, ...)` sat inside the loop at
+`audit.spec.ts:132`, so it failed fast like the others. The sweep that actually modelled
+the right pattern was **contrast**. It also said "the four sweeps that do not", which
+miscounted: three sweeps, seven tests.
 
-This is live right now, not hypothetical. `/reference/deployment-environments` fails at
-320px and is a known pre-existing failure. It sits at index 13 in `CHEATSHEETS`, so at
-320px **every sheet registered after it is currently unswept** — `aws-deployment`,
-`post-deploy-verification`, `ci-cd`, `github-actions`, and the five language placeholders.
-W-6.3m's new sheet had to be checked with a throwaway spec, and only that spec is why its
-320px result is known at all. The other four widths pass, so they do sweep the whole list;
-it is 320px alone, and 320px is the width that catches overflow.
+**RED/GREEN.** Two synthetic overflows were planted on `/reference/ci-cd` and
+`/reference/github-actions`, both behind `/reference/deployment-environments` in registry
+order. Fail-fast loop, three failures present: **one reported**. Accumulating loop, same
+three present: **all three reported, by name**. Plant removed before the fix wave.
 
-Same family as ~~TD-26~~ — a check that is green about surfaces it never evaluated — and
-ranked **Medium** for the same reason that one was: the failure mode is silence, and the
-longer a known failure sits early in the list, the more pages hide behind it.
+**The prediction in this entry's first draft was wrong, and the honest result is the more
+useful one.** It said "fixing it will likely surface more than the one failure visible
+today, which is the point." It surfaced nothing new. Across all five widths, all 23
+sheets and every stage step, `/reference/deployment-environments @ 320px` was the only
+real overflow — the nine sheets the 320px sweep had never reached are all clean. What the
+fix bought is not a list of new bugs; it is that a future one cannot hide, and that the
+nine unmeasured sheets are now known-good rather than merely unreported.
 
-Closes by collecting failures across the loop and asserting once at the end
-(`expect(failures).toEqual([])`), so a run reports *every* bad path rather than the first.
-The touch-target sweep already accumulates into a `small[]` array and asserts after the
-loop; this is that pattern applied to the four sweeps that do not. Fixing it will likely
-surface more than the one failure visible today, which is the point.
+**The one real failure, diagnosed rather than guessed.** No element exceeded the right
+edge, so the first probe found nothing; the overflow was internal. `<h1 class="t-display
+mt-3 text-3xl">` measured `scrollWidth` 298 against `clientWidth` 272 — the title wraps,
+but ENVIRONMENTS is a single unbreakable word 298px wide in Archivo at `wdth` 118, and
+272px is all that `px-6` leaves at 320px. The title therefore reached `24 + 298 = 322`,
+which is exactly the page's `scrollWidth` and exactly the 2px reported. Fixed with
+`hyphens-auto break-words` on that h1 only: it renders `sheet.title`, which is data of
+unknown length, while `/reference`'s h1 is the literal "Cheatsheets" and needs neither.
+Hyphenation splits at a syllable (the document is `lang="en"`) rather than mid-word, and
+neither utility fires unless a word genuinely cannot fit, so every other title is
+visually untouched. Teeth-checked by reverting only the className and leaving the
+comment: the same `@ 320px by 2px` failure returned, on the 320px test alone, and the
+other four widths stayed green.
+
+**Gate on the fixed suite: audit 18/18** — the first fully green audit run; it had read
+17/18 since the deployment-environments overflow appeared. Plus lint 0, typecheck 0,
+1152/160, build clean.
 
 ### TD-44 — Two records say gathered originals are untracked; all 62 of them are tracked · **Low**
 

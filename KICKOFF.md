@@ -96,8 +96,9 @@ Previously shipped (2026-09-02/03):
 - Stage 12 (Staging, W-3.8) — six panels, coverage walk ran
 - `aws-deployment` (W-6.3i), `deployment-environments` (W-6.3h)
 
-**1152 tests across 160 files, build clean, e2e 17/18 (1 pre-existing),
-dev-console 1/1.**
+**1152 tests across 160 files, build clean, e2e 18/18, dev-console 1/1.**
+The audit is fully green for the first time — it read 17/18 for weeks, and TD-45 is
+why that number was not what it appeared to be.
 
 ---
 
@@ -127,9 +128,9 @@ re-reading the whole log.
   `test:dev-console` (React dev-mode warnings, outside the gate, run once per stage
   round — TD-35, D-84). Re-derive current counts rather than quoting them.
 - **1152 tests across 160 files** (the previous kickoff said 1143, which was already
-  wrong when written), build clean, e2e 17/18 (1 pre-existing on
-  `/reference/deployment-environments` at 320px), dev-console 1/1. That one failure
-  hides the rest of the 320px sweep behind it — **TD-45**.
+  wrong when written), build clean, **e2e 18/18**, dev-console 1/1. The long-standing
+  "17/18, 1 pre-existing" is closed: the overflow was real and is fixed, and TD-45 —
+  the reason the other 320px results were unknown rather than passing — is closed too.
 - **Deployed**: `W-5` complete, live at https://acp-dev-playbook.vercel.app since
   2026-08-11. `pnpm test:prod` verifies the deployment itself, outside the merge gate.
   `docs/learnings/deploying-101.md` before touching deploy config.
@@ -185,13 +186,12 @@ Notes for whoever is preparing this handoff:
     are tracked and `.gitignore` covers only `.DS_Store` and `.playwright-mcp/`. Either
     add the ignore rule and drop them from the index, or rewrite both paragraphs to
     describe tracking. Do not pick one silently. Opened as **TD-44**.
-  - **A green `pnpm test:e2e` is not a claim about every page.** The overflow tests loop
-    over paths inside a single test and throw at the first bad one, so every path after
-    it goes unchecked. `/reference/deployment-environments` fails at 320px and sits
-    early in the registry order, which means **the 320px sweep currently stops before
-    reaching any sheet registered after it**. W-6.3m's new sheet had to be verified with
-    a throwaway spec for that reason. Worth fixing properly — collect failures and
-    assert once at the end, rather than failing fast. Opened as **TD-45**.
+  - ~~**A green `pnpm test:e2e` is not a claim about every page**~~ — **closed
+    2026-09-07 as TD-45.** Every sweep now collects across the whole path list and
+    asserts once, so a run names every bad path instead of the first. Worth knowing why
+    it mattered: nine sheets had never been measured at 320px, and all nine turned out
+    clean, so the fix bought *known-good* rather than a pile of new bugs. **Keep the
+    rule when adding a sweep**: assert after the loop, never inside it.
   - **Two numbers in the records were wrong when written, both found by re-deriving.**
     The test count (`1143` against a real `1152`) and the originals-are-untracked claim.
     Re-run the query; do not copy the answer.
