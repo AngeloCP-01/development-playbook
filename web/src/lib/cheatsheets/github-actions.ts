@@ -1,6 +1,10 @@
 import type { Cheatsheet } from './types'
 
-/** No source plate — content original to this playbook, tethered to stage 11. */
+/**
+ * No source plate — content original to this playbook, tethered to stage 11.
+ * The tool-specific half of the pair: `ci-cd` carries the platform-agnostic
+ * pipeline, this sheet the syntax for one runner.
+ */
 export const githubActions: Cheatsheet = {
   slug: 'github-actions',
   title: 'GitHub Actions',
@@ -41,7 +45,7 @@ export const githubActions: Cheatsheet = {
         {
           term: '`jobs:` → `steps:`',
           what: 'A job runs on one runner. Steps run sequentially inside it.',
-          when: 'One job for a pipeline under five minutes. Split to parallel jobs past that.',
+          when: 'One job for a pipeline under five minutes. Split to parallel jobs past that. For what the steps should *be*, see `ci-cd`.',
         },
         {
           term: '`uses:` vs `run:`',
