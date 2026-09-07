@@ -269,6 +269,67 @@ of what was believed at the time is the point.
 
 Ordered by cost of leaving it. Each names where it lives and what closes it.
 
+### TD-45 — The audit's sweeps fail fast, so one known failure blinds every path behind it · **Medium**
+
+`e2e/audit.spec.ts`'s overflow tests loop over `auditPages(page)` **inside a single
+test** and assert per path:
+
+```ts
+for (const path of await auditPages(page)) {
+  await page.goto(path, { waitUntil: 'networkidle' })
+  expect(overflow, `${path} @ ${width}px`).toBe(0)
+}
+```
+
+The first failing path throws, and every path after it in the list is never loaded. The
+suite reports `1 failed`, which reads as one broken page and is actually *one broken page
+plus an unmeasured tail*.
+
+This is live right now, not hypothetical. `/reference/deployment-environments` fails at
+320px and is a known pre-existing failure. It sits at index 13 in `CHEATSHEETS`, so at
+320px **every sheet registered after it is currently unswept** — `aws-deployment`,
+`post-deploy-verification`, `ci-cd`, `github-actions`, and the five language placeholders.
+W-6.3m's new sheet had to be checked with a throwaway spec, and only that spec is why its
+320px result is known at all. The other four widths pass, so they do sweep the whole list;
+it is 320px alone, and 320px is the width that catches overflow.
+
+Same family as ~~TD-26~~ — a check that is green about surfaces it never evaluated — and
+ranked **Medium** for the same reason that one was: the failure mode is silence, and the
+longer a known failure sits early in the list, the more pages hide behind it.
+
+Closes by collecting failures across the loop and asserting once at the end
+(`expect(failures).toEqual([])`), so a run reports *every* bad path rather than the first.
+The touch-target sweep already accumulates into a `small[]` array and asserts after the
+loop; this is that pattern applied to the four sweeps that do not. Fixing it will likely
+surface more than the one failure visible today, which is the point.
+
+### TD-44 — Two records say gathered originals are untracked; all 62 of them are tracked · **Low**
+
+`reference/cheatsheet-sources.md`'s **Filing** section says captures "are **not
+committed** — the originals run 1–4MB each and git keeps every version forever."
+`docs/task.md`'s **W-6.2** entry says the same thing in different words: "Originals stay
+untracked and gitignored."
+
+Neither is true, and neither has been. `git ls-files reference/` returns **62 entries**,
+including every gathered original the ledger names — `git-commands.jpeg`,
+`CLEAN-CODE-principle.webp`, `playwright1.jpeg`, `sdlc.png`, `5types-of-testing.webp`.
+`.gitignore` is six lines and covers `.DS_Store` and `.playwright-mcp/` and nothing else.
+There is no rule that could have excluded them and no evidence one was ever written.
+
+Ranked **Low** because nothing is broken: the site serves the converted WebP either way,
+and the extra history costs disk, not correctness. What it costs is trust in the file
+that new sheets are gathered against, which is the same class of problem as the stale
+merge status `decisions-need-tests-101.md` was written about — a record believed because
+it is specific.
+
+**Closes either way, and which way is the user's call, not a reviewer's.** Option A:
+`.gitignore` grows a `reference/*.jpeg|png|gif|webp` rule, the tracked originals are
+removed from the index, and the ledger becomes the only record that an original ever
+existed. Option B: both paragraphs are rewritten to describe tracking, and the disk cost
+is accepted as the price of a ledger whose filenames resolve in a fresh clone. Opened by
+W-6.3m, which hit the question when deciding whether to commit its own three captures,
+and committed them to match observed practice rather than the record.
+
 ### TD-1 — The playbook prescribes tooling the app does not use · **Closed 2026-07-23**
 
 Resolved in ESLint's favour (D-22): Prettier added, Lefthook added, `stack.md` and

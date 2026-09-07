@@ -798,6 +798,11 @@ decorative on a drawn sheet, descriptive on an undrawn one, both directions test
 Originals stay untracked and gitignored; the conversion recipe and measured savings
 are in `reference/cheatsheet-sources.md`. Evidence in `docs/tracker.md`.
 
+> **Correction appended 2026-09-07, not rewritten.** "Originals stay untracked and
+> gitignored" is false and has been since this entry was written — all 62 files under
+> `reference/` are tracked and `.gitignore` covers only `.DS_Store` and
+> `.playwright-mcp/`. Opened as **TD-44**, which also carries the two ways it can close.
+
 **W-6.3 — Fill the ten empty sheets ◐** *(six of the original ten drawn 2026-08-24,
 plus three sheets not in the original count; five language sheets remain)*
 
