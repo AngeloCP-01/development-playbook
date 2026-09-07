@@ -23,7 +23,7 @@ describe('post-deployment verification AI plays data', () => {
   })
 
   test('all kinds are valid', () => {
-    const valid = new Set(['mcp', 'command', 'prompt', 'cli'])
+    const valid = new Set(['mcp', 'command', 'prompt', 'cli', 'cli-mcp'])
     for (const p of PLAYS) {
       expect(valid.has(p.kind), `${p.id} kind "${p.kind}"`).toBe(true)
     }
@@ -47,5 +47,14 @@ describe('post-deployment verification AI plays data', () => {
 
   test('has a CloudWatch baseline play', () => {
     expect(PLAYS.some((p) => p.id === 'compare-baseline')).toBe(true)
+  })
+
+  // The doc calls this one "(A CLI + MCP command.)" — playwright from a shell
+  // or claude-in-chrome through MCP. Tagging it `mcp` alone renders the badge
+  // "Browser tool", which tells the reader they need MCP when they do not.
+  test('the ten-minute-check play is labelled as both CLI and MCP, as the doc describes it', () => {
+    const play = PLAYS.find((p) => /ten-minute check/i.test(p.title + p.body))
+    expect(play, 'no ten-minute-check play found').toBeDefined()
+    expect(play!.kind).toBe('cli-mcp')
   })
 })

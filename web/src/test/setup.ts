@@ -19,6 +19,15 @@
  * A no-op is the right shape. Nothing in jsdom resizes, so the callback would
  * never fire anyway; what the tests need is for construction not to throw.
  * A test that actually cares about the measured result stubs the widths itself.
+ *
+ * `Element.prototype.scrollIntoView` is the third arrival, on the same rule and
+ * for the same reason: jsdom implements no layout and therefore no scrolling.
+ * `Stepper` calls it on every step change to bring the new panel to the top, so
+ * *any* test that activates a step throws `scrollIntoView is not a function`
+ * from inside an effect — the component is fine and the environment is not.
+ * Stubbing it here rather than per-file is what makes a panel other than the
+ * first one testable at all; stage 14's coverage-walk fixes were the first
+ * tests to need that, and they will not be the last.
  */
 
 import { cleanup } from '@testing-library/react'
@@ -33,3 +42,5 @@ class NoopResizeObserver {
 }
 
 vi.stubGlobal('ResizeObserver', NoopResizeObserver)
+
+Element.prototype.scrollIntoView = () => {}
