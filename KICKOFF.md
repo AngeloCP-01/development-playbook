@@ -101,7 +101,7 @@ Previously shipped (2026-09-02/03):
 - Stage 12 (Staging, W-3.8) — six panels, coverage walk ran
 - `aws-deployment` (W-6.3i), `deployment-environments` (W-6.3h)
 
-**1152 tests across 160 files, build clean, e2e 18/18, dev-console 1/1.**
+**1154 tests across 160 files, build clean, e2e 18/18, dev-console 1/1.**
 The audit is fully green for the first time — it read 17/18 for weeks, and TD-45 is
 why that number was not what it appeared to be.
 
@@ -132,7 +132,7 @@ re-reading the whole log.
   `test:e2e` (18-test Playwright audit, refuses a stale server per TD-27),
   `test:dev-console` (React dev-mode warnings, outside the gate, run once per stage
   round — TD-35, D-84). Re-derive current counts rather than quoting them.
-- **1152 tests across 160 files** (the previous kickoff said 1143, which was already
+- **1154 tests across 160 files** (the previous kickoff said 1143, which was already
   wrong when written), build clean, **e2e 18/18**, dev-console 1/1. The long-standing
   "17/18, 1 pre-existing" is closed: the overflow was real and is fixed, and TD-45 —
   the reason the other 320px results were unknown rather than passing — is closed too.
