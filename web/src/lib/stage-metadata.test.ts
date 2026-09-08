@@ -55,6 +55,7 @@ const AI_SECTION_STAGES = [
   '05-development',
   '06-testing',
   '07-code-review',
+  '11-ci-cd',
   '12-staging',
   '13-production-deployment',
   '14-post-deployment-verification',
