@@ -113,6 +113,24 @@ Naming: `<topic>-101.md`.
   because a write-up is a sentence a future session does not read; only checking
   `git branch --show-current` before the first edit, every time, especially right after a
   merge, actually holds. Read it before starting any new round of work, not just once.
+- `plans-are-unverified-101.md` — **nothing in this repository reads a plan.** Not lint,
+  typecheck, vitest, build or the audit suite; Prettier skips markdown; the cold reader is
+  forbidden everything but the one stage doc. So a plan is the most trusted artifact in a
+  round and the only one with no checker — trusted precisely because an implementer works
+  from a task slice and cannot see the argument around it. Distinct from
+  `decisions-need-tests-101.md`, which is about a claim decaying: this is a claim being
+  wrong the moment it is written. Stage 15's plan did it twice in an afternoon — seven
+  cumulative test counts copied forward instead of counted, and an omission that
+  reproduced the exact defect class the round existed to close, four hundred lines below
+  where it had diagnosed it. What caught the second was **a source read after the plan was
+  committed**, because it reasoned from the field inward while everything else reasoned
+  from the document outward. Read it before writing a plan, and again before believing
+  one.
+- `restructuring-a-shipped-stage-101.md` — what stage 13's AWS expansion taught, the first
+  revision of an already-shipped interactive stage rather than a fresh port: the step ID
+  rename is the critical path, not the content. *(This guide was written and never listed
+  here — it was orphaned from 2026-09-02 until 2026-09-08, which is its own small lesson
+  about indexes that are maintained by hand.)*
 - `rules-measure-the-wrong-thing-101.md` — what superseding D-38 taught: a rule can be right
   about what it cares about and wrong about what it counts. D-38 capped a stage's step count,
   reasoning that "a stepper stops being navigable when a step is a scroll" — a claim about

@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13 and 14 done; 7 remain — 11/18. **Stage 11 complete 2026-09-07**: 8 steps (gate, ordering, e2e, protection, deps, scaling, ai, traps), doc correction + ordering exercise signature piece, 1143/160 tests, all verification green. Seven stages remain)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13 and 14 done; 7 remain — 11/18. **Stage 11 complete 2026-09-07**: 8 steps (gate, ordering, e2e, protection, deps, scaling, ai, traps), doc correction + ordering exercise signature piece, 1143/160 tests, all verification green. Seven stages remain. **Stage 15's doc round (W-3.12) is planned and in flight on `fix/stage-15-doc-round` — the plan is written, the stage doc is untouched, `ready` stays `false`, and none of this advances the count**)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(eighteen of twenty-three registered sheets drawn — `github-actions` and `ci-cd` both added 2026-09-07, tethered to stage 11. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
@@ -126,7 +126,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13 and 14 done; 7 remain — 11/18. **Stage 11 complete 2026-09-07**: 8 steps, doc correction + ordering exercise, 1143/160 tests, e2e 17/18 (1 pre-existing), all verification green)*
+### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13 and 14 done; 7 remain — 11/18. **Stage 11 complete 2026-09-07**: 8 steps, doc correction + ordering exercise, 1143/160 tests, e2e 17/18 (1 pre-existing), all verification green. **W-3.12, stage 15's doc round, is planned and in flight — see below; it does not advance this count**)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -755,6 +755,56 @@ the reason this repo is public (**D-26**). The boxes were never ticked back.
       layout, and the edge logs no console errors. Scoped to what a local build cannot do —
       contrast and overflow stay in `audit.spec.ts`, because the bytes CI checked are the
       bytes Vercel serves
+
+---
+
+### W-3.12 — Stage 15, doc round then port ◐ *(doc round planned and in flight 2026-09-08 on `fix/stage-15-doc-round`; **not merged, not executed** — the plan is written, the stage doc is untouched)*
+
+Stage 15 closes the shipping pipeline that 11 → 12 → 13 → 14 opened, and it is the
+first stage whose doc was assessed **before** any of it was written, rather than
+after the port had already been shaped by it.
+
+**The doc round comes first, and it is not a formality.** Two cold readers ran on
+2026-09-08 per D-54, each allowed to read only `docs/15-observability.md`. The
+findings are recorded in full in
+[`docs/superpowers/specs/2026-09-08-stage-15-cold-reader-findings.md`](superpowers/specs/2026-09-08-stage-15-cold-reader-findings.md)
+and the round that closes them is
+[`docs/superpowers/plans/2026-09-08-stage-15-doc-round.md`](superpowers/plans/2026-09-08-stage-15-doc-round.md).
+
+What they found, in short:
+
+- **Six contradictions.** The reference implementation sent customer email to Sentry
+  while the Definition of done forbade personal data; the alert list required paging
+  on a new error type and forbade paging on a single error, two bullets apart; the
+  Artifacts entry demanded a four-signal dashboard from a section that listed three.
+- **Four things the stage requires and never teaches** — `beforeSend`, the `logger`
+  identifier its best example depends on, deploy markers, and monitoring a real user
+  path on a service that has no homepage.
+- **Nine things it never mentions**, headed by the two about silence: nothing in the
+  stage detects a scheduled job that never ran, and "nothing is reporting and
+  something is still wrong" had no answer anywhere. The material for the second was
+  on the page twice — a deliberately swallowed `catch` and a business failure that
+  throws nothing — and the lesson was never drawn.
+- **Consultability 2/5.** The document is filed by tool and read by symptom.
+
+**Five references were gathered by the user after the plan was committed**, and
+changed it — recorded as Task 13b rather than folded in silently. The one that
+justifies the task on its own: the round as planned taught scrubbing for the error
+tracker and nothing for the logs, while the checkbox it was fixing covers both. That
+is the same defect class the round exists to close, introduced by the round closing
+it. See [`docs/learnings/plans-are-unverified-101.md`](learnings/plans-are-unverified-101.md).
+
+**Scope of the doc round, deliberately:** corrections, the untaught artifacts, the
+missing sections, the `### AI in observability` section D-35 requires, glossary
+repairs, and platform coverage extended to AWS to match stages 13 and 14. **`ready`
+stays `false`.** The port is a later round and W-3 is **not** advanced by this one.
+
+**Deferred out of it, on the record:** trimming `## Traps` and deleting `## Artifacts`
+— both raised by the readers, both rejected because they are the house template
+across eighteen documents and changing one document to answer a playbook-wide
+question creates drift rather than removing it. Also the bold-lead-in navigability
+finding, which belongs to the port, since a stepper surfaces lead-ins as panel
+structure.
 
 ---
 
