@@ -40,14 +40,19 @@ fix.
 // src/lib/observability.ts
 import * as Sentry from '@sentry/nextjs'
 
-export function identifyUser(user: { id: string; email: string }) {
-  Sentry.setUser({ id: user.id, email: user.email })
+export function identifyUser(user: { id: string }) {
+  Sentry.setUser({ id: user.id })
 }
 
 export function addContext(key: string, data: Record<string, unknown>) {
   Sentry.setContext(key, data)
 }
 ```
+
+An opaque id is enough, because it **resolves to a person in your own database** — which
+you control, can query, and can delete. An email address in an error report is the same
+fact stored a second time, on infrastructure you do not control, under a retention policy
+you did not set.
 
 Attach the user to every authenticated request. "This error hit 400 users" and "this error
 hit one user with unusual data" are entirely different problems with entirely different
@@ -56,7 +61,7 @@ urgency, and you cannot tell them apart without it.
 Add breadcrumbs for meaningful actions — what the user was doing before it broke is often
 the whole answer.
 
-**Do not send secrets, passwords, tokens, or full payment details.** Sentry data is
+**Do not send secrets, passwords, tokens, or payment details.** Sentry data is
 retained, is accessible to anyone with account access, and lives on someone else's
 infrastructure. Configure `beforeSend` to scrub aggressively.
 
@@ -88,8 +93,9 @@ searchable a year later.
 Worth logging: authentication events, payments, permission denials, external API failures,
 background job outcomes, anything irreversible.
 
-Never log: passwords, tokens, session IDs, full card numbers, or the contents of user
-documents.
+Never log: passwords, tokens, session IDs, card numbers, or the contents of user
+documents. The last four digits and an expiry date are still personal data, and "it is
+only partial" is not a retention policy.
 
 ### The four signals
 
@@ -206,6 +212,9 @@ Resist adding more. A dashboard with forty charts is not read.
 
 - [ ] Errors reach Sentry with readable stack traces and user context
 - [ ] No secrets or personal data in error reports or logs
+- [ ] You know how to delete a person's data from your error tracker and your
+      logs, and have checked the retention window on both
+      ([08](08-security-audit.md))
 - [ ] Key events logged as structured objects
 - [ ] Health check verifies the database, not just the process
 - [ ] External uptime monitoring is active
