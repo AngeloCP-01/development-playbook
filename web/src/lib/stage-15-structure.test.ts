@@ -63,6 +63,20 @@ function doc(): string {
   return readFileSync(DOC, 'utf8')
 }
 
+/** The body of one `##` section, by heading. */
+function topLevelSection(heading: string): string {
+  const md = doc()
+  const anchor = new RegExp(
+    `^## ${heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`,
+    'm',
+  )
+  const start = md.search(anchor)
+  expect(start, `docs/15-observability.md has no "## ${heading}"`).not.toBe(-1)
+  const rest = md.slice(start)
+  const next = rest.indexOf('\n## ', 1)
+  return next === -1 ? rest : rest.slice(0, next)
+}
+
 // C1. The pre-round document defined `identifyUser` as
 // `Sentry.setUser({ id: user.id, email: user.email })` and then required, in
 // `## Definition of done`, "No secrets or personal data in error reports or
@@ -359,6 +373,28 @@ test('S1: baselines are taught in the body, not only in the checklist', () => {
   const signals = section('The four signals')
   expect(signals).toMatch(/baseline/i)
   expect(signals).toMatch(/write (them|the numbers) down|record/i)
+})
+
+// P1. p50/p95/p99 appeared throughout this stage, while neither this stage,
+// stage 09 nor the glossary defined them. The threshold wording matters when
+// measurements tie, and p99 still says nothing about the slowest request.
+test('P1: percentiles are thresholds that include ties, not maxima', () => {
+  const signals = section('The four signals')
+  expect(signals).toMatch(/p95[^.]*95[^.]*at or below/i)
+  expect(signals).toMatch(/p99[^.]*threshold[^.]*not (?:a |the )?maximum/i)
+  expect(signals).toMatch(/percentiles do not average/i)
+})
+
+// P2. A request-success SLO budgets failed requests; only a time-based uptime
+// SLO turns 0.1% into minutes. Conflating the two gives request volume a time
+// budget it cannot have.
+test('P2: the error budget keeps request and time-based SLO arithmetic separate', () => {
+  const scaling = topLevelSection('Scaling to a team')
+  expect(scaling).toMatch(/request-based[^.]*99\.9%[^.]*0\.1%[^.]*requests/i)
+  expect(scaling).toMatch(
+    /time-based[^.]*99\.9%[^.]*43\.2 minutes[^.]*30 days/i,
+  )
+  expect(scaling).toMatch(/error budget/i)
 })
 
 // S1. The disposal instruction for the commonest solo alerting failure was

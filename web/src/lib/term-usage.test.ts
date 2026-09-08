@@ -16,6 +16,9 @@ import { TERMS } from './terms'
  * much as for 05.
  */
 const SRC_DIR = fileURLToPath(new URL('..', import.meta.url))
+const DOCS_DIR = fileURLToPath(new URL('../../../docs/', import.meta.url))
+
+const KNOWN_ORPHANS: string[] = []
 
 function findTsxFiles(dir: string, files: string[] = []): string[] {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -46,4 +49,21 @@ test('every <Term id="..."> resolves against TERMS, since an unknown id degrades
     }
   }
   expect(misses, JSON.stringify(misses, null, 2)).toEqual([])
+})
+
+// A `see` link promises that the linked stage explains the term in context.
+// P2 exposed the missing reverse check: `error-budget` pointed to stage 15,
+// while stage 15 never used the phrase.
+test('a term pointing at a stage names something that stage actually says', () => {
+  const offenders: string[] = []
+
+  for (const [slug, term] of Object.entries(TERMS)) {
+    if (!term.see) continue
+    const md = readFileSync(join(DOCS_DIR, `${term.see}.md`), 'utf8')
+    if (!md.toLowerCase().includes(term.name.toLowerCase())) {
+      offenders.push(`${slug} -> ${term.see} (never says "${term.name}")`)
+    }
+  }
+
+  expect(offenders).toEqual(KNOWN_ORPHANS)
 })
