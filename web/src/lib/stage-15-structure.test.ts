@@ -92,3 +92,35 @@ test('C1: the scrubbing rules are not qualified by "full"', () => {
   expect(md).not.toMatch(/full payment details/i)
   expect(md).not.toMatch(/full card numbers/i)
 })
+
+/** The body of one `###` subsection, by heading. */
+function section(heading: string): string {
+  const md = doc()
+  const start = md.indexOf(`### ${heading}`)
+  expect(start, `docs/15-observability.md has no "### ${heading}"`).not.toBe(-1)
+  const rest = md.slice(start)
+  const next = rest.indexOf('\n### ', 1)
+  const capped = next === -1 ? rest : rest.slice(0, next)
+  const upper = capped.indexOf('\n## ', 1)
+  return upper === -1 ? capped : capped.slice(0, upper)
+}
+
+// C2. "A new error type in production" sat in the worth-alerting list and
+// "Any single error" in the not-worth list, two bullets apart. A new error
+// type on first occurrence is a single error, so the reader was told both to
+// page and not to page on the same event.
+test('C2: the not-worth-alerting list no longer forbids what the list above requires', () => {
+  const alerts = section('Alerts you will not learn to ignore')
+  expect(alerts).not.toMatch(/^- Any single error$/m)
+  expect(alerts).toMatch(/signature you have never seen/i)
+})
+
+// C3. The section bolds "Alert on symptoms, not causes" and then alerts on a
+// database connection count. The distinction it was missing: a resource with
+// a hard ceiling that does not recover on its own is worth alerting on before
+// it becomes a symptom, because crossing it is a cliff rather than a slope.
+test('C3: the symptoms-not-causes rule states its exception', () => {
+  const alerts = section('Alerts you will not learn to ignore')
+  expect(alerts).toMatch(/hard ceiling/i)
+  expect(alerts).toMatch(/does not recover on its own/i)
+})

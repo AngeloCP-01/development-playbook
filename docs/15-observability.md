@@ -152,7 +152,9 @@ result of noisy alerts.
 Worth alerting on:
 
 - Error rate above baseline for 5+ minutes
-- A *new* error type in production
+- A **new** error — a signature you have never seen before. This is the one exception to
+  the rule below, and it earns it: a novel error after a deploy is the highest-information
+  event your system produces.
 - The site being unreachable from outside
 - p95 latency doubling and staying there
 - Payment or auth failures spiking
@@ -161,12 +163,19 @@ Worth alerting on:
 
 Not worth alerting on:
 
-- Any single error
+- A single occurrence of an error signature you have seen before
 - CPU spikes that self-resolve
 - Anything that has resolved itself every time for months
 
 **Alert on symptoms, not causes.** "Users cannot check out" is actionable. "CPU is at 80%"
 is not — 80% CPU with everything working is fine.
+
+One exception, and it is the reason "database connections near the limit" is in the list
+above: a resource with a **hard ceiling** that **does not recover on its own** — a
+connection pool, a disk, an API quota — is worth alerting on *before* it becomes a symptom,
+because crossing it is a cliff rather than a slope. By the time users feel a full
+connection pool, every request is already failing. CPU has neither property: it is elastic
+and it self-resolves, which is why the number on its own tells you nothing.
 
 Route to somewhere that will actually interrupt you: push notification or SMS. Email
 alerts are read the next morning, which for an outage is not a response.
