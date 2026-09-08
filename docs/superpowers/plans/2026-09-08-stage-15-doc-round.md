@@ -529,7 +529,7 @@ Expected: four FAIL.
 
 - [ ] **Step 4: Rewrite the signal-to-source mapping**
 
-Replace the "Vercel Analytics covers latency and traffic. Sentry covers errors. Your database dashboard covers saturation. You do not need a unified platform to start." paragraph with a table. Keep the last sentence — it is right, and Task 11 will reconcile it with the one-dashboard requirement.
+Replace the "Vercel Analytics covers latency and traffic. Sentry covers errors. Your database dashboard covers saturation. You do not need a unified platform to start." paragraph with a table. Keep the last sentence — it is right, and **Task 13b** reconciles it with the `## Artifacts` requirement for one dashboard carrying all four signals. (This pointer originally named Task 11, which never picked it up; the gap was found while reading the gathered references and closed there.)
 
 The table's job is that every row is a *category* first:
 
@@ -1993,6 +1993,242 @@ drift rather than remove it."
 
 ---
 
+### Task 13b: Adjustments from the gathered references
+
+**Files:**
+- Modify: `docs/15-observability.md` — `### Three things, in order of value`, `### Structured logs`, `### Dashboards`, `## Scaling to a team`
+- Test: `web/src/lib/stage-15-structure.test.ts`
+
+**Interfaces:**
+- Consumes: `section()`, `doc()`.
+- Produces: **no new headings.** `EXPECTED` is unchanged — if this task needs to change it, the content went in the wrong place.
+
+Numbered `13b` rather than renumbering, because it is honest about when the material arrived: the plan was written and committed, then five references were gathered and read, and they changed it. Runs **before** Task 14, so the re-run sees the finished document.
+
+**Sources, all read 2026-09-08.** Record these in `reference/cheatsheet-sources.md` in Task 16 — they are the W-6 gathering for this stage as well as input here:
+
+1. *Best practices for logging in Node.js* — Atatus
+2. *Observability vs monitoring: key differences and similarities* — Sujeeth H R
+3. *The three pillars of observability* — Priya Dharshini
+4. *Observability with OpenTelemetry: why do we need it* — Tenil Sridhar
+5. *Building an observability platform with Prometheus, Grafana and Jenkins* — Kumar
+
+Source 3 **corroborates and changes nothing**: its three pillars are this stage's three things with a different ordering rationale, and its point that "reconstructing distributed request journeys without correlation IDs is slow and error-prone" is Task 8's finding arrived at independently. Worth saying in the report — a source that confirms is evidence, not filler.
+
+- [ ] **Step 1: Write the failing tests**
+
+```ts
+// Source 1. The Definition of done requires no secrets or personal data "in
+// error reports or logs". The round teaches beforeSend for the error tracker
+// and, until this task, taught nothing that redacts a log line. The document
+// would have shipped a checkbox it only half satisfied — the same defect
+// class as C1, introduced by the round that was fixing C1.
+test('logs are redacted, not only error reports', () => {
+  const logs = section('Structured logs')
+  expect(logs).toMatch(/redact/i)
+})
+
+// Source 1. The document showed exactly one level, `error`, and used it for a
+// declined card. Task 5 fixed that instance; this states the ladder.
+test('the level ladder is stated, not implied', () => {
+  const logs = section('Structured logs')
+  expect(logs).toMatch(/\bdebug\b/i)
+  expect(logs).toMatch(/\bfatal\b|\binfo\b/i)
+})
+
+// Source 2. The stage is called Observability and never distinguishes it from
+// monitoring. Its own epigraph makes the distinction without naming it.
+test('the stage names the distinction its title rests on', () => {
+  const three = section('Three things, in order of value')
+  expect(three).toMatch(/monitoring/i)
+  expect(three).toMatch(/did not think to ask|questions you did not|anticipate/i)
+})
+
+// Sources 2 and 3. A field that is correct in a log is ruinous as a metric
+// label. The document tells the reader to attach identifying fields and never
+// says where that stops.
+test('cardinality is distinguished between logs and metrics', () => {
+  const logs = section('Structured logs')
+  expect(logs).toMatch(/cardinality|as a metric label/i)
+})
+
+// Source 4. The document names a vendor for every signal and never mentions
+// the vendor-neutral option, which is the general answer to the transfer
+// problem Task 4 fixed case by case.
+test('OpenTelemetry is named, with the honest caveat', () => {
+  expect(doc()).toMatch(/OpenTelemetry/)
+})
+
+// Source 5 resolves a tension Task 4 deferred and Task 11 never picked up:
+// "you do not need a unified platform" against an Artifacts entry requiring
+// one dashboard with all four signals.
+test('the one-dashboard requirement is reconciled with three tools', () => {
+  const dash = section('Dashboards')
+  expect(dash).toMatch(/data source|queries/i)
+})
+```
+
+- [ ] **Step 2: Run and watch six fail**
+
+Run: `cd web && pnpm vitest run src/lib/stage-15-structure.test.ts`
+Expected: six FAIL, 33 tests total.
+
+- [ ] **Step 3: Redact the logs, not just the error reports**
+
+This is the one that matters most, because without it the round ships a
+Definition-of-done checkbox it half satisfies. Extend the Task 8 logger:
+
+```ts
+export const logger = pino({
+  level: process.env.LOG_LEVEL ?? 'info',
+  base: {
+    service: process.env.SERVICE_NAME ?? 'web',
+    env: process.env.NODE_ENV,
+  },
+  mixin: () => ({ requestId: requestContext.getStore()?.requestId }),
+  redact: {
+    paths: ['req.headers.authorization', 'req.headers.cookie', '*.password', '*.token'],
+    censor: '[redacted]',
+  },
+})
+```
+
+> `beforeSend` protects the error tracker and nothing else. Logs are the other
+> half of the same checkbox, and they are the half that is easier to leak into,
+> because a log line is written on the happy path by someone who was not
+> thinking about secrets. Configure redaction at construction, where it applies
+> to every call site including the ones you have not written yet.
+
+- [ ] **Step 4: State the level ladder**
+
+Extend Task 5's level policy with the ladder, keeping the policy sentence that
+is already there:
+
+```markdown
+| Level | For |
+|---|---|
+| `debug` | Detail you want while diagnosing and not in production |
+| `info` | Events you want to count later — the business outcomes |
+| `warn` | Something unexpected that the system handled. A declined card |
+| `error` | A fault you would investigate. This is what alerting reads |
+| `fatal` | The process cannot continue |
+```
+
+> The boundary that costs money is `warn` against `error`, because `error` is
+> the level your alerting reads. Everything routine that lands there is a false
+> page waiting to happen, and a few weeks of those is how you learn to ignore
+> the real one.
+
+- [ ] **Step 5: Name the distinction the stage's title rests on**
+
+At the top of `### Three things, in order of value`, before the numbered list:
+
+> **Monitoring asks whether the system is broken. Observability asks why.**
+> Monitoring is the checks you set up in advance, against the failures you
+> thought of; it answers questions you already knew to ask. Observability is
+> whether the system emits enough for you to answer questions you *did not*
+> think to ask — the outage whose shape nobody anticipated. The first is a
+> finite list. The second is a property, and it is why this stage's cadence is
+> "day one, then continuous": you are never done, because the questions keep
+> being new ones.
+>
+> Everything below is both. Errors and the four signals are monitoring; the
+> structured logs and the request id that let you ask something new at 3am are
+> observability.
+
+That last paragraph is what stops the distinction being a vocabulary lesson.
+The playbook's test for a definition is whether it changes what the reader
+does.
+
+- [ ] **Step 6: Draw the cardinality line**
+
+In `### Structured logs`, after the "worth logging / never log" lists:
+
+> One caution for later. The fields that make a log line useful — `userId`,
+> `invoiceId`, a request id — are exactly the fields that must **never** become
+> metric labels. A log store expects millions of distinct values; a metrics
+> database creates a separate time series for every combination of label values
+> and falls over. `event: 'invoice.payment_declined'` is a fine metric label.
+> `invoiceId` is how you take down your own monitoring. High cardinality is the
+> point in one and the failure mode in the other.
+
+- [ ] **Step 7: Name OpenTelemetry, honestly**
+
+In `## Scaling to a team`, as its own bullet, near the distributed-tracing one:
+
+```markdown
+- **Adopt OpenTelemetry when you have more than one place to send telemetry
+  to.** It is a vendor-neutral standard for generating and exporting logs,
+  metrics and traces — instrument once, choose the backend afterwards, change
+  the backend without re-instrumenting. It is deliberately not a dashboard, not
+  a database and not a monitoring product: it is the layer between your code
+  and whichever one you buy. Solo and on one platform it is machinery you do
+  not need yet; the day you are running the same service on two platforms, or
+  seriously considering leaving one vendor, it is the thing whose absence makes
+  that expensive.
+```
+
+The "not yet" framing is deliberate and matches how this stage already defers
+traces. A stage that recommends every good practice unconditionally teaches
+nothing about sequencing, which is most of what a playbook is for.
+
+- [ ] **Step 8: Reconcile three tools with one dashboard**
+
+Task 4 kept the sentence "You do not need a unified platform to start" and
+noted that a later task would reconcile it with the `## Artifacts` requirement
+for one dashboard carrying all four signals. **Task 11 did not pick that up.**
+It is a real gap in this plan, found by reading source 5, and this is where it
+closes.
+
+Add to `### Dashboards`:
+
+> Three tools do not mean three screens. What you need is not a unified
+> *platform* but a single **pane** — a visualization layer that queries each of
+> them as a data source and draws the result in one place. That separation is
+> the load-bearing idea: the thing that collects a metric and the thing that
+> draws it are different jobs, and Grafana querying Prometheus, CloudWatch and
+> a hosted error tracker at once is the ordinary arrangement rather than an
+> advanced one. Start on whichever console you already have; move to one pane
+> when checking three of them is what stops you looking.
+
+- [ ] **Step 9: Typecheck the changed logger (D-50)**
+
+The `redact` option's `paths` syntax is version-specific and wildcard paths are
+the part that breaks quietly. Run the harness, and if `redact` rejects the
+wildcard form on the installed version, fix the block rather than the harness
+and report it.
+
+Run: `npx tsc --noEmit`
+Expected: PASS.
+
+- [ ] **Step 10: Run**
+
+Run: `cd web && pnpm vitest run src/lib/stage-15-structure.test.ts`
+Expected: PASS, 39 tests. `EXPECTED` unchanged.
+
+- [ ] **Step 11: Commit**
+
+```bash
+git add docs/15-observability.md web/src/lib/stage-15-structure.test.ts
+git commit -m "docs(observability): adjustments from five gathered references
+
+The one that mattered: the Definition of done requires no secrets in error
+reports OR logs, and the round taught beforeSend for the tracker and nothing
+for the logs — the same defect class as C1, introduced by the round fixing
+C1. pino redaction is configured at construction, so it covers call sites
+nobody has written yet.
+
+Also names the distinction the stage's title rests on and never made
+(monitoring asks whether, observability asks why), draws the cardinality line
+between a log field and a metric label, names OpenTelemetry with a 'not yet'
+that matches how the stage already defers traces, and closes a gap this plan
+left: Task 4 promised a reconciliation of three tools against the one-
+dashboard requirement and no task delivered it. One pane, three data
+sources."
+```
+
+---
+
 ### Task 14: Re-run the instruments
 
 **Files:**
@@ -2135,18 +2371,34 @@ possibly in two different ways.
 - [ ] **Step 3: Add the W-6 gathering entry**
 
 Add an `### Observability · \`observability\` · stage 15` entry to
-`reference/cheatsheet-sources.md` under Priority 3, with the search queries.
-The five that pay are the ones that fill something the doc asserts without
-teaching: `"SLI SLO SLA" explained`, `"error budget" explained`,
-`"four golden signals" SRE`, `"RED method" "USE method" monitoring`,
-`"p50 p95 p99" percentiles explained`, `"logging levels" cheat sheet`.
+`reference/cheatsheet-sources.md` under Priority 3. **Five sources are already
+gathered** — they are listed at the top of Task 13b and were read on
+2026-09-08. Record each with its title and author in the entry and in the
+ledger at the bottom of the file, per that file's own rule that provenance is
+captured at gathering time.
+
+Mark which fed the document and which are sheet-only:
+
+- Node.js logging (Atatus) → fed `### Structured logs`: levels, redaction
+- Observability vs monitoring (Sujeeth H R) → fed the opening distinction
+- Three pillars (Priya Dharshini) → corroborated, changed nothing
+- OpenTelemetry (Tenil Sridhar) → fed `## Scaling to a team`
+- Prometheus / Grafana / Jenkins (Kumar) → fed the one-pane reconciliation;
+  otherwise sheet material, since it is a self-hosted stack and this playbook's
+  platforms are managed
+
+Still worth searching, since none of the five covers them and each fills
+something the doc asserts without teaching: `"SLI SLO SLA" explained`,
+`"error budget" explained`, `"four golden signals" SRE`,
+`"RED method" "USE method" monitoring`, `"p50 p95 p99" percentiles explained`.
 
 Note two things in the entry: that these searches will surface stage 16
 material (MTTR, on-call, postmortems) which files against
-`16-incident-management` and not here, and that no tool sheet is proposed yet
-because the project's own tools have little gatherable material while the
-available graphics are Prometheus/Grafana — the same vendor mismatch `ci-cd`
-accepted deliberately.
+`16-incident-management` and not here, and that the Prometheus/Grafana source
+is the one with drawable architecture — the same vendor mismatch `ci-cd`
+accepted deliberately when it shipped a Jenkins plate on a GitHub Actions
+project, and acceptable for the same reason: on a concept sheet the flow shape
+is the content.
 
 - [ ] **Step 4: Correct `KICKOFF.md`**
 
