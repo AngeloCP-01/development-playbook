@@ -28,6 +28,8 @@ const EXPECTED = [
   'Health checks',
   'Alerts you will not learn to ignore',
   'Uptime monitoring from outside',
+  'When nothing is reporting',
+  'Jobs that nobody watches',
   'Dashboards',
 ]
 
@@ -221,4 +223,35 @@ test('A4: monitoring an authenticated API is covered', () => {
 test('A4: certificate expiry has a countermeasure, not just a trap', () => {
   const uptime = section('Uptime monitoring from outside')
   expect(uptime).toMatch(/certificate/i)
+})
+
+// M2. The only lookup question with no answer anywhere: "a user reports
+// checkout failed but the error tracker shows nothing". The material was on
+// the page twice — a swallowed catch in the health-check example and a
+// business failure in the logging example — and the lesson was never drawn.
+test('M2: the document names the failures that raise no exception', () => {
+  const silence = section('When nothing is reporting')
+  expect(silence).toMatch(/swallow|caught and discarded/i)
+  expect(silence).toMatch(/200/)
+  expect(silence).toMatch(/absence/i)
+})
+
+// M1. A scheduled job that never runs produces no errors, no logs and no
+// requests, so every mechanism in this stage reports healthy. The doc
+// mentioned background jobs twice, both times assuming the job ran and failed.
+test('M1: a job that never ran is detectable', () => {
+  const jobs = section('Jobs that nobody watches')
+  expect(jobs).toMatch(/heartbeat|dead man/i)
+  expect(jobs).toMatch(/finally/)
+  expect(jobs).toMatch(/CloudWatch/)
+})
+
+test('the two silence sections sit after uptime monitoring', () => {
+  const md = doc()
+  expect(md.indexOf('### Uptime monitoring from outside')).toBeLessThan(
+    md.indexOf('### When nothing is reporting'),
+  )
+  expect(md.indexOf('### When nothing is reporting')).toBeLessThan(
+    md.indexOf('### Jobs that nobody watches'),
+  )
 })

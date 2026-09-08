@@ -305,6 +305,66 @@ export async function GET(request: Request) {
 Returning `404` rather than `401` for a bad token keeps the endpoint out of anyone's crawl
 results.
 
+### When nothing is reporting
+
+Everything above fires when something happens. Nothing above fires when something
+**stops**, and a system that has gone quiet looks exactly like a system that is fine.
+
+- **An exception that was caught and discarded.** The health check earlier in this stage
+  does it deliberately: `catch { /* stays false */ }`. The dependency is down, the
+  endpoint knows, and the reason is gone forever.
+- **A failure that is a normal response.** `invoice.payment_declined` — the logging
+  example above — is a business failure that throws nothing. So is every handled `4xx`.
+- **A third party returning `200` with a failure inside it.** Your HTTP client is
+  satisfied. Your integration is not.
+- **A failure on the client.** It never reached your server, so your server has nothing to
+  say about it.
+- **An event your own configuration dropped** — sampling, a quota, or the `beforeSend` you
+  just wrote.
+
+The fix is not more error tracking. It is to **count the outcomes you care about, not just
+the exceptions** — you already are, if you took the structured-logging section seriously.
+Once `order.created` is a counted event, its *absence* is measurable, and "no orders in
+ninety minutes on a Tuesday afternoon" is an alert you can actually write. An exception
+count falling to zero tells you nothing; a business event falling to zero tells you almost
+everything.
+
+**Absence of a signal is not evidence of health.** When someone reports a failure your
+tools did not see, that gap is the finding — not the report.
+
+### Jobs that nobody watches
+
+A scheduled job that fails is easy: it throws, and everything above catches it. A
+scheduled job that **never ran** produces no exception, no log line and no request. Every
+mechanism in this stage reports that the system is healthy, and it is — the job is simply
+not part of it any more.
+
+The instrument is a **heartbeat**, sometimes called a dead man's switch, and it is the
+only monitor here that alerts on silence: the job calls a URL when it finishes
+successfully, and the monitor pages you when the call does not arrive inside the window
+you set.
+
+```ts
+// At the end of the job — after the work, on the success path only.
+await fetch(process.env.HEARTBEAT_URL!, { method: 'POST' })
+```
+
+Not in a `finally`. A ping in a `finally` block reports success for a run that threw,
+which converts your only detector of silence into a source of false confidence.
+
+Any monitor that can page you on a *missing* check will do — Better Stack, Healthchecks.io
+and Cronitor all offer this as a heartbeat URL. On **AWS**, the equivalent is a CloudWatch
+alarm over a custom metric the job emits, with `TreatMissingData` set to `breaching`
+explicitly. The default is `missing`, which tells the alarm to disregard absent data
+points when deciding its state — which is precisely the condition you are trying to catch.
+
+- **A job that is slower every night.** Alert on duration as well as absence; a
+  reconciliation that has gone from four minutes to forty is on its way to overrunning its
+  window.
+- **A job that overlaps itself.** Two copies of a reconciliation running concurrently is a
+  different bug from either of them failing, and neither an error rate nor a heartbeat
+  will show it.
+
 ### Dashboards
 
 One dashboard, visible in one screen, answering: **is the application healthy right now?**
