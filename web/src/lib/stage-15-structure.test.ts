@@ -281,3 +281,34 @@ test('M4: the document says where logs go and how long they live', () => {
   expect(where).toMatch(/stream, not storage|not storage/i)
   expect(where).toMatch(/never expire/i)
 })
+
+// M8. "Check real dependencies" is right for an uptime prober and wrong for a
+// platform health check that restarts on failure, where a 30-second database
+// blip becomes a rolling restart of every instance.
+test('M8: liveness and readiness are distinguished', () => {
+  const health = section('Health checks')
+  expect(health).toMatch(/liveness/i)
+  expect(health).toMatch(/readiness/i)
+  expect(health).toMatch(/restart/i)
+})
+
+// M5. "Rate as a percentage of requests" is correct at scale and inverts below
+// it: at four requests a minute, one 500 is a 25% error rate.
+test('M5: the alerting section handles low traffic', () => {
+  const alerts = section('Alerts you will not learn to ignore')
+  expect(alerts).toMatch(/minimum|at least \d+ requests/i)
+})
+
+// M6. The DoD asked whether every alert is one you would act on at 2am and
+// never asked whether any of them arrives.
+test('M6: the document says to test that an alert arrives', () => {
+  const md = doc()
+  expect(md).toMatch(/fire (a|one) test alert|trigger it on purpose/i)
+})
+
+// M9. One error loop in a batch job burns a month of quota in minutes, after
+// which you are blind and do not know it.
+test('M9: quota exhaustion is covered', () => {
+  const errors = section('Errors that are actually useful')
+  expect(errors).toMatch(/quota|spike protection/i)
+})

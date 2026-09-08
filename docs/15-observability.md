@@ -104,6 +104,13 @@ Scrubbing is a deny-list, and a deny-list is only as current as the last time yo
 The thing that actually protects you is sending less: an id instead of an email, a reason
 code instead of a payload.
 
+One loop can spend everything. A batch job that throws once per row, over five thousand
+rows, sends five thousand events in a minute or two and empties a month's quota — after
+which you are blind, and nothing tells you so, because the thing that would have told you
+is the thing that ran out. Turn on spike protection, sample the noisy and expected, and
+set one alert on quota consumption itself. It is the only alert in this stage about your
+monitoring rather than your system, which is exactly why it gets forgotten.
+
 ### Structured logs
 
 Log objects, not sentences. Sentences are unsearchable at volume.
@@ -252,9 +259,16 @@ export async function GET() {
   const checks = { database: false }
 
   try {
-    await db.execute(sql`SELECT 1`)
+    await Promise.race([
+      db.execute(sql`SELECT 1`),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000)),
+    ])
     checks.database = true
-  } catch { /* stays false */ }
+  } catch (error) {
+    // Not a fault, so not `error` — but the reason is the only evidence of
+    // how, and a bare `catch {}` destroys it.
+    logger.warn({ event: 'health.dependency_unreachable', error })
+  }
 
   const healthy = Object.values(checks).every(Boolean)
   return Response.json(
@@ -266,6 +280,23 @@ export async function GET() {
 
 Check real dependencies. An endpoint returning `200 OK` unconditionally tells you the
 process is running, which you already knew.
+
+The realistic failure is not *refused*, it is *hung* — an exhausted pool, a network
+partition. Without the timeout the health check hangs with it and never returns the
+`degraded` state it exists to report, which means the endpoint fails in exactly the case
+it was written for.
+
+Two different things ask whether you are up, and they want different answers. **Liveness**
+is "is this process wedged, should the platform restart it" — and the honest answer
+depends on nothing but the process, because a restart cannot fix a database.
+**Readiness**, which is what this endpoint does, is "should traffic come here, is
+everything it depends on reachable".
+
+Point your uptime monitor at the dependency-checking one. Point your *platform* — Fly,
+ECS, Cloud Run, Kubernetes, anything that restarts or deregisters on a failed check — at a
+liveness endpoint that returns `200` whenever the process is running. Wire the platform to
+the dependency check and a thirty-second database blip restarts every instance you have,
+simultaneously, turning a recoverable hiccup into an outage with a restart storm on top.
 
 But do not point uptime monitoring only at `/api/health`. Monitor a real user path too —
 the health check can pass while the page a user actually loads throws.
@@ -307,8 +338,21 @@ because crossing it is a cliff rather than a slope. By the time users feel a ful
 connection pool, every request is already failing. CPU has neither property: it is elastic
 and it self-resolves, which is why the number on its own tells you nothing.
 
+**A ratio needs a floor.** "Error rate above 5%" is a sensible rule at a thousand requests
+a minute and nonsense at four: one failed request overnight is a 25% error rate, and it
+will page you. Gate every ratio alert on a minimum volume — *above 5% **and** at least
+twenty requests in the window* — and add a plain count alongside it for the traffic levels
+where the ratio is noise. The threshold that is right at lunchtime is wrong at 3am, and
+the volume gate is what keeps one rule usable across both.
+
 Route to somewhere that will actually interrupt you: push notification or SMS. Email
 alerts are read the next morning, which for an outage is not a response.
+
+**Fire a test alert on purpose, and confirm it reaches you on the device you expect to be
+woken by.** An alert routed to a dead phone number, an expired webhook, or an app whose
+notifications you silenced in a meeting is indistinguishable from a healthy system,
+forever, and the only thing that tells you is the incident. Do it when you set the alert
+up, and again when you change how you are reachable.
 
 ### Uptime monitoring from outside
 
@@ -358,9 +402,9 @@ results.
 Everything above fires when something happens. Nothing above fires when something
 **stops**, and a system that has gone quiet looks exactly like a system that is fine.
 
-- **An exception that was caught and discarded.** The health check earlier in this stage
-  does it deliberately: `catch { /* stays false */ }`. The dependency is down, the
-  endpoint knows, and the reason is gone forever.
+- **An exception that was caught and discarded.** A bare `catch {}` swallows the reason:
+  the dependency is down, the code knows, and why is gone forever. The health check
+  earlier in this stage logs its catch instead, for exactly this reason.
 - **A failure that is a normal response.** `invoice.payment_declined` — the logging
   example above — is a business failure that throws nothing. So is every handled `4xx`.
 - **A third party returning `200` with a failure inside it.** Your HTTP client is
@@ -477,6 +521,7 @@ Resist adding more. A dashboard with forty charts is not read.
 - [ ] External uptime monitoring is active
 - [ ] Every configured alert is one you would act on at 2am
 - [ ] Alerts route somewhere that interrupts you
+- [ ] At least one alert has been fired deliberately and confirmed to arrive
 - [ ] Baselines documented for error rate and p95 latency
       ([14](14-post-deployment-verification.md))
 - [ ] Dashboard shows deploy markers
