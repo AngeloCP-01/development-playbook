@@ -110,7 +110,10 @@ Log objects, not sentences. Sentences are unsearchable at volume.
 
 ```ts
 // src/lib/logger.ts
+import { AsyncLocalStorage } from 'node:async_hooks'
 import pino from 'pino'
+
+export const requestContext = new AsyncLocalStorage<{ requestId: string }>()
 
 export const logger = pino({
   level: process.env.LOG_LEVEL ?? 'info',
@@ -118,12 +121,31 @@ export const logger = pino({
     service: process.env.SERVICE_NAME ?? 'web',
     env: process.env.NODE_ENV,
   },
+  mixin: () => ({ requestId: requestContext.getStore()?.requestId }),
 })
 ```
 
 `pino` writes one JSON object per line to stdout, which is what every platform in this
 playbook already collects. Any library that does that will do; what matters is that the
 output is a line of JSON and not a sentence.
+
+`mixin` runs on every log call, so the id attaches itself and no call site has to remember
+it. Open the store once per request — in middleware, or the first line of the handler —
+with the incoming `x-request-id` if there is one, or a fresh `crypto.randomUUID()` if
+there is not. Platforms usually supply one already; use theirs when it exists, so your
+line and their line agree.
+
+One id is the difference between "here is an error" and "here is everything that happened
+during the request that produced it". It is also the cheapest thing in this stage: one
+field, no new vendor, no sampling decisions.
+
+```ts
+Sentry.setTag('requestId', requestId)
+```
+
+Now the error tracker and the logs are searchable by the same key, which is the whole of
+what tracing buys you until requests start crossing service boundaries
+([Scaling to a team](#scaling-to-a-team)).
 
 ```ts
 // Bad: unqueryable
@@ -158,6 +180,32 @@ background job outcomes, anything irreversible.
 Never log: passwords, tokens, session IDs, card numbers, or the contents of user
 documents. The last four digits and an expiry date are still personal data, and "it is
 only partial" is not a retention policy.
+
+### Where logs go, and what they cost
+
+`pino` writes to stdout. On every platform in this playbook,
+**stdout is a stream, not storage** — something collects it, keeps it for a while, and
+then does not. Deciding what that something is, and for how long, is part of this stage;
+discovering it during an incident is not.
+
+| | Collector | Retention default | What to set |
+|---|---|---|---|
+| **Vercel** | Runtime logs | Short, and shorter on lower plans | A drain to a log store if you need more than the built-in window |
+| **AWS** | CloudWatch Logs | **Never expire** | A retention policy per log group, explicitly |
+
+The AWS default is the one that bites. A log group with no retention policy keeps
+everything forever and bills for it forever, and nobody chose that — it is what happens
+when nobody chooses.
+
+Order of magnitude for a small production service, so you can tell whether this stage is
+an afternoon or a commitment: error tracking free to ~$30/month at low volume, uptime
+monitoring free to ~$10, logs the variable one — single-digit dollars if you keep a week
+and log events rather than everything, and unbounded if you keep everything forever. Check
+current pricing rather than trusting this paragraph; it is here to set expectations, not
+to quote.
+
+Retention is also a privacy decision, not only a cost one — whatever you kept is what you
+have to be able to delete ([08](08-security-audit.md)).
 
 ### The four signals
 

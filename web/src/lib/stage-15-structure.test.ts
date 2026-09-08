@@ -24,6 +24,7 @@ const EXPECTED = [
   'Three things, in order of value',
   'Errors that are actually useful',
   'Structured logs',
+  'Where logs go, and what they cost',
   'The four signals',
   'Health checks',
   'Alerts you will not learn to ignore',
@@ -254,4 +255,29 @@ test('the two silence sections sit after uptime monitoring', () => {
   expect(md.indexOf('### When nothing is reporting')).toBeLessThan(
     md.indexOf('### Jobs that nobody watches'),
   )
+})
+
+// M3. The exemplar log object was event/userId/invoiceId/reason/amountCents —
+// no join key. Distributed tracing is deferred to Scaling to a team, which is
+// fair, but a per-request id is not distributed tracing: it is one field, and
+// without it "work out why" fails at two log lines.
+test('M3: log lines carry a request id', () => {
+  const logs = section('Structured logs')
+  expect(logs).toMatch(/requestId/)
+  expect(logs).toMatch(/AsyncLocalStorage|x-request-id/i)
+})
+
+test('M3: the request id joins logs to the error tracker', () => {
+  const logs = section('Structured logs')
+  expect(logs).toMatch(/setTag/)
+})
+
+// M4. "Log volume costs money" was the whole treatment, and it implied a paid
+// destination the doc never told you to acquire. stdout on a container
+// platform is a stream, not storage.
+test('M4: the document says where logs go and how long they live', () => {
+  const where = section('Where logs go, and what they cost')
+  expect(where).toMatch(/retention/i)
+  expect(where).toMatch(/stream, not storage|not storage/i)
+  expect(where).toMatch(/never expire/i)
 })
