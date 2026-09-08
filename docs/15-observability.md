@@ -113,8 +113,26 @@ nothing without a denominator.
 **Saturation** — how close resources are to their limit. Database connections, function
 concurrency, storage.
 
-Vercel Analytics covers latency and traffic. Sentry covers errors. Your database
-dashboard covers saturation. You do not need a unified platform to start.
+| Signal | Where it comes from | Vercel | AWS |
+|---|---|---|---|
+| Latency | The HTTP layer in front of your app, which already times every request | Vercel Observability, per route | ALB or API Gateway CloudWatch metrics |
+| Traffic | The same layer — it counts every request, which is also your denominator | The same place | The same CloudWatch metrics |
+| Errors | Two questions, not one: *what broke* and *how often*. Sentry answers the first; the request-counting layer answers the second | Sentry, over Observability invocations | Sentry, over ALB 5XX and request count |
+| Saturation | Whatever owns the resource with the ceiling | Your database dashboard, function concurrency | CloudWatch per-service metrics, RDS connections |
+
+Error *rate* does not come from your error tracker. Sentry tells you what broke and how
+many times it was reported; it is sampled, it is filtered by `beforeSend`, and it never
+sees a request that succeeded. The denominator comes from the layer that **counts every
+request**. Take the numerator from one and the denominator from the other, or you are
+computing a percentage of a number you do not have.
+
+Check which number you are reading. Web Analytics counts visits and Speed Insights
+measures Core Web Vitals in the browser; both are the user's experience, not your server's
+time. The latency in the table above is the time your function spent. A p95 that doubles
+in one is not the same event as a p95 that doubles in the other, and an alert that does
+not say which will wake you for the wrong one.
+
+You do not need a unified platform to start.
 
 ### Health checks
 
@@ -160,6 +178,8 @@ Worth alerting on:
 - Payment or auth failures spiking
 - Database connections near the limit
 - A background job failing repeatedly
+- Traffic falling to near zero outside a pattern you recognise — the fastest signal that
+  something upstream of your application is broken
 
 Not worth alerting on:
 
@@ -196,11 +216,16 @@ One dashboard, visible in one screen, answering: **is the application healthy ri
 - Requests per minute
 - Error rate
 - p95 latency
+- Saturation of whatever is closest to its ceiling — usually database connections
 - Recent deploys, marked on the timeline
 
 That last item is disproportionately useful. Most problems correlate with a deploy, and
 seeing deploy markers against a metrics graph often collapses an investigation into a
 glance.
+
+Saturation is the one people drop, and it is the one most likely to be the actual
+incident on a small deployment: a connection pool exhausted by a batch job running
+alongside daytime traffic.
 
 Resist adding more. A dashboard with forty charts is not read.
 

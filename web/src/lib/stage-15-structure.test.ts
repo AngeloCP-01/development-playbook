@@ -124,3 +124,40 @@ test('C3: the symptoms-not-causes rule states its exception', () => {
   expect(alerts).toMatch(/hard ceiling/i)
   expect(alerts).toMatch(/does not recover on its own/i)
 })
+
+// C4. `## Artifacts` required "the four signals" on one dashboard; the
+// Dashboards section listed three of them plus deploy markers. Saturation —
+// the signal most likely to be the actual incident on a small deployment —
+// was the one dropped.
+test('C4: the dashboard carries all four signals', () => {
+  const dash = section('Dashboards')
+  expect(dash).toMatch(/saturation/i)
+})
+
+// C5. Errors were defined as a rate ("fifty errors means nothing without a
+// denominator") and sourced from Sentry, which is sampled, beforeSend-filtered
+// and has no request denominator. The numerator and the denominator lived in
+// different products and the doc never said how to divide them.
+test('C5: the error-rate source can produce a denominator', () => {
+  const signals = section('The four signals')
+  expect(signals).toMatch(/denominator/i)
+  expect(signals).toMatch(/counts every request/i)
+})
+
+// C6. The doc calls a traffic drop "one of the clearest possible signals that
+// something is badly broken" and then left it out of the alert list.
+test('C6: a traffic collapse is in the alert list', () => {
+  const alerts = section('Alerts you will not learn to ignore')
+  expect(alerts).toMatch(
+    /traffic (dropping|collapsing|falling)|requests? (per minute )?(dropping|falling) to/i,
+  )
+})
+
+// The transfer failure underneath all three: every signal states its category
+// before it names a product, so a reader on neither platform still knows what
+// to look for.
+test('the four signals each name a category before a product', () => {
+  const signals = section('The four signals')
+  expect(signals).toMatch(/CloudWatch/i)
+  expect(signals).not.toMatch(/Vercel Analytics covers latency and traffic/)
+})
