@@ -34,76 +34,89 @@ Before doing anything, read these for context:
   naming, atomic registration) and `quality-gates-101.md` (gate blind spots) both bear
   on whichever stage comes next.
 
-### Project state (as of 2026-09-07 — W-3 is **11/18**, seven stages remain.
+### Project state (as of 2026-09-08 — W-3 is **11/18**, seven stages remain.
 Stages 01–07, 11, 12, 13 and 14 are interactive. Stage 13 is platform-aware (8 steps,
-Vercel + AWS). **Eighteen of twenty-three** reference sheets drawn. The W-6 round that
-D-88 puts after a shipped stage has already run for stage 11 (two sheets, `github-actions`
-and `ci-cd`), so the next round is a `W-3` stage, not another sheet. **The recommended
-next round is stage 15 (Observability)** — completes the deploy→verify→observe pipeline
-(12→13→14→15). The doc exists but has not been assessed. Other candidates:
-08 (Security Audit, clean break), 09 (Performance, Core Web Vitals),
-10 (Documentation, never stops).)
+Vercel + AWS). **Eighteen of twenty-three** reference sheets drawn. Nothing is in flight
+and the tree is clean.
+
+**This session is for stage 15 (Observability), W-3.12.** It is already decided — do not
+re-litigate it. Stage 11's W-6 round is done (two sheets), so the reference-sheet cadence
+D-88 describes has been paid and the next move is a `W-3` stage. Stage 15 closes the
+shipping pipeline: 11 CI/CD → 12 Staging → 13 Deploy → 14 Verify → 15 Observe, all
+interactive. Its own W-6 round, if the material justifies one, comes after — not first.)
 
 **Start here, in order:**
 
 1. **Check the branch before editing anything.** `git branch --show-current`. If it says
-   `develop` or `main`, branch first. This bit twice in one session — see
+   `develop` or `main`, branch first. This has bitten twice — see
    `docs/learnings/branch-discipline-101.md`.
-2. **Before trusting anything this file says about merge status, run `git log`
-   yourself.** The previous version of this exact file was itself wrong about stage 06
-   being unmerged, for a full day — see
-   `docs/learnings/decisions-need-tests-101.md`'s newest section.
-3. **Stage 15 (Observability) is the recommended next round.** Completes the shipping
-   pipeline: 11 (CI/CD) → 12 (Staging) → 13 (Deploy) → 14 (Verify) → 15 (Observe), all
-   interactive. Same doc-correction-then-port pattern. Read
-   `docs/learnings/stage-implementation-101.md` before porting.
-4. Run `git fetch` and re-derive `develop`'s position against `origin/develop` and
-   `origin/main` — the exact commands are in "Branch state" below. Do not trust any commit
-   SHA quoted in this file.
+2. **Re-derive every number in this file before trusting it.** `git fetch`, then the
+   commands under "Branch state". This file has now been wrong three separate times: about
+   a stage's merge status, about a test count, and about whether `develop` was pushed. It
+   is trusted, which is exactly what makes a stale line expensive.
+3. **Read `docs/learnings/stage-implementation-101.md` before porting anything**, and
+   `web/PATTERNS.md` before designing a single panel. The default is not a paragraph — it
+   is something the reader clicks. A stage that is only prose blocks is the anti-pattern.
+4. **Cold-reader pass on `docs/15-observability.md` first** (D-54,
+   `docs/learnings/cold-reader-testing.md`). It validates the doc *before* the port
+   starts, not after. Stage 15's doc has never been assessed.
 
 ---
 
-#### What shipped since the last kickoff
+#### Stage 15 — what you need before you start
 
-**`ci-cd` cheatsheet** (W-6.3m) — eighteenth drawn sheet, tethered to stage 11, and the
-registry's **third concept/tool split** after `git-commands`÷`git-branching` and
-`testing`÷`playwright`. Four sections: CI vs continuous delivery vs continuous
-deployment; seven pipeline stages ordered cheapest-failure-first; who plays each role
-across seven tool categories; six practices. Three gathered graphics, one displayed and
-two consulted — the first use of D-89's convention since D-90 superseded its premise but
-kept the reasoning on file. **Merged to `develop` as `6f52212`, branch deleted.**
+Measured 2026-09-08. Re-check anything you are about to act on.
 
-**TD-45 closed** (merged as `99f6145`): the audit's overflow, touch-target and step-hash
-sweeps asserted inside their path loop, so the first failing path threw and the rest of
-the list was never loaded — nine sheets had never been measured at 320px. All sweeps now
-collect and assert once. The one failure it was hiding is fixed, and **the audit is
-18/18 for the first time**.
+- **`docs/15-observability.md` is 261 lines**: 6 `##` sections and 9 `###` subsections.
+  The teachable spine is *Three things in order of value · Errors that are actually
+  useful · Structured logs · The four signals · Health checks · Alerts you will not learn
+  to ignore · Uptime monitoring from outside · Dashboards*, then Artifacts, Definition of
+  done, Scaling to a team, Traps. That is more subsections than fit four-to-six `Step`
+  objects, so grouping is a real design decision, not bookkeeping.
+- **The doc has no `### AI in observability` section, and it needs one.**
+  `stage-metadata.test.ts` fails any `ready: true` stage whose doc lacks that heading, so
+  the port cannot land without writing it. Stage 11's round wrote its AI section and then
+  expanded it 4→8 plays; budget for authoring, not transcribing. **None of the seven
+  remaining stage docs has one** — this is true for every future port, not just this one.
+- **`references.ts` has zero entries for `15-observability`.** Every ported stage so far
+  carries references; this one starts empty, so gathering them is part of the round.
+  `terms.ts` already has 3 terms pointing at the stage.
+- **`stages.ts` has it `ready: false`**, blurb "Know something is wrong before your users
+  tell you.", timing "Errors on day one; the rest grows continuously." Note the cadence:
+  observability never stops, so any framing that implies a finished checkpoint fights the
+  playbook's central claim.
+- **The three-file registration is one atomic operation** — `stages.ts` (`ready: true`),
+  `stage-content.ts`, `step-ids.ts`. Do it in the assembly task, not the scaffold task.
+- **Panel content is testable now.** `Element.prototype.scrollIntoView` is stubbed in
+  `src/test/setup.ts`. Before that, any test activating a step other than the first threw
+  from inside a `Stepper` effect, which is why stage 14's component test had six tests
+  that only ever inspected the rail. Write real panel assertions; and assume other stages'
+  component tests still carry that blind spot.
 
-**TD-44 is still open and is a question for you**, not a chore: see "Open threads".
+#### What shipped in the session before this one (2026-09-07)
 
-**Stage 11 (CI/CD) is interactive** (W-3.11), merged 2026-09-07.
-Eight steps: annotated ci.yml/e2e.yml/dependabot.yml, click-to-place ordering
-exercise (cheapest-failure-first), branch protection RevealList, scaling moves,
-8 AI plays, 9 traps. Doc corrected: action versions @v4→@v7/@v6/@v7, AI section
-added then expanded (8 plays covering Copilot review, Claude Code in CI, build
-diagnosis, test gap analysis). Six glossary terms, four references. Coverage walk
-14/14 sections, 0 gaps. W-3 at 11/18.
+Four branches, all merged `--no-ff`, all deleted, each re-gated on the merged result.
 
-**`github-actions` cheatsheet shipped** (W-6.3l) — tethered to stage 11, 17th drawn.
+- **`6f52212`** — `ci-cd` reference sheet (W-6.3m), the registry's third concept/tool
+  split. Opened TD-44 and TD-45.
+- **`99f6145`** — **TD-45 closed.** The audit's overflow, touch-target and step-hash
+  sweeps asserted *inside* their path loop, so the first failure threw and the rest went
+  unmeasured; nine sheets had never been checked at 320px. All sweeps now collect and
+  assert once. **The audit reads 18/18 for the first time** — it said 17/18 for weeks, and
+  that number was never what it appeared to be.
+- **`4fdb9bd`** — `ci-cd` expanded 4→7 sections, 24→49 rows (W-6.3n), after the sheet
+  shipped without using its two densest sources.
+- **`a8f56de`** — **stage 14's coverage walk**, the one shipped stage that never had one.
+  12 of 16 doc sections covered; five gaps fixed, one finding downgraded and one rejected
+  on verification.
 
-Previously shipped (2026-09-04):
-- Stage 14 (Post-Deployment Verification, W-3.10) — 6 steps, doc expanded to 343 lines
-- `post-deploy-verification` (W-6.3j), `git-cheatsheet` (W-6.3k)
+**All four merged without a whole-branch review**, on the user's call. Every previous
+review in this repo found something a green gate did not.
 
-Previously shipped (2026-09-02/03):
-- Stage 13 AWS expansion (W-3.9b) — 8 steps, coverage walk ran
-- Stage 13 initial interactive port (W-3.9) — six Vercel-focused steps
-- Stage 12 (Staging, W-3.8) — six panels, coverage walk ran
-- `aws-deployment` (W-6.3i), `deployment-environments` (W-6.3h)
-
-**1161 tests across 160 files, build clean, e2e 18/18, dev-console 1/1.**
-The audit is fully green for the first time — it read 17/18 for weeks, and TD-45 is
-why that number was not what it appeared to be.
+**1161 tests across 160 files, build clean, e2e 18/18.** `pnpm test:dev-console` has not
+run since 2026-09-07 — a `next dev` server was occupying :3200 and Next refuses a second
+for the same directory. Run it once this round; it is the only thing that sees React's
+development warnings.
 
 ---
 
@@ -133,10 +146,12 @@ re-reading the whole log.
   `test:e2e` (18-test Playwright audit, refuses a stale server per TD-27),
   `test:dev-console` (React dev-mode warnings, outside the gate, run once per stage
   round — TD-35, D-84). Re-derive current counts rather than quoting them.
-- **1161 tests across 160 files** (the previous kickoff said 1143, which was already
-  wrong when written), build clean, **e2e 18/18**, dev-console 1/1. The long-standing
-  "17/18, 1 pre-existing" is closed: the overflow was real and is fixed, and TD-45 —
-  the reason the other 320px results were unknown rather than passing — is closed too.
+- **1161 tests across 160 files**, build clean, **e2e 18/18**. `test:dev-console` is
+  **unrun since 2026-09-07**, not passing — do not quote a number for it. The
+  long-standing "17/18, 1 pre-existing" is closed: the overflow was real and is fixed,
+  and TD-45 — the reason the other 320px results were unknown rather than merely
+  unreported — is closed too. An earlier kickoff quoted 1143 here, which was already
+  wrong when written; that is the habit step 2 exists to break.
 - **Deployed**: `W-5` complete, live at https://acp-dev-playbook.vercel.app since
   2026-08-11. `pnpm test:prod` verifies the deployment itself, outside the merge gate.
   `docs/learnings/deploying-101.md` before touching deploy config.
@@ -151,27 +166,29 @@ git log --oneline -1 develop origin/develop main origin/main
 git rev-list --count origin/develop..develop
 ```
 
-**Last measured at the end of this session (2026-09-07), after both merges.** `develop`
-is at `a8f56de`, **3 commits ahead of `origin/develop`** (`32c1613`) and **42 ahead of
-`main`** (`d659d32`), so a promotion is pending. The user pushed once mid-session, which
-is why this number reset rather than climbing. `main` is 2 ahead of `develop`, which is
-just its own `--no-ff` merge commits.
+**Measured 2026-09-08 at handoff.** `develop` and `origin/develop` are **identical** at
+`10b1f6b` — the user pushed after the last merge. `develop` is **43 commits ahead of
+`main`** (`d659d32`), so a promotion is pending and it is the user's to make. `main` is 2
+ahead of `develop`, which is just its own `--no-ff` merge commits.
 
-The previous version of this paragraph was wrong, which is why the numbers above are
-measured rather than carried forward: it claimed `develop` was "well ahead of
-`origin/develop` (the user has not pushed since several rounds ago)" when the two were
-identical.
+A version of this paragraph two sessions ago was wrong, claiming `develop` was "well
+ahead of `origin/develop` (the user has not pushed since several rounds ago)" when the
+two were identical. That is why every number here is measured at handoff rather than
+carried forward, and why step 2 at the top says to re-derive.
 
-**No branch is in flight.** All four of this session's branches merged `--no-ff` and were
-deleted: `feat/ci-cd-cheatsheet` as `6f52212`, `fix/audit-fail-fast` as `99f6145`,
-`feat/ci-cd-sheet-expansion` as `4fdb9bd`, `fix/stage-14-coverage-walk` as `a8f56de`.
-Each merged result was re-gated first-hand — lint 0, typecheck 0, 1161/160, build clean,
-audit 18/18.
+**No branch is in flight, and the tree is clean.** All four branches from 2026-09-07
+merged `--no-ff` and were deleted: `feat/ci-cd-cheatsheet` as `6f52212`,
+`fix/audit-fail-fast` as `99f6145`, `feat/ci-cd-sheet-expansion` as `4fdb9bd`,
+`fix/stage-14-coverage-walk` as `a8f56de`. Each merged result was re-gated first-hand —
+lint 0, typecheck 0, 1161/160, build clean, audit 18/18.
 
-**Both merged without a whole-branch review, on the user's call.** Every previous
-branch's review found something a green gate did not, so treat both as less checked than
-usual. `pnpm test:dev-console` did not run either: a `next dev` server was already up on
-:3200 and Next refuses a second one for the same directory.
+**Two stale branches predate all of this and were deliberately not touched**:
+`docs/2026-08-12-stage-04-spec` and `feat/stage-03-standard-practices`. Check whether
+they are merged before assuming either is safe to delete. Not this round's job.
+
+**All four merged without a whole-branch review, on the user's call.** Every previous
+branch's review in this repo found something a green gate did not, so treat that code as
+less checked than usual if you touch it.
 
 **Re-derive before trusting anything here.** That instruction is not boilerplate: this
 paragraph has now been wrong twice, about two different things.
@@ -195,9 +212,12 @@ Notes for whoever is preparing this handoff:
 - If a round is already scoped, add a per-round sibling — `KICKOFF-W4.md` — rather than
   overwriting this one. The generic version stays useful.
 - Open threads worth carrying forward:
-  - **Four branches merged unreviewed this session** (`6f52212`, `99f6145`, `4fdb9bd`,
-    `a8f56de`). Nothing is in flight, but none got the whole-branch pass the standard
-    calls for.
+  - **`pnpm test:dev-console` has not run since 2026-09-07.** It needs its own dev server
+    and refuses to start while another `next dev` holds the same directory — the user had
+    one on :3200. Ask them to stop it rather than killing their process. It is the only
+    thing that sees React's development warnings, and it found a real bug on its first run.
+  - **Four branches merged unreviewed on 2026-09-07** (`6f52212`, `99f6145`, `4fdb9bd`,
+    `a8f56de`). None got the whole-branch pass the standard calls for.
   - **`develop` is 42 commits ahead of `main`** and 3 ahead of `origin/develop`. The
     promotion PR is the user's.
   - **Panel content is testable now.** `Element.prototype.scrollIntoView` is stubbed in
@@ -219,9 +239,10 @@ Notes for whoever is preparing this handoff:
     it mattered: nine sheets had never been measured at 320px, and all nine turned out
     clean, so the fix bought *known-good* rather than a pile of new bugs. **Keep the
     rule when adding a sweep**: assert after the loop, never inside it.
-  - **Two numbers in the records were wrong when written, both found by re-deriving.**
-    The test count (`1143` against a real `1152`) and the originals-are-untracked claim.
-    Re-run the query; do not copy the answer.
+  - **Three claims in the records were wrong when written, all found by re-deriving.**
+    A test count (`1143` against a real `1152` at the time), the originals-are-untracked
+    claim (TD-44), and two rows saying "NOT merged" about branches merged weeks earlier.
+    Re-run the query; never copy the answer forward.
   - **Read `docs/learnings/branch-discipline-101.md` before the first commit of any new
     round**, not just once.
   - **A "merged"/"not merged" claim is a query to re-run, not a fact to reuse** —
