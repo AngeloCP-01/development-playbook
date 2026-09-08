@@ -25,11 +25,15 @@ driven by incidents that were harder to diagnose than they should have been.
 **2. Metrics** — aggregate health over time. This is what tells you "normal" so that
 "abnormal" is legible.
 
-**3. Traces** — where request time went. Most valuable when debugging slowness rather than
-failure.
+**3. Traces** — where request time went, across every hop of one request. This stage does
+not set them up, and that is not an oversight: with one application and one database, a
+trace tells you what a slow query log already told you. **You will know when you need
+them** — the symptom is a slowness you cannot locate after checking the obvious two
+places, and it usually arrives with the second service
+([09](09-performance-optimization.md), [Scaling to a team](#scaling-to-a-team)). Until
+then the request id from [Structured logs](#structured-logs) does the job traces would.
 
-Solo, errors plus a handful of metrics covers the large majority of real need. Add traces
-when you have a performance problem you cannot locate ([09](09-performance-optimization.md)).
+Solo, errors plus a handful of metrics covers the large majority of real need.
 
 ### Errors that are actually useful
 
@@ -258,6 +262,14 @@ latency breakdown is an Observability Plus feature. Below it you get invocation 
 error rate but not the latency split, which is worth knowing before you write an alert
 against a number your plan does not show you.
 
+Instrumenting these gives you numbers. It does not give you *normal*, and without normal
+none of them is readable: 12 errors in the last hour is a catastrophe or a Tuesday, and
+during an incident is the worst possible moment to find out which.
+**Write the numbers down** once you have a week of ordinary traffic — error rate, p95
+latency, requests per minute at your busy hour and your quiet one — somewhere you will
+find them at 3am, which means the repository and not your memory. Stage 14 uses the same baselines to judge a
+deploy ([14](14-post-deployment-verification.md)); this is where they come from.
+
 You do not need a unified platform to start.
 
 ### Health checks
@@ -357,6 +369,13 @@ the volume gate is what keeps one rule usable across both.
 
 Route to somewhere that will actually interrupt you: push notification or SMS. Email
 alerts are read the next morning, which for an outage is not a response.
+
+An alert that has woken you four times without once needing action is not a discipline
+problem, it is a broken alert, and you have three moves: **raise the threshold**,
+**lengthen the window** it has to hold for, or **delete it**. Reach for the first two
+before the third — four fires a week is usually a threshold set from a guess rather than
+from a baseline. Delete without hesitation when it has never once led to action; an alert
+nobody acts on is training you to ignore the one that matters.
 
 **Fire a test alert on purpose, and confirm it reaches you on the device you expect to be
 woken by.** An alert routed to a dead phone number, an expired webhook, or an app whose
@@ -583,8 +602,9 @@ the thing that mattered is not on it.
 - **Set up on-call rotation** with a real escalation path, once the team can sustain it.
 - **Alerts need an owner.** Unowned alerts are ignored by everyone, each assuming someone
   else has it.
-- **Review alert noise monthly.** Delete alerts that never led to action. This is the
-  single most effective way to keep alerting trustworthy.
+- **Review alert noise monthly, as a team.** Unowned alerts are ignored by everyone, each
+  assuming someone else has it, and the monthly review is where ownership gets assigned or
+  the alert gets deleted.
 - **Add distributed tracing** once requests cross service boundaries and you cannot follow
   them in one place.
 

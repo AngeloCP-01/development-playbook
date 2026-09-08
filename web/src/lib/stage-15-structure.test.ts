@@ -99,10 +99,21 @@ test('C1: the scrubbing rules are not qualified by "full"', () => {
   expect(md).not.toMatch(/full card numbers/i)
 })
 
-/** The body of one `###` subsection, by heading. */
+/**
+ * The body of one `###` subsection, by heading.
+ *
+ * Anchored to a whole line. A plain `indexOf('### Structured logs')` also
+ * matches an inline mention of that heading in another section's prose, and
+ * when one was written during this round it silently re-pointed three
+ * unrelated tests at the wrong slice.
+ */
 function section(heading: string): string {
   const md = doc()
-  const start = md.indexOf(`### ${heading}`)
+  const anchor = new RegExp(
+    `^### ${heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*$`,
+    'm',
+  )
+  const start = md.search(anchor)
   expect(start, `docs/15-observability.md has no "### ${heading}"`).not.toBe(-1)
   const rest = md.slice(start)
   const next = rest.indexOf('\n### ', 1)
@@ -337,4 +348,29 @@ test('M6: the document says to test that an alert arrives', () => {
 test('M9: quota exhaustion is covered', () => {
   const errors = section('Errors that are actually useful')
   expect(errors).toMatch(/quota|spike protection/i)
+})
+
+// S1. "Baselines documented for error rate and p95 latency" was a DoD
+// checkbox and "No baseline" was a trap, so the only actionable statement
+// lived in a closing checklist and the only explanation in a list of
+// mistakes. A cold reader looking for "what does normal look like" found
+// neither.
+test('S1: baselines are taught in the body, not only in the checklist', () => {
+  const signals = section('The four signals')
+  expect(signals).toMatch(/baseline/i)
+  expect(signals).toMatch(/write (them|the numbers) down|record/i)
+})
+
+// S1. The disposal instruction for the commonest solo alerting failure was
+// under a heading that tells solo readers it is not for them.
+test('S1: deleting a noisy alert is in the alerting section', () => {
+  const alerts = section('Alerts you will not learn to ignore')
+  expect(alerts).toMatch(/delete/i)
+  expect(alerts).toMatch(/raise the threshold|lengthen the window|tune/i)
+})
+
+// S3. The taxonomy promised three things and delivered two.
+test('S3: traces get more than an announcement', () => {
+  const three = section('Three things, in order of value')
+  expect(three).toMatch(/you will know when you need|until then/i)
 })
