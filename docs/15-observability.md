@@ -65,17 +65,73 @@ the whole answer.
 retained, is accessible to anyone with account access, and lives on someone else's
 infrastructure. Configure `beforeSend` to scrub aggressively.
 
+```ts
+// src/lib/observability.ts
+const SECRETS = [
+  /postgres(?:ql)?:\/\/\S+/gi, // connection strings carry the password inline
+  /\bsk_live_[A-Za-z0-9]+/g, // provider secret keys
+  /\bBearer\s+[A-Za-z0-9._-]+/gi,
+]
+
+function redact(text: string): string {
+  return SECRETS.reduce((acc, pattern) => acc.replace(pattern, '[redacted]'), text)
+}
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  beforeSend(event) {
+    // Sentry captures request headers by default, and that is where
+    // credentials live.
+    for (const header of ['authorization', 'cookie', 'x-api-key']) {
+      delete event.request?.headers?.[header]
+    }
+
+    // It captures bodies too. A form post carries whatever the form carried.
+    if (event.request) delete event.request.data
+
+    // And an exception message is free text: a failed query prints the
+    // connection string, password included.
+    for (const value of event.exception?.values ?? []) {
+      if (value.value) value.value = redact(value.value)
+    }
+
+    return event
+  },
+})
+```
+
+Scrubbing is a deny-list, and a deny-list is only as current as the last time you read it.
+The thing that actually protects you is sending less: an id instead of an email, a reason
+code instead of a payload.
+
 ### Structured logs
 
 Log objects, not sentences. Sentences are unsearchable at volume.
+
+```ts
+// src/lib/logger.ts
+import pino from 'pino'
+
+export const logger = pino({
+  level: process.env.LOG_LEVEL ?? 'info',
+  base: {
+    service: process.env.SERVICE_NAME ?? 'web',
+    env: process.env.NODE_ENV,
+  },
+})
+```
+
+`pino` writes one JSON object per line to stdout, which is what every platform in this
+playbook already collects. Any library that does that will do; what matters is that the
+output is a line of JSON and not a sentence.
 
 ```ts
 // Bad: unqueryable
 console.log(`User ${userId} failed to pay invoice ${invoiceId}`)
 
 // Good
-logger.error({
-  event: 'invoice.payment_failed',
+logger.warn({
+  event: 'invoice.payment_declined',
   userId,
   invoiceId,
   reason: 'card_declined',
@@ -85,6 +141,12 @@ logger.error({
 
 Now you can ask "how many `card_declined` events this week, by amount?" — a question that
 is impossible against prose.
+
+**Levels are a filter, not a mood.** `error` means *a fault you would investigate* — it is
+the level your alerting reads, so anything routine that lands there is a false page
+waiting to happen. A declined card is a routine business outcome and not a fault: it is
+`warn`. Reserve `error` for the things that should not have happened, and `info` for the
+events you want to count later.
 
 Name events as `noun.verb_past_tense`, consistently. Consistency is what makes the log
 searchable a year later.

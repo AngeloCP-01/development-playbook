@@ -161,3 +161,38 @@ test('the four signals each name a category before a product', () => {
   expect(signals).toMatch(/CloudWatch/i)
   expect(signals).not.toMatch(/Vercel Analytics covers latency and traffic/)
 })
+
+// A1. "Configure beforeSend to scrub aggressively" was the doc's only defence
+// against the risk it raises in bold, and it was a bare API name — no field
+// list, no note that Sentry captures request headers and bodies by default.
+test('A1: beforeSend is shown, not just named', () => {
+  const errors = section('Errors that are actually useful')
+  expect(errors).toMatch(/beforeSend\s*\(/)
+  expect(errors).toMatch(/authorization/i)
+  expect(errors).toMatch(/connection string/i)
+})
+
+// A2. `logger` appeared exactly once, in the "Good" half of the document's
+// strongest teaching device, with no import and no library named. It is the
+// only code in the document that could not be fixed by adding a plausible
+// import, because the reader was not told which package.
+//
+// The call site is matched by pattern rather than by `logger.error(`: the
+// same task drops the declined-card example to `warn`, so pinning the level
+// here would have made this test fail for the fix rather than the defect.
+test('A2: logger is constructed before it is used', () => {
+  const logs = section('Structured logs')
+  const construction = logs.indexOf('src/lib/logger.ts')
+  const use = logs.search(/logger\.(warn|error|info|debug)\(/)
+  expect(construction, 'no logger construction block').toBeGreaterThan(-1)
+  expect(use, 'no logger call site').toBeGreaterThan(-1)
+  expect(construction).toBeLessThan(use)
+})
+
+// The doc logged a declined card at `error`, which inflates the error rate it
+// tells you to alert on. It showed no other level anywhere.
+test('A2: the document states a level policy', () => {
+  const logs = section('Structured logs')
+  expect(logs).toMatch(/\bwarn\b/)
+  expect(logs).toMatch(/expected outcome|routine business|not a fault/i)
+})
