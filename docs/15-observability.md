@@ -506,6 +506,44 @@ CloudWatch dashboard schema both move.
 
 Resist adding more. A dashboard with forty charts is not read.
 
+### AI in observability
+
+An agent is good at the parts of observability that are pattern-matching over text you
+already have — grouping errors, spotting what changed, writing a query in a language you
+do not know. It is bad at the part that decides whether you are actually covered, because
+that requires noticing what is *not* in the data, and the data is all it has.
+
+Where it earns its place:
+
+- **Draft the alert set from your own event names.** Give it your structured log events,
+  your four signals and your traffic shape, and ask for alert rules with thresholds,
+  durations and a minimum-volume gate. The rules come back reasonable and the *numbers*
+  come back invented — they are the part you replace with your own baselines. (A prompt.)
+- **Ask which events stopped.** Paste a day of log events and yesterday's, and ask what
+  appears in one and not the other. This is the one analysis that addresses the failure
+  mode nothing else in this stage sees, and it is mechanical enough to hand over.
+  (A prompt.)
+- **Write the scrubbing deny-list from your own schema.** Point it at your schema and your
+  environment variable names and ask which values would end up in an error payload. It
+  finds the connection string you forgot; you verify by sending a test event and reading
+  what arrived. (A prompt.)
+- **Query logs in a language you do not know.** Describe the question in English and let
+  it write the CloudWatch Logs Insights query or the PromQL. Reading a query you did not
+  write is much easier than writing it, which reverses the usual argument against
+  generated code here. (A CLI + MCP command.)
+- **Turn an incident into the alert you were missing.** Paste the timeline of something
+  you found out about late, and ask what signal would have fired first. It reliably names
+  one you do not have. (A prompt.)
+- **Generate the dashboard as configuration.** Grafana and CloudWatch both take JSON.
+  Describe the four signals and the deploy markers and edit what comes back, rather than
+  clicking twelve panels into existence. (A prompt.)
+
+What it cannot do is tell you what you failed to instrument. Every one of those plays
+reads the signals that exist, and the failure this stage is most concerned with — the job
+that never ran, the business failure that threw nothing, the alert routed to a dead phone
+number — produces no signal at all. An agent will summarise a dashboard confidently while
+the thing that mattered is not on it.
+
 ---
 
 ## Artifacts

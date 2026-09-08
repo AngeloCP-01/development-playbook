@@ -32,6 +32,7 @@ const EXPECTED = [
   'When nothing is reporting',
   'Jobs that nobody watches',
   'Dashboards',
+  'AI in observability',
 ]
 
 /**
