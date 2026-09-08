@@ -235,21 +235,29 @@ annotation lifecycle.
 
 ## Filing
 
-Captures land in `reference/` as gathered. They are **not committed** — the originals
-run 1–4MB each and git keeps every version forever.
+Captures land in `reference/` as gathered, and **they are committed** — commit the
+original alongside the converted WebP rather than leaving it on your disk.
 
-> **Correction appended 2026-09-07, not rewritten.** The paragraph above is false, and
-> has been since it was written. Every gathered original *is* tracked: `git ls-files
-> reference/` returns 62 entries including `git-commands.jpeg`,
-> `CLEAN-CODE-principle.webp`, `playwright1.jpeg`, `sdlc.png` and
-> `5types-of-testing.webp`, and `.gitignore` holds nothing that would cover them (only
-> `.DS_Store` and `.playwright-mcp/`). W-6.2's entry in `docs/task.md` repeats the same
-> claim. The three CI/CD captures were committed to match what the repo actually does
-> rather than what this file says it does, since a ledger row naming a file that a
-> fresh clone does not have is worse than the disk cost. **Which side should change is
-> a real open question and the user's call**: either `.gitignore` grows a rule and the
-> ledger becomes the only record an original ever existed, or these two paragraphs are
-> rewritten to describe tracking. This note decides neither.
+> This paragraph said the opposite until 2026-09-08, and was wrong for as long as it
+> existed. Resolved as **TD-44** in favour of what the repo already did. The reasoning is
+> worth keeping, because the original rule was not merely unenforced — it was arguing
+> from a cost that does not apply here:
+>
+> - **The fear was "the originals run 1–4MB each and git keeps every version forever".**
+>   True in general, empty for these. A gathered capture is written once and never
+>   edited: every image under `reference/` has exactly one commit touching it. There is
+>   no "every version" to accumulate.
+> - **Ignoring them now would reclaim nothing.** ~18MB of originals are already in
+>   history and stay there whether or not the index still points at them. `.git` is 64MB
+>   before and after. Only a history rewrite would recover it, over commits already
+>   pushed to `origin/develop`.
+> - **A ledger row must resolve in a fresh clone.** The table at the bottom of this file
+>   names source files by filename. If those files are not in the repo, the ledger names
+>   things that, for anyone but the original gatherer, do not exist.
+
+**Because this directory is committed, do not park unrelated files in it.** Anything
+dropped into `reference/` is one `git add -A` away from being published — the site is
+public. Personal documents in particular belong somewhere outside the repo.
 
 What is committed is the converted copy in `web/public/reference/`, which is what the
 site serves. Convert with `sharp` before wiring a sheet to it:
