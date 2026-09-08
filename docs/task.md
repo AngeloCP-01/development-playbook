@@ -795,13 +795,13 @@ All four requirements closed. The images live in `web/public/reference/` as WebP
 **5.2MB of originals became 644K**, the plate frames them in both themes without
 dimming, and the alt decision is derived from whether a text equivalent exists —
 decorative on a drawn sheet, descriptive on an undrawn one, both directions tested.
-Originals stay untracked and gitignored; the conversion recipe and measured savings
-are in `reference/cheatsheet-sources.md`. Evidence in `docs/tracker.md`.
+Originals are committed alongside the converted copy; the conversion recipe and measured
+savings are in `reference/cheatsheet-sources.md`. Evidence in `docs/tracker.md`.
 
-> **Correction appended 2026-09-07, not rewritten.** "Originals stay untracked and
-> gitignored" is false and has been since this entry was written — all 62 files under
-> `reference/` are tracked and `.gitignore` covers only `.DS_Store` and
-> `.playwright-mcp/`. Opened as **TD-44**, which also carries the two ways it can close.
+> This entry read "Originals stay untracked and gitignored" until 2026-09-08 and was
+> wrong from the day it was written. Closed as **TD-44** in favour of describing what the
+> repo does: 65 files under `reference/` are tracked, `.gitignore` never covered them,
+> and ignoring them now would reclaim nothing because the bytes are already in history.
 
 **W-6.3 — Fill the ten empty sheets ◐** *(six of the original ten drawn 2026-08-24,
 plus three sheets not in the original count; five language sheets remain)*

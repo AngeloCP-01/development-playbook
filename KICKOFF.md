@@ -228,11 +228,10 @@ Notes for whoever is preparing this handoff:
   - **Grep `NOT merged, NOT pushed, NOT deployed` in `docs/tracker.md` at every merge.**
     Doing it once this session found three rows carrying the phrase: one merely out of
     date, and two false for weeks (W-6.3e, TD-43). It costs one command.
-  - **TD-44 is a question, not a chore, and it is the user's to answer.** Two records
-    say gathered originals are untracked and gitignored; all 62 files under `reference/`
-    are tracked and `.gitignore` covers only `.DS_Store` and `.playwright-mcp/`. Either
-    add the ignore rule and drop them from the index, or rewrite both paragraphs to
-    describe tracking. Do not pick one silently. Opened as **TD-44**.
+  - ~~**TD-44**~~ — **closed 2026-09-08.** Gathered originals in `reference/` are
+    committed, deliberately, and both records now say so. The consequence to remember:
+    **anything parked in `reference/` is one `git add -A` from a public repo.** Do not
+    leave unrelated files there.
   - ~~**A green `pnpm test:e2e` is not a claim about every page**~~ — **closed
     2026-09-07 as TD-45.** Every sweep now collects across the whole path list and
     asserts once, so a run names every bad path instead of the first. Worth knowing why
