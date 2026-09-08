@@ -234,20 +234,29 @@ concurrency, storage.
 |---|---|---|---|
 | Latency | The HTTP layer in front of your app, which already times every request | Vercel Observability, per route | ALB or API Gateway CloudWatch metrics |
 | Traffic | The same layer — it counts every request, which is also your denominator | The same place | The same CloudWatch metrics |
-| Errors | Two questions, not one: *what broke* and *how often*. Sentry answers the first; the request-counting layer answers the second | Sentry, over Observability invocations | Sentry, over ALB 5XX and request count |
+| Errors | Two questions, not one: *what broke* and *how often*. Sentry answers the first; the request-counting layer answers the second | Edge Requests by status code; Sentry for what broke | ALB 5XX over request count; Sentry for what broke |
 | Saturation | Whatever owns the resource with the ceiling | Your database dashboard, function concurrency | CloudWatch per-service metrics, RDS connections |
 
 Error *rate* does not come from your error tracker. Sentry tells you what broke and how
 many times it was reported; it is sampled, it is filtered by `beforeSend`, and it never
-sees a request that succeeded. The denominator comes from the layer that **counts every
-request**. Take the numerator from one and the denominator from the other, or you are
-computing a percentage of a number you do not have.
+sees a request that succeeded — so it can give you neither half of the fraction. Both
+halves come from the layer that counts every request: failed responses over total
+responses, same source, same window. Divide a sampled numerator by an unsampled
+denominator and the percentage you get is not a percentage of anything. Sentry answers the
+question you ask second, which is *which* error and *why*.
 
-Check which number you are reading. Web Analytics counts visits and Speed Insights
-measures Core Web Vitals in the browser; both are the user's experience, not your server's
-time. The latency in the table above is the time your function spent. A p95 that doubles
-in one is not the same event as a p95 that doubles in the other, and an alert that does
-not say which will wake you for the wrong one.
+Check which number you are reading. Every platform sells you two different latencies.
+Vercel's Web Analytics counts visits and its Speed Insights measures Core Web Vitals in
+the browser; on AWS the same split is CloudWatch's `TargetResponseTime` against whatever
+RUM you have bolted on. One is the user's experience, the other is the time your server
+spent, and the table above means the second. A p95 that doubles in one is not the same
+event as a p95 that doubles in the other, and an alert that does not say which will wake
+you for the wrong one.
+
+One tier note, because it changes what you can actually see: on Vercel the per-route
+latency breakdown is an Observability Plus feature. Below it you get invocation counts and
+error rate but not the latency split, which is worth knowing before you write an alert
+against a number your plan does not show you.
 
 You do not need a unified platform to start.
 
@@ -335,8 +344,9 @@ One exception, and it is the reason "database connections near the limit" is in 
 above: a resource with a **hard ceiling** that **does not recover on its own** — a
 connection pool, a disk, an API quota — is worth alerting on *before* it becomes a symptom,
 because crossing it is a cliff rather than a slope. By the time users feel a full
-connection pool, every request is already failing. CPU has neither property: it is elastic
-and it self-resolves, which is why the number on its own tells you nothing.
+connection pool, every request is already failing. CPU has the ceiling but not the second
+half: it is elastic, it comes back on its own, and crossing 80% degrades rather than
+fails. That is the difference, and it is the whole of the difference.
 
 **A ratio needs a floor.** "Error rate above 5%" is a sensible rule at a thousand requests
 a minute and nonsense at four: one failed request overnight is a 25% error rate, and it
@@ -467,9 +477,13 @@ One dashboard, visible in one screen, answering: **is the application healthy ri
 - Saturation of whatever is closest to its ceiling — usually database connections
 - Recent deploys, marked on the timeline
 
-That last item is disproportionately useful. Most problems correlate with a deploy, and
-seeing deploy markers against a metrics graph often collapses an investigation into a
-glance.
+Saturation is the one most likely to be the actual incident on a small deployment: a
+connection pool exhausted by a batch job running alongside daytime traffic. It is also the
+one that gets dropped first, because it is the only one of the four that does not have an
+obvious single number.
+
+Deploy markers are disproportionately useful. Most problems correlate with a deploy, and
+seeing them against a metrics graph often collapses an investigation into a glance.
 
 A deploy marker is not a feature of your dashboard. It is an **event with a timestamp**,
 emitted by whatever performs the deploy, that the dashboard knows how to draw. Which means
@@ -489,10 +503,6 @@ add the step above to the deploy workflow, and for a CloudWatch dashboard,
 `aws cloudwatch put-dashboard` with an annotation, or a Grafana annotation if you are
 drawing the graphs there. Check the current flags before copying: `sentry-cli` and the
 CloudWatch dashboard schema both move.
-
-Saturation is the one people drop, and it is the one most likely to be the actual
-incident on a small deployment: a connection pool exhausted by a batch job running
-alongside daytime traffic.
 
 Resist adding more. A dashboard with forty charts is not read.
 

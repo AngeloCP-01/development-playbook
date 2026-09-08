@@ -67,19 +67,21 @@ function doc(): string {
 // `## Definition of done`, "No secrets or personal data in error reports or
 // logs". Customer email is personal data. Following the code made the
 // checkbox unsatisfiable, and the document never said which half was wrong.
-// Scoped to the fenced block, not the whole section: the prose that explains
+// Scoped to the fenced blocks, not the whole section: the prose that explains
 // why an id is enough has to be able to say the word "email", and a
 // section-wide assertion would forbid the teaching along with the defect.
-test('C1: the error-context example sends no email address', () => {
-  const section = doc().slice(
-    doc().indexOf('### Errors that are actually useful'),
-  )
-  const open = section.indexOf('```ts')
-  const block = section.slice(open, section.indexOf('```', open + 5))
-  expect(
-    block,
-    'the Sentry user-context example still sends an email address',
-  ).not.toMatch(/email/i)
+// Every block, not the first — the section gained a second one (beforeSend),
+// and a guard that reads only block one stops guarding as soon as the
+// document grows.
+test('C1: no code example in the error section sends an email address', () => {
+  const errors = section('Errors that are actually useful')
+  const blocks = [...errors.matchAll(/```ts\n([\s\S]*?)```/g)].map((m) => m[1])
+  expect(blocks.length, 'no fenced ts block found').toBeGreaterThan(0)
+  for (const block of blocks) {
+    expect(block, 'a code example still sends an email address').not.toMatch(
+      /email/i,
+    )
+  }
 })
 
 test('C1: the document says why an opaque id is enough', () => {
@@ -132,19 +134,32 @@ test('C3: the symptoms-not-causes rule states its exception', () => {
 // Dashboards section listed three of them plus deploy markers. Saturation —
 // the signal most likely to be the actual incident on a small deployment —
 // was the one dropped.
+// Asserted as list items. The first version of this test matched /saturation/i
+// anywhere in the section, which the defence paragraph below the list also
+// satisfies — deleting the actual bullet left the suite green.
 test('C4: the dashboard carries all four signals', () => {
   const dash = section('Dashboards')
-  expect(dash).toMatch(/saturation/i)
+  expect(dash).toMatch(/^- Requests per minute/m)
+  expect(dash).toMatch(/^- Error rate/m)
+  expect(dash).toMatch(/^- p95 latency/m)
+  expect(dash).toMatch(/^- Saturation\b/m)
 })
 
 // C5. Errors were defined as a rate ("fifty errors means nothing without a
 // denominator") and sourced from Sentry, which is sampled, beforeSend-filtered
 // and has no request denominator. The numerator and the denominator lived in
 // different products and the doc never said how to divide them.
-test('C5: the error-rate source can produce a denominator', () => {
+// The first version asserted /denominator/i, which the section already said
+// before this round, and /counts every request/i, which the table's Traffic
+// row satisfies — so deleting the entire load-bearing paragraph left it green.
+// It now pins the teaching itself.
+test('C5: error rate is not sourced from the error tracker', () => {
   const signals = section('The four signals')
-  expect(signals).toMatch(/denominator/i)
-  expect(signals).toMatch(/counts every request/i)
+  expect(signals).toMatch(/rate\* does not come from your error tracker/)
+  expect(signals).toMatch(
+    /Both\s+halves come from the layer that counts every request/,
+  )
+  expect(signals).toMatch(/sampled numerator/)
 })
 
 // C6. The doc calls a traffic drop "one of the clearest possible signals that
@@ -159,9 +174,19 @@ test('C6: a traffic collapse is in the alert list', () => {
 // The transfer failure underneath all three: every signal states its category
 // before it names a product, so a reader on neither platform still knows what
 // to look for.
+// The first version asserted only that "CloudWatch" appeared somewhere and one
+// old sentence did not. Product-first prose naming CloudWatch passed it — the
+// exact stage-transfer failure this round exists to fix. It now pins the table,
+// whose "Where it comes from" column is what carries the category.
 test('the four signals each name a category before a product', () => {
   const signals = section('The four signals')
-  expect(signals).toMatch(/CloudWatch/i)
+  expect(signals).toMatch(
+    /^\| Signal \| Where it comes from \| Vercel \| AWS \|$/m,
+  )
+  expect(signals).toMatch(/^\| Latency \|/m)
+  expect(signals).toMatch(/^\| Traffic \|/m)
+  expect(signals).toMatch(/^\| Errors \|/m)
+  expect(signals).toMatch(/^\| Saturation \|/m)
   expect(signals).not.toMatch(/Vercel Analytics covers latency and traffic/)
 })
 
