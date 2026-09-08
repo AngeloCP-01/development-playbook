@@ -166,9 +166,13 @@ git log --oneline -1 develop origin/develop main origin/main
 git rev-list --count origin/develop..develop
 ```
 
-**Measured 2026-09-08 at handoff.** `develop` is at `8d6bd39`, **3 commits ahead of
-`origin/develop`** (`10b1f6b`) and **46 ahead of `main`** (`d659d32`), so a promotion is
-pending and it is the user's to make. `main` is 2
+**Measured 2026-09-08 at handoff**, at `53d6140`: `develop` is **4 commits ahead of
+`origin/develop`** (`10b1f6b`) and **48 ahead of `main`** (`d659d32`), so a promotion is
+pending and it is the user's to make.
+
+Those two counts include the commit that wrote them, and go stale on the next commit —
+the first draft of this line said 46 because it was written before the commit that
+recorded it. Do not reason from them; run the block above. `main` is 2
 ahead of `develop`, which is just its own `--no-ff` merge commits.
 
 A version of this paragraph two sessions ago was wrong, claiming `develop` was "well
