@@ -166,9 +166,9 @@ git log --oneline -1 develop origin/develop main origin/main
 git rev-list --count origin/develop..develop
 ```
 
-**Measured 2026-09-08 at handoff.** `develop` and `origin/develop` are **identical** at
-`10b1f6b` — the user pushed after the last merge. `develop` is **43 commits ahead of
-`main`** (`d659d32`), so a promotion is pending and it is the user's to make. `main` is 2
+**Measured 2026-09-08 at handoff.** `develop` is at `8d6bd39`, **3 commits ahead of
+`origin/develop`** (`10b1f6b`) and **46 ahead of `main`** (`d659d32`), so a promotion is
+pending and it is the user's to make. `main` is 2
 ahead of `develop`, which is just its own `--no-ff` merge commits.
 
 A version of this paragraph two sessions ago was wrong, claiming `develop` was "well
@@ -176,11 +176,11 @@ ahead of `origin/develop` (the user has not pushed since several rounds ago)" wh
 two were identical. That is why every number here is measured at handoff rather than
 carried forward, and why step 2 at the top says to re-derive.
 
-**No branch is in flight, and the tree is clean.** All four branches from 2026-09-07
-merged `--no-ff` and were deleted: `feat/ci-cd-cheatsheet` as `6f52212`,
-`fix/audit-fail-fast` as `99f6145`, `feat/ci-cd-sheet-expansion` as `4fdb9bd`,
-`fix/stage-14-coverage-walk` as `a8f56de`. Each merged result was re-gated first-hand —
-lint 0, typecheck 0, 1161/160, build clean, audit 18/18.
+**No branch is in flight, and the tree is clean.** Five branches merged `--no-ff` and
+were deleted: `feat/ci-cd-cheatsheet` as `6f52212`, `fix/audit-fail-fast` as `99f6145`,
+`feat/ci-cd-sheet-expansion` as `4fdb9bd`, `fix/stage-14-coverage-walk` as `a8f56de`, and
+`fix/td-44-originals-are-tracked` as `8d6bd39` (docs only, 2026-09-08). Each merged result
+was re-gated first-hand — lint 0, typecheck 0, 1161/160, build clean, audit 18/18.
 
 **Two stale branches predate all of this and were deliberately not touched**:
 `docs/2026-08-12-stage-04-spec` and `feat/stage-03-standard-practices`. Check whether
