@@ -196,3 +196,29 @@ test('A2: the document states a level policy', () => {
   expect(logs).toMatch(/\bwarn\b/)
   expect(logs).toMatch(/expected outcome|routine business|not a fault/i)
 })
+
+// A3. "Dashboard shows deploy markers" was a DoD checkbox with no mechanism
+// given for any stack — free and automatic on Vercel, deliberate work
+// everywhere else, and the doc read as though it cost nothing.
+test('A3: deploy markers have a mechanism', () => {
+  const dash = section('Dashboards')
+  expect(dash).toMatch(/release|annotation/i)
+  expect(dash).toMatch(/deploy step|CI|workflow/i)
+})
+
+// A4. The only worked example for "monitor a real user path" was a homepage.
+// An authenticated API has none, and its real paths mutate data and charge
+// cards — a monitor hitting one every sixty seconds is a load test against
+// your own payment provider.
+test('A4: monitoring an authenticated API is covered', () => {
+  const uptime = section('Uptime monitoring from outside')
+  expect(uptime).toMatch(/canary/i)
+  expect(uptime).toMatch(/writes nothing|read-only|without writing/i)
+})
+
+// M7. `## Traps` named certificate expiry as something internal monitoring
+// will not catch, and no section ever said to switch the check on.
+test('A4: certificate expiry has a countermeasure, not just a trap', () => {
+  const uptime = section('Uptime monitoring from outside')
+  expect(uptime).toMatch(/certificate/i)
+})

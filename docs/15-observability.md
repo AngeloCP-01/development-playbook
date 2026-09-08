@@ -220,7 +220,7 @@ Check real dependencies. An endpoint returning `200 OK` unconditionally tells yo
 process is running, which you already knew.
 
 But do not point uptime monitoring only at `/api/health`. Monitor a real user path too —
-the health check can pass while the homepage throws.
+the health check can pass while the page a user actually loads throws.
 
 ### Alerts you will not learn to ignore
 
@@ -271,6 +271,40 @@ reaching it.
 An external check every minute against a real page is the cheapest meaningful monitoring
 you can buy. Better Stack or similar, five minutes to set up.
 
+Turn on **certificate expiry** checking while you are there. It is a separate toggle from
+the HTTP check on every service that offers it, it is the one failure in this section that
+arrives on a schedule you could have read months in advance, and the default notice period
+is usually shorter than the time you will need.
+
+"A real user path" means a request that exercises the same machinery a user's would. If
+you have a page, monitor the page. If you are an API behind authentication, you need a
+**canary endpoint**: one route, authenticated with a token issued to the monitor and
+nothing else, that reads far enough down the real path to prove it works and **writes
+nothing**.
+
+The temptation is to have the monitor place an order every minute, because that is the
+real path. Do not: you will charge cards, fill tables, and page yourself when your payment
+provider is fine and your test data is not. Read the last order back instead of creating
+one.
+
+```ts
+// src/app/api/canary/route.ts — reads the real path, writes nothing
+export async function GET(request: Request) {
+  if (request.headers.get('x-monitor-token') !== process.env.MONITOR_TOKEN) {
+    return new Response('not found', { status: 404 })
+  }
+
+  const latest = await db.query.orders.findFirst({
+    orderBy: (orders, { desc }) => [desc(orders.createdAt)],
+  })
+
+  return Response.json({ ok: latest !== undefined })
+}
+```
+
+Returning `404` rather than `401` for a bad token keeps the endpoint out of anyone's crawl
+results.
+
 ### Dashboards
 
 One dashboard, visible in one screen, answering: **is the application healthy right now?**
@@ -284,6 +318,25 @@ One dashboard, visible in one screen, answering: **is the application healthy ri
 That last item is disproportionately useful. Most problems correlate with a deploy, and
 seeing deploy markers against a metrics graph often collapses an investigation into a
 glance.
+
+A deploy marker is not a feature of your dashboard. It is an **event with a timestamp**,
+emitted by whatever performs the deploy, that the dashboard knows how to draw. Which means
+the work is in your deploy step, not your dashboard.
+
+```bash
+# In the deploy job, after the deploy succeeds.
+# Sentry: create the release and associate the commits.
+sentry-cli releases new "$GITHUB_SHA"
+sentry-cli releases set-commits "$GITHUB_SHA" --auto
+sentry-cli releases finalize "$GITHUB_SHA"
+```
+
+On **Vercel**, the Sentry integration creates releases for you, which is why this looks
+free — it is being done on your behalf. On **AWS**, nothing emits the event unless you do:
+add the step above to the deploy workflow, and for a CloudWatch dashboard,
+`aws cloudwatch put-dashboard` with an annotation, or a Grafana annotation if you are
+drawing the graphs there. Check the current flags before copying: `sentry-cli` and the
+CloudWatch dashboard schema both move.
 
 Saturation is the one people drop, and it is the one most likely to be the actual
 incident on a small deployment: a connection pool exhausted by a batch job running
