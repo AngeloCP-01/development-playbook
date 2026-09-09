@@ -271,3 +271,169 @@ lacks that heading" — `AI_SECTION_STAGES` is an explicit list, deliberately so
 rather than at the end when `ready` flips". Reading it also found that
 `11-ci-cd` is missing from that list although stage 11 shipped with an AI
 section, so the guard has a hole.
+
+
+## Re-run, after the fix waves
+
+**2026-09-09, Task 14.** The readers examined the Stage 15 document at `1243f92`.
+While they ran, the interrupted Task 12/13 reviews closed: Task 12 was clean;
+Task 13 needed its two closing dividers moved below the new list items. That
+formatting-only correction is `382bbde`; a token comparison confirmed unchanged
+prose, and the structure/citation checks passed **43/43**. No findings below are
+silently treated as fixed by that formatting change.
+
+### Method and limits
+
+A fresh completeness reader used the **same Loaf scenario quoted under Method**,
+reading only the stage document. It produced an artifact plan covering error
+tracking, request-correlated logs, a log destination and retention policy, the
+four-signal dashboard with deploy markers, baselines, separate health endpoints,
+a read-only canary, external monitoring, reconciliation-job monitoring, actionable
+alerts and expected-business-outcome counts. It could identify the artifacts but
+could not implement every provider-specific step for Express/Fly.io/Neon from this
+document alone. The scope judgment for that limitation is recorded below.
+
+A separate fresh lookup reader chose headings before reading the corresponding
+sections. **The original record did not retain all five questions.** Repository
+and memory searches did not recover them. This pass preserved three recorded
+themes and fixed two new questions, so **5/5 is a new baseline, not a measured
+improvement from the earlier 2/5**. Future reruns can use these exact questions:
+
+| Question | Heading chosen before reading | Result |
+|---|---|---|
+| A user reports failure but nothing is reporting; where should I look? | When nothing is reporting | HIT |
+| Alerts are too noisy; how do I tune or retire them? | Alerts you will not learn to ignore | HIT |
+| Is this error-rate or p95 number bad; how do I establish normal? | The four signals | HIT |
+| My API has no public homepage; how can an external monitor check a real path safely? | Uptime monitoring from outside | HIT |
+| How do I connect an error report to the logs for its request? | Structured logs | HIT |
+
+All five destinations contained an answer. A lookup HIT does not establish code
+correctness: the canary was findable and still has the runtime defect below.
+The reader found the material useful for junior developers and introductory for
+SREs; deeper service policy and wiring remain application decisions.
+
+### Original findings, reconciled with the file
+
+| IDs | Result after checking |
+|---|---|
+| C1 | **Still open, I3 below.** Removing email did not reconcile the absolute personal-data prohibition with a resolvable user ID. |
+| C2, C3, C4, C5, C6 | **Closed.** New-signature exception, hard-ceiling saturation exception, fourth dashboard signal, shared numerator/denominator and traffic-drop alert are explicit. |
+| A1 | **Original omission closed:** `beforeSend` is shown. Its remaining coverage problem is I4. |
+| A2 | **Original omission closed, M1 remains.** The document now defines and names Pino's logger. The reader called it undefined in the health route; that route still omits the import and application DB declarations. Do not conflate missing module wiring with no logger definition anywhere. |
+| A3 | **Closed as a mechanism.** Post-success deploy markers have a timestamp and CLI example; Fly-specific wiring is outside the two-platform round. |
+| A4 | **Pattern taught, implementation incomplete:** the authenticated read-only canary exists, but I1 can hide its failure. |
+| M1, M2, M3, M4, M5, M6, M7, M9 | **Original omissions closed.** Heartbeats, silence, request correlation, retention/cost, low-volume arithmetic, alert-delivery proof, certificate expiry and quota are taught. I5 retains a job-verification gap. |
+| M8 | **Partially closed, I6.** Definitions are present, but the platform instruction conflates restarting with removing from traffic. The completeness reader marked this closed; controller checking disproved that conclusion. |
+| P1, P2 | **Closed.** Percentile thresholds and separate request/time error-budget units are defined. |
+| S1, S3 | **Covered by the new lookup check and body additions.** Baselines and alert disposal have body homes; tracing has an explanation of its current boundary. |
+| S2, S4 | **Deferred as before.** Traps is the house mnemonic layer; bold-lead-in navigation belongs to the port. |
+
+### Task 15 fix queue
+
+**I1 (blocking) — canary failure returns success status.** Introduced by the round's
+canary example, reproduced from its actual fenced code. A successful query with no
+matching order returns HTTP `200` with `{"ok":false}`. A status-only monitor misses
+the failed assertion. Define the expected empty-state policy, return a failing status
+when that assertion fails, and verify both result branches. Do not make a legitimate
+empty table an accidental outage without stating what the canary expects.
+
+**I2 (blocking) — health logging drops the exception.** Introduced by the health
+example's new diagnostic log. With the shown default Pino configuration,
+`logger.warn({ event, error })` emits `error:{}` for an Error. The comment promises
+the reason survives. An `err` control preserves it, but blindly logging raw exception
+text could violate the stage's own redaction policy. Preserve useful diagnostics
+through an explicit safe serialization policy, then test the emitted record.
+
+**I3 (blocking) — C1 persists as an inconsistent data policy.** The document recommends
+an opaque identifier precisely because it resolves to a person, while Definition of
+done forbids personal data without exception. Narrow the policy to the deliberately
+allowed identifiers and require minimization, retention and deletion for them.
+The existing deletion link is present; the cold reader's suggestion that no deletion
+rule exists was too broad.
+
+**I4 (blocking) — arbitrary context bypasses the demonstrated scrubber.** Pre-existing
+`addContext(key, data: Record<string, unknown>)` accepts arbitrary records. The new
+hook covers selected headers, request data and exception values, not those records,
+breadcrumbs or every other SDK surface. The prose acknowledges deny-list limits but
+the helper still invites unrestricted context. Constrain the example to allowlisted
+fields and verify synthetic secrets against the payload surfaces it actually uses;
+do not claim a universal scrubber from a short list of patterns.
+
+**I5 (blocking) — duration and overlap have no completion evidence.** The new job
+section requires watching slow and overlapping runs, but the added checklist only
+verifies heartbeat absence. Add checkable evidence for both behaviors. The reader's
+forty-minute example is illustrative; it is not a universal threshold to copy.
+
+**I6 (blocking) — platform restart and routing checks are conflated.** The new health
+section sends every platform check that “restarts or deregisters” to liveness. Those
+actions serve different purposes: restart decisions use liveness; routing decisions
+need readiness. Kubernetes explicitly distinguishes these effects in its
+[probe documentation](https://kubernetes.io/docs/concepts/workloads/pods/probes/),
+checked 2026-09-09. Teach the action-to-check mapping and qualify platform mechanisms
+that combine replacement and routing. Also explain why a dependency affecting one
+feature need not make the entire instance unready; the reader raised this as the
+unresolved Stripe-readiness policy. A full Stripe design is not required here.
+
+**M1 — clarify snippet boundaries.** The logger is defined, but the health route does
+not import it and its DB/schema dependencies are implicit. Annotate the application
+scenery or show the imports when correcting I2; the scratch declarations must not be
+mistaken for proof of a standalone copy-paste module.
+
+### Findings that do not expand this round
+
+- **Fly.io/Express/Neon cookbook:** a real transfer limitation for Loaf, not a new
+  requirement to implement a third platform. D-94 scoped this round to Vercel and AWS.
+  The principles should transfer; adapter code and provider selection remain work
+  for that application.
+- **Stripe webhook lifecycle contract:** receipt, signature checks, processing and
+  invoice correlation are application/integration design. Stage 15 teaches counting
+  important outcomes; it cannot select Loaf's complete event contract.
+- **Response, ownership and prerequisites:** incident response points to Stage 16;
+  source maps to Stage 04; deletion to Stage 08. Ownership and monthly review already
+  appear under Scaling to a team. The lookup reader did not read that section, so its
+  ownership concern is not a whole-document omission.
+- **Baseline seasonality, refresh cadence, token lifecycle and deeper tracing:** useful
+  operational depth, deferred. Complete middleware wiring can be illustrated when
+  clarifying snippet boundaries, without porting this document to Express.
+
+### Executable evidence
+
+All eight TypeScript fences were combined, with the Task 0 Node-SDK substitution,
+distinct names for the two GET handlers, and declared application DB/schema/id
+scenery. This checks the examples together against the scratch Node SDK; it does
+not establish a deployed Next.js integration.
+
+```text
+$ python3 /private/tmp/stage15-codex-harness/extract.py
+Extracted 8 TypeScript blocks; only SDK adapter, route name disambiguation and app dependency declarations added.
+$ ./node_modules/.bin/tsc --noEmit
+```
+
+Both commands exited 0; TypeScript produced no diagnostics. Scratch dependencies:
+Sentry 10.73.0, Pino 10.3.1, TypeScript 7.0.2. Runtime transpilation used the site's
+TypeScript 5.9.3 API. Offline probes used synthetic values and a controlled database:
+
+```text
+$ node runtime.mjs
+{"probe":"sentry beforeSend","headers":{"accept":"application/json"},"hasData":false,"exceptionValues":["connect [redacted] failed","provider [redacted] refused [redacted]"]}
+{"probe":"logger request correlation","correlation":{"probe.b":"request-b","probe.a":"request-a"}}
+{"probe":"pino Error serialization","errorKey":{},"errControl":{"type":"Error","message":"database unavailable"}}
+{"probe":"logger redaction regression scaffold","status":"PASS","leaked":[]}
+{"probe":"health success","status":200,"body":{"status":"ok","checks":{"database":true}}}
+{"probe":"health rejected dependency","status":503,"body":{"status":"degraded","checks":{"database":false}},"loggedError":{}}
+{"probe":"health hung dependency","status":503,"body":{"status":"degraded","checks":{"database":false}},"elapsedMs":2004}
+{"probe":"canary unauthorized","status":404,"body":"not found"}
+{"probe":"canary present result","status":200,"body":{"ok":true}}
+{"probe":"canary empty result","status":200,"body":{"ok":false}}
+{"probe":"heartbeat placement","calls":[{"url":"https://heartbeat.invalid/task","method":"POST"}]}
+{"probe":"finding summary","findings":[{"id":"canary-status","reproduced":true,"evidence":"empty query result returned HTTP 200"},{"id":"health-error-serialization","reproduced":true,"evidence":"Pino emitted error={}"}]}
+```
+
+The runtime harness exits 0 when its probes reproduce the expected findings; that
+status does **not** say the examples are defect-free. The safe-header/exception
+scrubbing cases, request isolation, configured logger redaction, health success and
+timeout, bad-token canary response and success-only heartbeat placement passed.
+I1 and I2 were reproduced. Task 15 remains necessary.
+
+No full app gate was rerun for this findings-only record. The interactive port,
+reference sheet and production promotion remain deferred. **Not merged or deployed.**
