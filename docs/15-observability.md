@@ -634,12 +634,12 @@ the thing that mattered is not on it.
 - A small set of actionable alerts routed to a channel that interrupts you
 - One dashboard with the four signals and deploy markers
 
----
-
 - A heartbeat monitor on every scheduled job, alerting on a missing ping
 - A read-only canary endpoint for an authenticated service
 - A retention policy on every log group or drain, chosen rather than defaulted
 - A request id on request-scoped log lines and matching error-tracker events
+
+---
 
 ## Definition of done
 
@@ -658,14 +658,14 @@ the thing that mattered is not on it.
       ([14](14-post-deployment-verification.md))
 - [ ] Dashboard shows deploy markers
 
----
-
 - [ ] Every scheduled job pings a heartbeat on success, and you have watched
       the monitor page you by withholding a test ping
 - [ ] A single request id joins a request's log line to its error report
 - [ ] Log retention is a number you chose, and you know what it costs
 - [ ] Liveness and readiness are separate endpoints, and the platform's
       restart trigger uses the one that does not check dependencies
+
+---
 
 ## Scaling to a team
 
