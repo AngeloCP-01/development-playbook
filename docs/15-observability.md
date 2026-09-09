@@ -198,7 +198,7 @@ what tracing buys you until requests start crossing service boundaries
 console.log(`User ${userId} failed to pay invoice ${invoiceId}`)
 
 // Good
-logger.warn({
+logger.info({
   event: 'invoice.payment_declined',
   userId,
   invoiceId,
@@ -213,7 +213,7 @@ is impossible against prose.
 **Levels are a filter, not a mood.** `error` means *a fault you would investigate* — it is
 the level your alerting reads, so anything routine that lands there is a false page
 waiting to happen. A declined card is a routine business outcome and not a fault: it is
-`warn`. Reserve `error` for the things that should not have happened, and `info` for the
+`info`. Reserve `warn` for unexpected conditions the application handled, `error` for the things that should not have happened, and `info` for the
 events you want to count later.
 
 Name events as `noun.verb_past_tense`, consistently. Consistency is what makes the log

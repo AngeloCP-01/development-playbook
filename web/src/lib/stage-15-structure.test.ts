@@ -462,3 +462,10 @@ test('dashboard requirements can be fulfilled across separate collection tools',
   expect(dashboards).toMatch(/data sources/i)
   expect(dashboards).toMatch(/Grafana/)
 })
+
+// A routine decline is counted, not escalated as an unexpected condition.
+test('the routine card decline example follows the info-level policy', () => {
+  const logs = section('Structured logs')
+  expect(logs).toMatch(/logger\.info\(\{\s*event: 'invoice\.payment_declined'/)
+  expect(logs).toMatch(/routine business outcome[^:]*:\s*it is\s*`info`/)
+})
