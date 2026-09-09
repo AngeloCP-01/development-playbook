@@ -205,7 +205,7 @@ export const TERMS: Record<string, Term> = {
   'error-budget': {
     name: 'Error budget',
     short: 'The amount of failure you have decided is acceptable in a period.',
-    full: 'The failure you have decided is acceptable over a window. A 99.9% uptime target is roughly a 43-minute monthly budget. Spending it is allowed — that is what a budget is for; exceeding it means stop shipping features and fix reliability.',
+    full: 'The failure you have decided is acceptable over a window. For a request-based SLO, 99.9% success leaves 0.1% of requests available to fail. For a time-based 99.9% uptime SLO, the budget is 43.2 minutes in 30 days. Spending it is allowed; exceeding it means stop shipping features and fix reliability.',
     soWhat:
       'It turns "is it reliable enough?" from an argument into arithmetic, and gives the feature-versus-reliability call a rule instead of a mood.',
     see: '15-observability',
@@ -226,6 +226,15 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'It is where "works on my machine" stops being anyone’s problem. Added late it is a fight; wired on day one it is invisible.',
     see: '11-ci-cd',
+  },
+  percentile: {
+    name: 'Percentile',
+    short:
+      'The threshold at or below which a given share of measurements fall, such as p95 or p99.',
+    full: 'A ranking rather than an average. A p95 latency of 400ms means at least 95 of every hundred measurements are at or below 400ms. A p99 is a threshold, not a maximum; the slowest request can be higher. Percentiles do not average: the p95 across three servers is not the mean of their three p95s.',
+    soWhat:
+      'An average can stay comfortable while a growing minority of users wait. Percentiles expose that slow tail.',
+    see: '15-observability',
   },
   'phantom-dependency': {
     name: 'Phantom dependency',

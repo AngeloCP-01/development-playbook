@@ -220,10 +220,17 @@ have to be able to delete ([08](08-security-audit.md)).
 
 ### The four signals
 
-If you instrument only four things:
+These are the **golden signals**. If you instrument only four things:
 
-**Latency** — p50, p95, p99 of response time. Percentiles, never averages
-([09](09-performance-optimization.md)).
+**Latency** — how long requests take, at p50, p95 and p99. A p95 of 400ms means at
+least 95 requests out of every hundred finished at or below 400ms. A p99 is the
+threshold at or below which at least 99% finished, not a maximum; the slowest request can
+take much longer. Watch the tail: an average stays comfortable while a growing minority
+of users wait ([09](09-performance-optimization.md)).
+
+Percentiles do not average. The p95 across three instances is not the mean of their three
+p95s. Combine the underlying measurements, or use an aggregation system that can merge
+their distributions.
 
 **Traffic** — requests per minute. Its main value is that a sudden drop is one of the
 clearest possible signals that something is badly broken.
@@ -597,8 +604,13 @@ the thing that mattered is not on it.
 
 ## Scaling to a team
 
-- **Define SLOs.** "99.9% of requests succeed" makes reliability a shared target rather
-  than an individual preference.
+- **Define an SLO (Service Level Objective), and the error budget that follows from it.**
+  For a request-based SLO, "99.9% of requests succeed" allows 0.1% of requests to fail
+  during the measurement window. For a time-based uptime SLO, 99.9% allows 43.2 minutes
+  of unavailability in 30 days. Both are error budgets, but their units are different.
+  Spending the budget is allowed; exceeding it is the rule that says to stop shipping
+  features and fix reliability. Without that rule, an SLO is a number in a document that
+  nobody has to act on.
 - **Set up on-call rotation** with a real escalation path, once the team can sustain it.
 - **Alerts need an owner.** Unowned alerts are ignored by everyone, each assuming someone
   else has it.

@@ -71,7 +71,7 @@ drift apart.
 
 **Error boundary** — A segment marked by a file like `error.tsx` in the App Router. It catches an unhandled throw from anything it wraps and renders a fallback in place of the crashed subtree, rather than taking the whole page down. It has to be a Client Component — one of the few places the directive is not a choice. See [05 — Development](../docs/05-development.md).
 
-**Error budget** — The failure you have decided is acceptable over a window. A 99.9% uptime target is roughly a 43-minute monthly budget. Spending it is allowed — that is what a budget is for; exceeding it means stop shipping features and fix reliability. See [15 — Observability](../docs/15-observability.md).
+**Error budget** — The failure you have decided is acceptable over a window. For a request-based SLO, 99.9% success leaves 0.1% of requests available to fail. For a time-based 99.9% uptime SLO, the budget is 43.2 minutes in 30 days. Spending it is allowed; exceeding it means stop shipping features and fix reliability. See [15 — Observability](../docs/15-observability.md).
 
 **Event sourcing** — Instead of a row holding the current value, you store every change that ever happened and derive the current value by replaying them. The log is the database; the table you query is a projection built from it. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -142,6 +142,8 @@ drift apart.
 **Optimistic locking** — Keep a version number on the row. Read it, and include it in the update: `WHERE id = $1 AND version = $2`. Zero rows updated means somebody committed between your read and your write, so you retry or tell the user. See [03 — Architecture](../docs/03-architecture.md).
 
 **Partial unique index** — A unique index with a WHERE clause, so the constraint applies to a subset of the table. `CREATE UNIQUE INDEX ... ON claims (shift_id) WHERE status = 'approved'` permits many rejected claims per shift and exactly one approved one. See [03 — Architecture](../docs/03-architecture.md).
+
+**Percentile** — A ranking rather than an average. A p95 latency of 400ms means at least 95 of every hundred measurements are at or below 400ms. A p99 is a threshold, not a maximum; the slowest request can be higher. Percentiles do not average: the p95 across three servers is not the mean of their three p95s. See [15 — Observability](../docs/15-observability.md).
 
 **Pessimistic locking** — `SELECT … FOR UPDATE` inside a transaction takes a row lock, and any other transaction wanting that row blocks until yours commits or rolls back. See [03 — Architecture](../docs/03-architecture.md).
 
