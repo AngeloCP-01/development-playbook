@@ -410,3 +410,16 @@ test('S3: traces get more than an announcement', () => {
   const three = section('Three things, in order of value')
   expect(three).toMatch(/you will know when you need|until then/i)
 })
+
+// The new mechanisms need mnemonic reminders in the existing Traps layer.
+test('Traps covers silent jobs and forgotten retention policies', () => {
+  const traps = topLevelSection('Traps')
+  expect(traps).toMatch(/silence|never ran/i)
+  expect(traps).toMatch(/retention/i)
+})
+
+test('alert delivery hands the reader to incident management for the response', () => {
+  expect(section('Alerts you will not learn to ignore')).toMatch(
+    /16-incident-management\.md/,
+  )
+})

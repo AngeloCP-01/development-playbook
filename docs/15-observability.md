@@ -105,7 +105,7 @@ Sentry.init({
 ```
 
 Scrubbing is a deny-list, and a deny-list is only as current as the last time you read it.
-The thing that actually protects you is sending less: an id instead of an email, a reason
+Reduce what you send in the first place: an id instead of an email, a reason
 code instead of a payload.
 
 One loop can spend everything. A batch job that throws once per row, over five thousand
@@ -146,9 +146,8 @@ with the incoming `x-request-id` if there is one, or a fresh `crypto.randomUUID(
 there is not. Platforms usually supply one already; use theirs when it exists, so your
 line and their line agree.
 
-One id is the difference between "here is an error" and "here is everything that happened
-during the request that produced it". It is also the cheapest thing in this stage: one
-field, no new vendor, no sampling decisions.
+A shared id lets you find the log lines from the request that produced an error.
+You can add it without buying another service or setting up distributed tracing.
 
 ```ts
 Sentry.setTag('requestId', requestId)
@@ -390,6 +389,10 @@ notifications you silenced in a meeting is indistinguishable from a healthy syst
 forever, and the only thing that tells you is the incident. Do it when you set the alert
 up, and again when you change how you are reachable.
 
+This stage stops at the alert arriving. What you do in the five minutes after it —
+where to look first, what to roll back, what to write down — is
+[16 — Incident Management](16-incident-management.md). Read it before the alert.
+
 ### Uptime monitoring from outside
 
 Everything above runs inside your infrastructure. If Vercel has a regional problem or your
@@ -583,6 +586,11 @@ the thing that mattered is not on it.
 
 ---
 
+- A heartbeat monitor on every scheduled job, alerting on a missing ping
+- A read-only canary endpoint for an authenticated service
+- A retention policy on every log group or drain, chosen rather than defaulted
+- A request id on request-scoped log lines and matching error-tracker events
+
 ## Definition of done
 
 - [ ] Errors reach Sentry with readable stack traces and user context
@@ -601,6 +609,13 @@ the thing that mattered is not on it.
 - [ ] Dashboard shows deploy markers
 
 ---
+
+- [ ] Every scheduled job pings a heartbeat on success, and you have watched
+      the monitor page you by withholding a test ping
+- [ ] A single request id joins a request's log line to its error report
+- [ ] Log retention is a number you chose, and you know what it costs
+- [ ] Liveness and readiness are separate endpoints, and the platform's
+      restart trigger uses the one that does not check dependencies
 
 ## Scaling to a team
 
@@ -650,3 +665,22 @@ which is exactly when you need to read it fastest.
 glanced at.
 
 **Email alerts for urgent problems.** Read tomorrow morning. The outage was tonight.
+
+
+**Monitoring that only fires on events.** The job that stopped running, the orders
+that stopped arriving, and the alert that stopped being delivered all produce silence.
+Check for missing expected events as well as failures.
+
+**A heartbeat in a `finally` block.** It reports success for a run that threw,
+so your monitor tells you the job worked when it did not.
+
+**Logs with no retention policy.** CloudWatch Logs retains them indefinitely by
+default. On a container platform, stdout may disappear before you need it.
+Choose how long the destination keeps the data.
+
+**An alert nobody has ever seen arrive.** A configured alert can still route to a dead
+phone number. Fire it deliberately and confirm delivery.
+
+**Health checks wired to the thing that restarts you.** Point a platform's
+liveness probe at a check that fails when the database blinks and the platform can
+restart healthy instances during a database outage.
