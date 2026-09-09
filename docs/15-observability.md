@@ -20,6 +20,13 @@ driven by incidents that were harder to diagnose than they should have been.
 
 ### Three things, in order of value
 
+Monitoring checks the failures you anticipated: an error-rate threshold, a missing
+heartbeat, a slow response. Observability is the ability to investigate questions you
+did not anticipate, using the evidence the system emits. The request id and structured
+fields below let you follow an unfamiliar failure without redeploying to add logging.
+Both matter: predefined checks tell you to look, and contextual evidence helps you
+work out what happened.
+
 **1. Errors** — something broke. Install this first; it delivers value immediately.
 
 **2. Metrics** — aggregate health over time. This is what tells you "normal" so that
@@ -133,8 +140,37 @@ export const logger = pino({
     env: process.env.NODE_ENV,
   },
   mixin: () => ({ requestId: requestContext.getStore()?.requestId }),
+  redact: {
+    paths: [
+      'req.headers.authorization', 'req.headers.cookie',
+      'req.headers["x-api-key"]',
+      'password', 'token', '*.password', '*.token',
+    ],
+    censor: '[redacted]',
+  },
 })
 ```
+
+Configure redaction when you create the logger so every call uses the same policy.
+`beforeSend` protects error reports; it does nothing to log output.
+[Pino redaction paths](https://github.com/pinojs/pino/blob/main/docs/redaction.md)
+are case-sensitive and match specific object shapes. `*.token` covers one level of
+nesting, not arbitrary depth. These paths do not scrub secrets embedded in free-text
+messages or stack traces. Log allowlisted fields, avoid raw payloads, and test the
+actual shapes your application emits with synthetic secrets before enabling a drain.
+
+| Level | For |
+|---|---|
+| `debug` | Diagnostic detail, normally disabled in production |
+| `info` | Routine events and business outcomes you want to count |
+| `warn` | An unexpected condition the application handled |
+| `error` | A fault you would investigate; a common input to alerts |
+| `fatal` | A fault that prevents the process continuing |
+
+Choose the level by the action it warrants. An expected card decline may be `info`;
+use `warn` when it deserves attention, and reserve `error` for a fault. If routine
+outcomes feed a paging rule, tune the rule or the classification before it teaches
+you to ignore failures.
 
 `pino` writes one JSON object per line to stdout, which is what every platform in this
 playbook already collects. Any library that does that will do; what matters is that the
@@ -190,6 +226,12 @@ background job outcomes, anything irreversible.
 Never log: passwords, tokens, session IDs, card numbers, or the contents of user
 documents. The last four digits and an expiry date are still personal data, and "it is
 only partial" is not a retention policy.
+
+Keep high-cardinality identifiers such as `userId`, `invoiceId` and `requestId`
+in logs, where distinct values help you find a particular event. Do not use them as
+metric labels: each combination of label values creates another time series.
+A bounded event name such as `invoice.payment_declined` is suitable; a unique invoice
+id is not. Cardinality that is useful for log lookup can make metrics expensive.
 
 ### Where logs go, and what they cost
 
@@ -535,6 +577,14 @@ CloudWatch dashboard schema both move.
 
 Resist adding more. A dashboard with forty charts is not read.
 
+You can keep separate collection tools and still meet the four-signal dashboard
+requirement. Use your provider's dashboard if it can show all four signals and deploy
+markers. Otherwise, configure a visualization layer such as Grafana to query the needed
+[data sources](https://grafana.com/docs/grafana/latest/datasources/), for example
+Prometheus and CloudWatch, in one dashboard. Verify that each panel covers the same
+service, environment and time window. You do not have to move the collected data into
+one storage product to see it together.
+
 ### AI in observability
 
 An agent is good at the parts of observability that are pattern-matching over text you
@@ -626,6 +676,13 @@ the thing that mattered is not on it.
   Spending the budget is allowed; exceeding it is the rule that says to stop shipping
   features and fix reliability. Without that rule, an SLO is a number in a document that
   nobody has to act on.
+- **Consider [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/)
+  when instrumentation needs to work across backends.** It provides vendor-neutral
+  APIs, SDKs and tools for generating, collecting and exporting telemetry. Your
+  backend still stores the data and supplies dashboards. It can reduce reinstrumentation
+  when you change providers, though backend-specific configuration still needs work.
+  A solo service can start with its platform integration; revisit this when multiple
+  services or a provider change make that integration a constraint.
 - **Set up on-call rotation** with a real escalation path, once the team can sustain it.
 - **Alerts need an owner.** Unowned alerts are ignored by everyone, each assuming someone
   else has it.

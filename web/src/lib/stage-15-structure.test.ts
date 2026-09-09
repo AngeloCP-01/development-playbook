@@ -423,3 +423,42 @@ test('alert delivery hands the reader to incident management for the response', 
     /16-incident-management\.md/,
   )
 })
+
+// These guards pin the explanations missing from the gathered-reference pass.
+test('structured logging teaches redaction boundaries as well as configuration', () => {
+  const logs = section('Structured logs')
+  expect(logs).toMatch(/redact:\s*\{/)
+  expect(logs).toMatch(/free.text/i)
+  expect(logs).toMatch(/case.sensitive/i)
+})
+
+test('the logging level ladder gives routine events a level below error', () => {
+  const logs = section('Structured logs')
+  for (const level of ['debug', 'info', 'warn', 'error', 'fatal']) {
+    expect(logs).toContain(`| \`${level}\` |`)
+  }
+})
+
+test('observability explains investigating questions not anticipated in monitoring', () => {
+  const opening = section('Three things, in order of value')
+  expect(opening).toMatch(/monitoring/i)
+  expect(opening).toMatch(/did not anticipate/i)
+})
+
+test('identifying log fields are not recommended as metric labels', () => {
+  expect(section('Structured logs')).toMatch(/cardinality/i)
+  expect(section('Structured logs')).toMatch(/metric labels/i)
+})
+
+test('OpenTelemetry has a purpose and a boundary rather than a bare product name', () => {
+  const team = topLevelSection('Scaling to a team')
+  expect(team).toMatch(/OpenTelemetry/)
+  expect(team).toMatch(/vendor.neutral/i)
+  expect(team).toMatch(/backend/i)
+})
+
+test('dashboard requirements can be fulfilled across separate collection tools', () => {
+  const dashboards = section('Dashboards')
+  expect(dashboards).toMatch(/data sources/i)
+  expect(dashboards).toMatch(/Grafana/)
+})
