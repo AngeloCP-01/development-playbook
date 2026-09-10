@@ -234,6 +234,13 @@ settings change. Item 10 is a docs task that should go through the normal loop.
   The guards are what stop the cheaper reviewer being a worse one: evidence-or-rejected,
   per-task escalation on named triggers, model-independent TDD evidence, and the Opus
   final review kept as backstop and as the measurement of whether the tier holds.
+- **Items 8 and 9 closed:** `cv-cover-writer` was byte-identical to the copy in
+  `career-ops/.claude/skills/`; the user-level copy moved to `~/.claude/backups/`.
+  `ui-ux-pro-max` kept on the user's call; `CLAUDE.md` no longer claims regular use.
+  Also cleaned up, outside the audit's list: three agent worktrees (1.8 GB) and five stale
+  branches, all superseded by content already in `develop`.
+- **Still to measure:** the next session's first `cache_creation_input_tokens` is the new
+  fixed baseline. Today's was 59–66k; the cuts should show as roughly 7k less.
 - **Lever 4d applied (item 10):** `docs/tracker-archive.md` takes 34 closed debt headings and
   23 pre-August Completed rows, verbatim; live tracker 415,081 → 303,135 bytes (~104k → ~76k
   tokens), 0 lines lost. Decisions stay. `web/src/lib/tracker-ledger.test.ts` guards ids

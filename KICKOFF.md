@@ -139,6 +139,10 @@ A context-budget round for the Max → Pro downgrade, then two merges, then thes
   clean, format clean, **1207/1207 across 162 files**. `test:e2e` and `test:dev-console`
   not run — nothing under `web/src` renders differently; two test files were added.
 - **Found and fixed:** the personal files in history (above). **D-97**, **TD-46**.
+- **After the records merged:** worktrees and stale branches cleaned up (above);
+  `cv-cover-writer` moved from user scope to `career-ops` (it was a byte-identical
+  duplicate); `ui-ux-pro-max` kept on the user's call, 0 uses in 26 sessions
+  notwithstanding, and `CLAUDE.md` now says "available" rather than "in regular use".
 
 ---
 
@@ -199,10 +203,11 @@ a fast-forward), **not** `--tags`, **not** `--mirror`.
 
 **No branch is in flight.** The next one is `fix/stage-15-fix-wave`, cut from `develop`.
 
-**Two stale branches predate all of this and were deliberately not touched**:
-`docs/2026-08-12-stage-04-spec` and `feat/stage-03-standard-practices`. Three
-`worktree-agent-*` branches and their `.claude/worktrees/` checkouts from 2026-09-04 are
-also still around; `git worktree remove` them when convenient.
+**`git branch` is `develop` and `main`, and `git worktree list` is one line.** The two
+stale branches and the three 2026-09-04 agent worktrees (1.8 GB) were removed on
+2026-09-10 after checking every file they touched was already in `develop`. Their three
+implementer reports were the only copies and now live in
+`.superpowers/sdd/2026-09-04-stage-11-ci-cd/`, git-ignored like every workspace there.
 
 **Branch/push convention, unchanged:** work on `feat/`|`fix/`|`docs/<date>-` branches, cut
 from `develop`, never from `main`. Merge with `--no-ff` and a hand-written subject, never
