@@ -375,6 +375,7 @@ Test names encode the rationale, not the mechanic:
 | `KICKOFF.md` | Paste-buffer for cold-starting a new session with full context. Refresh its *Project state* before use — a stale kickoff is worse than none, because it is trusted. |
 | `docs/task.md` | Scope, milestones (`P-` content, `W-` web app), dependency map |
 | `docs/tracker.md` | What shipped with evidence, numbered decisions, technical debt, bug ledger |
+| `docs/tracker-archive.md` | Closed debt and older Completed rows, moved verbatim. Grep by ID, never read whole. |
 | `web/DESIGN.md` | The design system. Any new UI matches it. |
 | `web/PATTERNS.md` | Interaction patterns — which UX pattern fits which content. Read before building a stage. |
 | `docs/superpowers/specs/`, `plans/` | Delivery-loop artifacts |
@@ -399,6 +400,13 @@ what stops scope creep being invisible.
 Decisions are appended and superseded, never edited — the record of what was believed
 at the time is the value. Follow-ups are struck through with a date when closed
 (`~~rotate the key~~ ✓ done 2026-07-02`) rather than deleted.
+
+**The tracker has an archive** (`docs/tracker-archive.md`, D-96). At each KICKOFF refresh,
+closed debt entries and Completed rows older than the current round move there verbatim;
+IDs are never renumbered, and `web/src/lib/tracker-ledger.test.ts` fails if an ID lands in
+both files or in neither. Decisions never move. Grep either file by ID; do not `Read` the
+tracker whole — it was 104k tokens before the split and the point of the archive is that
+no session needs to load it.
 
 ### Prose that does not read as AI-written
 

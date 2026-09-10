@@ -19,8 +19,12 @@ Before doing anything, read these for context:
 
 - `CLAUDE.md` — how this project works: git conventions, delivery loop, review and TDD
   standards, tooling. Start here.
-- `docs/task.md` — scope, milestones (`P-` content, `W-` web app), dependency map
-- `docs/tracker.md` — what shipped with evidence, numbered decisions, technical debt
+- `docs/task.md` — **only the section for the milestone this round is on** (named in
+  *Project state* below); the file is ~19k tokens and the rest of it is not this round
+- `docs/tracker.md` — **do not read it whole.** Read `## Next up`, then list open debt
+  with `grep '^### TD' docs/tracker.md`. For any decision you need, grep its ID
+  (`grep -n 'D-54' docs/tracker.md docs/tracker-archive.md`). Closed debt and older
+  Completed rows live in `docs/tracker-archive.md`, same rule: grep, never read.
 - `web/DESIGN.md` — the design system; any new UI matches it
 - `README.md` — the playbook's own index and its central claim
 - `web/AGENTS.md` — this Next.js version postdates your training data; read

@@ -132,6 +132,7 @@ The project practises what the documents preach, and records itself doing it:
 |---|---|
 | [`docs/task.md`](docs/task.md) | Scope, milestones, dependency map |
 | [`docs/tracker.md`](docs/tracker.md) | What shipped with evidence, decisions, technical debt, bug ledger |
+| [`docs/tracker-archive.md`](docs/tracker-archive.md) | Closed debt and older completed rows, moved verbatim; grep by ID |
 | [`docs/superpowers/`](docs/superpowers/README.md) | Specs and plans from the delivery loop |
 | [`docs/learnings/`](docs/learnings/README.md) | Guides written when a round taught something expensive |
 | [`web/DESIGN.md`](web/DESIGN.md) · [`web/PATTERNS.md`](web/PATTERNS.md) | The design system and the interaction-pattern library |
