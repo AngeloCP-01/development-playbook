@@ -35,158 +35,136 @@ Before doing anything, read these for context:
   is going to execute: nothing in this repository reads a plan, and the one you are
   about to run proved it twice while it was being written.
 
-### Project state (as of 2026-09-08 — W-3 is **11/18**, seven stages remain.
+### Project state (as of 2026-09-10 — W-3 is **11/18**, seven stages remain.
 Stages 01–07, 11, 12, 13 and 14 are interactive. Stage 13 is platform-aware (8 steps,
 Vercel + AWS). **Eighteen of twenty-three** reference sheets drawn.
 
-**Stage 15's doc round is specified and not executed.** The plan is written, reviewed
-against five gathered references, and committed. `docs/15-observability.md` has not been
-touched — it is byte-identical to its state on `develop`. This session's job is to
-**execute** it.)
+**Stage 15's doc round is executed through Task 14 of 16 and merged.** `fcd46f1` on
+`develop`, merged mid-round at the user's direction and **without a whole-branch review**.
+`docs/15-observability.md` is 743 lines, 6 `##` and 12 `###`. What is left is **Task 15,
+the fix wave**: six blocking findings and one minor from the re-run, then the re-run again
+on the fixed doc (D-48), then the review that is owed, then the round closes.)
 
 **Start here, in order:**
 
-1. **Check the branch before editing anything.** `git branch --show-current`. The work
-   is on `fix/stage-15-doc-round`, which already exists — check it out, do not cut a new
-   one. If the answer is `develop` or `main`, stop and read
-   `docs/learnings/branch-discipline-101.md`. This has bitten twice.
+1. **Check the branch before editing anything.** `git branch --show-current`. There is no
+   branch in flight. Cut `fix/stage-15-fix-wave` from `develop`. If the answer is
+   `develop` or `main`, stop and read `docs/learnings/branch-discipline-101.md`.
 2. **Re-derive every number in this file before trusting it.** `git fetch`, then the
-   commands under "Branch state". This file has now been wrong about **six** separate
-   things: a stage's merge status, a test count, whether `develop` was pushed, the
-   ahead-of-`main` count, the number of subsections in stage 15's doc, and what
-   `stage-metadata.test.ts` actually gates on. The last two were found this round by
-   checking rather than reading.
-3. **Read the plan and the findings it argues from**, in that order:
-   - `docs/superpowers/plans/2026-09-08-stage-15-doc-round.md` — 18 tasks, 2447 lines
-   - `docs/superpowers/specs/2026-09-08-stage-15-cold-reader-findings.md` — the evidence
-4. **Then execute it**, Task 0 onward. The execution mode was never decided; see below.
+   commands under "Branch state". This file has been wrong about **six** things so far,
+   all found by checking rather than reading. Counts include the commit that writes them,
+   and every SHA in this file from before 2026-09-10 was rewritten (D-97).
+3. **Run the two one-line checks that belong at every refresh:**
+   `grep -n "NOT merged, NOT pushed, NOT deployed" docs/tracker.md` and
+   `git ls-files reference/ | grep -iv "jpeg\|jpg\|png\|webp\|gif\|\.md$"`. The second
+   found a résumé in the tree on 2026-09-10 (TD-46, D-97). It must return nothing.
+4. **Read the fix queue, not the whole plan:** `docs/superpowers/specs/2026-09-08-stage-15-cold-reader-findings.md`
+   → *Re-run, after the fix waves* → *Task 15 fix queue*. Seven items. The plan's
+   Task 15 (`docs/superpowers/plans/2026-09-08-stage-15-doc-round.md`, line ~2288) says
+   how to budget it; nothing else in the plan is still open.
+5. **Open on Sonnet, medium effort** (`CLAUDE.md` → *Session model*). The fix wave is
+   execution; the findings already say what to do. Dispatch the whole-branch review on
+   `opus`. If I3 (the data policy) or I6 (readiness vs liveness) turns into a design
+   question, switch the thread to Opus for that and back.
 
 ---
 
-#### Stage 15 — the round is planned, so this is what you actually need
+#### Stage 15 — the fix queue, and the trap around it
 
-Measured 2026-09-08. Re-check anything you are about to act on.
+Measured 2026-09-10 from the findings file and the doc. Re-check before acting.
 
-- **The plan is the source of truth, not this file.** Every task carries its own files,
-  its RED, its implementation and its commit message. Work from the task slice.
-- **Two cold readers ran on 2026-09-08** (D-54). They found six contradictions, four
-  things the stage requires in `## Artifacts` or `## Definition of done` and never
-  teaches, nine it never mentions, and scored **2/5** on symptom-shaped lookup. Both
-  found the PII contradiction independently.
-- **`docs/15-observability.md` is 261 lines with 6 `##` and 8 `###` subsections.** The
-  previous version of this file said 9. It was 8 then too.
-- **`stage-metadata.test.ts` does not gate on `ready`.** The previous version of this
-  file said it fails any `ready: true` stage lacking an AI heading. `AI_SECTION_STAGES`
-  is an explicit list, and the test's own comment says the explicitness is deliberate —
-  so the slug is added at the *start* of a round. That is Task 10's RED, and it is real.
-- **The same read found `11-ci-cd` missing from that list**, although stage 11 shipped an
-  AI section on 2026-09-07. The guard has been blind to a shipped stage. Task 1 closes it.
-- **Sentry is not a dependency of this repo.** `web/package.json` has no `@sentry/*`.
-  The stage teaches it; the site does not use it. D-50's harness is the scratch project
-  in Task 0, not `web/`.
-- **`ready` stays `false`.** This branch does not port and does not advance W-3.
-- **Panel content is testable now.** `Element.prototype.scrollIntoView` is stubbed in
-  `src/test/setup.ts`. Assume other stages' component tests still carry the old blind
-  spot.
+- **I1** canary returns `200` with `{"ok":false}` on an empty result — a status-only
+  monitor misses it. Reproduced by the harness. Define the empty-state policy, fail the
+  status, test both branches.
+- **I2** health logging drops the exception: `logger.warn({ event, error })` emits
+  `error:{}` under default Pino. Reproduced. Serialize safely (`err`, within the redaction
+  policy), test the emitted record.
+- **I3** the opaque-identifier recommendation and Definition of done's "no personal data,
+  no exception" still contradict. Narrow the policy to the allowed identifiers; require
+  minimisation, retention, deletion. The deletion link exists already.
+- **I4** `addContext(key, data)` accepts arbitrary records the scrubber never sees.
+  Constrain to allowlisted fields; do not claim a universal scrubber.
+- **I5** the jobs section requires watching duration and overlap; the checklist only
+  verifies heartbeat absence. Add checkable evidence for both.
+- **I6** liveness and readiness conflated: restart decisions use liveness, routing needs
+  readiness (Kubernetes probe docs, checked 2026-09-09). Teach the mapping; say why one
+  dependency failing need not make the whole instance unready.
+- **M1** the health route does not import the logger it uses; annotate the scenery.
+- **Two of these were introduced by the round itself** (I1, I2). That is the D-48 shape:
+  the fix wave lands after the pass that justified it. So the re-run runs again, **same
+  Loaf scenario verbatim**, after Task 15, and the five lookup questions now recorded in
+  the file are the ones to reuse.
+- **`ready` stays `false`.** Nothing here ports or advances W-3.
+- **Guards exist now** for the doc: `stage-15-structure.test.ts` pins section order;
+  `term-usage.test.ts` and `terms.test.ts` cover the glossary additions; `AI_SECTION_STAGES`
+  includes `15-observability` (and `11-ci-cd`, which it had been missing while stage 11
+  was shipped).
 
-#### The execution decision was never made
+#### Reference material for stage 15 — tracked, still unregistered
 
-The round was planned and then stopped deliberately, at the user's request, to record
-first. Two options were put up and neither was chosen:
+The ten images are committed (`450190c`, rewritten from `c4f2a68`) but **none is
+registered and none has provenance** — `reference/cheatsheet-sources.md` requires an
+author and a URL at capture time, and a graphic with neither cannot be published. Ask
+for the sources before registering any of them. The `observability` sheet is deferred
+until that happens.
 
-- **Inline with checkpoints** — recommended when it was offered, and the reasoning still
-  holds: tasks 2–13b all edit one prose document in sequence, so there is no independence
-  to exploit; voice has to hold across thirteen edits and the cold reader explicitly
-  cannot see voice drift; and the plan pins every load-bearing sentence verbatim. The
-  cost is no fresh reviewer per task, which makes the whole-branch review before merge
-  non-optional.
-- **Subagent-driven** — the repo standard, and every reviewed round here has found
-  something a green gate did not. Budget one retry per reviewer dispatch; 3 of 5 stalled
-  in a previous round and every retry succeeded.
+`AGENTS.md` at the repo root arrived in the same commit: a copy of `CLAUDE.md` addressed
+to Codex. It is the user's; leave it, and do not let the two drift without saying so.
 
-**Ask before starting.** It is a real fork and it was left open on purpose.
-
-#### Reference material for stage 15 — gathered, unregistered
-
-**Ten images landed in `reference/` on 2026-09-08 and none is committed or registered:**
-
-```
-3-pillars-of-observavilty.jpeg        SLA-SLI-SLO&ERRORBUDGET.jpeg
-4-Golden-Signals-SRE.jpeg             latency-metrics.jpeg
-Microservices-Observavility&Tracing.jpeg   logging.jpeg
-mertrics-vs-logs-vs-traces.png        observavility&opentelemetry.png
-sprinboot-logging-cheatsheet.jpeg
-```
-
-They map almost exactly onto the gathering list this round proposed, including the three
-that fill things the doc asserts without teaching: SLI/SLO/SLA plus error budget, the
-four golden signals, and latency percentiles. **None has provenance recorded**, which
-`reference/cheatsheet-sources.md` requires at capture time — a graphic with no author and
-no URL cannot be published on a live site. Ask for the sources before registering any of
-them.
-
-**Five articles were also read on 2026-09-08** and are listed at the top of the plan's
-Task 13b, with which fed the document and which are sheet-only. They are the reason Task
-13b exists.
-
-> **The hazard TD-44 recorded is live right now.** `reference/` is a committed directory,
-> so anything parked there is one `git add -A` from a public repo. Sitting in it
-> untracked at handoff: the ten images above, plus `angelito_paa_software_developer.pdf`,
-> `cover-letter-ai-fullstack.md` and `system-design-tradeoffs.jpeg`. **Stage the résumé
-> and the cover letter nowhere.** Add files by explicit path, never with `-A` or `.`.
+> **The hazard TD-44 named fired on 2026-09-08.** The résumé and cover letter were
+> committed with `reference/`. The unpushed history was rewritten on 2026-09-10 to take
+> them out (D-97); the files are at `~/personal/parked-from-playbook/`, off the repo.
+> `.gitignore` now guards the file kinds. **Never `git push --tags` or `--mirror`** —
+> `backup/pre-filter-2026-09-10` and `refs/original/` still hold the old objects locally
+> until the user deletes them after the push. Add files by explicit path, never `-A`.
 
 ---
 
-#### What this session did (2026-09-08)
+#### What this session did (2026-09-10)
 
-Four commits, no merge, and the stage doc deliberately untouched.
+A context-budget round for the Max → Pro downgrade, then two merges, then these records.
 
-- **`a2d3552`** — the cold-reader findings, both runs, with the Loaf scenario recorded
-  verbatim because the re-run has to reuse it. Also records what did **not** survive
-  checking: the missing-triage finding is stage 16's job, the Sentry scope-leak claim is
-  held pending an SDK check rather than written up as fact, and the cost complaint fails
-  because five other stages discuss cost.
-- **`1ab79c5`** — the plan. Its own self-review found seven task steps quoting cumulative
-  test counts that did not match the tests each task adds.
-- **`d5a4227`** — Task 13b, from the five gathered articles. The finding that justifies
-  it: the round as planned taught scrubbing for the error tracker and nothing for the
-  logs, while the checkbox it was fixing covers both. Reading source 5 also exposed a
-  forward reference in the plan that no task delivered.
-- **`6c5f816`** — records. `task.md` gains W-3.12; the tracker gains the round, **D-94**
-  (stage 15 is platform-aware, Vercel and AWS) and **D-95** (a weak template section is a
-  playbook-wide question, not a stage round's business); and
-  `docs/learnings/plans-are-unverified-101.md` is new.
-
-**No gate was run and none was due** — nothing under `web/` changed and
-`docs/15-observability.md` has a zero-line diff against `develop`.
+- **`docs/audits/2026-09-10-context-usage-audit.md`** — 26 sessions and 375 subagent
+  transcripts measured. Cache re-reads are 68% of weighted spend, subagents 39%, every
+  cuttable plugin about 2%. Ten levers ranked; five applied the same day.
+- **Applied outside the repo:** auto-compact on; global default Sonnet at medium effort;
+  claude-mem trimmed to 15 observations and skipping shell/read tools; vercel,
+  claude-in-chrome, impeccable disabled; the `memory` MCP server removed.
+- **Applied in the repo:** `CLAUDE.md` gains the subagent tier table with four quality
+  guards, the session → model mapping, and the tracker-archive rule. **`docs/tracker.md`
+  is two files now** — closed debt and pre-August rows in `docs/tracker-archive.md`,
+  guarded by `tracker-ledger.test.ts` (D-96). This file's read list says grep, never read.
+- **Merged to `develop`:** `fix/stage-15-doc-round` (tasks 0–14, 25 commits) and
+  `docs/2026-09-10-context-audit` (4 commits). Gate on `develop`: lint 0, typecheck
+  clean, format clean, **1207/1207 across 162 files**. `test:e2e` and `test:dev-console`
+  not run — nothing under `web/src` renders differently; two test files were added.
+- **Found and fixed:** the personal files in history (above). **D-97**, **TD-46**.
 
 ---
 
 #### The condensed history (01–07, 11–14, the reference hub)
 
-Full detail lives in `docs/tracker.md`; this is what a new session needs without
-re-reading the whole log.
+Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them by ID.
 
 - **Stages 01–07, 11, 12, 13 and 14 are interactive and merged.** 03 is 22 steps, 04 is
-  15, 05 is 13, 06 is 8, 07 is 6, 11 is 8 (ordering exercise signature piece), 12 is 6,
-  13 is 8 (platform-aware: Vercel + AWS), 14 is 6. Coverage walks ran on 03–06, 11, 12,
-  13, 14. Stages 08–10 and 15–18 render a "sheet not drawn" placeholder; routing works
-  for all 18.
+  15, 05 is 13, 06 is 8, 07 is 6, 11 is 8, 12 is 6, 13 is 8 (platform-aware), 14 is 6.
+  Coverage walks ran on 03–06, 11–14. Stages 08–10 and 15–18 render a "sheet not drawn"
+  placeholder; routing works for all 18.
 - **A per-task reviewer subagent, plus a whole-branch review, is the standard** — every
   reviewed round has found something a green gate did not. **The same session cannot
-  self-review.**
-- **A coverage walk, blind to the branch's own plan and reports, finds real gaps a green
-  gate and clean per-task reviews cannot see.** Budget a fix wave after it.
+  self-review.** Under the Pro policy the per-task reviewer is `sonnet` with evidence
+  required, the final review is `opus`; `CLAUDE.md` → *Subagent models*.
+- **A coverage walk, blind to the branch's own plan and reports, finds real gaps.**
+  Budget a fix wave after it.
 - **Glossary and stage metadata are single-sourced** (D-36): terms live in
   `web/src/lib/terms.ts` (`pnpm gen:glossary`), never hand-edit `glossary.md`.
-- **Quality gates**: prettier (skips markdown and `highlighted.generated.ts` by design),
-  eslint at `--max-warnings 0`, vitest in two projects, `test:e2e` (18-test Playwright
-  audit), `test:dev-console` (outside the gate, once per stage round — TD-35, D-84).
-  Re-derive current counts rather than quoting them.
-- **1161 tests across 160 files** as of `develop`, build clean, **e2e 18/18**.
-  `test:dev-console` is **unrun since 2026-09-07**, not passing — do not quote a number
-  for it. It needs its own dev server and refuses to start while another `next dev` holds
-  the directory. Ask the user to stop theirs rather than killing their process.
+- **Quality gates**: prettier (skips markdown and `highlighted.generated.ts`), eslint at
+  `--max-warnings 0`, vitest in two projects, `test:e2e` (18-test Playwright audit),
+  `test:dev-console` (outside the gate, once per stage round — TD-35, D-84).
+- **1207 tests across 162 files** as of `develop` on 2026-09-10. **e2e last green
+  2026-09-07 (18/18)**; `test:dev-console` **unrun since 2026-09-07** — do not quote a
+  number for it. It needs its own dev server and refuses to start while another
+  `next dev` holds the directory.
 - **Deployed**: `W-5` complete, live at https://acp-dev-playbook.vercel.app since
   2026-08-11. `pnpm test:prod` verifies the deployment, outside the merge gate.
 
@@ -197,37 +175,39 @@ re-reading the whole log.
 ```bash
 git fetch
 git log --oneline -1 develop origin/develop main
-git rev-list --count develop..HEAD
+git rev-list --count origin/develop..develop
 git rev-list --count main..develop
+git ls-files reference/ | grep -iv "jpeg\|jpg\|png\|webp\|gif\|\.md$"
 ```
 
-**Measured 2026-09-08 at handoff:**
+**Measured 2026-09-10 at handoff, before the records commit landed:**
 
 | | SHA | |
 |---|---|---|
-| `fix/stage-15-doc-round` | `6c5f816` | **4 ahead of `develop`**, the work of this session |
-| `develop` | `fdc4811` | **level with `origin/develop`** |
-| `main` | `d659d32` | `develop` is **48 ahead** |
+| `develop` | `bf0070e` | **30 ahead of `origin/develop`**, all unpushed and **rewritten** (D-97) |
+| `origin/develop` | `fdc4811` | last push, 2026-09-08 |
+| `main` | `d659d32` | `develop` is **78 ahead** |
 
-**`develop` was 4 ahead of `origin/develop` earlier in this same session and is now
-level** — the user pushed mid-session. That is the fourth time re-deriving has changed an
-answer this file previously stated as fact, and it is why step 2 exists.
+**`develop`'s unpushed commits have different SHAs from any earlier record of them.**
+`c4f2a68` is `450190c`, `906cb32`'s line is gone, `8e94b1f` is `bf0070e`. Any SHA from
+a 2026-09-08 or 2026-09-10 note that is not in `git log develop` was rewritten, not lost:
+`git log --oneline develop | grep "<subject>"` finds it.
 
-The promotion of `develop` to `main` is still pending and is **the user's**. Every count
-above includes the commit that wrote it and goes stale on the next one.
+The push and the promotion of `develop` to `main` are **the user's**. The push is a plain
+`git push origin develop` — **not** `--force` (origin has none of these commits, so it is
+a fast-forward), **not** `--tags`, **not** `--mirror`.
 
-**One branch is in flight:** `fix/stage-15-doc-round`, unmerged and unpushed, four
-commits, all `docs(...)`. No code under `web/` is touched.
+**No branch is in flight.** The next one is `fix/stage-15-fix-wave`, cut from `develop`.
 
 **Two stale branches predate all of this and were deliberately not touched**:
-`docs/2026-08-12-stage-04-spec` and `feat/stage-03-standard-practices`. Check whether
-they are merged before assuming either is safe to delete. Not this round's job.
+`docs/2026-08-12-stage-04-spec` and `feat/stage-03-standard-practices`. Three
+`worktree-agent-*` branches and their `.claude/worktrees/` checkouts from 2026-09-04 are
+also still around; `git worktree remove` them when convenient.
 
 **Branch/push convention, unchanged:** work on `feat/`|`fix/`|`docs/<date>-` branches, cut
 from `develop`, never from `main`. Merge with `--no-ff` and a hand-written subject, never
 squashed. **Ask before every merge.** The user handles pushes and the promotion PR.
 
----
 
 ## Quick reference — for you, not the new session
 
@@ -242,16 +222,20 @@ Notes for whoever is preparing this handoff:
   `reference/rest-api-best-practices.md` — hand-written drafts for `sql-reference` and
   `api-reference`, gathered without an image, not yet registered.
 - Open threads worth carrying forward:
-  - **The stage 15 plan is written and unexecuted.** That is the next session's whole
-    job, and the execution mode is an open question the user has not answered.
-  - **Ten observability captures are in `reference/` with no provenance.** Ask for
+  - **Task 15 of the stage 15 round is the next session's whole job** — seven findings,
+    then the re-run on the same scenario (D-48), then the whole-branch review the merge
+    skipped. Cut `fix/stage-15-fix-wave`; open on Sonnet.
+  - **Ten observability captures are tracked in `reference/` with no provenance.** Ask for
     authors and URLs before registering any of them.
-  - **Personal files are still parked in a committed directory** — a résumé PDF and a
-    cover letter. Never `git add -A`.
+  - ~~**Personal files are still parked in a committed directory.**~~ Committed on
+    2026-09-08, rewritten out on 2026-09-10 (D-97, TD-46). Now at
+    `~/personal/parked-from-playbook/`. Never `git add -A`; never push `--tags`.
+  - **`develop` is 30 unpushed commits with rewritten SHAs.** Plain `git push origin
+    develop`; then delete `backup/pre-filter-2026-09-10` and `refs/original/` locally.
   - **`pnpm test:dev-console` has not run since 2026-09-07.**
-  - **Four branches merged unreviewed on 2026-09-07** (`6f52212`, `99f6145`, `4fdb9bd`,
-    `a8f56de`). None got the whole-branch pass the standard calls for, so treat that code
-    as less checked than usual if you touch it.
+  - **Five branches merged unreviewed** — the four of 2026-09-07 (`6f52212`, `99f6145`,
+    `4fdb9bd`, `a8f56de`) and stage 15's `fcd46f1` on 2026-09-10. Treat that code and
+    that doc as less checked than usual.
   - **Grep `NOT merged, NOT pushed, NOT deployed` in `docs/tracker.md` at every merge.**
     Doing it once found three rows carrying the phrase, two false for weeks.
   - **A "merged"/"not merged" claim is a query to re-run, not a fact to reuse** —
