@@ -25,136 +25,166 @@ Before doing anything, read these for context:
 - `README.md` — the playbook's own index and its central claim
 - `web/AGENTS.md` — this Next.js version postdates your training data; read
   `node_modules/next/dist/docs/` before writing framework code
-- `docs/learnings/README.md` — eight guides written after rounds that cost real time.
-  **Read `branch-discipline-101.md` first, before touching git at all**, and
-  **`decisions-need-tests-101.md`'s newest section before trusting any "merged" or "not
-  merged" claim anywhere, including in this file** — a stage's merge status went stale
-  in both `docs/task.md` and `docs/tracker.md` and was believed for a full day.
-  `stage-implementation-101.md` (worked-example teaching pattern, Tailwind v4 token
-  naming, atomic registration) and `quality-gates-101.md` (gate blind spots) both bear
-  on whichever stage comes next.
+- `docs/learnings/README.md` — ten guides written after rounds that cost real time.
+  **Read `branch-discipline-101.md` first, before touching git at all.** Then
+  **`plans-are-unverified-101.md`**, which is new and is about the artifact this round
+  is going to execute: nothing in this repository reads a plan, and the one you are
+  about to run proved it twice while it was being written.
 
 ### Project state (as of 2026-09-08 — W-3 is **11/18**, seven stages remain.
 Stages 01–07, 11, 12, 13 and 14 are interactive. Stage 13 is platform-aware (8 steps,
-Vercel + AWS). **Eighteen of twenty-three** reference sheets drawn. Nothing is in flight
-and the tree is clean.
+Vercel + AWS). **Eighteen of twenty-three** reference sheets drawn.
 
-**This session is for stage 15 (Observability), W-3.12.** It is already decided — do not
-re-litigate it. Stage 11's W-6 round is done (two sheets), so the reference-sheet cadence
-D-88 describes has been paid and the next move is a `W-3` stage. Stage 15 closes the
-shipping pipeline: 11 CI/CD → 12 Staging → 13 Deploy → 14 Verify → 15 Observe, all
-interactive. Its own W-6 round, if the material justifies one, comes after — not first.)
+**Stage 15's doc round is specified and not executed.** The plan is written, reviewed
+against five gathered references, and committed. `docs/15-observability.md` has not been
+touched — it is byte-identical to its state on `develop`. This session's job is to
+**execute** it.)
 
 **Start here, in order:**
 
-1. **Check the branch before editing anything.** `git branch --show-current`. If it says
-   `develop` or `main`, branch first. This has bitten twice — see
-   `docs/learnings/branch-discipline-101.md`.
+1. **Check the branch before editing anything.** `git branch --show-current`. The work
+   is on `fix/stage-15-doc-round`, which already exists — check it out, do not cut a new
+   one. If the answer is `develop` or `main`, stop and read
+   `docs/learnings/branch-discipline-101.md`. This has bitten twice.
 2. **Re-derive every number in this file before trusting it.** `git fetch`, then the
-   commands under "Branch state". This file has now been wrong three separate times: about
-   a stage's merge status, about a test count, and about whether `develop` was pushed. It
-   is trusted, which is exactly what makes a stale line expensive.
-3. **Read `docs/learnings/stage-implementation-101.md` before porting anything**, and
-   `web/PATTERNS.md` before designing a single panel. The default is not a paragraph — it
-   is something the reader clicks. A stage that is only prose blocks is the anti-pattern.
-4. **Cold-reader pass on `docs/15-observability.md` first** (D-54,
-   `docs/learnings/cold-reader-testing.md`). It validates the doc *before* the port
-   starts, not after. Stage 15's doc has never been assessed.
+   commands under "Branch state". This file has now been wrong about **six** separate
+   things: a stage's merge status, a test count, whether `develop` was pushed, the
+   ahead-of-`main` count, the number of subsections in stage 15's doc, and what
+   `stage-metadata.test.ts` actually gates on. The last two were found this round by
+   checking rather than reading.
+3. **Read the plan and the findings it argues from**, in that order:
+   - `docs/superpowers/plans/2026-09-08-stage-15-doc-round.md` — 18 tasks, 2447 lines
+   - `docs/superpowers/specs/2026-09-08-stage-15-cold-reader-findings.md` — the evidence
+4. **Then execute it**, Task 0 onward. The execution mode was never decided; see below.
 
 ---
 
-#### Stage 15 — what you need before you start
+#### Stage 15 — the round is planned, so this is what you actually need
 
 Measured 2026-09-08. Re-check anything you are about to act on.
 
-- **`docs/15-observability.md` is 261 lines**: 6 `##` sections and 9 `###` subsections.
-  The teachable spine is *Three things in order of value · Errors that are actually
-  useful · Structured logs · The four signals · Health checks · Alerts you will not learn
-  to ignore · Uptime monitoring from outside · Dashboards*, then Artifacts, Definition of
-  done, Scaling to a team, Traps. That is more subsections than fit four-to-six `Step`
-  objects, so grouping is a real design decision, not bookkeeping.
-- **The doc has no `### AI in observability` section, and it needs one.**
-  `stage-metadata.test.ts` fails any `ready: true` stage whose doc lacks that heading, so
-  the port cannot land without writing it. Stage 11's round wrote its AI section and then
-  expanded it 4→8 plays; budget for authoring, not transcribing. **None of the seven
-  remaining stage docs has one** — this is true for every future port, not just this one.
-- **`references.ts` has zero entries for `15-observability`.** Every ported stage so far
-  carries references; this one starts empty, so gathering them is part of the round.
-  `terms.ts` already has 3 terms pointing at the stage.
-- **`stages.ts` has it `ready: false`**, blurb "Know something is wrong before your users
-  tell you.", timing "Errors on day one; the rest grows continuously." Note the cadence:
-  observability never stops, so any framing that implies a finished checkpoint fights the
-  playbook's central claim.
-- **The three-file registration is one atomic operation** — `stages.ts` (`ready: true`),
-  `stage-content.ts`, `step-ids.ts`. Do it in the assembly task, not the scaffold task.
+- **The plan is the source of truth, not this file.** Every task carries its own files,
+  its RED, its implementation and its commit message. Work from the task slice.
+- **Two cold readers ran on 2026-09-08** (D-54). They found six contradictions, four
+  things the stage requires in `## Artifacts` or `## Definition of done` and never
+  teaches, nine it never mentions, and scored **2/5** on symptom-shaped lookup. Both
+  found the PII contradiction independently.
+- **`docs/15-observability.md` is 261 lines with 6 `##` and 8 `###` subsections.** The
+  previous version of this file said 9. It was 8 then too.
+- **`stage-metadata.test.ts` does not gate on `ready`.** The previous version of this
+  file said it fails any `ready: true` stage lacking an AI heading. `AI_SECTION_STAGES`
+  is an explicit list, and the test's own comment says the explicitness is deliberate —
+  so the slug is added at the *start* of a round. That is Task 10's RED, and it is real.
+- **The same read found `11-ci-cd` missing from that list**, although stage 11 shipped an
+  AI section on 2026-09-07. The guard has been blind to a shipped stage. Task 1 closes it.
+- **Sentry is not a dependency of this repo.** `web/package.json` has no `@sentry/*`.
+  The stage teaches it; the site does not use it. D-50's harness is the scratch project
+  in Task 0, not `web/`.
+- **`ready` stays `false`.** This branch does not port and does not advance W-3.
 - **Panel content is testable now.** `Element.prototype.scrollIntoView` is stubbed in
-  `src/test/setup.ts`. Before that, any test activating a step other than the first threw
-  from inside a `Stepper` effect, which is why stage 14's component test had six tests
-  that only ever inspected the rail. Write real panel assertions; and assume other stages'
-  component tests still carry that blind spot.
+  `src/test/setup.ts`. Assume other stages' component tests still carry the old blind
+  spot.
 
-#### What shipped in the session before this one (2026-09-07)
+#### The execution decision was never made
 
-Four branches, all merged `--no-ff`, all deleted, each re-gated on the merged result.
+The round was planned and then stopped deliberately, at the user's request, to record
+first. Two options were put up and neither was chosen:
 
-- **`6f52212`** — `ci-cd` reference sheet (W-6.3m), the registry's third concept/tool
-  split. Opened TD-44 and TD-45.
-- **`99f6145`** — **TD-45 closed.** The audit's overflow, touch-target and step-hash
-  sweeps asserted *inside* their path loop, so the first failure threw and the rest went
-  unmeasured; nine sheets had never been checked at 320px. All sweeps now collect and
-  assert once. **The audit reads 18/18 for the first time** — it said 17/18 for weeks, and
-  that number was never what it appeared to be.
-- **`4fdb9bd`** — `ci-cd` expanded 4→7 sections, 24→49 rows (W-6.3n), after the sheet
-  shipped without using its two densest sources.
-- **`a8f56de`** — **stage 14's coverage walk**, the one shipped stage that never had one.
-  12 of 16 doc sections covered; five gaps fixed, one finding downgraded and one rejected
-  on verification.
+- **Inline with checkpoints** — recommended when it was offered, and the reasoning still
+  holds: tasks 2–13b all edit one prose document in sequence, so there is no independence
+  to exploit; voice has to hold across thirteen edits and the cold reader explicitly
+  cannot see voice drift; and the plan pins every load-bearing sentence verbatim. The
+  cost is no fresh reviewer per task, which makes the whole-branch review before merge
+  non-optional.
+- **Subagent-driven** — the repo standard, and every reviewed round here has found
+  something a green gate did not. Budget one retry per reviewer dispatch; 3 of 5 stalled
+  in a previous round and every retry succeeded.
 
-**All four merged without a whole-branch review**, on the user's call. Every previous
-review in this repo found something a green gate did not.
+**Ask before starting.** It is a real fork and it was left open on purpose.
 
-**1161 tests across 160 files, build clean, e2e 18/18.** `pnpm test:dev-console` has not
-run since 2026-09-07 — a `next dev` server was occupying :3200 and Next refuses a second
-for the same directory. Run it once this round; it is the only thing that sees React's
-development warnings.
+#### Reference material for stage 15 — gathered, unregistered
+
+**Ten images landed in `reference/` on 2026-09-08 and none is committed or registered:**
+
+```
+3-pillars-of-observavilty.jpeg        SLA-SLI-SLO&ERRORBUDGET.jpeg
+4-Golden-Signals-SRE.jpeg             latency-metrics.jpeg
+Microservices-Observavility&Tracing.jpeg   logging.jpeg
+mertrics-vs-logs-vs-traces.png        observavility&opentelemetry.png
+sprinboot-logging-cheatsheet.jpeg
+```
+
+They map almost exactly onto the gathering list this round proposed, including the three
+that fill things the doc asserts without teaching: SLI/SLO/SLA plus error budget, the
+four golden signals, and latency percentiles. **None has provenance recorded**, which
+`reference/cheatsheet-sources.md` requires at capture time — a graphic with no author and
+no URL cannot be published on a live site. Ask for the sources before registering any of
+them.
+
+**Five articles were also read on 2026-09-08** and are listed at the top of the plan's
+Task 13b, with which fed the document and which are sheet-only. They are the reason Task
+13b exists.
+
+> **The hazard TD-44 recorded is live right now.** `reference/` is a committed directory,
+> so anything parked there is one `git add -A` from a public repo. Sitting in it
+> untracked at handoff: the ten images above, plus `angelito_paa_software_developer.pdf`,
+> `cover-letter-ai-fullstack.md` and `system-design-tradeoffs.jpeg`. **Stage the résumé
+> and the cover letter nowhere.** Add files by explicit path, never with `-A` or `.`.
 
 ---
 
-#### The condensed history (01–07, 12, the reference hub)
+#### What this session did (2026-09-08)
+
+Four commits, no merge, and the stage doc deliberately untouched.
+
+- **`a2d3552`** — the cold-reader findings, both runs, with the Loaf scenario recorded
+  verbatim because the re-run has to reuse it. Also records what did **not** survive
+  checking: the missing-triage finding is stage 16's job, the Sentry scope-leak claim is
+  held pending an SDK check rather than written up as fact, and the cost complaint fails
+  because five other stages discuss cost.
+- **`1ab79c5`** — the plan. Its own self-review found seven task steps quoting cumulative
+  test counts that did not match the tests each task adds.
+- **`d5a4227`** — Task 13b, from the five gathered articles. The finding that justifies
+  it: the round as planned taught scrubbing for the error tracker and nothing for the
+  logs, while the checkbox it was fixing covers both. Reading source 5 also exposed a
+  forward reference in the plan that no task delivered.
+- **`6c5f816`** — records. `task.md` gains W-3.12; the tracker gains the round, **D-94**
+  (stage 15 is platform-aware, Vercel and AWS) and **D-95** (a weak template section is a
+  playbook-wide question, not a stage round's business); and
+  `docs/learnings/plans-are-unverified-101.md` is new.
+
+**No gate was run and none was due** — nothing under `web/` changed and
+`docs/15-observability.md` has a zero-line diff against `develop`.
+
+---
+
+#### The condensed history (01–07, 11–14, the reference hub)
 
 Full detail lives in `docs/tracker.md`; this is what a new session needs without
 re-reading the whole log.
 
 - **Stages 01–07, 11, 12, 13 and 14 are interactive and merged.** 03 is 22 steps, 04 is
   15, 05 is 13, 06 is 8, 07 is 6, 11 is 8 (ordering exercise signature piece), 12 is 6,
-  13 is 8 (platform-aware: Vercel + AWS), 14 is 6. Coverage walks ran on stages 03–06,
-  11, 12, 13, 14 (3 blocking fixed on 13). Stage 11: 14 sections, 0 gaps. Stage 14's
-  walk ran 2026-09-07 and returned seven findings, 12 of 16 sections covered; five were
-  fixed, one downgraded and one rejected on verification. Stages 08–10 and 15–18 render a "sheet not drawn"
-  placeholder; routing works for all 18.
+  13 is 8 (platform-aware: Vercel + AWS), 14 is 6. Coverage walks ran on 03–06, 11, 12,
+  13, 14. Stages 08–10 and 15–18 render a "sheet not drawn" placeholder; routing works
+  for all 18.
 - **A per-task reviewer subagent, plus a whole-branch review, is the standard** — every
-  reviewed round has found something a green gate did not. Stage 07's final review caught
-  dead CSS classes across three files that no per-task review or e2e audit saw.
-  **The same session cannot self-review.**
+  reviewed round has found something a green gate did not. **The same session cannot
+  self-review.**
 - **A coverage walk, blind to the branch's own plan and reports, finds real gaps a green
-  gate and clean per-task reviews cannot see** — five on stage 04, ten on stage 05.
-  `docs/learnings/stage-implementation-101.md` has the method. Budget a fix wave after it.
+  gate and clean per-task reviews cannot see.** Budget a fix wave after it.
 - **Glossary and stage metadata are single-sourced** (D-36): terms live in
   `web/src/lib/terms.ts` (`pnpm gen:glossary`), never hand-edit `glossary.md`.
 - **Quality gates**: prettier (skips markdown and `highlighted.generated.ts` by design),
-  eslint at `--max-warnings 0`, vitest in two projects (`unit` node, `dom` jsdom),
-  `test:e2e` (18-test Playwright audit, refuses a stale server per TD-27),
-  `test:dev-console` (React dev-mode warnings, outside the gate, run once per stage
-  round — TD-35, D-84). Re-derive current counts rather than quoting them.
-- **1161 tests across 160 files**, build clean, **e2e 18/18**. `test:dev-console` is
-  **unrun since 2026-09-07**, not passing — do not quote a number for it. The
-  long-standing "17/18, 1 pre-existing" is closed: the overflow was real and is fixed,
-  and TD-45 — the reason the other 320px results were unknown rather than merely
-  unreported — is closed too. An earlier kickoff quoted 1143 here, which was already
-  wrong when written; that is the habit step 2 exists to break.
+  eslint at `--max-warnings 0`, vitest in two projects, `test:e2e` (18-test Playwright
+  audit), `test:dev-console` (outside the gate, once per stage round — TD-35, D-84).
+  Re-derive current counts rather than quoting them.
+- **1161 tests across 160 files** as of `develop`, build clean, **e2e 18/18**.
+  `test:dev-console` is **unrun since 2026-09-07**, not passing — do not quote a number
+  for it. It needs its own dev server and refuses to start while another `next dev` holds
+  the directory. Ask the user to stop theirs rather than killing their process.
 - **Deployed**: `W-5` complete, live at https://acp-dev-playbook.vercel.app since
-  2026-08-11. `pnpm test:prod` verifies the deployment itself, outside the merge gate.
-  `docs/learnings/deploying-101.md` before touching deploy config.
+  2026-08-11. `pnpm test:prod` verifies the deployment, outside the merge gate.
 
 ---
 
@@ -162,45 +192,36 @@ re-reading the whole log.
 
 ```bash
 git fetch
-git log --oneline -1 develop origin/develop main origin/main
-git rev-list --count origin/develop..develop
+git log --oneline -1 develop origin/develop main
+git rev-list --count develop..HEAD
+git rev-list --count main..develop
 ```
 
-**Measured 2026-09-08 at handoff**, at `53d6140`: `develop` is **4 commits ahead of
-`origin/develop`** (`10b1f6b`) and **48 ahead of `main`** (`d659d32`), so a promotion is
-pending and it is the user's to make.
+**Measured 2026-09-08 at handoff:**
 
-Those two counts include the commit that wrote them, and go stale on the next commit —
-the first draft of this line said 46 because it was written before the commit that
-recorded it. Do not reason from them; run the block above. `main` is 2
-ahead of `develop`, which is just its own `--no-ff` merge commits.
+| | SHA | |
+|---|---|---|
+| `fix/stage-15-doc-round` | `6c5f816` | **4 ahead of `develop`**, the work of this session |
+| `develop` | `fdc4811` | **level with `origin/develop`** |
+| `main` | `d659d32` | `develop` is **48 ahead** |
 
-A version of this paragraph two sessions ago was wrong, claiming `develop` was "well
-ahead of `origin/develop` (the user has not pushed since several rounds ago)" when the
-two were identical. That is why every number here is measured at handoff rather than
-carried forward, and why step 2 at the top says to re-derive.
+**`develop` was 4 ahead of `origin/develop` earlier in this same session and is now
+level** — the user pushed mid-session. That is the fourth time re-deriving has changed an
+answer this file previously stated as fact, and it is why step 2 exists.
 
-**No branch is in flight, and the tree is clean.** Five branches merged `--no-ff` and
-were deleted: `feat/ci-cd-cheatsheet` as `6f52212`, `fix/audit-fail-fast` as `99f6145`,
-`feat/ci-cd-sheet-expansion` as `4fdb9bd`, `fix/stage-14-coverage-walk` as `a8f56de`, and
-`fix/td-44-originals-are-tracked` as `8d6bd39` (docs only, 2026-09-08). Each merged result
-was re-gated first-hand — lint 0, typecheck 0, 1161/160, build clean, audit 18/18.
+The promotion of `develop` to `main` is still pending and is **the user's**. Every count
+above includes the commit that wrote it and goes stale on the next one.
+
+**One branch is in flight:** `fix/stage-15-doc-round`, unmerged and unpushed, four
+commits, all `docs(...)`. No code under `web/` is touched.
 
 **Two stale branches predate all of this and were deliberately not touched**:
 `docs/2026-08-12-stage-04-spec` and `feat/stage-03-standard-practices`. Check whether
 they are merged before assuming either is safe to delete. Not this round's job.
 
-**All four merged without a whole-branch review, on the user's call.** Every previous
-branch's review in this repo found something a green gate did not, so treat that code as
-less checked than usual if you touch it.
-
-**Re-derive before trusting anything here.** That instruction is not boilerplate: this
-paragraph has now been wrong twice, about two different things.
-
 **Branch/push convention, unchanged:** work on `feat/`|`fix/`|`docs/<date>-` branches, cut
 from `develop`, never from `main`. Merge with `--no-ff` and a hand-written subject, never
-squashed. **Ask before every merge.** The user handles pushes and the `develop` → `main`
-promotion PR.
+squashed. **Ask before every merge.** The user handles pushes and the promotion PR.
 
 ---
 
@@ -213,50 +234,31 @@ Notes for whoever is preparing this handoff:
 - **Untracked and deliberately parked**: `reference/10-sql-concepts.md` and
   `reference/rest-api-best-practices.md` — hand-written drafts for `sql-reference` and
   `api-reference`, gathered without an image, not yet registered.
-- If a round is already scoped, add a per-round sibling — `KICKOFF-W4.md` — rather than
-  overwriting this one. The generic version stays useful.
 - Open threads worth carrying forward:
-  - **`pnpm test:dev-console` has not run since 2026-09-07.** It needs its own dev server
-    and refuses to start while another `next dev` holds the same directory — the user had
-    one on :3200. Ask them to stop it rather than killing their process. It is the only
-    thing that sees React's development warnings, and it found a real bug on its first run.
+  - **The stage 15 plan is written and unexecuted.** That is the next session's whole
+    job, and the execution mode is an open question the user has not answered.
+  - **Ten observability captures are in `reference/` with no provenance.** Ask for
+    authors and URLs before registering any of them.
+  - **Personal files are still parked in a committed directory** — a résumé PDF and a
+    cover letter. Never `git add -A`.
+  - **`pnpm test:dev-console` has not run since 2026-09-07.**
   - **Four branches merged unreviewed on 2026-09-07** (`6f52212`, `99f6145`, `4fdb9bd`,
-    `a8f56de`). None got the whole-branch pass the standard calls for.
-  - **`develop` is 42 commits ahead of `main`** and 3 ahead of `origin/develop`. The
-    promotion PR is the user's.
-  - **Panel content is testable now.** `Element.prototype.scrollIntoView` is stubbed in
-    `src/test/setup.ts`; without it any test activating a step other than the first threw
-    from inside a `Stepper` effect. That is why stage 14's component test had six tests
-    that only inspected the rail. Assume other stages' component tests have the same
-    shape and the same blind spot.
+    `a8f56de`). None got the whole-branch pass the standard calls for, so treat that code
+    as less checked than usual if you touch it.
   - **Grep `NOT merged, NOT pushed, NOT deployed` in `docs/tracker.md` at every merge.**
-    Doing it once this session found three rows carrying the phrase: one merely out of
-    date, and two false for weeks (W-6.3e, TD-43). It costs one command.
-  - ~~**TD-44**~~ — **closed 2026-09-08.** Gathered originals in `reference/` are
-    committed, deliberately, and both records now say so. The consequence to remember:
-    **anything parked in `reference/` is one `git add -A` from a public repo.** Do not
-    leave unrelated files there.
-  - ~~**A green `pnpm test:e2e` is not a claim about every page**~~ — **closed
-    2026-09-07 as TD-45.** Every sweep now collects across the whole path list and
-    asserts once, so a run names every bad path instead of the first. Worth knowing why
-    it mattered: nine sheets had never been measured at 320px, and all nine turned out
-    clean, so the fix bought *known-good* rather than a pile of new bugs. **Keep the
-    rule when adding a sweep**: assert after the loop, never inside it.
-  - **Three claims in the records were wrong when written, all found by re-deriving.**
-    A test count (`1143` against a real `1152` at the time), the originals-are-untracked
-    claim (TD-44), and two rows saying "NOT merged" about branches merged weeks earlier.
-    Re-run the query; never copy the answer forward.
-  - **Read `docs/learnings/branch-discipline-101.md` before the first commit of any new
-    round**, not just once.
+    Doing it once found three rows carrying the phrase, two false for weeks.
   - **A "merged"/"not merged" claim is a query to re-run, not a fact to reuse** —
     `docs/learnings/decisions-need-tests-101.md`.
-  - **Cold-reader testing** (`docs/learnings/cold-reader-testing.md`) validates a stage
-    doc before the interactive port starts, not after (D-54).
+  - **A number in a plan is a measurement, not a quotation** —
+    `docs/learnings/plans-are-unverified-101.md`. The tracker row for this round said
+    "four commits" when there were three, inside the same commit that added the guide
+    saying not to do that. Corrected on re-derivation.
+  - **Cold-reader testing** validates a stage doc before the port starts, not after
+    (D-54). The re-run must reuse the same scenario.
   - **Cite doc sections by heading, never by line number** (D-42).
   - `docs/learnings/contrast-checkers-lie.md` — read before changing a token.
   - `docs/learnings/rules-measure-the-wrong-thing-101.md` — measure before capping.
   - **Tailwind v4 token naming** — `border-line` not `border-rule`, `bg-sunken` not
-    `bg-surface-sunken`. Check the `@theme` block in `globals.css`, not the CSS custom
-    property names. Three files × 8 instances caught only at final review.
+    `bg-surface-sunken`. Check the `@theme` block in `globals.css`.
   - **The three-file registration (stages.ts, stage-content.ts, step-ids.ts) is one
     atomic operation** — do it in the assembly task, not the scaffold task.

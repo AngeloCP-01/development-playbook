@@ -16,6 +16,36 @@ import { TERMS } from './terms'
  * much as for 05.
  */
 const SRC_DIR = fileURLToPath(new URL('..', import.meta.url))
+const DOCS_DIR = fileURLToPath(new URL('../../../docs/', import.meta.url))
+
+const KNOWN_ORPHANS = [
+  'opportunity-solution-tree -> 01-product-discovery (never says "Opportunity solution tree")',
+  'problem-interview -> 01-product-discovery (never says "Problem interview")',
+  'mvp -> 02-planning (never says "MVP (Minimum Viable Product)")',
+  'product-roadmap -> 02-planning (never says "Product roadmap")',
+  'product-vision -> 02-planning (never says "Product vision")',
+  'feasibility-risk -> 02-planning (never says "Feasibility risk")',
+  'adr -> 03-architecture (never says "ADR (Architecture Decision Record)")',
+  'phantom-dependency -> 04-project-setup (never says "Phantom dependency")',
+  'join-table -> 03-architecture (never says "Join table")',
+  'cqrs -> 03-architecture (never says "CQRS (Command Query Responsibility Segregation)")',
+  'c4-model -> 03-architecture (never says "C4 model")',
+  'hexagonal-architecture -> 03-architecture (never says "Hexagonal architecture (ports and adapters)")',
+  'connection-pooling -> 03-architecture (never says "Connection pooling")',
+  'cap-theorem -> 03-architecture (never says "CAP theorem")',
+  'exponential-backoff -> 03-architecture (never says "Exponential backoff (with jitter)")',
+  'expand-contract -> 03-architecture (never says "Expand-contract (parallel change)")',
+  'architecture-characteristic -> 03-architecture (never says "Architecture characteristic (non-functional requirement)")',
+  'feature-flag -> 05-development (never says "Feature flag")',
+  'test-fixture -> 06-testing (never says "Test fixture")',
+  'code-coverage -> 06-testing (never says "Code coverage")',
+  'rubber-stamping -> 07-code-review (never says "Rubber-stamping")',
+  'provenance -> 07-code-review (never says "Provenance (review)")',
+  'finding-severity -> 07-code-review (never says "Finding severity")',
+  'concurrency-group -> 11-ci-cd (never says "Concurrency group")',
+  'deployment-status -> 11-ci-cd (never says "Deployment status event")',
+  'frozen-lockfile -> 11-ci-cd (never says "Frozen lockfile")',
+]
 
 function findTsxFiles(dir: string, files: string[] = []): string[] {
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
@@ -46,4 +76,21 @@ test('every <Term id="..."> resolves against TERMS, since an unknown id degrades
     }
   }
   expect(misses, JSON.stringify(misses, null, 2)).toEqual([])
+})
+
+// A `see` link promises that the linked stage explains the term in context.
+// P2 exposed the missing reverse check: `error-budget` pointed to stage 15,
+// while stage 15 never used the phrase.
+test('a term pointing at a stage names something that stage actually says', () => {
+  const offenders: string[] = []
+
+  for (const [slug, term] of Object.entries(TERMS)) {
+    if (!term.see) continue
+    const md = readFileSync(join(DOCS_DIR, `${term.see}.md`), 'utf8')
+    if (!md.toLowerCase().includes(term.name.toLowerCase())) {
+      offenders.push(`${slug} -> ${term.see} (never says "${term.name}")`)
+    }
+  }
+
+  expect(offenders).toEqual(KNOWN_ORPHANS)
 })

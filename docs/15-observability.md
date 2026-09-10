@@ -20,16 +20,27 @@ driven by incidents that were harder to diagnose than they should have been.
 
 ### Three things, in order of value
 
+Monitoring checks the failures you anticipated: an error-rate threshold, a missing
+heartbeat, a slow response. Observability is the ability to investigate questions you
+did not anticipate, using the evidence the system emits. The request id and structured
+fields below let you follow an unfamiliar failure without redeploying to add logging.
+Both matter: predefined checks tell you to look, and contextual evidence helps you
+work out what happened.
+
 **1. Errors** — something broke. Install this first; it delivers value immediately.
 
 **2. Metrics** — aggregate health over time. This is what tells you "normal" so that
 "abnormal" is legible.
 
-**3. Traces** — where request time went. Most valuable when debugging slowness rather than
-failure.
+**3. Traces** — where request time went, across every hop of one request. This stage does
+not set them up, and that is not an oversight: with one application and one database, a
+trace tells you what a slow query log already told you. **You will know when you need
+them** — the symptom is a slowness you cannot locate after checking the obvious two
+places, and it usually arrives with the second service
+([09](09-performance-optimization.md), [Scaling to a team](#scaling-to-a-team)). Until
+then the request id from [Structured logs](#structured-logs) does the job traces would.
 
-Solo, errors plus a handful of metrics covers the large majority of real need. Add traces
-when you have a performance problem you cannot locate ([09](09-performance-optimization.md)).
+Solo, errors plus a handful of metrics covers the large majority of real need.
 
 ### Errors that are actually useful
 
@@ -40,14 +51,19 @@ fix.
 // src/lib/observability.ts
 import * as Sentry from '@sentry/nextjs'
 
-export function identifyUser(user: { id: string; email: string }) {
-  Sentry.setUser({ id: user.id, email: user.email })
+export function identifyUser(user: { id: string }) {
+  Sentry.setUser({ id: user.id })
 }
 
 export function addContext(key: string, data: Record<string, unknown>) {
   Sentry.setContext(key, data)
 }
 ```
+
+An opaque id is enough, because it **resolves to a person in your own database** — which
+you control, can query, and can delete. An email address in an error report is the same
+fact stored a second time, on infrastructure you do not control, under a retention policy
+you did not set.
 
 Attach the user to every authenticated request. "This error hit 400 users" and "this error
 hit one user with unusual data" are entirely different problems with entirely different
@@ -56,21 +72,134 @@ urgency, and you cannot tell them apart without it.
 Add breadcrumbs for meaningful actions — what the user was doing before it broke is often
 the whole answer.
 
-**Do not send secrets, passwords, tokens, or full payment details.** Sentry data is
+**Do not send secrets, passwords, tokens, or payment details.** Sentry data is
 retained, is accessible to anyone with account access, and lives on someone else's
 infrastructure. Configure `beforeSend` to scrub aggressively.
+
+```ts
+// src/lib/observability.ts
+const SECRETS = [
+  /postgres(?:ql)?:\/\/\S+/gi, // connection strings carry the password inline
+  /\bsk_live_[A-Za-z0-9]+/g, // provider secret keys
+  /\bBearer\s+[A-Za-z0-9._-]+/gi,
+]
+
+function redact(text: string): string {
+  return SECRETS.reduce((acc, pattern) => acc.replace(pattern, '[redacted]'), text)
+}
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  beforeSend(event) {
+    // Sentry captures request headers by default, and that is where
+    // credentials live.
+    for (const header of ['authorization', 'cookie', 'x-api-key']) {
+      delete event.request?.headers?.[header]
+    }
+
+    // It captures bodies too. A form post carries whatever the form carried.
+    if (event.request) delete event.request.data
+
+    // And an exception message is free text: a failed query prints the
+    // connection string, password included.
+    for (const value of event.exception?.values ?? []) {
+      if (value.value) value.value = redact(value.value)
+    }
+
+    return event
+  },
+})
+```
+
+Scrubbing is a deny-list, and a deny-list is only as current as the last time you read it.
+Reduce what you send in the first place: an id instead of an email, a reason
+code instead of a payload.
+
+One loop can spend everything. A batch job that throws once per row, over five thousand
+rows, sends five thousand events in a minute or two and empties a month's quota — after
+which you are blind, and nothing tells you so, because the thing that would have told you
+is the thing that ran out. Turn on spike protection, sample the noisy and expected, and
+set one alert on quota consumption itself. It is the only alert in this stage about your
+monitoring rather than your system, which is exactly why it gets forgotten.
 
 ### Structured logs
 
 Log objects, not sentences. Sentences are unsearchable at volume.
 
 ```ts
+// src/lib/logger.ts
+import { AsyncLocalStorage } from 'node:async_hooks'
+import pino from 'pino'
+
+export const requestContext = new AsyncLocalStorage<{ requestId: string }>()
+
+export const logger = pino({
+  level: process.env.LOG_LEVEL ?? 'info',
+  base: {
+    service: process.env.SERVICE_NAME ?? 'web',
+    env: process.env.NODE_ENV,
+  },
+  mixin: () => ({ requestId: requestContext.getStore()?.requestId }),
+  redact: {
+    paths: [
+      'req.headers.authorization', 'req.headers.cookie',
+      'req.headers["x-api-key"]',
+      'password', 'token', '*.password', '*.token',
+    ],
+    censor: '[redacted]',
+  },
+})
+```
+
+Configure redaction when you create the logger so every call uses the same policy.
+`beforeSend` protects error reports; it does nothing to log output.
+[Pino redaction paths](https://github.com/pinojs/pino/blob/main/docs/redaction.md)
+are case-sensitive and match specific object shapes. `*.token` covers one level of
+nesting, not arbitrary depth. These paths do not scrub secrets embedded in free-text
+messages or stack traces. Log allowlisted fields, avoid raw payloads, and test the
+actual shapes your application emits with synthetic secrets before enabling a drain.
+
+| Level | For |
+|---|---|
+| `debug` | Diagnostic detail, normally disabled in production |
+| `info` | Routine events and business outcomes you want to count |
+| `warn` | An unexpected condition the application handled |
+| `error` | A fault you would investigate; a common input to alerts |
+| `fatal` | A fault that prevents the process continuing |
+
+Choose the level by the action it warrants. An expected card decline may be `info`;
+use `warn` when it deserves attention, and reserve `error` for a fault. If routine
+outcomes feed a paging rule, tune the rule or the classification before it teaches
+you to ignore failures.
+
+`pino` writes one JSON object per line to stdout, which is what every platform in this
+playbook already collects. Any library that does that will do; what matters is that the
+output is a line of JSON and not a sentence.
+
+`mixin` runs on every log call, so the id attaches itself and no call site has to remember
+it. Open the store once per request — in middleware, or the first line of the handler —
+with the incoming `x-request-id` if there is one, or a fresh `crypto.randomUUID()` if
+there is not. Platforms usually supply one already; use theirs when it exists, so your
+line and their line agree.
+
+A shared id lets you find the log lines from the request that produced an error.
+You can add it without buying another service or setting up distributed tracing.
+
+```ts
+Sentry.setTag('requestId', requestId)
+```
+
+Now the error tracker and the logs are searchable by the same key, which is the whole of
+what tracing buys you until requests start crossing service boundaries
+([Scaling to a team](#scaling-to-a-team)).
+
+```ts
 // Bad: unqueryable
 console.log(`User ${userId} failed to pay invoice ${invoiceId}`)
 
 // Good
-logger.error({
-  event: 'invoice.payment_failed',
+logger.info({
+  event: 'invoice.payment_declined',
   userId,
   invoiceId,
   reason: 'card_declined',
@@ -81,6 +210,12 @@ logger.error({
 Now you can ask "how many `card_declined` events this week, by amount?" — a question that
 is impossible against prose.
 
+**Levels are a filter, not a mood.** `error` means *a fault you would investigate* — it is
+the level your alerting reads, so anything routine that lands there is a false page
+waiting to happen. A declined card is a routine business outcome and not a fault: it is
+`info`. Reserve `warn` for unexpected conditions the application handled, `error` for the things that should not have happened, and `info` for the
+events you want to count later.
+
 Name events as `noun.verb_past_tense`, consistently. Consistency is what makes the log
 searchable a year later.
 
@@ -88,15 +223,55 @@ searchable a year later.
 Worth logging: authentication events, payments, permission denials, external API failures,
 background job outcomes, anything irreversible.
 
-Never log: passwords, tokens, session IDs, full card numbers, or the contents of user
-documents.
+Never log: passwords, tokens, session IDs, card numbers, or the contents of user
+documents. The last four digits and an expiry date are still personal data, and "it is
+only partial" is not a retention policy.
+
+Keep high-cardinality identifiers such as `userId`, `invoiceId` and `requestId`
+in logs, where distinct values help you find a particular event. Do not use them as
+metric labels: each combination of label values creates another time series.
+A bounded event name such as `invoice.payment_declined` is suitable; a unique invoice
+id is not. Cardinality that is useful for log lookup can make metrics expensive.
+
+### Where logs go, and what they cost
+
+`pino` writes to stdout. On every platform in this playbook,
+**stdout is a stream, not storage** — something collects it, keeps it for a while, and
+then does not. Deciding what that something is, and for how long, is part of this stage;
+discovering it during an incident is not.
+
+| | Collector | Retention default | What to set |
+|---|---|---|---|
+| **Vercel** | Runtime logs | Short, and shorter on lower plans | A drain to a log store if you need more than the built-in window |
+| **AWS** | CloudWatch Logs | **Never expire** | A retention policy per log group, explicitly |
+
+The AWS default is the one that bites. A log group with no retention policy keeps
+everything forever and bills for it forever, and nobody chose that — it is what happens
+when nobody chooses.
+
+Order of magnitude for a small production service, so you can tell whether this stage is
+an afternoon or a commitment: error tracking free to ~$30/month at low volume, uptime
+monitoring free to ~$10, logs the variable one — single-digit dollars if you keep a week
+and log events rather than everything, and unbounded if you keep everything forever. Check
+current pricing rather than trusting this paragraph; it is here to set expectations, not
+to quote.
+
+Retention is also a privacy decision, not only a cost one — whatever you kept is what you
+have to be able to delete ([08](08-security-audit.md)).
 
 ### The four signals
 
-If you instrument only four things:
+These are the **golden signals**. If you instrument only four things:
 
-**Latency** — p50, p95, p99 of response time. Percentiles, never averages
-([09](09-performance-optimization.md)).
+**Latency** — how long requests take, at p50, p95 and p99. A p95 of 400ms means at
+least 95 requests out of every hundred finished at or below 400ms. A p99 is the
+threshold at or below which at least 99% finished, not a maximum; the slowest request can
+take much longer. Watch the tail: an average stays comfortable while a growing minority
+of users wait ([09](09-performance-optimization.md)).
+
+Percentiles do not average. The p95 across three instances is not the mean of their three
+p95s. Combine the underlying measurements, or use an aggregation system that can merge
+their distributions.
 
 **Traffic** — requests per minute. Its main value is that a sudden drop is one of the
 clearest possible signals that something is badly broken.
@@ -107,8 +282,43 @@ nothing without a denominator.
 **Saturation** — how close resources are to their limit. Database connections, function
 concurrency, storage.
 
-Vercel Analytics covers latency and traffic. Sentry covers errors. Your database
-dashboard covers saturation. You do not need a unified platform to start.
+| Signal | Where it comes from | Vercel | AWS |
+|---|---|---|---|
+| Latency | The HTTP layer in front of your app, which already times every request | Vercel Observability, per route | ALB or API Gateway CloudWatch metrics |
+| Traffic | The same layer — it counts every request, which is also your denominator | The same place | The same CloudWatch metrics |
+| Errors | Two questions, not one: *what broke* and *how often*. Sentry answers the first; the request-counting layer answers the second | Edge Requests by status code; Sentry for what broke | ALB 5XX over request count; Sentry for what broke |
+| Saturation | Whatever owns the resource with the ceiling | Your database dashboard, function concurrency | CloudWatch per-service metrics, RDS connections |
+
+Error *rate* does not come from your error tracker. Sentry tells you what broke and how
+many times it was reported; it is sampled, it is filtered by `beforeSend`, and it never
+sees a request that succeeded — so it can give you neither half of the fraction. Both
+halves come from the layer that counts every request: failed responses over total
+responses, same source, same window. Divide a sampled numerator by an unsampled
+denominator and the percentage you get is not a percentage of anything. Sentry answers the
+question you ask second, which is *which* error and *why*.
+
+Check which number you are reading. Every platform sells you two different latencies.
+Vercel's Web Analytics counts visits and its Speed Insights measures Core Web Vitals in
+the browser; on AWS the same split is CloudWatch's `TargetResponseTime` against whatever
+RUM you have bolted on. One is the user's experience, the other is the time your server
+spent, and the table above means the second. A p95 that doubles in one is not the same
+event as a p95 that doubles in the other, and an alert that does not say which will wake
+you for the wrong one.
+
+One tier note, because it changes what you can actually see: on Vercel the per-route
+latency breakdown is an Observability Plus feature. Below it you get invocation counts and
+error rate but not the latency split, which is worth knowing before you write an alert
+against a number your plan does not show you.
+
+Instrumenting these gives you numbers. It does not give you *normal*, and without normal
+none of them is readable: 12 errors in the last hour is a catastrophe or a Tuesday, and
+during an incident is the worst possible moment to find out which.
+**Write the numbers down** once you have a week of ordinary traffic — error rate, p95
+latency, requests per minute at your busy hour and your quiet one — somewhere you will
+find them at 3am, which means the repository and not your memory. Stage 14 uses the same baselines to judge a
+deploy ([14](14-post-deployment-verification.md)); this is where they come from.
+
+You do not need a unified platform to start.
 
 ### Health checks
 
@@ -118,9 +328,16 @@ export async function GET() {
   const checks = { database: false }
 
   try {
-    await db.execute(sql`SELECT 1`)
+    await Promise.race([
+      db.execute(sql`SELECT 1`),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000)),
+    ])
     checks.database = true
-  } catch { /* stays false */ }
+  } catch (error) {
+    // Not a fault, so not `error` — but the reason is the only evidence of
+    // how, and a bare `catch {}` destroys it.
+    logger.warn({ event: 'health.dependency_unreachable', error })
+  }
 
   const healthy = Object.values(checks).every(Boolean)
   return Response.json(
@@ -133,8 +350,25 @@ export async function GET() {
 Check real dependencies. An endpoint returning `200 OK` unconditionally tells you the
 process is running, which you already knew.
 
+The realistic failure is not *refused*, it is *hung* — an exhausted pool, a network
+partition. Without the timeout the health check hangs with it and never returns the
+`degraded` state it exists to report, which means the endpoint fails in exactly the case
+it was written for.
+
+Two different things ask whether you are up, and they want different answers. **Liveness**
+is "is this process wedged, should the platform restart it" — and the honest answer
+depends on nothing but the process, because a restart cannot fix a database.
+**Readiness**, which is what this endpoint does, is "should traffic come here, is
+everything it depends on reachable".
+
+Point your uptime monitor at the dependency-checking one. Point your *platform* — Fly,
+ECS, Cloud Run, Kubernetes, anything that restarts or deregisters on a failed check — at a
+liveness endpoint that returns `200` whenever the process is running. Wire the platform to
+the dependency check and a thirty-second database blip restarts every instance you have,
+simultaneously, turning a recoverable hiccup into an outage with a restart storm on top.
+
 But do not point uptime monitoring only at `/api/health`. Monitor a real user path too —
-the health check can pass while the homepage throws.
+the health check can pass while the page a user actually loads throws.
 
 ### Alerts you will not learn to ignore
 
@@ -146,24 +380,60 @@ result of noisy alerts.
 Worth alerting on:
 
 - Error rate above baseline for 5+ minutes
-- A *new* error type in production
+- A **new** error — a signature you have never seen before. This is the one exception to
+  the rule below, and it earns it: a novel error after a deploy is the highest-information
+  event your system produces.
 - The site being unreachable from outside
 - p95 latency doubling and staying there
 - Payment or auth failures spiking
 - Database connections near the limit
 - A background job failing repeatedly
+- Traffic falling to near zero outside a pattern you recognise — the fastest signal that
+  something upstream of your application is broken
 
 Not worth alerting on:
 
-- Any single error
+- A single occurrence of an error signature you have seen before
 - CPU spikes that self-resolve
 - Anything that has resolved itself every time for months
 
 **Alert on symptoms, not causes.** "Users cannot check out" is actionable. "CPU is at 80%"
 is not — 80% CPU with everything working is fine.
 
+One exception, and it is the reason "database connections near the limit" is in the list
+above: a resource with a **hard ceiling** that **does not recover on its own** — a
+connection pool, a disk, an API quota — is worth alerting on *before* it becomes a symptom,
+because crossing it is a cliff rather than a slope. By the time users feel a full
+connection pool, every request is already failing. CPU has the ceiling but not the second
+half: it is elastic, it comes back on its own, and crossing 80% degrades rather than
+fails. That is the difference, and it is the whole of the difference.
+
+**A ratio needs a floor.** "Error rate above 5%" is a sensible rule at a thousand requests
+a minute and nonsense at four: one failed request overnight is a 25% error rate, and it
+will page you. Gate every ratio alert on a minimum volume — *above 5% **and** at least
+twenty requests in the window* — and add a plain count alongside it for the traffic levels
+where the ratio is noise. The threshold that is right at lunchtime is wrong at 3am, and
+the volume gate is what keeps one rule usable across both.
+
 Route to somewhere that will actually interrupt you: push notification or SMS. Email
 alerts are read the next morning, which for an outage is not a response.
+
+An alert that has woken you four times without once needing action is not a discipline
+problem, it is a broken alert, and you have three moves: **raise the threshold**,
+**lengthen the window** it has to hold for, or **delete it**. Reach for the first two
+before the third — four fires a week is usually a threshold set from a guess rather than
+from a baseline. Delete without hesitation when it has never once led to action; an alert
+nobody acts on is training you to ignore the one that matters.
+
+**Fire a test alert on purpose, and confirm it reaches you on the device you expect to be
+woken by.** An alert routed to a dead phone number, an expired webhook, or an app whose
+notifications you silenced in a meeting is indistinguishable from a healthy system,
+forever, and the only thing that tells you is the incident. Do it when you set the alert
+up, and again when you change how you are reachable.
+
+This stage stops at the alert arriving. What you do in the five minutes after it —
+where to look first, what to roll back, what to write down — is
+[16 — Incident Management](16-incident-management.md). Read it before the alert.
 
 ### Uptime monitoring from outside
 
@@ -174,6 +444,100 @@ reaching it.
 An external check every minute against a real page is the cheapest meaningful monitoring
 you can buy. Better Stack or similar, five minutes to set up.
 
+Turn on **certificate expiry** checking while you are there. It is a separate toggle from
+the HTTP check on every service that offers it, it is the one failure in this section that
+arrives on a schedule you could have read months in advance, and the default notice period
+is usually shorter than the time you will need.
+
+"A real user path" means a request that exercises the same machinery a user's would. If
+you have a page, monitor the page. If you are an API behind authentication, you need a
+**canary endpoint**: one route, authenticated with a token issued to the monitor and
+nothing else, that reads far enough down the real path to prove it works and **writes
+nothing**.
+
+The temptation is to have the monitor place an order every minute, because that is the
+real path. Do not: you will charge cards, fill tables, and page yourself when your payment
+provider is fine and your test data is not. Read the last order back instead of creating
+one.
+
+```ts
+// src/app/api/canary/route.ts — reads the real path, writes nothing
+export async function GET(request: Request) {
+  if (request.headers.get('x-monitor-token') !== process.env.MONITOR_TOKEN) {
+    return new Response('not found', { status: 404 })
+  }
+
+  const latest = await db.query.orders.findFirst({
+    orderBy: (orders, { desc }) => [desc(orders.createdAt)],
+  })
+
+  return Response.json({ ok: latest !== undefined })
+}
+```
+
+Returning `404` rather than `401` for a bad token keeps the endpoint out of anyone's crawl
+results.
+
+### When nothing is reporting
+
+Everything above fires when something happens. Nothing above fires when something
+**stops**, and a system that has gone quiet looks exactly like a system that is fine.
+
+- **An exception that was caught and discarded.** A bare `catch {}` swallows the reason:
+  the dependency is down, the code knows, and why is gone forever. The health check
+  earlier in this stage logs its catch instead, for exactly this reason.
+- **A failure that is a normal response.** `invoice.payment_declined` — the logging
+  example above — is a business failure that throws nothing. So is every handled `4xx`.
+- **A third party returning `200` with a failure inside it.** Your HTTP client is
+  satisfied. Your integration is not.
+- **A failure on the client.** It never reached your server, so your server has nothing to
+  say about it.
+- **An event your own configuration dropped** — sampling, a quota, or the `beforeSend` you
+  just wrote.
+
+The fix is not more error tracking. It is to **count the outcomes you care about, not just
+the exceptions** — you already are, if you took the structured-logging section seriously.
+Once `order.created` is a counted event, its *absence* is measurable, and "no orders in
+ninety minutes on a Tuesday afternoon" is an alert you can actually write. An exception
+count falling to zero tells you nothing; a business event falling to zero tells you almost
+everything.
+
+**Absence of a signal is not evidence of health.** When someone reports a failure your
+tools did not see, that gap is the finding — not the report.
+
+### Jobs that nobody watches
+
+A scheduled job that fails is easy: it throws, and everything above catches it. A
+scheduled job that **never ran** produces no exception, no log line and no request. Every
+mechanism in this stage reports that the system is healthy, and it is — the job is simply
+not part of it any more.
+
+The instrument is a **heartbeat**, sometimes called a dead man's switch, and it is the
+only monitor here that alerts on silence: the job calls a URL when it finishes
+successfully, and the monitor pages you when the call does not arrive inside the window
+you set.
+
+```ts
+// At the end of the job — after the work, on the success path only.
+await fetch(process.env.HEARTBEAT_URL!, { method: 'POST' })
+```
+
+Not in a `finally`. A ping in a `finally` block reports success for a run that threw,
+which converts your only detector of silence into a source of false confidence.
+
+Any monitor that can page you on a *missing* check will do — Better Stack, Healthchecks.io
+and Cronitor all offer this as a heartbeat URL. On **AWS**, the equivalent is a CloudWatch
+alarm over a custom metric the job emits, with `TreatMissingData` set to `breaching`
+explicitly. The default is `missing`, which tells the alarm to disregard absent data
+points when deciding its state — which is precisely the condition you are trying to catch.
+
+- **A job that is slower every night.** Alert on duration as well as absence; a
+  reconciliation that has gone from four minutes to forty is on its way to overrunning its
+  window.
+- **A job that overlaps itself.** Two copies of a reconciliation running concurrently is a
+  different bug from either of them failing, and neither an error rate nor a heartbeat
+  will show it.
+
 ### Dashboards
 
 One dashboard, visible in one screen, answering: **is the application healthy right now?**
@@ -181,13 +545,83 @@ One dashboard, visible in one screen, answering: **is the application healthy ri
 - Requests per minute
 - Error rate
 - p95 latency
+- Saturation of whatever is closest to its ceiling — usually database connections
 - Recent deploys, marked on the timeline
 
-That last item is disproportionately useful. Most problems correlate with a deploy, and
-seeing deploy markers against a metrics graph often collapses an investigation into a
-glance.
+Saturation is the one most likely to be the actual incident on a small deployment: a
+connection pool exhausted by a batch job running alongside daytime traffic. It is also the
+one that gets dropped first, because it is the only one of the four that does not have an
+obvious single number.
+
+Deploy markers are disproportionately useful. Most problems correlate with a deploy, and
+seeing them against a metrics graph often collapses an investigation into a glance.
+
+A deploy marker is not a feature of your dashboard. It is an **event with a timestamp**,
+emitted by whatever performs the deploy, that the dashboard knows how to draw. Which means
+the work is in your deploy step, not your dashboard.
+
+```bash
+# In the deploy job, after the deploy succeeds.
+# Sentry: create the release and associate the commits.
+sentry-cli releases new "$GITHUB_SHA"
+sentry-cli releases set-commits "$GITHUB_SHA" --auto
+sentry-cli releases finalize "$GITHUB_SHA"
+```
+
+On **Vercel**, the Sentry integration creates releases for you, which is why this looks
+free — it is being done on your behalf. On **AWS**, nothing emits the event unless you do:
+add the step above to the deploy workflow, and for a CloudWatch dashboard,
+`aws cloudwatch put-dashboard` with an annotation, or a Grafana annotation if you are
+drawing the graphs there. Check the current flags before copying: `sentry-cli` and the
+CloudWatch dashboard schema both move.
 
 Resist adding more. A dashboard with forty charts is not read.
+
+You can keep separate collection tools and still meet the four-signal dashboard
+requirement. Use your provider's dashboard if it can show all four signals and deploy
+markers. Otherwise, configure a visualization layer such as Grafana to query the needed
+[data sources](https://grafana.com/docs/grafana/latest/datasources/), for example
+Prometheus and CloudWatch, in one dashboard. Verify that each panel covers the same
+service, environment and time window. You do not have to move the collected data into
+one storage product to see it together.
+
+### AI in observability
+
+An agent is good at the parts of observability that are pattern-matching over text you
+already have — grouping errors, spotting what changed, writing a query in a language you
+do not know. It is bad at the part that decides whether you are actually covered, because
+that requires noticing what is *not* in the data, and the data is all it has.
+
+Where it earns its place:
+
+- **Draft the alert set from your own event names.** Give it your structured log events,
+  your four signals and your traffic shape, and ask for alert rules with thresholds,
+  durations and a minimum-volume gate. The rules come back reasonable and the *numbers*
+  come back invented — they are the part you replace with your own baselines. (A prompt.)
+- **Ask which events stopped.** Paste a day of log events and yesterday's, and ask what
+  appears in one and not the other. This is the one analysis that addresses the failure
+  mode nothing else in this stage sees, and it is mechanical enough to hand over.
+  (A prompt.)
+- **Write the scrubbing deny-list from your own schema.** Point it at your schema and your
+  environment variable names and ask which values would end up in an error payload. It
+  finds the connection string you forgot; you verify by sending a test event and reading
+  what arrived. (A prompt.)
+- **Query logs in a language you do not know.** Describe the question in English and let
+  it write the CloudWatch Logs Insights query or the PromQL. Reading a query you did not
+  write is much easier than writing it, which reverses the usual argument against
+  generated code here. (A CLI + MCP command.)
+- **Turn an incident into the alert you were missing.** Paste the timeline of something
+  you found out about late, and ask what signal would have fired first. It reliably names
+  one you do not have. (A prompt.)
+- **Generate the dashboard as configuration.** Grafana and CloudWatch both take JSON.
+  Describe the four signals and the deploy markers and edit what comes back, rather than
+  clicking twelve panels into existence. (A prompt.)
+
+What it cannot do is tell you what you failed to instrument. Every one of those plays
+reads the signals that exist, and the failure this stage is most concerned with — the job
+that never ran, the business failure that threw nothing, the alert routed to a dead phone
+number — produces no signal at all. An agent will summarise a dashboard confidently while
+the thing that mattered is not on it.
 
 ---
 
@@ -200,32 +634,61 @@ Resist adding more. A dashboard with forty charts is not read.
 - A small set of actionable alerts routed to a channel that interrupts you
 - One dashboard with the four signals and deploy markers
 
+- A heartbeat monitor on every scheduled job, alerting on a missing ping
+- A read-only canary endpoint for an authenticated service
+- A retention policy on every log group or drain, chosen rather than defaulted
+- A request id on request-scoped log lines and matching error-tracker events
+
 ---
 
 ## Definition of done
 
 - [ ] Errors reach Sentry with readable stack traces and user context
 - [ ] No secrets or personal data in error reports or logs
+- [ ] You know how to delete a person's data from your error tracker and your
+      logs, and have checked the retention window on both
+      ([08](08-security-audit.md))
 - [ ] Key events logged as structured objects
 - [ ] Health check verifies the database, not just the process
 - [ ] External uptime monitoring is active
 - [ ] Every configured alert is one you would act on at 2am
 - [ ] Alerts route somewhere that interrupts you
+- [ ] At least one alert has been fired deliberately and confirmed to arrive
 - [ ] Baselines documented for error rate and p95 latency
       ([14](14-post-deployment-verification.md))
 - [ ] Dashboard shows deploy markers
+
+- [ ] Every scheduled job pings a heartbeat on success, and you have watched
+      the monitor page you by withholding a test ping
+- [ ] A single request id joins a request's log line to its error report
+- [ ] Log retention is a number you chose, and you know what it costs
+- [ ] Liveness and readiness are separate endpoints, and the platform's
+      restart trigger uses the one that does not check dependencies
 
 ---
 
 ## Scaling to a team
 
-- **Define SLOs.** "99.9% of requests succeed" makes reliability a shared target rather
-  than an individual preference.
+- **Define an SLO (Service Level Objective), and the error budget that follows from it.**
+  For a request-based SLO, "99.9% of requests succeed" allows 0.1% of requests to fail
+  during the measurement window. For a time-based uptime SLO, 99.9% allows 43.2 minutes
+  of unavailability in 30 days. Both are error budgets, but their units are different.
+  Spending the budget is allowed; exceeding it is the rule that says to stop shipping
+  features and fix reliability. Without that rule, an SLO is a number in a document that
+  nobody has to act on.
+- **Consider [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/)
+  when instrumentation needs to work across backends.** It provides vendor-neutral
+  APIs, SDKs and tools for generating, collecting and exporting telemetry. Your
+  backend still stores the data and supplies dashboards. It can reduce reinstrumentation
+  when you change providers, though backend-specific configuration still needs work.
+  A solo service can start with its platform integration; revisit this when multiple
+  services or a provider change make that integration a constraint.
 - **Set up on-call rotation** with a real escalation path, once the team can sustain it.
 - **Alerts need an owner.** Unowned alerts are ignored by everyone, each assuming someone
   else has it.
-- **Review alert noise monthly.** Delete alerts that never led to action. This is the
-  single most effective way to keep alerting trustworthy.
+- **Review alert noise monthly, as a team.** Unowned alerts are ignored by everyone, each
+  assuming someone else has it, and the monthly review is where ownership gets assigned or
+  the alert gets deleted.
 - **Add distributed tracing** once requests cross service boundaries and you cannot follow
   them in one place.
 
@@ -259,3 +722,22 @@ which is exactly when you need to read it fastest.
 glanced at.
 
 **Email alerts for urgent problems.** Read tomorrow morning. The outage was tonight.
+
+
+**Monitoring that only fires on events.** The job that stopped running, the orders
+that stopped arriving, and the alert that stopped being delivered all produce silence.
+Check for missing expected events as well as failures.
+
+**A heartbeat in a `finally` block.** It reports success for a run that threw,
+so your monitor tells you the job worked when it did not.
+
+**Logs with no retention policy.** CloudWatch Logs retains them indefinitely by
+default. On a container platform, stdout may disappear before you need it.
+Choose how long the destination keeps the data.
+
+**An alert nobody has ever seen arrive.** A configured alert can still route to a dead
+phone number. Fire it deliberately and confirm delivery.
+
+**Health checks wired to the thing that restarts you.** Point a platform's
+liveness probe at a check that fails when the database blinks and the platform can
+restart healthy instances during a database outage.
