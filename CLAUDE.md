@@ -423,9 +423,10 @@ tables, and tracker entries, where the flagged patterns are not the problem.
 ## Tooling
 
 Skills are covered above — they are the process, not tooling. Beyond Superpowers, two
-design skills are in regular use: **`frontend-design`** for visual direction (the only
+design skills are available: **`frontend-design`** for visual direction (the only
 project-enabled plugin) and **`ui-ux-pro-max`** for design-system and accessibility rule
-lookups. Match `web/DESIGN.md` when using either.
+lookups — kept on 2026-09-10 despite zero invocations in 26 sessions, because the lookup
+is cheap to keep and expensive to reconstruct. Match `web/DESIGN.md` when using either.
 
 MCP servers, configured at user level, and what each is actually for here:
 
