@@ -758,7 +758,7 @@ the reason this repo is public (**D-26**). The boxes were never ticked back.
 
 ---
 
-### W-3.12 — Stage 15, doc round then port ◐ *(doc round planned and in flight 2026-09-08 on `fix/stage-15-doc-round`; **not merged, not executed** — the plan is written, the stage doc is untouched)*
+### W-3.12 — Stage 15, doc round then port ◐ *(doc round **executed through Task 14 of 16** and merged to `develop` 2026-09-10 as `fcd46f1`, mid-round and without a whole-branch review; the doc is 261 → 743 lines. **Open:** Task 15, the fix wave for the re-run's six blocking findings I1–I6 and M1 — see the findings file's *Task 15 fix queue* — then the owed review. `ready` stays `false`; the port is a later round)*
 
 Stage 15 closes the shipping pipeline that 11 → 12 → 13 → 14 opened, and it is the
 first stage whose doc was assessed **before** any of it was written, rather than
@@ -793,6 +793,14 @@ justifies the task on its own: the round as planned taught scrubbing for the err
 tracker and nothing for the logs, while the checkbox it was fixing covers both. That
 is the same defect class the round exists to close, introduced by the round closing
 it. See [`docs/learnings/plans-are-unverified-101.md`](learnings/plans-are-unverified-101.md).
+
+**Where it stands, 2026-09-10.** Tasks 0–14 ran and merged. Task 14's re-run scored 5/5
+on both instruments, and the lookup number is a new baseline rather than an improvement
+because the original five questions were not kept. It also produced six blocking findings
+(I1–I6, two reproduced by a runtime harness) and M1, which are Task 15's queue and the
+next session's whole job. D-48 applies: the fix wave lands *after* the pass that justified
+it, so the re-run must run once more on the fixed doc, same scenario, before the round
+closes. Records (Task 16) were written on 2026-09-10 in place of that.
 
 **Scope of the doc round, deliberately:** corrections, the untaught artifacts, the
 missing sections, the `### AI in observability` section D-35 requires, glossary

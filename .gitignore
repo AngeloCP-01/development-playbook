@@ -4,3 +4,11 @@
 # Browser-automation artifacts. These landed in the repo root during
 # development more than once; ignoring them stops it recurring.
 .playwright-mcp/
+
+# Personal files parked in reference/ while gathering sources. reference/ is a
+# committed directory, so anything left there is one `git add -A` from a public
+# repo — which happened on 2026-09-08 (TD-46) and was rewritten out before push.
+reference/*.pdf
+reference/cover-letter*
+reference/*resume*
+reference/*cv*
