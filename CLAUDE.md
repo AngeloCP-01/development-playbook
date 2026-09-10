@@ -253,6 +253,54 @@ plan and why** — grounded in the plan's actual shape (task count, independence
 need for context isolation), not a generic default. Ported verbatim from
 `SmartJobSearchCRM`, where it was added as its own commit.
 
+**Subagent models.** Always pass `model` on every `Agent` dispatch. An omitted model
+inherits the session's Opus, and 13 file searches and 17 reviewers have gone out that way.
+The tiers, chosen so that the cheaper model does the mechanical work and Opus keeps the
+judgement calls:
+
+| Role | Model | Why |
+|---|---|---|
+| Explore, file search, "find where X is" | `haiku` | mechanical; the answer is a path |
+| Implementer of a plan task (test + impl inline) | `sonnet` | already the norm (94 of 114); the plan carries the design |
+| Implementer, fix rounds 4–5 or an escalation | `opus` | the SDD skill's own rule: one tier up when stuck |
+| Per-task reviewer (spec + quality, bounded diff) | `sonnet` | the diff is small and the acceptance criteria are written down |
+| Re-review of a fix diff | `haiku` | checks one named finding against a few hunks |
+| Cold reader of a stage doc | `sonnet` | a reading-comprehension check, not a design one |
+| **Final whole-branch review** | **`opus`** | the load-bearing one; it caught the XSS and the cookie leak |
+
+What keeps a Sonnet review from being a cheaper *worse* review:
+
+- **A verdict without its evidence is rejected, not upgraded.** A per-task review must list
+  every acceptance criterion with the test name that covers it and cite `file:line` for
+  every finding. `review clean` with no checked list gets re-dispatched on the same model
+  with the missing list named.
+- **Escalate the review, not the default.** Send a task's review to `opus` when the task
+  touches `stages.ts`, routing, the build or CI config, or when a Sonnet reviewer returns an
+  Important finding that conflicts with the plan text. That is a per-task decision, noted
+  in the dispatch, not a reason to raise the tier for everything.
+- **The model-independent evidence stays non-negotiable.** RED/GREEN output pasted, the
+  failure reason stated, the teeth check run. Those are what make a green from any model
+  trustworthy.
+- **The Opus final review is the backstop, and the measurement.** Tracker entries already
+  record what a review caught; from now on record which tier caught it. If the final review
+  starts finding things a per-task review should have, the per-task tier moves up for that
+  kind of task, with the evidence.
+
+**Session model.** The global default is now Sonnet at medium effort; Opus is opted into
+per session, not out of. Which one a session opens on follows from what kind of session it
+is, and that is already decided by the "plan, then record, then a new session" habit:
+
+| Session | Model | Why |
+|---|---|---|
+| Brainstorm → spec → plan | `opus`, high effort | the design decisions are made here and nowhere else |
+| Plan execution (SDD orchestration, gate, commits) | `sonnet`, medium | the plan carries the design; the orchestrator dispatches, reads reports, rules on conflicts |
+| Doc round, tracker/KICKOFF refresh, coverage walk | `sonnet`, medium | routine; the standards are written down and tested |
+| Final whole-branch review | `opus` (as the review subagent) | unchanged from the tier table |
+| Debugging a failure the plan did not anticipate | switch to `opus` for that thread | `superpowers:systematic-debugging` is judgement work |
+
+Switch with `/model` and `/config` mid-session when a routine session turns into a design
+one; do not start every session on Opus "just in case".
+
 ## Delivery loop
 
 The loop, adapted from the source project — each arrow is a skill from the table above:

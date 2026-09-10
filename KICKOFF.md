@@ -210,6 +210,9 @@ Notes for whoever is preparing this handoff:
 
 - Refresh **Project state** and re-derive **Branch state** before pasting. Delete closed
   items rather than leaving them ticked.
+- **Open the session on the right model** (`CLAUDE.md` → *Session model*): Opus for a
+  brainstorm/spec/plan session, Sonnet for execution, doc rounds and tracker refreshes.
+  The global default is Sonnet at medium effort since 2026-09-10 (Pro budget).
 - **Untracked and deliberately parked**: `reference/10-sql-concepts.md` and
   `reference/rest-api-best-practices.md` — hand-written drafts for `sql-reference` and
   `api-reference`, gathered without an image, not yet registered.
