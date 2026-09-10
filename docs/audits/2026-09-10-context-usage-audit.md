@@ -234,6 +234,12 @@ settings change. Item 10 is a docs task that should go through the normal loop.
   The guards are what stop the cheaper reviewer being a worse one: evidence-or-rejected,
   per-task escalation on named triggers, model-independent TDD evidence, and the Opus
   final review kept as backstop and as the measurement of whether the tier holds.
+- **Lever 4d applied (item 10):** `docs/tracker-archive.md` takes 34 closed debt headings and
+  23 pre-August Completed rows, verbatim; live tracker 415,081 → 303,135 bytes (~104k → ~76k
+  tokens), 0 lines lost. Decisions stay. `web/src/lib/tracker-ledger.test.ts` guards ids
+  across the two files. KICKOFF's read list now says grep, never read, for both, and names
+  the one `task.md` section a round needs. D-96. Less than the audit's "half" — the
+  remaining Completed rows are long; a 2026-08-15 cut would take ~7k more.
 - **Lever 4c applied globally:** `~/.claude/settings.json` `model` `opus[1m]` → `sonnet`,
   `effortLevel` `high` → `medium`. Opus is now opted into per session. The session → model
   mapping is in `CLAUDE.md` (*Workflow preferences → Session model*) and the KICKOFF
