@@ -55,7 +55,9 @@ export function identifyUser(user: { id: string }) {
   Sentry.setUser({ id: user.id })
 }
 
-export function addContext(key: string, data: Record<string, unknown>) {
+type SafeContext = Record<string, string | number | boolean | null>
+
+export function addContext(key: string, data: SafeContext) {
   Sentry.setContext(key, data)
 }
 ```
@@ -115,6 +117,14 @@ Scrubbing is a deny-list, and a deny-list is only as current as the last time yo
 Reduce what you send in the first place: an id instead of an email, a reason
 code instead of a payload.
 
+`beforeSend` only sees what Sentry's own capture puts on the event — request headers,
+bodies, exception values. `addContext` is a separate door: `Sentry.setContext` accepts
+whatever you hand it, and the deny-list above never runs over it. Constrain the type to an
+allowlist of flat, primitive values (`SafeContext`, above) so a nested object or a stray
+field cannot smuggle a payload through the one path the scrubber does not inspect. Verify
+with a synthetic secret sent through every surface you actually use — context, breadcrumbs,
+tags — not only the request and exception fields `beforeSend` covers.
+
 One loop can spend everything. A batch job that throws once per row, over five thousand
 rows, sends five thousand events in a minute or two and empties a month's quota — after
 which you are blind, and nothing tells you so, because the thing that would have told you
@@ -148,8 +158,18 @@ export const logger = pino({
     ],
     censor: '[redacted]',
   },
+  serializers: {
+    error: pino.stdSerializers.err,
+  },
 })
 ```
+
+An `Error` has no enumerable own properties — `message` and `stack` are inherited getters —
+so `JSON.stringify` on a bare `Error` produces `{}`. Pino only serializes a field if you
+register a serializer for its exact key, so `logger.warn({ error })` needs one for `error`
+specifically; the built-in `err` serializer is not applied unless the field is named `err`.
+Register it under the name you actually log, and check the emitted record, not just the
+call site, before trusting a diagnostic log to have kept the reason.
 
 Configure redaction when you create the logger so every call uses the same policy.
 `beforeSend` protects error reports; it does nothing to log output.
@@ -324,6 +344,10 @@ You do not need a unified platform to start.
 
 ```ts
 // src/app/api/health/route.ts
+import { logger } from '@/lib/logger'
+import { db } from '@/lib/db'
+import { sql } from 'drizzle-orm'
+
 export async function GET() {
   const checks = { database: false }
 
@@ -361,11 +385,24 @@ depends on nothing but the process, because a restart cannot fix a database.
 **Readiness**, which is what this endpoint does, is "should traffic come here, is
 everything it depends on reachable".
 
-Point your uptime monitor at the dependency-checking one. Point your *platform* — Fly,
-ECS, Cloud Run, Kubernetes, anything that restarts or deregisters on a failed check — at a
-liveness endpoint that returns `200` whenever the process is running. Wire the platform to
-the dependency check and a thirty-second database blip restarts every instance you have,
-simultaneously, turning a recoverable hiccup into an outage with a restart storm on top.
+Point your uptime monitor at the dependency-checking one. Two different platform
+mechanisms consume a health check, for two different reasons, and they should not read the
+same endpoint:
+
+- A **restart decision** (Fly, ECS, Cloud Run, a Kubernetes liveness probe) asks "is this
+  process wedged" and should read the liveness endpoint. A restart cannot fix a database,
+  so wiring it to the dependency check turns a thirty-second blip into a restart storm
+  across every instance you have, simultaneously.
+- A **routing decision** (a load balancer's health check, a Kubernetes readiness probe)
+  asks "should traffic come here right now", and that is exactly what the
+  dependency-checking endpoint is for: pull one unhealthy instance out of rotation without
+  restarting it.
+
+Readiness does not have to be all-or-nothing, either. If a service depends on several
+things a request might not all need, one dependency being down does not have to fail every
+route: treat each dependency's health as a fact a handler can read, and let the handler
+decide whether its own dependency is required, rather than one shared boolean marking the
+whole instance unready. A payment provider outage need not fail every route.
 
 But do not point uptime monitoring only at `/api/health`. Monitor a real user path too —
 the health check can pass while the page a user actually loads throws.
@@ -462,6 +499,8 @@ one.
 
 ```ts
 // src/app/api/canary/route.ts — reads the real path, writes nothing
+import { db } from '@/lib/db'
+
 export async function GET(request: Request) {
   if (request.headers.get('x-monitor-token') !== process.env.MONITOR_TOKEN) {
     return new Response('not found', { status: 404 })
@@ -471,12 +510,22 @@ export async function GET(request: Request) {
     orderBy: (orders, { desc }) => [desc(orders.createdAt)],
   })
 
-  return Response.json({ ok: latest !== undefined })
+  // A service taking orders continuously should always have one: no row at
+  // all is the read path (or the write path behind it) failing silently, not
+  // a legitimately empty table. A status-only monitor only sees this if the
+  // assertion failing changes the HTTP status, not just the JSON body.
+  if (latest === undefined) {
+    return Response.json({ ok: false }, { status: 503 })
+  }
+
+  return Response.json({ ok: true })
 }
 ```
 
 Returning `404` rather than `401` for a bad token keeps the endpoint out of anyone's crawl
-results.
+results. A brand-new deployment with genuinely no orders yet is the one case this
+mistakenly fails — seed one known row for the canary to read, rather than special-casing
+"no orders" as healthy and losing the signal for everyone after launch.
 
 ### When nothing is reporting
 
@@ -533,10 +582,13 @@ points when deciding its state — which is precisely the condition you are tryi
 
 - **A job that is slower every night.** Alert on duration as well as absence; a
   reconciliation that has gone from four minutes to forty is on its way to overrunning its
-  window.
+  window. Make it checkable rather than aspirational: send `durationMs` in the same
+  success ping, and set a threshold on it if your monitor supports one —
+  `{ durationMs: Date.now() - start }` alongside the heartbeat, not instead of it.
 - **A job that overlaps itself.** Two copies of a reconciliation running concurrently is a
   different bug from either of them failing, and neither an error rate nor a heartbeat
-  will show it.
+  will show it. Take an advisory lock (or check a "job running" flag) before starting, so
+  a second invocation logs the conflict and exits instead of running alongside the first.
 
 ### Dashboards
 
@@ -644,7 +696,8 @@ the thing that mattered is not on it.
 ## Definition of done
 
 - [ ] Errors reach Sentry with readable stack traces and user context
-- [ ] No secrets or personal data in error reports or logs
+- [ ] No secrets, and no personal data beyond the opaque identifiers this stage allows —
+      each one minimized to what a fix needs
 - [ ] You know how to delete a person's data from your error tracker and your
       logs, and have checked the retention window on both
       ([08](08-security-audit.md))

@@ -469,3 +469,69 @@ test('the routine card decline example follows the info-level policy', () => {
   expect(logs).toMatch(/logger\.info\(\{\s*event: 'invoice\.payment_declined'/)
   expect(logs).toMatch(/routine business outcome[^:]*:\s*it is\s*`info`/)
 })
+
+// --- Task 15 fix wave: findings from the re-run against the merged doc. ---
+
+// I1. `Response.json({ ok: latest !== undefined })` always returns HTTP 200,
+// so a status-only monitor cannot see the canary's own assertion fail. An
+// established service takes orders continuously, so no row at all is a read
+// (or write) path failure, not a legitimately empty table.
+test('I1: the canary fails its HTTP status when its assertion fails', () => {
+  const uptime = section('Uptime monitoring from outside')
+  expect(uptime).toMatch(/status:\s*503/)
+  expect(uptime).toMatch(/ok:\s*false/)
+  expect(uptime).toMatch(/no row at[\s/]+all/i)
+})
+
+// I2. `logger.warn({ event, error })` emits `error:{}` under pino's default
+// serialization, because only keys with a registered serializer survive.
+test('I2: the logger has a serializer for the error field the health check logs', () => {
+  const logs = section('Structured logs')
+  expect(logs).toMatch(/serializers:\s*\{/)
+  expect(logs).toMatch(/stdSerializers\.err/)
+})
+
+// I3. Definition of done forbade all personal data while the reference code
+// recommends an opaque id that resolves to one. Narrow the rule to what is
+// deliberately allowed, and require minimization alongside the existing
+// deletion requirement.
+test('I3: Definition of done narrows to the allowed identifiers, not a blanket ban', () => {
+  const md = doc()
+  expect(md).toMatch(/no personal data beyond/i)
+  expect(md).toMatch(/minimi[sz]ed/i)
+})
+
+// I4. `addContext(key, data: Record<string, unknown>)` accepted arbitrary
+// records the scrubber never inspects — only headers, bodies and exception
+// values are covered by `beforeSend`.
+test('I4: addContext is constrained to values the scrubbing policy can reach', () => {
+  const errors = section('Errors that are actually useful')
+  expect(errors).toMatch(/SafeContext/)
+  expect(errors).toMatch(/allowlist/i)
+})
+
+// I5. The jobs section required watching duration and overlap but the only
+// checkable evidence was heartbeat absence.
+test('I5: job duration and overlap have checkable evidence, not only prose', () => {
+  const jobs = section('Jobs that nobody watches')
+  expect(jobs).toMatch(/durationMs/)
+  expect(jobs).toMatch(/advisory lock/i)
+})
+
+// I6. "Restarts or deregisters" sent both decisions to the same liveness
+// endpoint. A restart decision and a routing decision are different
+// questions, and readiness need not be all-or-nothing across dependencies.
+test('I6: restart and routing decisions read different endpoints', () => {
+  const health = section('Health checks')
+  expect(health).toMatch(/routing decision/i)
+  expect(health).toMatch(/restart decision/i)
+  expect(health).toMatch(/need not fail every route/i)
+})
+
+// M1. The health route used `logger` and `db` with no import shown, so the
+// scratch code could be mistaken for a standalone, copy-pasteable module.
+test('M1: the health check shows its logger and db imports', () => {
+  const health = section('Health checks')
+  expect(health).toMatch(/import \{ logger \}/)
+  expect(health).toMatch(/import \{ db \}/)
+})
