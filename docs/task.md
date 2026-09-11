@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13 and 14 done; 7 remain — 11/18. **Stage 11 complete 2026-09-07**: 8 steps (gate, ordering, e2e, protection, deps, scaling, ai, traps), doc correction + ordering exercise signature piece, 1143/160 tests, all verification green. Seven stages remain. **Stage 15's doc round (W-3.12) is planned and in flight on `fix/stage-15-doc-round` — the plan is written, the stage doc is untouched, `ready` stays `false`, and none of this advances the count**)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13 and 14 done; 7 remain — 11/18. **Stage 11 complete 2026-09-07**: 8 steps (gate, ordering, e2e, protection, deps, scaling, ai, traps), doc correction + ordering exercise signature piece, 1143/160 tests, all verification green. Seven stages remain. **Stage 15's doc round (W-3.12) is complete, all 16 tasks, on `fix/stage-15-fix-wave` — not merged, `ready` stays `false`, and none of this advances the count until the port**)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(eighteen of twenty-three registered sheets drawn — `github-actions` and `ci-cd` both added 2026-09-07, tethered to stage 11. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
@@ -126,7 +126,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13 and 14 done; 7 remain — 11/18. **Stage 11 complete 2026-09-07**: 8 steps, doc correction + ordering exercise, 1143/160 tests, e2e 17/18 (1 pre-existing), all verification green. **W-3.12, stage 15's doc round, is planned and in flight — see below; it does not advance this count**)*
+### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13 and 14 done; 7 remain — 11/18. **Stage 11 complete 2026-09-07**: 8 steps, doc correction + ordering exercise, 1143/160 tests, e2e 17/18 (1 pre-existing), all verification green. **W-3.12, stage 15's doc round, is complete — see below; it does not advance this count until the port**)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -758,7 +758,7 @@ the reason this repo is public (**D-26**). The boxes were never ticked back.
 
 ---
 
-### W-3.12 — Stage 15, doc round then port ◐ *(doc round **executed through Task 14 of 16** and merged to `develop` 2026-09-10 as `fcd46f1`, mid-round and without a whole-branch review; the doc is 261 → 743 lines. **Open:** Task 15, the fix wave for the re-run's six blocking findings I1–I6 and M1 — see the findings file's *Task 15 fix queue* — then the owed review. `ready` stays `false`; the port is a later round)*
+### W-3.12 — Stage 15, doc round then port ◐ *(**doc round complete, all 16 tasks, 2026-09-11**: Task 15's fix wave (I1–I6, M1), the D-48 re-run, the whole-branch review the mid-round merge owed, and Task 16's records all ran on `fix/stage-15-fix-wave`, not yet merged. The doc is 261 → 853 lines, gate-clean at 1218/1218 on the branch. **Open:** the merge (the user's call), then the port — a later round. `ready` stays `false`)*
 
 Stage 15 closes the shipping pipeline that 11 → 12 → 13 → 14 opened, and it is the
 first stage whose doc was assessed **before** any of it was written, rather than
@@ -794,13 +794,20 @@ tracker and nothing for the logs, while the checkbox it was fixing covers both. 
 is the same defect class the round exists to close, introduced by the round closing
 it. See [`docs/learnings/plans-are-unverified-101.md`](learnings/plans-are-unverified-101.md).
 
-**Where it stands, 2026-09-10.** Tasks 0–14 ran and merged. Task 14's re-run scored 5/5
-on both instruments, and the lookup number is a new baseline rather than an improvement
-because the original five questions were not kept. It also produced six blocking findings
-(I1–I6, two reproduced by a runtime harness) and M1, which are Task 15's queue and the
-next session's whole job. D-48 applies: the fix wave lands *after* the pass that justified
-it, so the re-run must run once more on the fixed doc, same scenario, before the round
-closes. Records (Task 16) were written on 2026-09-10 in place of that.
+**Where it stands, 2026-09-11: all 16 tasks are done.** Tasks 0–14 ran and merged
+2026-09-10 (`fcd46f1`). Task 14's re-run scored 5/5 on both instruments, and produced
+six blocking findings (I1–I6, two reproduced by a runtime harness) and M1. Task 15
+closed all seven, test-first, on `fix/stage-15-fix-wave`. Per D-48, the re-run then ran
+again on the fixed doc, same Loaf scenario verbatim, blind to the fixes: I1–I5 confirmed
+closed, and it surfaced one gap the fix queue hadn't named (a required liveness
+endpoint with no code example), fixed the same way. The whole-branch review the
+mid-round merge owed then ran (covering the full round from before Task 0) and found
+two blocking defects **the fix wave itself had introduced** — `Sentry.init` shown in a
+module that never runs it, and the I2 fix logging a raw database password to stdout —
+plus a vacuous test and one untaught DoD checkbox. All fixed and independently
+re-reviewed. Task 16 wrote these records and registered the five text sources that fed
+the doc in `reference/cheatsheet-sources.md`. Gate: 1218/1218 across 162 files on the
+branch. **The branch is not merged, not pushed, not deployed** — that decision is next.
 
 **Scope of the doc round, deliberately:** corrections, the untaught artifacts, the
 missing sections, the `### AI in observability` section D-35 requires, glossary

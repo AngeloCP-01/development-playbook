@@ -193,6 +193,53 @@ command tables, and its interview-questions block. The same call `playwright` ma
 its own source — study-guide material, not lookup material — plus a domain question,
 since none of it is what stage 11 teaches.
 
+### Observability · `observability` · stage 15
+
+Not yet transcribed. Five text sources, all read 2026-09-08 for the doc round
+(`docs/superpowers/plans/2026-09-08-stage-15-doc-round.md`, Task 13b), registered here
+per that task's own instruction since they are this stage's W-6 gathering as well as
+input to the prose:
+
+1. *Best practices for logging in Node.js* — Atatus → fed `### Structured logs`:
+   levels, redaction
+2. *Observability vs monitoring: key differences and similarities* — Sujeeth H R → fed
+   the opening distinction in `### Three things, in order of value`
+3. *The three pillars of observability* — Priya Dharshini → corroborated, changed
+   nothing (its three pillars are this stage's three things with a different ordering
+   rationale)
+4. *Observability with OpenTelemetry: why do we need it* — Tenil Sridhar → fed
+   `## Scaling to a team`
+5. *Building an observability platform with Prometheus, Grafana and Jenkins* — Kumar →
+   fed the one-pane dashboard-reconciliation paragraph; otherwise sheet-only material,
+   since it is a self-hosted stack and this playbook's platforms are managed
+
+None of the five is a graphic, so none has a plate to register — text articles, no
+`File` column entry below. Author is what each source states; **URL not recorded** for
+any of the five, the same gap most of this ledger already carries.
+
+Separately, **ten images are already committed** (`450190c`) for this sheet —
+`3-pillars-of-observavilty.jpeg`, `4-Golden-Signals-SRE.jpeg`,
+`Microservices-Observavility&Tracing.jpeg`, `SLA-SLI-SLO&ERRORBUDGET.jpeg`,
+`latency-metrics.jpeg`, `logging.jpeg`, `mertrics-vs-logs-vs-traces.png`,
+`observavility&opentelemetry.png`, `sprinboot-logging-cheatsheet.jpeg`,
+`system-design-tradeoffs.jpeg` — but **none is registered and none has provenance**,
+unlike the five sources above. This entry does not register them: an author and a URL
+are required at capture time by this file's own rule, and asking for those after the
+fact is exactly the gap `ci-cd`'s row above shows how to avoid. Ask for the sources
+before registering any of them; the `observability` sheet stays untranscribed until
+that happens.
+
+Still worth searching — none of the five sources above covers these, and each fills
+something the doc asserts without teaching a term for it: `"SLI SLO SLA" explained`,
+`"error budget" explained`, `"four golden signals" SRE`,
+`"RED method" "USE method" monitoring`, `"p50 p95 p99" percentiles explained`. Two
+notes for whoever runs these searches: they will surface stage 16 material (MTTR,
+on-call, postmortems), which files against `16-incident-management` and not here; and
+a Prometheus/Grafana result is the one with drawable architecture — the same
+vendor mismatch `ci-cd` accepted deliberately when it shipped a Jenkins plate on a
+GitHub Actions project, acceptable here for the same reason, since on a concept sheet
+the flow shape is the content.
+
 ## Untethered
 
 ### Software Development Life Cycle · `sdlc` · no stage
@@ -321,3 +368,8 @@ unrecorded on most of these; fix before promoting past `develop` (D-63).
 | `testing` | Levels of Testing (pyramid) | *not recorded* | *not recorded* | `Levels-of-testing-1.jpeg` | 2026-08-28 | consulted — concept transcribed into the second section's rows, no second plate |
 | `playwright` | Playwright Quick Revision Cheat Sheet, page 1/3 | *not recorded* | *not recorded* | `playwright1.jpeg` | 2026-08-28 | displayed |
 | `playwright` | Playwright Quick Revision Cheat Sheet, pages 2–3/3 | *not recorded* | *not recorded* | `playwright2.jpeg`, `playwright3.jpeg` | 2026-08-28 | consulted — content transcribed into rows, converted webp deleted rather than left as an unreferenced asset (`public-assets.test.ts` caught it) |
+| `observability` | Best practices for logging in Node.js | Atatus | *not recorded* | *no image — text article* | 2026-09-08 | consulted — fed `### Structured logs` |
+| `observability` | Observability vs monitoring: key differences and similarities | Sujeeth H R | *not recorded* | *no image — text article* | 2026-09-08 | consulted — fed the opening distinction |
+| `observability` | The three pillars of observability | Priya Dharshini | *not recorded* | *no image — text article* | 2026-09-08 | consulted — corroborated, changed nothing |
+| `observability` | Observability with OpenTelemetry: why do we need it | Tenil Sridhar | *not recorded* | *no image — text article* | 2026-09-08 | consulted — fed `## Scaling to a team` |
+| `observability` | Building an observability platform with Prometheus, Grafana and Jenkins | Kumar | *not recorded* | *no image — text article* | 2026-09-08 | consulted — fed the one-pane dashboard reconciliation; otherwise sheet-only |
