@@ -535,3 +535,15 @@ test('M1: the health check shows its logger and db imports', () => {
   expect(health).toMatch(/import \{ logger \}/)
   expect(health).toMatch(/import \{ db \}/)
 })
+
+// Surfaced by the Task 15 re-run's completeness reader, against the fixed
+// doc: Definition of done requires liveness and readiness as separate
+// endpoints, but only the dependency-checking (readiness) endpoint had a
+// code example — a reader had no worked example to build the liveness one
+// from, despite the doc naming the platforms that need it (Fly, ECS,
+// Cloud Run, Kubernetes) in the same section.
+test('the health check section shows a liveness endpoint, not only readiness', () => {
+  const health = section('Health checks')
+  expect(health).toMatch(/\/api\/health\/live/)
+  expect(health).toMatch(/return new Response\('ok'\)/)
+})

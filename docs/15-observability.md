@@ -404,6 +404,17 @@ route: treat each dependency's health as a fact a handler can read, and let the 
 decide whether its own dependency is required, rather than one shared boolean marking the
 whole instance unready. A payment provider outage need not fail every route.
 
+The liveness endpoint is the trivial one, deliberately — it has nothing to check:
+
+```ts
+// src/app/api/health/live/route.ts — wire the platform's restart trigger here
+export async function GET() {
+  return new Response('ok')
+}
+```
+
+If this ever grows a dependency check, it has stopped being a liveness endpoint.
+
 But do not point uptime monitoring only at `/api/health`. Monitor a real user path too —
 the health check can pass while the page a user actually loads throws.
 
