@@ -114,9 +114,9 @@ to Codex. It is the user's; leave it, and do not let the two drift without sayin
 > **The hazard TD-44 named fired on 2026-09-08.** The résumé and cover letter were
 > committed with `reference/`. The unpushed history was rewritten on 2026-09-10 to take
 > them out (D-97); the files are at `~/personal/parked-from-playbook/`, off the repo.
-> `.gitignore` now guards the file kinds. **Never `git push --tags` or `--mirror`** —
-> `backup/pre-filter-2026-09-10` and `refs/original/` still hold the old objects locally
-> until the user deletes them after the push. Add files by explicit path, never `-A`.
+> `.gitignore` now guards the file kinds. The rewritten history is pushed, the backup
+> refs are deleted and `gc --prune=now` has run: the blobs no longer exist anywhere
+> (`.git` went 64 → 27 MB). Add files by explicit path, never `-A`.
 
 ---
 
@@ -184,22 +184,23 @@ git rev-list --count main..develop
 git ls-files reference/ | grep -iv "jpeg\|jpg\|png\|webp\|gif\|\.md$"
 ```
 
-**Measured 2026-09-10 at handoff, before the records commit landed:**
+**Measured 2026-09-10 at handoff, before this refresh's own commit landed:**
 
 | | SHA | |
 |---|---|---|
-| `develop` | `bf0070e` | **30 ahead of `origin/develop`**, all unpushed and **rewritten** (D-97) |
-| `origin/develop` | `fdc4811` | last push, 2026-09-08 |
-| `main` | `d659d32` | `develop` is **78 ahead** |
+| `develop` | `87ca223` | **level with `origin/develop`** — pushed 2026-09-10 |
+| `main` | `d659d32` | `develop` is **82 ahead** |
 
-**`develop`'s unpushed commits have different SHAs from any earlier record of them.**
-`c4f2a68` is `450190c`, `906cb32`'s line is gone, `8e94b1f` is `bf0070e`. Any SHA from
-a 2026-09-08 or 2026-09-10 note that is not in `git log develop` was rewritten, not lost:
+**SHAs from before 2026-09-10 were rewritten** (D-97): `c4f2a68` is `450190c`, `8e94b1f`
+is `bf0070e`, and the originals no longer exist as objects. A SHA from a 2026-09-08 note
+that `git log develop` cannot find was rewritten, not lost:
 `git log --oneline develop | grep "<subject>"` finds it.
 
-The push and the promotion of `develop` to `main` are **the user's**. The push is a plain
-`git push origin develop` — **not** `--force` (origin has none of these commits, so it is
-a fast-forward), **not** `--tags`, **not** `--mirror`.
+The promotion of `develop` to `main` is **the user's**, and 82 commits are waiting on it.
+
+**The stale-merge grep found one on this refresh**: the 2026-09-08 W-3.12 row still said
+"NOT merged" after the branch merged that morning. Struck with the date. Run both checks
+in step 3 every time; they are cheap and they keep finding things.
 
 **No branch is in flight.** The next one is `fix/stage-15-fix-wave`, cut from `develop`.
 
@@ -234,9 +235,8 @@ Notes for whoever is preparing this handoff:
     authors and URLs before registering any of them.
   - ~~**Personal files are still parked in a committed directory.**~~ Committed on
     2026-09-08, rewritten out on 2026-09-10 (D-97, TD-46). Now at
-    `~/personal/parked-from-playbook/`. Never `git add -A`; never push `--tags`.
-  - **`develop` is 30 unpushed commits with rewritten SHAs.** Plain `git push origin
-    develop`; then delete `backup/pre-filter-2026-09-10` and `refs/original/` locally.
+    `~/personal/parked-from-playbook/`; blobs purged locally and never pushed. Never
+    `git add -A`.
   - **`pnpm test:dev-console` has not run since 2026-09-07.**
   - **Five branches merged unreviewed** — the four of 2026-09-07 (`6f52212`, `99f6145`,
     `4fdb9bd`, `a8f56de`) and stage 15's `fcd46f1` on 2026-09-10. Treat that code and
