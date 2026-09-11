@@ -39,26 +39,32 @@ Before doing anything, read these for context:
 Stages 01–07, 11, 12, 13 and 14 are interactive. Stage 13 is platform-aware (8 steps,
 Vercel + AWS). **Eighteen of twenty-three** reference sheets drawn.
 
-**Stage 15's whole doc round — all 16 tasks — is done.** The mid-round merge (`fcd46f1`,
-2026-09-10) landed the doc through Task 14 without a whole-branch review; that gap is
-closed now, not deferred. Task 15 (the fix wave), the D-48 re-run, the whole-branch review
-the merge owed, and Task 16 (these records) all ran in the 2026-09-11 session, on
-`fix/stage-15-fix-wave`, cut from `develop`. `docs/15-observability.md` is now
-**853 lines**, 6 `##`, 12 `###` — unchanged section count from the mid-round merge; the
-fix wave and review added content within existing sections, no new headings. **The branch
-is not merged, not pushed, not deployed** — that decision is next, and it is the user's.
+**Stage 15's whole doc round — all 16 tasks — is done and merged.** The mid-round merge
+(`fcd46f1`, 2026-09-10) landed the doc through Task 14 without a whole-branch review;
+that gap is closed, not deferred. Task 15 (the fix wave), the D-48 re-run, the
+whole-branch review the merge owed, and Task 16 (records) all ran on
+`fix/stage-15-fix-wave` and merged to `develop` as `7418684` (`--no-ff`), branch deleted.
+`docs/15-observability.md` is **853 lines**, 6 `##`, 12 `###`. `develop` is level with
+`origin/develop`.
 
-**What's actually left for stage 15 is the port** (W-3.12 proper — the interactive
-`web/features/observability/` component). Nothing in the doc content is open. If this
-session is picking the port up next, start there directly; `web/PATTERNS.md` first, per
-`CLAUDE.md`'s three-file trace (`stages.ts`, the feature component, `stage-content.ts`).
+**The next thing is the port** (W-3.12 proper — an interactive `web/features/observability/`
+component, the same three-file trace every other stage used: `stages.ts`, the feature
+component, `stage-content.ts`). Nothing in the doc content is open; this is a fresh piece
+of work, not a continuation of the fix wave. **Start with `superpowers:brainstorming`,
+not a plan** — `CLAUDE.md`'s delivery loop puts brainstorming before writing-plans for
+any creative/build work, and stage 15's content (Sentry, structured logging, health
+checks, alerting, uptime monitoring, silent failures, jobs, dashboards) is dense enough
+that how to split it into 4–6 `Step` objects is itself a design decision, not a mechanical
+one. Read `web/PATTERNS.md` before that brainstorm — it says which interaction pattern
+fits which content, and the default is not a paragraph.
 
 **Start here, in order:**
 
-1. **Check the branch before editing anything.** `git branch --show-current`. If it's
-   `fix/stage-15-fix-wave` already, you're continuing this work — check
-   `git log --oneline develop..HEAD` matches what's below before assuming anything. If the
-   answer is `develop` or `main`, stop and read `docs/learnings/branch-discipline-101.md`.
+1. **Check the branch before editing anything.** `git branch --show-current`. Should be
+   `develop`. If you're about to start the port, cut a new branch (`feat/stage-15-observability-port`
+   or similar) once the brainstorm has produced a spec to build from — not before. If the
+   current branch is unexpectedly not `develop` or `main`, stop and read
+   `docs/learnings/branch-discipline-101.md`.
 2. **Re-derive every number in this file before trusting it.** `git fetch`, then the
    commands under "Branch state". This file has been wrong about **six** things in the
    past, all found by checking rather than reading. Counts include the commit that writes
@@ -67,12 +73,12 @@ session is picking the port up next, start there directly; `web/PATTERNS.md` fir
    `grep -n "NOT merged, NOT pushed, NOT deployed" docs/tracker.md` and
    `git ls-files reference/ | grep -iv "jpeg\|jpg\|png\|webp\|gif\|\.md$"`. The second
    found a résumé in the tree on 2026-09-10 (TD-46, D-97). It must return nothing.
-4. **Ask the user what's next**, rather than assuming. The most likely answers: merge
-   `fix/stage-15-fix-wave` into `develop` (the user's call, ask first — `CLAUDE.md`'s Git
-   conventions), or start the stage 15 port (a fresh brainstorm/plan cycle, its own
-   session per *Plan, then record, then a new session*).
-5. **Open on Sonnet, medium effort** for a merge or records session; **Opus, high effort**
-   if the next thing is brainstorming the port (`CLAUDE.md` → *Session model*).
+4. **Read `docs/15-observability.md` and `web/PATTERNS.md`**, then invoke
+   `superpowers:brainstorming` for the port — do not skip straight to a plan.
+5. **Open on Opus, high effort** — this is a brainstorm/spec/plan session, and
+   `CLAUDE.md` → *Session model* is explicit that the design decisions get made here and
+   nowhere else. Switch to Sonnet for the execution session that follows, per *Plan, then
+   record, then a new session*.
 
 ---
 
@@ -184,11 +190,18 @@ Tasks 15 and 16 of the stage 15 doc round, start to finish, on `fix/stage-15-fix
 - **Task 16 (these records):** the tracker row below, this file, `docs/task.md`, and a
   new `### Observability` entry in `reference/cheatsheet-sources.md` registering the
   five text sources that fed the doc (the ten images stay unregistered — no provenance).
-- **Gate, final:** lint 0, typecheck clean, format clean, **1218/1218 across 162 files**.
-  `fix/stage-15-fix-wave` — 3 commits off `develop`, 87 off `main`, tree clean. **NOT
-  merged, NOT pushed, NOT deployed.**
-- **Not done:** the merge (asked about below, the user's call, every time); the port; the
-  ten-image registration; the "Next up" staleness noted in the tracker row.
+- A `docs/learnings/quality-gates-101.md` addition: two vacuous-verification lessons from
+  the whole-branch review's blocking findings — a test that names the mechanism
+  (`serializers: {`, `stdSerializers.err`) without checking the wiring (which *key*), and
+  a re-run that verified a redaction mechanism ran without ever trying a secret-bearing
+  input, so it never caught the mechanism failing to redact.
+- **Gate, final on the branch:** lint 0, typecheck clean, format clean, **1218/1218
+  across 162 files**.
+- **Merged to `develop` as `7418684` (`--no-ff`), at the user's request.** Plus a fourth
+  commit (`99c8a90` → included) recording Task 16. Branch `fix/stage-15-fix-wave` deleted.
+  Gate re-run on `develop`: 1218/1218, still clean. `develop` level with `origin/develop`.
+- **Not done:** the port (next, its own brainstorm/plan cycle); the ten-image
+  registration; the "Next up" staleness noted in the tracker row.
 
 ---
 
@@ -211,11 +224,11 @@ Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them 
 - **Quality gates**: prettier (skips markdown and `highlighted.generated.ts`), eslint at
   `--max-warnings 0`, vitest in two projects, `test:e2e` (18-test Playwright audit),
   `test:dev-console` (outside the gate, once per stage round — TD-35, D-84).
-- **`develop` is still at 1207 tests across 162 files** (unchanged since 2026-09-10;
-  `fix/stage-15-fix-wave` adds 11 more, **1218**, unmerged). **e2e last green
-  2026-09-07 (18/18)**; `test:dev-console` **unrun since 2026-09-07** — do not quote a
-  number for it. It needs its own dev server and refuses to start while another
-  `next dev` holds the directory.
+- **`develop` is at 1218 tests across 162 files** (was 1207 before the stage 15 fix-wave
+  merge, 2026-09-11). **e2e last green 2026-09-07 (18/18)** — that predates this merge,
+  and nothing under `web/src` renders differently, so it wasn't re-run; `test:dev-console`
+  **unrun since 2026-09-07** — do not quote a number for it. It needs its own dev server
+  and refuses to start while another `next dev` holds the directory.
 - **Deployed**: `W-5` complete, live at https://acp-dev-playbook.vercel.app since
   2026-08-11. `pnpm test:prod` verifies the deployment, outside the merge gate.
 
@@ -231,27 +244,27 @@ git rev-list --count main..develop
 git ls-files reference/ | grep -iv "jpeg\|jpg\|png\|webp\|gif\|\.md$"
 ```
 
-**Measured 2026-09-11, before this refresh's own commit landed:**
+**Measured 2026-09-11, after the stage 15 fix-wave merge, before this refresh's own
+commit landed:**
 
 | | SHA | |
 |---|---|---|
-| `develop` | `f5b1782` | **level with `origin/develop`** |
-| `main` | (unchanged since 2026-09-10) | `develop` is **87 ahead** |
-| `fix/stage-15-fix-wave` | `b1deecb` | cut from `develop` at `f5b1782`; **3 commits ahead**, not merged, not pushed |
+| `develop` | `7418684` | **level with `origin/develop`** |
+| `main` | `d659d32` (unchanged since 2026-09-10) | `develop` is **89 ahead** |
 
 **SHAs from before 2026-09-10 were rewritten** (D-97): `c4f2a68` is `450190c`, `8e94b1f`
 is `bf0070e`, and the originals no longer exist as objects. A SHA from a 2026-09-08 note
 that `git log develop` cannot find was rewritten, not lost:
 `git log --oneline develop | grep "<subject>"` finds it.
 
-The promotion of `develop` to `main` is **the user's**, and 87 commits are waiting on it —
-including, once it merges, `fix/stage-15-fix-wave`'s 3.
+The promotion of `develop` to `main` is **the user's**, and 89 commits are waiting on it.
 
-**`fix/stage-15-fix-wave` is in flight, on `develop`, not merged anywhere.** It carries
-Tasks 15 and 16 of the stage 15 round (this session, 2026-09-11): the fix wave, the D-48
-re-run, the whole-branch review, and these records. Ask the user before merging it into
-`develop` — the "ask before every merge" rule applies to this branch exactly as to any
-other.
+**`fix/stage-15-fix-wave` merged and was deleted, 2026-09-11.** `7418684`, `--no-ff`, 4
+commits (the fix wave, the liveness endpoint the re-run surfaced, the whole-branch
+review's fixes, Task 16's records). Gate on `develop` after the merge: 1218/1218, clean.
+
+**No branch is in flight.** The next one is for the stage 15 port — cut it after the
+brainstorm/plan produces something to build from, not before.
 
 **`git branch` is `develop` and `main`, and `git worktree list` is one line.** The two
 stale branches and the three 2026-09-04 agent worktrees (1.8 GB) were removed on
@@ -277,12 +290,10 @@ Notes for whoever is preparing this handoff:
   `reference/rest-api-best-practices.md` — hand-written drafts for `sql-reference` and
   `api-reference`, gathered without an image, not yet registered.
 - Open threads worth carrying forward:
-  - **`fix/stage-15-fix-wave` is done and waiting on a merge decision — the user's, every
-    time.** Tasks 15 and 16 of the stage 15 round: the fix wave, the D-48 re-run, the
-    whole-branch review, and these records. 1218/1218 on the branch, `develop` still at
-    1207. Ask before merging.
-  - **The stage 15 port (W-3.12 proper) is the next content work**, once the branch above
-    is settled — a fresh brainstorm/plan session, not a continuation of this one.
+  - **The stage 15 port (W-3.12 proper) is the next content work.** `fix/stage-15-fix-wave`
+    merged 2026-09-11 as `7418684`; `develop` is at 1218 tests. Start with
+    `superpowers:brainstorming`, not a plan — this is fresh design work, not a
+    continuation of the fix wave.
   - **Ten observability captures are tracked in `reference/` with no provenance.** Ask for
     authors and URLs before registering any of them. (The five text sources that fed the
     doc's prose *are* registered now, 2026-09-11.)

@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13 and 14 done; 7 remain — 11/18. **Stage 11 complete 2026-09-07**: 8 steps (gate, ordering, e2e, protection, deps, scaling, ai, traps), doc correction + ordering exercise signature piece, 1143/160 tests, all verification green. Seven stages remain. **Stage 15's doc round (W-3.12) is complete, all 16 tasks, on `fix/stage-15-fix-wave` — not merged, `ready` stays `false`, and none of this advances the count until the port**)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13 and 14 done; 7 remain — 11/18. **Stage 11 complete 2026-09-07**: 8 steps (gate, ordering, e2e, protection, deps, scaling, ai, traps), doc correction + ordering exercise signature piece, 1143/160 tests, all verification green. Seven stages remain. **Stage 15's doc round (W-3.12) is complete, all 16 tasks, merged to `develop`** as `7418684` **— `ready` stays `false`, and none of this advances the count until the port**)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(eighteen of twenty-three registered sheets drawn — `github-actions` and `ci-cd` both added 2026-09-07, tethered to stage 11. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
@@ -758,7 +758,7 @@ the reason this repo is public (**D-26**). The boxes were never ticked back.
 
 ---
 
-### W-3.12 — Stage 15, doc round then port ◐ *(**doc round complete, all 16 tasks, 2026-09-11**: Task 15's fix wave (I1–I6, M1), the D-48 re-run, the whole-branch review the mid-round merge owed, and Task 16's records all ran on `fix/stage-15-fix-wave`, not yet merged. The doc is 261 → 853 lines, gate-clean at 1218/1218 on the branch. **Open:** the merge (the user's call), then the port — a later round. `ready` stays `false`)*
+### W-3.12 — Stage 15, doc round then port ◐ *(**doc round complete, all 16 tasks, merged to `develop` 2026-09-11 as `7418684`**: Task 15's fix wave (I1–I6, M1), the D-48 re-run, the whole-branch review the mid-round merge owed, and Task 16's records all ran on `fix/stage-15-fix-wave`, then merged `--no-ff`, branch deleted. The doc is 261 → 853 lines, gate-clean at 1218/1218 on `develop`. **Open:** the port — a later round, its own brainstorm/plan cycle. `ready` stays `false`)*
 
 Stage 15 closes the shipping pipeline that 11 → 12 → 13 → 14 opened, and it is the
 first stage whose doc was assessed **before** any of it was written, rather than
@@ -807,7 +807,9 @@ module that never runs it, and the I2 fix logging a raw database password to std
 plus a vacuous test and one untaught DoD checkbox. All fixed and independently
 re-reviewed. Task 16 wrote these records and registered the five text sources that fed
 the doc in `reference/cheatsheet-sources.md`. Gate: 1218/1218 across 162 files on the
-branch. **The branch is not merged, not pushed, not deployed** — that decision is next.
+branch, reconfirmed on `develop` after merging. **Merged `--no-ff` as `7418684` at the
+user's request, branch deleted, `develop` level with `origin/develop`.** The port is
+next, as its own round.
 
 **Scope of the doc round, deliberately:** corrections, the untaught artifacts, the
 missing sections, the `### AI in observability` section D-35 requires, glossary

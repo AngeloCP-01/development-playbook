@@ -53,7 +53,16 @@ Naming: `<topic>-101.md`.
   constant to the doc it was read from and never touched an app export, so each stayed
   green through a fix wave that restored the very content it was named for. A doc-source
   read proves the doc, not the app built from it. Read it on any new project's day one,
-  and before writing tests for scoring/judgment logic.
+  and before writing tests for scoring/judgment logic. Extended after stage 15's fix wave
+  with a vacuous shape that named the mechanism and skipped the wiring: a test asserted a
+  `serializers: {` block existed and the string `stdSerializers.err` appeared somewhere in
+  the section, without checking which *key* the serializer was registered under —
+  reverting to the original bug (wrong key) kept it green. A second gap survived one layer
+  further: the fix wave's own re-run confirmed the serializer preserved the exception's
+  structure, but never tried an error message with a secret in it, so it never caught that
+  the "fixed" version logged a database password to stdout verbatim. Verifying a mechanism
+  *runs* is not the same claim as verifying the *property it exists to protect* — put a
+  violating value through it, not just a representative one.
 - `deploying-101.md` — what W-5's first deploy taught: the three dashboard settings the
   repository cannot express (connected repo, framework preset, root directory), why a green
   build of the *wrong* repository looks exactly like success, `prepare` scripts failing on hosts
