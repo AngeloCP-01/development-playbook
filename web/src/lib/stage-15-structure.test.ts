@@ -485,20 +485,59 @@ test('I1: the canary fails its HTTP status when its assertion fails', () => {
 
 // I2. `logger.warn({ event, error })` emits `error:{}` under pino's default
 // serialization, because only keys with a registered serializer survive.
-test('I2: the logger has a serializer for the error field the health check logs', () => {
+// Pinned on the *key* the health check actually logs, not just the presence
+// of a `serializers` block — the whole-branch review reverted this to
+// `err: pino.stdSerializers.err` (the original bug, wrong key) and the suite
+// stayed green because neither assertion looked at the key.
+test('I2: the logger has a serializer for the specific error key the health check logs', () => {
   const logs = section('Structured logs')
-  expect(logs).toMatch(/serializers:\s*\{/)
-  expect(logs).toMatch(/stdSerializers\.err/)
+  expect(logs).toMatch(/serializers:\s*\{\s*error:/)
 })
 
 // I3. Definition of done forbade all personal data while the reference code
 // recommends an opaque id that resolves to one. Narrow the rule to what is
 // deliberately allowed, and require minimization alongside the existing
-// deletion requirement.
+// deletion requirement. Scoped to the DoD section itself (not the whole
+// doc) — the earlier version would stay green if the DoD line reverted as
+// long as the phrase survived anywhere else on the page.
 test('I3: Definition of done narrows to the allowed identifiers, not a blanket ban', () => {
-  const md = doc()
-  expect(md).toMatch(/no personal data beyond/i)
-  expect(md).toMatch(/minimi[sz]ed/i)
+  const dod = topLevelSection('Definition of done')
+  expect(dod).toMatch(/no personal data beyond/i)
+  expect(dod).toMatch(/minimi[sz]ed/i)
+})
+
+// --- Whole-branch review findings, against the fix-wave commits above. ---
+
+// Review-I1. `Sentry.init` was shown in `src/lib/observability.ts`, a module
+// that never runs it — for @sentry/nextjs, init belongs in the three
+// per-runtime config files the setup wizard (04) already writes. A lib
+// module `beforeSend` here would silently never fire; the wizard's own
+// `Sentry.init` calls win, with no scrubbing.
+test('review-I1: Sentry.init is shown in the wizard-created runtime config files, not a lib module', () => {
+  const errors = section('Errors that are actually useful')
+  expect(errors).toMatch(/sentry\.server\.config\.ts/)
+  expect(errors).toMatch(/instrumentation-client\.ts/)
+  expect(errors).toMatch(/sentry\.edge\.config\.ts/)
+})
+
+// Review-I2. The fixed serializer preserved the exception's message and
+// stack in full — including a connection string with its password inline,
+// which the doc's own SECRETS list exists to redact out of Sentry. Logging
+// it verbatim to stdout contradicts "avoid raw payloads" a few paragraphs
+// earlier. The serializer must redact, not just structure.
+test('review-I2: the error serializer redacts secrets, reusing the shared helper', () => {
+  const logs = section('Structured logs')
+  expect(logs).toMatch(/import \{ redact \} from '\.\/redact'/)
+  expect(logs).toMatch(/redact\(err\.message\)/)
+})
+
+// Review-I4. Definition of done required proof that a job's heartbeat
+// monitor actually pages on silence ("watched the monitor page you by
+// withholding a test ping"), but the Jobs section never taught how — unlike
+// its alert-delivery twin (M6), which got a body home.
+test('review-I4: withholding a test heartbeat to prove the monitor pages is taught in the body', () => {
+  const jobs = section('Jobs that nobody watches')
+  expect(jobs).toMatch(/withhold/i)
 })
 
 // I4. `addContext(key, data: Record<string, unknown>)` accepted arbitrary

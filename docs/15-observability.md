@@ -65,7 +65,9 @@ export function addContext(key: string, data: SafeContext) {
 An opaque id is enough, because it **resolves to a person in your own database** — which
 you control, can query, and can delete. An email address in an error report is the same
 fact stored a second time, on infrastructure you do not control, under a retention policy
-you did not set.
+you did not set. Sentry's retention window is a project setting, not something you configure
+in code — check it under the project's settings once, rather than assuming whatever the
+plan defaults to is what you meant to keep.
 
 Attach the user to every authenticated request. "This error hit 400 users" and "this error
 hit one user with unusual data" are entirely different problems with entirely different
@@ -79,16 +81,27 @@ retained, is accessible to anyone with account access, and lives on someone else
 infrastructure. Configure `beforeSend` to scrub aggressively.
 
 ```ts
-// src/lib/observability.ts
+// src/lib/redact.ts — shared by Sentry's beforeSend and the logger below,
+// so one deny-list covers both destinations rather than drifting apart.
 const SECRETS = [
   /postgres(?:ql)?:\/\/\S+/gi, // connection strings carry the password inline
   /\bsk_live_[A-Za-z0-9]+/g, // provider secret keys
   /\bBearer\s+[A-Za-z0-9._-]+/gi,
 ]
 
-function redact(text: string): string {
+export function redact(text: string): string {
   return SECRETS.reduce((acc, pattern) => acc.replace(pattern, '[redacted]'), text)
 }
+```
+
+`@sentry/nextjs`'s install wizard ([04](04-project-setup.md)) already created three runtime config
+files and called `Sentry.init` in each — `instrumentation-client.ts`, `sentry.server.config.ts`,
+`sentry.edge.config.ts`. `Sentry.init` must not be called a second time, so `beforeSend` is added
+by editing those files, not by adding a new one:
+
+```ts
+// sentry.server.config.ts — edit the wizard's Sentry.init, do not add another
+import { redact } from './lib/redact'
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
@@ -112,6 +125,10 @@ Sentry.init({
   },
 })
 ```
+
+The same `beforeSend` belongs in `instrumentation-client.ts` and `sentry.edge.config.ts` too —
+each runtime calls its own `Sentry.init`, and a scrubber added to only one covers only that
+runtime.
 
 Scrubbing is a deny-list, and a deny-list is only as current as the last time you read it.
 Reduce what you send in the first place: an id instead of an email, a reason
@@ -140,6 +157,7 @@ Log objects, not sentences. Sentences are unsearchable at volume.
 // src/lib/logger.ts
 import { AsyncLocalStorage } from 'node:async_hooks'
 import pino from 'pino'
+import { redact } from './redact'
 
 export const requestContext = new AsyncLocalStorage<{ requestId: string }>()
 
@@ -159,7 +177,11 @@ export const logger = pino({
     censor: '[redacted]',
   },
   serializers: {
-    error: pino.stdSerializers.err,
+    error: (err: Error) => ({
+      type: err.name,
+      message: redact(err.message),
+      stack: err.stack ? redact(err.stack) : undefined,
+    }),
   },
 })
 ```
@@ -170,6 +192,13 @@ register a serializer for its exact key, so `logger.warn({ error })` needs one f
 specifically; the built-in `err` serializer is not applied unless the field is named `err`.
 Register it under the name you actually log, and check the emitted record, not just the
 call site, before trusting a diagnostic log to have kept the reason.
+
+A stock serializer is not enough on its own: pino's redaction paths above operate on known
+field shapes, and an exception's message and stack are free text — the same connection
+string `beforeSend` redacts out of Sentry is just as present in a rejected database
+connection's error message, and a serializer that copies it verbatim prints it to stdout
+instead. Run it through the same `redact` helper before it reaches the log line, so a
+secret pattern added once covers both destinations.
 
 Configure redaction when you create the logger so every call uses the same policy.
 `beforeSend` protects error reports; it does nothing to log output.
@@ -187,10 +216,11 @@ actual shapes your application emits with synthetic secrets before enabling a dr
 | `error` | A fault you would investigate; a common input to alerts |
 | `fatal` | A fault that prevents the process continuing |
 
-Choose the level by the action it warrants. An expected card decline may be `info`;
-use `warn` when it deserves attention, and reserve `error` for a fault. If routine
-outcomes feed a paging rule, tune the rule or the classification before it teaches
-you to ignore failures.
+Choose the level by the action it warrants: a fault you would investigate is `error`; an
+unexpected condition the application already handled is `warn`; a routine business
+outcome — a card decline included, however much you want visibility into it — is `info`.
+If routine outcomes feed a paging rule, tune the rule or the classification before it
+teaches you to ignore failures.
 
 `pino` writes one JSON object per line to stdout, which is what every platform in this
 playbook already collects. Any library that does that will do; what matters is that the
@@ -335,7 +365,7 @@ none of them is readable: 12 errors in the last hour is a catastrophe or a Tuesd
 during an incident is the worst possible moment to find out which.
 **Write the numbers down** once you have a week of ordinary traffic — error rate, p95
 latency, requests per minute at your busy hour and your quiet one — somewhere you will
-find them at 3am, which means the repository and not your memory. Stage 14 uses the same baselines to judge a
+find them at 2am, which means the repository and not your memory. Stage 14 uses the same baselines to judge a
 deploy ([14](14-post-deployment-verification.md)); this is where they come from.
 
 You do not need a unified platform to start.
@@ -350,17 +380,24 @@ import { sql } from 'drizzle-orm'
 
 export async function GET() {
   const checks = { database: false }
+  let timer: ReturnType<typeof setTimeout>
 
   try {
     await Promise.race([
       db.execute(sql`SELECT 1`),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 2000)),
+      new Promise((_, reject) => {
+        timer = setTimeout(() => reject(new Error('timeout')), 2000)
+      }),
     ])
     checks.database = true
   } catch (error) {
     // Not a fault, so not `error` — but the reason is the only evidence of
     // how, and a bare `catch {}` destroys it.
     logger.warn({ event: 'health.dependency_unreachable', error })
+  } finally {
+    // The realistic failure is a hang, not a rejection — a pending timer on
+    // an invocation that already succeeded is exactly that shape.
+    clearTimeout(timer!)
   }
 
   const healthy = Object.values(checks).every(Boolean)
@@ -460,7 +497,7 @@ fails. That is the difference, and it is the whole of the difference.
 a minute and nonsense at four: one failed request overnight is a 25% error rate, and it
 will page you. Gate every ratio alert on a minimum volume — *above 5% **and** at least
 twenty requests in the window* — and add a plain count alongside it for the traffic levels
-where the ratio is noise. The threshold that is right at lunchtime is wrong at 3am, and
+where the ratio is noise. The threshold that is right at lunchtime is wrong at 2am, and
 the volume gate is what keeps one rule usable across both.
 
 Route to somewhere that will actually interrupt you: push notification or SMS. Email
@@ -578,8 +615,13 @@ successfully, and the monitor pages you when the call does not arrive inside the
 you set.
 
 ```ts
-// At the end of the job — after the work, on the success path only.
-await fetch(process.env.HEARTBEAT_URL!, { method: 'POST' })
+// At the start and end of the job — after the work, on the success path only.
+const start = Date.now()
+// ...the job's work happens here...
+await fetch(process.env.HEARTBEAT_URL!, {
+  method: 'POST',
+  body: JSON.stringify({ durationMs: Date.now() - start }),
+})
 ```
 
 Not in a `finally`. A ping in a `finally` block reports success for a run that threw,
@@ -591,11 +633,16 @@ alarm over a custom metric the job emits, with `TreatMissingData` set to `breach
 explicitly. The default is `missing`, which tells the alarm to disregard absent data
 points when deciding its state — which is precisely the condition you are trying to catch.
 
+**Withhold a ping on purpose and confirm the page arrives**, the same way you tested alert
+delivery above — disable the job, or comment out the fetch call, for one window on a
+non-production schedule, and watch the monitor treat the silence as a failure. A heartbeat
+you have only ever seen succeed has never actually been tested; the day it needs to catch
+silence is the wrong day to find out its threshold was set from a guess.
+
 - **A job that is slower every night.** Alert on duration as well as absence; a
   reconciliation that has gone from four minutes to forty is on its way to overrunning its
-  window. Make it checkable rather than aspirational: send `durationMs` in the same
-  success ping, and set a threshold on it if your monitor supports one —
-  `{ durationMs: Date.now() - start }` alongside the heartbeat, not instead of it.
+  window. Make it checkable rather than aspirational: the heartbeat above already sends
+  `durationMs` in its payload — set a threshold on it if your monitor supports one.
 - **A job that overlaps itself.** Two copies of a reconciliation running concurrently is a
   different bug from either of them failing, and neither an error rate nor a heartbeat
   will show it. Take an advisory lock (or check a "job running" flag) before starting, so
@@ -692,7 +739,7 @@ the thing that mattered is not on it.
 
 - Sentry with user context, breadcrumbs, and scrubbing configured
 - Structured logging with consistent event names
-- `/api/health` checking real dependencies
+- `/api/health` checking real dependencies, and a separate liveness endpoint that does not
 - External uptime monitoring on a real user path
 - A small set of actionable alerts routed to a channel that interrupts you
 - One dashboard with the four signals and deploy markers
@@ -750,9 +797,8 @@ the thing that mattered is not on it.
 - **Set up on-call rotation** with a real escalation path, once the team can sustain it.
 - **Alerts need an owner.** Unowned alerts are ignored by everyone, each assuming someone
   else has it.
-- **Review alert noise monthly, as a team.** Unowned alerts are ignored by everyone, each
-  assuming someone else has it, and the monthly review is where ownership gets assigned or
-  the alert gets deleted.
+- **Review alert noise monthly, as a team.** The monthly review is where ownership gets
+  assigned or the alert gets deleted.
 - **Add distributed tracing** once requests cross service boundaries and you cannot follow
   them in one place.
 
