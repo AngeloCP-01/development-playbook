@@ -469,3 +469,120 @@ test('the routine card decline example follows the info-level policy', () => {
   expect(logs).toMatch(/logger\.info\(\{\s*event: 'invoice\.payment_declined'/)
   expect(logs).toMatch(/routine business outcome[^:]*:\s*it is\s*`info`/)
 })
+
+// --- Task 15 fix wave: findings from the re-run against the merged doc. ---
+
+// I1. `Response.json({ ok: latest !== undefined })` always returns HTTP 200,
+// so a status-only monitor cannot see the canary's own assertion fail. An
+// established service takes orders continuously, so no row at all is a read
+// (or write) path failure, not a legitimately empty table.
+test('I1: the canary fails its HTTP status when its assertion fails', () => {
+  const uptime = section('Uptime monitoring from outside')
+  expect(uptime).toMatch(/status:\s*503/)
+  expect(uptime).toMatch(/ok:\s*false/)
+  expect(uptime).toMatch(/no row at[\s/]+all/i)
+})
+
+// I2. `logger.warn({ event, error })` emits `error:{}` under pino's default
+// serialization, because only keys with a registered serializer survive.
+// Pinned on the *key* the health check actually logs, not just the presence
+// of a `serializers` block — the whole-branch review reverted this to
+// `err: pino.stdSerializers.err` (the original bug, wrong key) and the suite
+// stayed green because neither assertion looked at the key.
+test('I2: the logger has a serializer for the specific error key the health check logs', () => {
+  const logs = section('Structured logs')
+  expect(logs).toMatch(/serializers:\s*\{\s*error:/)
+})
+
+// I3. Definition of done forbade all personal data while the reference code
+// recommends an opaque id that resolves to one. Narrow the rule to what is
+// deliberately allowed, and require minimization alongside the existing
+// deletion requirement. Scoped to the DoD section itself (not the whole
+// doc) — the earlier version would stay green if the DoD line reverted as
+// long as the phrase survived anywhere else on the page.
+test('I3: Definition of done narrows to the allowed identifiers, not a blanket ban', () => {
+  const dod = topLevelSection('Definition of done')
+  expect(dod).toMatch(/no personal data beyond/i)
+  expect(dod).toMatch(/minimi[sz]ed/i)
+})
+
+// --- Whole-branch review findings, against the fix-wave commits above. ---
+
+// Review-I1. `Sentry.init` was shown in `src/lib/observability.ts`, a module
+// that never runs it — for @sentry/nextjs, init belongs in the three
+// per-runtime config files the setup wizard (04) already writes. A lib
+// module `beforeSend` here would silently never fire; the wizard's own
+// `Sentry.init` calls win, with no scrubbing.
+test('review-I1: Sentry.init is shown in the wizard-created runtime config files, not a lib module', () => {
+  const errors = section('Errors that are actually useful')
+  expect(errors).toMatch(/sentry\.server\.config\.ts/)
+  expect(errors).toMatch(/instrumentation-client\.ts/)
+  expect(errors).toMatch(/sentry\.edge\.config\.ts/)
+})
+
+// Review-I2. The fixed serializer preserved the exception's message and
+// stack in full — including a connection string with its password inline,
+// which the doc's own SECRETS list exists to redact out of Sentry. Logging
+// it verbatim to stdout contradicts "avoid raw payloads" a few paragraphs
+// earlier. The serializer must redact, not just structure.
+test('review-I2: the error serializer redacts secrets, reusing the shared helper', () => {
+  const logs = section('Structured logs')
+  expect(logs).toMatch(/import \{ redact \} from '\.\/redact'/)
+  expect(logs).toMatch(/redact\(err\.message\)/)
+})
+
+// Review-I4. Definition of done required proof that a job's heartbeat
+// monitor actually pages on silence ("watched the monitor page you by
+// withholding a test ping"), but the Jobs section never taught how — unlike
+// its alert-delivery twin (M6), which got a body home.
+test('review-I4: withholding a test heartbeat to prove the monitor pages is taught in the body', () => {
+  const jobs = section('Jobs that nobody watches')
+  expect(jobs).toMatch(/withhold/i)
+})
+
+// I4. `addContext(key, data: Record<string, unknown>)` accepted arbitrary
+// records the scrubber never inspects — only headers, bodies and exception
+// values are covered by `beforeSend`.
+test('I4: addContext is constrained to values the scrubbing policy can reach', () => {
+  const errors = section('Errors that are actually useful')
+  expect(errors).toMatch(/SafeContext/)
+  expect(errors).toMatch(/allowlist/i)
+})
+
+// I5. The jobs section required watching duration and overlap but the only
+// checkable evidence was heartbeat absence.
+test('I5: job duration and overlap have checkable evidence, not only prose', () => {
+  const jobs = section('Jobs that nobody watches')
+  expect(jobs).toMatch(/durationMs/)
+  expect(jobs).toMatch(/advisory lock/i)
+})
+
+// I6. "Restarts or deregisters" sent both decisions to the same liveness
+// endpoint. A restart decision and a routing decision are different
+// questions, and readiness need not be all-or-nothing across dependencies.
+test('I6: restart and routing decisions read different endpoints', () => {
+  const health = section('Health checks')
+  expect(health).toMatch(/routing decision/i)
+  expect(health).toMatch(/restart decision/i)
+  expect(health).toMatch(/need not fail every route/i)
+})
+
+// M1. The health route used `logger` and `db` with no import shown, so the
+// scratch code could be mistaken for a standalone, copy-pasteable module.
+test('M1: the health check shows its logger and db imports', () => {
+  const health = section('Health checks')
+  expect(health).toMatch(/import \{ logger \}/)
+  expect(health).toMatch(/import \{ db \}/)
+})
+
+// Surfaced by the Task 15 re-run's completeness reader, against the fixed
+// doc: Definition of done requires liveness and readiness as separate
+// endpoints, but only the dependency-checking (readiness) endpoint had a
+// code example — a reader had no worked example to build the liveness one
+// from, despite the doc naming the platforms that need it (Fly, ECS,
+// Cloud Run, Kubernetes) in the same section.
+test('the health check section shows a liveness endpoint, not only readiness', () => {
+  const health = section('Health checks')
+  expect(health).toMatch(/\/api\/health\/live/)
+  expect(health).toMatch(/return new Response\('ok'\)/)
+})

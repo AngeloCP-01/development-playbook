@@ -35,78 +35,96 @@ Before doing anything, read these for context:
   is going to execute: nothing in this repository reads a plan, and the one you are
   about to run proved it twice while it was being written.
 
-### Project state (as of 2026-09-10 — W-3 is **11/18**, seven stages remain.
+### Project state (as of 2026-09-11 — W-3 is **11/18**, seven stages remain.
 Stages 01–07, 11, 12, 13 and 14 are interactive. Stage 13 is platform-aware (8 steps,
 Vercel + AWS). **Eighteen of twenty-three** reference sheets drawn.
 
-**Stage 15's doc round is executed through Task 14 of 16 and merged.** `fcd46f1` on
-`develop`, merged mid-round at the user's direction and **without a whole-branch review**.
-`docs/15-observability.md` is 743 lines, 6 `##` and 12 `###`. What is left is **Task 15,
-the fix wave**: six blocking findings and one minor from the re-run, then the re-run again
-on the fixed doc (D-48), then the review that is owed, then the round closes.)
+**Stage 15's whole doc round — all 16 tasks — is done.** The mid-round merge (`fcd46f1`,
+2026-09-10) landed the doc through Task 14 without a whole-branch review; that gap is
+closed now, not deferred. Task 15 (the fix wave), the D-48 re-run, the whole-branch review
+the merge owed, and Task 16 (these records) all ran in the 2026-09-11 session, on
+`fix/stage-15-fix-wave`, cut from `develop`. `docs/15-observability.md` is now
+**853 lines**, 6 `##`, 12 `###` — unchanged section count from the mid-round merge; the
+fix wave and review added content within existing sections, no new headings. **The branch
+is not merged, not pushed, not deployed** — that decision is next, and it is the user's.
+
+**What's actually left for stage 15 is the port** (W-3.12 proper — the interactive
+`web/features/observability/` component). Nothing in the doc content is open. If this
+session is picking the port up next, start there directly; `web/PATTERNS.md` first, per
+`CLAUDE.md`'s three-file trace (`stages.ts`, the feature component, `stage-content.ts`).
 
 **Start here, in order:**
 
-1. **Check the branch before editing anything.** `git branch --show-current`. There is no
-   branch in flight. Cut `fix/stage-15-fix-wave` from `develop`. If the answer is
-   `develop` or `main`, stop and read `docs/learnings/branch-discipline-101.md`.
+1. **Check the branch before editing anything.** `git branch --show-current`. If it's
+   `fix/stage-15-fix-wave` already, you're continuing this work — check
+   `git log --oneline develop..HEAD` matches what's below before assuming anything. If the
+   answer is `develop` or `main`, stop and read `docs/learnings/branch-discipline-101.md`.
 2. **Re-derive every number in this file before trusting it.** `git fetch`, then the
-   commands under "Branch state". This file has been wrong about **six** things so far,
-   all found by checking rather than reading. Counts include the commit that writes them,
-   and every SHA in this file from before 2026-09-10 was rewritten (D-97).
+   commands under "Branch state". This file has been wrong about **six** things in the
+   past, all found by checking rather than reading. Counts include the commit that writes
+   them, and every SHA in this file from before 2026-09-10 was rewritten (D-97).
 3. **Run the two one-line checks that belong at every refresh:**
    `grep -n "NOT merged, NOT pushed, NOT deployed" docs/tracker.md` and
    `git ls-files reference/ | grep -iv "jpeg\|jpg\|png\|webp\|gif\|\.md$"`. The second
    found a résumé in the tree on 2026-09-10 (TD-46, D-97). It must return nothing.
-4. **Read the fix queue, not the whole plan:** `docs/superpowers/specs/2026-09-08-stage-15-cold-reader-findings.md`
-   → *Re-run, after the fix waves* → *Task 15 fix queue*. Seven items. The plan's
-   Task 15 (`docs/superpowers/plans/2026-09-08-stage-15-doc-round.md`, line ~2288) says
-   how to budget it; nothing else in the plan is still open.
-5. **Open on Sonnet, medium effort** (`CLAUDE.md` → *Session model*). The fix wave is
-   execution; the findings already say what to do. Dispatch the whole-branch review on
-   `opus`. If I3 (the data policy) or I6 (readiness vs liveness) turns into a design
-   question, switch the thread to Opus for that and back.
+4. **Ask the user what's next**, rather than assuming. The most likely answers: merge
+   `fix/stage-15-fix-wave` into `develop` (the user's call, ask first — `CLAUDE.md`'s Git
+   conventions), or start the stage 15 port (a fresh brainstorm/plan cycle, its own
+   session per *Plan, then record, then a new session*).
+5. **Open on Sonnet, medium effort** for a merge or records session; **Opus, high effort**
+   if the next thing is brainstorming the port (`CLAUDE.md` → *Session model*).
 
 ---
 
-#### Stage 15 — the fix queue, and the trap around it
+#### Stage 15 — the fix queue closed, and what the process caught doing it
 
-Measured 2026-09-10 from the findings file and the doc. Re-check before acting.
+All seven fix-queue items (I1–I6, M1) are fixed, test-first, on `fix/stage-15-fix-wave`.
+Two were verified against the scratch harness at `/private/tmp/stage15-codex-harness/`
+rather than trusted from the doc text: the canary now returns `503`/`{"ok":false}` on an
+empty result, and the health check's logged error carries `type`/`message`/`stack`
+instead of `{}`.
 
-- **I1** canary returns `200` with `{"ok":false}` on an empty result — a status-only
-  monitor misses it. Reproduced by the harness. Define the empty-state policy, fail the
-  status, test both branches.
-- **I2** health logging drops the exception: `logger.warn({ event, error })` emits
-  `error:{}` under default Pino. Reproduced. Serialize safely (`err`, within the redaction
-  policy), test the emitted record.
-- **I3** the opaque-identifier recommendation and Definition of done's "no personal data,
-  no exception" still contradict. Narrow the policy to the allowed identifiers; require
-  minimisation, retention, deletion. The deletion link exists already.
-- **I4** `addContext(key, data)` accepts arbitrary records the scrubber never sees.
-  Constrain to allowlisted fields; do not claim a universal scrubber.
-- **I5** the jobs section requires watching duration and overlap; the checklist only
-  verifies heartbeat absence. Add checkable evidence for both.
-- **I6** liveness and readiness conflated: restart decisions use liveness, routing needs
-  readiness (Kubernetes probe docs, checked 2026-09-09). Teach the mapping; say why one
-  dependency failing need not make the whole instance unready.
-- **M1** the health route does not import the logger it uses; annotate the scenery.
-- **Two of these were introduced by the round itself** (I1, I2). That is the D-48 shape:
-  the fix wave lands after the pass that justified it. So the re-run runs again, **same
-  Loaf scenario verbatim**, after Task 15, and the five lookup questions now recorded in
-  the file are the ones to reuse.
-- **`ready` stays `false`.** Nothing here ports or advances W-3.
-- **Guards exist now** for the doc: `stage-15-structure.test.ts` pins section order;
-  `term-usage.test.ts` and `terms.test.ts` cover the glossary additions; `AI_SECTION_STAGES`
-  includes `15-observability` (and `11-ci-cd`, which it had been missing while stage 11
-  was shipped).
+**The D-48 re-run happened, and it did its job.** A fresh cold reader, blind to the
+fixes, replayed the exact Loaf scenario and the five lookup questions verbatim. It
+confirmed I1–I5 closed with no regressions, and it surfaced one thing the fix queue
+hadn't named: Definition of done required a liveness endpoint but no code example
+existed for one. Fixed the same way — test first.
 
-#### Reference material for stage 15 — tracked, still unregistered
+**The whole-branch review the mid-round merge owed then found two blocking defects the
+fix wave itself had introduced** — this is the pattern D-48 exists to catch, one level
+further in: `Sentry.init` was shown in `src/lib/observability.ts`, a module
+`@sentry/nextjs` never actually calls it from, so the scrubber would silently never fire;
+and the I2 fix logged a database connection string's password to stdout verbatim, in the
+same document whose own `SECRETS` list exists to redact that exact pattern out of Sentry.
+It also found the test pinning I2 was vacuous — asserted `serializers: {` and
+`stdSerializers.err` without checking which *key* they applied to, so reverting to the
+original bug (`err:` instead of `error:`) kept the suite green. All three fixed, plus one
+untaught Definition-of-done checkbox (withholding a test heartbeat) and seven cheap,
+correct minors. A haiku re-review independently confirmed every fix against the diff.
 
-The ten images are committed (`450190c`, rewritten from `c4f2a68`) but **none is
-registered and none has provenance** — `reference/cheatsheet-sources.md` requires an
+- **`ready` stays `false`.** None of this ports or advances W-3.
+- **Guards exist now** for the doc: `stage-15-structure.test.ts` (51 tests) pins section
+  order and every fix-queue and review claim; `term-usage.test.ts` and `terms.test.ts`
+  cover the glossary additions; `AI_SECTION_STAGES` includes `15-observability` (and
+  `11-ci-cd`, which it had been missing while stage 11 was shipped).
+- **Not fixed, deliberately** (review's minors this round didn't take, noted in the
+  tracker row rather than silently dropped): a breadcrumb code sample, a
+  `requestContext.run()` code sample, deletion how-to (stage 08's job), Fly.io named but
+  absent from the comparison tables (D-94 scoped this round to Vercel/AWS), and the
+  canary's non-timing-safe token comparison.
+
+#### Reference material for stage 15 — five sources registered, ten images still not
+
+`reference/cheatsheet-sources.md` now has an `### Observability` entry (Priority 3,
+Task 16, this round): the five text sources that fed the doc's prose (Atatus, Sujeeth
+H R, Priya Dharshini, Tenil Sridhar, Kumar), each with title, author, and which section
+they fed, plus five more search terms still worth running.
+
+The **ten images** are still committed (`450190c`, rewritten from `c4f2a68`) but **none
+is registered and none has provenance** — `reference/cheatsheet-sources.md` requires an
 author and a URL at capture time, and a graphic with neither cannot be published. Ask
-for the sources before registering any of them. The `observability` sheet is deferred
-until that happens.
+for the sources before registering any of them. The `observability` sheet stays
+untranscribed until that happens.
 
 `AGENTS.md` at the repo root arrived in the same commit: a copy of `CLAUDE.md` addressed
 to Codex. It is the user's; leave it, and do not let the two drift without saying so.
@@ -146,6 +164,34 @@ A context-budget round for the Max → Pro downgrade, then two merges, then thes
 
 ---
 
+#### What this session did (2026-09-11)
+
+Tasks 15 and 16 of the stage 15 doc round, start to finish, on `fix/stage-15-fix-wave`.
+
+- **Task 15 (the fix wave):** all seven fix-queue items (I1–I6, M1) fixed, test-first,
+  RED confirmed then GREEN each time. Two re-verified against the scratch harness at
+  `/private/tmp/stage15-codex-harness/` rather than trusted from the doc text.
+- **The D-48 re-run:** a fresh cold reader (sonnet, blind to the fixes) replayed the exact
+  Loaf scenario and five lookup questions verbatim. I1–I5 confirmed closed, no
+  regressions. It surfaced a gap the fix queue hadn't named — a required liveness
+  endpoint with no code example — fixed the same way.
+- **The whole-branch review the mid-round merge owed** (opus, covering the full round
+  from `fdc4811`): found two blocking defects the fix wave itself introduced
+  (`Sentry.init` in a module that never runs it; the I2 fix leaking a raw database
+  password to stdout), a vacuous test (checked `serializers: {` presence, not the key),
+  and one untaught DoD checkbox, plus seven cheap minors. All fixed; a haiku re-review
+  confirmed every fix against the diff.
+- **Task 16 (these records):** the tracker row below, this file, `docs/task.md`, and a
+  new `### Observability` entry in `reference/cheatsheet-sources.md` registering the
+  five text sources that fed the doc (the ten images stay unregistered — no provenance).
+- **Gate, final:** lint 0, typecheck clean, format clean, **1218/1218 across 162 files**.
+  `fix/stage-15-fix-wave` — 3 commits off `develop`, 87 off `main`, tree clean. **NOT
+  merged, NOT pushed, NOT deployed.**
+- **Not done:** the merge (asked about below, the user's call, every time); the port; the
+  ten-image registration; the "Next up" staleness noted in the tracker row.
+
+---
+
 #### The condensed history (01–07, 11–14, the reference hub)
 
 Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them by ID.
@@ -165,7 +211,8 @@ Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them 
 - **Quality gates**: prettier (skips markdown and `highlighted.generated.ts`), eslint at
   `--max-warnings 0`, vitest in two projects, `test:e2e` (18-test Playwright audit),
   `test:dev-console` (outside the gate, once per stage round — TD-35, D-84).
-- **1207 tests across 162 files** as of `develop` on 2026-09-10. **e2e last green
+- **`develop` is still at 1207 tests across 162 files** (unchanged since 2026-09-10;
+  `fix/stage-15-fix-wave` adds 11 more, **1218**, unmerged). **e2e last green
   2026-09-07 (18/18)**; `test:dev-console` **unrun since 2026-09-07** — do not quote a
   number for it. It needs its own dev server and refuses to start while another
   `next dev` holds the directory.
@@ -184,25 +231,27 @@ git rev-list --count main..develop
 git ls-files reference/ | grep -iv "jpeg\|jpg\|png\|webp\|gif\|\.md$"
 ```
 
-**Measured 2026-09-10 at handoff, before this refresh's own commit landed:**
+**Measured 2026-09-11, before this refresh's own commit landed:**
 
 | | SHA | |
 |---|---|---|
-| `develop` | `87ca223` | **level with `origin/develop`** — pushed 2026-09-10 |
-| `main` | `d659d32` | `develop` is **82 ahead** |
+| `develop` | `f5b1782` | **level with `origin/develop`** |
+| `main` | (unchanged since 2026-09-10) | `develop` is **87 ahead** |
+| `fix/stage-15-fix-wave` | `b1deecb` | cut from `develop` at `f5b1782`; **3 commits ahead**, not merged, not pushed |
 
 **SHAs from before 2026-09-10 were rewritten** (D-97): `c4f2a68` is `450190c`, `8e94b1f`
 is `bf0070e`, and the originals no longer exist as objects. A SHA from a 2026-09-08 note
 that `git log develop` cannot find was rewritten, not lost:
 `git log --oneline develop | grep "<subject>"` finds it.
 
-The promotion of `develop` to `main` is **the user's**, and 82 commits are waiting on it.
+The promotion of `develop` to `main` is **the user's**, and 87 commits are waiting on it —
+including, once it merges, `fix/stage-15-fix-wave`'s 3.
 
-**The stale-merge grep found one on this refresh**: the 2026-09-08 W-3.12 row still said
-"NOT merged" after the branch merged that morning. Struck with the date. Run both checks
-in step 3 every time; they are cheap and they keep finding things.
-
-**No branch is in flight.** The next one is `fix/stage-15-fix-wave`, cut from `develop`.
+**`fix/stage-15-fix-wave` is in flight, on `develop`, not merged anywhere.** It carries
+Tasks 15 and 16 of the stage 15 round (this session, 2026-09-11): the fix wave, the D-48
+re-run, the whole-branch review, and these records. Ask the user before merging it into
+`develop` — the "ask before every merge" rule applies to this branch exactly as to any
+other.
 
 **`git branch` is `develop` and `main`, and `git worktree list` is one line.** The two
 stale branches and the three 2026-09-04 agent worktrees (1.8 GB) were removed on
@@ -228,19 +277,28 @@ Notes for whoever is preparing this handoff:
   `reference/rest-api-best-practices.md` — hand-written drafts for `sql-reference` and
   `api-reference`, gathered without an image, not yet registered.
 - Open threads worth carrying forward:
-  - **Task 15 of the stage 15 round is the next session's whole job** — seven findings,
-    then the re-run on the same scenario (D-48), then the whole-branch review the merge
-    skipped. Cut `fix/stage-15-fix-wave`; open on Sonnet.
+  - **`fix/stage-15-fix-wave` is done and waiting on a merge decision — the user's, every
+    time.** Tasks 15 and 16 of the stage 15 round: the fix wave, the D-48 re-run, the
+    whole-branch review, and these records. 1218/1218 on the branch, `develop` still at
+    1207. Ask before merging.
+  - **The stage 15 port (W-3.12 proper) is the next content work**, once the branch above
+    is settled — a fresh brainstorm/plan session, not a continuation of this one.
   - **Ten observability captures are tracked in `reference/` with no provenance.** Ask for
-    authors and URLs before registering any of them.
+    authors and URLs before registering any of them. (The five text sources that fed the
+    doc's prose *are* registered now, 2026-09-11.)
   - ~~**Personal files are still parked in a committed directory.**~~ Committed on
     2026-09-08, rewritten out on 2026-09-10 (D-97, TD-46). Now at
     `~/personal/parked-from-playbook/`; blobs purged locally and never pushed. Never
     `git add -A`.
   - **`pnpm test:dev-console` has not run since 2026-09-07.**
-  - **Five branches merged unreviewed** — the four of 2026-09-07 (`6f52212`, `99f6145`,
-    `4fdb9bd`, `a8f56de`) and stage 15's `fcd46f1` on 2026-09-10. Treat that code and
-    that doc as less checked than usual.
+  - **Four branches merged unreviewed, from 2026-09-07** (`6f52212`, `99f6145`,
+    `4fdb9bd`, `a8f56de`) — treat that code as less checked than usual. Stage 15's
+    `fcd46f1` is no longer on this list: the 2026-09-11 whole-branch review covered the
+    full round from `fdc4811`, including it.
+  - **`docs/tracker.md`'s "Next up" section is roughly ten days stale** (still describes
+    an 8/18 W-3 and a pre-stage-11/13/14/15 stage-04 step-splitting question). Found
+    2026-09-11 while writing that round's tracker row, not fixed — refreshing it is a
+    separate pass.
   - **Grep `NOT merged, NOT pushed, NOT deployed` in `docs/tracker.md` at every merge.**
     Doing it once found three rows carrying the phrase, two false for weeks.
   - **A "merged"/"not merged" claim is a query to re-run, not a fact to reuse** —
