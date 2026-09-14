@@ -13,6 +13,8 @@ drift apart.
 
 **ADR (Architecture Decision Record)** — A short record of a single architecture decision — the context, the choice, and the consequences — written when the decision is made and never edited afterward. Superseded by a new ADR rather than revised. See [03 — Architecture](../docs/03-architecture.md).
 
+**Alert fatigue** — Not a discipline failure; the predictable result of noisy alerts. An alert that has woken you four times without once needing action has taught you to ignore it, and the fifth time is the real one. See [15 — Observability](../docs/15-observability.md).
+
 **Appetite** — A fixed budget of time you are willing to spend, which the solution is then shaped to fit. An estimate starts with a design and ends with a number; an appetite starts with a number and ends with a design. See [02 — Product Planning](../docs/02-planning.md).
 
 **Architecture characteristic (non-functional requirement)** — Availability, correctness, auditability, latency, security, cost to run — the qualities a design has to satisfy, separate from the features it delivers. Richards and Ford call them architecture characteristics; most job descriptions and specifications call the same thing non-functional requirements. One idea, two vocabularies. See [03 — Architecture](../docs/03-architecture.md).
@@ -36,6 +38,8 @@ drift apart.
 **Canary** — Releasing a change to a small slice of traffic first, watching it, then widening. On Vercel it is approximated with skew protection and staged rollouts rather than true traffic splitting. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **CAP theorem** — For a system spread across nodes: during a network partition you may either refuse requests to stay consistent, or serve them and let copies disagree. Consistency and availability are only jointly achievable when nothing is partitioned. See [03 — Architecture](../docs/03-architecture.md).
+
+**Cardinality** — A high-cardinality field — a user id, an invoice id, a request id — has as many distinct values as there are users, invoices or requests. In logs, that is what makes a particular event findable. As a metric label, every combination of label values creates another time series. See [15 — Observability](../docs/15-observability.md).
 
 **Circuit breaker** — A wrapper that counts consecutive failures, and once past a threshold stops attempting the call at all for a cooldown period, failing fast instead. After the cooldown it lets one request through to test whether the dependency recovered. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -101,6 +105,8 @@ drift apart.
 
 **Graceful degradation** — Designing so that the loss of one component removes one capability rather than the whole system. Search goes down and browsing still works; the PDF renderer goes down and the invoice still sends. See [03 — Architecture](../docs/03-architecture.md).
 
+**Heartbeat (dead man's switch)** — A scheduled job calls a URL when it finishes successfully, and a monitor pages you when the call does not arrive inside the window you set. It is the only monitor that alerts on silence rather than on an event, which is why it goes on the success path and never in a `finally`. See [15 — Observability](../docs/15-observability.md).
+
 **Hexagonal architecture (ports and adapters)** — An organising principle where the core logic defines interfaces — ports — and the database, HTTP layer and third-party services are adapters plugged into them. The core depends on nothing outside itself. See [03 — Architecture](../docs/03-architecture.md).
 
 **Horizontal scaling** — Adding instances behind a load balancer so work spreads across them. The alternative, vertical scaling, is moving to a larger machine: simpler, requiring no statelessness, and eventually running out of machine. See [03 — Architecture](../docs/03-architecture.md).
@@ -116,6 +122,8 @@ drift apart.
 **Join table** — When a client can belong to several users and a user to several clients, neither table can hold the relationship in a column. A third table holds pairs of ids instead — one row per connection. See [03 — Architecture](../docs/03-architecture.md).
 
 **Leading question** — "Would this save you time?" contains its own answer. The polite response is yes, it costs the respondent nothing, and you learn only that they are agreeable.
+
+**Liveness check** — An endpoint that returns 200 whenever the process is running and checks nothing else. Platforms that restart on a failed check (Fly, ECS, Cloud Run, a Kubernetes liveness probe) read this one. See [15 — Observability](../docs/15-observability.md).
 
 **Merge gate** — The set of automated checks that must pass before code merges to the main branch. Distinct from deployment: the gate protects the branch, the deploy ships it. See [11 — CI/CD](../docs/11-ci-cd.md).
 
@@ -167,15 +175,21 @@ drift apart.
 
 **Read replica** — A secondary instance kept up to date from the primary, used to spread read load. Writes still go to one place, so replicas scale reads and do nothing for write throughput. See [03 — Architecture](../docs/03-architecture.md).
 
+**Readiness check** — An endpoint that verifies real dependencies (the database, with a timeout) and returns 503 when one is unreachable. Routing decisions — a load balancer's health check, a Kubernetes readiness probe — read this one and pull the instance out of rotation without restarting it. See [15 — Observability](../docs/15-observability.md).
+
 **Rebase** — Move a branch’s commits so they start from the current tip of the branch it will merge into, rather than from wherever it happened to fork. Run before opening the pull request, so the diff a reviewer sees is the diff that will actually land. See [05 — Development](../docs/05-development.md).
 
 **Regression test** — A test written to reproduce a specific bug, which must fail before the fix lands and pass after. See [06 — Testing](../docs/06-testing.md).
+
+**Request id** — A per-request identifier — the incoming `x-request-id` if there is one, else a fresh UUID — stored in `AsyncLocalStorage` and attached to every log line by the logger's `mixin`, and to the error report with `Sentry.setTag`. Not distributed tracing: it is one field, and it costs nothing. See [15 — Observability](../docs/15-observability.md).
 
 **Rollback** — Returning production to the last known-good state. On Vercel it is promoting a prior deployment, which takes seconds — but it is not automatic for database migrations, which is why migrations get careful, separate treatment. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **Rolling deployment** — A deployment strategy where new tasks start alongside old tasks, pass health checks, and then old tasks drain. On ECS, governed by minimumHealthyPercent and maximumPercent. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **Rubber-stamping** — Approving code changes without reading them carefully — clicking "approve" based on green CI, a clean-looking diff, or trust in the author rather than on what the code actually does. See [07 — Code Review](../docs/07-code-review.md).
+
+**Saturation** — The fourth golden signal: how full the resource with a hard limit is. Database connections, function concurrency, storage. Unlike CPU, a saturated resource with a hard ceiling does not recover on its own, so it is worth alerting on before it becomes a symptom. See [15 — Observability](../docs/15-observability.md).
 
 **Self-review** — Deliberately breaking the state that makes reviewing your own code useless — you are still holding the intent, so you read what you meant rather than what you wrote. Three techniques: create distance, read the diff not the code, and explain it out loud. See [07 — Code Review](../docs/07-code-review.md).
 
@@ -200,6 +214,8 @@ drift apart.
 **Statelessness** — Every request carries or looks up whatever it needs, and anything that must persist between requests lives in a cookie, a database or a shared store rather than a local variable. Any instance can serve any request. See [03 — Architecture](../docs/03-architecture.md).
 
 **Strangler fig** — Put something in front of the existing system, route one path at a time to the replacement, and delete the old code once nothing reaches it. Named after the vine that grows around a tree and eventually stands without it. See [03 — Architecture](../docs/03-architecture.md).
+
+**Structured logging** — Each log call emits a JSON object with named fields (`event`, `userId`, `requestId`, `reason`) rather than a formatted sentence. `pino` writes one object per line to stdout, which every platform collects; the shape is what matters, not the library. See [15 — Observability](../docs/15-observability.md).
 
 **Survivorship bias** — Drawing conclusions from the visible survivors of a process while the failures are silent. In discovery: interviewing current users tells you why people stay, never why the larger group left or never arrived.
 

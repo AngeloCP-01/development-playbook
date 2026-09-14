@@ -45,6 +45,9 @@ const KNOWN_ORPHANS = [
   'concurrency-group -> 11-ci-cd (never says "Concurrency group")',
   'deployment-status -> 11-ci-cd (never says "Deployment status event")',
   'frozen-lockfile -> 11-ci-cd (never says "Frozen lockfile")',
+  'heartbeat -> 15-observability (never says "Heartbeat (dead man\'s switch)")',
+  'liveness -> 15-observability (never says "Liveness check")',
+  'readiness -> 15-observability (never says "Readiness check")',
 ]
 
 function findTsxFiles(dir: string, files: string[] = []): string[] {
