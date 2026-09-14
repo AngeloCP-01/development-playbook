@@ -2,7 +2,11 @@ import { defineConfig } from '@playwright/test'
 
 export default defineConfig({
   testDir: './e2e',
-  timeout: 60_000,
+  // Bumped from 60s (2026-09-14, stage 15 port): the full-sweep tests (WCAG
+  // AA in both themes, the disclosure-open sweep) walk every page the site
+  // has, and adding the 18th stage's pages pushed them past the old budget —
+  // confirmed by retry, not a flake. The sweep only grows as stages ship.
+  timeout: 120_000,
   retries: process.env.CI ? 1 : 0,
   // `testDir: './e2e'` collects smoke.spec.ts and dev-console.spec.ts too. The
   // first targets the deployed site; the second needs a dev server on 3101.
