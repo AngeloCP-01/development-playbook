@@ -46,7 +46,7 @@ describe('observability checklist data', () => {
 
   test('team notes match doc scaling bullets', () => {
     const src = h2('Scaling to a team')
-    const boldLeads = src.match(/^- \*\*.+?\*\*/gm) ?? []
+    const boldLeads = src.match(/^- \*\*[\s\S]+?\*\*/gm) ?? []
     expect(boldLeads).toHaveLength(6)
     expect(TEAM).toHaveLength(boldLeads.length)
   })
