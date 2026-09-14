@@ -67,13 +67,14 @@ describe('collect panels', () => {
     render(<Stepper steps={COLLECT_STEPS} />)
     go(/four signals/)
     for (const s of SIGNALS) {
-      // getAllByRole, not getByRole: "Saturation" also names the inline
-      // <Term id="saturation"> button in the "Reading the numbers" prose
-      // below, so a single-match query throws on that one signal.
-      expect(
-        screen.getAllByRole('button', { name: new RegExp(`^${s.name}`) })
-          .length,
-      ).toBeGreaterThan(0)
+      // Assert on the row's own `source` text, not the button name: the
+      // "Reading the numbers" prose further down this same panel also
+      // renders an inline <Term id="saturation"> button whose accessible
+      // name starts with "Saturation", so a name-based query on "button"
+      // stays green even if the Saturation row itself is removed from
+      // SIGNALS — `source` is unique, row-specific prose that only the
+      // RevealList row renders.
+      expect(screen.getByText(s.source)).toBeTruthy()
     }
     const panel = screen.getByRole('tabpanel')
     expect(panel.textContent).toMatch(/does not come from your error tracker/)
