@@ -18,7 +18,7 @@
 - `InlineCode` renders backtick spans in data strings; use backticks in data wherever the doc uses code formatting.
 - Drill verdicts use `go`/`danger`; `brand` is attention only. No template-literal Tailwind classes — every class is a complete literal.
 - Every `<Term>` gets an explicit `{' '}` on the side that touches prose text.
-- **One deviation from the spec, decided here:** the five artifacts are wrapped in numbered `Figure`s (1–5) the way stage 14 wraps its artifact, and the restart-vs-routing grid is Figure 6. The spec said one figure; `PATTERNS.md` says wrap every diagram, and stage 14 is the precedent.
+- **One deviation from the spec, decided here:** the five artifacts are wrapped in numbered `Figure`s (1–5) the way stage 14 wraps its artifact, and the restart-vs-routing grid is Figure 4 (figures number in reading order: scrubber 1, logger 2, health 3, grid 4, canary 5, heartbeat 6). The spec said one figure; `PATTERNS.md` says wrap every diagram, and stage 14 is the precedent.
 - Run all commands from `web/`. Commit after each task with a conventional-commit message and the trailer:
   ```
   Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
@@ -750,7 +750,10 @@ import { OPTIONS, ROWS } from './log-levels'
 import { flat, section } from './doc-source'
 
 describe('log level drill data', () => {
-  const src = flat(section('Structured logs'))
+  // The health-dependency `why` is a comment inside the Health checks fence,
+  // so the pin reads both sections with `//` markers stripped.
+  const strip = (t: string) => flat(t).replace(/\/\/ /g, '')
+  const src = strip(section('Structured logs')) + ' ' + strip(section('Health checks'))
 
   test('five options in the ladder order', () => {
     expect(OPTIONS.map((o) => o.id)).toEqual([
@@ -972,8 +975,12 @@ import { OPTIONS, ROWS } from './scrubber'
 import { flat, section } from './doc-source'
 
 describe('scrubber drill data', () => {
-  const errors = flat(section('Errors that are actually useful'))
-  const logs = flat(section('Structured logs'))
+  // Two of the `why`s quote comment lines inside the beforeSend fence, which
+  // `flat()` joins with their `//` markers intact. Strip the markers so the
+  // pin compares words, not comment syntax.
+  const strip = (t: string) => flat(t).replace(/\/\/ /g, '')
+  const errors = strip(section('Errors that are actually useful'))
+  const logs = strip(section('Structured logs'))
 
   test('two options', () => {
     expect(OPTIONS.map((o) => o.id)).toEqual(['scrubbed', 'reaches'])
@@ -3189,7 +3196,7 @@ function stageTitle(slug: string) {
 }
 
 /**
- * Figure 6: which platform mechanism reads which endpoint. Static — two
+ * Figure 4: which platform mechanism reads which endpoint. Static — two
  * columns, no interaction — because the lesson is the mapping itself.
  */
 function RestartVsRouting() {
@@ -3264,7 +3271,7 @@ export const ACT_STEPS: (Step & { id: StepId })[] = [
             </p>
           </Prose>
           <Figure
-            n={6}
+            n={4}
             caption="A restart decision and a routing decision read different endpoints. Wire the restart trigger to the dependency check and a thirty-second database blip restarts every instance you have, simultaneously."
           >
             <RestartVsRouting />
@@ -3437,7 +3444,7 @@ export async function GET() {
             </p>
           </Prose>
           <Figure
-            n={4}
+            n={5}
             caption="Reads the last order back instead of creating one. The pivot is the empty-result branch: a status-only monitor cannot see a failure inside a 200."
           >
             <AnnotatedArtifact artifact={CANARY} />
@@ -3484,7 +3491,7 @@ export async function GET() {
             </p>
           </Prose>
           <Figure
-            n={5}
+            n={6}
             caption="On the success path only. The pivot is the ping itself; the duration rides along with it."
           >
             <AnnotatedArtifact artifact={HEARTBEAT} />
@@ -3663,3 +3670,262 @@ git commit -m "feat(observability): last five panels — health checks through t
 ```
 
 ---
+
+### Task 10: Assembly and registration (atomic)
+
+**Files:**
+- Create: `web/src/features/observability/Observability.tsx`, `Observability.test.tsx`
+- Modify: `web/src/lib/stages.ts:173` (`ready: false` → `ready: true`)
+- Modify: `web/src/features/stage-content.ts` (import + one map entry)
+- Modify: `web/src/features/step-ids.ts` (import + one map entry)
+
+**Interfaces:**
+- Consumes: `COLLECT_STEPS` (Task 8), `ACT_STEPS` (Task 9), `STEP_IDS` (Task 1).
+- Produces: `Observability()`; the stage live at `/stages/15-observability`.
+
+This is the one task that flips `ready`. All three registry edits and the component land in **one commit**, because `features/rails.test.tsx` and `e2e/audit-pages.spec.ts` both compare the built stage to `STEP_IDS_BY_SLUG`, and a half-registered stage fails one of them.
+
+- [ ] **Step 1: Write the failing render test**
+
+```tsx
+// web/src/features/observability/Observability.test.tsx
+import { describe, expect, test, beforeEach } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { Observability } from './Observability'
+import { STEP_IDS } from './steps'
+import { ROWS as TRIAGE } from './alert-triage'
+import { ROWS as LEVELS } from './log-levels'
+import { ROWS as SILENCE } from './silence'
+import { ROWS as SCRUBBER } from './scrubber'
+
+beforeEach(() => {
+  window.localStorage.clear()
+})
+
+const go = (label: RegExp) =>
+  fireEvent.click(screen.getByRole('tab', { name: label }))
+
+describe('Observability page', () => {
+  test('renders ten steps in the rail, in STEP_IDS order', () => {
+    render(<Observability />)
+    const tabs = screen.getAllByRole('tab')
+    expect(tabs).toHaveLength(STEP_IDS.length)
+    expect(tabs).toHaveLength(10)
+  })
+
+  test('first step is the three things, last is traps & checklist', () => {
+    render(<Observability />)
+    const tabs = screen.getAllByRole('tab')
+    expect(tabs[0].textContent).toMatch(/Three things/)
+    expect(tabs[9].textContent).toMatch(/Traps/)
+  })
+
+  // The four drills, each on its own step, each sized by its data. This is
+  // the "component ignores the data" check PATTERNS.md asks for, across the
+  // whole stage rather than one panel file.
+  test('every drill mounts on its step with its row count', () => {
+    render(<Observability />)
+    const cases: [RegExp, number][] = [
+      [/Errors/, SCRUBBER.length],
+      [/Structured logs/, LEVELS.length],
+      [/Alerts/, TRIAGE.length],
+      [/nothing reports/, SILENCE.length],
+    ]
+    for (const [label, count] of cases) {
+      go(label)
+      expect(screen.getAllByRole('radiogroup'), String(label)).toHaveLength(count)
+    }
+  })
+
+  test('the AI step has the D-35 heading', () => {
+    render(<Observability />)
+    go(/AI plays/)
+    expect(screen.getByRole('tabpanel').textContent).toMatch(/AI in observability/)
+  })
+})
+```
+
+- [ ] **Step 2: Run it — expect FAIL** (`Cannot find module './Observability'`)
+
+- [ ] **Step 3: Create `Observability.tsx`**
+
+```tsx
+// web/src/features/observability/Observability.tsx
+import { Stepper } from '@/components/Stepper'
+import { COLLECT_STEPS } from './panels-collect'
+import { ACT_STEPS } from './panels-act'
+
+/**
+ * Stage 15. Ten steps in two files by phase — what to collect
+ * (`panels-collect.tsx`), then what to do with it (`panels-act.tsx`) —
+ * because one file holding ten panels, four drills and five artifacts is
+ * past what a reviewer can hold at once. `steps.test.ts` pins the order;
+ * this is where the two halves meet it.
+ */
+export function Observability() {
+  return <Stepper steps={[...COLLECT_STEPS, ...ACT_STEPS]} />
+}
+```
+
+- [ ] **Step 4: Run it — expect PASS (4 tests)**
+
+- [ ] **Step 5: Register — all three files**
+
+`web/src/lib/stages.ts` — the stage 15 entry (`num: '15'`), change `ready: false` to `ready: true`. Nothing else in the entry changes.
+
+`web/src/features/stage-content.ts` — add after the stage 14 import:
+
+```ts
+import { Observability } from './observability/Observability'
+```
+
+and after the `'14-post-deployment-verification'` entry:
+
+```ts
+  '15-observability': Observability,
+```
+
+`web/src/features/step-ids.ts` — add after the stage 14 import:
+
+```ts
+import { STEP_IDS as OBSERVABILITY } from './observability/steps'
+```
+
+and after the `'14-post-deployment-verification'` entry:
+
+```ts
+  '15-observability': OBSERVABILITY,
+```
+
+- [ ] **Step 6: Run the registration's consumers**
+
+Run: `pnpm vitest run src/features/rails.test.tsx src/lib/stage-metadata.test.ts src/lib/stages.test.ts`
+Expected: PASS. `rails.test.tsx` now renders stage 15 and compares its rail to `STEP_IDS_BY_SLUG`; `stage-metadata.test.ts` already lists `15-observability` in `AI_SECTION_STAGES` and now finds the heading in a `ready` stage.
+
+- [ ] **Step 7: Whole suite, lint, typecheck**
+
+Run: `pnpm lint && pnpm typecheck && pnpm test`
+Expected: all green. Record the test count in the task report — it is the number the tracker row will carry, and it is measured here, not quoted.
+
+- [ ] **Step 8: Commit — one commit**
+
+```bash
+git add src/features/observability/Observability.tsx src/features/observability/Observability.test.tsx src/lib/stages.ts src/features/stage-content.ts src/features/step-ids.ts
+git commit -m "feat(observability): assemble the ten-step stage and register it (ready: true)"
+```
+
+---
+
+### Task 11: Verification against the built stage
+
+**Files:**
+- Possibly modify: `web/src/features/observability/panels-act.tsx`, `steps.ts`, `steps.test.ts` (only if the D-52 split fires)
+
+**Interfaces:**
+- Consumes: the whole branch.
+
+This task produces evidence, not code, unless the audit says a panel is over. Every number below is measured and pasted, never estimated.
+
+- [ ] **Step 1: Production build**
+
+Run: `pnpm build`
+Expected: `/stages/15-observability` appears under the `● /stages/[slug]` paths (the `[+N more paths]` count rises by one — expand it with `pnpm build 2>&1 | grep observability` if needed).
+
+- [ ] **Step 2: The e2e audit — required, a new route entered the sweep**
+
+Run: `pnpm test:e2e`
+Expected: 18/18. Read the output for the D-52 panel-weight check on `/stages/15-observability#silence` specifically — it is the heaviest panel (two artifacts, a drill, a four-row list).
+
+**If `silence` is over four screens, take the pre-decided split and nothing else:**
+
+1. `steps.ts`: insert `'jobs'` after `'silence'` (eleven ids); update `steps.test.ts` to match.
+2. `panels-act.tsx`: move the `Jobs that nobody watches` `Section` (the `HEARTBEAT` figure and the `obs-jobs` list) into a new step `{ id: 'jobs', label: 'Jobs nobody watches', hint: 'Silence is the signal', … }` placed after `silence`; change `silence`'s hint to `'Canary, then what stops'`.
+3. `panels-act.test.tsx`: the `silence` test loses its `HEARTBEAT_URL` and `Withhold a ping` assertions; a new `jobs` test gains them; `five steps, in order` becomes six.
+4. `Observability.test.tsx`: `toHaveLength(10)` becomes `11`; `tabs[9]` becomes `tabs[10]`.
+5. Re-run `pnpm test`, then `pnpm test:e2e` again. Commit as `fix(observability): split jobs out of silence — panel measured over D-52`.
+
+Any *other* panel over the threshold is not pre-decided: stop, report the measurement, and ask.
+
+- [ ] **Step 3: Dev-console — required, unrun since 2026-09-07**
+
+This needs its own dev server on :3101 and refuses to start while another `next dev` holds the directory. **Ask the user to stop theirs; do not kill their process.**
+
+Run: `pnpm test:dev-console`
+Expected: 0 React dev-mode warnings. The drills are client components rendering lists from data; a missing `key` would surface here and nowhere else.
+
+- [ ] **Step 4: Contrast, both themes, all ten steps**
+
+Run the audit's contrast pass (it is part of `pnpm test:e2e`) and confirm the drill's verdict colours — `text-go` on Correct, `text-danger` on Not quite — pass AA on `bg-sunken` in both themes. If either fails, the fix is a token in `globals.css` per `docs/learnings/contrast-checkers-lie.md`, and only after re-reading with a fresh server (TD-27).
+
+- [ ] **Step 5: Responsive, 320 → 2560**
+
+Load `/stages/15-observability#errors` and `#health` at 320px in a real browser. The `SCRUBBER` and `HEALTH` artifacts have the widest lines (84 and ~78 characters); each code cell scrolls on its own and the page must not scroll sideways. Then `#logs` — the level drill's five options at 320px stack to one column via `grid-cols-1`; confirm no option is under 44px tall.
+
+- [ ] **Step 6: Expandable count, for the record**
+
+Run: `AUDIT_IDS=1 node e2e/count-expandables.mjs` against a freshly started production server. Paste the total; the tracker row cites it.
+
+- [ ] **Step 7: Humanizer over the panel prose**
+
+Run `humanizer:humanizer` over `panels-collect.tsx` and `panels-act.tsx` prose. Apply what clarifies; skip what would flatten a sentence the doc chose deliberately (the doc has already been through the same pass). Prose-only edits; no test changes. Commit any edits as `docs(observability): humanizer pass over panel prose`.
+
+- [ ] **Step 8: Report**
+
+Paste, in the task report: build output tail, e2e summary with the `#silence` measurement, dev-console result, the expandable count, and `pnpm test`'s final count. State plainly which of Steps 2–5 found something and what changed.
+
+---
+
+### Task 12: Close the records
+
+**Files:**
+- Modify: `docs/tracker.md`, `docs/task.md`, `KICKOFF.md`, `web/PATTERNS.md`
+
+**Interfaces:**
+- Consumes: the whole branch and Task 11's measurements.
+
+- [ ] **Step 1: The two standing greps**
+
+Run: `grep -n "NOT merged, NOT pushed, NOT deployed" docs/tracker.md` and `git ls-files reference/ | grep -iv "jpeg\|jpg\|png\|webp\|gif\|\.md$"`. The first returns only struck-through history; the second returns nothing.
+
+- [ ] **Step 2: Tracker row**
+
+A new row at the top of the Completed table, `W-3.12 (port)`, with: the commit range on `feat/stage-15-observability-port` (`git log --oneline develop..HEAD`), the test count from Task 10 Step 7 re-run now, the expandable count, whether the D-52 split fired, what the per-task reviews caught (by tier, per `CLAUDE.md`'s measurement rule), and a **Deferred** list carrying forward: the baselines/alert-set worksheet (its own round, user's call 2026-09-11); migrating `TriageDrill`/`AuthorizationDrill` onto `Drill`; the `observability` reference sheet (ten images, no provenance); the doc's five deferred minors; the "Next up" staleness. End with `NOT merged, NOT pushed, NOT deployed` — the whole-branch review and the merge are after this task, not in it.
+
+- [ ] **Step 3: `docs/task.md`**
+
+W-3 → **12/18**, six remain; stage 15 interactive. The W-3.12 heading loses "then port" and gains the port's date and branch. `ready` is `true` now; say so.
+
+- [ ] **Step 4: `KICKOFF.md`**
+
+Project state: 12/18, stage 15 interactive, the branch in flight and awaiting review + merge. Branch state re-derived. Open threads: the worksheet round is the next bounded piece of work; the next W-3 stage is not chosen. Delete the closed "the port is next" items rather than ticking them.
+
+- [ ] **Step 5: `web/PATTERNS.md`**
+
+In the **Guess then reveal** note, after the stage 06 sentence, add: "Stage 15 adds a fifth instance and the first parameterised one: `Drill` (`src/features/observability/Drill.tsx`) takes question, options and rows as props and is mounted four times in one stage — alert triage, log level (a five-option radiogroup), silence, scrubber. One component, four datasets, one render test."
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add docs/tracker.md docs/task.md KICKOFF.md web/PATTERNS.md
+git commit -m "docs(tracker): record the stage 15 interactive port"
+```
+
+---
+
+## Verification (after all tasks)
+
+Run on the branch, and again on the merge result if the user approves a merge.
+
+- [ ] `cd web && pnpm lint` — 0 warnings
+- [ ] `cd web && pnpm typecheck` — via `next typegen`
+- [ ] `cd web && pnpm test` — both projects; the count is measured, not quoted
+- [ ] `cd web && pnpm build` — `/stages/15-observability` prerenders
+- [ ] `cd web && pnpm test:e2e` — 18/18, the new route swept, no panel over D-52
+- [ ] `cd web && pnpm test:dev-console` — 0 warnings
+- [ ] `git diff --stat develop...HEAD` — every changed file expected: `src/features/observability/*`, the three registries, `terms.ts`, `references.ts`, `reference/glossary.md`, the four record files, `PATTERNS.md`. Nothing else.
+- [ ] `reference/glossary.md` diff is additions only, eight entries
+- [ ] Whole-branch review dispatched on `opus`, per `CLAUDE.md`; its findings fixed and re-reviewed before any merge is asked about
+
+**Not run, and why:** `pnpm test:prod` checks the deployed site; it belongs after a promotion to `main`, which is the user's.
+
+**The merge is the user's call, every time.** Having this plan approved is not approval to merge the branch that comes out of it. Ask.

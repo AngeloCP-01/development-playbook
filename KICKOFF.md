@@ -47,23 +47,19 @@ whole-branch review the merge owed, and Task 16 (records) all ran on
 `docs/15-observability.md` is **853 lines**, 6 `##`, 12 `###`. `develop` is level with
 `origin/develop`.
 
-**The next thing is the port** (W-3.12 proper — an interactive `web/features/observability/`
-component, the same three-file trace every other stage used: `stages.ts`, the feature
-component, `stage-content.ts`). Nothing in the doc content is open; this is a fresh piece
-of work, not a continuation of the fix wave. **Start with `superpowers:brainstorming`,
-not a plan** — `CLAUDE.md`'s delivery loop puts brainstorming before writing-plans for
-any creative/build work, and stage 15's content (Sentry, structured logging, health
-checks, alerting, uptime monitoring, silent failures, jobs, dashboards) is dense enough
-that how to split it into 4–6 `Step` objects is itself a design decision, not a mechanical
-one. Read `web/PATTERNS.md` before that brainstorm — it says which interaction pattern
-fits which content, and the default is not a paragraph.
+**The port is specced and planned; the next session executes it.** Spec:
+`docs/superpowers/specs/2026-09-11-stage-15-interactive-port-design.md`. Plan:
+`docs/superpowers/plans/2026-09-11-stage-15-interactive-port.md` — twelve tasks, ten
+steps, four drills through one shared `Drill` component, five annotated artifacts. Nothing
+has been executed; `ready` is still `false`. Execution is subagent-driven
+(`superpowers:subagent-driven-development`), Sonnet implementers, Sonnet per-task reviewers
+with evidence, Opus for the whole-branch review — `CLAUDE.md` → *Subagent models*.
 
 **Start here, in order:**
 
 1. **Check the branch before editing anything.** `git branch --show-current`. Should be
-   `develop`. If you're about to start the port, cut a new branch (`feat/stage-15-observability-port`
-   or similar) once the brainstorm has produced a spec to build from — not before. If the
-   current branch is unexpectedly not `develop` or `main`, stop and read
+   `develop`. Cut `feat/stage-15-observability-port` from it before Task 1. If the answer
+   is `main`, or a branch you did not expect, stop and read
    `docs/learnings/branch-discipline-101.md`.
 2. **Re-derive every number in this file before trusting it.** `git fetch`, then the
    commands under "Branch state". This file has been wrong about **six** things in the
@@ -73,12 +69,14 @@ fits which content, and the default is not a paragraph.
    `grep -n "NOT merged, NOT pushed, NOT deployed" docs/tracker.md` and
    `git ls-files reference/ | grep -iv "jpeg\|jpg\|png\|webp\|gif\|\.md$"`. The second
    found a résumé in the tree on 2026-09-10 (TD-46, D-97). It must return nothing.
-4. **Read `docs/15-observability.md` and `web/PATTERNS.md`**, then invoke
-   `superpowers:brainstorming` for the port — do not skip straight to a plan.
-5. **Open on Opus, high effort** — this is a brainstorm/spec/plan session, and
-   `CLAUDE.md` → *Session model* is explicit that the design decisions get made here and
-   nowhere else. Switch to Sonnet for the execution session that follows, per *Plan, then
-   record, then a new session*.
+4. **Read the plan's header and Global Constraints, then execute it task by task** with
+   `superpowers:subagent-driven-development`. Each implementer gets its task slice, the
+   spec path, and `web/PATTERNS.md`. Read `docs/learnings/plans-are-unverified-101.md`
+   first: nothing in this repo reads a plan, and every number in this one is a
+   measurement to re-derive, not a fact.
+5. **Open on Sonnet, medium effort** — this is an execution session; the design decisions
+   are in the spec. Escalate a task's review to Opus only where `CLAUDE.md` says to
+   (Task 10 touches `stages.ts` and the registries: that one, yes).
 
 ---
 
