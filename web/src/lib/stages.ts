@@ -170,7 +170,7 @@ export const STAGES: Stage[] = [
     blurb: 'Know something is wrong before your users tell you.',
     group: 'Running',
     timing: 'Errors on day one; the rest grows continuously.',
-    ready: false,
+    ready: true,
   },
   {
     num: '16',
