@@ -758,7 +758,7 @@ the reason this repo is public (**D-26**). The boxes were never ticked back.
 
 ---
 
-### W-3.12 — Stage 15, doc round then port ◐ *(**doc round complete, all 16 tasks, merged to `develop` 2026-09-11 as `7418684`**: Task 15's fix wave (I1–I6, M1), the D-48 re-run, the whole-branch review the mid-round merge owed, and Task 16's records all ran on `fix/stage-15-fix-wave`, then merged `--no-ff`, branch deleted. The doc is 261 → 853 lines, gate-clean at 1218/1218 on `develop`. **Open:** the port — a later round, its own brainstorm/plan cycle. `ready` stays `false`)*
+### W-3.12 — Stage 15, doc round then port ◐ *(**doc round complete, all 16 tasks, merged to `develop` 2026-09-11 as `7418684`**: Task 15's fix wave (I1–I6, M1), the D-48 re-run, the whole-branch review the mid-round merge owed, and Task 16's records all ran on `fix/stage-15-fix-wave`, then merged `--no-ff`, branch deleted. The doc is 261 → 853 lines, gate-clean at 1218/1218 on `develop`. **The port is specced and planned, not executed** — spec `docs/superpowers/specs/2026-09-11-stage-15-interactive-port-design.md`, plan `docs/superpowers/plans/2026-09-11-stage-15-interactive-port.md` (12 tasks, 10 steps, four drills through one `Drill` component, five annotated artifacts). Execution is the next session's job, subagent-driven on Sonnet. `ready` stays `false` until Task 10)*
 
 Stage 15 closes the shipping pipeline that 11 → 12 → 13 → 14 opened, and it is the
 first stage whose doc was assessed **before** any of it was written, rather than
@@ -808,8 +808,15 @@ plus a vacuous test and one untaught DoD checkbox. All fixed and independently
 re-reviewed. Task 16 wrote these records and registered the five text sources that fed
 the doc in `reference/cheatsheet-sources.md`. Gate: 1218/1218 across 162 files on the
 branch, reconfirmed on `develop` after merging. **Merged `--no-ff` as `7418684` at the
-user's request, branch deleted, `develop` level with `origin/develop`.** The port is
-next, as its own round.
+user's request, branch deleted, `develop` level with `origin/develop`.**
+
+**The port's brainstorm ran the same day, on Opus.** Four judgment exercises were chosen
+(alert triage, log level, silence, scrubber) and a persisted baselines worksheet was
+deferred to its own round at the user's direction. The spec (`f670aab`) and the plan
+(`2071f9f`) are on `develop`; nothing is executed. The plan's intermediate state was also
+committed as `e4750ad` under the subject "feat: scaffold data modules and test
+infrastructure" — that commit holds only the plan markdown, no code, and is already on
+`origin`; the subject is wrong about itself and is left as it is.
 
 **Scope of the doc round, deliberately:** corrections, the untaught artifacts, the
 missing sections, the `### AI in observability` section D-35 requires, glossary
