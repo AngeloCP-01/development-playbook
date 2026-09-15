@@ -41,7 +41,7 @@ Stages 01–07, 11, 12, 13, 14 and 15 are interactive. Stage 13 is platform-awar
 Vercel + AWS). **Eighteen of twenty-three** reference sheets drawn.
 
 **Stage 15 is interactive and complete on its branch, pending review and merge.**
-`feat/stage-15-observability-port` (18 commits, `d9b4da2..HEAD`) carries the port:
+`feat/stage-15-observability-port` (18 commits, `d9b4da2..2ea6414`) carries the port:
 sixteen steps — ten as planned, plus a mid-verification D-52 reshape that split four
 panels the plan had only pre-authorized fixing one of (`docs/tracker.md`'s 2026-09-15
 W-3.12 row has the full account). `ready: true`. Final gate on the branch: **179 files /
@@ -288,10 +288,12 @@ git ls-files reference/ | grep -iv "jpeg\|jpg\|png\|webp\|gif\|\.md$"
 | `develop` | `d9b4da2` | **2 ahead of `origin/develop`** (`e4750ad`) |
 | `main` | `d659d32` (unchanged since 2026-09-10) | `develop` is **94 ahead** |
 
-`develop`'s two unpushed commits are the port's spec+plan records commit (`d9b4da2`) and
-one intermediate state (`e4750ad` is on `origin` already, under a subject that describes
-itself wrong — see the note two sessions up). Neither is code; nothing under `web/src`
-differs between `develop` and `origin/develop`.
+`develop`'s two unpushed commits, per `git log --oneline origin/develop..develop`, are
+the plan commit `2071f9f` and the records commit `d9b4da2` on top of it. `e4750ad` is a
+*different*, already-pushed commit sitting on `origin/develop` — the user's own
+intermediate save of the plan at an earlier line count, under a subject that describes
+itself wrong (see the note two sessions up). Neither of the two actually-unpushed
+commits is code; nothing under `web/src` differs between `develop` and `origin/develop`.
 
 **SHAs from before 2026-09-10 were rewritten** (D-97): `c4f2a68` is `450190c`, `8e94b1f`
 is `bf0070e`, and the originals no longer exist as objects. A SHA from a 2026-09-08 note
@@ -301,7 +303,8 @@ that `git log develop` cannot find was rewritten, not lost:
 The promotion of `develop` to `main` is **the user's**, and 94 commits are waiting on it.
 
 **`feat/stage-15-observability-port` is in flight, cut from `develop` at `d9b4da2`.** 18
-commits, `d9b4da2..HEAD` (`git log --oneline develop..feat/stage-15-observability-port`).
+commits, `d9b4da2..2ea6414` (`git log --oneline develop..feat/stage-15-observability-port`
+— re-run against `HEAD` at read time, since this records commit itself now sits on top).
 Ten planned steps, sixteen shipped after the D-52 reshape; `ready: true`. Not merged, not
 pushed. **The whole-branch review (opus) is the next step on this branch**, then the
 user's merge decision (target: `develop`, `--no-ff`, never `main`).

@@ -758,7 +758,7 @@ the reason this repo is public (**D-26**). The boxes were never ticked back.
 
 ---
 
-### W-3.12 — Stage 15, doc round and port ◐ *(**doc round merged `develop` 2026-09-11 as `7418684`; port done 2026-09-15 on `feat/stage-15-observability-port`, 18 commits `d9b4da2..HEAD`, `ready: true`**. Ten planned steps grew to sixteen after Task 11's verification found four panels — not the plan's pre-authorized one — over the D-52 screen budget; brainstormed and split in two rounds. Per-task review: sonnet for most tasks, opus for Task 10 (`stages.ts`/registries). Final: 179 files/1348 tests, expandable count 379, e2e 18/18, dev-console clean. **Awaiting the whole-branch review and the user's merge decision**)*
+### W-3.12 — Stage 15, doc round and port ◐ *(**doc round merged `develop` 2026-09-11 as `7418684`; port done 2026-09-15 on `feat/stage-15-observability-port`, 18 commits `d9b4da2..2ea6414`, `ready: true`**. Ten planned steps grew to sixteen after Task 11's verification found four panels — not the plan's pre-authorized one — over the D-52 screen budget; brainstormed and split in two rounds. Per-task review: sonnet for most tasks, opus for Task 10 (`stages.ts`/registries). Final: 179 files/1348 tests, expandable count 379, e2e 18/18, dev-console clean. **Awaiting the whole-branch review and the user's merge decision**)*
 
 Stage 15 closes the shipping pipeline that 11 → 12 → 13 → 14 opened, and it is the
 first stage whose doc was assessed **before** any of it was written, rather than
@@ -819,7 +819,7 @@ commit holds only the plan markdown, no code, and is already on `origin`; the su
 wrong about itself and is left as it is.
 
 **The port executed 2026-09-15 on `feat/stage-15-observability-port`** (18 commits,
-`d9b4da2..HEAD`), subagent-driven, sonnet implementers, per-task reviewers on sonnet
+`d9b4da2..2ea6414`), subagent-driven, sonnet implementers, per-task reviewers on sonnet
 (opus for Task 10, which touches `stages.ts` and both registries, per `CLAUDE.md`'s
 measurement rule). Ten planned steps became **sixteen**: Task 11's verification measured
 four panels over the D-52 screen budget, not the plan's pre-authorized one, and the
