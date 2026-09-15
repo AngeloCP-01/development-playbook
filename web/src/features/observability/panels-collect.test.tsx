@@ -11,18 +11,20 @@ const go = (label: RegExp) =>
   fireEvent.click(screen.getByRole('tab', { name: label }))
 
 describe('collect panels', () => {
-  test('seven steps, in order', () => {
+  test('nine steps, in order', () => {
     render(<Stepper steps={COLLECT_STEPS} />)
     expect(COLLECT_STEPS.map((s) => s.id)).toEqual([
       'three',
       'errors',
       'scrubbing',
+      'reach',
       'logs',
+      'levels',
       'fields',
       'where',
       'signals',
     ])
-    expect(screen.getAllByRole('tab')).toHaveLength(7)
+    expect(screen.getAllByRole('tab')).toHaveLength(9)
   })
 
   test('three: the traces row says you will know when you need them', () => {
@@ -45,20 +47,32 @@ describe('collect panels', () => {
     expect(panel.textContent).toMatch(/Add breadcrumbs for meaningful actions/)
   })
 
-  test('scrubbing: the scrubber artifact and the scrubber drill both mount', () => {
+  test('scrubbing: the scrubber artifact mounts', () => {
     render(<Stepper steps={COLLECT_STEPS} />)
     go(/Scrubbing/)
     const panel = screen.getByRole('tabpanel')
     expect(panel.textContent).toMatch(/sentry\.server\.config\.ts/)
+  })
+
+  test('reach: the scrubber drill mounts, and the quota callout', () => {
+    render(<Stepper steps={COLLECT_STEPS} />)
+    go(/Scrubber reach/)
+    const panel = screen.getByRole('tabpanel')
     expect(screen.getAllByRole('radiogroup')).toHaveLength(SCRUBBER_ROWS.length)
     expect(panel.textContent).toMatch(/One loop can spend everything/)
   })
 
-  test('logs: the logger artifact, the ladder and the level drill mount', () => {
+  test('logs: the logger artifact mounts', () => {
     render(<Stepper steps={COLLECT_STEPS} />)
     go(/Structured logs/)
     const panel = screen.getByRole('tabpanel')
     expect(panel.textContent).toMatch(/src\/lib\/logger\.ts/)
+  })
+
+  test('levels: the ladder table and the level drill mount', () => {
+    render(<Stepper steps={COLLECT_STEPS} />)
+    go(/Log levels/)
+    const panel = screen.getByRole('tabpanel')
     expect(screen.getAllByRole('radiogroup')).toHaveLength(LEVEL_ROWS.length)
     // Five options per row — the only drill that is not binary.
     const radios = screen.getAllByRole('radio')

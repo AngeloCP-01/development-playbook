@@ -216,7 +216,17 @@ export const COLLECT_STEPS: (Step & { id: StepId })[] = [
             </p>
           </Prose>
         </Section>
+      </div>
+    ),
+  },
 
+  /* ---- Panel 4: reach ---- */
+  {
+    id: 'reach',
+    label: 'Scrubber reach',
+    hint: 'Which values get through',
+    content: (
+      <div className="space-y-16">
         <Section title="Which of these does the scrubber reach?">
           <Prose>
             <p>
@@ -252,7 +262,7 @@ export const COLLECT_STEPS: (Step & { id: StepId })[] = [
     ),
   },
 
-  /* ---- Panel 4: logs ---- */
+  /* ---- Panel 5: logs ---- */
   {
     id: 'logs',
     label: 'Structured logs',
@@ -276,7 +286,17 @@ export const COLLECT_STEPS: (Step & { id: StepId })[] = [
             <AnnotatedArtifact artifact={LOGGER} />
           </Figure>
         </Section>
+      </div>
+    ),
+  },
 
+  /* ---- Panel 6: levels ---- */
+  {
+    id: 'levels',
+    label: 'Log levels',
+    hint: 'Choosing the right one',
+    content: (
+      <div className="space-y-16">
         <Section title="Levels are a filter, not a mood">
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-sm">
@@ -317,7 +337,7 @@ export const COLLECT_STEPS: (Step & { id: StepId })[] = [
     ),
   },
 
-  /* ---- Panel 5: fields ---- */
+  /* ---- Panel 7: fields ---- */
   {
     id: 'fields',
     label: 'What goes on the line',
@@ -410,7 +430,7 @@ export const COLLECT_STEPS: (Step & { id: StepId })[] = [
     ),
   },
 
-  /* ---- Panel 6: where ---- */
+  /* ---- Panel 8: where ---- */
   {
     id: 'where',
     label: 'Where logs go',
@@ -489,7 +509,7 @@ export const COLLECT_STEPS: (Step & { id: StepId })[] = [
     ),
   },
 
-  /* ---- Panel 7: signals ---- */
+  /* ---- Panel 9: signals ---- */
   {
     id: 'signals',
     label: 'The four signals',
