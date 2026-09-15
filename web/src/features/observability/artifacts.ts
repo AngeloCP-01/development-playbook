@@ -163,7 +163,7 @@ export const HEALTH: Artifact = {
     },
     {
       text: '    clearTimeout(timer!)',
-      note: 'Resource cleanup, not a success signal. This `finally` is fine; the heartbeat two steps later must not be in one, because there a `finally` reports success for a run that threw.',
+      note: 'Resource cleanup, not a success signal. This `finally` is fine; the heartbeat three steps later must not be in one, because there a `finally` reports success for a run that threw.',
     },
     { text: '  }' },
     { text: '' },

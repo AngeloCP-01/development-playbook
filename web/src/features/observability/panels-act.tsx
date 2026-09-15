@@ -61,7 +61,7 @@ function RestartVsRouting() {
 }
 
 export const ACT_STEPS: (Step & { id: StepId })[] = [
-  /* ---- Panel 6: health ---- */
+  /* ---- Panel 10: health ---- */
   {
     id: 'health',
     label: 'Health checks',
@@ -149,7 +149,7 @@ export async function GET() {
     ),
   },
 
-  /* ---- Panel 7: alerts ---- */
+  /* ---- Panel 11: alerts ---- */
   {
     id: 'alerts',
     label: 'Alerts you will act on',
@@ -263,7 +263,7 @@ export async function GET() {
     ),
   },
 
-  /* ---- Panel 8: silence ---- */
+  /* ---- Panel 12: silence ---- */
   {
     id: 'silence',
     label: 'When nothing reports',
@@ -333,7 +333,7 @@ export async function GET() {
     ),
   },
 
-  /* ---- Panel 8b: jobs ---- */
+  /* ---- Panel 13: jobs ---- */
   {
     id: 'jobs',
     label: 'Jobs that nobody watches',
@@ -369,7 +369,7 @@ export async function GET() {
                   <p className="measure text-sm leading-6 text-muted">
                     Which converts your only detector of silence into a source
                     of false confidence. The health check&rsquo;s{' '}
-                    <code>finally</code> two steps back is resource cleanup;
+                    <code>finally</code> three steps back is resource cleanup;
                     this one would be a false success signal.
                   </p>
                 ),
@@ -435,7 +435,7 @@ export async function GET() {
     ),
   },
 
-  /* ---- Panel 9: ai ---- */
+  /* ---- Panel 14: ai ---- */
   {
     id: 'ai',
     label: 'AI plays',
@@ -449,7 +449,7 @@ export async function GET() {
     ),
   },
 
-  /* ---- Panel 10: done ---- */
+  /* ---- Panel 15: done ---- */
   {
     id: 'done',
     label: 'Definition of done',
@@ -509,7 +509,7 @@ sentry-cli releases finalize "$GITHUB_SHA"`}</code>
     ),
   },
 
-  /* ---- Panel 11: traps ---- */
+  /* ---- Panel 16: traps ---- */
   {
     id: 'traps',
     label: 'Traps',

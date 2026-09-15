@@ -59,7 +59,7 @@ describe('observability artifacts', () => {
 
   // The health check's `finally` is resource cleanup; the heartbeat's rule is
   // "not in a finally". The note on that line has to draw the distinction or
-  // a reader reads one against the other two steps later.
+  // a reader reads one against the other three steps later.
   test("health's clearTimeout note distinguishes it from the heartbeat rule", () => {
     const line = HEALTH.lines.find((l) => l.text.includes('clearTimeout'))
     expect(line?.note).toMatch(/heartbeat/i)

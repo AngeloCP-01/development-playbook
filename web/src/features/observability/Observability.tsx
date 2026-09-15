@@ -4,9 +4,9 @@ import { COLLECT_STEPS } from './panels-collect'
 import { ACT_STEPS } from './panels-act'
 
 /**
- * Stage 15. Ten steps in two files by phase — what to collect
+ * Stage 15. Sixteen steps in two files by phase — what to collect
  * (`panels-collect.tsx`), then what to do with it (`panels-act.tsx`) —
- * because one file holding ten panels, four drills and five artifacts is
+ * because one file holding sixteen panels, four drills and five artifacts is
  * past what a reviewer can hold at once. `steps.test.ts` pins the order;
  * this is where the two halves meet it.
  */
