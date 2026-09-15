@@ -267,7 +267,7 @@ export async function GET() {
   {
     id: 'silence',
     label: 'When nothing reports',
-    hint: 'And jobs nobody watches',
+    hint: 'Absence is not evidence of health',
     content: (
       <div className="space-y-16">
         <Section
@@ -329,8 +329,18 @@ export async function GET() {
             </p>
           </Prose>
         </Section>
+      </div>
+    ),
+  },
 
-        <Section title="Jobs that nobody watches">
+  /* ---- Panel 8b: jobs ---- */
+  {
+    id: 'jobs',
+    label: 'Jobs that nobody watches',
+    hint: 'Heartbeats catch silence, not errors',
+    content: (
+      <div className="space-y-16">
+        <Section eyebrow="Silence" title="Jobs that nobody watches">
           <Prose>
             <p>
               A scheduled job that <strong>never ran</strong> produces no
@@ -439,11 +449,37 @@ export async function GET() {
     ),
   },
 
-  /* ---- Panel 10: done ---- */
+  /* ---- Panel 10: traps ---- */
+  {
+    id: 'traps',
+    label: 'Traps',
+    hint: 'Fifteen ways this goes wrong',
+    content: (
+      <div className="space-y-16">
+        <Section title="Traps">
+          <div className="space-y-4">
+            {TRAPS.map((trap) => (
+              <Callout
+                key={trap.id}
+                kind="trap"
+                title={trap.title.replace(/`/g, '')}
+              >
+                <p>
+                  <InlineCode text={trap.body} />
+                </p>
+              </Callout>
+            ))}
+          </div>
+        </Section>
+      </div>
+    ),
+  },
+
+  /* ---- Panel 11: done ---- */
   {
     id: 'done',
-    label: 'Traps & checklist',
-    hint: 'The last step',
+    label: 'Definition of done',
+    hint: 'The dashboard and the checklist',
     content: (
       <div className="space-y-16">
         <Section
@@ -490,22 +526,6 @@ sentry-cli releases finalize "$GITHUB_SHA"`}</code>
               Grafana can query several data sources in one dashboard.
             </p>
           </Prose>
-        </Section>
-
-        <Section title="Traps">
-          <div className="space-y-4">
-            {TRAPS.map((trap) => (
-              <Callout
-                key={trap.id}
-                kind="trap"
-                title={trap.title.replace(/`/g, '')}
-              >
-                <p>
-                  <InlineCode text={trap.body} />
-                </p>
-              </Callout>
-            ))}
-          </div>
         </Section>
 
         <Section title="Done">

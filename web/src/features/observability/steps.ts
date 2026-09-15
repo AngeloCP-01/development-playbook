@@ -12,7 +12,9 @@ export const STEP_IDS = [
   'health',
   'alerts',
   'silence',
+  'jobs',
   'ai',
+  'traps',
   'done',
 ] as const
 

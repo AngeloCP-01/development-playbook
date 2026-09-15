@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { STEP_IDS } from './steps'
 
 describe('observability steps', () => {
-  test('fourteen steps in exact order', () => {
+  test('sixteen steps in exact order', () => {
     expect(STEP_IDS).toEqual([
       'three',
       'errors',
@@ -16,7 +16,9 @@ describe('observability steps', () => {
       'health',
       'alerts',
       'silence',
+      'jobs',
       'ai',
+      'traps',
       'done',
     ])
   })
