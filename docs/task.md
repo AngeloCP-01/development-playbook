@@ -57,7 +57,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13 and 14 done; 7 remain — 11/18. **Stage 11 complete 2026-09-07**: 8 steps (gate, ordering, e2e, protection, deps, scaling, ai, traps), doc correction + ordering exercise signature piece, 1143/160 tests, all verification green. Seven stages remain. **Stage 15's doc round (W-3.12) is complete, all 16 tasks, merged to `develop`** as `7418684` **— `ready` stays `false`, and none of this advances the count until the port**)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13, 14 and 15 done; 6 remain — 12/18. **Stage 11 complete 2026-09-07**: 8 steps (gate, ordering, e2e, protection, deps, scaling, ai, traps), doc correction + ordering exercise signature piece, 1143/160 tests, all verification green. **Stage 15 ported 2026-09-15** on `feat/stage-15-observability-port`: sixteen steps after a mid-round D-52 reshape (planned ten), `ready: true`, 179 files/1348 tests, e2e 18/18, dev-console clean — awaiting the whole-branch review and the user's merge decision. Six stages remain)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(eighteen of twenty-three registered sheets drawn — `github-actions` and `ci-cd` both added 2026-09-07, tethered to stage 11. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
@@ -126,7 +126,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13 and 14 done; 7 remain — 11/18. **Stage 11 complete 2026-09-07**: 8 steps, doc correction + ordering exercise, 1143/160 tests, e2e 17/18 (1 pre-existing), all verification green. **W-3.12, stage 15's doc round, is complete — see below; it does not advance this count until the port**)*
+### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13, 14 and 15 done; 6 remain — 12/18. **Stage 11 complete 2026-09-07**: 8 steps, doc correction + ordering exercise, 1143/160 tests, e2e 17/18 (1 pre-existing), all verification green. **W-3.12, stage 15's port, is complete — see below; branch awaits whole-branch review and the user's merge decision**)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -758,7 +758,7 @@ the reason this repo is public (**D-26**). The boxes were never ticked back.
 
 ---
 
-### W-3.12 — Stage 15, doc round then port ◐ *(**doc round complete, all 16 tasks, merged to `develop` 2026-09-11 as `7418684`**: Task 15's fix wave (I1–I6, M1), the D-48 re-run, the whole-branch review the mid-round merge owed, and Task 16's records all ran on `fix/stage-15-fix-wave`, then merged `--no-ff`, branch deleted. The doc is 261 → 853 lines, gate-clean at 1218/1218 on `develop`. **The port is specced and planned, not executed** — spec `docs/superpowers/specs/2026-09-11-stage-15-interactive-port-design.md`, plan `docs/superpowers/plans/2026-09-11-stage-15-interactive-port.md` (12 tasks, 10 steps, four drills through one `Drill` component, five annotated artifacts). Execution is the next session's job, subagent-driven on Sonnet. `ready` stays `false` until Task 10)*
+### W-3.12 — Stage 15, doc round and port ◐ *(**doc round merged `develop` 2026-09-11 as `7418684`; port done 2026-09-15 on `feat/stage-15-observability-port`, 18 commits `d9b4da2..HEAD`, `ready: true`**. Ten planned steps grew to sixteen after Task 11's verification found four panels — not the plan's pre-authorized one — over the D-52 screen budget; brainstormed and split in two rounds. Per-task review: sonnet for most tasks, opus for Task 10 (`stages.ts`/registries). Final: 179 files/1348 tests, expandable count 379, e2e 18/18, dev-console clean. **Awaiting the whole-branch review and the user's merge decision**)*
 
 Stage 15 closes the shipping pipeline that 11 → 12 → 13 → 14 opened, and it is the
 first stage whose doc was assessed **before** any of it was written, rather than
@@ -810,18 +810,28 @@ the doc in `reference/cheatsheet-sources.md`. Gate: 1218/1218 across 162 files o
 branch, reconfirmed on `develop` after merging. **Merged `--no-ff` as `7418684` at the
 user's request, branch deleted, `develop` level with `origin/develop`.**
 
-**The port's brainstorm ran the same day, on Opus.** Four judgment exercises were chosen
+**The port's brainstorm ran on 2026-09-11, on Opus.** Four judgment exercises were chosen
 (alert triage, log level, silence, scrubber) and a persisted baselines worksheet was
 deferred to its own round at the user's direction. The spec (`f670aab`) and the plan
-(`2071f9f`) are on `develop`; nothing is executed. The plan's intermediate state was also
-committed as `e4750ad` under the subject "feat: scaffold data modules and test
-infrastructure" — that commit holds only the plan markdown, no code, and is already on
-`origin`; the subject is wrong about itself and is left as it is.
+(`2071f9f`) landed on `develop`. The plan's intermediate state was also committed as
+`e4750ad` under the subject "feat: scaffold data modules and test infrastructure" — that
+commit holds only the plan markdown, no code, and is already on `origin`; the subject is
+wrong about itself and is left as it is.
+
+**The port executed 2026-09-15 on `feat/stage-15-observability-port`** (18 commits,
+`d9b4da2..HEAD`), subagent-driven, sonnet implementers, per-task reviewers on sonnet
+(opus for Task 10, which touches `stages.ts` and both registries, per `CLAUDE.md`'s
+measurement rule). Ten planned steps became **sixteen**: Task 11's verification measured
+four panels over the D-52 screen budget, not the plan's pre-authorized one, and the
+resulting reshape is recorded in full in `docs/tracker.md`'s 2026-09-15 W-3.12 row.
+`ready: true`; final gate: **179 files / 1348 tests**, expandable count **379**, `pnpm
+test:e2e` **18/18**, `pnpm test:dev-console` **1/1, zero warnings**. **Not merged, not
+pushed, not deployed** — the whole-branch review and the merge decision are next.
 
 **Scope of the doc round, deliberately:** corrections, the untaught artifacts, the
 missing sections, the `### AI in observability` section D-35 requires, glossary
-repairs, and platform coverage extended to AWS to match stages 13 and 14. **`ready`
-stays `false`.** The port is a later round and W-3 is **not** advanced by this one.
+repairs, and platform coverage extended to AWS to match stages 13 and 14. **The port is
+now done and W-3 is 12/18.**
 
 **Deferred out of it, on the record:** trimming `## Traps` and deleting `## Artifacts`
 — both raised by the readers, both rejected because they are the house template

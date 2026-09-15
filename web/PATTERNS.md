@@ -59,6 +59,16 @@ anything over the threshold, so this is checked rather than remembered.
 When a panel is over: **split it** at a seam where it holds two judgments, or **compress it**
 by moving elaboration behind an expand-to-reveal. Never by teaching less.
 
+**Stage 15 is the second stage to go through a D-52 reshape after its content had
+already landed**, the first being stage 03
+(`docs/superpowers/plans/2026-07-31-step-panel-weight.md`). Its reshape found that the
+panel-weight budget does not distribute evenly across a doc's own sections: of ten
+initial panels, four needed a further split, and two of those needed splitting *twice*.
+Both double splits shared the same cause — an annotated artifact paired with its own
+drill is a full judgment's worth of screen space, not half of one, so the first cut (one
+extra panel) still landed over budget and the seam that actually worked separated the
+artifact's prose from the drill entirely.
+
 Every stage carries one further **"AI plays"** step beyond the content steps — the "where
 agents help and where they mislead" pattern from stage 01, tuned to that stage's work. The
 AI step is standard, not drift (D-35). It also appears in the doc as an `### AI in <stage>`
@@ -374,7 +384,11 @@ Notes that make each land:
   rows: `TriageDrill` (six changes, a four-option radiogroup per row rather than binary,
   because the doc's own distribution has four tiers) and `TeethCheck` (three teeth-check
   transcripts, proven/not-proven, structurally `AuthorizationDrill`'s binary radiogroup
-  again with a different question). Four instances now share this one row.
+  again with a different question). Four instances now share this one row. Stage 15 adds
+  a fifth instance and the first parameterised one: `Drill`
+  (`src/features/observability/Drill.tsx`) takes question, options and rows as props and
+  is mounted four times in one stage — alert triage, log level (a five-option
+  radiogroup), silence, scrubber. One component, four datasets, one render test.
 - **Click-node inspector** pairs a diagram with a detail panel that updates on selection.
   Colour-code levels but always add a second signal (a dot, a label) so the coding is not
   the only cue.
