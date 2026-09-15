@@ -454,11 +454,13 @@ export const COLLECT_STEPS: (Step & { id: StepId })[] = [
           kind="info"
           title="Retention is a privacy decision, not only a cost one"
         >
-          Whatever you kept is what you have to be able to delete (
-          <Link href="/stages/08-security-audit" className={stageLinkClass}>
-            {stageTitle('08-security-audit')}
-          </Link>
-          ).
+          <p>
+            Whatever you kept is what you have to be able to delete (
+            <Link href="/stages/08-security-audit" className={stageLinkClass}>
+              {stageTitle('08-security-audit')}
+            </Link>
+            ).
+          </p>
         </Callout>
       </div>
     ),
@@ -547,14 +549,16 @@ export const COLLECT_STEPS: (Step & { id: StepId })[] = [
         </Section>
 
         <Callout kind="info" title="Write the numbers down">
-          Instrumenting these gives you numbers. It does not give you{' '}
-          <em>normal</em>, and without normal none of them is readable: 12
-          errors in the last hour is a catastrophe or a Tuesday. Once you have a
-          week of ordinary traffic, record the{' '}
-          <Term id="baseline">baseline</Term> &mdash; error rate, p95 latency,
-          requests per minute at your busy hour and your quiet one &mdash;
-          somewhere you will find it at 2am, which means the repository and not
-          your memory. Stage 14 uses the same baselines to judge a deploy.
+          <p>
+            Instrumenting these gives you numbers. It does not give you{' '}
+            <em>normal</em>, and without normal none of them is readable: 12
+            errors in the last hour is a catastrophe or a Tuesday. Once you have
+            a week of ordinary traffic, record the{' '}
+            <Term id="baseline">baseline</Term> &mdash; error rate, p95 latency,
+            requests per minute at your busy hour and your quiet one &mdash;
+            somewhere you will find it at 2am, which means the repository and
+            not your memory. Stage 14 uses the same baselines to judge a deploy.
+          </p>
         </Callout>
       </div>
     ),
