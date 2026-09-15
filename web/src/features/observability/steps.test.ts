@@ -18,8 +18,8 @@ describe('observability steps', () => {
       'silence',
       'jobs',
       'ai',
-      'traps',
       'done',
+      'traps',
     ])
   })
 

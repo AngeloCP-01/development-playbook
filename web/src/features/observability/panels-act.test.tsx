@@ -24,8 +24,8 @@ describe('act panels', () => {
       'silence',
       'jobs',
       'ai',
-      'traps',
       'done',
+      'traps',
     ])
     expect(screen.getAllByRole('tab')).toHaveLength(7)
   })
@@ -80,22 +80,22 @@ describe('act panels', () => {
     expect(screen.getByText('CLI + browser tool')).toBeTruthy()
   })
 
-  test('traps: every trap renders', () => {
+  test('traps: every trap renders, and references', () => {
     render(<Stepper steps={ACT_STEPS} />)
     go(/Traps/)
     const panel = screen.getByRole('tabpanel')
     for (const t of TRAPS) {
       expect(panel.textContent, t.id).toContain(t.title.replace(/`/g, ''))
     }
+    expect(panel.textContent).toMatch(/Four Golden Signals/)
   })
 
-  test('done: dashboards, the checklist, and references', () => {
+  test('done: dashboards and the checklist', () => {
     render(<Stepper steps={ACT_STEPS} />)
     go(/Definition of done/)
     const panel = screen.getByRole('tabpanel')
     expect(panel.textContent).toMatch(/is the application healthy right now/)
     expect(panel.textContent).toMatch(/sentry-cli releases new/)
     expect(screen.getAllByRole('checkbox')).toHaveLength(DONE.length)
-    expect(panel.textContent).toMatch(/Four Golden Signals/)
   })
 })

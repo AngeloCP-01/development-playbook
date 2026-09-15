@@ -14,8 +14,8 @@ export const STEP_IDS = [
   'silence',
   'jobs',
   'ai',
-  'traps',
   'done',
+  'traps',
 ] as const
 
 export type StepId = (typeof STEP_IDS)[number]

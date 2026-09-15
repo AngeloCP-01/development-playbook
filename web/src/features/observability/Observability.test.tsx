@@ -23,11 +23,11 @@ describe('Observability page', () => {
     expect(tabs).toHaveLength(16)
   })
 
-  test('first step is the three things, last is the definition of done', () => {
+  test('first step is the three things, last is traps', () => {
     render(<Observability />)
     const tabs = screen.getAllByRole('tab')
     expect(tabs[0].textContent).toMatch(/Three things/)
-    expect(tabs[15].textContent).toMatch(/Definition of done/)
+    expect(tabs[15].textContent).toMatch(/Traps/)
   })
 
   // The four drills, each on its own step, each sized by its data. This is

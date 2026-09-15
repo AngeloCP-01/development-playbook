@@ -449,33 +449,7 @@ export async function GET() {
     ),
   },
 
-  /* ---- Panel 10: traps ---- */
-  {
-    id: 'traps',
-    label: 'Traps',
-    hint: 'Fifteen ways this goes wrong',
-    content: (
-      <div className="space-y-16">
-        <Section title="Traps">
-          <div className="space-y-4">
-            {TRAPS.map((trap) => (
-              <Callout
-                key={trap.id}
-                kind="trap"
-                title={trap.title.replace(/`/g, '')}
-              >
-                <p>
-                  <InlineCode text={trap.body} />
-                </p>
-              </Callout>
-            ))}
-          </div>
-        </Section>
-      </div>
-    ),
-  },
-
-  /* ---- Panel 11: done ---- */
+  /* ---- Panel 10: done ---- */
   {
     id: 'done',
     label: 'Definition of done',
@@ -531,8 +505,33 @@ sentry-cli releases finalize "$GITHUB_SHA"`}</code>
         <Section title="Done">
           <ObservabilityChecklist />
         </Section>
+      </div>
+    ),
+  },
 
-        <References slug="15-observability" />
+  /* ---- Panel 11: traps ---- */
+  {
+    id: 'traps',
+    label: 'Traps',
+    hint: 'Fifteen ways this goes wrong',
+    content: (
+      <div className="space-y-16">
+        <Section title="Traps">
+          <div className="space-y-4">
+            {TRAPS.map((trap) => (
+              <Callout
+                key={trap.id}
+                kind="trap"
+                title={trap.title.replace(/`/g, '')}
+              >
+                <p>
+                  <InlineCode text={trap.body} />
+                </p>
+              </Callout>
+            ))}
+          </div>
+          <References slug="15-observability" />
+        </Section>
       </div>
     ),
   },
