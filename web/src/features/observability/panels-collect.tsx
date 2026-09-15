@@ -142,7 +142,7 @@ export const COLLECT_STEPS: (Step & { id: StepId })[] = [
   {
     id: 'errors',
     label: 'Errors that are useful',
-    hint: 'Context, then scrubbing',
+    hint: 'Context first',
     content: (
       <div className="space-y-16">
         <Section
@@ -173,8 +173,21 @@ export const COLLECT_STEPS: (Step & { id: StepId })[] = [
             </p>
           </Prose>
         </Section>
+      </div>
+    ),
+  },
 
-        <Section title="Do not send secrets, passwords, tokens, or payment details">
+  /* ---- Panel 3: scrubbing ---- */
+  {
+    id: 'scrubbing',
+    label: 'Scrubbing',
+    hint: 'What never leaves the process',
+    content: (
+      <div className="space-y-16">
+        <Section
+          eyebrow="Errors"
+          title="Do not send secrets, passwords, tokens, or payment details"
+        >
           <Prose>
             <p>
               Sentry data is retained, is accessible to anyone with account
@@ -239,7 +252,7 @@ export const COLLECT_STEPS: (Step & { id: StepId })[] = [
     ),
   },
 
-  /* ---- Panel 3: logs ---- */
+  /* ---- Panel 4: logs ---- */
   {
     id: 'logs',
     label: 'Structured logs',
@@ -300,8 +313,18 @@ export const COLLECT_STEPS: (Step & { id: StepId })[] = [
             rows={levels.ROWS}
           />
         </Section>
+      </div>
+    ),
+  },
 
-        <Section title="What goes on the line">
+  /* ---- Panel 5: fields ---- */
+  {
+    id: 'fields',
+    label: 'What goes on the line',
+    hint: 'Request id, naming, cardinality',
+    content: (
+      <div className="space-y-16">
+        <Section eyebrow="Logs" title="What goes on the line">
           <RevealList
             idPrefix="obs-logline"
             rows={[
@@ -387,7 +410,7 @@ export const COLLECT_STEPS: (Step & { id: StepId })[] = [
     ),
   },
 
-  /* ---- Panel 4: where ---- */
+  /* ---- Panel 6: where ---- */
   {
     id: 'where',
     label: 'Where logs go',
@@ -466,7 +489,7 @@ export const COLLECT_STEPS: (Step & { id: StepId })[] = [
     ),
   },
 
-  /* ---- Panel 5: signals ---- */
+  /* ---- Panel 7: signals ---- */
   {
     id: 'signals',
     label: 'The four signals',

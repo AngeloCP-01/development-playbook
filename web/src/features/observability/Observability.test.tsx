@@ -16,18 +16,18 @@ const go = (label: RegExp) =>
   fireEvent.click(screen.getByRole('tab', { name: label }))
 
 describe('Observability page', () => {
-  test('renders ten steps in the rail, in STEP_IDS order', () => {
+  test('renders twelve steps in the rail, in STEP_IDS order', () => {
     render(<Observability />)
     const tabs = screen.getAllByRole('tab')
     expect(tabs).toHaveLength(STEP_IDS.length)
-    expect(tabs).toHaveLength(10)
+    expect(tabs).toHaveLength(12)
   })
 
   test('first step is the three things, last is traps & checklist', () => {
     render(<Observability />)
     const tabs = screen.getAllByRole('tab')
     expect(tabs[0].textContent).toMatch(/Three things/)
-    expect(tabs[9].textContent).toMatch(/Traps/)
+    expect(tabs[11].textContent).toMatch(/Traps/)
   })
 
   // The four drills, each on its own step, each sized by its data. This is
@@ -36,7 +36,7 @@ describe('Observability page', () => {
   test('every drill mounts on its step with its row count', () => {
     render(<Observability />)
     const cases: [RegExp, number][] = [
-      [/Errors/, SCRUBBER.length],
+      [/Scrubbing/, SCRUBBER.length],
       [/Structured logs/, LEVELS.length],
       [/Alerts/, TRIAGE.length],
       [/nothing reports/, SILENCE.length],

@@ -11,16 +11,18 @@ const go = (label: RegExp) =>
   fireEvent.click(screen.getByRole('tab', { name: label }))
 
 describe('collect panels', () => {
-  test('five steps, in order', () => {
+  test('seven steps, in order', () => {
     render(<Stepper steps={COLLECT_STEPS} />)
     expect(COLLECT_STEPS.map((s) => s.id)).toEqual([
       'three',
       'errors',
+      'scrubbing',
       'logs',
+      'fields',
       'where',
       'signals',
     ])
-    expect(screen.getAllByRole('tab')).toHaveLength(5)
+    expect(screen.getAllByRole('tab')).toHaveLength(7)
   })
 
   test('three: the traces row says you will know when you need them', () => {
@@ -33,9 +35,19 @@ describe('collect panels', () => {
     expect(panel.textContent).toMatch(/You will know when you need them/)
   })
 
-  test('errors: the scrubber artifact and the scrubber drill both mount', () => {
+  test('errors: context is what turns an exception into a fix', () => {
     render(<Stepper steps={COLLECT_STEPS} />)
-    go(/Errors/)
+    go(/Errors that are useful/)
+    const panel = screen.getByRole('tabpanel')
+    expect(panel.textContent).toMatch(
+      /Context is what turns an exception into a fix/,
+    )
+    expect(panel.textContent).toMatch(/Add breadcrumbs for meaningful actions/)
+  })
+
+  test('scrubbing: the scrubber artifact and the scrubber drill both mount', () => {
+    render(<Stepper steps={COLLECT_STEPS} />)
+    go(/Scrubbing/)
     const panel = screen.getByRole('tabpanel')
     expect(panel.textContent).toMatch(/sentry\.server\.config\.ts/)
     expect(screen.getAllByRole('radiogroup')).toHaveLength(SCRUBBER_ROWS.length)
@@ -52,6 +64,19 @@ describe('collect panels', () => {
     const radios = screen.getAllByRole('radio')
     expect(radios).toHaveLength(LEVEL_ROWS.length * 5)
     expect(panel.textContent).toMatch(/Levels are a filter, not a mood/)
+  })
+
+  test('fields: request id, naming, and cardinality rows all render', () => {
+    render(<Stepper steps={COLLECT_STEPS} />)
+    go(/What goes on the line/)
+    const panel = screen.getByRole('tabpanel')
+    expect(panel.textContent).toMatch(/A request id on every line/)
+    expect(panel.textContent).toMatch(
+      /Name events noun\.verb_past_tense, consistently/,
+    )
+    expect(panel.textContent).toMatch(
+      /Identifiers in logs, never as metric labels/,
+    )
   })
 
   test('where: both platforms and the stream-not-storage claim', () => {

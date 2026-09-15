@@ -2,7 +2,9 @@
 export const STEP_IDS = [
   'three',
   'errors',
+  'scrubbing',
   'logs',
+  'fields',
   'where',
   'signals',
   'health',
