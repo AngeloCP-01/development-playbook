@@ -373,7 +373,8 @@ Test names encode the rationale, not the mechanic:
 |---|---|
 | `CLAUDE.md` | How this project works. You are reading it. |
 | `KICKOFF.md` | Paste-buffer for cold-starting a new session with full context. Refresh its *Project state* before use — a stale kickoff is worse than none, because it is trusted. |
-| `docs/task.md` | Scope, milestones (`P-` content, `W-` web app), dependency map |
+| `docs/task.md` | Scope, milestones (`P-` content, `W-` web app), dependency map, open task detail |
+| `docs/task-archive.md` | Fully completed task-detail sections, moved verbatim. Grep by ID, never read whole. |
 | `docs/tracker.md` | What shipped with evidence, numbered decisions, technical debt, bug ledger |
 | `docs/tracker-archive.md` | Closed debt and older Completed rows, moved verbatim. Grep by ID, never read whole. |
 | `web/DESIGN.md` | The design system. Any new UI matches it. |
