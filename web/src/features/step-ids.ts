@@ -9,6 +9,7 @@ import { STEP_IDS as CI_CD } from './ci-cd/steps'
 import { STEP_IDS as STAGING } from './staging/steps'
 import { STEP_IDS as PRODUCTION_DEPLOYMENT } from './production-deployment/steps'
 import { STEP_IDS as POST_DEPLOYMENT_VERIFICATION } from './post-deployment-verification/steps'
+import { STEP_IDS as OBSERVABILITY } from './observability/steps'
 
 /**
  * Every built stage's rail, keyed by slug — the *declaration* of what each
@@ -39,4 +40,5 @@ export const STEP_IDS_BY_SLUG: Record<string, readonly string[]> = {
   '12-staging': STAGING,
   '13-production-deployment': PRODUCTION_DEPLOYMENT,
   '14-post-deployment-verification': POST_DEPLOYMENT_VERIFICATION,
+  '15-observability': OBSERVABILITY,
 }

@@ -325,6 +325,32 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: 'Diagnostic steps when ALB health checks fail post-deploy — the most common AWS-side verification failure.',
     },
   ],
+  '15-observability': [
+    {
+      title: 'Monitoring Distributed Systems (The Four Golden Signals)',
+      source: 'Google SRE Book',
+      url: 'https://sre.google/sre-book/monitoring-distributed-systems/',
+      adds: 'The origin of latency, traffic, errors and saturation as the four things to instrument first, and the symptoms-versus-causes argument this stage borrows.',
+    },
+    {
+      title: 'Configure Liveness, Readiness and Startup Probes',
+      source: 'Kubernetes documentation',
+      url: 'https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/',
+      adds: 'The platform-side definition of the restart-versus-routing split: what each probe does on failure, which is the mapping the health-checks step teaches.',
+    },
+    {
+      title: 'Redaction',
+      source: 'pino documentation',
+      url: 'https://github.com/pinojs/pino/blob/main/docs/redaction.md',
+      adds: 'Exactly what a redaction path can and cannot match — case sensitivity, wildcard depth — which is the boundary the logger step draws before it adds its own serializer.',
+    },
+    {
+      title: 'Filtering Events with beforeSend',
+      source: 'Sentry documentation',
+      url: 'https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/filtering/',
+      adds: "The event shape `beforeSend` receives and which fields Sentry populates by default, so the scrubber step's three surfaces can be checked against the real payload.",
+    },
+  ],
 }
 
 export function getReferences(slug: string): Reference[] {

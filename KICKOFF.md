@@ -29,54 +29,48 @@ Before doing anything, read these for context:
 - `README.md` — the playbook's own index and its central claim
 - `web/AGENTS.md` — this Next.js version postdates your training data; read
   `node_modules/next/dist/docs/` before writing framework code
-- `docs/learnings/README.md` — ten guides written after rounds that cost real time.
+- `docs/learnings/README.md` — guides written after rounds that cost real time.
   **Read `branch-discipline-101.md` first, before touching git at all.** Then
-  **`plans-are-unverified-101.md`**, which is new and is about the artifact this round
-  is going to execute: nothing in this repository reads a plan, and the one you are
-  about to run proved it twice while it was being written.
+  **`plans-are-unverified-101.md`**: nothing in this repository reads a plan, and the
+  stage 15 port plan proved it twice while it was being written, then a third time
+  during its own execution — the D-52 fix the plan pre-authorized covered one panel,
+  and the real number was four.
 
-### Project state (as of 2026-09-11 — W-3 is **11/18**, seven stages remain.
-Stages 01–07, 11, 12, 13 and 14 are interactive. Stage 13 is platform-aware (8 steps,
+### Project state (as of 2026-09-15 — W-3 is **12/18**, six stages remain.
+Stages 01–07, 11, 12, 13, 14 and 15 are interactive. Stage 13 is platform-aware (8 steps,
 Vercel + AWS). **Eighteen of twenty-three** reference sheets drawn.
 
-**Stage 15's whole doc round — all 16 tasks — is done and merged.** The mid-round merge
-(`fcd46f1`, 2026-09-10) landed the doc through Task 14 without a whole-branch review;
-that gap is closed, not deferred. Task 15 (the fix wave), the D-48 re-run, the
-whole-branch review the merge owed, and Task 16 (records) all ran on
-`fix/stage-15-fix-wave` and merged to `develop` as `7418684` (`--no-ff`), branch deleted.
-`docs/15-observability.md` is **853 lines**, 6 `##`, 12 `###`. `develop` is level with
-`origin/develop`.
-
-**The port is specced and planned; the next session executes it.** Spec:
-`docs/superpowers/specs/2026-09-11-stage-15-interactive-port-design.md`. Plan:
-`docs/superpowers/plans/2026-09-11-stage-15-interactive-port.md` — twelve tasks, ten
-steps, four drills through one shared `Drill` component, five annotated artifacts. Nothing
-has been executed; `ready` is still `false`. Execution is subagent-driven
-(`superpowers:subagent-driven-development`), Sonnet implementers, Sonnet per-task reviewers
-with evidence, Opus for the whole-branch review — `CLAUDE.md` → *Subagent models*.
+**Stage 15 is interactive and complete on its branch, pending review and merge.**
+`feat/stage-15-observability-port` (18 commits, `d9b4da2..2ea6414`) carries the port:
+sixteen steps — ten as planned, plus a mid-verification D-52 reshape that split four
+panels the plan had only pre-authorized fixing one of (`docs/tracker.md`'s 2026-09-15
+W-3.12 row has the full account). `ready: true`. Final gate on the branch: **179 files /
+1348 tests**, expandable count **379**, `pnpm test:e2e` **18/18**, `pnpm test:dev-console`
+**1/1, zero React dev-mode warnings**. **Not merged, not pushed, not deployed** — the
+whole-branch review (opus, per `CLAUDE.md`) is next, then the user's merge decision.
 
 **Start here, in order:**
 
 1. **Check the branch before editing anything.** `git branch --show-current`. Should be
-   `develop`. Cut `feat/stage-15-observability-port` from it before Task 1. If the answer
-   is `main`, or a branch you did not expect, stop and read
+   `feat/stage-15-observability-port` if picking this branch up, or `develop` if starting
+   something new. If the answer is `main`, or a branch you did not expect, stop and read
    `docs/learnings/branch-discipline-101.md`.
 2. **Re-derive every number in this file before trusting it.** `git fetch`, then the
-   commands under "Branch state". This file has been wrong about **six** things in the
-   past, all found by checking rather than reading. Counts include the commit that writes
-   them, and every SHA in this file from before 2026-09-10 was rewritten (D-97).
+   commands under "Branch state". This file has a documented history of being wrong about
+   numbers, all found by checking rather than reading. Counts include the commit that
+   writes them, and every SHA in this file from before 2026-09-10 was rewritten (D-97).
 3. **Run the two one-line checks that belong at every refresh:**
    `grep -n "NOT merged, NOT pushed, NOT deployed" docs/tracker.md` and
    `git ls-files reference/ | grep -iv "jpeg\|jpg\|png\|webp\|gif\|\.md$"`. The second
    found a résumé in the tree on 2026-09-10 (TD-46, D-97). It must return nothing.
-4. **Read the plan's header and Global Constraints, then execute it task by task** with
-   `superpowers:subagent-driven-development`. Each implementer gets its task slice, the
-   spec path, and `web/PATTERNS.md`. Read `docs/learnings/plans-are-unverified-101.md`
-   first: nothing in this repo reads a plan, and every number in this one is a
-   measurement to re-derive, not a fact.
-5. **Open on Sonnet, medium effort** — this is an execution session; the design decisions
-   are in the spec. Escalate a task's review to Opus only where `CLAUDE.md` says to
-   (Task 10 touches `stages.ts` and the registries: that one, yes).
+4. **The next step for this branch is the whole-branch review**, opus, per
+   `CLAUDE.md` → *Subagent models*, covering the full 18-commit diff from `develop`
+   (`d9b4da2`) — not just the last few D-52 commits. Fix its findings and re-review before
+   asking about a merge. The merge target is `develop`, never `main`, and the merge itself
+   is the user's call every time.
+5. **If starting fresh work instead**, the next W-3 stage is not yet chosen — see Open
+   threads below. Open on Sonnet, medium effort, for routine rounds; Opus for a new
+   brainstorm/spec/plan.
 
 ---
 
@@ -203,18 +197,61 @@ Tasks 15 and 16 of the stage 15 doc round, start to finish, on `fix/stage-15-fix
 
 ---
 
-#### The condensed history (01–07, 11–14, the reference hub)
+#### What this session did (2026-09-15)
+
+Executed the stage 15 interactive port, `feat/stage-15-observability-port`, Tasks 1–12
+of `docs/superpowers/plans/2026-09-11-stage-15-interactive-port.md`.
+
+- **Tasks 1–10 ran per the plan**, subagent-driven, sonnet implementers, a sonnet
+  per-task reviewer on each (opus for Task 10, escalated per `CLAUDE.md` since it touches
+  `stages.ts` and both registries). All ten closed clean or clean-after-fix. `ready: true`
+  since Task 10; `pnpm test` after Task 10 was 179 files/1342 tests.
+- **Task 11 (verification) found real problems, not just evidence.** The e2e audit came
+  back 13/18: **four** panels over the D-52 screen budget (`#errors`, `#logs`,
+  `#silence`, `#done`), not the plan's pre-authorized one; the WCAG AA and
+  disclosure-sweep tests exceeded a fixed 60s timeout mid-sweep (an 18th-stage headroom
+  regression, unrelated to this branch's content); two new touch-target failures under
+  44px (`#where`, `#signals`); `test:dev-console` blocked by another `next dev`.
+  Implementer correctly stopped rather than improvising past its authorization.
+- **User decided, in order:** brainstorm the 4-panel D-52 split rather than force a
+  1-panel fix, bump the e2e timeout, and the user would stop their own dev server for
+  the dev-console check.
+- **Timeout raised 60s→120s** (`playwright.config.ts`, `2bb64e9`); the 3 previously
+  timing-out tests re-verified individually, including WCAG AA in both themes.
+- **Touch-target fix**: two `Callout` call sites in `panels-collect.tsx` were passing raw
+  text instead of `<p>`-wrapped text, missing the audit's inline exemption. Wrapped both,
+  matching every other `Callout` in the file (`7c47d33`).
+- **D-52 four-panel split**, brainstormed and executed in two files, two rounds each,
+  each round reviewed and approved: `panels-collect.tsx`'s `errors`/`logs` split further
+  into `errors`+`scrubbing`+`reach` and `logs`+`levels`+`fields`; `panels-act.tsx`'s
+  `silence`+`jobs` and `done`+`traps`, with a fix round making `traps` the doc's true
+  final step (matching its own section order and stage 11's precedent). `STEP_IDS`
+  10→16.
+- **Full re-run: `pnpm test:e2e` 18/18, `pnpm test:dev-console` 1/1 zero warnings.**
+  Expandable count re-measured against the post-split build: 379 (122 URLs, 269 ids,
+  both confirming content moved rather than grew). **Final `pnpm test`: 179 files/1348
+  tests.** Humanizer pass over both panel files: zero edits needed.
+- **Task 12 (these records):** this file, `docs/task.md`, `docs/tracker.md`'s new
+  2026-09-15 W-3.12 row, and `web/PATTERNS.md`'s D-52 note.
+- **Not done, deliberately:** the whole-branch review (opus) and the merge decision —
+  next, not part of this session. Not merged, not pushed, not deployed.
+
+---
+
+#### The condensed history (01–07, 11–15, the reference hub)
 
 Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them by ID.
 
 - **Stages 01–07, 11, 12, 13 and 14 are interactive and merged.** 03 is 22 steps, 04 is
   15, 05 is 13, 06 is 8, 07 is 6, 11 is 8, 12 is 6, 13 is 8 (platform-aware), 14 is 6.
-  Coverage walks ran on 03–06, 11–14. Stages 08–10 and 15–18 render a "sheet not drawn"
-  placeholder; routing works for all 18.
+  **Stage 15 is interactive on its own branch, unmerged** — 16 steps after the D-52
+  reshape. Coverage walks ran on 03–06, 11–14; stage 15's port hasn't had one yet.
+  Stages 08–10 and 16–18 render a "sheet not drawn" placeholder; routing works for all 18.
 - **A per-task reviewer subagent, plus a whole-branch review, is the standard** — every
   reviewed round has found something a green gate did not. **The same session cannot
   self-review.** Under the Pro policy the per-task reviewer is `sonnet` with evidence
-  required, the final review is `opus`; `CLAUDE.md` → *Subagent models*.
+  required (escalated to `opus` for a task touching `stages.ts`/routing/build/CI), the
+  final review is `opus`; `CLAUDE.md` → *Subagent models*.
 - **A coverage walk, blind to the branch's own plan and reports, finds real gaps.**
   Budget a fix wave after it.
 - **Glossary and stage metadata are single-sourced** (D-36): terms live in
@@ -222,11 +259,13 @@ Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them 
 - **Quality gates**: prettier (skips markdown and `highlighted.generated.ts`), eslint at
   `--max-warnings 0`, vitest in two projects, `test:e2e` (18-test Playwright audit),
   `test:dev-console` (outside the gate, once per stage round — TD-35, D-84).
-- **`develop` is at 1218 tests across 162 files** (was 1207 before the stage 15 fix-wave
-  merge, 2026-09-11). **e2e last green 2026-09-07 (18/18)** — that predates this merge,
-  and nothing under `web/src` renders differently, so it wasn't re-run; `test:dev-console`
-  **unrun since 2026-09-07** — do not quote a number for it. It needs its own dev server
-  and refuses to start while another `next dev` holds the directory.
+- **`develop` is at 1218 tests across 162 files** (unchanged since the stage 15 doc-round
+  merge, 2026-09-11 — the port lives on `feat/stage-15-observability-port`, not yet
+  merged). **On that branch, final: 179 files / 1348 tests, `test:e2e` 18/18,
+  `test:dev-console` 1/1 with zero warnings** — both re-run after all D-52 fixes, 2026-09-15.
+- **The e2e per-test timeout is now 120s, not 60s** (`playwright.config.ts`, `2bb64e9`) —
+  an 18th stage in the sweep pushed WCAG AA and the disclosure sweep over the old budget;
+  this is a repo-wide headroom fix, unrelated to stage 15's own content.
 - **Deployed**: `W-5` complete, live at https://acp-dev-playbook.vercel.app since
   2026-08-11. `pnpm test:prod` verifies the deployment, outside the merge gate.
 
@@ -242,33 +281,40 @@ git rev-list --count main..develop
 git ls-files reference/ | grep -iv "jpeg\|jpg\|png\|webp\|gif\|\.md$"
 ```
 
-**Measured 2026-09-11, after the stage 15 fix-wave merge, before this refresh's own
-commit landed:**
+**Measured 2026-09-15, before this refresh's own commit landed:**
 
 | | SHA | |
 |---|---|---|
-| `develop` | `7418684` | **level with `origin/develop`** |
-| `main` | `d659d32` (unchanged since 2026-09-10) | `develop` is **89 ahead** |
+| `develop` | `d9b4da2` | **2 ahead of `origin/develop`** (`e4750ad`) |
+| `main` | `d659d32` (unchanged since 2026-09-10) | `develop` is **94 ahead** |
+
+`develop`'s two unpushed commits, per `git log --oneline origin/develop..develop`, are
+the plan commit `2071f9f` and the records commit `d9b4da2` on top of it. `e4750ad` is a
+*different*, already-pushed commit sitting on `origin/develop` — the user's own
+intermediate save of the plan at an earlier line count, under a subject that describes
+itself wrong (see the note two sessions up). Neither of the two actually-unpushed
+commits is code; nothing under `web/src` differs between `develop` and `origin/develop`.
 
 **SHAs from before 2026-09-10 were rewritten** (D-97): `c4f2a68` is `450190c`, `8e94b1f`
 is `bf0070e`, and the originals no longer exist as objects. A SHA from a 2026-09-08 note
 that `git log develop` cannot find was rewritten, not lost:
 `git log --oneline develop | grep "<subject>"` finds it.
 
-The promotion of `develop` to `main` is **the user's**, and 89 commits are waiting on it.
+The promotion of `develop` to `main` is **the user's**, and 94 commits are waiting on it.
 
-**`fix/stage-15-fix-wave` merged and was deleted, 2026-09-11.** `7418684`, `--no-ff`, 4
-commits (the fix wave, the liveness endpoint the re-run surfaced, the whole-branch
-review's fixes, Task 16's records). Gate on `develop` after the merge: 1218/1218, clean.
+**`feat/stage-15-observability-port` is in flight, cut from `develop` at `d9b4da2`.** 18
+commits, `d9b4da2..2ea6414` (`git log --oneline develop..feat/stage-15-observability-port`
+— re-run against `HEAD` at read time, since this records commit itself now sits on top).
+Ten planned steps, sixteen shipped after the D-52 reshape; `ready: true`. Not merged, not
+pushed. **The whole-branch review (opus) is the next step on this branch**, then the
+user's merge decision (target: `develop`, `--no-ff`, never `main`).
 
-**No branch is in flight.** The next one is for the stage 15 port — cut it after the
-brainstorm/plan produces something to build from, not before.
-
-**`git branch` is `develop` and `main`, and `git worktree list` is one line.** The two
-stale branches and the three 2026-09-04 agent worktrees (1.8 GB) were removed on
-2026-09-10 after checking every file they touched was already in `develop`. Their three
-implementer reports were the only copies and now live in
-`.superpowers/sdd/2026-09-04-stage-11-ci-cd/`, git-ignored like every workspace there.
+**`git branch` is `develop`, `feat/stage-15-observability-port` and `main`; `git worktree
+list` is one line** (this working directory, on the port branch). The two stale remote
+branches and the three 2026-09-04 agent worktrees (1.8 GB) were removed on 2026-09-10
+after checking every file they touched was already in `develop`. Their three implementer
+reports were the only copies and now live in `.superpowers/sdd/2026-09-04-stage-11-ci-cd/`,
+git-ignored like every workspace there.
 
 **Branch/push convention, unchanged:** work on `feat/`|`fix/`|`docs/<date>-` branches, cut
 from `develop`, never from `main`. Merge with `--no-ff` and a hand-written subject, never
@@ -288,26 +334,35 @@ Notes for whoever is preparing this handoff:
   `reference/rest-api-best-practices.md` — hand-written drafts for `sql-reference` and
   `api-reference`, gathered without an image, not yet registered.
 - Open threads worth carrying forward:
-  - **The stage 15 port (W-3.12 proper) is the next content work.** `fix/stage-15-fix-wave`
-    merged 2026-09-11 as `7418684`; `develop` is at 1218 tests. Start with
-    `superpowers:brainstorming`, not a plan — this is fresh design work, not a
-    continuation of the fix wave.
+  - **The whole-branch review for `feat/stage-15-observability-port` is the next step,
+    before any merge decision.** Opus, per `CLAUDE.md`, covering the full 18-commit diff
+    from `develop` at `d9b4da2` — not just the D-52 fix-up commits. Fix its findings and
+    re-review before asking about a merge. The merge target is `develop`, never `main`,
+    and every merge is asked about, every time.
+  - **The next W-3 stage is not chosen.** Six remain (08, 09, 10, 16, 17, 18). Pick after
+    the stage 15 branch is merged, not before.
+  - **The D-52 split's own reviews left two cosmetic Minor findings, deferred:**
+    `Callout` `eyebrow` text on the split panels not updated to match the new step
+    boundaries, and the panel-file comment numbering scheme inconsistent across the split.
+  - **The baselines/alert-set persisted worksheet is its own bounded round**, deferred at
+    the user's direction 2026-09-11, unstarted.
+  - **`TriageDrill`/`AuthorizationDrill` (stage 06) are not yet migrated onto the shared
+    `Drill` component** stage 15 introduced — still two implementations of the same
+    pattern.
   - **Ten observability captures are tracked in `reference/` with no provenance.** Ask for
     authors and URLs before registering any of them. (The five text sources that fed the
-    doc's prose *are* registered now, 2026-09-11.)
+    doc's prose *are* registered, since 2026-09-11.)
   - ~~**Personal files are still parked in a committed directory.**~~ Committed on
     2026-09-08, rewritten out on 2026-09-10 (D-97, TD-46). Now at
     `~/personal/parked-from-playbook/`; blobs purged locally and never pushed. Never
     `git add -A`.
-  - **`pnpm test:dev-console` has not run since 2026-09-07.**
   - **Four branches merged unreviewed, from 2026-09-07** (`6f52212`, `99f6145`,
     `4fdb9bd`, `a8f56de`) — treat that code as less checked than usual. Stage 15's
     `fcd46f1` is no longer on this list: the 2026-09-11 whole-branch review covered the
     full round from `fdc4811`, including it.
-  - **`docs/tracker.md`'s "Next up" section is roughly ten days stale** (still describes
-    an 8/18 W-3 and a pre-stage-11/13/14/15 stage-04 step-splitting question). Found
-    2026-09-11 while writing that round's tracker row, not fixed — refreshing it is a
-    separate pass.
+  - **`docs/tracker.md`'s "Next up" section is stale** (still describes an 8/18 W-3 and a
+    pre-stage-11/13/14/15 stage-04 step-splitting question). Found 2026-09-11 while
+    writing that round's tracker row, not fixed — refreshing it is a separate pass.
   - **Grep `NOT merged, NOT pushed, NOT deployed` in `docs/tracker.md` at every merge.**
     Doing it once found three rows carrying the phrase, two false for weeks.
   - **A "merged"/"not merged" claim is a query to re-run, not a fact to reuse** —

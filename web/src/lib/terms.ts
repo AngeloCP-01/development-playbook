@@ -917,6 +917,77 @@ export const TERMS: Record<string, Term> = {
       'Short-lived credentials minted per run cannot leak from a config file that no longer holds them.',
     see: '11-ci-cd',
   },
+  heartbeat: {
+    name: "Heartbeat (dead man's switch)",
+    short:
+      'A ping a job sends on success; the monitor pages when the ping stops arriving.',
+    full: 'A scheduled job calls a URL when it finishes successfully, and a monitor pages you when the call does not arrive inside the window you set. It is the only monitor that alerts on silence rather than on an event, which is why it goes on the success path and never in a `finally`.',
+    soWhat:
+      'A job that never ran produces no exception, no log line and no request — every other mechanism reports healthy. This is the one that does not.',
+    see: '15-observability',
+  },
+  liveness: {
+    name: 'Liveness check',
+    short:
+      'Is this process wedged? — the check a platform uses to decide whether to restart it.',
+    full: 'An endpoint that returns 200 whenever the process is running and checks nothing else. Platforms that restart on a failed check (Fly, ECS, Cloud Run, a Kubernetes liveness probe) read this one.',
+    soWhat:
+      'A restart cannot fix a database. Wire the restart trigger to a check that depends on one and a thirty-second blip restarts every instance you have, at once.',
+    see: '15-observability',
+  },
+  readiness: {
+    name: 'Readiness check',
+    short:
+      'Should traffic come here right now? — the check a load balancer uses to route around an instance.',
+    full: "An endpoint that verifies real dependencies (the database, with a timeout) and returns 503 when one is unreachable. Routing decisions — a load balancer's health check, a Kubernetes readiness probe — read this one and pull the instance out of rotation without restarting it.",
+    soWhat:
+      'It is what your uptime monitor should point at. It is not what your restart trigger should point at; that is the liveness check.',
+    see: '15-observability',
+  },
+  saturation: {
+    name: 'Saturation',
+    short:
+      'How close a resource is to its ceiling — connections, concurrency, disk.',
+    full: 'The fourth golden signal: how full the resource with a hard limit is. Database connections, function concurrency, storage. Unlike CPU, a saturated resource with a hard ceiling does not recover on its own, so it is worth alerting on before it becomes a symptom.',
+    soWhat:
+      'On a small deployment it is the signal most likely to be the actual incident — a connection pool exhausted by a batch job running alongside daytime traffic — and the one most often left off the dashboard.',
+    see: '15-observability',
+  },
+  cardinality: {
+    name: 'Cardinality',
+    short:
+      'How many distinct values a field takes. Fine in logs, expensive as a metric label.',
+    full: 'A high-cardinality field — a user id, an invoice id, a request id — has as many distinct values as there are users, invoices or requests. In logs, that is what makes a particular event findable. As a metric label, every combination of label values creates another time series.',
+    soWhat:
+      'Keep identifiers in log lines and out of metric labels. A bounded event name is a fine label; a unique id is not.',
+    see: '15-observability',
+  },
+  'structured-logging': {
+    name: 'Structured logging',
+    short: 'Logging objects — one JSON line per event — instead of sentences.',
+    full: 'Each log call emits a JSON object with named fields (`event`, `userId`, `requestId`, `reason`) rather than a formatted sentence. `pino` writes one object per line to stdout, which every platform collects; the shape is what matters, not the library.',
+    soWhat:
+      'Sentences are unsearchable at volume. "How many card_declined events this week, by amount?" is a query against objects and impossible against prose.',
+    see: '15-observability',
+  },
+  'request-id': {
+    name: 'Request id',
+    short:
+      'One id shared by every log line and error report from the same request.',
+    full: "A per-request identifier — the incoming `x-request-id` if there is one, else a fresh UUID — stored in `AsyncLocalStorage` and attached to every log line by the logger's `mixin`, and to the error report with `Sentry.setTag`. Not distributed tracing: it is one field, and it costs nothing.",
+    soWhat:
+      'Without it, "work out why" fails at two log lines: you can see the error and the logs and cannot connect them.',
+    see: '15-observability',
+  },
+  'alert-fatigue': {
+    name: 'Alert fatigue',
+    short:
+      'The state where you dismiss alerts without reading them, because most have not needed action.',
+    full: 'Not a discipline failure; the predictable result of noisy alerts. An alert that has woken you four times without once needing action has taught you to ignore it, and the fifth time is the real one.',
+    soWhat:
+      'Every alert must be actionable. The cure for a noisy alert is to raise its threshold, lengthen its window, or delete it — not to try harder to read it.',
+    see: '15-observability',
+  },
 }
 
 export function getTerm(key: string): Term | undefined {

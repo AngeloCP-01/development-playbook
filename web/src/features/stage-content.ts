@@ -10,6 +10,7 @@ import CiCd from './ci-cd/CiCd'
 import { Staging } from './staging/Staging'
 import { ProductionDeployment } from './production-deployment/ProductionDeployment'
 import { PostDeploymentVerification } from './post-deployment-verification/PostDeploymentVerification'
+import { Observability } from './observability/Observability'
 
 /**
  * Stage slug → interactive page body. A stage missing from this map renders the
@@ -27,4 +28,5 @@ export const STAGE_CONTENT: Record<string, ComponentType> = {
   '12-staging': Staging,
   '13-production-deployment': ProductionDeployment,
   '14-post-deployment-verification': PostDeploymentVerification,
+  '15-observability': Observability,
 }
