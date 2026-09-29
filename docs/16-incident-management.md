@@ -87,37 +87,101 @@ responder has checked containment and recovery; involve specialist help when the
 scope cannot be established. Detailed forensic work and notification obligations
 belong to the security response process, not a generic availability checklist.
 
-### Diagnosing
+### Escalate when help is unavailable
 
-Once service is restored, investigate calmly.
+Write the escalation path before an incident: primary contact, backup, acknowledgment
+deadline, next contact or provider support route, and the conditions for immediate
+escalation. Set deadlines appropriate to your service and coverage; a team of two
+cannot promise continuous staffed coverage without making arrangements for it.
 
-**Start with what changed.** Almost every incident traces to a change: a deploy, a config
-edit, a dependency update, an expired certificate, a third-party outage, or crossing a
-threshold like disk space or a rate limit.
+If the primary does not acknowledge by the agreed deadline, contact the backup. If
+the backup is unavailable, use the recorded provider or specialist route and keep
+ownership with the current responder. Do not wait through deadlines if harm is
+increasing or specialist help is needed now. Send impact, severity, incident link,
+actions already taken, observed results and the specific help required. Never include
+credentials in the escalation message.
 
-The last of those is the sneaky category — nothing changed on your side, and the system
-crossed a line it had been approaching for months.
+An **Incident commander** owns coordination and decisions during the incident; on a
+small incident that may be the sole developer. Keep one timeline and set a reminder
+for brief customer updates while you investigate. A handoff is complete when the
+receiving responder explicitly accepts ownership, current impact, unknowns and the
+next action. Until then, the original responder still owns it.
 
-**Work from the symptom backwards.**
+### Communicate while the incident is open
 
-1. What exactly is the user-visible failure?
-2. Which request path produces it?
-3. What does Sentry show for that path?
-4. What do structured logs show around the first occurrence
-   ([15](15-observability.md))?
-5. What happened immediately before that timestamp?
+State observed impact, what you are doing, what is unknown and the next update time.
+Use an existing customer channel that stays reachable during the outage. A public
+status page is useful, but a support notice or agreed customer channel can meet the
+minimum. Keep sensitive investigative details in the restricted incident record.
+Update at the promised time even if nothing changed. A next-update time is not a
+recovery estimate. Communicate throughout mitigation and investigation.
 
-**Find the first occurrence.** Not the loudest error — the earliest. The most common
-diagnostic mistake is chasing the noisiest symptom, which is usually a downstream
-consequence. The first error in the timeline is closest to the cause.
+**Worked example: Nudge**, a fictional appointment-reminder service, uses a worker
+and a messaging provider. On 2026-09-29, send timeouts start at 10:00 UTC while the
+web UI stays healthy. Ana owns response; backup Bo is unavailable. The pre-agreed
+fallback is provider support. Nudge has a tested dispatch pause that preserves
+queued jobs. Each reminder has a stable operation ID; the fictional provider exposes
+an authoritative result lookup by that ID. These are example-specific capabilities,
+not promises made by every provider. Disable retries for uncertain outcomes until
+that lookup establishes whether sending already succeeded.
 
-**Form a hypothesis and test it.** State it specifically: "the migration added a NOT NULL
-column and old rows have nulls." Then find the evidence that would confirm or refute it.
-Changing things until the symptom disappears produces a system that works for reasons you
-do not know — which means it will break again for the same reasons.
+> 10:05 UTC — Investigating: appointment reminders are delayed. We are checking delivery records and the messaging provider. Cause and recovery time are unknown. Next update: 10:15 UTC.
 
-**Check third parties.** Before assuming it is your code, check your provider status
-pages. Sometimes the answer is that Stripe is down and there is nothing to fix.
+> 10:15 UTC — Update: the provider reports degradation. We have paused dispatch while checking uncertain send results; the provider's role is not yet confirmed. Recovery time remains unknown. Next update: 10:25 UTC.
+
+> 10:25 UTC — Monitoring: the provider reports recovery. Dispatch is resuming only for reconciled eligible reminders; delayed work remains. Recovery time remains unknown. Next update: 10:40 UTC.
+
+> 10:40 UTC — Resolved: checks from 10:30 to 10:40 UTC confirm normal dispatch. The affected reminder set is accounted for: confirmed sends were not repeated, remaining eligible reminders were sent, and expired reminders were marked expired with affected customers notified. Our follow-up review remains open.
+
+The times above are commitments in this fictional incident, not a required cadence.
+Internal updates also include the responder, evidence links and help needed. Do not
+claim a cause simply because a provider reports a problem at the same time.
+
+### Diagnose with evidence
+
+Before acting, investigate enough to select and check a mitigation. After limiting
+impact, continue the deeper investigation. Start with the affected operation,
+recent changes, dependency health and the first relevant timestamps in
+[15 — Observability](15-observability.md)'s logs and error reports. The earliest observed error is not necessarily the cause;
+missing telemetry and clock differences can hide earlier events.
+
+Write a falsifiable hypothesis: “The provider accepted reminders but timed out before
+returning acknowledgments.” Compare provider operation results with local reminder
+states. A provider result showing accepted delivery supports that hypothesis; an
+explicit rejection points elsewhere. Preserve competing explanations until the
+evidence separates them. A status page can lag or describe an unrelated region.
+
+Do not change several things at once without recording them. For each change, write
+what result would support your hypothesis, what would refute it and when you will
+stop. Provider downtime may leave nothing to repair at the provider, but you still
+own your application's retries, queued work and customer communication.
+
+### Verify recovery and account for delayed work
+
+Recovery means the affected customer operation meets its agreed criteria, not merely
+that a provider turned green. Check error rate, latency and real operation outcomes
+against your baseline. For background work, check oldest pending age, completion
+rate, failures and the disposition of affected records; new requests alone do not
+prove recovery. Use a service-specific observation window long enough to see normal
+work complete, and record why that window fits. See
+[14 — Post-Deployment Verification](14-post-deployment-verification.md) for checking the actual operation.
+
+Reconcile uncertain outcomes before replay. A timeout does not prove an operation
+failed: it might have completed before its acknowledgment was lost. Check the
+provider's authoritative result or another reliable record. If the outcome cannot
+be established, hold the item for reviewed reconciliation; do not send, charge or
+create again merely to test it. Document any remaining limitation to customers.
+
+In Nudge, stable IDs and authoritative lookup allow confirmed sends to be excluded
+from replay. The responder resumes only eligible unsent work, marks expired
+reminders expired, notifies affected customers and accounts for the whole affected
+set. The worked incident observes normal dispatch for ten minutes after that work
+is accounted for. Another service must choose its own criteria and observation window.
+
+Record service recovery separately from follow-up closure. Diagnosis, prevention
+and provider questions can remain open after impact ends. Keep owners and dates on
+that work; never invent a root cause to tick a checkbox.
+
 
 ### Writing it down
 

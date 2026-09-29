@@ -75,3 +75,37 @@ test('I1: suspected compromise has a containment path', () => {
   expect(s).toContain('without delaying urgent containment')
   expect(s).toContain('Availability alone does not establish safety')
 })
+
+test('I5: escalation continues when the backup is unreachable', () => {
+  const s = text('Escalate when help is unavailable')
+  for (const phrase of [
+    'acknowledgment deadline',
+    'backup is unavailable',
+    'explicitly accepts',
+  ])
+    expect(s).toContain(phrase)
+})
+test('updates promise a next update without guessing a recovery time', () => {
+  const s = section('Communicate while the incident is open')
+  const updates = [...s.matchAll(/^> (.+)$/gm)].map((m) => m[1])
+  expect(updates).toHaveLength(4)
+  for (const update of updates.slice(0, 3))
+    expect(update).toMatch(/Next update: \d{2}:\d{2} UTC/)
+  expect(updates[0]).toContain('Cause and recovery time are unknown')
+  expect(updates[1]).toContain('not yet confirmed')
+  expect(updates[3]).toContain('10:40 UTC')
+})
+test('I4: provider recovery does not authorize replay or incident resolution', () => {
+  const s = text('Verify recovery and account for delayed work')
+  for (const phrase of [
+    'Reconcile uncertain outcomes before replay',
+    'new requests alone',
+    'service-specific observation window',
+  ])
+    expect(s).toContain(phrase)
+})
+test('diagnosis treats early errors as evidence rather than proof', () => {
+  expect(text('Diagnose with evidence')).toContain(
+    'earliest observed error is not necessarily the cause',
+  )
+})

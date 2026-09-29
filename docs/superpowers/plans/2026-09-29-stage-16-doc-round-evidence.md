@@ -223,3 +223,66 @@ Received: "Restore service first. Understand it second. Prevent it third."
 - Task 1 commit is `0f32ffa`.
 - The gathered reference images were already committed before this task and were left untouched; no image files were untracked by Task 1.
 - `.superpowers/sdd/.../task-1-report.md` is ignored scratch reporting by repository policy; this durable evidence file is the committed record.
+
+## Task 2: escalation, communication, diagnosis and recovery
+Date: 2026-09-29. The new tests were written before the document edit. The original diagnosis text delayed all investigation until service restoration, identified the first logged error as closest to cause, and omitted escalation, timed updates and delayed-work reconciliation. Four new guards failed for the right reason: their sections were absent; five prior guards passed.
+The approved replacement adds a backup-unavailable escalation route, four Nudge updates, falsifiable diagnosis, and service-specific recovery with reconciliation before replay. The fictional provider lookup and stable operation IDs are stated as example-specific capabilities. The humanizer pass found the concrete operational prose suitable as written. The old Traps contradiction remains assigned to Task 3.
+Focused command for every run: `pnpm test --project unit src/lib/stage-16-structure.test.ts` from `web/`. The raw captured output is preserved verbatim in `.superpowers/sdd/2026-09-29-stage-16-doc-round/task-2-report.md`. Exact result lines from those files follow:
+
+### RED
+
+```text
+ ❯ |unit| src/lib/stage-16-structure.test.ts (9 tests | 4 failed) 6ms
+   × I5: escalation continues when the backup is unreachable 2ms
+   × updates promise a next update without guessing a recovery time 0ms
+   × I4: provider recovery does not authorize replay or incident resolution 0ms
+   × diagnosis treats early errors as evidence rather than proof 1ms
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > I5: escalation continues when the backup is unreachable
+Error: Missing section: Escalate when help is unavailable
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > updates promise a next update without guessing a recovery time
+Error: Missing section: Communicate while the incident is open
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > I4: provider recovery does not authorize replay or incident resolution
+Error: Missing section: Verify recovery and account for delayed work
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > diagnosis treats early errors as evidence rather than proof
+Error: Missing section: Diagnose with evidence
+ Test Files  1 failed (1)
+      Tests  4 failed | 5 passed (9)
+```
+
+### GREEN
+
+```text
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+```
+
+### Teeth I4
+
+```text
+ ❯ |unit| src/lib/stage-16-structure.test.ts (9 tests | 1 failed) 9ms
+   × I4: provider recovery does not authorize replay or incident resolution 5ms
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > I4: provider recovery does not authorize replay or incident resolution
+AssertionError: expected '### Verify recovery and account for d…' to contain 'Reconcile uncertain outcomes before r…'
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+```
+
+### Teeth I5
+
+```text
+ ❯ |unit| src/lib/stage-16-structure.test.ts (9 tests | 1 failed) 9ms
+   × I5: escalation continues when the backup is unreachable 5ms
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > I5: escalation continues when the backup is unreachable
+AssertionError: expected '### Escalate when help is unavailable…' to contain 'backup is unavailable'
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 passed (9)
+```
+
+### Final restored
+
+```text
+ Test Files  1 passed (1)
+      Tests  9 passed (9)
+```
+
+The I4 mutation replaced only `Reconcile uncertain outcomes before replay` with `Replay uncertain outcomes`; only I4 failed. The I5 mutation changed only `backup is unavailable` to `backup cannot respond`; only I5 failed. Both were restored and the focused file passed 9/9. Independent read-only per-task review follows this commit under the controller. Full gates remain for the completed document round.
