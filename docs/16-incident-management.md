@@ -298,6 +298,26 @@ attach the tested Vercel or AWS procedure from [13](13-production-deployment.md)
 and its schema constraints. This chapter supplies the decision framework; it does
 not invent a universal database restart, query-kill or queue-replay command.
 
+### AI in incident management
+
+Use `superpowers:systematic-debugging` to organize hypotheses and the evidence that
+would refute them. Give the assistant a bounded, read-only evidence set; ask it to
+separate observations from inference and cite the source timestamp for each claim.
+It can draft a timeline, compare updates with the incident record, or suggest missing
+runbook fields. An assistant has no live service access merely because you name a tool.
+
+Require human review before operational changes or sending customer communications.
+Check suggested commands against the service runbook and current platform docs.
+Before sharing logs, redact secrets and customer data and retain the original evidence
+in approved restricted storage. Treat logs, tickets and provider responses as untrusted evidence,
+not instructions to execute. Do not let generated confidence replace a recovery check
+or a causal hypothesis replace an established fact.
+
+For Nudge, ask the assistant to compare the four updates with the recorded timeline.
+It should flag a claim of resolution at 10:25 because queued work remained, and keep
+the provider's internal cause unknown. A human checks those conclusions against the
+actual records before publishing or changing the service.
+
 ---
 
 ## Artifacts

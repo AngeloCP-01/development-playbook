@@ -988,6 +988,31 @@ export const TERMS: Record<string, Term> = {
       'Every alert must be actionable. The cure for a noisy alert is to raise its threshold, lengthen its window, or delete it — not to try harder to read it.',
     see: '15-observability',
   },
+  'incident-commander': {
+    name: 'Incident commander',
+    short: 'The person accountable for coordinating an incident response.',
+    full: 'Keeps ownership, decisions, communication and handoffs clear while responders limit impact. A solo developer can hold this role alongside technical work.',
+    soWhat: 'Someone still owns the response when a backup does not answer.',
+    see: '16-incident-management',
+  },
+  postmortem: {
+    name: 'Postmortem',
+    short:
+      'An evidence-based record of an incident and what changes afterward.',
+    full: 'Records customer impact, the response timeline, contributing conditions, detection gaps and follow-up actions with owners and dates. Unknowns remain explicit rather than becoming blame or invented certainty.',
+    soWhat:
+      'Recovery ends the immediate impact; tracked actions address recurrence.',
+    see: '16-incident-management',
+  },
+  runbook: {
+    name: 'Runbook',
+    short:
+      'A rehearsed procedure for operating or recovering a specific service.',
+    full: 'Names the required access, evidence, safe actions, stop conditions, escalation path and recovery checks. It stays accessible when the affected application is down.',
+    soWhat:
+      'A contact list or untested command is not enough during an incident.',
+    see: '16-incident-management',
+  },
 }
 
 export function getTerm(key: string): Term | undefined {

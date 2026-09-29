@@ -156,3 +156,31 @@ test('I4/M3: recovery and follow-up closure are separate and a status site is op
   expect(section('Artifacts')).toContain('customer communication channel')
   expect(section('Artifacts')).not.toContain('A status page, if')
 })
+
+test('AI assistance preserves evidence and human operational judgment', () => {
+  const s = text('AI in incident management')
+  for (const phrase of [
+    'superpowers:systematic-debugging',
+    'human review',
+    'redact secrets',
+    'untrusted evidence',
+  ])
+    expect(s).toContain(phrase)
+})
+
+test('lookup headings remain available outside fenced artifact templates', () => {
+  for (const heading of [
+    'The order that matters',
+    'First response: confirm impact and severity',
+    'Choose a mitigation',
+    'When access may be compromised',
+    'Escalate when help is unavailable',
+    'Communicate while the incident is open',
+    'Diagnose with evidence',
+    'Verify recovery and account for delayed work',
+    'Write the postmortem and track follow-up',
+    'Prepare and rehearse the runbook',
+    'AI in incident management',
+  ])
+    expect(section(heading)).toContain(`### ${heading}`)
+})

@@ -418,3 +418,131 @@ Exact relevant lines from original captured output:
  Test Files  1 passed (1)
       Tests  13 passed (13)
 ```
+
+## Task 4: AI boundaries, incident vocabulary and structure guard
+
+Date: 2026-09-29. Structure and metadata tests failed for the missing AI section (13 prior structure checks and 30 prior metadata checks passed). Vocabulary failed for the missing Incident commander entry. The approved AI guidance and three Stage 16 terms made the focused suite green. AI and glossary teeth mutations were restored immediately. The generated glossary diff adds only Incident commander, Postmortem and Runbook. The eleven outer work headings were read outside fenced templates in the spec order. Humanizer pass found the concrete approved wording suitable without revision. No operational command was added. Per-task review follows under the controller. Full round gates remain later.
+
+### Structure RED
+
+Exact relevant lines from captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ ❯ |unit| src/lib/stage-16-structure.test.ts (15 tests | 2 failed) 9ms
+   × AI assistance preserves evidence and human operational judgment 2ms
+   × lookup headings remain available outside fenced artifact templates 2ms
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > AI assistance preserves evidence and human operational judgment
+Error: Missing section: AI in incident management
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > lookup headings remain available outside fenced artifact templates
+Error: Missing section: AI in incident management
+ Test Files  1 failed (1)
+      Tests  2 failed | 13 passed (15)
+```
+
+### AI metadata RED
+
+Exact relevant lines from captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ ❯ |unit| src/lib/stage-metadata.test.ts (31 tests | 1 failed) 15ms
+   × 16-incident-management: the doc carries an AI plays section 3ms
+ FAIL  |unit| src/lib/stage-metadata.test.ts > 16-incident-management: the doc carries an AI plays section
+AssertionError: 16-incident-management has no "### AI in ..." subsection: expected '# 16. Incident Management\n\n> Limit …' to match /^### AI in .+$/m
+ Test Files  1 failed (1)
+      Tests  1 failed | 30 passed (31)
+```
+
+### Vocabulary RED
+
+Exact relevant lines from captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ ❯ |unit| src/lib/terms.test.ts (15 tests | 1 failed | 14 skipped) 4ms
+   × incident vocabulary resolves to the stage that teaches each artifact 3ms
+ FAIL  |unit| src/lib/terms.test.ts > incident vocabulary resolves to the stage that teaches each artifact
+AssertionError: expected undefined to be 'Incident commander' // Object.is equality
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+```
+
+### Structure GREEN
+
+Exact relevant lines from captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+```
+
+### AI metadata GREEN
+
+Exact relevant lines from captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ Test Files  1 passed (1)
+      Tests  31 passed (31)
+```
+
+### Vocabulary GREEN
+
+Exact relevant lines from captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ Test Files  1 passed (1)
+      Tests  1 passed | 14 skipped (15)
+```
+
+### Focused suite GREEN
+
+Exact relevant lines from captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ Test Files  5 passed (5)
+      Tests  64 passed (64)
+```
+
+### AI guidance teeth
+
+Exact relevant lines from captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ ❯ |unit| src/lib/stage-16-structure.test.ts (15 tests | 1 failed) 12ms
+   × AI assistance preserves evidence and human operational judgment 4ms
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > AI assistance preserves evidence and human operational judgment
+AssertionError: expected '### AI in incident management Use `su…' to contain 'untrusted evidence'
+Expected: "untrusted evidence"
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 passed (15)
+```
+
+### Vocabulary teeth
+
+Exact relevant lines from captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ ❯ |unit| src/lib/terms.test.ts (15 tests | 1 failed | 14 skipped) 6ms
+   × incident vocabulary resolves to the stage that teaches each artifact 5ms
+ FAIL  |unit| src/lib/terms.test.ts > incident vocabulary resolves to the stage that teaches each artifact
+AssertionError: expected undefined to be 'Runbook' // Object.is equality
+ Test Files  1 failed (1)
+      Tests  1 failed | 14 skipped (15)
+```
+
+### Final restored focused suite
+
+Exact relevant lines from captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ Test Files  5 passed (5)
+      Tests  64 passed (64)
+```
