@@ -5,7 +5,9 @@ Preparation is on `docs/2026-09-29-stage-16-preparation`, based on `develop` at
 `91a6838`. Sources are gathered in `reference/cheatsheet-sources.md`; the document
 assessment is recorded in `docs/superpowers/specs/2026-09-29-stage-16-cold-reader-findings.md`.
 The document-repair spec in `docs/superpowers/specs/2026-09-29-stage-16-doc-round-design.md`
-awaits review; implementation planning and the port have not started. W-3 remains 12/18. This update supersedes
+is approved. The implementation plan in `docs/superpowers/plans/2026-09-29-stage-16-doc-round.md`
+awaits review and an execution-method choice. Product implementation and the port
+have not started. W-3 remains 12/18. This update supersedes
 the older instructions below to choose the next stage; September 16 verification
 and branch counts below are historical, not measurements of this round.
 

@@ -1,6 +1,7 @@
 # Stage 16 — incident management document repair
 
-Date: 2026-09-29. Status: proposed, awaiting written-spec review.
+Date: 2026-09-29. Status: approved in conversation; the user's “continue” followed
+the written-spec review request. Implementation plan awaits its own review.
 Scope approved in conversation: repair the document before building the interactive
 port, for solo developers and small teams. This spec covers that repair. The port
 gets its own design after the corrected document passes the repeatable assessment.

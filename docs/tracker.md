@@ -870,7 +870,9 @@ Two independent initial cold readers completed the document assessment. The
 [findings](superpowers/specs/2026-09-29-stage-16-cold-reader-findings.md) preserve
 the scenario and five lookup questions. The
 [document-repair spec](superpowers/specs/2026-09-29-stage-16-doc-round-design.md)
-is written and awaits review; no implementation plan or product edits yet. Gathered sources and image
+is approved. The [implementation plan](superpowers/plans/2026-09-29-stage-16-doc-round.md)
+contains five sequential tasks and awaits review and an execution-method choice.
+No product edits yet. Gathered sources and image
 caveats are recorded in `reference/cheatsheet-sources.md` under the stage 16 round.
 W-3 remains 12/18; W-6 follows the stage. Deferred: implementation, publication of
 reference graphics, and promotion to `main`.
