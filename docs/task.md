@@ -13,6 +13,12 @@ grep it by id, don't read it whole.
 
 ## Overview
 
+**Current round (2026-09-29): stage 16 — Incident Management**, selected by the
+user. Initial document assessment is complete. The
+[document-repair spec](superpowers/specs/2026-09-29-stage-16-doc-round-design.md)
+awaits review; the plan and port remain pending. W-3 stays at 12/18 until the port ships. A bounded W-6 companion
+follows this stage; gathered material is in `reference/cheatsheet-sources.md`.
+
 Two deliverables from one body of content.
 
 **The playbook** is eighteen markdown stage documents covering the software

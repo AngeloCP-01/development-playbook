@@ -864,6 +864,20 @@ of new work, not assumed to survive from the last `git checkout`.
 
 ## Next up
 
+**2026-09-29: user selected stage 16 — Incident Management.** Preparation is on
+`docs/2026-09-29-stage-16-preparation`, based on `develop` at `91a6838`.
+Two independent initial cold readers completed the document assessment. The
+[findings](superpowers/specs/2026-09-29-stage-16-cold-reader-findings.md) preserve
+the scenario and five lookup questions. The
+[document-repair spec](superpowers/specs/2026-09-29-stage-16-doc-round-design.md)
+is written and awaits review; no implementation plan or product edits yet. Gathered sources and image
+caveats are recorded in `reference/cheatsheet-sources.md` under the stage 16 round.
+W-3 remains 12/18; W-6 follows the stage. Deferred: implementation, publication of
+reference graphics, and promotion to `main`.
+
+The following is the historical 2026-09-16 handoff; its stage-choice instruction
+is superseded by the selection above.
+
 **W-3 is at 12/18.** Stage 15 (Observability) is interactive and merged to `develop` as
 `9d834e8`. Stages 01–07, 11, 12, 13, 14 and 15 are done. **Six remain, no priority chosen
 yet**: `08-security-audit` (Security Audit), `09-performance-optimization` (Performance
@@ -1028,4 +1042,3 @@ Carry into whichever round is next:
 - **Count the doc, do not trust the brief.** Two ports this round were specified against counts
   that were wrong by the time they were read. Where the count is checkable, check it in a test
   against the doc itself — `evolve.test.ts` and `ai-plays.test.ts` both do.
-

@@ -1,5 +1,14 @@
 # Kickoff — Development Playbook
 
+**Current round, 2026-09-29:** the user chose **stage 16 — Incident Management**.
+Preparation is on `docs/2026-09-29-stage-16-preparation`, based on `develop` at
+`91a6838`. Sources are gathered in `reference/cheatsheet-sources.md`; the document
+assessment is recorded in `docs/superpowers/specs/2026-09-29-stage-16-cold-reader-findings.md`.
+The document-repair spec in `docs/superpowers/specs/2026-09-29-stage-16-doc-round-design.md`
+awaits review; implementation planning and the port have not started. W-3 remains 12/18. This update supersedes
+the older instructions below to choose the next stage; September 16 verification
+and branch counts below are historical, not measurements of this round.
+
 Paste the block below into a **new Claude Code session** opened in
 `/Users/angelito/personal/Development-Playbook` to start a round with full context.
 
