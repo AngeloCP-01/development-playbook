@@ -361,6 +361,11 @@ that work; never invent a root cause to tick a checkbox.
 
 ### Task 3: Replace the runbook and postmortem with consistent worked artifacts
 
+**Round-1 review correction (2026-09-29):** The original example below conflated
+per-record reconciliation with aggregate impact reporting. The affected records had
+dispositions by 10:30 UTC; only the aggregate count awaits attachment. The corrected
+source below is authoritative for this task.
+
 **Files:** Modify `docs/16-incident-management.md` and `web/src/lib/stage-16-structure.test.ts`.
 
 **Interfaces:** Consumes Task 2 Nudge timeline (10:00 start, 10:25 monitoring, 10:40 recovered; Ana responding, Bo backup unavailable). Owns M1/M3 and closure consistency.
@@ -417,7 +422,8 @@ This fictional record carries the same Nudge incident as the customer updates:
 
 Severity: Major
 Customer-impact interval: 10:00–10:40 UTC (40 minutes)
-Impact: reminders delayed; exact affected count remains under reconciliation in the incident record.
+Impact: reminders delayed. Affected records reconciled and dispositions complete by 10:30 UTC.
+Aggregate affected count: pending attachment from the reconciliation report.
 Service: recovered. Follow-up: open.
 
 ## Timeline
@@ -432,7 +438,8 @@ Service: recovered. Follow-up: open.
 Provider request timeouts coincided with degradation. Local timeouts could not tell
 whether a reminder was accepted. Authoritative operation lookup was required to
 avoid duplicate sends. The provider's internal cause remains unknown; Ana owns the
-support follow-up. Exact impact totals will be attached from the reconciliation report.
+support follow-up. The aggregate count from the completed per-record reconciliation
+will be attached to this report.
 
 ## Why detection and response were harder
 Web uptime stayed green while reminders stalled. The existing monitor did not check

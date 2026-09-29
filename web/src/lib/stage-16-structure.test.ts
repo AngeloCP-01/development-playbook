@@ -126,6 +126,18 @@ test('M1: copied postmortem actions include accountable completion details', () 
   expect(block).toContain('10:00–10:40 UTC')
   expect(block).toContain('40 minutes')
 })
+test('I1: postmortem distinguishes completed dispositions from pending aggregate impact totals', () => {
+  const s = section('Write the postmortem and track follow-up')
+  const block = s.match(/```markdown\n([\s\S]*?)```/)?.[1]
+  expect(block).toBeDefined()
+  expect(block).toContain(
+    'Impact: reminders delayed. Affected records reconciled and dispositions complete by 10:30 UTC.',
+  )
+  expect(block).toContain(
+    'Aggregate affected count: pending attachment from the reconciliation report.',
+  )
+  expect(block).not.toContain('under reconciliation')
+})
 test('runbook teaches a tested path and a reusable skeleton', () => {
   const s = section('Prepare and rehearse the runbook')
   for (const phrase of [

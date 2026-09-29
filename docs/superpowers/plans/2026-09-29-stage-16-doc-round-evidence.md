@@ -364,3 +364,57 @@ Exact relevant lines from original captured output:
 ```
 
 Deferred: AI guidance, cold-reader reruns, whole-branch review, full gate and interactive port remain in later tasks.
+
+## Task 3 round-1 review fix: operational disposition versus aggregate reporting
+
+I1 (blocking, PLAN-AUTHORED ERROR): The copied postmortem said the exact affected count remained “under reconciliation” even though its timeline and customer update said all affected records were accounted for at 10:30 UTC. The fix states that per-record dispositions were complete by 10:30 and the aggregate count awaits attachment, with no invented number. The unknowns paragraph and Task 3 plan source now make the same distinction. The humanizer pass found these concrete terms clearer than the old ambiguous sentence.
+
+The scoped fenced-postmortem test failed for the expected impact-line mismatch; all twelve prior tests passed. GREEN passed 13/13. Changing only the new impact line back to ongoing reconciliation caused only I1 to fail, and the line was restored. The focused command for every run was `pnpm test --project unit src/lib/stage-16-structure.test.ts` from `web/`.
+
+### RED before correction
+
+Exact relevant lines from original captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ ❯ |unit| src/lib/stage-16-structure.test.ts (13 tests | 1 failed) 16ms
+   × I1: postmortem distinguishes completed dispositions from pending aggregate impact totals 10ms
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > I1: postmortem distinguishes completed dispositions from pending aggregate impact totals
+AssertionError: expected '# Nudge incident — delayed appointmen…' to contain 'Impact: reminders delayed. Affected r…'
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)
+```
+
+### GREEN after correction
+
+Exact relevant lines from original captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ Test Files  1 passed (1)
+      Tests  13 passed (13)
+```
+
+### Teeth: restored contradiction
+
+Exact relevant lines from original captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ ❯ |unit| src/lib/stage-16-structure.test.ts (13 tests | 1 failed) 17ms
+   × I1: postmortem distinguishes completed dispositions from pending aggregate impact totals 8ms
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > I1: postmortem distinguishes completed dispositions from pending aggregate impact totals
+AssertionError: expected '# Nudge incident — delayed appointmen…' to contain 'Impact: reminders delayed. Affected r…'
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)
+```
+
+### Final restored
+
+Exact relevant lines from original captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ Test Files  1 passed (1)
+      Tests  13 passed (13)
+```
