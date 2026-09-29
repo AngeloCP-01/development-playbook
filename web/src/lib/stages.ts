@@ -177,7 +177,7 @@ export const STAGES: Stage[] = [
     cadence: 'On incident · read before',
     slug: '16-incident-management',
     title: 'Incident Management',
-    blurb: 'Restore service first. Understand it second. Prevent it third.',
+    blurb: 'Limit harm first. Verify recovery. Learn from what happened.',
     group: 'Running',
     timing: 'When production breaks. Read it before that.',
     ready: false,

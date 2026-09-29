@@ -87,3 +87,9 @@ test('every STAGE_CONTENT key is a real stage slug, so no dead registration ling
     expect(getStage(key), `${key} registered but not a stage`).toBeDefined()
   }
 })
+
+test('stage 16 leads with limiting harm because restoration can preserve a compromise', () => {
+  expect(getStage('16-incident-management')?.blurb).toBe(
+    'Limit harm first. Verify recovery. Learn from what happened.',
+  )
+})

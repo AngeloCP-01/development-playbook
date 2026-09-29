@@ -1,7 +1,6 @@
 # 16. Incident Management
 
-> Restore service first. Understand it second. Prevent it third. In that order, every
-> time.
+> Limit harm first. Verify recovery. Learn from what happened.
 
 **When this actually happens:** When production is broken. Read this now, while nothing is
 on fire, because you will not absorb new process at 3am.
@@ -19,46 +18,74 @@ during [14 — Post-Deployment Verification](14-post-deployment-verification.md)
 
 ### The order that matters
 
-**Mitigate → Diagnose → Fix → Prevent.**
+**Limit harm, verify recovery, then finish the investigation and prevention work.**
+Investigate enough to choose a safe mitigation; do not wait for a complete causal
+explanation while users remain affected. Keep a timeline and communicate throughout.
+If access may be compromised, use the containment path below. Restoring availability
+is not always the first safe action.
 
-The instinct is to find the cause first, because understanding feels like progress and
-reverting feels like giving up. Resist it. Every minute spent diagnosing is a minute users
-stay broken, and diagnosis is far easier once the pressure is off.
+### First response: confirm impact and severity
 
-### First five minutes
+Confirm the affected customer operation using a safe check and existing evidence.
+A healthy homepage does not prove that a worker completed its job. For background
+work, inspect completion records, oldest pending work and customer reports. Avoid
+creating duplicate side effects just to reproduce a failure. Record what you know,
+what remains unknown, when impact began, and who is responding.
 
-**Confirm it is real.** Load the site yourself, in a private window. Check external uptime
-monitoring. A dashboard can be wrong; a monitoring integration can break. Confirm before
-acting.
+Declare an incident when impact or credible risk needs coordinated attention. Do
+not wait for the exact cause or complete user counts. Check recent changes and
+provider status early; a provider incident is a hypothesis, not proof of your cause.
 
-**Assess severity**, because it determines everything else:
+These are local policy examples, not universal SEV numbers or response deadlines:
 
-| Severity | Meaning | Response |
+| Severity | Example impact | Response |
 |---|---|---|
-| **Critical** | Site down, data loss, security breach, payments broken | Drop everything, now |
-| **Major** | A core feature broken for many users | Within the hour |
-| **Minor** | Degraded, or broken for a few users | Next working session |
+| Critical | Widespread outage, credible compromise, data loss or blocked payments | Respond immediately and seek help |
+| Major | Important customer work blocked or significantly degraded | Start response promptly; escalate as impact grows |
+| Minor | Limited impact with a safe workaround | Name an owner and an agreed response time |
 
-Be honest here. Treating everything as critical burns you out; treating a real outage as
-minor loses users.
+Use provisional severity when impact is uncertain. Explain the evidence and unknowns,
+choose the more urgent plausible response if harm may be serious, and reassess after
+each new observation. A small user count does not make data loss minor.
 
-**Mitigate.** In order of preference:
+### Choose a mitigation
 
-1. **Roll back**, if this correlates with a recent deploy. It usually does.
-   ```bash
-   vercel rollback
-   ```
-2. **Disable the feature** via a flag ([13](13-production-deployment.md)).
-3. **Scale or raise a limit**, if it is a saturation problem.
-4. **Fix forward** — only when rollback is impossible, such as after a contract-phase
-   migration.
+Choose by evidence and likely harm, not a fixed list of commands. Record the action,
+operator, time and observed effect. Stop or reverse a harmful action where safe.
 
-**Rollback is not failure.** It is the correct response to an unclear problem affecting
-real users. Revert first, satisfy curiosity afterward.
+| Option | Preconditions | Possible harm / Stop condition | Check effect |
+|---|---|---|---|
+| Rollback | Relevant recent change; known-good target; schema compatibility checked | Old code may not read current data; stop if incompatible or impact grows | Affected operation succeeds and errors fall |
+| Disable a feature | Tested flag and understood effect on accepted work | May strand work; stop if unrelated paths fail | Failed operation is safely unavailable and accepted work is accounted for |
+| Add capacity | Saturation confirmed and downstream capacity permits it | More workers can overload a dependency; stop if dependency errors rise | Queue age and latency improve without new failures |
+| Degrade around a dependency | Known safe fallback, admission control or bounded queue | Lost work, stale results or repeated side effects; stop if outcomes are uncertain | Customer-visible behavior matches the advertised degraded service |
+| Fix forward | Bounded change supported by evidence; rollback unsafe or irrelevant | Rushed change may widen impact; stop on failed checks | Verify the affected operation and monitor recurrence |
 
-**Communicate**, if users are affected and you have any channel to reach them. Even solo,
-a status page or a single post prevents a support inbox filling with reports of something
-you already know about. Say what is broken, that you are on it, and when you will update.
+A rollback may be available but irrelevant to a provider outage. Do not restart,
+scale or replay blindly. Keep uncertain outcomes for reconciliation and use the
+service runbook. If no action is known safe, limit further harm, escalate and explain
+the current limitation rather than inventing a repair.
+
+For Vercel and AWS rollback procedures, use [13 — Production Deployment](13-production-deployment.md),
+especially its platform-specific rollback sections. Those procedures still require
+the relevance and compatibility checks above. Application rollback does not undo a
+database migration. Validate customer recovery using [14 — Post-Deployment Verification](14-post-deployment-verification.md)
+and the recovery criteria in this stage.
+
+### When access may be compromised
+
+Contain unauthorized access using the service's security response procedure and
+trusted administrative access. Capture available logs and action timestamps without
+delaying urgent containment. Restrict access to evidence; do not paste credentials
+or customer data into public incident channels. Escalate to the security contact or
+provider support with the affected resource, observed behavior and actions taken.
+
+For example, a leaked deployment credential needs access containment and review of
+what it could change. Rolling the app back alone does not revoke that credential.
+Availability alone does not establish safety. Reopen access only after the responsible
+responder has checked containment and recovery; involve specialist help when the
+scope cannot be established. Detailed forensic work and notification obligations
+belong to the security response process, not a generic availability checklist.
 
 ### Diagnosing
 
