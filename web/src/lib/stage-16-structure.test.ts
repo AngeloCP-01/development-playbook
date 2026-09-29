@@ -109,3 +109,38 @@ test('diagnosis treats early errors as evidence rather than proof', () => {
     'earliest observed error is not necessarily the cause',
   )
 })
+
+test('M1: copied postmortem actions include accountable completion details', () => {
+  const s = section('Write the postmortem and track follow-up')
+  const block = s.match(/```markdown\n([\s\S]*?)```/)?.[1]
+  expect(block).toBeDefined()
+  const actions = [...block!.matchAll(/^\| A\d+ \|(.+)\|$/gm)]
+  expect(actions).toHaveLength(3)
+  for (const row of actions) {
+    const cells = row[1].split('|').map((c) => c.trim())
+    expect(cells).toHaveLength(4)
+    expect(cells[1]).toMatch(/^(Ana|Bo)$/)
+    expect(cells[2]).toMatch(/^2026-\d{2}-\d{2}$/)
+    expect(cells[3].length).toBeGreaterThan(15)
+  }
+  expect(block).toContain('10:00–10:40 UTC')
+  expect(block).toContain('40 minutes')
+})
+test('runbook teaches a tested path and a reusable skeleton', () => {
+  const s = section('Prepare and rehearse the runbook')
+  for (const phrase of [
+    'Last rehearsed',
+    'Stop conditions',
+    'Recovery checks',
+    'SERVICE-SPECIFIC',
+    'outside the affected application',
+  ])
+    expect(s).toContain(phrase)
+})
+test('I4/M3: recovery and follow-up closure are separate and a status site is optional', () => {
+  const s = section('Definition of done')
+  expect(s).toContain('Service recovery')
+  expect(s).toContain('Follow-up closure')
+  expect(section('Artifacts')).toContain('customer communication channel')
+  expect(section('Artifacts')).not.toContain('A status page, if')
+})

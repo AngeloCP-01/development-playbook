@@ -182,157 +182,182 @@ Record service recovery separately from follow-up closure. Diagnosis, prevention
 and provider questions can remain open after impact ends. Keep owners and dates on
 that work; never invent a root cause to tick a checkbox.
 
+### Write the postmortem and track follow-up
 
-### Writing it down
+A **Postmortem** records impact, response, contributing conditions and changes that
+reduce recurrence. Write about the system rather than blaming the responder. Start
+while evidence is fresh, ideally the next working day for major or critical incidents.
+Keep unanswered questions visible. Separate service recovery from the completion of
+investigation and corrective work. Give actions an owner, date and completion check.
 
-For anything above minor, write a short post-mortem within a day, while you still remember.
+This fictional record carries the same Nudge incident as the customer updates:
 
 ```markdown
-# Incident: Checkout failing — 2026-06-14
+# Nudge incident — delayed appointment reminders, 2026-09-29
 
-**Severity:** Critical
-**Duration:** 47 minutes (14:12–14:59 UTC)
-**Impact:** ~200 users could not complete checkout. 12 abandoned carts.
+Severity: Major
+Customer-impact interval: 10:00–10:40 UTC (40 minutes)
+Impact: reminders delayed; exact affected count remains under reconciliation in the incident record.
+Service: recovered. Follow-up: open.
 
 ## Timeline
-- 14:12  Deploy 8f3a2 promoted to production
-- 14:18  Sentry alert: new error type, `NOT NULL violation on orders.tax_region`
-- 14:23  Confirmed; began rollback
-- 14:26  Rollback complete, checkout recovering
-- 14:59  Fixed forward with a nullable column; verified
+- 10:00 — Provider send timeouts begin; web UI remains healthy.
+- 10:05 — Ana declares the incident and publishes the first update.
+- 10:15 — Provider reports degradation; dispatch paused; uncertain results held.
+- 10:25 — Provider reports recovery; only reconciled eligible work resumes.
+- 10:30 — Affected records accounted for; expired reminders marked and customers notified.
+- 10:40 — Ten-minute observation confirms normal dispatch; customer resolution update sent.
 
-## Cause
-The migration added `tax_region NOT NULL` in the same deploy as the code
-that populates it. Existing in-flight orders had no value, so every
-checkout insert failed.
+## Contributing conditions and unknowns
+Provider request timeouts coincided with degradation. Local timeouts could not tell
+whether a reminder was accepted. Authoritative operation lookup was required to
+avoid duplicate sends. The provider's internal cause remains unknown; Ana owns the
+support follow-up. Exact impact totals will be attached from the reconciliation report.
 
-## Why it was not caught
-Preview database had no in-flight orders. The migration ran cleanly against
-empty data.
+## Why detection and response were harder
+Web uptime stayed green while reminders stalled. The existing monitor did not check
+reminder completion age. Bo was unavailable; Ana used the agreed provider escalation
+route and kept customer updates on a timer.
 
-## What we are changing
-1. Expand/migrate/contract enforced for all migrations — no NOT NULL in the
-   same deploy as the code that fills it ([13](13-production-deployment.md))
-2. Seed data now includes in-flight records ([12](12-staging.md))
-3. Alert on NOT NULL violations specifically — this failed silently for 6
-   minutes before the generic error-rate alert fired
+## Actions
+| ID | Change | Owner | Due | Completion evidence |
+|---|---|---|---|---|
+| A1 | Alert on reminder completion age | Ana | 2026-10-01 | Withheld test completion triggers an actionable alert |
+| A2 | Rehearse timeout reconciliation | Bo | 2026-10-02 | Accepted-but-timed-out fixture is not resent |
+| A3 | Close impact totals and provider follow-up | Ana | 2026-10-03 | Reconciliation counts attached; provider answer or documented uncertainty recorded |
 ```
 
-**Write about the system, not the person.** "I was careless" produces no change. "The
-process allowed a schema and code change to ship together" produces a fix. Even in a
-post-mortem you will only ever read yourself, this framing is what turns an incident into
-an improvement.
+An unknown provider cause need not keep service marked down. It does keep an
+investigation item open until its owner records the evidence and disposition.
+Review overdue actions; do not count a ticket's existence as risk reduction.
 
-**Include "why it was not caught."** Often more valuable than the cause itself — it points
-at a gap in testing, monitoring, or review that will otherwise let a *different* incident
-through the same hole.
+### Prepare and rehearse the runbook
 
-**Give action items owners and dates**, or they do not happen. Solo, that means putting
-them at the top of your list, not on a someday list.
+A **Runbook** is a service-specific procedure tested before it is needed. Keep it
+outside the affected application with access available during an outage. Validate
+links, permissions and recovery checks during rehearsal and after relevant changes.
+A provider dashboard URL is not a complete escalation procedure.
 
-### The runbook
-
-Write this before you need it. During an incident you will not think clearly, and
-following a list is far easier than reasoning from scratch.
+Worked Nudge runbook, with fictional operational facts:
 
 ```markdown
-# Runbook
+# Nudge reminder dispatch
+Owner: Ana. Backup: Bo. Last rehearsed: 2026-09-22.
+Access: trusted operator account; dispatch pause and read-only delivery lookup.
+Location: restricted team operations workspace independent of Nudge.
+Evidence: worker completion-age dashboard, delivery ledger and provider status page.
 
-## Rollback
-vercel rollback            # previous production deployment
-vercel ls                  # list deployments
-vercel promote <url>       # promote a specific one
+## Trigger and checks
+Delayed reminder alert or customer report: inspect completion age and affected IDs.
+Web uptime is supporting evidence only. Never send another reminder to test a timeout.
 
-## Where things are
-- Errors: sentry.io/organizations/<org>/issues
-- Logs: Better Stack
-- Database: Neon console
-- Uptime: Better Stack monitors
-- Status page: <url>
+## Safe action
+Use the rehearsed dispatch-pause control; it retains accepted queued records.
+Look up uncertain operations by stable ID. Exclude accepted sends from resubmission.
+Resume only confirmed-unsent, still-eligible records; mark expired ones and notify customers.
 
-## Common problems
-**Site returns 500 on every route**
-→ Check env vars in Vercel first. A missing variable after a rename is the
-  most common cause.
+## Stop conditions
+Lookup unavailable or inconclusive, unexpected new side effects, or rising provider errors:
+keep affected records held, retain evidence, contact provider support and update customers.
 
-**Database connection errors**
-→ Check the Neon dashboard for connection limits. Pooler may need a restart.
+## Escalation and updates
+Primary Ana; backup Bo after the agreed five-minute acknowledgment deadline.
+If Bo is unavailable, Ana opens the provider support case and retains ownership.
+Escalate immediately for suspected compromise or increasing harm.
+Publish impact, unknowns and next-update time; use a timer while responding alone.
 
-**Slow but not down**
-→ Check for a long-running query in the Neon dashboard. Kill it if it is a
-  runaway backfill.
-
-## Escalation
-- Vercel support: <link>
-- Neon support: <link>
-- Stripe status: status.stripe.com
+## Recovery checks
+Account for the affected record set; inspect completion age, errors and delivery results.
+Observe normal dispatch for the example's ten-minute window and publish the outcome.
+Handoff only after the receiving owner accepts the state and next action.
 ```
 
-Keep it somewhere reachable when the application is down — not in the application.
+The five-minute acknowledgment and ten-minute observation windows are Nudge policy,
+not service-independent targets. Store actual access links and contact details in
+its restricted operations workspace. Here is the reusable skeleton for a different service:
+
+```markdown
+# SERVICE-SPECIFIC runbook
+Service and customer operation:
+Owner / backup / acknowledgment deadline / fallback support route:
+Last rehearsed / next review:
+Independent document location and required trusted access:
+Evidence locations and safe impact check:
+Action prerequisites and operator procedure:
+Stop conditions and reversal limits:
+Handling for queued work and uncertain external side effects:
+Recovery checks and observation window with rationale:
+Customer channel, next-update commitment and incident record:
+Receiving owner and handoff acceptance:
+```
+
+Fill each field for the real service and rehearse it. For deploy-related incidents,
+attach the tested Vercel or AWS procedure from [13](13-production-deployment.md)
+and its schema constraints. This chapter supplies the decision framework; it does
+not invent a universal database restart, query-kill or queue-replay command.
 
 ---
 
 ## Artifacts
 
-- A runbook with rollback commands, dashboard links, and common failure modes
-- Post-mortems for major and critical incidents
-- Action items with owners and dates
-- A status page, if you have users to inform
+- A rehearsed runbook with safe action conditions, evidence links and escalation
+- An incident record and customer communication channel reachable during the outage
+- A postmortem for major and critical incidents
+- Follow-up actions with owners, dates and completion evidence
 
 ---
 
 ## Definition of done
 
-Per incident:
+**Service recovery**
 
-- [ ] Service restored
-- [ ] Users informed, if affected
-- [ ] Root cause identified — not just the symptom that stopped
-- [ ] Permanent fix deployed and verified ([14](14-post-deployment-verification.md))
-- [ ] Post-mortem written for major and critical
-- [ ] "Why it was not caught" answered
-- [ ] Action items recorded with dates
-- [ ] Runbook updated if you learned something
+- [ ] The affected customer operation meets the service's recovery criteria
+- [ ] Delayed work and uncertain side effects are accounted for; limitations disclosed
+- [ ] Stability was observed for the documented service-specific window
+- [ ] Affected users received the recovery update
+
+**Follow-up closure**
+
+- [ ] Evidence supports the explanation; unresolved questions have owners and dispositions
+- [ ] Permanent corrections are verified, or remaining risk has an explicit owner and decision
+- [ ] Major/critical postmortem includes detection gaps and a consistent impact timeline
+- [ ] Actions have owners, dates and completion evidence; overdue work is reviewed
+- [ ] Runbook and rehearsal reflect what the incident taught
 
 ---
 
 ## Scaling to a team
 
-- **Define roles**, even informally: someone drives, someone communicates. Both at once is
-  how updates stop going out.
-- **Use a dedicated channel per incident** so the timeline reconstructs itself.
-- **Blameless post-mortems, enforced.** The moment incidents become about fault, people
-  hide problems, and hidden problems get worse.
-- **Rotate on-call** with a real escalation path.
-- **Review action items in a recurring meeting.** Unreviewed action items are decoration.
-- **Track incident frequency and time-to-recovery.** Whether things are improving is
-  otherwise a matter of opinion.
+Assign coordination, technical work and communication explicitly; one responder can
+hold several roles until help arrives. Keep one incident channel and record. A handoff
+requires acceptance, not merely a message sent. Agree coverage and escalation with
+backups before promising on-call availability. Review actions and repeat incidents
+regularly; compare recovery intervals defined consistently rather than mixing time
+to restore service with time to finish every follow-up.
 
 ---
 
 ## Traps
 
-**Diagnosing before mitigating.** The most common and most expensive incident mistake.
-Users stay broken while you satisfy your curiosity.
+**Waiting for a full explanation before limiting harm.** Investigate enough to choose
+and validate mitigation; deeper analysis continues after impact falls.
 
-**Treating rollback as defeat.** It is the correct first move for an unclear problem.
+**Rolling back an unrelated change.** Check relevance and schema compatibility first.
 
-**Chasing the loudest error.** It is usually a downstream effect. Find the first
-occurrence.
+**Calling the provider green while your customers remain blocked.** Verify your own
+operation and account for queued or uncertain work.
 
-**Changing things randomly.** You may stop the symptom without understanding the cause,
-and it returns next week having taught you nothing.
+**Treating the first observed error as proof.** Test the hypothesis against other evidence.
 
-**No post-mortem because you already know what happened.** You will forget within a month,
-and the systemic fix never gets made.
+**Replaying timeouts blindly.** An operation may have succeeded before its reply was lost.
 
-**Post-mortems that blame people.** Produce shame, not change. Fix the system that allowed
-it.
+**Restoring availability during ongoing compromise.** Contain access and involve the
+responsible security responder; uptime alone does not establish safety.
 
-**Action items without owners or dates.** They do not happen.
+**Letting updates stop when you are alone.** Name the next-update time and set a reminder.
 
-**A runbook stored inside the application.** Unreachable exactly when needed. So is one
-that only exists in your head.
+**Copying contacts without an escalation procedure.** Include deadlines, fallback and ownership.
 
-**Not checking third-party status first.** An hour debugging your code while your payment
-provider is down.
+**Writing blame or undated promises.** Record contributing conditions and owned, verifiable actions.
+
+**Keeping the only runbook inside the failing service.** Rehearse access during an outage.

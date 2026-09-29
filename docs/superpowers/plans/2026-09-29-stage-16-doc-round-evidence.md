@@ -286,3 +286,81 @@ AssertionError: expected '### Escalate when help is unavailable…' to contain '
 ```
 
 The I4 mutation replaced only `Reconcile uncertain outcomes before replay` with `Replay uncertain outcomes`; only I4 failed. The I5 mutation changed only `backup is unavailable` to `backup cannot respond`; only I5 failed. Both were restored and the focused file passed 9/9. Independent read-only per-task review follows this commit under the controller. Full gates remain for the completed document round.
+
+## Task 3: worked postmortem, rehearsed runbook and closure criteria
+
+Date: 2026-09-29. Confirmed M1 and M3 against the old document: the copied postmortem had no accountable action table, the runbook offered unverified commands and a contact list, and the done checklist required root cause and permanent repair before incident closure. The old Traps section also declared rollback the correct first move for an unclear problem, contradicting the repaired mitigation table. The section from “Writing it down” to document end was replaced with the approved Nudge artifacts and criteria. No executable operational command remains in this section.
+
+The three new guards failed for the expected content reasons while nine prior guards passed. The postmortem now uses the same 10:00–10:40 UTC incident interval as the customer updates, records service recovered with follow-up open, and supplies three owned, dated actions with completion evidence. The runbook names safe action, stop conditions, escalation fallback, independent storage and recovery checks, then supplies a reusable skeleton. Service recovery and follow-up closure have separate checklists; customer communication can use an existing channel. Humanizer review found the worked details, explicit unknowns and operational language concrete; no change to the approved wording was warranted.
+
+Focused command for every run: `pnpm test --project unit src/lib/stage-16-structure.test.ts` from `web/`. The blocks below are exact raw terminal output captured at each run. Teeth mutations were restored immediately. Independent per-task review will be performed by the controller after this task commit. Full gates belong to the completed round.
+
+### RED before document edit
+
+Exact relevant lines from original captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ ❯ |unit| src/lib/stage-16-structure.test.ts (12 tests | 3 failed) 12ms
+   × M1: copied postmortem actions include accountable completion details 3ms
+   × runbook teaches a tested path and a reusable skeleton 1ms
+   × I4/M3: recovery and follow-up closure are separate and a status site is optional 3ms
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > M1: copied postmortem actions include accountable completion details
+Error: Missing section: Write the postmortem and track follow-up
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > runbook teaches a tested path and a reusable skeleton
+Error: Missing section: Prepare and rehearse the runbook
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > I4/M3: recovery and follow-up closure are separate and a status site is optional
+AssertionError: expected '## Definition of done\n\nPer incident…' to contain 'Service recovery'
+ Test Files  1 failed (1)
+      Tests  3 failed | 9 passed (12)
+```
+
+### GREEN after replacement
+
+Exact relevant lines from original captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+```
+
+### Teeth M1: blank A2 owner
+
+Exact relevant lines from original captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ ❯ |unit| src/lib/stage-16-structure.test.ts (12 tests | 1 failed) 9ms
+   × M1: copied postmortem actions include accountable completion details 3ms
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > M1: copied postmortem actions include accountable completion details
+AssertionError: expected '' to match /^(Ana|Bo)$/
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 passed (12)
+```
+
+### Teeth I4/M3: removed closure label
+
+Exact relevant lines from original captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ ❯ |unit| src/lib/stage-16-structure.test.ts (12 tests | 1 failed) 9ms
+   × I4/M3: recovery and follow-up closure are separate and a status site is optional 4ms
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > I4/M3: recovery and follow-up closure are separate and a status site is optional
+AssertionError: expected '## Definition of done\n\n**Service re…' to contain 'Follow-up closure'
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 passed (12)
+```
+
+### Final restored run
+
+Exact relevant lines from original captured output:
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ Test Files  1 passed (1)
+      Tests  12 passed (12)
+```
+
+Deferred: AI guidance, cold-reader reruns, whole-branch review, full gate and interactive port remain in later tasks.
