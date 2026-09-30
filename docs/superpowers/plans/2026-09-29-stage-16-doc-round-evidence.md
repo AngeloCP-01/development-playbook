@@ -750,3 +750,75 @@ rendered `Term` usage while the port is absent; generated markdown and data guar
 were checked, but no new popup presentation is claimed. Screenshots and raw check
 notes are in `.superpowers/sdd/2026-09-29-stage-16-doc-round/visual-check.md`.
 W-3 remains 12/18 and stage 16 remains unready. No merge or production promotion.
+
+## Full gate completion, 2026-09-30
+
+The controller ran the commands separately from `web/` after Task 5a. Format,
+lint, typecheck, the 1370/1370 unit and DOM suite, and the production build passed.
+The production Playwright audit covered overflow at 320, 768, 1024, 1440 and 2560
+pixels, touch targets, both theme contrasts, disclosure coverage and browser-console
+errors. Its relevant raw terminal lines were:
+
+```text
+  ✓   2 e2e/audit.spec.ts:46:7 › no horizontal overflow at 320px, because a field manual must never scroll sideways (47.5s)
+  ✓   5 e2e/audit.spec.ts:46:7 › no horizontal overflow at 768px, because a field manual must never scroll sideways (28.5s)
+  ✓   6 e2e/audit.spec.ts:46:7 › no horizontal overflow at 1024px, because a field manual must never scroll sideways (28.1s)
+  ✓   7 e2e/audit.spec.ts:46:7 › no horizontal overflow at 1440px, because a field manual must never scroll sideways (29.3s)
+  ✓   8 e2e/audit.spec.ts:46:7 › no horizontal overflow at 2560px, because a field manual must never scroll sideways (44.1s)
+  ✓   9 e2e/audit.spec.ts:65:5 › interactive elements are at least 44px tall below lg (1.0m)
+  ✓  10 e2e/audit.spec.ts:158:7 › every text/background pair passes WCAG AA in light mode (1.1m)
+  ✓  11 e2e/audit.spec.ts:158:7 › every text/background pair passes WCAG AA in dark mode (1.1m)
+  ✓  12 e2e/audit.spec.ts:337:5 › the sweep observes every disclosure open at least once, since a sweep that quietly stops opening things is indistinguishable from a clean pass (1.1m)
+  ✓  13 e2e/audit.spec.ts:401:5 › zero console errors across every page and step (30.3s)
+  Slow test file: e2e/audit.spec.ts (8.3m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  18 passed (9.3m)
+```
+
+This audit used a production build, so it does not establish the absence of React
+development warnings. The separate `next dev` audit did cover those warnings in a
+clean browser context. Its relevant raw terminal lines were:
+
+```text
+  ✓  1 e2e/dev-console.spec.ts:29:5 › @dev no React development warnings on any audited page, which the production audit cannot see at all (2.5m)
+
+  1 passed (2.7m)
+```
+
+The Playwright server shells printed repeated `NO_COLOR`/`FORCE_COLOR` environment
+warnings, and Playwright advised that `audit.spec.ts` is slow. These did not come
+from the browser pages; the development check reported no React warnings or other
+browser messages. The full untracked controller logs are
+`.superpowers/sdd/2026-09-29-stage-16-doc-round/gate-e2e.log` and
+`gate-dev-console.log`. At the gate capture point, the whole-branch review was
+pending; its result and final disposition follow below.
+
+## Final whole-branch review and disposition, 2026-09-30
+
+The read-only reviewer inspected `91a6838..6df86f3`, including the spec, plan,
+canonical document, tests, glossary generation, source ledger, all four raw reader
+reports and the completed gate. Its verdict was **Ready to merge**, with zero
+Critical and zero Important findings. The full returned report is preserved
+verbatim in [the review record](2026-09-29-stage-16-doc-round-review.md).
+
+Two Minor issues remain as explicit follow-ups. **M1:** Definition of done says
+affected users “received” the recovery update, while the allowed status or support
+channel establishes publication rather than individual receipt. The communication
+section supplies a usable minimum, so this precision fix can use a small later
+slice. **M2:** the rollback guard tests its whole mitigation section; a later
+revision should assert relevance, compatibility, stop condition and recovery check
+within the rollback row. The current row is correct, and its recorded schema teeth
+mutation failed as intended. Changing either now would create a new content/test
+wave after the final assessment. The reviewer confirmed that phrase tests alone do
+not prove operational sequence; the direct prose reading and final blind reports
+supplied that check. A consolidated incident-record template remains optional.
+
+The controller accepted the review's declined boundaries: no interactive port or
+W-6 plate in this round; incomplete image provenance must be resolved before
+publishing affected captures; no live incident commands were executed; service
+thresholds, contacts and idempotency belong to a filled service runbook; specialist
+forensics and legal obligations stay in the security process; Stage 13's
+rollback-first wording is a separate cross-stage slice; and deployed-site health
+cannot be inferred without promotion. The repaired document round is complete on
+this branch. Stage 16 remains unready, W-3 remains 12/18, and integration requires
+the user's separate decision. No merge, push to `main` or deployment occurred.

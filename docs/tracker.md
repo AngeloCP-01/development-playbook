@@ -893,15 +893,30 @@ The post-plan PagerDuty incident-command page was inaccessible. The already used
 Google SRE incident-response chapter was checked as a fallback; it supported
 small-team ownership and an incident record, with no new correction. No live
 rollback, query termination, credential revocation or replay was executed; the
-document contains no executable incident command block. Focused checks and the
-latest full unit suite passed at **1370 tests across 180 files**; format, lint,
-typecheck and build checks have passed. The production audit and dev-console
-check, followed by whole-branch review, remain pending, so the round is **not
-complete**. Stage 16 stays unready and W-3 stays 12/18. No merge or deployment.
+document contains no executable incident command block. The full local gate passed:
+**1370 tests across 180 files**, format, lint, typecheck, production build,
+production audit **18/18** (responsive 320–2560, touch targets, light/dark contrast
+and production console), and development-console audit **1/1** with no React
+warnings or other browser messages. The read-only whole-branch review of
+`91a6838..6df86f3` returned **Ready to merge**, zero Critical and zero Important;
+its [full report](superpowers/plans/2026-09-29-stage-16-doc-round-review.md) is
+preserved. The round is complete on the branch, awaiting the user's separate
+integration decision. Stage 16 stays unready and W-3 stays 12/18. No merge or
+deployment.
+
+The reviewer retained two nonblocking Minors as follow-ups: **M1** recovery-update
+receipt wording should match publication through the agreed channel; **M2** the
+rollback regression should inspect the rollback row rather than the whole table.
+Current guidance and the rollback row are usable. It confirmed that phrase guards
+alone cannot prove operational sequence, while direct reading and the cold-reader
+reruns support that sequence. A consolidated incident-record template is optional.
 
 Deferred: interactive port, W-6 plate and images without established provenance,
 production promotion, and Stage 13's rollback-first wording and its interactive
-counterpart as a separate cross-stage slice.
+counterpart as a separate cross-stage slice. Service-specific thresholds, contacts
+and retry semantics belong to filled runbooks; specialist forensics and legal
+obligations belong to the security process. No deployed-site claim or production
+smoke test was made because there was no promotion.
 
 **2026-09-29: user selected stage 16 — Incident Management.** Preparation is on
 `docs/2026-09-29-stage-16-preparation`, based on `develop` at `91a6838`.

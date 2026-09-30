@@ -708,7 +708,7 @@ runbook: {
 
 ### Task 5: Reassess, fix new findings, verify and record the round
 
-Status, 2026-09-30: Tasks 1–4 and Task 5a are implemented and independently reviewed. The user chose sequential subagent-driven execution. The initial and final cold-reader reports are preserved in the linked raw appendix. Full gate and whole-branch review remain pending; Task 5 is not complete. Gathered images were committed earlier in `1abea37`, superseding the old untracked-image directions below.
+Status, 2026-09-30: The document repair round is complete on the work branch. The user chose sequential subagent-driven execution; Tasks 1–4 and Task 5a received independent reviews. The four cold-reader reports are preserved in the linked raw appendix. The full local gate passed (1370/1370 tests, production audit 18/18, development-console audit 1/1). The whole-branch review of `91a6838..6df86f3` returned Ready to merge with zero Critical or Important findings; two Minor follow-ups remain. Integration awaits the user's separate decision. Gathered images were committed earlier in `1abea37`, superseding the old untracked-image directions below.
 
 **Files:** `docs/superpowers/specs/2026-09-29-stage-16-cold-reader-findings.md`,
 `docs/superpowers/plans/2026-09-29-stage-16-doc-round-evidence.md`, `docs/task.md`,
@@ -762,20 +762,20 @@ Consultability prompt:
   Verify applicability to a solo team; list adopted corrections or reasons no change is
   needed. If unavailable, use Google's linked incident-response chapter and record the
   limitation rather than pretending it is a new source.
-- [ ] Run verification below. Capture raw results and distinguish full gate from targeted
+- [x] Run verification below. Capture raw results and distinguish full gate from targeted
   checks. Do not execute rollback, query termination, credential revocation or replay on
   real infrastructure. The new document removes executable incident command blocks and
   links platform procedures instead; state that operational behavior was not executed.
-- [ ] Request a fresh whole-branch review from baseline `91a6838` through branch tip,
+- [x] Request a fresh whole-branch review from baseline `91a6838` through branch tip,
   including spec, plan, prose, tests and generated glossary. Supply finding IDs and gate
   evidence, but require the reviewer to disprove claims as well as confirm them. Resolve
   Important/Critical findings with the same regression/review loop.
-- [ ] Update task/tracker/KICKOFF with actual SHAs and results, stating document round
+- [x] Update task/tracker/KICKOFF with actual SHAs and results, stating document round
   complete only after the above succeeds. W-3 remains 12/18 and stage 16 unready.
   Record Deferred: interactive port, W-6, images lacking provenance, production promotion,
   and the cross-stage rollback wording described below. Commit records separately with
   `docs(tracker): record stage 16 document repair evidence` and the required trailer.
-- [ ] Invoke finishing-a-development-branch. Ask before any merge; no main push or merge.
+- [ ] Invoke finishing-a-development-branch for the separate integration decision. Ask before any merge; no main push or merge.
 
 ### Task 5a: Put the security response route in the reusable runbook
 

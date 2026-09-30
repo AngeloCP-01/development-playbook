@@ -18,8 +18,13 @@ grep it by id, don't read it whole.
 and [plan](superpowers/plans/2026-09-29-stage-16-doc-round.md) were approved; the
 user chose sequential subagent-driven execution. Tasks 1–4 and the Task 5a fix
 are implemented and independently reviewed through `d1b22b0`. The original cold
-reader instruments have been rerun on the fix. Full gate and final whole-branch
-review remain pending, so the document round is still in progress. The interactive
+reader instruments have been rerun on the fix. The full local gate passed:
+format, lint, typecheck, 1370 tests across 180 files, build, production audit
+18/18 and development-console audit 1/1 with no React warnings or browser
+messages. The read-only whole-branch review of `91a6838..6df86f3` returned
+**Ready to merge**, with no Critical or Important findings and two nonblocking
+Minor follow-ups. The document repair round is complete on its branch and awaits
+the user's separate integration decision. The interactive
 port is pending and stage 16 remains unready; W-3 stays at 12/18. A bounded W-6
 companion follows the stage. Gathered material is in `reference/cheatsheet-sources.md`.
 

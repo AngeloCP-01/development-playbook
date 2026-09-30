@@ -8,8 +8,14 @@ The repaired markdown, visible stage blurb, incident terms and generated glossar
 are on the branch. The original Parcel and lookup instruments were rerun after Task
 5a; their disposition and raw returns are linked from
 `docs/superpowers/specs/2026-09-29-stage-16-cold-reader-findings.md`.
-The full gate and whole-branch review are still pending, so the document round is
-not complete. No merge or production promotion has occurred. The interactive port
+The full local gate passed: format, lint, typecheck, 1370 tests in 180 files,
+production build, production audit 18/18 and development-console audit 1/1 with
+no React warnings or browser messages. A read-only whole-branch review of
+`91a6838..6df86f3` returned **Ready to merge**, with zero Critical or Important
+findings. Its two Minor follow-ups concern recovery-update receipt wording and
+rollback test scoping. The document repair round is complete on this branch and
+awaits the user's separate integration decision. No merge or production promotion
+has occurred. The interactive port
 is unbuilt; stage 16 remains unready and W-3 remains 12/18. Sources and eight gathered
 images are in `reference/cheatsheet-sources.md`; the images were committed in
 `1abea37` but none was published as a W-6 plate. The September 16 branch and test
