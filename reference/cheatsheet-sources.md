@@ -272,6 +272,17 @@ Primary references added during specification (2026-09-29):
   https://sre.google/workbook/postmortem-culture/ — consulted for postmortem
   practice and follow-up. No local image for either reference.
 
+Post-plan external check (2026-09-29):
+
+- PagerDuty, *Incident Command*:
+  https://response.pagerduty.com/during/incident_command/ — the page was
+  inaccessible on retry, so no claim or instruction was taken from it.
+- The Google SRE *Incident Response* chapter above was reread as the fallback.
+  Its commander may hold undelegated roles, which fits a solo responder; its
+  ownership, incident-record and communication guidance was already reflected
+  in the approved teaching. This was not a new independent source. No
+  operational procedure was executed.
+
 Other captures inspected, with provenance still incomplete:
 
 | File | Visible attribution | Assessment |

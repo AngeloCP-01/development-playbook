@@ -864,6 +864,45 @@ of new work, not assumed to survive from the last `git checkout`.
 
 ## Next up
 
+**2026-09-30: stage 16 document repair is in progress.** The approved
+[spec](superpowers/specs/2026-09-29-stage-16-doc-round-design.md) and
+[plan](superpowers/plans/2026-09-29-stage-16-doc-round.md) are being executed
+sequentially on `docs/2026-09-29-stage-16-preparation` from `91a6838`. Tasks 1–4
+and Task 5a are implemented through `d1b22b0` and have independent per-task review:
+Task 1 `0f32ffa`/evidence `ce33524`; Task 2 `9a3d7ee`; Task 3 `b2da11a`,
+with the reviewed postmortem correction `79b8e08`; Task 4 `839a78f`; Task 5a
+`d1b22b0`. The source images were committed separately as `1abea37`, before
+implementation. Focused RED/GREEN and teeth output, reviews and raw cold-reader
+returns are linked from the
+[evidence](superpowers/plans/2026-09-29-stage-16-doc-round-evidence.md) and
+[findings](superpowers/specs/2026-09-29-stage-16-cold-reader-findings.md).
+
+The first cold-reader rerun exposed the reusable runbook's missing security response
+route. Task 5a added a procedure location, responsible contact and fallback field;
+the final lookup scored 5/5 HIT with no misfiled or missing answer. The final Parcel
+reader found no document contradiction and kept Parcel's unresolved operational
+facts unknown. The final lookup raised one new Minor: Definition of done says users
+“received” a recovery update although publication through an existing status or
+support channel is permitted. An incident-record template was suggested as a Minor
+usability improvement; its required contents are already taught. The final reviewer
+will triage both, along with two earlier review minors: the Task 1 rollback assertion
+could target its table row more narrowly, and phrase assertions alone cannot prove
+Task 2's operational sequence.
+
+The post-plan PagerDuty incident-command page was inaccessible. The already used
+Google SRE incident-response chapter was checked as a fallback; it supported
+small-team ownership and an incident record, with no new correction. No live
+rollback, query termination, credential revocation or replay was executed; the
+document contains no executable incident command block. Focused checks and the
+latest full unit suite passed at **1370 tests across 180 files**; format, lint,
+typecheck and build checks have passed. The production audit and dev-console
+check, followed by whole-branch review, remain pending, so the round is **not
+complete**. Stage 16 stays unready and W-3 stays 12/18. No merge or deployment.
+
+Deferred: interactive port, W-6 plate and images without established provenance,
+production promotion, and Stage 13's rollback-first wording and its interactive
+counterpart as a separate cross-stage slice.
+
 **2026-09-29: user selected stage 16 — Incident Management.** Preparation is on
 `docs/2026-09-29-stage-16-preparation`, based on `develop` at `91a6838`.
 Two independent initial cold readers completed the document assessment. The

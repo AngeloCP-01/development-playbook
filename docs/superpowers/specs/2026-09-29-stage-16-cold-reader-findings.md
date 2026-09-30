@@ -105,3 +105,36 @@ a full enterprise response manual would add roles and policy beyond this audienc
 Deferred: production edits and tests until the design/plan workflow, interactive
 panel design, W-6 implementation, unverified image provenance, full forensic response,
 and organization-specific response-time promises. No merge or deployment occurred.
+
+## Reassessment, 2026-09-30
+
+The original Parcel completeness and five-question lookup instruments were rerun
+against the repaired document by fresh readers restricted to that document. The first
+lookup found a missing security response route in the reusable runbook. Task 5a added
+the procedure location, responsible contact and fallback field, then both instruments
+were repeated on the corrected document. The four raw reader reports are preserved
+verbatim in [the cold-reader appendix](../plans/2026-09-29-stage-16-cold-reader-raw.md).
+The final lookup scored **5 HIT, 0 MISFILED, 0 MISS**. The final Parcel reader found
+no contradiction in the chapter; its inability to perform a safe replay or declare
+recovery from the supplied scenario reflects missing Parcel-specific facts.
+
+| ID | Disposition | Evidence heading | Reviewer rationale |
+|---|---|---|---|
+| I1 | Closed | The order that matters; When access may be compromised; Prepare and rehearse the runbook | Suspected compromise now routes to containment, trusted access and escalation before reopening. Task 5a made the route a field in the reusable runbook; final lookup found the answer under the predicted heading. |
+| I2 | Closed | The order that matters; Choose a mitigation; Diagnose with evidence | The document permits the bounded checks needed to choose a safe action while separating later causal work. Parcel reader treated carrier status as a hypothesis, not proof. |
+| I3 | Closed | First response: confirm impact and severity | Both final readers used worker completion, pending age and customer outcomes despite green web health. |
+| I4 | Closed | Verify recovery and account for delayed work; Definition of done | Both readers kept Parcel open at carrier recovery, required uncertain-outcome reconciliation and an observation window, and separated service recovery from follow-up closure. |
+| I5 | Closed | Escalate when help is unavailable; Prepare and rehearse the runbook | Final readers retained ownership with the reachable responder and used a pre-agreed deadline, backup and fallback. Parcel's actual contacts and deadline remain service-specific unknowns. |
+| I6 | Closed | Choose a mitigation | The table conditions rollback on relevance and compatibility. The Parcel reader did not infer that no deploy today proved a cause or justified rollback. |
+| M1 | Closed | Write the postmortem and track follow-up | The Nudge action table has named owners, dates and completion evidence. The corrected postmortem distinguishes reconciled records from a pending aggregate count. |
+| M2 | Closed | First response: confirm impact and severity | Both readers selected provisional Major for blocked label creation and described reassessment as impact becomes known. |
+| M3 | Closed | Communicate while the incident is open; Definition of done | An accessible existing channel can carry updates. Neither final reader treated a new status site as required. |
+
+This disposition combines the content tests with the two final blind readings; a
+passing structure test alone did not close any finding. The first lookup's incident
+record template suggestion remains a minor usability idea: the record's contents are
+taught across the chapter, and no response blocker was demonstrated. The final lookup
+flagged one new **Minor** precision issue: Definition of done says affected users
+“received” the recovery update, while the communication section permits publishing
+through a status page or support notice. Final whole-branch review will decide the
+wording. The original findings and their severity remain above unchanged.

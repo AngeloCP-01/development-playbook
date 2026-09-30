@@ -51,8 +51,8 @@ as fabricated test output now. Do not promise a test count before measuring it.
 
 **Interfaces:** Produces the fence-aware `section` and whitespace-normalized `text` test helpers. Preserves the stage title/cadence/readiness. Owns I1, I2, I3, I6 and M2.
 
-- [ ] Read this task, the approved spec and the current affected sections. Invoke systematic-debugging before proposing changes: the finding IDs below are hypotheses to confirm against the actual text.
-- [ ] Add these tests before editing the teaching. Create the file with this helper first:
+- [x] Read this task, the approved spec and the current affected sections. Invoke systematic-debugging before proposing changes: the finding IDs below are hypotheses to confirm against the actual text.
+- [x] Add these tests before editing the teaching. Create the file with this helper first:
 
 ```ts
 import { readFileSync } from 'node:fs'
@@ -117,8 +117,8 @@ test('I1: suspected compromise has a containment path', () => {
 })
 ```
 
-- [ ] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture RED. Missing new sections or missing required guidance must cause the failure, not a syntax/import error. Earlier tasks must still pass.
-- [ ] Replace the opening quote with `> Limit harm first. Verify recovery. Learn from what happened.` Replace from `### The order that matters` up to (excluding) `### Diagnosing` with the content below. Keep the later old sections until their owning tasks replace them. Use the complete replacement content below; adjust only if source verification or a reviewer disproves a claim, and record that correction.
+- [x] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture RED. Missing new sections or missing required guidance must cause the failure, not a syntax/import error. Earlier tasks must still pass.
+- [x] Replace the opening quote with `> Limit harm first. Verify recovery. Learn from what happened.` Replace from `### The order that matters` up to (excluding) `### Diagnosing` with the content below. Keep the later old sections until their owning tasks replace them. Use the complete replacement content below; adjust only if source verification or a reviewer disproves a claim, and record that correction.
 
 ````markdown
 ### The order that matters
@@ -194,10 +194,10 @@ belong to the security response process, not a generic availability checklist.
 
 ````
 
-- [ ] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture GREEN. Format changed TypeScript with `pnpm exec prettier --write src/lib/stage-16-structure.test.ts`.
-- [ ] Teeth check: Change `schema compatibility` to `schema unexamined` in the rollback row only; only I6 must fail. Separately remove `without delaying urgent containment`; only I1 must fail. Revert each mutation before the next. Run the whole new test file, confirm only the corresponding regression test fails, restore immediately, and run it again. Record both outputs.
-- [ ] Obtain a fresh read-only per-task review. Require finding IDs, severity and provenance; resolve blockers before continuing. Tests pin prose contracts; the reviewer must challenge whether the instructions actually work.
-- [ ] Commit the task and its evidence with `fix(docs): make incident mitigation depend on impact and safety` plus the required Co-Authored-By trailer. Stage explicit paths only; leave gathered images untracked.
+- [x] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture GREEN. Format changed TypeScript with `pnpm exec prettier --write src/lib/stage-16-structure.test.ts`.
+- [x] Teeth check: Change `schema compatibility` to `schema unexamined` in the rollback row only; only I6 must fail. Separately remove `without delaying urgent containment`; only I1 must fail. Revert each mutation before the next. Run the whole new test file, confirm only the corresponding regression test fails, restore immediately, and run it again. Record both outputs.
+- [x] Obtain a fresh read-only per-task review. Require finding IDs, severity and provenance; resolve blockers before continuing. Tests pin prose contracts; the reviewer must challenge whether the instructions actually work.
+- [x] Commit the task and its evidence with `fix(docs): make incident mitigation depend on impact and safety` plus the required Co-Authored-By trailer. Stage explicit paths only; preserve the gathered images committed in `1abea37`.
 
 Before Task 1's commit, add this test to `web/src/lib/stages.test.ts`, run it RED,
 then replace only stage 16's blurb with the literal below and run GREEN:
@@ -227,8 +227,8 @@ must verify that title, cadence and `ready: false` are unchanged.
 
 **Interfaces:** Consumes Task 1 section/text helpers. Owns I4/I5 and completes I2. Establishes Nudge story facts consumed by Task 3.
 
-- [ ] Read this task, the approved spec and the current affected sections. Invoke systematic-debugging before proposing changes: the finding IDs below are hypotheses to confirm against the actual text.
-- [ ] Add these tests before editing the teaching. Append to `web/src/lib/stage-16-structure.test.ts`; it consumes `section(heading: string, source?: string): string` and `text(heading: string): string` from Task 1.
+- [x] Read this task, the approved spec and the current affected sections. Invoke systematic-debugging before proposing changes: the finding IDs below are hypotheses to confirm against the actual text.
+- [x] Add these tests before editing the teaching. Append to `web/src/lib/stage-16-structure.test.ts`; it consumes `section(heading: string, source?: string): string` and `text(heading: string): string` from Task 1.
 
 ```ts
 test('I5: escalation continues when the backup is unreachable', () => {
@@ -253,8 +253,8 @@ test('diagnosis treats early errors as evidence rather than proof', () => {
 })
 ```
 
-- [ ] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture RED. Missing new sections or missing required guidance must cause the failure, not a syntax/import error. Earlier tasks must still pass.
-- [ ] Replace the old `### Diagnosing` section with the five sections below, stopping before the old `### Writing it down` heading. Use the complete replacement content below; adjust only if source verification or a reviewer disproves a claim, and record that correction.
+- [x] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture RED. Missing new sections or missing required guidance must cause the failure, not a syntax/import error. Earlier tasks must still pass.
+- [x] Replace the old `### Diagnosing` section with the five sections below, stopping before the old `### Writing it down` heading. Use the complete replacement content below; adjust only if source verification or a reviewer disproves a claim, and record that correction.
 
 ````markdown
 ### Escalate when help is unavailable
@@ -354,10 +354,10 @@ that work; never invent a root cause to tick a checkbox.
 
 ````
 
-- [ ] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture GREEN. Format changed TypeScript with `pnpm exec prettier --write src/lib/stage-16-structure.test.ts`.
-- [ ] Teeth check: Replace `Reconcile uncertain outcomes before replay` with `Replay uncertain outcomes` only in the recovery section: only I4 must fail. Separately delete `backup is unavailable` from escalation: only I5 must fail. Run the whole new test file, confirm only the corresponding regression test fails, restore immediately, and run it again. Record both outputs.
-- [ ] Obtain a fresh read-only per-task review. Require finding IDs, severity and provenance; resolve blockers before continuing. Tests pin prose contracts; the reviewer must challenge whether the instructions actually work.
-- [ ] Commit the task and its evidence with `fix(docs): teach incident escalation communication and recovery` plus the required Co-Authored-By trailer. Stage explicit paths only; leave gathered images untracked.
+- [x] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture GREEN. Format changed TypeScript with `pnpm exec prettier --write src/lib/stage-16-structure.test.ts`.
+- [x] Teeth check: Replace `Reconcile uncertain outcomes before replay` with `Replay uncertain outcomes` only in the recovery section: only I4 must fail. Separately delete `backup is unavailable` from escalation: only I5 must fail. Run the whole new test file, confirm only the corresponding regression test fails, restore immediately, and run it again. Record both outputs.
+- [x] Obtain a fresh read-only per-task review. Require finding IDs, severity and provenance; resolve blockers before continuing. Tests pin prose contracts; the reviewer must challenge whether the instructions actually work.
+- [x] Commit the task and its evidence with `fix(docs): teach incident escalation communication and recovery` plus the required Co-Authored-By trailer. Stage explicit paths only; preserve the gathered images committed in `1abea37`.
 
 ### Task 3: Replace the runbook and postmortem with consistent worked artifacts
 
@@ -370,8 +370,8 @@ source below is authoritative for this task.
 
 **Interfaces:** Consumes Task 2 Nudge timeline (10:00 start, 10:25 monitoring, 10:40 recovered; Ana responding, Bo backup unavailable). Owns M1/M3 and closure consistency.
 
-- [ ] Read this task, the approved spec and the current affected sections. Invoke systematic-debugging before proposing changes: the finding IDs below are hypotheses to confirm against the actual text.
-- [ ] Add these tests before editing the teaching. Append to `web/src/lib/stage-16-structure.test.ts`; it consumes `section(heading: string, source?: string): string` and `text(heading: string): string` from Task 1.
+- [x] Read this task, the approved spec and the current affected sections. Invoke systematic-debugging before proposing changes: the finding IDs below are hypotheses to confirm against the actual text.
+- [x] Add these tests before editing the teaching. Append to `web/src/lib/stage-16-structure.test.ts`; it consumes `section(heading: string, source?: string): string` and `text(heading: string): string` from Task 1.
 
 ```ts
 test('M1: copied postmortem actions include accountable completion details', () => {
@@ -403,8 +403,8 @@ test('I4/M3: recovery and follow-up closure are separate and a status site is op
 })
 ```
 
-- [ ] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture RED. Missing new sections or missing required guidance must cause the failure, not a syntax/import error. Earlier tasks must still pass.
-- [ ] Replace from the old `### Writing it down` through end of document with the content below. This removes the old contradictory traps and unchecked operational commands as part of the same repair. Use the complete replacement content below; adjust only if source verification or a reviewer disproves a claim, and record that correction.
+- [x] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture RED. Missing new sections or missing required guidance must cause the failure, not a syntax/import error. Earlier tasks must still pass.
+- [x] Replace from the old `### Writing it down` through end of document with the content below. This removes the old contradictory traps and unchecked operational commands as part of the same repair. Use the complete replacement content below; adjust only if source verification or a reviewer disproves a claim, and record that correction.
 
 ````markdown
 ### Write the postmortem and track follow-up
@@ -591,10 +591,10 @@ responsible security responder; uptime alone does not establish safety.
 
 ````
 
-- [ ] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture GREEN. Format changed TypeScript with `pnpm exec prettier --write src/lib/stage-16-structure.test.ts`.
-- [ ] Teeth check: Replace owner `Bo` with an empty cell only in A2: only M1 must fail. Separately remove `Follow-up closure` label: only I4/M3 must fail. Run the whole new test file, confirm only the corresponding regression test fails, restore immediately, and run it again. Record both outputs.
-- [ ] Obtain a fresh read-only per-task review. Require finding IDs, severity and provenance; resolve blockers before continuing. Tests pin prose contracts; the reviewer must challenge whether the instructions actually work.
-- [ ] Commit the task and its evidence with `fix(docs): make incident artifacts consistent with recovery policy` plus the required Co-Authored-By trailer. Stage explicit paths only; leave gathered images untracked.
+- [x] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture GREEN. Format changed TypeScript with `pnpm exec prettier --write src/lib/stage-16-structure.test.ts`.
+- [x] Teeth check: Replace owner `Bo` with an empty cell only in A2: only M1 must fail. Separately remove `Follow-up closure` label: only I4/M3 must fail. Run the whole new test file, confirm only the corresponding regression test fails, restore immediately, and run it again. Record both outputs.
+- [x] Obtain a fresh read-only per-task review. Require finding IDs, severity and provenance; resolve blockers before continuing. Tests pin prose contracts; the reviewer must challenge whether the instructions actually work.
+- [x] Commit the task and its evidence with `fix(docs): make incident artifacts consistent with recovery policy` plus the required Co-Authored-By trailer. Stage explicit paths only; preserve the gathered images committed in `1abea37`.
 
 ### Task 4: Add AI guidance, glossary terms and final structure guard
 
@@ -602,8 +602,8 @@ responsible security responder; uptime alone does not establish safety.
 
 **Interfaces:** Consumes the completed document structure from Tasks 1–3. Adds three glossary entries with stage-16 see links. No component interfaces or readiness change.
 
-- [ ] Read this task, the approved spec and the current affected sections. Invoke systematic-debugging before proposing changes: the finding IDs below are hypotheses to confirm against the actual text.
-- [ ] Add these tests before editing the teaching. Append to `web/src/lib/stage-16-structure.test.ts`; it consumes `section(heading: string, source?: string): string` and `text(heading: string): string` from Task 1.
+- [x] Read this task, the approved spec and the current affected sections. Invoke systematic-debugging before proposing changes: the finding IDs below are hypotheses to confirm against the actual text.
+- [x] Add these tests before editing the teaching. Append to `web/src/lib/stage-16-structure.test.ts`; it consumes `section(heading: string, source?: string): string` and `text(heading: string): string` from Task 1.
 
 ```ts
 test('AI assistance preserves evidence and human operational judgment', () => {
@@ -622,8 +622,8 @@ test('lookup headings remain available outside fenced artifact templates', () =>
 })
 ```
 
-- [ ] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture RED. Missing new sections or missing required guidance must cause the failure, not a syntax/import error. Earlier tasks must still pass.
-- [ ] Insert this section immediately before the `---` preceding `## Artifacts`, after the complete runbook section. Before adding prose, add `16-incident-management` to `AI_SECTION_STAGES` and capture the metadata test failing for the missing section. Use the complete replacement content below; adjust only if source verification or a reviewer disproves a claim, and record that correction.
+- [x] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture RED. Missing new sections or missing required guidance must cause the failure, not a syntax/import error. Earlier tasks must still pass.
+- [x] Insert this section immediately before the `---` preceding `## Artifacts`, after the complete runbook section. Before adding prose, add `16-incident-management` to `AI_SECTION_STAGES` and capture the metadata test failing for the missing section. Use the complete replacement content below; adjust only if source verification or a reviewer disproves a claim, and record that correction.
 
 ````markdown
 ### AI in incident management
@@ -648,14 +648,14 @@ actual records before publishing or changing the service.
 
 ````
 
-- [ ] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture GREEN. Format changed TypeScript with `pnpm exec prettier --write src/lib/stage-16-structure.test.ts`.
-- [ ] Teeth check: Remove `untrusted evidence` only from AI prose: only the AI content test must fail. Restore it. Separately remove a glossary entry after the glossary cycle below; the new vocabulary test and generated snapshot may both fail, so run the targeted vocabulary test alone for that mutation and report the expected broader dependencies honestly. Run the whole new test file, confirm only the corresponding regression test fails, restore immediately, and run it again. Record both outputs.
-- [ ] Obtain a fresh read-only per-task review. Require finding IDs, severity and provenance; resolve blockers before continuing. Tests pin prose contracts; the reviewer must challenge whether the instructions actually work.
-- [ ] Commit the task and its evidence with `docs(incident-management): add ai boundaries and incident vocabulary` plus the required Co-Authored-By trailer. Stage explicit paths only; leave gathered images untracked.
+- [x] Run `pnpm test --project unit src/lib/stage-16-structure.test.ts` and capture GREEN. Format changed TypeScript with `pnpm exec prettier --write src/lib/stage-16-structure.test.ts`.
+- [x] Teeth check: Remove `untrusted evidence` only from AI prose: only the AI content test must fail. Restore it. Separately remove a glossary entry after the glossary cycle below; the new vocabulary test and generated snapshot may both fail, so run the targeted vocabulary test alone for that mutation and report the expected broader dependencies honestly. Run the whole new test file, confirm only the corresponding regression test fails, restore immediately, and run it again. Record both outputs.
+- [x] Obtain a fresh read-only per-task review. Require finding IDs, severity and provenance; resolve blockers before continuing. Tests pin prose contracts; the reviewer must challenge whether the instructions actually work.
+- [x] Commit the task and its evidence with `docs(incident-management): add ai boundaries and incident vocabulary` plus the required Co-Authored-By trailer. Stage explicit paths only; preserve the gathered images committed in `1abea37`.
 
 Complete these additional TDD steps before Task 4's review and commit:
 
-- [ ] Append this test to `web/src/lib/terms.test.ts`, run it RED with
+- [x] Append this test to `web/src/lib/terms.test.ts`, run it RED with
   `pnpm test --project unit src/lib/terms.test.ts -t 'incident vocabulary'`:
 
 ```ts
@@ -671,7 +671,7 @@ test('incident vocabulary resolves to the stage that teaches each artifact', () 
 })
 ```
 
-- [ ] Add these entries inside `TERMS` in `web/src/lib/terms.ts`:
+- [x] Add these entries inside `TERMS` in `web/src/lib/terms.ts`:
 
 ```ts
 'incident-commander': {
@@ -697,16 +697,18 @@ runbook: {
 },
 ```
 
-- [ ] Run `pnpm gen:glossary`, inspect the generated diff, and run
+- [x] Run `pnpm gen:glossary`, inspect the generated diff, and run
   `pnpm test --project unit src/lib/stage-16-structure.test.ts src/lib/stage-metadata.test.ts src/lib/terms.test.ts src/lib/term-usage.test.ts src/lib/glossary.test.ts`.
   The doc already spells the three display names in Tasks 2–3; add no known-orphan exemption.
-- [ ] Record the missing-AI RED run using
+- [x] Record the missing-AI RED run using
   `pnpm test --project unit src/lib/stage-metadata.test.ts` before prose addition and
   its GREEN after. The AI slug is added exactly once. Do not derive this list from readiness.
-- [ ] Check the eleven work headings occur in the spec's order by reading outside
+- [x] Check the eleven work headings occur in the spec's order by reading outside
   fenced blocks; the presence guard above is intentionally not claimed to prove order.
 
 ### Task 5: Reassess, fix new findings, verify and record the round
+
+Status, 2026-09-30: Tasks 1–4 and Task 5a are implemented and independently reviewed. The user chose sequential subagent-driven execution. The initial and final cold-reader reports are preserved in the linked raw appendix. Full gate and whole-branch review remain pending; Task 5 is not complete. Gathered images were committed earlier in `1abea37`, superseding the old untracked-image directions below.
 
 **Files:** `docs/superpowers/specs/2026-09-29-stage-16-cold-reader-findings.md`,
 `docs/superpowers/plans/2026-09-29-stage-16-doc-round-evidence.md`, `docs/task.md`,
@@ -716,8 +718,8 @@ must name its affected doc/test files in the evidence before editing.
 **Interfaces:** Consumes the completed document and all regression guards. Produces
 an audited findings disposition and fresh verification evidence. Does not register the port.
 
-- [ ] Apply humanizer to the finished prose without erasing deliberate technical distinctions.
-- [ ] Use two fresh read-only agents with no conversation history. Both may read only
+- [x] Apply humanizer to the finished prose without erasing deliberate technical distinctions.
+- [x] Use two fresh read-only agents with no conversation history. Both may read only
   `docs/16-incident-management.md`, no web, linked stages or plan. Dispatch the following
   complete prompts; preserve their raw returned findings in the evidence file.
 
@@ -747,15 +749,15 @@ Consultability prompt:
 > requirements. Do not infer linked stages. Report evidence by heading and separate
 > scope boundaries from defects.
 
-- [ ] Compare results against baseline I1–I6/M1–M3. Append a dated table to the findings
+- [x] Compare results against baseline I1–I6/M1–M3. Append a dated table to the findings
   with columns ID, closed/partial/open/boundary, evidence heading, reviewer rationale.
   Do not mark a finding closed solely because its structural test passed.
-- [ ] Reserve a fix wave for new or partial findings. Before editing, invoke systematic-debugging,
+- [x] Reserve a fix wave for new or partial findings. Before editing, invoke systematic-debugging,
   reproduce the defect, write the failing regression, and record the smallest corrected
   content and test as Task 5a, 5b, etc. in this plan. Do not invent future findings now.
   Run RED/GREEN/teeth and independent review, then repeat the same cold-reader instruments
   on the corrected document. A failing rerun does not mean the round is finished.
-- [ ] Read one additional primary source after the plan, as an external check on its
+- [x] Read one additional primary source after the plan, as an external check on its
   assumptions: [PagerDuty incident command](https://response.pagerduty.com/during/incident_command/).
   Verify applicability to a solo team; list adopted corrections or reasons no change is
   needed. If unavailable, use Google's linked incident-response chapter and record the

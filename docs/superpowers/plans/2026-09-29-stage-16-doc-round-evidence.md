@@ -698,3 +698,55 @@ AssertionError: expected '# SERVICE-SPECIFIC runbook\nService a…' to contain '
 Checking formatting...
 All matched files use Prettier code style!
 ```
+
+## Task 5 reassessment and provisional records, 2026-09-30
+
+The approved execution method was sequential subagent-driven work. Tasks 1–4 and
+Task 5a are complete with independent per-task reviews. The source images were
+already committed in `1abea37` at the user's request, superseding the plan's old
+untracked-image instructions. Task 5 as a whole remains open until the full gate,
+whole-branch review and record finalization pass.
+
+The initial Parcel completeness and heading-first lookup reruns used the original
+instruments with fresh document-only readers. The first lookup scored 5/5 HIT but
+found the reusable security runbook lacked a procedure location, responsible contact
+and fallback, although the compromise section depended on them. Task 5a recorded
+the root-cause hypothesis, failing test, correction, GREEN and teeth check above.
+Both instruments then ran again on the corrected document. The final completeness
+reader found no chapter contradiction; it held Parcel's contacts, metrics, carrier
+results and safe controls as unknown. The final lookup again scored **5 HIT, 0
+MISFILED, 0 MISS**. The four returned reports are preserved verbatim in the
+[cold-reader appendix](2026-09-29-stage-16-cold-reader-raw.md), with the original
+I1–I6/M1–M3 disposition in the
+[findings record](../specs/2026-09-29-stage-16-cold-reader-findings.md).
+
+The final lookup flagged a Minor wording mismatch between affected users
+“received” an update in Definition of done and publication through an existing
+status or support channel in the communication section. The first lookup suggested
+an incident-record template as a Minor usability improvement; the chapter already
+teaches its contents. Both are for final-review triage. Earlier review minors also
+remain for that reviewer: Task 1's rollback assertion checks a whole section
+rather than only the table row, and Task 2's phrase tests do not alone prove
+operational order. The blind readings supplied the behavioral check for the latter.
+
+The post-plan PagerDuty incident-command page was inaccessible. The previously
+consulted Google SRE incident-response chapter was read as fallback and supported
+small-team ownership and a retained incident record; no new correction followed.
+This is a limitation of the requested independent external check. The repaired
+document has no executable operational incident command blocks. No rollback,
+query termination, credential revocation or replay was executed on real services.
+
+The latest full unit suite passed **1370/1370 across 180 files** after Task 5a;
+format, lint, typecheck and production build passed separately. The first sandbox
+build attempt could not fetch Google Fonts; a network-enabled retry passed and
+prerendered 48 pages. The controller's production e2e audit and development-console
+check remain pending at this record point, as does the whole-branch review. Do not
+interpret the passing production build as React development validation.
+
+The visible stage-16 blurb was inspected in light and dark at 320×900 and
+1440×900 against the production build. It wrapped to two lines at 320 and one
+line at 1440, with no observed overflow or overlap. New glossary terms have no
+rendered `Term` usage while the port is absent; generated markdown and data guards
+were checked, but no new popup presentation is claimed. Screenshots and raw check
+notes are in `.superpowers/sdd/2026-09-29-stage-16-doc-round/visual-check.md`.
+W-3 remains 12/18 and stage 16 remains unready. No merge or production promotion.
