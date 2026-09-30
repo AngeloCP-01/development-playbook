@@ -149,6 +149,16 @@ test('runbook teaches a tested path and a reusable skeleton', () => {
   ])
     expect(s).toContain(phrase)
 })
+test('reusable runbook records the security response route before compromise', () => {
+  const s = section('Prepare and rehearse the runbook')
+  const skeleton = s.match(
+    /```markdown\n(# SERVICE-SPECIFIC runbook[\s\S]*?)```/,
+  )?.[1]
+  expect(skeleton).toBeDefined()
+  expect(skeleton).toContain(
+    'Security response procedure location / responsible contact / fallback route:',
+  )
+})
 test('I4/M3: recovery and follow-up closure are separate and a status site is optional', () => {
   const s = section('Definition of done')
   expect(s).toContain('Service recovery')

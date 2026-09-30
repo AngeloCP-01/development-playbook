@@ -775,6 +775,23 @@ Consultability prompt:
   `docs(tracker): record stage 16 document repair evidence` and the required trailer.
 - [ ] Invoke finishing-a-development-branch. Ask before any merge; no main push or merge.
 
+### Task 5a: Put the security response route in the reusable runbook
+
+**Files:** `docs/16-incident-management.md`, `web/src/lib/stage-16-structure.test.ts`,
+`docs/superpowers/plans/2026-09-29-stage-16-doc-round.md`,
+`docs/superpowers/plans/2026-09-29-stage-16-doc-round-evidence.md`,
+`.superpowers/sdd/2026-09-29-stage-16-doc-round/task-5a-report.md`.
+
+**Interfaces:** The fenced `SERVICE-SPECIFIC` skeleton must tell a service owner where
+to find the security response procedure, who is responsible, and which route to use
+when that contact is unavailable. No forensic procedure or incident-record template.
+
+- [x] Confirm the existing compromise guidance and the missing skeleton field; record the hypothesis and affected files in the evidence before editing teaching.
+- [x] Add a regression that extracts the `SERVICE-SPECIFIC` fenced skeleton and requires a security procedure location, responsible contact, and fallback route. Run it RED for the missing field.
+- [x] Add the smallest field to the skeleton, apply humanizer, and run the focused test GREEN.
+- [x] Temporarily remove only the new field and confirm only the new guard fails; restore it and rerun GREEN.
+- [x] Record exact relevant raw output, focused verification, and deferral of the incident-record template. Commit the explicit Task 5a files with the required trailer. No review, merge, or push in this bounded wave.
+
 ## Verification (after all tasks)
 
 From `web/`, run each separately and stop to investigate failures:

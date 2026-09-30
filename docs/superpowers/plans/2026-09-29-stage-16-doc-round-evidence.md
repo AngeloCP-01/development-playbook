@@ -546,3 +546,155 @@ Exact relevant lines from captured output:
  Test Files  5 passed (5)
       Tests  64 passed (64)
 ```
+## Task 5a: Security response route in reusable skeleton
+
+Affected files before teaching edit: `docs/16-incident-management.md`,
+`web/src/lib/stage-16-structure.test.ts`,
+`docs/superpowers/plans/2026-09-29-stage-16-doc-round.md`, this evidence file, and
+`.superpowers/sdd/2026-09-29-stage-16-doc-round/task-5a-report.md`.
+
+Root cause hypothesis: `When access may be compromised` assumes a service security
+response procedure and contact. The copyable `SERVICE-SPECIFIC` runbook records an
+ordinary owner, backup, and fallback support route but no security-specific procedure
+location, responsible contact, or fallback route. A new service owner can copy and
+fill the skeleton without preparing the security path the chapter requires.
+
+The new guard failed for the expected missing field, after extracting only the reusable fenced skeleton. The field label was added in that skeleton and passed. For the teeth check, only that label was removed; exactly the new guard failed, then it was restored. The incident-record template suggestion remains deferred as a minor scope expansion.
+
+### RED raw output
+
+```text
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/web
+> vitest run --project unit src/lib/stage-16-structure.test.ts
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |unit| src/lib/stage-16-structure.test.ts (16 tests | 1 failed) 16ms
+   × reusable runbook records the security response route before compromise 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > reusable runbook records the security response route before compromise
+AssertionError: expected '# SERVICE-SPECIFIC runbook\nService a…' to contain 'Security response procedure location …'
+
+- Expected
++ Received
+
+- Security response procedure location / responsible contact / fallback route:
++ # SERVICE-SPECIFIC runbook
++ Service and customer operation:
++ Owner / backup / acknowledgment deadline / fallback support route:
++ Last rehearsed / next review:
++ Independent document location and required trusted access:
++ Evidence locations and safe impact check:
++ Action prerequisites and operator procedure:
++ Stop conditions and reversal limits:
++ Handling for queued work and uncertain external side effects:
++ Recovery checks and observation window with rationale:
++ Customer channel, next-update commitment and incident record:
++ Receiving owner and handoff acceptance:
++
+
+ ❯ src/lib/stage-16-structure.test.ts:156:20
+    154|   const skeleton = s.match(/```markdown\n(# SERVICE-SPECIFIC runbook[\…
+    155|   expect(skeleton).toBeDefined()
+    156|   expect(skeleton).toContain(
+       |                    ^
+    157|     'Security response procedure location / responsible contact / fall…
+    158|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 passed (16)
+   Start at  08:22:52
+   Duration  182ms (transform 33ms, setup 0ms, import 42ms, tests 16ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.
+```
+
+### GREEN raw output
+
+```text
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/web
+> vitest run --project unit src/lib/stage-16-structure.test.ts
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  1 passed (1)
+      Tests  16 passed (16)
+   Start at  08:23:09
+   Duration  124ms (transform 20ms, setup 0ms, import 27ms, tests 7ms, environment 0ms)
+```
+
+### Teeth raw output
+
+```text
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/web
+> vitest run --project unit src/lib/stage-16-structure.test.ts
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |unit| src/lib/stage-16-structure.test.ts (16 tests | 1 failed) 17ms
+   × reusable runbook records the security response route before compromise 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/lib/stage-16-structure.test.ts > reusable runbook records the security response route before compromise
+AssertionError: expected '# SERVICE-SPECIFIC runbook\nService a…' to contain 'Security response procedure location …'
+
+- Expected
++ Received
+
+- Security response procedure location / responsible contact / fallback route:
++ # SERVICE-SPECIFIC runbook
++ Service and customer operation:
++ Owner / backup / acknowledgment deadline / fallback support route:
++ Last rehearsed / next review:
++ Independent document location and required trusted access:
++ Evidence locations and safe impact check:
++ Action prerequisites and operator procedure:
++ Stop conditions and reversal limits:
++ Handling for queued work and uncertain external side effects:
++ Recovery checks and observation window with rationale:
++ Customer channel, next-update commitment and incident record:
++ Receiving owner and handoff acceptance:
++
+
+ ❯ src/lib/stage-16-structure.test.ts:156:20
+    154|   const skeleton = s.match(/```markdown\n(# SERVICE-SPECIFIC runbook[\…
+    155|   expect(skeleton).toBeDefined()
+    156|   expect(skeleton).toContain(
+       |                    ^
+    157|     'Security response procedure location / responsible contact / fall…
+    158|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 passed (16)
+   Start at  08:23:18
+   Duration  152ms (transform 25ms, setup 0ms, import 33ms, tests 17ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.
+```
+
+### Restored focused verification and formatting
+
+```text
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+ Test Files  1 passed (1)
+      Tests  16 passed (16)
+```
+
+```text
+> prettier --check .
+Checking formatting...
+All matched files use Prettier code style!
+```

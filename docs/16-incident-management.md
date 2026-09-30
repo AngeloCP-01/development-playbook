@@ -282,6 +282,7 @@ its restricted operations workspace. Here is the reusable skeleton for a differe
 # SERVICE-SPECIFIC runbook
 Service and customer operation:
 Owner / backup / acknowledgment deadline / fallback support route:
+Security response procedure location / responsible contact / fallback route:
 Last rehearsed / next review:
 Independent document location and required trusted access:
 Evidence locations and safe impact check:
