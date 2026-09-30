@@ -5,18 +5,21 @@ The document-repair spec and plan are approved. Sequential subagent-driven execu
 on `docs/2026-09-29-stage-16-preparation` has completed Tasks 1–4 and the Task 5a
 security-runbook correction through `d1b22b0`, with independent per-task reviews.
 The repaired markdown, visible stage blurb, incident terms and generated glossary
-are on the branch. The original Parcel and lookup instruments were rerun after Task
-5a; their disposition and raw returns are linked from
+are merged into `develop`. The original Parcel and lookup instruments were rerun
+after Task 5a; their disposition and raw returns are linked from
 `docs/superpowers/specs/2026-09-29-stage-16-cold-reader-findings.md`.
 The full local gate passed: format, lint, typecheck, 1370 tests in 180 files,
 production build, production audit 18/18 and development-console audit 1/1 with
 no React warnings or browser messages. A read-only whole-branch review of
 `91a6838..6df86f3` returned **Ready to merge**, with zero Critical or Important
 findings. Its two Minor follow-ups concern recovery-update receipt wording and
-rollback test scoping. The document repair round is complete on this branch and
-awaits the user's separate integration decision. No merge or production promotion
-has occurred. The interactive port
-is unbuilt; stage 16 remains unready and W-3 remains 12/18. Sources and eight gathered
+rollback test scoping. The document repair round was merged locally into `develop`
+as `3d9d70c`
+with `--no-ff` on 2026-09-30. The merged result passed 1370 tests across 180 files;
+the work branch was deleted. Nothing was pushed or deployed. The user authorized
+the Stage 16 interactive port next; begin its design and plan after this records
+update. The interactive port is unbuilt; stage 16 remains unready and W-3 remains
+12/18. Sources and eight gathered
 images are in `reference/cheatsheet-sources.md`; the images were committed in
 `1abea37` but none was published as a W-6 plate. The September 16 branch and test
 counts below are historical, not measurements of this round.

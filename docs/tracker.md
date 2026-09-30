@@ -864,7 +864,26 @@ of new work, not assumed to survive from the last `git checkout`.
 
 ## Next up
 
-**2026-09-30: stage 16 document repair is in progress.** The approved
+**2026-09-30: Stage 16 document repair merged; interactive port authorized next.**
+The user approved local integration. Merge `3d9d70c` brought
+`docs/2026-09-29-stage-16-preparation` into `develop` with `--no-ff`, preserving
+its twelve commits through `3f18f03`. The merged tree is identical to the reviewed
+branch tip. A fresh `pnpm test` passed **1370/1370 across 180 files** in 18.26s;
+the work branch was then deleted. Nothing was pushed or deployed.
+
+Next: brainstorm the Stage 16 interactive design against the repaired document,
+then write its implementation plan. The user authorized this work and asked for
+the task/tracker refresh first. Stage 16 remains `ready: false`; W-3 remains
+**12/18**. A bounded W-6 reference round follows the interactive port.
+
+Deferred: the two nonblocking document-review follow-ups (recovery-update receipt
+wording and rollback-row test scope), optional incident-record template, W-6
+publication and incomplete image provenance, the separate Stage 13 rollback
+wording repair, and production promotion. The full document-round gate and review
+remain recorded below; no browser audit was repeated after the identical-tree
+merge, and no deployed-site smoke test was due.
+
+**Historical execution record, 2026-09-30 (before merge): stage 16 document repair.** The approved
 [spec](superpowers/specs/2026-09-29-stage-16-doc-round-design.md) and
 [plan](superpowers/plans/2026-09-29-stage-16-doc-round.md) are being executed
 sequentially on `docs/2026-09-29-stage-16-preparation` from `91a6838`. Tasks 1–4
@@ -885,7 +904,7 @@ facts unknown. The final lookup raised one new Minor: Definition of done says us
 “received” a recovery update although publication through an existing status or
 support channel is permitted. An incident-record template was suggested as a Minor
 usability improvement; its required contents are already taught. The final reviewer
-will triage both, along with two earlier review minors: the Task 1 rollback assertion
+subsequently triaged both, along with two earlier review minors: the Task 1 rollback assertion
 could target its table row more narrowly, and phrase assertions alone cannot prove
 Task 2's operational sequence.
 
