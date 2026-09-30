@@ -240,6 +240,64 @@ vendor mismatch `ci-cd` accepted deliberately when it shipped a Jenkins plate on
 GitHub Actions project, acceptable here for the same reason, since on a concept sheet
 the flow shape is the content.
 
+## Stage 16 gathering round · 2026-09-29
+
+Target: `incident-management`, tethered to stage 16. The user chose stage 16 for
+the next W-3 round; its W-6 companion follows the stage. These are gathered sources,
+not published sheet content. No plate has been selected.
+
+| Source | Author / organization | URL | Local image | Intended use / verification |
+|---|---|---|---|---|
+| 2025 SRE Incident Management Best Practices Checklist | Rootly | https://rootly.com/sre/2025-sre-incident-management-best-practices-checklist | None matched | Read; preparation, roles, handoffs and follow-up. Adapt team size and severity conventions. |
+| The 15-Minute Rule: Incident Response Checklist for Cybersecurity Leaders | PKWARE | https://www.pkware.com/blog/the-15-minute-rule-incident-response-checklist-for-cybersecurity-leaders | None matched | Read; security containment and evidence preservation. Its timing is source guidance, not a universal deadline. |
+| Incident Management Handbook | Atlassian | https://www.atlassian.com/incident-management/handbook#tooling-requirements | None matched | Read; incident record, coordination, alerting, documentation and status communication. |
+| Incident Communication Templates: 8 Copy-Paste Examples | Runframe | https://runframe.io/blog/incident-stakeholder-communication-templates | None matched | Read; audience-specific updates, known impact, unknowns and next-update time. |
+| Incident response runbook presentation templates | SlideTeam | https://www.slideteam.net/top-10-incident-response-runbook-powerpoint-presentation-templates | `process_of_creating_runbook_for_incident_action_plan_slide01.jpg` | User-supplied attribution; page blocked by bot verification. Image inspected; contains placeholder text, not a completed operational runbook. |
+| SRE Playbook: Step-by-Step Guide to Incident Response & Reliability | Vaibhav Umarvaishya / NovelVista | https://www.novelvista.com/blogs/devops/sre-playbook-step-by-step-incident-response-reliability | `sre-internal-1.webp` | Article read, clearer image inspected; replaces the earlier low-resolution capture. Candidate workflow plate, subject to the caveats below. |
+
+The NovelVista graphic is readable at 1704 × 923. Its sequence places communication
+after diagnosis; our adaptation must make updates ongoing. Its timeline labels an
+incident resolved while validation is still in progress. Its health panel also says
+all systems are operational while showing a degraded payment service. The article
+has a separate recovery-validation step, which the graphic's top row omits. Use these
+as review findings, not instructions to reproduce.
+
+Primary references added during specification (2026-09-29):
+
+- Google SRE, *Incident Response*, Jennifer Mace, Jelena Oertel, Stephen Thorne
+  and Arup Chakrabarti, with Jian Ma and Jessie Yang:
+  https://sre.google/workbook/incident-response/ — consulted for coordination,
+  incident ownership and maintaining a working record.
+- Google SRE, *Postmortem Culture: Learning from Failure*:
+  https://sre.google/workbook/postmortem-culture/ — consulted for postmortem
+  practice and follow-up. No local image for either reference.
+
+Post-plan external check (2026-09-29):
+
+- PagerDuty, *Incident Command*:
+  https://response.pagerduty.com/during/incident_command/ — the page was
+  inaccessible on retry, so no claim or instruction was taken from it.
+- The Google SRE *Incident Response* chapter above was reread as the fallback.
+  Its commander may hold undelegated roles, which fits a solo responder; its
+  ownership, incident-record and communication guidance was already reflected
+  in the approved teaching. This was not a new independent source. No
+  operational procedure was executed.
+
+Other captures inspected, with provenance still incomplete:
+
+| File | Visible attribution | Assessment |
+|---|---|---|
+| `Major-Incident-----First-15-Minutes-Checklist-Why-control-matters-before-speed.png` | ITILIGENCE; URL missing | Coordination and fact/assumption separation; candidate supporting source. |
+| `incident-severity-levels-og.webp` | Runframe; exact page URL missing | Five-level model; reconcile with the stage's three-level model before use. |
+| `incident-escation-matrix.webp` | Not recorded | Support hierarchy; adapt for small teams, do not equate management rank with incident severity. |
+| `post-mortem-vs-retrospective-vs-indecident-review.webp` | Not recorded | Terminology comparison; verify the distinctions before teaching them. |
+| `9-escalation-matrix.png` | Not recorded | Reject as the operational model: repeated Levels 2/3 and days-long support escalation. |
+| `SRE incident-management Checklist.jpeg` | Not recorded | Filename is misleading: image is a cybersecurity infection-response checklist. Security-specific supporting material only. |
+
+Deferred: publication and conversion of graphics, remaining image provenance,
+a worked runbook and completed postmortem, and the W-6 implementation. Gathering
+does not change the live registry or stage readiness.
+
 ## Untethered
 
 ### Software Development Life Cycle · `sdlc` · no stage

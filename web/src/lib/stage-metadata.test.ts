@@ -60,6 +60,7 @@ const AI_SECTION_STAGES = [
   '13-production-deployment',
   '14-post-deployment-verification',
   '15-observability',
+  '16-incident-management',
 ]
 
 test.each(AI_SECTION_STAGES)(

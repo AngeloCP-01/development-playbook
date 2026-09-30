@@ -864,6 +864,76 @@ of new work, not assumed to survive from the last `git checkout`.
 
 ## Next up
 
+**2026-09-30: stage 16 document repair is in progress.** The approved
+[spec](superpowers/specs/2026-09-29-stage-16-doc-round-design.md) and
+[plan](superpowers/plans/2026-09-29-stage-16-doc-round.md) are being executed
+sequentially on `docs/2026-09-29-stage-16-preparation` from `91a6838`. Tasks 1–4
+and Task 5a are implemented through `d1b22b0` and have independent per-task review:
+Task 1 `0f32ffa`/evidence `ce33524`; Task 2 `9a3d7ee`; Task 3 `b2da11a`,
+with the reviewed postmortem correction `79b8e08`; Task 4 `839a78f`; Task 5a
+`d1b22b0`. The source images were committed separately as `1abea37`, before
+implementation. Focused RED/GREEN and teeth output, reviews and raw cold-reader
+returns are linked from the
+[evidence](superpowers/plans/2026-09-29-stage-16-doc-round-evidence.md) and
+[findings](superpowers/specs/2026-09-29-stage-16-cold-reader-findings.md).
+
+The first cold-reader rerun exposed the reusable runbook's missing security response
+route. Task 5a added a procedure location, responsible contact and fallback field;
+the final lookup scored 5/5 HIT with no misfiled or missing answer. The final Parcel
+reader found no document contradiction and kept Parcel's unresolved operational
+facts unknown. The final lookup raised one new Minor: Definition of done says users
+“received” a recovery update although publication through an existing status or
+support channel is permitted. An incident-record template was suggested as a Minor
+usability improvement; its required contents are already taught. The final reviewer
+will triage both, along with two earlier review minors: the Task 1 rollback assertion
+could target its table row more narrowly, and phrase assertions alone cannot prove
+Task 2's operational sequence.
+
+The post-plan PagerDuty incident-command page was inaccessible. The already used
+Google SRE incident-response chapter was checked as a fallback; it supported
+small-team ownership and an incident record, with no new correction. No live
+rollback, query termination, credential revocation or replay was executed; the
+document contains no executable incident command block. The full local gate passed:
+**1370 tests across 180 files**, format, lint, typecheck, production build,
+production audit **18/18** (responsive 320–2560, touch targets, light/dark contrast
+and production console), and development-console audit **1/1** with no React
+warnings or other browser messages. The read-only whole-branch review of
+`91a6838..6df86f3` returned **Ready to merge**, zero Critical and zero Important;
+its [full report](superpowers/plans/2026-09-29-stage-16-doc-round-review.md) is
+preserved. The round is complete on the branch, awaiting the user's separate
+integration decision. Stage 16 stays unready and W-3 stays 12/18. No merge or
+deployment.
+
+The reviewer retained two nonblocking Minors as follow-ups: **M1** recovery-update
+receipt wording should match publication through the agreed channel; **M2** the
+rollback regression should inspect the rollback row rather than the whole table.
+Current guidance and the rollback row are usable. It confirmed that phrase guards
+alone cannot prove operational sequence, while direct reading and the cold-reader
+reruns support that sequence. A consolidated incident-record template is optional.
+
+Deferred: interactive port, W-6 plate and images without established provenance,
+production promotion, and Stage 13's rollback-first wording and its interactive
+counterpart as a separate cross-stage slice. Service-specific thresholds, contacts
+and retry semantics belong to filled runbooks; specialist forensics and legal
+obligations belong to the security process. No deployed-site claim or production
+smoke test was made because there was no promotion.
+
+**2026-09-29: user selected stage 16 — Incident Management.** Preparation is on
+`docs/2026-09-29-stage-16-preparation`, based on `develop` at `91a6838`.
+Two independent initial cold readers completed the document assessment. The
+[findings](superpowers/specs/2026-09-29-stage-16-cold-reader-findings.md) preserve
+the scenario and five lookup questions. The
+[document-repair spec](superpowers/specs/2026-09-29-stage-16-doc-round-design.md)
+is approved. The [implementation plan](superpowers/plans/2026-09-29-stage-16-doc-round.md)
+contains five sequential tasks and awaits review and an execution-method choice.
+No product edits yet. Gathered sources and image
+caveats are recorded in `reference/cheatsheet-sources.md` under the stage 16 round.
+W-3 remains 12/18; W-6 follows the stage. Deferred: implementation, publication of
+reference graphics, and promotion to `main`.
+
+The following is the historical 2026-09-16 handoff; its stage-choice instruction
+is superseded by the selection above.
+
 **W-3 is at 12/18.** Stage 15 (Observability) is interactive and merged to `develop` as
 `9d834e8`. Stages 01–07, 11, 12, 13, 14 and 15 are done. **Six remain, no priority chosen
 yet**: `08-security-audit` (Security Audit), `09-performance-optimization` (Performance
@@ -1028,4 +1098,3 @@ Carry into whichever round is next:
 - **Count the doc, do not trust the brief.** Two ports this round were specified against counts
   that were wrong by the time they were read. Where the count is checkable, check it in a test
   against the doc itself — `evolve.test.ts` and `ai-plays.test.ts` both do.
-

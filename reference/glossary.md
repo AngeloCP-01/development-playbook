@@ -113,6 +113,8 @@ drift apart.
 
 **Idempotency** — A property of an operation: running it repeatedly with the same input leaves the system in the same state as running it once. Usually achieved by having the caller supply a key, and recording which keys have already been processed. See [03 — Architecture](../docs/03-architecture.md).
 
+**Incident commander** — Keeps ownership, decisions, communication and handoffs clear while responders limit impact. A solo developer can hold this role alongside technical work. See [16 — Incident Management](../docs/16-incident-management.md).
+
 **Invariant test** — A test asserting the shape of data rather than its values — counts, uniqueness, cross-references between files, rather than what any one field contains. See [06 — Testing](../docs/06-testing.md).
 
 **Isolation level** — A per-transaction setting trading strictness against concurrency. Postgres defaults to read committed: you never see uncommitted rows, but you do see rows others commit while you are still running. Serializable behaves as though transactions ran one at a time, and aborts one when it cannot guarantee that. See [03 — Architecture](../docs/03-architecture.md).
@@ -159,6 +161,8 @@ drift apart.
 
 **pnpm** — Same registry and same package.json as npm, but packages live in one content-addressable store on your machine and get hard-linked into each project. Its node_modules layout is strict: only dependencies you actually declared are importable. See [04 — Project Setup](../docs/04-project-setup.md).
 
+**Postmortem** — Records customer impact, the response timeline, contributing conditions, detection gaps and follow-up actions with owners and dates. Unknowns remain explicit rather than becoming blame or invented certainty. See [16 — Incident Management](../docs/16-incident-management.md).
+
 **Preview deployment** — A complete, isolated deployment of a single branch at its own URL — automatic per pull request on Vercel. Not the same as staging. See [12 — Staging](../docs/12-staging.md).
 
 **Problem interview** — A short interview — 20 to 30 minutes — focused entirely on past behaviour around a problem. No pitch, no product, no hypotheticals. See [01 — Product Discovery](../docs/01-product-discovery.md).
@@ -188,6 +192,8 @@ drift apart.
 **Rolling deployment** — A deployment strategy where new tasks start alongside old tasks, pass health checks, and then old tasks drain. On ECS, governed by minimumHealthyPercent and maximumPercent. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **Rubber-stamping** — Approving code changes without reading them carefully — clicking "approve" based on green CI, a clean-looking diff, or trust in the author rather than on what the code actually does. See [07 — Code Review](../docs/07-code-review.md).
+
+**Runbook** — Names the required access, evidence, safe actions, stop conditions, escalation path and recovery checks. It stays accessible when the affected application is down. See [16 — Incident Management](../docs/16-incident-management.md).
 
 **Saturation** — The fourth golden signal: how full the resource with a hard limit is. Database connections, function concurrency, storage. Unlike CPU, a saturated resource with a hard ceiling does not recover on its own, so it is worth alerting on before it becomes a symptom. See [15 — Observability](../docs/15-observability.md).
 

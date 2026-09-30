@@ -1,5 +1,26 @@
 # Kickoff — Development Playbook
 
+**Current round, 2026-09-30:** the user chose **stage 16 — Incident Management**.
+The document-repair spec and plan are approved. Sequential subagent-driven execution
+on `docs/2026-09-29-stage-16-preparation` has completed Tasks 1–4 and the Task 5a
+security-runbook correction through `d1b22b0`, with independent per-task reviews.
+The repaired markdown, visible stage blurb, incident terms and generated glossary
+are on the branch. The original Parcel and lookup instruments were rerun after Task
+5a; their disposition and raw returns are linked from
+`docs/superpowers/specs/2026-09-29-stage-16-cold-reader-findings.md`.
+The full local gate passed: format, lint, typecheck, 1370 tests in 180 files,
+production build, production audit 18/18 and development-console audit 1/1 with
+no React warnings or browser messages. A read-only whole-branch review of
+`91a6838..6df86f3` returned **Ready to merge**, with zero Critical or Important
+findings. Its two Minor follow-ups concern recovery-update receipt wording and
+rollback test scoping. The document repair round is complete on this branch and
+awaits the user's separate integration decision. No merge or production promotion
+has occurred. The interactive port
+is unbuilt; stage 16 remains unready and W-3 remains 12/18. Sources and eight gathered
+images are in `reference/cheatsheet-sources.md`; the images were committed in
+`1abea37` but none was published as a W-6 plate. The September 16 branch and test
+counts below are historical, not measurements of this round.
+
 Paste the block below into a **new Claude Code session** opened in
 `/Users/angelito/personal/Development-Playbook` to start a round with full context.
 
@@ -37,7 +58,7 @@ Before doing anything, read these for context:
   during its own execution — the D-52 fix the plan pre-authorized covered one panel,
   and the real number was four.
 
-### Project state (as of 2026-09-16 — W-3 is **12/18**, six stages remain.
+### Project state (stage 16 update above; the baseline below is 2026-09-16)
 
 Stages 01–07, 11, 12, 13, 14 and 15 are interactive. Stage 13 is platform-aware (8 steps,
 Vercel + AWS). **Eighteen of twenty-three** reference sheets drawn.
@@ -69,14 +90,12 @@ time): 45 Completed rows moved to `docs/tracker-archive.md`, ten fully-completed
    `grep -n "NOT merged, NOT pushed, NOT deployed" docs/tracker.md` and
    `git ls-files reference/ | grep -iv "jpeg\|jpg\|png\|webp\|gif\|\.md$"`. Both must
    return nothing.
-4. **Pick the next W-3 stage before cutting a branch.** Six remain, no priority chosen:
+4. **Stage 16 is selected.** The six unported stages at the historical baseline were:
    `08-security-audit` (Security Audit), `09-performance-optimization` (Performance
    Optimization), `10-documentation` (Documentation), `16-incident-management` (Incident
    Management), `17-maintenance` (Maintenance), `18-continuous-improvement` (Continuous
-   Improvement). This has deliberately been left open rather than picked for you — ask
-   the user which one, or default to numeric order (08 next) only if they have no
-   preference. Read `docs/task.md`'s `### W-3` section for the shared per-stage
-   checklist once a stage is chosen.
+   Improvement). Continue the stage 16 document round from the current status above;
+   read `docs/task.md`'s `### W-3` section before the later interactive port.
 5. **If it's a real stage round**, run the delivery loop: brainstorm → spec → plan
    (Opus) → TDD tasks (sonnet, subagent-driven) → per-task review → whole-branch review
    (opus) → merge (ask first, target `develop`, never `main`).
