@@ -294,9 +294,14 @@ Other captures inspected, with provenance still incomplete:
 | `9-escalation-matrix.png` | Not recorded | Reject as the operational model: repeated Levels 2/3 and days-long support escalation. |
 | `SRE incident-management Checklist.jpeg` | Not recorded | Filename is misleading: image is a cybersecurity infection-response checklist. Security-specific supporting material only. |
 
+The W-6 `incident-management` sheet was drawn on 2026-10-01 without an image
+plate. Its lookup rows follow the repaired Stage 16 chapter. The NovelVista
+sequence errors above and the other captures' provenance or content gaps made
+none suitable for display in this round.
+
 Deferred: publication and conversion of graphics, remaining image provenance,
-a worked runbook and completed postmortem, and the W-6 implementation. Gathering
-does not change the live registry or stage readiness.
+and a worked runbook and completed postmortem. The gathering round itself did
+not change stage readiness.
 
 ## Untethered
 

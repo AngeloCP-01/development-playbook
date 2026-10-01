@@ -1,18 +1,14 @@
 # Kickoff — Development Playbook
 
-**Next round, 2026-10-01: W-6 `incident-management` reference companion.** The
-user chose this as the next task in a new session. Stage 16's chapter repair
-landed on `develop` as `3d9d70c`; its fourteen-step interactive port landed as
-no-ff merge `3d2c266` on 2026-10-01. The port's final review cleared three
-blocking findings; its full local gate passed (1388 tests in 181 files,
-production audit 18/18, development-console audit 1/1). The merged tree
-matched the reviewed tip and passed all 1388 tests again. Post-merge records
-are in `8d815f0` and `d272a73`. W-3 is **13/18** on local `develop`; the
-local Stage 16 work has not been pushed or deployed. The W-6 sheet has not
-started: no `incident-management` sheet is registered, no plate is selected,
-and eight gathered images in `reference/` have not been published. Start from
-`docs/task.md` → W-6, `docs/tracker.md` → Next up, and
-`reference/cheatsheet-sources.md` → Stage 16 gathering round.
+**Next decision, 2026-10-01: review the W-6 `incident-management` reference
+companion on `feat/incident-management-reference`.** It is drawn and registered,
+with generated markdown, but has not merged, pushed or deployed. The branch's
+local gate passed: 1389 tests across 181 files, format, lint, typecheck, a
+49-page production build and browser audit 18/18. No image plate was selected;
+the Stage 16 source ledger records the candidate's errors. Stage 16's chapter
+and fourteen-step port are merged locally into `develop`; W-3 is **13/18**.
+The sheet landed as `017655a`. Read `docs/tracker.md` → Next up and the W-6.3o
+row before deciding integration.
 
 Paste the block below into a **new coding session** opened in
 `/Users/angelito/personal/Development-Playbook` to start a round with full context.
@@ -55,26 +51,23 @@ Before doing anything, read these for context:
 
 Stages 01–07 and 11–16 are interactive on local `develop` (**13/18**); 08–10,
 17 and 18 remain. Stage 16 is `ready: true` after merge `3d2c266`; its port
-branch was deleted. W-6 has **18 of 23** registered sheets drawn. The
-`incident-management` sheet is not yet registered or drawn.
+branch was deleted. W-6 has **19 of 24** registered sheets drawn on the current
+work branch; `develop` still has 18 of 23.
 
 The Stage 16 source ledger is `reference/cheatsheet-sources.md` → *Stage 16
 gathering round*. It has six attributed external sources and eight local image
-captures. The NovelVista workflow graphic is a candidate, but its recovery
-and communication sequence contradicts the repaired chapter; inspect and
-correct it before using it. Several other captures lack exact source URLs,
-and the slide template contains placeholder text. No graphic has been chosen.
+captures. No graphic was selected for the new sheet: the NovelVista sequence
+contradicts the repaired chapter, several captures lack exact source URLs, and
+the slide template contains placeholder text.
 
-The user's last workflow choice was a short brainstorm, TDD, one whole-branch
-review and the full local gate for the Stage 16 port, without a separate port
-spec/plan or per-task reviews. Keep that token-conscious preference in mind
-for this bounded companion.
+The user chose a lean workflow for this bounded sheet: brief in-chat design,
+TDD, final review and the local gate, without a separate spec or plan.
 
 **Start here, in order:**
 
-1. **Check the branch before editing anything.** `git branch --show-current`. Should be
-   `develop` unless you already cut a work branch. If the answer is `main`, or a branch
-   you did not expect, stop and read `docs/learnings/branch-discipline-101.md`.
+1. **Check the branch before editing anything.** `git branch --show-current` should
+   be `feat/incident-management-reference` unless it was integrated or switched.
+   If the answer is `main`, stop and read `docs/learnings/branch-discipline-101.md`.
 2. **Re-derive every number in this file before trusting it.** `git fetch`, then the
    commands under "Branch state". This file has a documented history of being wrong
    about numbers, all found by checking rather than reading.
@@ -84,17 +77,11 @@ for this bounded companion.
    The reference check must return nothing. The tracker currently has one
    historical struck-through hit in its 2026-09-08 W-3.12 row; verify that
    every hit is struck through and immediately corrected, not a live status.
-4. **Begin the bounded W-6 `incident-management` companion.** Read `docs/task.md`
-   → W-6, `docs/tracker.md` → Next up, and the Stage 16 gathering round in
-   `reference/cheatsheet-sources.md`. Inspect `web/src/lib/cheatsheets/` and
-   the generated `reference/cheatsheets.md` workflow before editing. Set the
-   sheet's lookup scope and decide whether a corrected, attributed plate adds
-   value. The source ledger records the graphic's concrete defects.
-5. **Build on a work branch and verify the result.** Start with a brief design
-   choice, write a failing test before production code, generate the markdown
-   snapshot with `pnpm gen:cheatsheets`, and run the applicable gate and final
-   review. Record evidence and deferrals in task/tracker. Ask before merging
-   into `develop`; never merge or push to `main`.
+4. **Review the W-6 companion branch.** Inspect the sheet, generated markdown,
+   test and tracker evidence. The remaining integration decision belongs to the
+   user. Ask before merging into `develop`; never merge or push to `main`.
+5. **After integration, choose the next W-3 stage.** Stages 08–10, 17 and 18
+   remain; the W-6.4 glossary/stack work is separate.
 
 ---
 
@@ -168,9 +155,9 @@ Notes for whoever is preparing this handoff:
   `reference/rest-api-best-practices.md` — hand-written drafts for `sql-reference` and
   `api-reference`, gathered without an image, not yet registered.
 - Open threads worth carrying forward:
-  - **W-6 `incident-management` is next.** Its sources and graphic caveats are in
-    `reference/cheatsheet-sources.md` → Stage 16 gathering round. No sheet or
-    plate exists yet; the Stage 16 port is merged locally and undeployed.
+  - **W-6 `incident-management` awaits integration.** Its sources and graphic
+    caveats are in `reference/cheatsheet-sources.md` → Stage 16 gathering round.
+    The sheet has no plate; the Stage 16 port is merged locally and undeployed.
   - **The D-52 split's own reviews left two cosmetic Minor findings, deferred:**
     `Callout` `eyebrow` text on the split panels not updated to match the new step
     boundaries, and the panel-file comment numbering scheme inconsistent across the
