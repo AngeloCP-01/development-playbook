@@ -15,16 +15,17 @@ grep it by id, don't read it whole.
 
 **Current round (2026-10-01): stage 16 — Incident Management.** The repaired
 chapter was merged into `develop` as `3d9d70c` on 2026-09-30. Its interactive
-port is implemented on `feat/stage-16-incident-port` as `eef16d7`, following the
-user's lighter workflow: a short in-chat design, TDD, one whole-branch review and
+port landed on `develop` as no-ff merge `3d2c266` (feature commit `eef16d7`),
+following the user's lighter workflow: a short in-chat design, TDD, one whole-branch review and
 the full local gate. The port has fourteen steps, a four-decision Nudge rehearsal,
 three judgment drills, and a resettable incident checklist. Review found three
 blocking issues across its two passes; all were fixed and rechecked. The gate
 passed: format, lint, typecheck, 1388 tests across 181 files, production audit
-18/18, and development-console audit 1/1 with no React warnings. **The port has
-not been merged or pushed.** `develop` still has 12/18 interactive stages; stage
-16 is `ready: true` only on the feature branch. A bounded W-6 companion follows
-the port. Gathered material is in `reference/cheatsheet-sources.md`.
+18/18, and development-console audit 1/1 with no React warnings. The merged
+tree matched the reviewed feature tip, and all 1388 tests passed again. **The
+port has not been pushed or deployed.** `develop` has 13/18 interactive stages.
+A bounded W-6 companion follows the port. Gathered material is in
+`reference/cheatsheet-sources.md`.
 
 Two deliverables from one body of content.
 
@@ -73,7 +74,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(12/18 merged to `develop`; six remain there. Stage 16's port is complete on `feat/stage-16-incident-port`, pending a separate merge decision.)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(13/18 merged to `develop`; five remain: 08, 09, 10, 17 and 18. Stage 16 landed as `3d2c266`.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(eighteen of twenty-three registered sheets drawn — `github-actions` and `ci-cd` both added 2026-09-07, tethered to stage 11. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
@@ -132,7 +133,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13, 14 and 15 done; 6 remain — 12/18. **Stage 11 complete 2026-09-07**: 8 steps, doc correction + ordering exercise, 1143/160 tests, e2e 17/18 (1 pre-existing), all verification green. **W-3.12, stage 15's port, is DONE and MERGED to `develop` as `9d834e8`** (`--no-ff`) — see below)*
+### W-3 — Stages 02–18 interactive ◐ *(13/18 merged to `develop`; five remain: 08, 09, 10, 17 and 18. Stage 16 landed as `3d2c266`; see tracker W-3.13 for evidence.)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 

@@ -1,19 +1,19 @@
 # Kickoff — Development Playbook
 
 **Current round, 2026-10-01:** Stage 16's repaired document was merged into
-`develop` as `3d9d70c` on 2026-09-30. The interactive port is implemented on
-`feat/stage-16-incident-port` as `eef16d7`; this branch also carries the prior
-records handoff commit `61f27a5`. The user chose a lean workflow for the port:
+`develop` as `3d9d70c` on 2026-09-30. The interactive port landed on `develop`
+as no-ff merge `3d2c266`, carrying feature commit `eef16d7` and the prior
+records handoff `61f27a5`. The user chose a lean workflow for the port:
 short in-chat design, TDD, one whole-branch review and the full local gate,
 without a separate port spec/plan or per-task reviews. Fourteen steps include a
 four-decision Nudge rehearsal, three judgment drills and a resettable checklist.
 The reviewer found three blocking issues across its first pass and re-review;
 all were fixed, and its final verdict was **Ready to merge**. Format, lint,
 typecheck, 1388 tests in 181 files, production audit 18/18 and development-console
-audit 1/1 all passed. The port is **not merged, pushed or deployed**. `develop`
-remains 12/18; stage 16 is `ready: true` on the feature branch only. The next
-step is the user's separate merge decision. A bounded W-6 reference companion
-follows the port; eight gathered images are in `reference/` but none is published
+audit 1/1 all passed. The merged tree matched the reviewed feature tip, and its
+full test suite passed again (1388/1388). `develop` is now **13/18**; the port has
+not been pushed or deployed. A bounded W-6 reference companion follows the port;
+eight gathered images are in `reference/` but none is published
 as a W-6 plate. The September 16 branch and test counts below are historical.
 
 Paste the block below into a **new Claude Code session** opened in
@@ -87,10 +87,9 @@ time): 45 Completed rows moved to `docs/tracker-archive.md`, ten fully-completed
    The reference check must return nothing. The tracker currently has one
    historical struck-through hit in its 2026-09-08 W-3.12 row; verify that
    every hit is struck through and immediately corrected, not a live status.
-4. **Stage 16's port is on `feat/stage-16-incident-port`, awaiting merge.** Read
-   `docs/tracker.md`'s `## Next up` and W-3.13 row before the integration decision.
-   The six unported stages on `develop` are 08, 09, 10, 16, 17 and 18; after
-   stage 16 merges, five remain.
+4. **Stage 16's port is merged locally into `develop`.** Read `docs/tracker.md`'s
+   `## Next up` and W-3.13 row before the next round. The five unported stages
+   are 08, 09, 10, 17 and 18.
 5. **If it's a real stage round**, run the delivery loop: brainstorm → spec → plan
    (Opus) → TDD tasks (sonnet, subagent-driven) → per-task review → whole-branch review
    (opus) → merge (ask first, target `develop`, never `main`).
@@ -168,8 +167,8 @@ Notes for whoever is preparing this handoff:
   `reference/rest-api-best-practices.md` — hand-written drafts for `sql-reference` and
   `api-reference`, gathered without an image, not yet registered.
 - Open threads worth carrying forward:
-  - **Stage 16 is the selected W-3 stage.** Its port is complete on a work branch;
-    integration into `develop` is the user's separate decision.
+  - **Stage 16's port is merged locally.** The bounded W-6 incident-management
+    reference companion is the next identified slice; no push or deployment occurred.
   - **The D-52 split's own reviews left two cosmetic Minor findings, deferred:**
     `Callout` `eyebrow` text on the split panels not updated to match the new step
     boundaries, and the panel-file comment numbering scheme inconsistent across the
