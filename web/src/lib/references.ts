@@ -351,6 +351,26 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: "The event shape `beforeSend` receives and which fields Sentry populates by default, so the scrubber step's three surfaces can be checked against the real payload.",
     },
   ],
+  '16-incident-management': [
+    {
+      title: 'Managing Incidents',
+      source: 'Google SRE Book',
+      url: 'https://sre.google/sre-book/managing-incidents/',
+      adds: 'A team-scale command model, live incident document and explicit handoff practice. Use it when one responder can no longer coordinate the work alone.',
+    },
+    {
+      title: 'Postmortem Culture: Learning from Failure',
+      source: 'Google SRE Book',
+      url: 'https://sre.google/sre-book/postmortem-culture/',
+      adds: 'How a larger organization makes blameless analysis routine and follows corrective actions beyond the first incident record.',
+    },
+    {
+      title: 'Incident Management Handbook',
+      source: 'Atlassian',
+      url: 'https://www.atlassian.com/incident-management/handbook',
+      adds: 'A complete team process for roles, communication and postmortems when the solo service procedure in this stage needs to scale.',
+    },
+  ],
 }
 
 export function getReferences(slug: string): Reference[] {
