@@ -11,6 +11,7 @@ import { gitBranching } from './git-branching'
 import { gitCheatsheet } from './git-cheatsheet'
 import { gitCommands } from './git-commands'
 import { githubActions } from './github-actions'
+import { incidentManagement } from './incident-management'
 import { PLANNED } from './planned'
 import { postDeployVerification } from './post-deploy-verification'
 import { playwright } from './playwright'
@@ -49,6 +50,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   postDeployVerification,
   ciCd,
   githubActions,
+  incidentManagement,
   ...PLANNED,
 ]
 

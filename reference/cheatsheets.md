@@ -6,7 +6,7 @@
 Lookup material rather than reading material. A stage teaches a decision; a
 sheet answers what that command was.
 
-Drawn: 18 of 23. A sheet listed as not drawn is
+Drawn: 19 of 24. A sheet listed as not drawn is
 registered on purpose — the gap is the point, so it can be seen and filled.
 
 | Sheet | Group | Stage | Status |
@@ -29,6 +29,7 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | Post-Deploy Verification | Standards | 14 | Drawn |
 | CI/CD Pipeline | Standards | 11 | Drawn |
 | GitHub Actions | Standards | 11 | Drawn |
+| Incident Management | Standards | 16 | Drawn |
 | JavaScript | Languages | — | Not drawn |
 | Python | Languages | — | Not drawn |
 | Java | Languages | — | Not drawn |
@@ -931,6 +932,49 @@ Credential handling — the part where mistakes are not recoverable by re-runnin
 - **OIDC token exchange** — `permissions: { id-token: write }` lets the runner mint a short-lived JWT. The cloud provider exchanges it for temporary credentials. — AWS, GCP, Azure deployments. Replaces long-lived access keys with per-run tokens that cannot leak.
 - **`permissions:` block** — Scopes the `GITHUB_TOKEN` to only what the workflow needs. — Every workflow. Principle of least privilege — `contents: read` unless you need to push.
 - **Environment protection rules** — Require manual approval, restrict to specific branches, add wait timers. — Production deploy workflows. A human gate before the automated one ships.
+
+## Incident Management
+
+First response, safe mitigation, updates, recovery proof, and follow-up in one lookup.
+
+Belongs to [16 — Incident Management](../docs/16-incident-management.md).
+
+### Declare and coordinate
+
+Use local severity policy. These labels are examples, not universal response deadlines.
+
+- **Confirm impact** — Check the affected customer operation, including background completion and oldest pending work. Record observed impact, start time, unknowns, and responder. — At the first credible signal. A healthy homepage does not clear a stalled worker.
+- **Declare** — Open one incident record and timeline when impact or credible risk needs coordinated attention. Name the owner and a provisional severity. — Before the exact cause or user count is known. Reassess severity as evidence changes.
+- **Critical / Major / Minor** — Critical: widespread outage, credible compromise, data loss, or blocked payments. Major: important customer work blocked or degraded. Minor: limited impact with a safe workaround. — Apply your service’s agreed policy; a small user count does not make data loss minor.
+- **Own the response** — One incident commander owns decisions, timeline, and updates; a solo responder may hold all roles. Set an update reminder. — At declaration and whenever responders change.
+- **Escalate / hand off** — Send impact, severity, incident link, actions and results, unknowns, and the help needed. Keep ownership until the receiver explicitly accepts it and the next action. — Use the agreed acknowledgment deadline and fallback; escalate immediately if harm grows.
+
+### Limit harm and keep people informed
+
+Investigate enough to choose a safe action; keep communicating while diagnosis continues.
+
+- **Choose a mitigation** — Check evidence, prerequisites, possible harm, stop condition, and the customer operation that will prove the action helped. Record operator, time, and observed result. — Before rollback, disabling a feature, adding capacity, degrading service, or fixing forward.
+- **Rollback** — Confirm a relevant change, a known-good target, and schema compatibility. Application rollback does not undo a database migration. — Only when the change plausibly caused impact and the old version can safely run.
+- **Uncertain outcomes** — Hold retries or replay until an authoritative result or reliable record establishes what already happened. Keep unresolved items for reviewed reconciliation. — A timeout may have happened after a send, charge, or write succeeded.
+- **Possible compromise** — Use the security response route to contain access and protect evidence. Keep credentials and customer data out of public incident channels. — Availability returning does not establish that access is safe.
+- **Customer update** — State observed impact, current action, unknowns, and the next update time through a channel that remains reachable. Update at that time even without a change. — Throughout mitigation and investigation. The next update is not a recovery estimate.
+
+### Prove recovery
+
+Service recovery and follow-up closure are separate states.
+
+- **Affected operation** — Verify that the customer operation meets its agreed criteria. Compare errors, latency, and actual outcomes with the baseline. — Before calling the incident resolved; a green provider status or homepage is insufficient.
+- **Delayed work** — Account for the affected set: oldest pending age, completion, failures, confirmed side effects, eligible replay, expired work, and limitations disclosed to customers. — Before resuming uncertain work or announcing full recovery.
+- **Observation window** — Observe normal work long enough for this service’s operation to complete; record why the window fits. — After mitigation and reconciliation, before the resolved update.
+- **Recovery update** — Report verified customer impact and remaining limitations through the agreed channel. Keep unresolved investigation and prevention work open with owners. — After recovery checks pass, not merely after a mitigation command succeeds.
+
+### Close the learning loop
+
+- **Postmortem** — Record impact, an evidence-backed timeline, contributing conditions, detection and response gaps, and explicit unknowns. Describe system conditions without blaming the responder. — For major or critical incidents, while evidence is fresh.
+- **Actions** — Give each corrective action an owner, due date, and completion evidence. Review overdue work; a ticket alone is not risk reduction. — Until the correction is verified or remaining risk has an explicit decision.
+- **Runbook** — Update the safe action, stop conditions, escalation route, recovery checks, and rehearsal from what the incident taught. — After follow-up identifies a changed procedure or missing check.
+
+Source: [Incident Response](https://sre.google/workbook/incident-response/) — Google SRE Workbook.
 
 ## JavaScript
 
