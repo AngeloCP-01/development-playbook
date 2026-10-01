@@ -1,22 +1,20 @@
 # Kickoff — Development Playbook
 
-**Current round, 2026-10-01:** Stage 16's repaired document was merged into
-`develop` as `3d9d70c` on 2026-09-30. The interactive port landed on `develop`
-as no-ff merge `3d2c266`, carrying feature commit `eef16d7` and the prior
-records handoff `61f27a5`. The user chose a lean workflow for the port:
-short in-chat design, TDD, one whole-branch review and the full local gate,
-without a separate port spec/plan or per-task reviews. Fourteen steps include a
-four-decision Nudge rehearsal, three judgment drills and a resettable checklist.
-The reviewer found three blocking issues across its first pass and re-review;
-all were fixed, and its final verdict was **Ready to merge**. Format, lint,
-typecheck, 1388 tests in 181 files, production audit 18/18 and development-console
-audit 1/1 all passed. The merged tree matched the reviewed feature tip, and its
-full test suite passed again (1388/1388). `develop` is now **13/18**; the port has
-not been pushed or deployed. A bounded W-6 reference companion follows the port;
-eight gathered images are in `reference/` but none is published
-as a W-6 plate. The September 16 branch and test counts below are historical.
+**Next round, 2026-10-01: W-6 `incident-management` reference companion.** The
+user chose this as the next task in a new session. Stage 16's chapter repair
+landed on `develop` as `3d9d70c`; its fourteen-step interactive port landed as
+no-ff merge `3d2c266` on 2026-10-01. The port's final review cleared three
+blocking findings; its full local gate passed (1388 tests in 181 files,
+production audit 18/18, development-console audit 1/1). The merged tree
+matched the reviewed tip and passed all 1388 tests again. Post-merge records
+are in `8d815f0` and `d272a73`. W-3 is **13/18** on local `develop`; the
+local Stage 16 work has not been pushed or deployed. The W-6 sheet has not
+started: no `incident-management` sheet is registered, no plate is selected,
+and eight gathered images in `reference/` have not been published. Start from
+`docs/task.md` → W-6, `docs/tracker.md` → Next up, and
+`reference/cheatsheet-sources.md` → Stage 16 gathering round.
 
-Paste the block below into a **new Claude Code session** opened in
+Paste the block below into a **new coding session** opened in
 `/Users/angelito/personal/Development-Playbook` to start a round with full context.
 
 Update the *Project state* section before pasting — a stale kickoff is worse than none,
@@ -33,10 +31,10 @@ ground I have not worked in, so stages need to teach, not just remind.
 
 Before doing anything, read these for context:
 
-- `CLAUDE.md` — how this project works: git conventions, delivery loop, review and TDD
+- `AGENTS.md` and `CLAUDE.md` — git conventions, delivery loop, review and TDD
   standards, tooling. Start here.
 - `docs/task.md` — **only the section for the milestone this round is on**. Older
-  completed sections now live in `docs/task-archive.md` (new this round) — grep by id,
+  completed sections now live in `docs/task-archive.md` — grep by id,
   don't read either file whole.
 - `docs/tracker.md` — **do not read it whole.** Read `## Next up`, then list open debt
   with `grep '^### TD' docs/tracker.md`. For any decision you need, grep its ID
@@ -53,25 +51,24 @@ Before doing anything, read these for context:
   during its own execution — the D-52 fix the plan pre-authorized covered one panel,
   and the real number was four.
 
-### Project state (stage 16 update above; the baseline below is 2026-09-16)
+### Project state (verified 2026-10-01; recheck before work)
 
-Stages 01–07, 11, 12, 13, 14 and 15 are interactive. Stage 13 is platform-aware (8 steps,
-Vercel + AWS). **Eighteen of twenty-three** reference sheets drawn.
+Stages 01–07 and 11–16 are interactive on local `develop` (**13/18**); 08–10,
+17 and 18 remain. Stage 16 is `ready: true` after merge `3d2c266`; its port
+branch was deleted. W-6 has **18 of 23** registered sheets drawn. The
+`incident-management` sheet is not yet registered or drawn.
 
-**Stage 15 is interactive and merged.** `feat/stage-15-observability-port` (18 commits,
-`d9b4da2..2ea6414`) landed on `develop` as `9d834e8` (`--no-ff`), branch deleted.
-`ready: true`, sixteen steps (ten as planned, plus a mid-verification D-52 reshape that
-split four panels — full account in `docs/tracker.md`'s 2026-09-15 W-3.12 row). The
-final whole-branch review (opus) found two blocking issues — untested checklist
-persistence, two stale step-count references from the reshape — both fixed (`3604e59`)
-and independently re-verified with a teeth check. Post-merge gate on `develop`: **179
-files / 1351 tests**, `pnpm lint` clean, `pnpm typecheck` clean, `pnpm test:e2e` 18/18,
-`pnpm test:dev-console` 1/1 zero warnings. `develop` is pushed — `origin/develop`
-matches.
+The Stage 16 source ledger is `reference/cheatsheet-sources.md` → *Stage 16
+gathering round*. It has six attributed external sources and eight local image
+captures. The NovelVista workflow graphic is a candidate, but its recovery
+and communication sequence contradicts the repaired chapter; inspect and
+correct it before using it. Several other captures lack exact source URLs,
+and the slide template contains placeholder text. No graphic has been chosen.
 
-Records were archived this round too (D-96 pattern, extended to `task.md` for the first
-time): 45 Completed rows moved to `docs/tracker-archive.md`, ten fully-completed
-`docs/task.md` sections moved to the new `docs/task-archive.md`.
+The user's last workflow choice was a short brainstorm, TDD, one whole-branch
+review and the full local gate for the Stage 16 port, without a separate port
+spec/plan or per-task reviews. Keep that token-conscious preference in mind
+for this bounded companion.
 
 **Start here, in order:**
 
@@ -87,29 +84,33 @@ time): 45 Completed rows moved to `docs/tracker-archive.md`, ten fully-completed
    The reference check must return nothing. The tracker currently has one
    historical struck-through hit in its 2026-09-08 W-3.12 row; verify that
    every hit is struck through and immediately corrected, not a live status.
-4. **Stage 16's port is merged locally into `develop`.** Read `docs/tracker.md`'s
-   `## Next up` and W-3.13 row before the next round. The five unported stages
-   are 08, 09, 10, 17 and 18.
-5. **If it's a real stage round**, run the delivery loop: brainstorm → spec → plan
-   (Opus) → TDD tasks (sonnet, subagent-driven) → per-task review → whole-branch review
-   (opus) → merge (ask first, target `develop`, never `main`).
+4. **Begin the bounded W-6 `incident-management` companion.** Read `docs/task.md`
+   → W-6, `docs/tracker.md` → Next up, and the Stage 16 gathering round in
+   `reference/cheatsheet-sources.md`. Inspect `web/src/lib/cheatsheets/` and
+   the generated `reference/cheatsheets.md` workflow before editing. Set the
+   sheet's lookup scope and decide whether a corrected, attributed plate adds
+   value. The source ledger records the graphic's concrete defects.
+5. **Build on a work branch and verify the result.** Start with a brief design
+   choice, write a failing test before production code, generate the markdown
+   snapshot with `pnpm gen:cheatsheets`, and run the applicable gate and final
+   review. Record evidence and deferrals in task/tracker. Ask before merging
+   into `develop`; never merge or push to `main`.
 
 ---
 
-#### The condensed history (01–07, 11–15, the reference hub)
+#### The condensed history (01–07, 11–16, the reference hub)
 
 Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them by ID.
 
-- **Stages 01–07, 11, 12, 13, 14 and 15 are interactive and merged.** 03 is 22 steps, 04
+- **Stages 01–07 and 11–16 are interactive and merged.** 03 is 22 steps, 04
   is 15, 05 is 13, 06 is 8, 07 is 6, 11 is 8, 12 is 6, 13 is 8 (platform-aware), 14 is 6,
-  15 is 16 (after the D-52 reshape). Coverage walks ran on 03–06, 11–14; stage 15's port
-  has not had one yet. Stages 08–10 and 16–18 render a "sheet not drawn" placeholder;
-  routing works for all 18.
-- **A per-task reviewer subagent, plus a whole-branch review, is the standard** — every
-  reviewed round has found something a green gate did not. **The same session cannot
-  self-review.** Under the Pro policy the per-task reviewer is `sonnet` with evidence
-  required (escalated to `opus` for a task touching `stages.ts`/routing/build/CI), the
-  final review is `opus`; `CLAUDE.md` → *Subagent models*.
+  15 is 16 (after the D-52 reshape), and 16 is 14. Coverage walks ran on
+  03–06, 11–14; the later ports have not had one yet. Stages 08–10 and 17–18
+  render a "sheet not drawn" placeholder; routing works for all 18.
+- **The standard review loop has per-task and whole-branch reviews.** The user
+  chose one whole-branch review for the Stage 16 port to reduce ceremony;
+  it found three blocking issues the green gate missed. The same session
+  cannot self-review; see `CLAUDE.md` → *Subagent models*.
 - **A coverage walk, blind to the branch's own plan and reports, finds real gaps.**
   Budget a fix wave after it.
 - **Glossary and stage metadata are single-sourced** (D-36): terms live in
@@ -117,8 +118,9 @@ Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them 
 - **Quality gates**: prettier (skips markdown and `highlighted.generated.ts`), eslint at
   `--max-warnings 0`, vitest in two projects, `test:e2e` (18-test Playwright audit),
   `test:dev-console` (outside the gate, once per stage round — TD-35, D-84).
-- **`develop` is at 1351 tests across 179 files**, measured 2026-09-16 after the stage
-  15 merge and its final-review fix wave.
+- **`develop` passed 1388 tests across 181 files** after the Stage 16 merge,
+  measured 2026-10-01. The pre-merge lint, typecheck, format, production audit
+  18/18 and development-console audit 1/1 were green on the identical tree.
 - **The e2e per-test timeout is 120s, not 60s** (`playwright.config.ts`, `2bb64e9`) — an
   18th stage in the sweep pushed WCAG AA and the disclosure sweep over the old budget;
   this is a repo-wide headroom fix, unrelated to stage 15's own content.
@@ -127,28 +129,27 @@ Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them 
 
 ---
 
-#### Branch state — re-derive, do not trust any SHA below
+#### Branch state — re-derive before work
 
 ```bash
 git fetch
-git log --oneline -1 develop origin/develop main
+git log -1 --oneline develop
+git log -1 --oneline origin/develop
+git log -1 --oneline main
 git rev-list --count origin/develop..develop
 git rev-list --count main..develop
-git ls-files reference/ | grep -iv "jpeg\|jpg\|png\|webp\|gif\|\.md$"
+git rev-list --count develop..main
+git status --short --branch
+git ls-files reference/ | rg -iv "jpeg|jpg|png|webp|gif|\.md$"
 ```
 
-**Measured 2026-09-16, after the stage 15 merge and this records refresh:**
-
-| | SHA | |
-|---|---|---|
-| `develop` | `9d834e8` | **0 ahead of `origin/develop`** — pushed, matches |
-| `main` | `d659d32` | `develop` is **116 ahead**; `main` is **2 ahead** of `develop` (pre-existing merge-history commits, untouched this round) |
-
-The promotion of `develop` to `main` is **the user's**, and 116 commits are waiting on
-it.
-
-**`git branch` is `develop` and `main`** (the port branch was deleted on merge); `git
-worktree list` is one line (this working directory, on `develop`).
+**Verified 2026-10-01 after `git fetch`:** local `develop` was at `d272a73`,
+six commits ahead of `origin/develop` (`3d9d70c`), and 137 ahead of `main`
+(`d659d32`); `main` was two ahead of `develop` by merge history. This kickoff
+edit will add another local commit, so run the commands above for current
+counts. The worktree was clean and this was the sole worktree. A separate
+`docs/2026-09-30-stage-16-handoff` branch still exists; the Stage 16 port
+branch was deleted after merge. Nothing from the port round has been pushed.
 
 **Branch/push convention, unchanged:** work on `feat/`|`fix/`|`docs/<date>-` branches,
 cut from `develop`, never from `main`. Merge with `--no-ff` and a hand-written subject,
@@ -167,8 +168,9 @@ Notes for whoever is preparing this handoff:
   `reference/rest-api-best-practices.md` — hand-written drafts for `sql-reference` and
   `api-reference`, gathered without an image, not yet registered.
 - Open threads worth carrying forward:
-  - **Stage 16's port is merged locally.** The bounded W-6 incident-management
-    reference companion is the next identified slice; no push or deployment occurred.
+  - **W-6 `incident-management` is next.** Its sources and graphic caveats are in
+    `reference/cheatsheet-sources.md` → Stage 16 gathering round. No sheet or
+    plate exists yet; the Stage 16 port is merged locally and undeployed.
   - **The D-52 split's own reviews left two cosmetic Minor findings, deferred:**
     `Callout` `eyebrow` text on the split panels not updated to match the new step
     boundaries, and the panel-file comment numbering scheme inconsistent across the
