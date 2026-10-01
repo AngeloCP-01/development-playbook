@@ -180,7 +180,7 @@ export const STAGES: Stage[] = [
     blurb: 'Limit harm first. Verify recovery. Learn from what happened.',
     group: 'Running',
     timing: 'When production breaks. Read it before that.',
-    ready: false,
+    ready: true,
   },
   {
     num: '17',

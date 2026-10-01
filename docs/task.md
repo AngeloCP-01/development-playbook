@@ -13,20 +13,18 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current round (2026-09-30): stage 16 — Incident Management.** The
-[document-repair spec](superpowers/specs/2026-09-29-stage-16-doc-round-design.md)
-and [plan](superpowers/plans/2026-09-29-stage-16-doc-round.md) were approved; the
-user chose sequential subagent-driven execution. Tasks 1–4 and the Task 5a fix
-are implemented and independently reviewed through `d1b22b0`. The original cold
-reader instruments have been rerun on the fix. The full local gate passed:
-format, lint, typecheck, 1370 tests across 180 files, build, production audit
-18/18 and development-console audit 1/1 with no React warnings or browser
-messages. The read-only whole-branch review of `91a6838..6df86f3` returned
-**Ready to merge**, with no Critical or Important findings and two nonblocking
-Minor follow-ups. The document repair round is complete on its branch and awaits
-the user's separate integration decision. The interactive
-port is pending and stage 16 remains unready; W-3 stays at 12/18. A bounded W-6
-companion follows the stage. Gathered material is in `reference/cheatsheet-sources.md`.
+**Current round (2026-10-01): stage 16 — Incident Management.** The repaired
+chapter was merged into `develop` as `3d9d70c` on 2026-09-30. Its interactive
+port is implemented on `feat/stage-16-incident-port` as `eef16d7`, following the
+user's lighter workflow: a short in-chat design, TDD, one whole-branch review and
+the full local gate. The port has fourteen steps, a four-decision Nudge rehearsal,
+three judgment drills, and a resettable incident checklist. Review found three
+blocking issues across its two passes; all were fixed and rechecked. The gate
+passed: format, lint, typecheck, 1388 tests across 181 files, production audit
+18/18, and development-console audit 1/1 with no React warnings. **The port has
+not been merged or pushed.** `develop` still has 12/18 interactive stages; stage
+16 is `ready: true` only on the feature branch. A bounded W-6 companion follows
+the port. Gathered material is in `reference/cheatsheet-sources.md`.
 
 Two deliverables from one body of content.
 
@@ -75,7 +73,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(02, 03, 04, 05, 06, 07, 11, 12, 13, 14 and 15 done; 6 remain — 12/18. **Stage 11 complete 2026-09-07**: 8 steps (gate, ordering, e2e, protection, deps, scaling, ai, traps), doc correction + ordering exercise signature piece, 1143/160 tests, all verification green. **Stage 15 ported and merged** to `develop` as `9d834e8` (`--no-ff`, 2026-09-16): sixteen steps after a mid-round D-52 reshape (planned ten), `ready: true`. Final whole-branch review (opus) found two blocking issues, both fixed and re-verified with a teeth check. Post-merge gate: 179 files/1351 tests, lint/typecheck clean, e2e 18/18, dev-console clean. Stage 16 is selected; its document repair is in progress before the port.)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(12/18 merged to `develop`; six remain there. Stage 16's port is complete on `feat/stage-16-incident-port`, pending a separate merge decision.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(eighteen of twenty-three registered sheets drawn — `github-actions` and `ci-cd` both added 2026-09-07, tethered to stage 11. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
