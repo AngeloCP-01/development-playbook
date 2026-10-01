@@ -176,6 +176,22 @@ Per stage (checklist ticked for **03 Architecture**, feat/stage-03-architecture)
       event-driven, serverless — each stating what would have to be true to pick it. The
       recommendation does not change; it stops being an assertion.
 
+### W-3.13 — Stage 16, document repair and interactive port ☑
+
+The repaired incident-management chapter landed on `develop` as `3d9d70c`; the
+interactive port followed as no-ff merge `3d2c266` on 2026-10-01. Fourteen
+steps cover impact and severity judgment, the connected Nudge rehearsal,
+recovery, postmortem follow-up and traps. Stage 16 is `ready: true`, taking W-3
+to **13/18**. TDD and a whole-branch review caught and fixed three blocking
+issues. The merged tree matched the reviewed tip and passed 1388 tests across
+181 files; the full pre-merge gate and browser audits passed. The detailed RED,
+GREEN, review and deferral record is in [tracker W-3.13](tracker.md#completed).
+
+Deferred: the W-6 incident-management reference companion, two minor chapter
+review follow-ups, the optional incident-record template and production
+promotion. The local merge was authorized separately; nothing was pushed or
+deployed.
+
 ### W-3.12 — Stage 15, doc round and port ☑ *(**doc round merged `develop` 2026-09-11 as `7418684`; port merged `develop` 2026-09-16 as `9d834e8`** (`--no-ff`), `ready: true`. Ten planned steps grew to sixteen after Task 11's verification found four panels — not the plan's pre-authorized one — over the D-52 screen budget; brainstormed and split in two rounds. Per-task review: sonnet for most tasks, opus for Task 10 (`stages.ts`/registries). **Final whole-branch review (opus) found two blocking issues — untested checklist persistence, two stale step-count references from the reshape — both fixed (`3604e59`) and independently re-verified with a teeth check.** Post-merge gate re-run on `develop` at `9d834e8`: 179 files/1351 tests, `pnpm lint` clean, `pnpm typecheck` clean)*
 
 Stage 15 closes the shipping pipeline that 11 → 12 → 13 → 14 opened, and it is the
@@ -253,7 +269,7 @@ independently re-verified with a teeth check. **Merged to `develop` as `9d834e8`
 **Scope of the doc round, deliberately:** corrections, the untaught artifacts, the
 missing sections, the `### AI in observability` section D-35 requires, glossary
 repairs, and platform coverage extended to AWS to match stages 13 and 14. **The port is
-now done and W-3 is 12/18.**
+now done and W-3 reached 12/18 at that point.**
 
 **Deferred out of it, on the record:** trimming `## Traps` and deleting `## Artifacts`
 — both raised by the readers, both rejected because they are the house template
