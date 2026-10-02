@@ -88,6 +88,12 @@ const steps: (Step & { id: (typeof STEP_IDS)[number] })[] = [
             handler. Include paths the UI does not currently show.
           </p>
         </Callout>
+        <a
+          href="https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html"
+          className="mt-4 inline-flex min-h-11 items-center text-sm underline hover:text-brand"
+        >
+          OWASP threat modeling
+        </a>
       </Section>
     ),
   },
@@ -126,6 +132,12 @@ const steps: (Step & { id: (typeof STEP_IDS)[number] })[] = [
         <div className="mt-6">
           <IdorProbe />
         </div>
+        <a
+          href="https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html"
+          className="mt-4 inline-flex min-h-11 items-center text-sm underline hover:text-brand"
+        >
+          OWASP IDOR prevention
+        </a>
         <p className="mt-5 text-sm text-muted">
           Repeat the probe for read, update, and delete. Check that User
           A&apos;s record is unchanged after each denial.
@@ -165,6 +177,12 @@ const steps: (Step & { id: (typeof STEP_IDS)[number] })[] = [
             from its session, then applies the written policy.
           </p>
         </Callout>
+        <a
+          href="https://nextjs.org/docs/app/guides/data-security"
+          className="mt-4 inline-flex min-h-11 items-center text-sm underline hover:text-brand"
+        >
+          Next.js data security
+        </a>
       </Section>
     ),
   },
@@ -188,7 +206,17 @@ const steps: (Step & { id: (typeof STEP_IDS)[number] })[] = [
             rows={CONTROLS.map((item) => ({
               id: item.id,
               title: item.title,
-              body: <p>{item.detail}</p>,
+              body: (
+                <div>
+                  <p>{item.detail}</p>
+                  <a
+                    href={item.source[1]}
+                    className="mt-2 inline-flex min-h-11 items-center text-sm underline hover:text-brand"
+                  >
+                    {item.source[0]}
+                  </a>
+                </div>
+              ),
             }))}
           />
         </div>

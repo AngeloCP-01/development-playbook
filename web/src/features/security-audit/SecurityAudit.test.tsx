@@ -81,3 +81,50 @@ test('the controls distinguish safe SQL and the finding carries a retest', () =>
   }
   expect(go(/AI plays/).textContent).toMatch(/verify the permission policy/)
 })
+
+test('the control pass includes reset tokens, existence leaks, and sensitive logs', () => {
+  render(<SecurityAudit />)
+  const controls = go(/Other checks/)
+  const cases: [RegExp, RegExp][] = [
+    [/Sessions and reset/, /single.use.*short.lived.*random/i],
+    [/User-facing errors/, /existence.*stack trace/i],
+    [/Sensitive logs/, /passwords.*tokens.*session IDs/i],
+  ]
+  for (const [name, detail] of cases) {
+    fireEvent.click(within(controls).getByRole('button', { name }))
+    expect(controls.textContent).toMatch(detail)
+  }
+})
+
+test('the reader can open primary guidance beside the IDOR and control claims', () => {
+  render(<SecurityAudit />)
+  expect(
+    within(go(/Trust boundaries/))
+      .getByRole('link', { name: /OWASP threat modeling/ })
+      .getAttribute('href'),
+  ).toBe(
+    'https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html',
+  )
+  const probe = go(/Two-user probe/)
+  expect(
+    within(probe)
+      .getByRole('link', { name: /OWASP IDOR prevention/ })
+      .getAttribute('href'),
+  ).toBe(
+    'https://cheatsheetseries.owasp.org/cheatsheets/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet.html',
+  )
+  expect(
+    within(go(/Enforce the rule/))
+      .getByRole('link', { name: /Next.js data security/ })
+      .getAttribute('href'),
+  ).toBe('https://nextjs.org/docs/app/guides/data-security')
+  const controls = go(/Other checks/)
+  fireEvent.click(
+    within(controls).getByRole('button', { name: /SQL insertion/ }),
+  )
+  expect(
+    within(controls)
+      .getByRole('link', { name: /Drizzle SQL documentation/ })
+      .getAttribute('href'),
+  ).toBe('https://orm.drizzle.team/docs/sql')
+})
