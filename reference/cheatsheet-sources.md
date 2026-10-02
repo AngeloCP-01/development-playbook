@@ -163,6 +163,146 @@ the `Cheatsheet` shape; a later round, not this one.
 stage 11, which has no interactive port. D-62's registered-but-empty pattern would
 allow it, but content work is scoped to stages already built (01–05) for now.
 
+> **Correction appended 2026-09-07, not rewritten.** The clause above about stage 11
+> having no interactive port stopped being true on 2026-09-07, when stage 11 shipped
+> (W-3.11). `containers` is still ungathered, but the reason is now simply that no
+> Docker/Kubernetes source has been captured — not the stage's status. The three CI/CD
+> graphics gathered for the entry below all *touch* containers and none is about them.
+
+### ~~CI/CD pipeline~~ · `ci-cd` + `github-actions` · stage 11 ✓ transcribed 2026-09-07
+
+```
+"CI/CD pipeline" visual guide            ✓ 0141-ci-cd-workflow.png — ByteByteGo, displayed
+"CI/CD cheat sheet"                      ✓ cicd-cheatsheet2.jpeg (12-section) — consulted
+"devops cheat sheet"                     ✓ cicd-cheatsheet.jpeg (Jenkins/Maven/Terraform/Ansible) — consulted
+```
+
+Two sheets again, the `git-commands`/`git-branching` and `testing`/`playwright` split
+for the third time: `ci-cd` carries the platform-agnostic pipeline and `github-actions`
+the syntax for one runner. `github-actions` was written first, in the stage 11 round,
+with no source at all; these three graphics arrived afterwards and are all
+tool-agnostic, so they built the concept sheet rather than being forced onto the tool
+one.
+
+**Displayed plate shows Jenkins, not GitHub Actions.** Accepted deliberately: on a
+concept sheet the flow shape is the content, and the "who plays each role" section is
+where the substitution to this project's own runner and platform is made explicit.
+
+Deliberately left out of `ci-cd`: the DevOps sheet's Linux basics, Maven and AWS CLI
+command tables, and its interview-questions block. The same call `playwright` made on
+its own source — study-guide material, not lookup material — plus a domain question,
+since none of it is what stage 11 teaches.
+
+### Observability · `observability` · stage 15
+
+Not yet transcribed. Five text sources, all read 2026-09-08 for the doc round
+(`docs/superpowers/plans/2026-09-08-stage-15-doc-round.md`, Task 13b), registered here
+per that task's own instruction since they are this stage's W-6 gathering as well as
+input to the prose:
+
+1. *Best practices for logging in Node.js* — Atatus → fed `### Structured logs`:
+   levels, redaction
+2. *Observability vs monitoring: key differences and similarities* — Sujeeth H R → fed
+   the opening distinction in `### Three things, in order of value`
+3. *The three pillars of observability* — Priya Dharshini → corroborated, changed
+   nothing (its three pillars are this stage's three things with a different ordering
+   rationale)
+4. *Observability with OpenTelemetry: why do we need it* — Tenil Sridhar → fed
+   `## Scaling to a team`
+5. *Building an observability platform with Prometheus, Grafana and Jenkins* — Kumar →
+   fed the one-pane dashboard-reconciliation paragraph; otherwise sheet-only material,
+   since it is a self-hosted stack and this playbook's platforms are managed
+
+None of the five is a graphic, so none has a plate to register — text articles, no
+`File` column entry below. Author is what each source states; **URL not recorded** for
+any of the five, the same gap most of this ledger already carries.
+
+Separately, **ten images are already committed** (`450190c`) for this sheet —
+`3-pillars-of-observavilty.jpeg`, `4-Golden-Signals-SRE.jpeg`,
+`Microservices-Observavility&Tracing.jpeg`, `SLA-SLI-SLO&ERRORBUDGET.jpeg`,
+`latency-metrics.jpeg`, `logging.jpeg`, `mertrics-vs-logs-vs-traces.png`,
+`observavility&opentelemetry.png`, `sprinboot-logging-cheatsheet.jpeg`,
+`system-design-tradeoffs.jpeg` — but **none is registered and none has provenance**,
+unlike the five sources above. This entry does not register them: an author and a URL
+are required at capture time by this file's own rule, and asking for those after the
+fact is exactly the gap `ci-cd`'s row above shows how to avoid. Ask for the sources
+before registering any of them; the `observability` sheet stays untranscribed until
+that happens.
+
+Still worth searching — none of the five sources above covers these, and each fills
+something the doc asserts without teaching a term for it: `"SLI SLO SLA" explained`,
+`"error budget" explained`, `"four golden signals" SRE`,
+`"RED method" "USE method" monitoring`, `"p50 p95 p99" percentiles explained`. Two
+notes for whoever runs these searches: they will surface stage 16 material (MTTR,
+on-call, postmortems), which files against `16-incident-management` and not here; and
+a Prometheus/Grafana result is the one with drawable architecture — the same
+vendor mismatch `ci-cd` accepted deliberately when it shipped a Jenkins plate on a
+GitHub Actions project, acceptable here for the same reason, since on a concept sheet
+the flow shape is the content.
+
+## Stage 16 gathering round · 2026-09-29
+
+Target: `incident-management`, tethered to stage 16. The user chose stage 16 for
+the next W-3 round; its W-6 companion follows the stage. These are gathered sources,
+not published sheet content. No plate has been selected.
+
+| Source | Author / organization | URL | Local image | Intended use / verification |
+|---|---|---|---|---|
+| 2025 SRE Incident Management Best Practices Checklist | Rootly | https://rootly.com/sre/2025-sre-incident-management-best-practices-checklist | None matched | Read; preparation, roles, handoffs and follow-up. Adapt team size and severity conventions. |
+| The 15-Minute Rule: Incident Response Checklist for Cybersecurity Leaders | PKWARE | https://www.pkware.com/blog/the-15-minute-rule-incident-response-checklist-for-cybersecurity-leaders | None matched | Read; security containment and evidence preservation. Its timing is source guidance, not a universal deadline. |
+| Incident Management Handbook | Atlassian | https://www.atlassian.com/incident-management/handbook#tooling-requirements | None matched | Read; incident record, coordination, alerting, documentation and status communication. |
+| Incident Communication Templates: 8 Copy-Paste Examples | Runframe | https://runframe.io/blog/incident-stakeholder-communication-templates | None matched | Read; audience-specific updates, known impact, unknowns and next-update time. |
+| Incident response runbook presentation templates | SlideTeam | https://www.slideteam.net/top-10-incident-response-runbook-powerpoint-presentation-templates | `process_of_creating_runbook_for_incident_action_plan_slide01.jpg` | User-supplied attribution; page blocked by bot verification. Image inspected; contains placeholder text, not a completed operational runbook. |
+| SRE Playbook: Step-by-Step Guide to Incident Response & Reliability | Vaibhav Umarvaishya / NovelVista | https://www.novelvista.com/blogs/devops/sre-playbook-step-by-step-incident-response-reliability | `sre-internal-1.webp` | Article read, clearer image inspected; replaces the earlier low-resolution capture. Candidate workflow plate, subject to the caveats below. |
+
+The NovelVista graphic is readable at 1704 × 923. Its sequence places communication
+after diagnosis; our adaptation must make updates ongoing. Its timeline labels an
+incident resolved while validation is still in progress. Its health panel also says
+all systems are operational while showing a degraded payment service. The article
+has a separate recovery-validation step, which the graphic's top row omits. Use these
+as review findings, not instructions to reproduce.
+
+Primary references added during specification (2026-09-29):
+
+- Google SRE, *Incident Response*, Jennifer Mace, Jelena Oertel, Stephen Thorne
+  and Arup Chakrabarti, with Jian Ma and Jessie Yang:
+  https://sre.google/workbook/incident-response/ — consulted for coordination,
+  incident ownership and maintaining a working record.
+- Google SRE, *Postmortem Culture: Learning from Failure*:
+  https://sre.google/workbook/postmortem-culture/ — consulted for postmortem
+  practice and follow-up. No local image for either reference.
+
+Post-plan external check (2026-09-29):
+
+- PagerDuty, *Incident Command*:
+  https://response.pagerduty.com/during/incident_command/ — the page was
+  inaccessible on retry, so no claim or instruction was taken from it.
+- The Google SRE *Incident Response* chapter above was reread as the fallback.
+  Its commander may hold undelegated roles, which fits a solo responder; its
+  ownership, incident-record and communication guidance was already reflected
+  in the approved teaching. This was not a new independent source. No
+  operational procedure was executed.
+
+Other captures inspected, with provenance still incomplete:
+
+| File | Visible attribution | Assessment |
+|---|---|---|
+| `Major-Incident-----First-15-Minutes-Checklist-Why-control-matters-before-speed.png` | ITILIGENCE; URL missing | Coordination and fact/assumption separation; candidate supporting source. |
+| `incident-severity-levels-og.webp` | Runframe; exact page URL missing | Five-level model; reconcile with the stage's three-level model before use. |
+| `incident-escation-matrix.webp` | Not recorded | Support hierarchy; adapt for small teams, do not equate management rank with incident severity. |
+| `post-mortem-vs-retrospective-vs-indecident-review.webp` | Not recorded | Terminology comparison; verify the distinctions before teaching them. |
+| `9-escalation-matrix.png` | Not recorded | Reject as the operational model: repeated Levels 2/3 and days-long support escalation. |
+| `SRE incident-management Checklist.jpeg` | Not recorded | Filename is misleading: image is a cybersecurity infection-response checklist. Security-specific supporting material only. |
+
+The W-6 `incident-management` sheet was drawn on 2026-10-01 without an image
+plate. Its lookup rows follow the repaired Stage 16 chapter. The NovelVista
+sequence errors above and the other captures' provenance or content gaps made
+none suitable for display in this round.
+
+Deferred: publication and conversion of graphics, remaining image provenance,
+and a worked runbook and completed postmortem. The gathering round itself did
+not change stage readiness.
+
 ## Untethered
 
 ### Software Development Life Cycle · `sdlc` · no stage
@@ -205,8 +345,29 @@ annotation lifecycle.
 
 ## Filing
 
-Captures land in `reference/` as gathered. They are **not committed** — the originals
-run 1–4MB each and git keeps every version forever.
+Captures land in `reference/` as gathered, and **they are committed** — commit the
+original alongside the converted WebP rather than leaving it on your disk.
+
+> This paragraph said the opposite until 2026-09-08, and was wrong for as long as it
+> existed. Resolved as **TD-44** in favour of what the repo already did. The reasoning is
+> worth keeping, because the original rule was not merely unenforced — it was arguing
+> from a cost that does not apply here:
+>
+> - **The fear was "the originals run 1–4MB each and git keeps every version forever".**
+>   True in general, empty for these. A gathered capture is written once and never
+>   edited: every image under `reference/` has exactly one commit touching it. There is
+>   no "every version" to accumulate.
+> - **Ignoring them now would reclaim nothing.** ~18MB of originals are already in
+>   history and stay there whether or not the index still points at them. `.git` is 64MB
+>   before and after. Only a history rewrite would recover it, over commits already
+>   pushed to `origin/develop`.
+> - **A ledger row must resolve in a fresh clone.** The table at the bottom of this file
+>   names source files by filename. If those files are not in the repo, the ledger names
+>   things that, for anyone but the original gatherer, do not exist.
+
+**Because this directory is committed, do not park unrelated files in it.** Anything
+dropped into `reference/` is one `git add -A` away from being published — the site is
+public. Personal documents in particular belong somewhere outside the repo.
 
 What is committed is the converted copy in `web/public/reference/`, which is what the
 site serves. Convert with `sharp` before wiring a sheet to it:
@@ -225,9 +386,14 @@ Measured on this batch:
 | `Software-Architecture-Patterns.gif` | 1024K | 121K | 88.2% |
 | `git-commands.jpeg` | 210K | 138K | 34.2% |
 | `software_design_patterns.jpeg` | 262K | 182K | 30.6% |
+| `0141-ci-cd-workflow.png` | 1997K | 211K | 89.4% |
 
 The two GIFs are static images that were stored as GIF, which is why they collapse
-so far. Name the output `<target-slug>.webp`, all lowercase and hyphenated — a test
+so far. The PNG collapses further still, for a related reason: a flat-colour
+infographic stored losslessly is close to the worst case for PNG and close to the best
+case for lossy WebP. Reading the output back mattered here — at 1344×1846 the small
+labels ("Security Scanning", "Integration Tests") are what quality 82 is being judged
+on, not the large hand-lettered title. Name the output `<target-slug>.webp`, all lowercase and hyphenated — a test
 asserts every registered `src` exists on disk, so a mismatch fails the suite rather
 than shipping a broken-image box.
 
@@ -248,6 +414,9 @@ unrecorded on most of these; fix before promoting past `develop` (D-63).
 | `design-patterns` | Behavioral Design Patterns | *not recorded* | *not recorded* | `behavioral-design-pattern.png` | 2026-08-24 | consulted |
 | `design-patterns` | 15 Design Patterns in Simple Words | Keivan Damirchi | *not recorded* | `15-DesignPatterns.jpeg` | 2026-08-24 | dropped — subset of the above, no category split |
 | `api-design` | Master Plan for API Design | Shalini Goyal | *not recorded* | `MasterPlan-Api-Design.gif` | 2026-08-14 | displayed |
+| `ci-cd` | CI/CD Workflow — Simplified Visual Guide | ByteByteGo | https://blog.bytebytego.com | `0141-ci-cd-workflow.png` | 2026-09-07 | displayed — the URL is printed on the plate itself, so this is only the second entry here gathered with real provenance rather than *not recorded* |
+| `ci-cd` | CI/CD Complete Cheat Sheet (12 sections) | *not recorded* | *not recorded* | `cicd-cheatsheet2.jpeg` | 2026-09-07 | consulted — its pipeline-stage and best-practice sections became rows; its deployment-strategy and environment-flow sections were skipped as already covered by `aws-deployment` and `deployment-environments`. Not converted to webp |
+| `ci-cd` | CI/CD Cheat Sheet (DevOps tooling) | *not recorded* | *not recorded* | `cicd-cheatsheet.jpeg` | 2026-09-07 | consulted — source for the "who plays each role" section only. Its Linux, Maven and AWS CLI command tables were left out as outside stage 11's domain. Not converted to webp |
 | `git-commands` | Git Beyond Commit and Push | *not recorded* | *not recorded* | `git-commands.jpeg` | 2026-08-14 | displayed |
 | `git-commands` | Git Cheat Sheet — Essential Commands | *not recorded* | *not recorded* | `git-cheatsheet.jpeg` | 2026-08-24 | consulted |
 | `git-commands` | What is Git? | *not recorded* | *not recorded* | `Git.jpeg` | 2026-08-24 | dropped — redundant with the two above |
@@ -262,3 +431,8 @@ unrecorded on most of these; fix before promoting past `develop` (D-63).
 | `testing` | Levels of Testing (pyramid) | *not recorded* | *not recorded* | `Levels-of-testing-1.jpeg` | 2026-08-28 | consulted — concept transcribed into the second section's rows, no second plate |
 | `playwright` | Playwright Quick Revision Cheat Sheet, page 1/3 | *not recorded* | *not recorded* | `playwright1.jpeg` | 2026-08-28 | displayed |
 | `playwright` | Playwright Quick Revision Cheat Sheet, pages 2–3/3 | *not recorded* | *not recorded* | `playwright2.jpeg`, `playwright3.jpeg` | 2026-08-28 | consulted — content transcribed into rows, converted webp deleted rather than left as an unreferenced asset (`public-assets.test.ts` caught it) |
+| `observability` | Best practices for logging in Node.js | Atatus | *not recorded* | *no image — text article* | 2026-09-08 | consulted — fed `### Structured logs` |
+| `observability` | Observability vs monitoring: key differences and similarities | Sujeeth H R | *not recorded* | *no image — text article* | 2026-09-08 | consulted — fed the opening distinction |
+| `observability` | The three pillars of observability | Priya Dharshini | *not recorded* | *no image — text article* | 2026-09-08 | consulted — corroborated, changed nothing |
+| `observability` | Observability with OpenTelemetry: why do we need it | Tenil Sridhar | *not recorded* | *no image — text article* | 2026-09-08 | consulted — fed `## Scaling to a team` |
+| `observability` | Building an observability platform with Prometheus, Grafana and Jenkins | Kumar | *not recorded* | *no image — text article* | 2026-09-08 | consulted — fed the one-pane dashboard reconciliation; otherwise sheet-only |

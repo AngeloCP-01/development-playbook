@@ -13,6 +13,8 @@ drift apart.
 
 **ADR (Architecture Decision Record)** — A short record of a single architecture decision — the context, the choice, and the consequences — written when the decision is made and never edited afterward. Superseded by a new ADR rather than revised. See [03 — Architecture](../docs/03-architecture.md).
 
+**Alert fatigue** — Not a discipline failure; the predictable result of noisy alerts. An alert that has woken you four times without once needing action has taught you to ignore it, and the fifth time is the real one. See [15 — Observability](../docs/15-observability.md).
+
 **Appetite** — A fixed budget of time you are willing to spend, which the solution is then shaped to fit. An estimate starts with a design and ends with a number; an appetite starts with a number and ends with a design. See [02 — Product Planning](../docs/02-planning.md).
 
 **Architecture characteristic (non-functional requirement)** — Availability, correctness, auditability, latency, security, cost to run — the qualities a design has to satisfy, separate from the features it delivers. Richards and Ford call them architecture characteristics; most job descriptions and specifications call the same thing non-functional requirements. One idea, two vocabularies. See [03 — Architecture](../docs/03-architecture.md).
@@ -29,11 +31,15 @@ drift apart.
 
 **Bounded context** — From domain-driven design: a section of the system with its own model, where the terms have a single agreed meaning. "Invoice" in billing and "invoice" in a customer-support view are often not the same object, and a bounded context is the admission that forcing them together costs more than keeping them apart. See [03 — Architecture](../docs/03-architecture.md).
 
+**Branch protection** — A set of rules applied to a branch (typically main) requiring status checks to pass, reviews to be approved, and branches to be current before a merge is allowed. Without it, a CI pipeline is advisory — anyone can merge regardless of what the checks say. See [11 — CI/CD](../docs/11-ci-cd.md).
+
 **C4 model** — Simon Brown’s convention for architecture diagrams. Context shows your system and the outside world it talks to. Container shows the deployable things inside it — the application, the database, the worker. Component shows the pieces inside one container. Code is classes and functions. See [03 — Architecture](../docs/03-architecture.md).
 
 **Canary** — Releasing a change to a small slice of traffic first, watching it, then widening. On Vercel it is approximated with skew protection and staged rollouts rather than true traffic splitting. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **CAP theorem** — For a system spread across nodes: during a network partition you may either refuse requests to stay consistent, or serve them and let copies disagree. Consistency and availability are only jointly achievable when nothing is partitioned. See [03 — Architecture](../docs/03-architecture.md).
+
+**Cardinality** — A high-cardinality field — a user id, an invoice id, a request id — has as many distinct values as there are users, invoices or requests. In logs, that is what makes a particular event findable. As a metric label, every combination of label values creates another time series. See [15 — Observability](../docs/15-observability.md).
 
 **Circuit breaker** — A wrapper that counts consecutive failures, and once past a threshold stops attempting the call at all for a cooldown period, failing fast instead. After the cooldown it lets one request through to test whether the dependency recovered. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -42,6 +48,8 @@ drift apart.
 **Code coverage** — The percentage of lines or branches a test suite executes when it runs. See [06 — Testing](../docs/06-testing.md).
 
 **Concierge test** — You do the work manually for a handful of real users — spreadsheets, emails, your own labour — while they experience the result as if it were a product.
+
+**Concurrency group** — A string key (typically including the branch ref) that tells GitHub Actions to cancel in-progress runs when a new one starts for the same group. Without it, pushing three times to a branch queues three full CI runs. See [11 — CI/CD](../docs/11-ci-cd.md).
 
 **Connection pooling** — A pooler sits between the application and the database, holding a limited number of real connections and multiplexing client requests onto them, instead of each caller opening its own. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -59,13 +67,15 @@ drift apart.
 
 **Deployment protection** — A setting (e.g. Vercel Deployment Protection) that requires authentication before a preview URL loads. Preview URLs are unlisted, not secret — they end up in Slack, issue trackers, and occasionally search indexes. See [12 — Staging](../docs/12-staging.md).
 
+**Deployment status event** — The `deployment_status` event fires after an external deployment platform reports success or failure. Using it as a workflow trigger means E2E tests run against the real deployed URL — a real build, real edge network, real database — rather than a dev server. See [11 — CI/CD](../docs/11-ci-cd.md).
+
 **Derived state** — Anything you could work out on demand — whether an invoice is overdue, how many items are in a cart, a running total — that is written into a column instead. Storing it means something has to keep it up to date. See [03 — Architecture](../docs/03-architecture.md).
 
 **Domain model** — A description of the system in entities and relationships — a user has many clients, a client has many invoices — written in the language of the problem rather than the language of the database. Tables come after, as one way of storing it. See [03 — Architecture](../docs/03-architecture.md).
 
 **Error boundary** — A segment marked by a file like `error.tsx` in the App Router. It catches an unhandled throw from anything it wraps and renders a fallback in place of the crashed subtree, rather than taking the whole page down. It has to be a Client Component — one of the few places the directive is not a choice. See [05 — Development](../docs/05-development.md).
 
-**Error budget** — The failure you have decided is acceptable over a window. A 99.9% uptime target is roughly a 43-minute monthly budget. Spending it is allowed — that is what a budget is for; exceeding it means stop shipping features and fix reliability. See [15 — Observability](../docs/15-observability.md).
+**Error budget** — The failure you have decided is acceptable over a window. For a request-based SLO, 99.9% success leaves 0.1% of requests available to fail. For a time-based 99.9% uptime SLO, the budget is 43.2 minutes in 30 days. Spending it is allowed; exceeding it means stop shipping features and fix reliability. See [15 — Observability](../docs/15-observability.md).
 
 **Event sourcing** — Instead of a row holding the current value, you store every change that ever happened and derive the current value by replaying them. The log is the database; the table you query is a projection built from it. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -89,15 +99,21 @@ drift apart.
 
 **Flaky test** — A test that passes and fails on the same code, with nothing about the code itself changing between runs. See [06 — Testing](../docs/06-testing.md).
 
+**Frozen lockfile** — `pnpm install --frozen-lockfile` (or `npm ci`) refuses to resolve dependencies and fails if the lockfile is out of sync with package.json. Without it, CI silently resolves different versions than you tested with locally. See [11 — CI/CD](../docs/11-ci-cd.md).
+
 **Golden signals** — The four measurements to instrument before any others: latency, traffic, errors, and saturation. If you watch only four things, watch these. See [15 — Observability](../docs/15-observability.md).
 
 **Graceful degradation** — Designing so that the loss of one component removes one capability rather than the whole system. Search goes down and browsing still works; the PDF renderer goes down and the invoice still sends. See [03 — Architecture](../docs/03-architecture.md).
+
+**Heartbeat (dead man's switch)** — A scheduled job calls a URL when it finishes successfully, and a monitor pages you when the call does not arrive inside the window you set. It is the only monitor that alerts on silence rather than on an event, which is why it goes on the success path and never in a `finally`. See [15 — Observability](../docs/15-observability.md).
 
 **Hexagonal architecture (ports and adapters)** — An organising principle where the core logic defines interfaces — ports — and the database, HTTP layer and third-party services are adapters plugged into them. The core depends on nothing outside itself. See [03 — Architecture](../docs/03-architecture.md).
 
 **Horizontal scaling** — Adding instances behind a load balancer so work spreads across them. The alternative, vertical scaling, is moving to a larger machine: simpler, requiring no statelessness, and eventually running out of machine. See [03 — Architecture](../docs/03-architecture.md).
 
 **Idempotency** — A property of an operation: running it repeatedly with the same input leaves the system in the same state as running it once. Usually achieved by having the caller supply a key, and recording which keys have already been processed. See [03 — Architecture](../docs/03-architecture.md).
+
+**Incident commander** — Keeps ownership, decisions, communication and handoffs clear while responders limit impact. A solo developer can hold this role alongside technical work. See [16 — Incident Management](../docs/16-incident-management.md).
 
 **Invariant test** — A test asserting the shape of data rather than its values — counts, uniqueness, cross-references between files, rather than what any one field contains. See [06 — Testing](../docs/06-testing.md).
 
@@ -109,7 +125,11 @@ drift apart.
 
 **Leading question** — "Would this save you time?" contains its own answer. The polite response is yes, it costs the respondent nothing, and you learn only that they are agreeable.
 
+**Liveness check** — An endpoint that returns 200 whenever the process is running and checks nothing else. Platforms that restart on a failed check (Fly, ECS, Cloud Run, a Kubernetes liveness probe) read this one. See [15 — Observability](../docs/15-observability.md).
+
 **Merge gate** — The set of automated checks that must pass before code merges to the main branch. Distinct from deployment: the gate protects the branch, the deploy ships it. See [11 — CI/CD](../docs/11-ci-cd.md).
+
+**Merge queue** — When multiple PRs target the same branch, a merge queue serialises them: each PR is tested against a temporary merge of everything ahead of it, not just its own branch point. This catches conflicts between PRs that are each green on their own. See [11 — CI/CD](../docs/11-ci-cd.md).
 
 **Microservices** — An architecture where services are deployed and scaled independently and communicate over the network. Each owns its own storage; sharing a database between services undoes most of what the split was for. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -125,17 +145,23 @@ drift apart.
 
 **npm** — Reads your package.json, downloads every package it names (and everything those packages need) from the npm registry, and copies the whole tree into the project’s node_modules folder. Every project gets its own full copy, hoisted into one flat pile. See [04 — Project Setup](../docs/04-project-setup.md).
 
+**OIDC** — OpenID Connect lets a CI runner (like GitHub Actions) mint a short-lived JWT proving its identity. A cloud provider (like AWS) exchanges that JWT for temporary credentials scoped to one run. No long-lived access key sits in a config file waiting to be leaked. See [11 — CI/CD](../docs/11-ci-cd.md).
+
 **Opportunity solution tree** — A diagram by Teresa Torres with four levels: the outcome you want to move, the customer opportunities (problems, needs, desires) that could move it, the solutions that address each opportunity, and the experiments that test each solution. See [01 — Product Discovery](../docs/01-product-discovery.md).
 
 **Optimistic locking** — Keep a version number on the row. Read it, and include it in the update: `WHERE id = $1 AND version = $2`. Zero rows updated means somebody committed between your read and your write, so you retry or tell the user. See [03 — Architecture](../docs/03-architecture.md).
 
 **Partial unique index** — A unique index with a WHERE clause, so the constraint applies to a subset of the table. `CREATE UNIQUE INDEX ... ON claims (shift_id) WHERE status = 'approved'` permits many rejected claims per shift and exactly one approved one. See [03 — Architecture](../docs/03-architecture.md).
 
+**Percentile** — A ranking rather than an average. A p95 latency of 400ms means at least 95 of every hundred measurements are at or below 400ms. A p99 is a threshold, not a maximum; the slowest request can be higher. Percentiles do not average: the p95 across three servers is not the mean of their three p95s. See [15 — Observability](../docs/15-observability.md).
+
 **Pessimistic locking** — `SELECT … FOR UPDATE` inside a transaction takes a row lock, and any other transaction wanting that row blocks until yours commits or rolls back. See [03 — Architecture](../docs/03-architecture.md).
 
 **Phantom dependency** — A package your code imports but never listed in package.json. It resolves only because some other dependency happened to pull it into a flat node_modules, and it breaks mysteriously when that package updates or drops it. See [04 — Project Setup](../docs/04-project-setup.md).
 
 **pnpm** — Same registry and same package.json as npm, but packages live in one content-addressable store on your machine and get hard-linked into each project. Its node_modules layout is strict: only dependencies you actually declared are importable. See [04 — Project Setup](../docs/04-project-setup.md).
+
+**Postmortem** — Records customer impact, the response timeline, contributing conditions, detection gaps and follow-up actions with owners and dates. Unknowns remain explicit rather than becoming blame or invented certainty. See [16 — Incident Management](../docs/16-incident-management.md).
 
 **Preview deployment** — A complete, isolated deployment of a single branch at its own URL — automatic per pull request on Vercel. Not the same as staging. See [12 — Staging](../docs/12-staging.md).
 
@@ -153,15 +179,23 @@ drift apart.
 
 **Read replica** — A secondary instance kept up to date from the primary, used to spread read load. Writes still go to one place, so replicas scale reads and do nothing for write throughput. See [03 — Architecture](../docs/03-architecture.md).
 
+**Readiness check** — An endpoint that verifies real dependencies (the database, with a timeout) and returns 503 when one is unreachable. Routing decisions — a load balancer's health check, a Kubernetes readiness probe — read this one and pull the instance out of rotation without restarting it. See [15 — Observability](../docs/15-observability.md).
+
 **Rebase** — Move a branch’s commits so they start from the current tip of the branch it will merge into, rather than from wherever it happened to fork. Run before opening the pull request, so the diff a reviewer sees is the diff that will actually land. See [05 — Development](../docs/05-development.md).
 
 **Regression test** — A test written to reproduce a specific bug, which must fail before the fix lands and pass after. See [06 — Testing](../docs/06-testing.md).
+
+**Request id** — A per-request identifier — the incoming `x-request-id` if there is one, else a fresh UUID — stored in `AsyncLocalStorage` and attached to every log line by the logger's `mixin`, and to the error report with `Sentry.setTag`. Not distributed tracing: it is one field, and it costs nothing. See [15 — Observability](../docs/15-observability.md).
 
 **Rollback** — Returning production to the last known-good state. On Vercel it is promoting a prior deployment, which takes seconds — but it is not automatic for database migrations, which is why migrations get careful, separate treatment. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **Rolling deployment** — A deployment strategy where new tasks start alongside old tasks, pass health checks, and then old tasks drain. On ECS, governed by minimumHealthyPercent and maximumPercent. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **Rubber-stamping** — Approving code changes without reading them carefully — clicking "approve" based on green CI, a clean-looking diff, or trust in the author rather than on what the code actually does. See [07 — Code Review](../docs/07-code-review.md).
+
+**Runbook** — Names the required access, evidence, safe actions, stop conditions, escalation path and recovery checks. It stays accessible when the affected application is down. See [16 — Incident Management](../docs/16-incident-management.md).
+
+**Saturation** — The fourth golden signal: how full the resource with a hard limit is. Database connections, function concurrency, storage. Unlike CPU, a saturated resource with a hard ceiling does not recover on its own, so it is worth alerting on before it becomes a symptom. See [15 — Observability](../docs/15-observability.md).
 
 **Self-review** — Deliberately breaking the state that makes reviewing your own code useless — you are still holding the intent, so you read what you meant rather than what you wrote. Three techniques: create distance, read the diff not the code, and explain it out loud. See [07 — Code Review](../docs/07-code-review.md).
 
@@ -186,6 +220,8 @@ drift apart.
 **Statelessness** — Every request carries or looks up whatever it needs, and anything that must persist between requests lives in a cookie, a database or a shared store rather than a local variable. Any instance can serve any request. See [03 — Architecture](../docs/03-architecture.md).
 
 **Strangler fig** — Put something in front of the existing system, route one path at a time to the replacement, and delete the old code once nothing reaches it. Named after the vine that grows around a tree and eventually stands without it. See [03 — Architecture](../docs/03-architecture.md).
+
+**Structured logging** — Each log call emits a JSON object with named fields (`event`, `userId`, `requestId`, `reason`) rather than a formatted sentence. `pino` writes one object per line to stdout, which every platform collects; the shape is what matters, not the library. See [15 — Observability](../docs/15-observability.md).
 
 **Survivorship bias** — Drawing conclusions from the visible survivors of a process while the failures are silent. In discovery: interviewing current users tells you why people stay, never why the larger group left or never arrived.
 

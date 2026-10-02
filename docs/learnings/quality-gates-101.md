@@ -423,3 +423,42 @@ async module evaluation is only verified by the tools that actually exercised it
 proves Playwright's transform agrees, or that Prettier's opinion matches the generator's
 output. Run the *whole* gate — including the slow parts — before trusting a change is
 safe, not the fast subset that happened to pass.
+
+## A test that names the mechanism and skips the wiring
+
+From stage 15's fix wave (2026-09-11). A doc round had shipped `logger.warn({ event,
+error })` losing the exception under Pino's default serialization — `error` has no
+enumerable own properties, so `JSON.stringify` on a bare `Error` gives `{}`. The fix
+wave's own test pinned it:
+
+```ts
+expect(logs).toMatch(/serializers:\s*\{/)
+expect(logs).toMatch(/stdSerializers\.err/)
+```
+
+Both assertions were true of the fix. They were also true of the bug: reverting the
+serializer key from `error:` back to `err:` — the exact original defect, wrong field name
+— left a `serializers: {` block and the string `stdSerializers.err` sitting in the same
+section, and all 47 tests stayed green. The test named the two tokens the fix was made of
+and never checked they were connected to each other, or to the field the health check
+actually logs. Reverting it and re-running was the only way this surfaced; it was not
+visible from reading the assertion. The fix was to anchor the *pairing*:
+`/serializers:\s*\{\s*error:/` — the token that matters is which key gets the serializer,
+not that a serializer exists somewhere nearby.
+
+**A second gap survived one layer further up.** The same fix wave's own re-run (the D-48
+re-run, and a scratch harness reproducing the doc's TypeScript live) confirmed the
+serializer now preserved `type`/`message`/`stack` instead of `{}` — proving the mechanism
+ran. Neither check used an error message containing a secret, so neither could have
+caught that the preserved text was logged **verbatim**: a database connection string's
+password, sitting in the same document whose own redaction list exists to strip that
+exact pattern out of Sentry. Only the whole-branch review, dispatched afterward with
+instructions to trace the code as code, tried a realistic failure (`connect ECONNREFUSED
+postgresql://app:hunter2@...`) and watched the password come out the other side unredacted.
+
+**The general shape:** verifying that a mechanism *runs* (the field is structured, the
+value round-trips) is a different claim from verifying the *property it exists to
+protect* (the value is safe to print). A test suite can confirm the first with complete
+confidence and never touch the second, because the input it happened to use didn't need
+protecting. When a fix's entire reason for existing is a safety property — redaction,
+scrubbing, an allowlist — put a violating value through it, not just a representative one.

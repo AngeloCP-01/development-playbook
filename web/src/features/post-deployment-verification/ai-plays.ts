@@ -20,7 +20,7 @@ export const AI_LIMIT =
 export type Play = {
   id: string
   title: string
-  kind: 'mcp' | 'command' | 'prompt' | 'cli'
+  kind: 'mcp' | 'command' | 'prompt' | 'cli' | 'cli-mcp'
   body: string
 }
 
@@ -40,7 +40,7 @@ export const PLAYS: Play[] = [
   {
     id: 'run-ten-minute-check',
     title: 'Run the ten-minute check against a deployed URL',
-    kind: 'mcp',
+    kind: 'cli-mcp',
     body: 'claude-in-chrome or playwright can load the production URL, walk the critical path, and screenshot each step. The agent catches a broken page, a missing element, a console error. It does not catch "this feels slower" or "that number looks wrong."',
   },
   {

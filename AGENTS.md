@@ -1,0 +1,388 @@
+# AGENTS.md
+
+This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
+
+## Commands
+
+All app commands run from `web/`:
+
+```bash
+pnpm dev          # dev server on :3200 (Turbopack) — 3000 is left free for other projects
+pnpm build        # production build; prerenders every page, plus /robots.txt and /sitemap.xml
+pnpm lint         # eslint --max-warnings 0
+pnpm format       # prettier --write (format:check is what CI runs)
+pnpm test         # vitest — two projects: `unit` (node, data invariants), `dom` (jsdom, render tests)
+pnpm test:e2e     # playwright audit suite against a production build on :3100
+pnpm test:prod    # playwright @smoke checks against the DEPLOYED site (docs/14)
+pnpm test:dev-console # React's dev-mode warnings, against `next dev` on :3101 (TD-35)
+pnpm typecheck    # next typegen && tsc --noEmit
+```
+
+Lefthook runs format+lint on commit and typecheck+test on push. CI
+(`.github/workflows/ci.yml`) is the same gate cheapest-first, plus the audit suite.
+
+`pnpm test:prod` is **not** part of that gate. It checks the deployed site, so a green run
+says nothing about the working tree and a red one may have nothing to do with local changes.
+Run it after a promotion to `main`.
+
+`pnpm test:dev-console` is not part of it either, and for the opposite reason: it needs a
+dev server, which the gate deliberately avoids. Run it once per stage round. It is the only
+thing in the repo that can see React's development validation — missing keys, invalid DOM
+nesting, `act()` warnings, hydration detail — because a production build has stripped all of
+it (TD-35). It found a real bug on its first run.
+
+## Two deliverables, one body of content
+
+**`docs/NN-*.md`** — eighteen markdown stage documents. The canonical prose. Readable
+in a plain editor and on GitHub.
+
+**`web/`** — a Next.js 16 static site that turns those documents into something you
+consult rather than read. No backend, no database, no env vars.
+
+The web app does **not** read the markdown. The interactive stage *content* is
+hand-ported into React components — known duplication, do not "fix" it casually, but do
+not widen it without noting it either.
+
+Two pieces that used to be hand-ported are now single-sourced (D-36): the **glossary**
+lives in `web/src/lib/terms.ts` and `reference/glossary.md` is generated from it (run
+`pnpm gen:glossary`; never hand-edit the markdown), and stage **titles** are guarded by a
+sync test against `stages.ts`. A term or a stage title now lives in exactly one place.
+
+## The claim the structure rests on
+
+**Stage numbers are filing codes, not a sequence.** CI/CD (11) is wired during Project
+Setup (04). Documentation (10) and Observability (15) never stop. Stages 13–18 loop.
+
+This is why every stage carries a `cadence` field in `src/lib/stages.ts`, surfaced in
+the `TitleBlock` component. Any change that re-implies a linear waterfall — renumbering,
+"next/previous" framing that suggests progression, a progress bar over all 18 — works
+against the point of the playbook.
+
+## Making a stage interactive
+
+Stage 01 is the reference implementation. Adding another is a three-file trace:
+
+1. `src/lib/stages.ts` — flip `ready: true`
+2. `src/features/<stage>/` — build the content component; group sections into 4–6
+   `Step` objects and render through `<Stepper>`
+3. `src/features/stage-content.ts` — register the component against the slug
+
+A slug absent from `STAGE_CONTENT` renders a "sheet not drawn" placeholder, so
+routing works for all 18 regardless.
+
+`Stepper` keeps the active step in the URL hash (deep-linkable, back button works) and
+renders one panel at a time. `Figure` numbers run across the whole stage, not per step,
+and are passed explicitly.
+
+**Before building a stage, read `web/PATTERNS.md`.** It catalogs the interaction
+patterns (expand-to-reveal, inline terms, guess-then-reveal, click-node inspector, and
+so on) and says which fits which content. The default is not a paragraph — it is
+something the reader clicks. A stage that is only prose blocks is the anti-pattern.
+
+## Design system
+
+Tokens live in `src/app/globals.css`. Light mode is a whiteprint (dark linework on
+drafting paper); dark is a cyanotype (pale linework on Prussian blue). Dark is a
+second drawing, not an inverted filter — design both.
+
+**Accent and semantic colour are deliberately separate.** `brand` (annotation orange)
+means *attention* — active states, eyebrows, "you are here". `go` / `danger` / `warn`
+carry meaning. Using `brand` for "this is good" is a bug; it was one, and was fixed.
+
+Type roles are utility classes, not Tailwind font sizes: `t-display` (Archivo pushed
+wide, uppercase, sparingly), `t-head`, `t-ui`, `t-label` (mono, tracked caps),
+`t-data` (mono, tabular). Body is Newsreader at 17px — a serif, on purpose.
+
+`main :is(p, li)` caps at 68ch by default. The container is wide (1400px) so diagrams
+get room; prose stays readable without per-component effort. Opt out with
+`.measure-full`.
+
+## Framework gotchas
+
+`web/AGENTS.md` instructs reading `node_modules/next/dist/docs/` before writing code.
+Follow it — this Next.js version has breaking changes from training data. Notably
+`params` and `searchParams` are Promises; use the generated `PageProps<'/route'>` helper.
+
+**Route types are generated, not written.** `PageProps<'/route'>` and friends live in
+`.next/types/`, produced by `next build` or `next typegen`. A bare `tsc --noEmit` passes
+locally only because a previous build left `.next` behind, and fails on a clean checkout
+— which is exactly how CI caught it. Always typecheck via `pnpm typecheck`, which runs
+typegen first.
+
+**React 19 forbids setState in an effect body** (`react-hooks/set-state-in-effect`, an
+error not a warning). `src/lib/useLocalStorage.ts` uses `useSyncExternalStore` for this
+reason. Reaching for `useEffect` + `setState` to read localStorage will fail lint and
+cause a cascading render.
+
+## Verification expectations
+
+This repo's standard is checking against a live build rather than asserting. Changes
+touching UI are expected to clear:
+
+- **Contrast** — every distinct text/background pair, both themes, all steps, WCAG AA
+- **Responsive** — 320→2560px, no horizontal overflow, no sub-44px touch target below `lg`
+- **Console** — zero errors in a clean browser context. Say which build you mean:
+  `pnpm test:e2e` covers a **production** build, where React has stripped its development
+  validation, so that whole family is invisible to it. `pnpm test:dev-console` is the half
+  that sees it, and a green audit is not a claim about missing keys
+
+These checks live in `web/e2e/audit.spec.ts` and run in CI. Two cautions learned
+the hard way: a checker reporting mass failures is usually the checker (a link audit
+once reported 124 false breaks), and colour parsers must handle `oklab()` — Tailwind
+emits it for alpha backgrounds.
+
+A component that derives what it displays from data — a conditional render, a
+module-private helper, an accessible name assembled from parts — also gets a `*.test.tsx`
+render test. `web/PATTERNS.md` states the rule and why. A passing data test plus a
+component that ignores the data is green and wrong, and that combination is what TD-17
+was opened for.
+
+## Git conventions
+
+Ported from `SmartJobSearchCRM`, where they are established across ~500 commits.
+
+**Conventional Commits**, `type(scope): subject`. Types in use: `feat`, `fix`, `docs`,
+`refactor`, `test`, `chore`, `build`. Subject is lowercase after the colon and describes
+the change, not the diff.
+
+Scopes are the area touched. In this repo that means `web`, `docs`, `design`, `a11y`,
+`stepper`, a stage slug (`discovery`), or the artifact being edited (`tracker`, `task`,
+`spec`, `plan`).
+
+```
+feat(discovery): add opportunity solution tree with per-level legend
+fix(a11y): raise --faint to 4.8:1 on the darkest light surface
+docs(tracker): record TD-1 stack drift between playbook and app
+refactor(stepper): hoist FlowNode out of render to stop state resets
+```
+
+A body is used when there is a *why* worth keeping — a constraint, a rejected
+alternative, a load-bearing ordering. Skip it when the subject already says everything.
+
+Every commit carries the trailer:
+
+```
+Co-Authored-By: Codex Opus 4.8 (1M context) <noreply@anthropic.com>
+```
+
+**Branches** are `feat/<kebab-topic>` or `fix/<kebab-topic>`, no ticket numbers.
+`docs/<date>-<topic>` branches carry a date in the slug; `feat`/`fix` do not.
+
+### `main` is production — the branch you may not merge to
+
+Since 2026-08-11 the site is live from `main` (https://acp-dev-playbook.vercel.app), so a
+push to `main` is a deploy. The flow that follows from that:
+
+```
+feat/… · fix/… · chore/… · docs/…   ──merge──>   develop   ──user only──>   main
+```
+
+- **Work branches merge to `develop`.** Never to `main`, whatever the change is and however
+  safe it looks. A records-only edit deploys exactly as hard as a feature.
+- **`main` is the user's.** You may **open a pull request** to `main`; you may not merge it,
+  and you may not push to it. The user handles that promotion.
+- **Ask before every merge, including into `develop`.** Having a plan approved is not
+  approval to merge the branch that came out of it — integration is a separate decision, and
+  it is the user's each time.
+
+Everything below applies to a merge into `develop` exactly as it did to `main`.
+
+**Merges use `--no-ff`** — never squash, never rebase. The merge subject is hand-written
+and carries meaning, because history should show what shipped as one unit:
+
+```
+Merge feat/observability-p1: backend observability P1 (Sentry + /api/health/deep)
+Merge: RAG-grounded résumé tailoring suggestions (RAG part 2)
+```
+
+Merge commits get bodies too — a bullet summary of the branch plus a pointer to its
+plan. Branches are deleted after merge.
+
+**Specs, plans and tracker updates are committed separately** with `docs(...)` scopes,
+before or alongside the implementation they describe — so a spec exists in history at
+the point the decision was made.
+
+Temporary commits meant to be reverted are labelled as such:
+`chore(TEMP): add /api/debug/boom to verify Sentry prod capture (revert after)`.
+
+## Skills are how we develop
+
+This is not a "reach for these if useful" list. **The Superpowers skills are the
+process** — every substantive change runs through them, the same way it does in
+`SmartJobSearchCRM`. Invoke the skill before the work it governs, not after. If a skill
+applies and you skip it, that is a defect in the process, not a shortcut.
+
+The delivery loop *is* a sequence of skills:
+
+| Phase | Skill | Non-negotiable |
+|---|---|---|
+| Explore intent, before any code | `superpowers:brainstorming` | Runs before plan mode, before clarifying questions |
+| Turn the spec into steps | `superpowers:writing-plans` | For any multi-step task |
+| Implement | `superpowers:test-driven-development` | **The iron law below** |
+| Run a plan with subagents | `superpowers:subagent-driven-development` | For plans with independent tasks |
+| Fan out independent work | `superpowers:dispatching-parallel-agents` | 2+ tasks with no shared state |
+| Before proposing any fix | `superpowers:systematic-debugging` | Hypothesis before edit, always |
+| Before claiming done | `superpowers:verification-before-completion` | Evidence before assertion |
+| Ask for / receive review | `superpowers:requesting-code-review`, `receiving-code-review` | Verify feedback, don't comply reflexively |
+| Close the branch | `superpowers:finishing-a-development-branch` | The merge / PR decision |
+| Isolate risky work | `superpowers:using-git-worktrees` | Parallel branches that would collide |
+
+### The iron law
+
+TDD is not optional here, because the whole project's verification standard depends on
+it. From `superpowers:test-driven-development`:
+
+```
+NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
+```
+
+Write the test, watch it fail *for the right reason*, write the minimum to pass. If you
+wrote code before the test, delete it and start over — keeping it "as reference" is the
+rationalization the skill names explicitly. The teeth check (see TDD evidence below) is
+how we prove a test isn't vacuous.
+
+The exceptions are narrow and require asking first: throwaway prototypes, generated
+code, configuration. "Skip TDD just this once" is not one of them.
+
+## Workflow preferences
+
+**Presenting plan execution options.** When presenting the two plan-execution
+approaches (Subagent-Driven vs. Inline) at the end of the writing-plans workflow,
+always add a short note stating **which approach is recommended for this specific
+plan and why** — grounded in the plan's actual shape (task count, independence, risk,
+need for context isolation), not a generic default. Ported verbatim from
+`SmartJobSearchCRM`, where it was added as its own commit.
+
+## Delivery loop
+
+The loop, adapted from the source project — each arrow is a skill from the table above:
+
+```
+brainstorm  →  spec  →  plan  →  TDD tasks  →  per-task review  →  final whole-branch review  →  merge  →  verify
+```
+
+- **Spec** → `docs/superpowers/specs/YYYY-MM-DD-<slug>-design.md` (`superpowers:brainstorming`)
+- **Plan** → `docs/superpowers/plans/YYYY-MM-DD-<slug>.md` with checkbox steps (`superpowers:writing-plans`)
+- **Execute** → `superpowers:subagent-driven-development`, TDD per task, or inline for small slices
+- **Review** → a final whole-branch pass before merge, not only per-task
+- **Finish** → `superpowers:finishing-a-development-branch`
+
+Scale the ceremony, not the discipline. A single-component fix does not need a spec; it
+still needs a failing test first. A milestone (`W-3`, `W-4`) needs the whole loop.
+
+**Spec sections, in order:** Problem · Goals · Non-goals · Constraints · Architecture ·
+Testing · Verification · Documentation updates · Risks. Non-goals state *why* each was
+dropped. Specs cite real code by `file:line` and record rejected options inline.
+
+**Plans** open with a fixed preamble, then `## Global Constraints`, then
+`### Task N` blocks (Files / Interfaces / checkbox steps), then
+`## Verification (after all tasks)`. Tasks carry the full test and implementation source
+inline, so an implementer works from the task slice alone rather than the whole plan.
+
+### Review
+
+Two tiers: a read-only review per task, then a **final whole-branch review** before
+merge. The final one is load-bearing, not ceremony — in the source project it caught an
+SVG-spoof XSS, a `Set-Cookie` refresh-token leak, an infinite autosave loop, and a
+drag-math defect.
+
+Findings carry a severity and an ID: **Critical**, **Important** (`I1`, `I2`, written
+`(blocking)`), **Minor** (`M1`…). They also carry *provenance*, which matters because it
+changes who fixes what:
+
+```
+I2 (blocking) - no test rendered <WebVitals/>
+M3 (PRE-EXISTING, not introduced here; defer to final review)
+Fix (Important, PLAN-AUTHORED ERROR not implementer error)
+DEFERRED (user's call, not blocking): M5 - ...
+```
+
+Verdicts are `review clean` / `review clean after 1 fix` per task, and
+`Ready to merge` / `Ready with fixes` for the branch. A review closes with the branch
+state: `12 commits off main, 296/296 across 53 files, build clean, tree clean. NOT merged, NOT deployed.`
+
+**A reviewer is expected to disprove as well as confirm**, including its own earlier
+claims — real entries read `DISPROVED my suspected SPA bug: ...` and
+`CORRECTED A FACTUAL ERROR IN MY OWN SPEC: ...`. Agreeing with a wrong finding is worse
+than missing one.
+
+### TDD evidence
+
+A task report pastes **raw terminal output for both the RED and GREEN runs**, and states
+explicitly that the failure was *for the right reason* — "failed for the expected reason
+(`trackEvent` never called — 'Number of calls: 0')". A green test alone proves nothing.
+
+When a fix lands, verification includes a **teeth check**: deliberately break the
+implementation again and confirm the new test — and only that test — fails. This is what
+separates a real regression test from a vacuous one.
+
+Test names encode the rationale, not the mechanic:
+`test('still fires ai_analysis_run when the run fails, since failure volume is a useful signal')`.
+
+## Project artifacts
+
+| File | Holds |
+|---|---|
+| `AGENTS.md` | How this project works. You are reading it. |
+| `KICKOFF.md` | Paste-buffer for cold-starting a new session with full context. Refresh its *Project state* before use — a stale kickoff is worse than none, because it is trusted. |
+| `docs/task.md` | Scope, milestones (`P-` content, `W-` web app), dependency map |
+| `docs/tracker.md` | What shipped with evidence, numbered decisions, technical debt, bug ledger |
+| `web/DESIGN.md` | The design system. Any new UI matches it. |
+| `web/PATTERNS.md` | Interaction patterns — which UX pattern fits which content. Read before building a stage. |
+| `docs/superpowers/specs/`, `plans/` | Delivery-loop artifacts |
+| `docs/learnings/` | Guides written for future-you when a round teaches something expensive |
+| `reference/stack.md` | The default stack. Versions live here and nowhere else. |
+
+## Recording work
+
+`docs/task.md` — scope, milestones, dependency map.
+`docs/tracker.md` — what shipped with evidence, numbered decisions with reasoning,
+technical debt ranked by cost, bug ledger.
+
+Two conventions worth keeping precisely:
+
+**Evidence, not adjectives.** A completed entry cites what proves it — commit SHA,
+test count, what a review caught. "Reviewed + merged" alone is not evidence.
+
+**Every slice records what it deliberately did *not* do.** A `Deferred:` list on each
+entry. This is the same discipline as the "What this is NOT" box in stage 01, and it is
+what stops scope creep being invisible.
+
+Decisions are appended and superseded, never edited — the record of what was believed
+at the time is the value. Follow-ups are struck through with a date when closed
+(`~~rotate the key~~ ✓ done 2026-07-02`) rather than deleted.
+
+### Prose that does not read as AI-written
+
+Documentation is a deliverable here — the stage docs *are* the product — so it cannot
+read like generated filler. Run **`humanizer:humanizer`** over anything prose-heavy before
+it is considered done: the stage docs, the READMEs, spec and plan bodies, learning
+guides. It flags the tells this project is prone to — em-dash overuse, the rule of three,
+inflated symbolism, vague attributions, negative parallelisms, AI-vocabulary words.
+
+It is a review pass, not an autopilot: apply the fixes that make the writing clearer and
+skip the ones that would flatten a deliberate voice. Skip it for terminal output, code,
+tables, and tracker entries, where the flagged patterns are not the problem.
+
+## Tooling
+
+Skills are covered above — they are the process, not tooling. Beyond Superpowers, two
+design skills are in regular use: **`frontend-design`** for visual direction (the only
+project-enabled plugin) and **`ui-ux-pro-max`** for design-system and accessibility rule
+lookups. Match `web/DESIGN.md` when using either.
+
+MCP servers, configured at user level, and what each is actually for here:
+
+| Server | Use |
+|---|---|
+| **context7** | Library docs before writing framework code. Prefer over training memory — this Next.js version postdates it. |
+| **playwright** | Driving the running app for the verification passes above. |
+| **Codex-mem** | "Did I already decide this?" across sessions. |
+
+## Resolved contradiction (kept for history)
+
+`reference/stack.md` and `docs/04-project-setup.md` used to prescribe **Biome** while
+`web/` ran ESLint with no hooks (TD-1). Resolved 2026-07-23 in ESLint's favour — its
+react-hooks rule family caught a real bug here — with Prettier added for formatting and
+Lefthook for hooks. Biome stays documented in `reference/stack.md` as the alternative
+for projects off the ESLint plugin ecosystem. Decision D-22.

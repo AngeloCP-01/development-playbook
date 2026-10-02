@@ -1,0 +1,51 @@
+import type { Artifact } from '@/components/artifact'
+
+export const E2E_ARTIFACT: Artifact = {
+  id: 'e2e-preview',
+  filename: '.github/workflows/e2e.yml',
+  language: 'yaml',
+  lines: [
+    { text: 'name: E2E' },
+    { text: '' },
+    {
+      text: 'on:',
+      note: 'Fires after Vercel finishes deploying, not when code is pushed. Tests the real build on the real edge network.',
+      pivot: true,
+    },
+    { text: '  deployment_status:' },
+    { text: '' },
+    { text: 'jobs:' },
+    { text: '  test:' },
+    { text: "    if: github.event.deployment_status.state == 'success'" },
+    { text: '    runs-on: ubuntu-latest' },
+    { text: '    timeout-minutes: 15' },
+    { text: '    steps:' },
+    { text: '      - uses: actions/checkout@v7' },
+    { text: '      - uses: pnpm/action-setup@v6' },
+    { text: '      - uses: actions/setup-node@v7' },
+    { text: '        with:' },
+    { text: "          node-version-file: '.nvmrc'" },
+    { text: "          cache: 'pnpm'" },
+    { text: '      - run: pnpm install --frozen-lockfile' },
+    {
+      text: '      - run: pnpm exec playwright install --with-deps chromium',
+      note: 'Installs Chromium and its OS dependencies. Without --with-deps, the run fails on missing system libraries.',
+    },
+    { text: '      - run: pnpm exec playwright test' },
+    { text: '        env:' },
+    {
+      text: '          BASE_URL: ${{ github.event.deployment_status.environment_url }}',
+      note: 'A real preview URL, real edge network, real database — a meaningfully better signal than testing a dev server.',
+    },
+    { text: '' },
+    {
+      text: '      - uses: actions/upload-artifact@v4',
+      note: 'A failed E2E run with no trace is a debugging session that starts from nothing; the trace viewer starts you at the failing step with a DOM snapshot.',
+    },
+    { text: '        if: failure()' },
+    { text: '        with:' },
+    { text: '          name: playwright-report' },
+    { text: '          path: playwright-report/' },
+    { text: '          retention-days: 7' },
+  ],
+}

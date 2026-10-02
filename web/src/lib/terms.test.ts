@@ -103,7 +103,29 @@ test('stage 06 defines the vocabulary it introduces', () => {
   }
 })
 
+test('stage 15 definitions preserve percentile and error-budget arithmetic', () => {
+  const percentile = getTerm('percentile')
+  expect(percentile, 'percentile is missing').toBeDefined()
+  expect(percentile?.full).toMatch(/at or below/i)
+  expect(percentile?.full).toMatch(/threshold, not (?:a |the )?maximum/i)
+
+  const errorBudget = getTerm('error-budget')
+  expect(errorBudget?.full).toMatch(/0\.1% of requests/i)
+  expect(errorBudget?.full).toMatch(/43\.2 minutes in 30 days/i)
+})
+
 test('smoke-test is reused rather than redefined', () => {
   expect(TERMS['smoke-test']).toBeDefined()
   expect(TERMS['smoke-test'].see).not.toBe('06-testing')
+})
+
+test('incident vocabulary resolves to the stage that teaches each artifact', () => {
+  for (const [id, name] of [
+    ['incident-commander', 'Incident commander'],
+    ['postmortem', 'Postmortem'],
+    ['runbook', 'Runbook'],
+  ]) {
+    expect(TERMS[id]?.name).toBe(name)
+    expect(TERMS[id]?.see).toBe('16-incident-management')
+  }
 })

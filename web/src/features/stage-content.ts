@@ -6,9 +6,12 @@ import { Setup } from './setup/Setup'
 import { Development } from './development/Development'
 import { Testing } from './testing/Testing'
 import { CodeReview } from './code-review/CodeReview'
+import CiCd from './ci-cd/CiCd'
 import { Staging } from './staging/Staging'
 import { ProductionDeployment } from './production-deployment/ProductionDeployment'
 import { PostDeploymentVerification } from './post-deployment-verification/PostDeploymentVerification'
+import { Observability } from './observability/Observability'
+import { IncidentManagement } from './incident-management/IncidentManagement'
 
 /**
  * Stage slug → interactive page body. A stage missing from this map renders the
@@ -22,7 +25,10 @@ export const STAGE_CONTENT: Record<string, ComponentType> = {
   '05-development': Development,
   '06-testing': Testing,
   '07-code-review': CodeReview,
+  '11-ci-cd': CiCd,
   '12-staging': Staging,
   '13-production-deployment': ProductionDeployment,
   '14-post-deployment-verification': PostDeploymentVerification,
+  '15-observability': Observability,
+  '16-incident-management': IncidentManagement,
 }

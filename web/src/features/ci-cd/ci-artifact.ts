@@ -1,0 +1,68 @@
+import type { Artifact } from '@/components/artifact'
+
+export const CI_ARTIFACT: Artifact = {
+  id: 'ci-gate',
+  filename: '.github/workflows/ci.yml',
+  language: 'yaml',
+  lines: [
+    { text: 'name: CI' },
+    { text: '' },
+    { text: 'on:' },
+    { text: '  pull_request:' },
+    { text: '  push:' },
+    { text: '    branches: [main]' },
+    { text: '' },
+    {
+      text: 'concurrency:',
+      note: 'Push three times to a branch and you get one run, not three. This is free money on both minutes and queue time.',
+    },
+    { text: '  group: ci-${{ github.ref }}' },
+    { text: '  cancel-in-progress: true' },
+    { text: '' },
+    { text: 'jobs:' },
+    { text: '  verify:' },
+    { text: '    runs-on: ubuntu-latest' },
+    {
+      text: '    timeout-minutes: 10',
+      note: 'Without it, a hung process burns the full six-hour default. Ten minutes is generous for this pipeline; if you legitimately exceed it, the pipeline is the problem.',
+    },
+    { text: '    steps:' },
+    { text: '      - uses: actions/checkout@v7' },
+    { text: '      - uses: pnpm/action-setup@v6' },
+    { text: '      - uses: actions/setup-node@v7' },
+    { text: '        with:' },
+    {
+      text: "          node-version-file: '.nvmrc'",
+      note: 'Pins the same Node version CI and your machine use. One file, not two declarations.',
+    },
+    {
+      text: "          cache: 'pnpm'",
+      note: 'Caches the pnpm store across runs. Cuts install from ~25s to ~5s on a warm cache.',
+    },
+    { text: '' },
+    {
+      text: '      - run: pnpm install --frozen-lockfile',
+      note: 'Fails if pnpm-lock.yaml disagrees with package.json instead of silently resolving different versions than you tested with. Non-negotiable in CI.',
+      pivot: true,
+    },
+    { text: '' },
+    { text: '      - name: Format' },
+    { text: '        run: pnpm format:check' },
+    { text: '' },
+    { text: '      - name: Lint' },
+    {
+      text: '        run: pnpm lint   # eslint --max-warnings 0 — see the trap below',
+    },
+    { text: '' },
+    { text: '      - name: Typecheck' },
+    {
+      text: '        run: pnpm typecheck   # generates route types first — see the trap below',
+    },
+    { text: '' },
+    { text: '      - name: Unit and integration tests' },
+    { text: '        run: pnpm vitest run --coverage' },
+    { text: '' },
+    { text: '      - name: Build' },
+    { text: '        run: pnpm build' },
+  ],
+}

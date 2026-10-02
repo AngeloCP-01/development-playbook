@@ -27,19 +27,36 @@ function ratio(a: number[], b: number[]) {
 
 // ── overflow ───────────────────────────────────────────────────────────────
 
+/**
+ * Every sweep below collects across the whole path list and asserts once at the
+ * end (TD-45). Asserting *inside* the loop throws on the first bad path and
+ * leaves every path after it unvisited, so the run reports one failure and
+ * silently declines to measure the tail.
+ *
+ * That was not hypothetical. `/reference/deployment-environments` overflows at
+ * 320px and sits at index 13 of `CHEATSHEETS`, so the 320px sweep stopped there
+ * and the nine sheets registered behind it went unmeasured — including two added
+ * while the suite reported a steady "1 failed". Planting two extra overflows
+ * proved it: three failures present, one reported.
+ *
+ * The contrast, console and panel-height sweeps already worked this way. This is
+ * that pattern applied to the four that did not.
+ */
 for (const width of WIDTHS) {
   test(`no horizontal overflow at ${width}px, because a field manual must never scroll sideways`, async ({
     page,
   }) => {
     await page.setViewportSize({ width, height: 900 })
+    const failures: string[] = []
     for (const path of await auditPages(page)) {
       await page.goto(path, { waitUntil: 'networkidle' })
       const overflow = await page.evaluate(() => {
         const de = document.documentElement
         return de.scrollWidth - de.clientWidth
       })
-      expect(overflow, `${path} @ ${width}px`).toBe(0)
+      if (overflow !== 0) failures.push(`${path} @ ${width}px by ${overflow}px`)
     }
+    expect(failures, failures.join('\n')).toEqual([])
   })
 }
 
@@ -49,6 +66,7 @@ test('interactive elements are at least 44px tall below lg', async ({
   page,
 }) => {
   await page.setViewportSize({ width: 390, height: 844 })
+  const failures: string[] = []
   for (const path of await auditPages(page)) {
     await page.goto(path, { waitUntil: 'networkidle' })
     // A target that is only reachable behind an accordion is still a target.
@@ -129,8 +147,9 @@ test('interactive elements are at least 44px tall below lg', async ({
         })),
       )
     })
-    expect(small, `${path}: ${small.join(', ')}`).toEqual([])
+    if (small.length > 0) failures.push(`${path}: ${small.join(', ')}`)
   }
+  expect(failures, failures.join('\n')).toEqual([])
 })
 
 // ── contrast ───────────────────────────────────────────────────────────────
@@ -527,14 +546,14 @@ test('reset clears the uncommitted draft as well as the committed answers, since
 test('every listed step hash lands on the step it names, since a dead hash falls back and audits step one twice', async ({
   page,
 }) => {
+  const failures: string[] = []
   for (const path of (await auditPages(page)).filter((p) => p.includes('#'))) {
     const id = path.split('#')[1]
     await page.goto(path, { waitUntil: 'networkidle' })
-    await expect(
-      page.locator(`#panel-${id}`),
-      `${path} does not resolve to a step called "${id}"`,
-    ).toBeVisible()
+    if (!(await page.locator(`#panel-${id}`).isVisible()))
+      failures.push(`${path} does not resolve to a step called "${id}"`)
   }
+  expect(failures, failures.join('\n')).toEqual([])
 })
 
 // ── D-52: a step holds one judgment, and its panel is not a scroll ─────────

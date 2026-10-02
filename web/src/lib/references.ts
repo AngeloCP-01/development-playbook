@@ -215,6 +215,32 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: 'The Microsoft study showing knowledge transfer — not defect detection — is the primary actual outcome of review.',
     },
   ],
+  '11-ci-cd': [
+    {
+      title: 'Workflow syntax for GitHub Actions',
+      source: 'GitHub Docs',
+      url: 'https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions',
+      adds: 'The complete trigger, job, and step reference this stage condenses into the three patterns that matter.',
+    },
+    {
+      title: 'Vercel Git Integration',
+      source: 'Vercel Docs',
+      url: 'https://vercel.com/docs/deployments/git',
+      adds: 'How Vercel builds and deploys on every push — the deployer half this stage deliberately leaves to Vercel.',
+    },
+    {
+      title: 'Playwright CI guide',
+      source: 'Playwright Docs',
+      url: 'https://playwright.dev/docs/ci-intro',
+      adds: 'CI-specific configuration: sharding, retries, trace collection, and the container images that skip browser install.',
+    },
+    {
+      title: 'Dependabot grouped updates',
+      source: 'GitHub Docs',
+      url: 'https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#groups',
+      adds: 'The full grouping syntax and filtering options beyond the two-group pattern this stage teaches.',
+    },
+  ],
   '12-staging': [
     {
       title: 'Preview Deployments',
@@ -297,6 +323,52 @@ export const REFERENCES: Record<string, Reference[]> = {
       source: 'AWS re:Post',
       url: 'https://repost.aws/knowledge-center/troubleshoot-unhealthy-checks-ecs',
       adds: 'Diagnostic steps when ALB health checks fail post-deploy — the most common AWS-side verification failure.',
+    },
+  ],
+  '15-observability': [
+    {
+      title: 'Monitoring Distributed Systems (The Four Golden Signals)',
+      source: 'Google SRE Book',
+      url: 'https://sre.google/sre-book/monitoring-distributed-systems/',
+      adds: 'The origin of latency, traffic, errors and saturation as the four things to instrument first, and the symptoms-versus-causes argument this stage borrows.',
+    },
+    {
+      title: 'Configure Liveness, Readiness and Startup Probes',
+      source: 'Kubernetes documentation',
+      url: 'https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/',
+      adds: 'The platform-side definition of the restart-versus-routing split: what each probe does on failure, which is the mapping the health-checks step teaches.',
+    },
+    {
+      title: 'Redaction',
+      source: 'pino documentation',
+      url: 'https://github.com/pinojs/pino/blob/main/docs/redaction.md',
+      adds: 'Exactly what a redaction path can and cannot match — case sensitivity, wildcard depth — which is the boundary the logger step draws before it adds its own serializer.',
+    },
+    {
+      title: 'Filtering Events with beforeSend',
+      source: 'Sentry documentation',
+      url: 'https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/filtering/',
+      adds: "The event shape `beforeSend` receives and which fields Sentry populates by default, so the scrubber step's three surfaces can be checked against the real payload.",
+    },
+  ],
+  '16-incident-management': [
+    {
+      title: 'Managing Incidents',
+      source: 'Google SRE Book',
+      url: 'https://sre.google/sre-book/managing-incidents/',
+      adds: 'A team-scale command model, live incident document and explicit handoff practice. Use it when one responder can no longer coordinate the work alone.',
+    },
+    {
+      title: 'Postmortem Culture: Learning from Failure',
+      source: 'Google SRE Book',
+      url: 'https://sre.google/sre-book/postmortem-culture/',
+      adds: 'How a larger organization makes blameless analysis routine and follows corrective actions beyond the first incident record.',
+    },
+    {
+      title: 'Incident Management Handbook',
+      source: 'Atlassian',
+      url: 'https://www.atlassian.com/incident-management/handbook',
+      adds: 'A complete team process for roles, communication and postmortems when the solo service procedure in this stage needs to scale.',
     },
   ],
 }

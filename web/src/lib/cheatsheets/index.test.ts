@@ -70,19 +70,55 @@ test('every row has a what, since the middle column is the one that carries mean
   }
 })
 
+// types.ts states the registry's purpose: a sheet "answers 'what was that
+// command again' in one screen". `ci-cd` shipped failing that — it named Maven,
+// Terraform, Ansible and kubectl across its roles section and gave the reader
+// nothing to type. Commands belong in `code`, which Cheatsheet.tsx sets in mono
+// and render.ts quotes into cheatsheets.md; `term` is for when the thing being
+// named is not code.
+test('ci-cd teaches commands, and sets them in `code` rather than `term`', () => {
+  const commands = cheatsheetBySlug('ci-cd')?.sections.find((s) =>
+    /command/i.test(s.title),
+  )
+  expect(commands, 'ci-cd has no commands section').toBeDefined()
+  for (const row of commands!.rows) {
+    expect(row.code, `"${row.what.slice(0, 45)}" has no code`).toBeDefined()
+  }
+})
+
+// The left column comes from `code` or `term`, both optional on the type. A row
+// carrying neither still renders — as a blank cell beside prose, which reads as
+// a styling bug rather than missing data.
+test('every row names itself with a term or a code, since a row with neither renders an empty left column', () => {
+  for (const sheet of CHEATSHEETS) {
+    for (const section of sheet.sections) {
+      for (const row of section.rows) {
+        expect(
+          row.code ?? row.term,
+          `${sheet.slug} / ${section.title} / "${row.what.slice(0, 40)}"`,
+        ).toBeDefined()
+      }
+    }
+  }
+})
+
 test('isDrawn distinguishes a sheet with content from a registered placeholder', () => {
   const drawn = CHEATSHEETS.filter(isDrawn)
   expect(drawn.map((s) => s.slug).sort()).toEqual([
     'api-design',
     'architecture-patterns',
     'aws-deployment',
+    'ci-cd',
     'clean-code',
     'code-review',
     'coding-standards',
     'deployment-environments',
     'design-patterns',
     'git-branching',
+    'git-cheatsheet',
     'git-commands',
+    'github-actions',
+    'incident-management',
     'playwright',
     'post-deploy-verification',
     'sdlc',
@@ -118,6 +154,15 @@ test('cheatsheetsForStage returns the sheet tethered to stage 07', () => {
   expect(slugs).toEqual(['code-review'])
 })
 
+// Stage 11 carries the concept/tool pair the registry uses elsewhere
+// (git-commands ÷ git-branching, testing ÷ playwright): `ci-cd` is the
+// platform-agnostic pipeline, `github-actions` the syntax for one runner.
+// Sorted like the stage 03 and 06 cases, so registry order is not load-bearing.
+test('cheatsheetsForStage returns the sheets tethered to stage 11', () => {
+  const slugs = cheatsheetsForStage('11-ci-cd').map((s) => s.slug)
+  expect(slugs.sort()).toEqual(['ci-cd', 'github-actions'])
+})
+
 test('cheatsheetsForStage returns the sheet tethered to stage 13', () => {
   const slugs = cheatsheetsForStage('13-production-deployment').map(
     (s) => s.slug,
@@ -130,6 +175,12 @@ test('cheatsheetsForStage returns the sheet tethered to stage 14', () => {
     (s) => s.slug,
   )
   expect(slugs).toEqual(['post-deploy-verification'])
+})
+
+test('stage 16 exposes its incident lookup sheet as drawn reference material', () => {
+  const sheets = cheatsheetsForStage('16-incident-management')
+  expect(sheets.map((sheet) => sheet.slug)).toEqual(['incident-management'])
+  expect(sheets.every(isDrawn)).toBe(true)
 })
 
 // A sheet transcribed from someone else's graphic must credit them. The site is

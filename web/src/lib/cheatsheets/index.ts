@@ -2,12 +2,16 @@ import { apiDesign } from './api-design'
 import { awsDeployment } from './aws-deployment'
 import { codeReview } from './code-review'
 import { architecturePatterns } from './architecture-patterns'
+import { ciCd } from './ci-cd'
 import { cleanCode } from './clean-code'
 import { codingStandards } from './coding-standards'
 import { deploymentEnvironments } from './deployment-environments'
 import { designPatterns } from './design-patterns'
 import { gitBranching } from './git-branching'
+import { gitCheatsheet } from './git-cheatsheet'
 import { gitCommands } from './git-commands'
+import { githubActions } from './github-actions'
+import { incidentManagement } from './incident-management'
 import { PLANNED } from './planned'
 import { postDeployVerification } from './post-deploy-verification'
 import { playwright } from './playwright'
@@ -33,6 +37,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   apiDesign,
   solidPrinciples,
   cleanCode,
+  gitCheatsheet,
   gitCommands,
   gitBranching,
   codingStandards,
@@ -43,6 +48,9 @@ export const CHEATSHEETS: Cheatsheet[] = [
   deploymentEnvironments,
   awsDeployment,
   postDeployVerification,
+  ciCd,
+  githubActions,
+  incidentManagement,
   ...PLANNED,
 ]
 

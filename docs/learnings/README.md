@@ -53,7 +53,16 @@ Naming: `<topic>-101.md`.
   constant to the doc it was read from and never touched an app export, so each stayed
   green through a fix wave that restored the very content it was named for. A doc-source
   read proves the doc, not the app built from it. Read it on any new project's day one,
-  and before writing tests for scoring/judgment logic.
+  and before writing tests for scoring/judgment logic. Extended after stage 15's fix wave
+  with a vacuous shape that named the mechanism and skipped the wiring: a test asserted a
+  `serializers: {` block existed and the string `stdSerializers.err` appeared somewhere in
+  the section, without checking which *key* the serializer was registered under —
+  reverting to the original bug (wrong key) kept it green. A second gap survived one layer
+  further: the fix wave's own re-run confirmed the serializer preserved the exception's
+  structure, but never tried an error message with a secret in it, so it never caught that
+  the "fixed" version logged a database password to stdout verbatim. Verifying a mechanism
+  *runs* is not the same claim as verifying the *property it exists to protect* — put a
+  violating value through it, not just a representative one.
 - `deploying-101.md` — what W-5's first deploy taught: the three dashboard settings the
   repository cannot express (connected repo, framework preset, root directory), why a green
   build of the *wrong* repository looks exactly like success, `prepare` scripts failing on hosts
@@ -113,6 +122,24 @@ Naming: `<topic>-101.md`.
   because a write-up is a sentence a future session does not read; only checking
   `git branch --show-current` before the first edit, every time, especially right after a
   merge, actually holds. Read it before starting any new round of work, not just once.
+- `plans-are-unverified-101.md` — **nothing in this repository reads a plan.** Not lint,
+  typecheck, vitest, build or the audit suite; Prettier skips markdown; the cold reader is
+  forbidden everything but the one stage doc. So a plan is the most trusted artifact in a
+  round and the only one with no checker — trusted precisely because an implementer works
+  from a task slice and cannot see the argument around it. Distinct from
+  `decisions-need-tests-101.md`, which is about a claim decaying: this is a claim being
+  wrong the moment it is written. Stage 15's plan did it twice in an afternoon — seven
+  cumulative test counts copied forward instead of counted, and an omission that
+  reproduced the exact defect class the round existed to close, four hundred lines below
+  where it had diagnosed it. What caught the second was **a source read after the plan was
+  committed**, because it reasoned from the field inward while everything else reasoned
+  from the document outward. Read it before writing a plan, and again before believing
+  one.
+- `restructuring-a-shipped-stage-101.md` — what stage 13's AWS expansion taught, the first
+  revision of an already-shipped interactive stage rather than a fresh port: the step ID
+  rename is the critical path, not the content. *(This guide was written and never listed
+  here — it was orphaned from 2026-09-02 until 2026-09-08, which is its own small lesson
+  about indexes that are maintained by hand.)*
 - `rules-measure-the-wrong-thing-101.md` — what superseding D-38 taught: a rule can be right
   about what it cares about and wrong about what it counts. D-38 capped a stage's step count,
   reasoning that "a stepper stops being navigable when a step is a scroll" — a claim about
