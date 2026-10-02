@@ -303,6 +303,28 @@ Deferred: publication and conversion of graphics, remaining image provenance,
 and a worked runbook and completed postmortem. The gathering round itself did
 not change stage readiness.
 
+## Stage 08 gathering round · 2026-10-02
+
+Target: a future `security` sheet tethered to `08-security-audit`. Three OWASP
+images were downloaded as **source captures**, not selected as a publication
+plate. The chapter's central audit is object ownership; none of these images
+shows the two-user, same-object test, so the sheet must teach that in its own
+rows or an original figure.
+
+| Local capture | Creator / source page | Original image | Size | License and assessment |
+|---|---|---|---|---|
+| `stage08-authorization-matrix.png` | OWASP Cheat Sheet Series, [Authorization Testing Automation](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Testing_Automation_Cheat_Sheet.html#rendering-the-authorization-matrix-for-an-audit-review) | [OWASP asset](https://cheatsheetseries.owasp.org/assets/Authorization_Testing_Automation_AutomationRendering.png) | 1480 × 971 | CC BY-SA 4.0, stated on the page. Clear role/endpoint mapping, but its example allows anonymous reads and has no record-ownership dimension. Consult; do not display as Stage 08's complete authorization audit. |
+| `stage08-threat-data-flow-overview.jpg` | OWASP Foundation, [Threat Modeling Process (Historical)](https://community.owasp.org/Threat_Modeling_Process) | [OWASP asset](https://community.owasp.org/assets/images/Data_flow1.jpg) | 749 × 412 | Site footer states CC BY-SA 4.0 unless specified otherwise. College-library users, librarians, web app, database and trust boundaries. Legible at native size; historical example, not current framework guidance. |
+| `stage08-threat-login-flow.jpg` | OWASP Foundation, [Threat Modeling Process (Historical)](https://community.owasp.org/Threat_Modeling_Process) | [OWASP asset](https://community.owasp.org/assets/images/Data_flow2.jpg) | 760 × 469 | Same site license. Drill-down of the library login flow and its trust boundaries. Useful alongside the overview, but too specific to stand alone as the sheet's plate. |
+
+No first-party downloadable two-user IDOR or complete audit-finding infographic
+was found in this pass. [OWASP's IDOR testing procedure](https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/05-Authorization/04-Insecure_Direct_Object_References/)
+and [WSTG reporting guidance](https://wstg.owasp.org/stable/5-Reporting/README/)
+are text sources for those parts. The existing `"OWASP top 10" visual` search
+target above remains useful for orientation, not as the main audit workflow.
+No image was copied into `web/public/reference/` or registered in the live
+cheatsheet. W-6's drawn-sheet count is unchanged.
+
 ## Untethered
 
 ### Software Development Life Cycle · `sdlc` · no stage
