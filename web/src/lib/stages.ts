@@ -99,7 +99,7 @@ export const STAGES: Stage[] = [
       'Find the vulnerabilities that actually apply, before someone else does.',
     group: 'Building',
     timing: 'Before launch, then quarterly.',
-    ready: false,
+    ready: true,
   },
   {
     num: '09',
