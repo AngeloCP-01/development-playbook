@@ -118,6 +118,7 @@ test('isDrawn distinguishes a sheet with content from a registered placeholder',
     'git-cheatsheet',
     'git-commands',
     'github-actions',
+    'incident-management',
     'playwright',
     'post-deploy-verification',
     'sdlc',
@@ -174,6 +175,12 @@ test('cheatsheetsForStage returns the sheet tethered to stage 14', () => {
     (s) => s.slug,
   )
   expect(slugs).toEqual(['post-deploy-verification'])
+})
+
+test('stage 16 exposes its incident lookup sheet as drawn reference material', () => {
+  const sheets = cheatsheetsForStage('16-incident-management')
+  expect(sheets.map((sheet) => sheet.slug)).toEqual(['incident-management'])
+  expect(sheets.every(isDrawn)).toBe(true)
 })
 
 // A sheet transcribed from someone else's graphic must credit them. The site is
