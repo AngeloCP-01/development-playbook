@@ -3,7 +3,7 @@
 **Purpose:** the log. What actually shipped, what was decided and why, and what
 debt was taken on. Scope and planning live in [task.md](task.md).
 
-**Last updated:** 2026-10-01
+**Last updated:** 2026-10-02
 **Current phase:** W-3 and W-6 remain open. Thirteen of eighteen stages are
 interactive on `develop` (01–07 and 11–16); five remain. Stage 16's port landed
 as no-ff merge `3d2c266`. Nineteen of twenty-four reference sheets are drawn
@@ -871,8 +871,17 @@ and generated markdown. The feature branch was deleted. W-6 is **19/24**;
 W-3 remains **13/18**. The merged tree passed 1389/1389 tests across 181 files,
 plus lint, typecheck and format. No push or deployment occurred.
 
-Next: choose the next W-3 stage from 08–10, 17 and 18. W-6.4 glossary and
-stack surfacing remains a separate reference-hub task.
+**Next candidate, pending the user's choice: W-3 Stage 08 Security Audit.**
+The [archived W-3 order](task-archive.md) leaves 08–10, 17 and 18 unordered;
+08 is first by filing number and can reuse interaction patterns from the finished
+development, testing and review stages. Its 270-line chapter teaches
+authorization checks and security audit artifacts. Before porting it, verify
+its security claims and runnable examples against current primary sources and
+this repo's actual Next.js version. [OWASP Top 10 2025](https://owasp.org/projects/top-ten) is the
+current risk overview; [OWASP ASVS](https://owasp.org/projects/asvs) provides
+testable control requirements. These are review inputs, not a decision to
+replace the chapter with a generic checklist. The user has not selected 08 yet.
+W-6.4 glossary and stack surfacing remains a separate reference-hub task.
 
 Deferred: the Stage 16 document-review follow-ups, optional incident-record
 template, image publication and provenance, Stage 13 rollback wording repair,
