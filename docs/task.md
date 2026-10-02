@@ -436,12 +436,13 @@ diagnosis and resolution before recovery validation, while the other captures ne
 provenance or contain placeholder and conflicting material. Evidence in
 `docs/tracker.md`.
 
-**Stage 08 source gathering (2026-10-02).** Three attributed OWASP image
-captures are in `reference/`; see `reference/cheatsheet-sources.md`. The
+**Stage 08 source gathering ☑ (2026-10-02, `d3e826b`).** Three attributed OWASP
+image captures are in `reference/`; see `reference/cheatsheet-sources.md`. The
 authorization matrix lacks object-ownership tests, and the two threat-model
 diagrams are historical examples. No `security` sheet or image plate has been
 registered. A two-user IDOR exercise and finding record still need an original
-presentation informed by the cited OWASP text guidance.
+presentation informed by the cited OWASP text guidance. This gathering does
+not advance W-6's drawn-sheet count.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 
