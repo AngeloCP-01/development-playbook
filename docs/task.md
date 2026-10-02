@@ -14,17 +14,16 @@ grep it by id, don't read it whole.
 ## Overview
 
 **Current state (2026-10-02): W-3 is 13/18 and W-6 is 19/24 on local
-`develop`.** Stage 16's repaired chapter, fourteen-step port and bounded
-`incident-management` reference companion are merged. The companion landed as
-no-ff merge `a992d74`; its post-merge gate passed 1389 tests across 181 files,
-lint, typecheck and format. Nothing from that round was pushed or deployed.
+`develop`.** Stage 08 is the selected W-3 round. Its corrected chapter and
+ten-step port are committed on `feat/stage-08-security-audit`, taking the
+branch's ready count to 14/18. The final browser audit passed 18/18, and the
+reviewer returned Ready to merge. Nothing from this branch has been merged,
+pushed or deployed.
 
-**Next W-3 candidate: 08 Security Audit, pending the user's choice.** It is the
-first remaining stage by filing number; the archived W-3 order leaves the
-remainder unordered. Begin with a source and executable-example review of
-`08-security-audit.md` before designing its interactive port. Security guidance
-and framework behavior need current verification. Stages 09, 10, 17 and 18
-remain alternatives; W-6.4 glossary/stack surfacing is a separate task.
+Stage 08 was chosen after the Stage 16 round. Its source review preceded the
+port; `docs/superpowers/specs/2026-10-02-stage-08-security-audit-design.md`
+records the scope. Stages 09, 10, 17 and 18 remain; W-6.4 glossary/stack
+surfacing is a separate task.
 
 Two deliverables from one body of content.
 
@@ -136,11 +135,10 @@ Map of what lands where:
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
-**Next candidate, not yet selected:** 08 Security Audit. Review the 270-line
-chapter's claims and runnable snippets against current primary guidance. Repair
-the chapter first, then port the settled content in the same stage round. The
-earlier suggested order in `task-archive.md` lists the remaining stages without
-ranking them; the tracker records why 08 is the current recommendation.
+**Current round:** Stage 08 Security Audit. The chapter's claims and examples
+were checked against primary guidance and the installed Next.js docs before
+porting. The earlier suggested order in `task-archive.md` leaves the remaining
+stages unranked.
 
 **Every stage carries an "AI plays" section** (D-34, D-35): where agents help in that
 stage's work and where they mislead, mirroring stage 01's. It is a dedicated stepper step
@@ -180,6 +178,18 @@ Per stage (checklist ticked for **03 Architecture**, feat/stage-03-architecture)
       step and an honest styles comparison — monolith, modular monolith, microservices,
       event-driven, serverless — each stating what would have to be true to pick it. The
       recommendation does not change; it stops being an assertion.
+
+### W-3.14 — Stage 08, chapter audit and interactive port ◐
+
+The corrected chapter now carries an invoice threat model, permission matrix,
+two-user probes and a worked finding with retest. The interactive port has ten
+steps, one permission inspector and a committed IDOR decision. The first
+whole-branch review found missing reset, error and logging controls in the port;
+commit `5a82e43` closed that gap and put primary source links beside the claims.
+The branch has 14 ready stages; `develop` remains at 13 until an approved merge.
+The RED/GREEN record, gate results and deferrals are in
+`docs/superpowers/reports/2026-10-02-stage-08-security-audit.md` and the W-3.14
+row in `docs/tracker.md`.
 
 ### W-3.13 — Stage 16, document repair and interactive port ☑
 
