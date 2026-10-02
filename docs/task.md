@@ -13,19 +13,18 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current round (2026-10-01): stage 16 — Incident Management.** The repaired
-chapter was merged into `develop` as `3d9d70c` on 2026-09-30. Its interactive
-port landed on `develop` as no-ff merge `3d2c266` (feature commit `eef16d7`),
-following the user's lighter workflow: a short in-chat design, TDD, one whole-branch review and
-the full local gate. The port has fourteen steps, a four-decision Nudge rehearsal,
-three judgment drills, and a resettable incident checklist. Review found three
-blocking issues across its two passes; all were fixed and rechecked. The gate
-passed: format, lint, typecheck, 1388 tests across 181 files, production audit
-18/18, and development-console audit 1/1 with no React warnings. The merged
-tree matched the reviewed feature tip, and all 1388 tests passed again. **The
-port has not been pushed or deployed.** `develop` has 13/18 interactive stages.
-A bounded W-6 companion follows the port. Gathered material is in
-`reference/cheatsheet-sources.md`.
+**Current state (2026-10-02): W-3 is 13/18 and W-6 is 19/24 on local
+`develop`.** Stage 16's repaired chapter, fourteen-step port and bounded
+`incident-management` reference companion are merged. The companion landed as
+no-ff merge `a992d74`; its post-merge gate passed 1389 tests across 181 files,
+lint, typecheck and format. Nothing from that round was pushed or deployed.
+
+**Next W-3 candidate: 08 Security Audit, pending the user's choice.** It is the
+first remaining stage by filing number; the archived W-3 order leaves the
+remainder unordered. Begin with a source and executable-example review of
+`08-security-audit.md` before designing its interactive port. Security guidance
+and framework behavior need current verification. Stages 09, 10, 17 and 18
+remain alternatives; W-6.4 glossary/stack surfacing is a separate task.
 
 Two deliverables from one body of content.
 
@@ -136,6 +135,12 @@ Map of what lands where:
 ### W-3 — Stages 02–18 interactive ◐ *(13/18 merged to `develop`; five remain: 08, 09, 10, 17 and 18. Stage 16 landed as `3d2c266`; see tracker W-3.13 for evidence.)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
+
+**Next candidate, not yet selected:** 08 Security Audit. Review the 270-line
+chapter's claims and runnable snippets against current primary guidance. Repair
+the chapter first, then port the settled content in the same stage round. The
+earlier suggested order in `task-archive.md` lists the remaining stages without
+ranking them; the tracker records why 08 is the current recommendation.
 
 **Every stage carries an "AI plays" section** (D-34, D-35): where agents help in that
 stage's work and where they mislead, mirroring stage 01's. It is a dedicated stepper step
@@ -284,8 +289,8 @@ structure.
 
 > **The pause is deliberately overridden, not lifted.** From 2026-08-14 to
 > 2026-08-24 this section was paused because content work competes with `W-3`, the
-> project. That reasoning still holds in general — **W-6 is not "the project" and
-> stage 06 has still not been chosen** — but the user made an explicit, informed call
+> project. That reasoning still holds in general — **W-6 is not "the project"** —
+> but the user made an explicit, informed call
 > to run a bounded W-6 round after finishing each W-3 stage, when there is reference
 > material naturally related to what was just built. Stage 05 (Development) shipped
 > 2026-08-20; this round follows it. **The standing rule going forward**: after a
