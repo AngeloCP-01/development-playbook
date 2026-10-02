@@ -77,7 +77,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-3** | Stages 02–18 interactive | ◐ *(13/18 merged to `develop`; five remain: 08, 09, 10, 17 and 18. Stage 16 landed as `3d2c266`.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(nineteen of twenty-four registered sheets drawn — `incident-management` is the Stage 16 companion. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(nineteen of twenty-four registered sheets drawn on `develop` — `incident-management` merged as `a992d74`. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
 
 ### Dependency map
 
@@ -421,7 +421,8 @@ kubectl while giving the reader nothing to type. Plate unchanged, since the 16-s
 source is exactly what this repo's capture rule calls a prompt rather than something to
 reproduce. Evidence in `docs/tracker.md`.
 
-**W-6.3o — `incident-management`, Stage 16's lookup companion** *(2026-10-01)*.
+**W-6.3o — `incident-management`, Stage 16's lookup companion** *(merged
+locally into `develop` 2026-10-02 as `a992d74`)*.
 Four sections keep declaration, provisional severity, safe mitigation, communication,
 recovery proof and follow-up together. The sheet uses the repaired Stage 16 chapter
 as its operational scope and credits the Google SRE incident-response chapter.

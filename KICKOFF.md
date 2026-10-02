@@ -1,14 +1,14 @@
 # Kickoff — Development Playbook
 
-**Next decision, 2026-10-01: review the W-6 `incident-management` reference
-companion on `feat/incident-management-reference`.** It is drawn and registered,
-with generated markdown, but has not merged, pushed or deployed. The branch's
-local gate passed: 1389 tests across 181 files, format, lint, typecheck, a
-49-page production build and browser audit 18/18. No image plate was selected;
-the Stage 16 source ledger records the candidate's errors. Stage 16's chapter
-and fourteen-step port are merged locally into `develop`; W-3 is **13/18**.
-The sheet landed as `017655a`. Read `docs/tracker.md` → Next up and the W-6.3o
-row before deciding integration.
+**Next round, 2026-10-02: choose the next W-3 stage.** The bounded W-6
+`incident-management` companion merged locally into `develop` as `a992d74`
+(`--no-ff`). It is drawn and registered, with generated markdown. No image
+plate was selected; the Stage 16 source ledger records the candidate's errors.
+The branch gate passed 1389 tests across 181 files, format, lint, typecheck,
+a 49-page production build and browser audit 18/18. Stages 08–10, 17 and 18
+remain; W-3 is **13/18**. Nothing from this round was pushed or deployed.
+The merged tree also passed 1389/1389 tests, lint, typecheck and format.
+Read `docs/tracker.md` → Next up before choosing the next stage.
 
 Paste the block below into a **new coding session** opened in
 `/Users/angelito/personal/Development-Playbook` to start a round with full context.
@@ -47,12 +47,12 @@ Before doing anything, read these for context:
   during its own execution — the D-52 fix the plan pre-authorized covered one panel,
   and the real number was four.
 
-### Project state (verified 2026-10-01; recheck before work)
+### Project state (verified 2026-10-02; recheck before work)
 
 Stages 01–07 and 11–16 are interactive on local `develop` (**13/18**); 08–10,
 17 and 18 remain. Stage 16 is `ready: true` after merge `3d2c266`; its port
-branch was deleted. W-6 has **19 of 24** registered sheets drawn on the current
-work branch; `develop` still has 18 of 23.
+branch was deleted. W-6 has **19 of 24** registered sheets drawn on local
+`develop`; the Stage 16 companion merged as `a992d74`.
 
 The Stage 16 source ledger is `reference/cheatsheet-sources.md` → *Stage 16
 gathering round*. It has six attributed external sources and eight local image
@@ -60,13 +60,14 @@ captures. No graphic was selected for the new sheet: the NovelVista sequence
 contradicts the repaired chapter, several captures lack exact source URLs, and
 the slide template contains placeholder text.
 
-The user chose a lean workflow for this bounded sheet: brief in-chat design,
-TDD, final review and the local gate, without a separate spec or plan.
+The user chose a lean workflow for the bounded sheet: brief in-chat design,
+TDD, self-review and the local gate, without a separate spec or plan. The
+feature branch was deleted after the approved local merge.
 
 **Start here, in order:**
 
 1. **Check the branch before editing anything.** `git branch --show-current` should
-   be `feat/incident-management-reference` unless it was integrated or switched.
+   be `develop` unless a new work branch has been cut.
    If the answer is `main`, stop and read `docs/learnings/branch-discipline-101.md`.
 2. **Re-derive every number in this file before trusting it.** `git fetch`, then the
    commands under "Branch state". This file has a documented history of being wrong
@@ -77,11 +78,10 @@ TDD, final review and the local gate, without a separate spec or plan.
    The reference check must return nothing. The tracker currently has one
    historical struck-through hit in its 2026-09-08 W-3.12 row; verify that
    every hit is struck through and immediately corrected, not a live status.
-4. **Review the W-6 companion branch.** Inspect the sheet, generated markdown,
-   test and tracker evidence. The remaining integration decision belongs to the
-   user. Ask before merging into `develop`; never merge or push to `main`.
-5. **After integration, choose the next W-3 stage.** Stages 08–10, 17 and 18
-   remain; the W-6.4 glossary/stack work is separate.
+4. **Choose the next W-3 stage.** Stages 08–10, 17 and 18 remain. Read their
+   canonical docs and the W-3 order in `docs/task.md` before setting scope.
+5. **Keep W-6.4 separate.** Glossary and stack surfacing remains open; ask
+   before any future merge into `develop`, and never merge or push to `main`.
 
 ---
 
@@ -105,9 +105,9 @@ Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them 
 - **Quality gates**: prettier (skips markdown and `highlighted.generated.ts`), eslint at
   `--max-warnings 0`, vitest in two projects, `test:e2e` (18-test Playwright audit),
   `test:dev-console` (outside the gate, once per stage round — TD-35, D-84).
-- **`develop` passed 1388 tests across 181 files** after the Stage 16 merge,
-  measured 2026-10-01. The pre-merge lint, typecheck, format, production audit
-  18/18 and development-console audit 1/1 were green on the identical tree.
+- **The W-6 branch passed 1389 tests across 181 files** before its local merge,
+  measured 2026-10-01. Lint, typecheck, format and production audit 18/18
+  were green; Stage 16's development-console audit was 1/1.
 - **The e2e per-test timeout is 120s, not 60s** (`playwright.config.ts`, `2bb64e9`) — an
   18th stage in the sweep pushed WCAG AA and the disclosure sweep over the old budget;
   this is a repo-wide headroom fix, unrelated to stage 15's own content.
@@ -155,9 +155,9 @@ Notes for whoever is preparing this handoff:
   `reference/rest-api-best-practices.md` — hand-written drafts for `sql-reference` and
   `api-reference`, gathered without an image, not yet registered.
 - Open threads worth carrying forward:
-  - **W-6 `incident-management` awaits integration.** Its sources and graphic
+  - **W-6 `incident-management` is merged locally.** Its sources and graphic
     caveats are in `reference/cheatsheet-sources.md` → Stage 16 gathering round.
-    The sheet has no plate; the Stage 16 port is merged locally and undeployed.
+    The sheet has no plate; neither it nor the Stage 16 port is deployed.
   - **The D-52 split's own reviews left two cosmetic Minor findings, deferred:**
     `Callout` `eyebrow` text on the split panels not updated to match the new step
     boundaries, and the panel-file comment numbering scheme inconsistent across the
