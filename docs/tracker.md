@@ -3,11 +3,10 @@
 **Purpose:** the log. What actually shipped, what was decided and why, and what
 debt was taken on. Scope and planning live in [task.md](task.md).
 
-**Last updated:** 2026-10-02
-**Current phase:** W-3 and W-6 remain open. Thirteen of eighteen stages are
-interactive on `develop` (01–07 and 11–16); Stage 08 is ready on the unmerged
-`feat/stage-08-security-audit` branch, bringing that branch to 14/18. Nineteen
-of twenty-four reference sheets are drawn on local `develop`.
+**Last updated:** 2026-10-05
+**Current phase:** W-3 and W-6 remain open. Fourteen of eighteen stages are
+interactive on `develop` (01–08 and 11–16); four remain. Nineteen of
+twenty-four reference sheets are drawn on local `develop`.
 Re-derive every count here rather than quoting it.
 
 **The site is live** at https://acp-dev-playbook.vercel.app and verifies itself with
@@ -85,6 +84,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-10-05 | W-3.14 (merge) | **Stage 08's corrected chapter and interactive port merged locally into `develop`.** The approved no-ff merge brings W-3 to 14/18. The feature branch was deleted. | Merge `a03e190` brought the six Stage 08 commits `d52d27d`…`31a5a4f` into `develop`. Post-merge: **1403/1403 tests across 184 files**, lint, typecheck and format clean. The branch's production browser audit passed **18/18** and development-console audit **1/1**; the merged tree has the same Stage 08 content. | **Not pushed or deployed.** W-3 stages 09, 10, 17, 18 and W-6's `security` reference sheet remain separate. |
 | 2026-10-02 | W-3.14 (branch) | **The Stage 08 chapter was corrected and its interactive Security Audit port built on `feat/stage-08-security-audit`.** The chapter and ten-panel port use the same two-user invoice case: trust boundaries, owner/other/anonymous/admin permissions, IDOR probes over read/update/delete/export, safe query scoping, controls, a finding with retest, and AI limits. Stage 08 is `ready: true` on the branch, taking it to 14/18; `develop` remains 13/18. | Chapter `012a26e`, port `6cce5c6`, review fix `5a82e43`. Chapter guard RED 4/4 for missing material, GREEN 4/4. Port registration RED on `ready: false`; focused GREEN 66/66. A teeth check changed `User B: deny` to `allow` and only the policy render test failed, then 4/4 passed after restoration. The whole-branch reviewer found one Important omission (reset tokens, existence-leak errors, sensitive logs) and one source-link gap; both fixed test-first in `5a82e43`, re-reviewed **Ready to merge**. Final branch gate: **1403/1403 tests across 184 files**, format/lint/typecheck clean, 49-page production build, production browser audit **18/18**, development-console audit **1/1**. Raw RED/GREEN and gate notes: [Stage 08 execution report](superpowers/reports/2026-10-02-stage-08-security-audit.md). | **Not merged, pushed or deployed.** The W-6 `security` reference sheet and image plate, a real authenticated-app audit, and a full ASVS assessment are separate work. |
 | 2026-10-02 | W-6 (Stage 08 gathering merge) | **Stage 08 source research merged locally into `develop`.** The three OWASP captures and their provenance are available for the future `security` sheet. The drawn-sheet count remains 19/24. | Approved no-ff merge `073daa8` brought source commit `d3e826b` and records commit `1a0f09f` into `develop`. Post-merge gate: **1389/1389 tests across 181 files**, lint, typecheck and format clean. | **Not pushed, deployed or registered as a sheet plate.** The two-user IDOR exercise and finding-record presentation remain to be drawn from the cited guidance. |
 | 2026-10-02 | W-6 (Stage 08 gathering) | **Three OWASP source images were downloaded on `docs/2026-10-02-stage-08-reference-assets` for the future Stage 08 `security` sheet.** One is a role/endpoint authorization matrix; two are a historical data-flow overview and login detail. Each was inspected, attributed and linked in `reference/cheatsheet-sources.md`. The matrix omits object ownership, so none is selected as the published plate. | Source commit `d3e826b`; direct OWASP image URLs, dimensions, CC BY-SA 4.0 source-page statements and caveats are in the source ledger. Decoded images measured 1480 × 971, 749 × 412 and 760 × 469; SHA-256 prefixes `9709da26`, `4cd6751b`, `908151ed`. | **Not pushed, deployed or registered in the cheatsheet.** No first-party two-user IDOR or complete finding-record infographic was found. Draw those from OWASP guidance if the sheet needs them; review the Stage 08 chapter before publication. |
@@ -868,12 +868,12 @@ of new work, not assumed to survive from the last `git checkout`.
 
 ## Next up
 
-**2026-10-02: Stage 08 chapter and port are ready on the feature branch.**
-The chapter-first W-3.14 round is reviewed and its gates pass. `develop` remains
-**13/18**; the feature branch is **14/18**. The branch awaits a separate merge
-decision. W-6 remains **19/24**.
+**2026-10-05: Stage 08 chapter and port merged locally into `develop` as
+`a03e190`.** The chapter-first W-3.14 round passed its post-merge test, lint,
+typecheck and format gates. W-3 is **14/18** and W-6 remains **19/24**. The
+feature branch was deleted. No push or deployment occurred.
 
-**Next candidate after Stage 08 integration: W-3 Stage 09 Performance.** The
+**Next candidate: W-3 Stage 09 Performance.** The
 [archived W-3 order](task-archive.md) leaves 09, 10, 17 and 18 unordered. Stage
 09 follows the security audit in the filing order and its performance chapter
 can receive the same claim and example audit before porting. This is a

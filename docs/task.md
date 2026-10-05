@@ -13,12 +13,11 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current state (2026-10-02): W-3 is 13/18 and W-6 is 19/24 on local
-`develop`.** Stage 08 is the selected W-3 round. Its corrected chapter and
-ten-step port are committed on `feat/stage-08-security-audit`, taking the
-branch's ready count to 14/18. The final browser audit passed 18/18, and the
-reviewer returned Ready to merge. Nothing from this branch has been merged,
-pushed or deployed.
+**Current state (2026-10-05): W-3 is 14/18 and W-6 is 19/24 on local
+`develop`.** Stage 08's corrected chapter and ten-step port merged as
+`a03e190` after the reviewer returned Ready to merge. The merged tree passed
+1403 tests across 184 files, lint, typecheck and format. Nothing from this
+round was pushed or deployed.
 
 Stage 08 was chosen after the Stage 16 round. Its source review preceded the
 port; `docs/superpowers/specs/2026-10-02-stage-08-security-audit-design.md`
@@ -131,14 +130,14 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(13/18 merged to `develop`; five remain: 08, 09, 10, 17 and 18. Stage 16 landed as `3d2c266`; see tracker W-3.13 for evidence.)*
+### W-3 — Stages 02–18 interactive ◐ *(14/18 merged to `develop`; four remain: 09, 10, 17 and 18. Stage 08 landed as `a03e190`; see tracker W-3.14 for evidence.)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
-**Current round:** Stage 08 Security Audit. The chapter's claims and examples
+**Last round:** Stage 08 Security Audit. The chapter's claims and examples
 were checked against primary guidance and the installed Next.js docs before
 porting. The earlier suggested order in `task-archive.md` leaves the remaining
-stages unranked.
+stages unranked; Stage 09 is the next candidate, not a selected round.
 
 **Every stage carries an "AI plays" section** (D-34, D-35): where agents help in that
 stage's work and where they mislead, mirroring stage 01's. It is a dedicated stepper step
@@ -179,14 +178,15 @@ Per stage (checklist ticked for **03 Architecture**, feat/stage-03-architecture)
       event-driven, serverless — each stating what would have to be true to pick it. The
       recommendation does not change; it stops being an assertion.
 
-### W-3.14 — Stage 08, chapter audit and interactive port ◐
+### W-3.14 — Stage 08, chapter audit and interactive port ☑
 
 The corrected chapter now carries an invoice threat model, permission matrix,
 two-user probes and a worked finding with retest. The interactive port has ten
 steps, one permission inspector and a committed IDOR decision. The first
 whole-branch review found missing reset, error and logging controls in the port;
 commit `5a82e43` closed that gap and put primary source links beside the claims.
-The branch has 14 ready stages; `develop` remains at 13 until an approved merge.
+The approved no-ff merge `a03e190` brought Stage 08 to `develop`, taking W-3 to
+14/18. The feature branch was deleted after the merged tree passed its gates.
 The RED/GREEN record, gate results and deferrals are in
 `docs/superpowers/reports/2026-10-02-stage-08-security-audit.md` and the W-3.14
 row in `docs/tracker.md`.
