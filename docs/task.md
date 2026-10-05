@@ -13,11 +13,11 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current state (2026-10-05): W-3 is 14/18 and W-6 is 19/24 on local
-`develop`; W-6 is 20/25 on `feat/security-reference-sheet`.** Stage 08's corrected chapter and ten-step port merged as
-`a03e190` after the reviewer returned Ready to merge. The merged tree passed
-1403 tests across 184 files, lint, typecheck and format. Nothing from this
-round was pushed or deployed.
+**Current state (2026-10-05): W-3 is 14/18 and W-6 is 20/25 on local
+`develop`.** Stage 08's corrected chapter and ten-step port merged as
+`a03e190`; its `security` lookup sheet and original diagram followed as
+`739c8ed`. The latter's merged tree passed 1406 tests across 184 files, lint,
+typecheck and format. Nothing from these rounds was pushed or deployed.
 
 Stage 08 was chosen after the Stage 16 round. Its source review preceded the
 port; `docs/superpowers/specs/2026-10-02-stage-08-security-audit-design.md`
@@ -455,14 +455,15 @@ two-user IDOR exercise and finding record still needed an original presentation
 informed by the cited OWASP text guidance. That gathering did not advance W-6's
 drawn-sheet count. W-6.3p below is the follow-up.
 
-**W-6.3p — `security`, Stage 08's lookup companion ◐** *(on
-`feat/security-reference-sheet`, unmerged)*. Four sections turn the two-user
+**W-6.3p — `security`, Stage 08's lookup companion ☑** *(merged locally into
+`develop` 2026-10-05 as `739c8ed`)*. Four sections turn the two-user
 invoice audit into a lookup for boundaries and policy, read/update/delete/export
 probes, enforcement checks, and a retestable finding. An original 640 × 780 SVG
 shows User B's known invoice ID crossing the browser/server boundary and being
 denied by an owner-scoped lookup. The three gathered OWASP images remain source
 captures, not published plates. The sheet adds one entry to the registry, so
-the branch is **20 drawn of 25 total**; `develop` remains 19/24. Evidence and
+`develop` is **20 drawn of 25 total**. Post-merge tests passed 1406/1406;
+the feature branch was deleted. Evidence and
 deferrals are in the W-6.3p tracker row, source ledger, and
 `docs/superpowers/reports/2026-10-05-security-reference-sheet.md`.
 
