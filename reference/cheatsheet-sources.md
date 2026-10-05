@@ -325,6 +325,18 @@ target above remains useful for orientation, not as the main audit workflow.
 No image was copied into `web/public/reference/` or registered in the live
 cheatsheet. W-6's drawn-sheet count is unchanged.
 
+### Stage 08 sheet follow-up · 2026-10-05
+
+`web/public/reference/security-invoice-audit.svg` is an **original Development
+Playbook diagram**, 640 × 780. It shows User B's known invoice ID crossing the
+browser/server boundary, the server deriving B from the session, the lookup
+scoped to both invoice ID and owner, the denied result, and User A's positive
+control. It was drawn for the `security` sheet; no OWASP image was traced or
+republished. The three captures above remain consulted sources, not display
+plates.
+
+The sheet's test method follows [OWASP WSTG IDOR testing](https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/05-Authorization/04-Insecure_Direct_Object_References/): map object references and try another test user's known object. The permission matrix draws on the [OWASP Authorization Testing Automation Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Testing_Automation_Cheat_Sheet.html), with object ownership added for this invoice case. The finding fields follow [OWASP WSTG reporting guidance](https://wstg.owasp.org/stable/5-Reporting/README/). The Stage 08 chapter supplies the application policy and the surrounding control checks. The diagram is illustrative: no authenticated backend was audited to produce it.
+
 ## Untethered
 
 ### Software Development Life Cycle · `sdlc` · no stage

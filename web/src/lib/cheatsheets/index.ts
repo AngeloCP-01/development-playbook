@@ -16,6 +16,7 @@ import { PLANNED } from './planned'
 import { postDeployVerification } from './post-deploy-verification'
 import { playwright } from './playwright'
 import { sdlc } from './sdlc'
+import { security } from './security'
 import { solidPrinciples } from './solid-principles'
 import { testing } from './testing'
 import type { Cheatsheet, CheatsheetGroup } from './types'
@@ -51,6 +52,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   ciCd,
   githubActions,
   incidentManagement,
+  security,
   ...PLANNED,
 ]
 
