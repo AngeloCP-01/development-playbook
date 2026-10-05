@@ -121,7 +121,12 @@ export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
 
       {sheet.source?.image && (
         <figure className="mt-14">
-          {/* A plate, because every one of these graphics has a light background
+          {sheet.source.image.origin === 'original' && (
+            <p className="t-ui mb-2 text-[0.8125rem] text-muted md:hidden">
+              Scroll sideways to read the full diagram
+            </p>
+          )}
+          {/* A plate, because these graphics have a light background
               and would punch a hole in the cyanotype unframed. The border and
               padding give it an edge to sit against in both themes.
 
@@ -133,7 +138,7 @@ export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
               next/image rather than a plain tag, despite these already being
               WebP: the win is not re-encoding, it is srcset. These are up to
               1536px tall and a phone has no use for the full file. */}
-          <div className="border border-line-strong bg-sunken p-3 sm:p-4">
+          <div className="overflow-x-auto border border-line-strong bg-sunken p-3 sm:p-4">
             <Image
               src={sheet.source.image.src}
               width={sheet.source.image.width}
@@ -145,11 +150,17 @@ export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
               // is the only content, so it has to describe itself.
               alt={isDrawn(sheet) ? '' : sheet.source.image.alt}
               aria-hidden={isDrawn(sheet) || undefined}
-              className="h-auto w-full"
+              className={
+                sheet.source.image.origin === 'original'
+                  ? 'h-auto w-full min-w-[560px]'
+                  : 'h-auto w-full'
+              }
             />
           </div>
           <figcaption className="t-label mt-3 text-subtle">
-            The gathered original
+            {sheet.source.image.origin === 'original'
+              ? 'Original diagram'
+              : 'The gathered original'}
           </figcaption>
         </figure>
       )}

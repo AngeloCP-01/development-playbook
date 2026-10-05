@@ -123,6 +123,34 @@ test('renders the source graphic with explicit dimensions when the sheet has one
   expect(img.getAttribute('height')).toBe('1350')
 })
 
+test('labels an original diagram as original instead of gathered', () => {
+  const original = {
+    ...drawn,
+    source: {
+      title: 'Invoice audit',
+      author: 'Development Playbook',
+      image: {
+        src: '/reference/security-invoice-audit.svg',
+        width: 1200,
+        height: 680,
+        alt: 'User B is denied access to User A’s invoice.',
+        origin: 'original' as const,
+      },
+    },
+  }
+  render(<CheatsheetView sheet={original} />)
+  expect(screen.getByText('Original diagram')).toBeTruthy()
+  expect(screen.queryByText('The gathered original')).toBeNull()
+  expect(document.querySelector('img')?.className).toContain('min-w-[560px]')
+  const hint = screen.getByText('Scroll sideways to read the full diagram')
+  expect(hint.className).toContain('md:hidden')
+  const img = document.querySelector('img')
+  expect(img).not.toBeNull()
+  expect(
+    hint.compareDocumentPosition(img!) & Node.DOCUMENT_POSITION_FOLLOWING,
+  ).toBeTruthy()
+})
+
 // The alt decision is derived from whether a text equivalent exists, which makes
 // it exactly the conditional TD-17 requires a render test for. Getting this
 // backwards is an accessibility defect that no data test would catch: a

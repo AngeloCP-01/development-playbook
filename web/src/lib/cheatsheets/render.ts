@@ -51,6 +51,15 @@ function renderSheet(sheet: Cheatsheet): string {
     lines.push('')
   }
 
+  if (sheet.source?.image?.origin === 'original') {
+    lines.push(
+      `![${sheet.source.image.alt}](../web/public${sheet.source.image.src})`,
+      '',
+      'Original diagram for this playbook.',
+      '',
+    )
+  }
+
   if (sheet.source) {
     const title = sheet.source.url
       ? `[${sheet.source.title}](${sheet.source.url})`
