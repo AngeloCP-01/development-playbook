@@ -52,3 +52,31 @@ test('order response, payment, and consumers have separate clocks', () => {
   expect(map).toMatch(/branch|fan.out/i)
   expect(map).toMatch(/provider.+wait|payment.+wait/i)
 })
+
+test('the worked order fix is chosen from evidence and retested at the user boundary', () => {
+  const md = doc()
+  const diagnosis = section(md, 'Find the real bottleneck')
+  expect(diagnosis).toContain('Illustrative example')
+  expect(diagnosis).toContain('20-item cart')
+  expect(diagnosis).toMatch(/21.+quer(y|ies)/s)
+  expect(diagnosis).toMatch(/batch/i)
+  expect(diagnosis).toMatch(/alternative|instead/i)
+  expect(diagnosis).toMatch(/before.+after/is)
+  expect(diagnosis).toContain(
+    '| Outcome | Place order → response | Same outcome |',
+  )
+  expect(diagnosis).toMatch(/production/i)
+  expect(diagnosis).toMatch(/correctness/i)
+  expect(diagnosis).not.toContain('The database is usually the answer.')
+})
+
+test('a query plan is a diagnosis of one query, not the order-flow result', () => {
+  const diagnosis = section(doc(), 'Find the real bottleneck')
+  expect(diagnosis).toContain('EXPLAIN (ANALYZE, BUFFERS)')
+  expect(diagnosis).toMatch(/single query|one query/i)
+  expect(diagnosis).toMatch(/not.+p95/i)
+  expect(diagnosis).toMatch(/sequential scan.+cheaper/is)
+  expect(diagnosis).not.toContain(
+    'Seq Scan` on a large table means a missing index.',
+  )
+})

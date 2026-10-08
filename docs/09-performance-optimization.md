@@ -85,22 +85,48 @@ Record the target and why users need it before optimizing.
 
 ### Find the real bottleneck
 
-**Real user data first** — Vercel Speed Insights gives field data, which is what actually
-matters. Lab tools run on fast hardware on good networks; your users do not.
+Start at the slow outcome, then move inward. A checkout-response problem calls
+for request latency by route, a few representative slow traces, and only then
+database or external-call timings. A slow Paid status calls for webhook and
+status-update timestamps. A late notification calls for event-publish and
+consumer-completion timestamps. Traces show instrumented spans; an absent
+database span is not proof the database did no work.
 
-**Sentry performance traces** show where request time goes: which query, which external
-call, which render.
+**Illustrative example, not a measured application:** a 20-item cart makes
+the Place order response feel slow. Record a seven-day production baseline for
+that route, a clearly named deployment, traffic sample, failures, and a
+controlled 20-item cart reproduction. Slow request traces show 21 inventory
+queries: one list query and one availability query per item. The repeated
+database round trips, not a large checkout image, account for most of the
+request's time in this example. Batch the availability lookup for the cart's
+SKUs, preserving the same stock decision and order result. The image is the
+rejected alternative because it cannot explain the observed server time.
 
-**The database is usually the answer.** For a typical Next.js app, most slow requests are
-slow queries, and most slow queries are N+1s or missing indexes.
+| Comparison field | Before | After |
+|---|---|---|
+| Outcome | Place order → response | Same outcome |
+| Scope | Same route, segment, cart shape, cache state and length of observation window | Same scope after deployment |
+| Diagnostic evidence | 21 inventory queries for a 20-item cart in the controlled reproduction | One batched availability query in the same reproduction |
+| Production verdict | Record route p95, sample count, error rate and timeouts | Compare those same measures; do not claim a win from query count alone |
+
+The before/after cells are an example record to fill, not invented p95
+measurements. If the user-facing p95 misses its target, failures rise, or
+correctness changes in stock checks or order creation, investigate or revert.
+A faster internal span proves only that span improved.
+
+If one query is still slow, inspect its actual plan on representative data:
 
 ```sql
-EXPLAIN ANALYZE
-SELECT * FROM invoices WHERE owner_id = '...' ORDER BY created_at DESC LIMIT 20;
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT sku, available FROM inventory WHERE sku IN ('A', 'B');
 ```
 
-`Seq Scan` on a large table means a missing index. Look at actual row counts versus
-estimates — a large gap means stale statistics.
+That output is the execution of a single query, not a production p95. Compare
+actual and estimated rows, rows filtered, buffers, and time. PostgreSQL
+[documents](https://www.postgresql.org/docs/current/using-explain.html) that a
+sequential scan can be cheaper than an index for a small or low-selectivity table; its
+presence alone does not diagnose a missing index. Investigate the plan,
+statistics, and workload before choosing one.
 
 ### The fixes that usually matter
 
