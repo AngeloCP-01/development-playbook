@@ -8,6 +8,26 @@ performance measurement of this playbook or another application.
 
 ## Chapter claim audit
 
+The chapter says to measure before optimizing but does not show a first measurement.
+[Google's field/lab guidance](https://web.dev/articles/lab-and-field-data-differences)
+explains the distinct jobs: field data locates the user-visible problem, while a
+controlled lab run helps reproduce and diagnose it. [Vercel Speed
+Insights](https://vercel.com/docs/speed-insights/metrics) reports real-user Web
+Vitals; [Vercel Observability](https://vercel.com/docs/observability) exposes
+function performance by route, subject to plan-specific detail. [PostgreSQL
+EXPLAIN](https://www.postgresql.org/docs/current/using-explain.html) provides a
+query-level plan and actual execution measurements with `ANALYZE`. The revision
+needs an explicit first-measurement procedure and a sample baseline record, not
+just a list of tools.
+
+For the running invoice-list case, record the affected route and user action,
+metric and percentile, collection window, device segment, sample size, test-data
+shape, deployment version, and cold/warm cache state. Measure the same scope
+after the change. A single lab run or `EXPLAIN ANALYZE` result diagnoses one
+case; it is not a production p95 or evidence that users improved. These record
+fields are a proposed comparison discipline inferred from the sources above,
+not a published universal checklist.
+
 | Chapter lines | Assessment | Evidence and proposed treatment |
 |---|---|---|
 | 39–42, 191 | **Two published thresholds, one omission, two local examples.** [Google's Web Vitals definition](https://web.dev/articles/vitals) sets good LCP at **2.5 seconds or less**, INP at **200 ms or less**, and CLS at **0.1 or less**, evaluated at p75 separately for mobile and desktop. The chapter omits CLS. Neither that source nor [Google SRE's SLO guidance](https://sre.google/workbook/implementing-slos/) establishes universal API p95 <300 ms or database p95 <50 ms targets. | Add CLS; label API/database numbers as example targets that a team should adapt from user needs and measured baselines. Note the inclusive published thresholds rather than changing them into strict `<` cutoffs. |
