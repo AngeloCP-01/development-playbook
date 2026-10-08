@@ -2,10 +2,10 @@
 
 Date: 2026-10-08. Milestone: W-3.16.
 
-Status: proposed port spec, awaiting written-spec review. The user asked to
-start the port after the recommended worked-example and own-app worksheet
-scope was presented. This spec records that interpretation. Implementation
-and its task plan have not started.
+Status: approved 2026-10-08. After the written spec was presented, the user
+replied "proceed", approving the handoff to implementation planning. The
+scope pairs a worked order example with an own-app worksheet. Implementation
+waits for review of the task plan and selection of its execution method.
 
 ## Problem
 
@@ -365,8 +365,9 @@ including a standing Deferred list and the report holding raw RED/GREEN,
 teeth checks and review findings. The separate handoff branch
 `docs/2026-10-08-stage-09-port-handoff` already carries pending records updates;
 reconcile its contents before editing those records, without merging it under
-this spec's authorization. The design branch starts from local `develop`
-at `c99bf64` and changes only this spec.
+this spec's authorization. The initial spec commit was cut from local
+`develop` at `c99bf64` and changed only this spec. Planning and its records
+follow on the design branch.
 
 Keep W-3 at 14/18 until an approved port merge brings it to 15/18. W-6 remains
 20/25. Refresh KICKOFF with measured branch state when preparing the next
