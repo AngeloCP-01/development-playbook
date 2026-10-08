@@ -3,7 +3,7 @@
 **Purpose:** the log. What actually shipped, what was decided and why, and what
 debt was taken on. Scope and planning live in [task.md](task.md).
 
-**Last updated:** 2026-10-05
+**Last updated:** 2026-10-08
 **Current phase:** W-3 and W-6 remain open. Fourteen of eighteen stages are
 interactive on `develop` (01–08 and 11–16); four remain. Twenty of
 twenty-five reference sheets are drawn on local `develop`, including Stage 08's
@@ -85,6 +85,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-10-08 | W-3.15 (chapter branch) | **Stage 09's canonical Performance Optimization chapter was revised on `docs/2026-10-08-stage-09-research`.** It now starts with a comparable baseline, uses a hypothetical order flow with browser checkout, payment and `OrderPaid` consumer clocks, diagnoses a 20-item cart case, and requires a like-for-like user outcome retest. The [source audit](../reference/stage-09-performance-sources.md) also gathers first-party `caching` and `scaling` references for W-6. `ready` stays `false`; W-3 stays 14/18 and W-6 stays 20/25 on `develop`. | Research `9e82b01`…`fb05ab1`, spec `d16f6be`, plan `8912eb0`, chapter `043d765`…`0df3878`, cold-reader/typecheck fix `a5ccc35`, review fix `758c2cc`. RED: the first two guards failed on missing map/baseline; the next two failed on missing worked diagnosis; the final three failed on unsupported advice and missing AI section. Each group passed after the edit and its teeth check failed only the intended guard. A cold reader could form a payment baseline but found the timeout denominator undefined; `a5ccc35` defined it. The whole-branch reviewer found one Important plan-authored clock-boundary error: route and webhook subintervals stood in for user outcomes. The new guard failed 1/9 before `758c2cc`, then passed 9/9; full suite **1416/1416 across 185 files**. Format, lint, typecheck and 50-page production build passed (build needed network access for Google Fonts). Humanizer review found no prose rewrite needed. Reviewer verdict: **Ready with fixes**, with I1 resolved test-first. | **Not merged, pushed or deployed.** The interactive port and browser audits, W-6 `caching`/`scaling` sheets, any image publication, and a real ordering-system benchmark are separate work. |
 | 2026-10-05 | W-6.3p (merge) | **The Stage 08 `security` lookup sheet and original invoice-audit diagram merged locally into `develop`.** The approved no-ff merge brings W-6 to 20 drawn / 25 registered. The feature branch was deleted. | Merge `739c8ed` brought implementation `360fdcb` and records `3fd938f` into `develop`. Post-merge: **1406/1406 tests across 184 files**, lint, typecheck and format clean. The feature branch passed the production browser audit **18/18**; its final hint change was checked in a production build at 320px. | **Not pushed or deployed.** W-6.4 glossary/stack surfacing and five language sheets remain open. |
 | 2026-10-05 | W-6.3p (branch) | **Stage 08's `security` reference sheet is drawn on `feat/security-reference-sheet`.** Four sections keep the same two-user invoice case as the chapter: trust boundary and policy, cross-user read/update/delete/export probes, enforcement paths, and finding/retest fields. An original SVG shows User B denied by a server-side owner-scoped lookup; the three gathered OWASP captures remain source material. The sheet is tethered to Stage 08 and generated into `reference/cheatsheets.md`. Adding it takes the branch to **20 drawn / 25 registered**; `develop` remains 19/24. | RED: the new Stage 08 registry test failed with `expected [] to deeply equal ['security']`; the original-diagram caption and generated-Markdown tests failed for missing behavior. GREEN: focused tests **40/40**; full unit/render suite **1406/1406 across 184 files**, format/lint/typecheck clean. A concurrent gate run timed out 14 unrelated DOM tests under load; rerunning Vitest alone passed **1406/1406**. A teeth check changed the read probe to allow User B: only the new Stage 08 sheet test failed, then restoration passed. Build prerendered **50 pages**; production browser audit **18/18** across both themes and responsive widths. The 640 × 780 SVG was visually inspected; the final 320px production page showed the loaded SVG and scroll hint with no page overflow. A whole-branch reviewer found stale records (Important) and a narrow-screen hint gap (Minor); both were fixed, then the reviewer returned **Ready to merge**. Sources, authorship and image disposition are in [the Stage 08 source ledger](../reference/cheatsheet-sources.md#stage-08-sheet-follow-up--2026-10-05). | **Not merged, pushed or deployed.** A real authenticated-app audit, publishing the gathered OWASP captures as plates, W-6.4 glossary/stack surfacing, and the five remaining language sheets are separate work. |
 | 2026-10-05 | W-3.14 (merge) | **Stage 08's corrected chapter and interactive port merged locally into `develop`.** The approved no-ff merge brings W-3 to 14/18. The feature branch was deleted. | Merge `a03e190` brought the six Stage 08 commits `d52d27d`…`31a5a4f` into `develop`. Post-merge: **1403/1403 tests across 184 files**, lint, typecheck and format clean. The branch's production browser audit passed **18/18** and development-console audit **1/1**; the merged tree has the same Stage 08 content. | **Not pushed or deployed.** W-3 stages 09, 10, 17, 18 and W-6's `security` reference sheet remain separate. |
@@ -871,17 +872,16 @@ of new work, not assumed to survive from the last `git checkout`.
 
 ## Next up
 
-**2026-10-05: The Stage 08 `security` reference sheet merged locally into
-`develop` as `739c8ed`.** W-6 is **20/25** and W-3 remains **14/18**. The prior
-Stage 08 chapter and port merged as `a03e190`; this reference round was
-separate. No push or deployment occurred.
+**2026-10-08: Stage 09's researched chapter is complete on an unmerged docs
+branch.** W-3 remains **14/18** and W-6 **20/25** on local `develop`. The
+chapter, source audit, spec and plan have been reviewed and tested; Stage 09 is
+still `ready: false`. No push or deployment occurred.
 
-**Next candidate: W-3 Stage 09 Performance.** The
-[archived W-3 order](task-archive.md) leaves 09, 10, 17 and 18 unordered. Stage
-09 follows the security audit in the filing order and its performance chapter
-can receive the same claim and example audit before porting. This is a
-candidate, not a selected round. W-6.4 glossary and stack surfacing remains a
-separate reference-hub task.
+**Next phase: Stage 09 interactive port.** Start from the reviewed chapter and
+write its own spec and plan using `web/PATTERNS.md`. The browser exercise needs
+to teach where each measurement begins and ends before it offers a fix. The
+W-6 `caching` and `scaling` sources are gathered but their sheets are not drawn;
+W-6.4 glossary and stack surfacing remains separate.
 
 Deferred: the Stage 16 document-review follow-ups, optional incident-record
 template, image publication and provenance, Stage 13 rollback wording repair,
