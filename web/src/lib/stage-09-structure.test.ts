@@ -80,3 +80,28 @@ test('a query plan is a diagnosis of one query, not the order-flow result', () =
     'Seq Scan` on a large table means a missing index.',
   )
 })
+
+test('fixes remain hypotheses and indexing advice respects plan and write cost', () => {
+  const md = doc()
+  expect(md).toContain('### AI in performance optimization')
+  expect(md).toMatch(/index.+write cost/is)
+  expect(md).toMatch(/CONCURRENTLY.+transaction/is)
+  expect(md).toMatch(/invalid index/i)
+  expect(md).toMatch(/updateTag.+Server Action/is)
+  expect(md).toMatch(/bundle analyzer/i)
+  expect(md).toMatch(/LCP.+eager/is)
+  expect(md).not.toContain('Every column you filter or sort by')
+  expect(md).not.toContain('Indexes exist for every filtered and sorted column')
+  expect(md).not.toContain('Anything at low traffic.')
+  expect(md).not.toContain('pnpm build   # review the route-level output')
+})
+
+test('completion is tied to the selected outcome and includes correctness', () => {
+  const md = doc()
+  const done = md.split('## Definition of done')[1]?.split('\n## ')[0] ?? ''
+  expect(done).toMatch(/same outcome/i)
+  expect(done).toMatch(/before and after/i)
+  expect(done).toMatch(/sample/i)
+  expect(done).toMatch(/production|field/i)
+  expect(done).toMatch(/correctness|tests/i)
+})

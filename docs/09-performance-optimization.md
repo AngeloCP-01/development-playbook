@@ -130,167 +130,119 @@ statistics, and workload before choosing one.
 
 ### The fixes that usually matter
 
-In rough order of how often they are the answer:
+These are candidates, not a ranking. Start with the evidence from the
+affected outcome.
 
-**1. Missing indexes.** Every column you filter or sort by, at production data volume.
+**Index or query shape.** A candidate index for an observed filter-and-sort
+query can be `(owner_id, created_at DESC)`, but its value depends on the plan,
+table size, selectivity and write cost. Compare the same query and workload
+before and after. A normal `CREATE INDEX` blocks writes while building;
+`CONCURRENTLY` permits writes but takes longer, cannot run inside a
+transaction block, and a failed build can leave an invalid index. Check what
+your migration runner wraps in a transaction before using it.
 
-```sql
-CREATE INDEX CONCURRENTLY idx_invoices_owner_created
-  ON invoices (owner_id, created_at DESC);
-```
+**N+1 queries.** Repeated per-item lookups can dominate an order request.
+The 20-item cart above makes the count visible; batch or join only after
+confirming the repeated calls in a trace or query log. Preserve the same stock
+decision and verify the request result.
 
-`CONCURRENTLY` avoids taking a write lock. On a production table, omitting it can take the
-site down. Composite column order should match your query's filter-then-sort shape.
+**Serial awaits.** Independent operations can overlap with `Promise.all`.
+The often-quoted 300 ms → 150 ms result assumes two independent 150 ms calls;
+it is arithmetic, not a promised measurement. Do not parallelize a dependent
+payment or inventory step.
 
-**2. N+1 queries.** Fetching a list, then querying per item. Twenty invoices become
-twenty-one queries.
+**Caching.** For data safe to share across requests, [Next.js Cache
+Components](https://nextjs.org/docs/app/api-reference/directives/use-cache)
+supports `'use cache'`, `cacheLife` and `cacheTag`. A Server Action that writes
+the tagged data can call `updateTag` so the next read waits for fresh data.
+That API is limited to Server Actions; TTL and other invalidation paths have
+different semantics. Test freshness and authorization as well as speed.
 
-```ts
-// Bad: one query per invoice
-const invoices = await db.query.invoices.findMany({ where: ... })
-for (const inv of invoices) {
-  inv.customer = await db.query.customers.findFirst({ where: eq(customers.id, inv.customerId) })
-}
+**Client bundles.** A production build checks that the app builds; [Next.js 16
+no longer prints route-level JS bundle sizes
+there](https://nextjs.org/docs/app/api-reference/cli/next). Use a bundle analyzer to
+inspect what a client route ships, then measure whether changing an import
+improves the affected page.
 
-// Good: one query
-const invoices = await db.query.invoices.findMany({
-  where: ...,
-  with: { customer: true },
-})
-```
+**Images.** `next/image` can serve responsive sizes and modern formats with
+the default optimization loader. It lazy-loads by default, so an LCP image may
+need eager loading or fetch priority. Static export cannot use the default
+Image Optimization API without a compatible loader.
 
-This is the most common serious performance bug in application code, and it is invisible
-locally — with 5 seeded rows, 6 queries is fast. With 5,000 rows it is not.
+**Server Components.** Moving eligible fetching and rendering to the server
+can reduce client JavaScript and a client-side fetch waterfall. It does not
+remove every loading state or make a slow server query fast.
 
-**3. Serial awaits that could be parallel.**
+### When not to optimize
 
-```ts
-// Bad: 300ms
-const user = await getUser(id)
-const invoices = await getInvoices(id)
+Do not add memoization, caching or an index merely because a profiler lists
+that code path. A 200 ms query with few users can still block a consequential
+workflow; a high-traffic operation can already meet its user target. Use the
+recorded outcome and cost of the proposed change to decide whether to stop.
 
-// Good: 150ms
-const [user, invoices] = await Promise.all([getUser(id), getInvoices(id)])
-```
+### AI in performance optimization
 
-Only when they are genuinely independent.
-
-**4. Missing caching.** For data that does not change per request, Next.js 16's
-`use cache` directive:
-
-```ts
-import { cacheLife, cacheTag } from 'next/cache'
-
-export async function getPricingPlans() {
-  'use cache'
-  cacheLife('hours')
-  cacheTag('pricing')
-  return db.query.plans.findMany()
-}
-```
-
-Then invalidate precisely when the data changes, from the server action that changed it:
-
-```ts
-'use server'
-import { updateTag } from 'next/cache'
-
-export async function updatePlan(/* ... */) {
-  await db.update(plans)/* ... */
-  updateTag('pricing')
-}
-```
-
-Tag-based invalidation beats guessing at a TTL: the cache is correct immediately after a
-write rather than eventually. Requires Cache Components enabled in `next.config.ts`.
-
-Cache deliberately. A cache is a second source of truth, and a stale-data bug is far more
-confusing to debug than a slow query.
-
-**5. Oversized client bundles.**
-
-```bash
-pnpm build   # review the route-level output
-```
-
-Common causes: a date library imported whole for one function, an icon set imported
-entirely for three icons, or a heavy component that could be dynamically imported.
-
-**6. Unoptimized images.** Use `next/image`. It handles format negotiation, sizing, and
-lazy loading. An unoptimized hero image routinely outweighs all the JavaScript on the
-page.
-
-### Server Components are a performance feature
-
-Moving data fetching to the server removes a whole class of problem: no client-side
-waterfall, no loading spinners, no shipping data-fetching code to the browser. Before
-optimizing a client component, check whether it needs to be a client component at all.
-
-### Do not optimize these
-
-- **React re-renders**, unless profiling shows a real problem. `memo` everywhere adds
-  comparison cost and complexity for no measured benefit.
-- **Micro-benchmarks** of code that runs once per request. Saving 2ms in a 300ms request
-  is not a win.
-- **Anything at low traffic.** A query taking 200ms with 50 daily users is fine. Optimize
-  when it matters.
+An assistant can organize a measurement record, suggest competing bottleneck
+hypotheses, and draft a controlled reproduction. Give it the metric definition,
+scope, sample count and trace or plan evidence. Check its arithmetic and every
+claimed cause against the raw measurements. Do not ask it to invent a p95,
+assume a sequential scan is bad, or declare a production win from a lab run.
+Keep customer and payment data out of prompts.
 
 ---
 
 ## Artifacts
 
-- Before-and-after measurements for each change
-- Indexes added via committed migrations
-- Documented performance targets
-- Notes on what you tried that did *not* help — genuinely valuable, and never written
-  down
+- A baseline record naming the outcome, metric, scope, window, sample and target
+- The trace, query plan or controlled run that supports the chosen hypothesis
+- The change and its correctness/rollback checks
+- A comparable before and after record, including unsuccessful attempts
 
 ---
 
 ## Definition of done
 
-- [ ] The original slow thing is measurably faster, with numbers
-- [ ] Improvement confirmed in production, not just locally ([14](14-post-deployment-verification.md))
-- [ ] Core Web Vitals within target at p75
-- [ ] No N+1 queries on primary paths
-- [ ] Indexes exist for every filtered and sorted column
-- [ ] Nothing broke — tests still green ([06](06-testing.md))
+- [ ] The same outcome is measured before and after, with comparable segment, data and cache state
+- [ ] The production or field comparison records the window, sample, percentile, failures and timeouts
+- [ ] The measured outcome meets its stated target, or the unresolved gap is recorded
+- [ ] Correctness tests pass and the order, payment and inventory behavior remains intact
+- [ ] A failed or harmful change is reverted or explicitly carried as an open problem
 
 ---
 
 ## Scaling to a team
 
-- **Publish the targets** so performance is a shared standard rather than one person's
-  crusade.
-- **Add performance budgets to CI** — fail the build if a bundle exceeds a threshold. Slow
-  accretion is invisible per-PR and enormous over a year.
-- **Review query plans in PRs** for anything touching data access.
-- **Watch for the "someone else's problem" effect.** Everyone assumes performance is
-  owned by whoever cares most. Assign it explicitly.
+- **Publish the targets** with the outcome and scope so the team measures the same thing.
+- **Use a named CI budget.** State its metric, threshold and representative run. A passing
+  build alone is not a bundle-size budget.
+- **Review relevant query plans** when changing data access on a measured slow path.
+- **Assign ownership** for observing the outcome after deployment and deciding whether
+  the change helped.
 
 ---
 
 ## Traps
 
-**Optimizing without measuring.** You will optimize the wrong thing, add complexity, and
-have no way to know it did not help.
+**Optimizing without measuring.** Record the outcome and baseline first, or there is no
+way to tell whether a change helped.
 
-**Averages instead of percentiles.** The average is fine. The p99 is on fire.
+**Averages instead of percentiles.** An average can hide a slow tail. Keep the sample
+count beside the percentile.
 
-**Testing performance locally.** Local has 50 rows, no network latency, and a fast
-machine. The N+1 is invisible until production.
+**Treating a local run as field evidence.** A controlled run can reveal an N+1, but its
+hardware, data and network may not represent users.
 
-**`CREATE INDEX` without `CONCURRENTLY`.** Takes a write lock on the table. On a busy
-production table, this is an outage.
+**Adding an index by reflex.** A missing index is not itself a diagnosis. Check the query
+plan, selectivity, workload and write cost. Plan the migration's locking behavior.
 
-**Caching to avoid fixing a slow query.** Now you have a slow query *and* a cache
-invalidation problem.
+**Caching without a freshness rule.** A cache may shorten one path while serving stale
+stock or pricing data. Test the read after a write.
 
-**`memo` and `useMemo` everywhere.** Real cost, imaginary benefit, more complex code.
-Profile first.
+**`memo` and `useMemo` everywhere.** Profile the user outcome and render work before
+adding comparison cost and complexity.
 
-**Optimizing before it matters.** Speed you cannot measure has no value, and the
-complexity you added to get it is permanent.
+**Dismissing low traffic.** A rare workflow may still be critical to its users. Decide
+from impact and the target, not request volume alone.
 
-**Stopping before verifying in production.** Local improvements sometimes fail to
-materialize under real conditions. Confirm with field data.
+**Stopping at a faster internal span.** Retest the same user outcome in production or
+field data. Record failures and correctness as well as duration.
