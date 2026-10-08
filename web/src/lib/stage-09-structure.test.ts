@@ -63,7 +63,7 @@ test('the worked order fix is chosen from evidence and retested at the user boun
   expect(diagnosis).toMatch(/alternative|instead/i)
   expect(diagnosis).toMatch(/before[\s\S]+after/i)
   expect(diagnosis).toContain(
-    '| Outcome | Place order → response | Same outcome |',
+    '| Outcome | Place order click → response receipt | Same outcome |',
   )
   expect(diagnosis).toMatch(/production/i)
   expect(diagnosis).toMatch(/correctness/i)
@@ -115,4 +115,18 @@ test('baseline defines how timeouts and failures affect the percentile', () => {
 test('candidate index names the query shape it could help', () => {
   const fixes = section(doc(), 'The fixes that usually matter')
   expect(fixes).toMatch(/order.history[\s\S]+owner_id[\s\S]+created_at/i)
+})
+
+test('user outcome clocks include browser and provider time beyond diagnostic intervals', () => {
+  const md = doc()
+  const map = section(md, 'Map the order journey')
+  const baseline = section(md, 'Measure the first baseline')
+  const diagnosis = section(md, 'Find the real bottleneck')
+  expect(map).toMatch(/click[\s\S]+response receipt/i)
+  expect(map).toMatch(/payment is submitted[\s\S]+Paid is visible/i)
+  expect(baseline).toMatch(/route duration[\s\S]+diagnostic/i)
+  expect(baseline).toMatch(/payment initiation[\s\S]+webhook receipt/i)
+  expect(baseline).toMatch(/webhook receipt[\s\S]+persisted Paid/i)
+  expect(baseline).toMatch(/persisted Paid[\s\S]+visible/i)
+  expect(diagnosis).toMatch(/browser p95[\s\S]+server route p95/i)
 })

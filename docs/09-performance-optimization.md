@@ -43,13 +43,20 @@ explain it. Correlate the records with an opaque order or event ID and trace
 context where available. Keep payment secrets and customer details out of
 telemetry.
 
+For a user-visible checkout clock, start at the Place order click and stop at
+response receipt in the browser. Server route duration explains only part of
+that interval. For a slow payment clock, start when payment is submitted and
+stop when Paid is visible to the user. Provider waiting, webhook handling and
+status display can each add delay; a fast webhook handler does not settle the
+whole payment outcome.
+
 ### Measure the first baseline
 
 Write a baseline record before naming a fix:
 
 | Record | What to write |
 |---|---|
-| Outcome | The user-visible event and its start and end, such as Place order → response or webhook receipt → Paid |
+| Outcome | The observer and start/end events, such as Place order click → response receipt in the browser or payment submitted → Paid visible |
 | Metric | Duration and percentile for that outcome; include failures and timeouts rather than measuring only successes |
 | Scope | Route or event name, deployment version, device or other relevant segment, and whether the cache was cold or warm |
 | Window and sample | Collection dates, number of observations, and the traffic or test-data shape |
@@ -60,8 +67,12 @@ For page loading and interactions, start with real-user Web Vitals in
 [PageSpeed Insights](https://web.dev/articles/vitals-measurement-getting-started)
 and compare mobile and desktop. For a server route, inspect its duration by
 route in your available monitoring; feature detail and retention vary by
-plan. For webhook-to-paid or OrderPaid-to-consumer lag, record timestamps at
-those boundaries and join them by an opaque identifier. A trace can explain
+plan. Treat route duration as diagnostic when the chosen outcome starts in the
+browser. For payment, separate payment initiation → webhook receipt, webhook
+receipt → persisted Paid, and persisted Paid → visible status. For each
+OrderPaid consumer, record publish-to-completion lag and join timestamps by an
+opaque identifier. These intervals help locate delay; measure the selected
+user clock independently. A trace can explain
 instrumented work across services when [context is
 propagated](https://opentelemetry.io/docs/concepts/context-propagation/),
 but it does not automatically include time spent waiting at an external
@@ -90,15 +101,17 @@ Record the target and why users need it before optimizing.
 ### Find the real bottleneck
 
 Start at the slow outcome, then move inward. A checkout-response problem calls
-for request latency by route, a few representative slow traces, and only then
-database or external-call timings. A slow Paid status calls for webhook and
-status-update timestamps. A late notification calls for event-publish and
+for browser-observed latency, request latency by route, a few representative
+slow traces, and only then
+database or external-call timings. A slow Paid status calls for provider,
+webhook and status-display timestamps. A late notification calls for event-publish and
 consumer-completion timestamps. Traces show instrumented spans; an absent
 database span is not proof the database did no work.
 
 **Illustrative example, not a measured application:** a 20-item cart makes
 the Place order response feel slow. Record a seven-day production baseline for
-that route, a clearly named deployment, traffic sample, failures, and a
+the browser-observed outcome and route duration separately, with a clearly named
+deployment, traffic sample, failures, and a
 controlled 20-item cart reproduction. Slow request traces show 21 inventory
 queries: one list query and one availability query per item. The repeated
 database round trips, not a large checkout image, account for most of the
@@ -108,10 +121,10 @@ rejected alternative because it cannot explain the observed server time.
 
 | Comparison field | Before | After |
 |---|---|---|
-| Outcome | Place order → response | Same outcome |
+| Outcome | Place order click → response receipt | Same outcome |
 | Scope | Same route, segment, cart shape, cache state and length of observation window | Same scope after deployment |
 | Diagnostic evidence | 21 inventory queries for a 20-item cart in the controlled reproduction | One batched availability query in the same reproduction |
-| Production verdict | Record route p95, sample count, error rate and timeouts | Compare those same measures; do not claim a win from query count alone |
+| Production verdict | Record browser p95, sample count, error rate and timeouts; keep server route p95 as diagnostic | Compare those same measures; do not claim a win from query count alone |
 
 The before/after cells are an example record to fill, not invented p95
 measurements. If the user-facing p95 misses its target, failures rise, or
