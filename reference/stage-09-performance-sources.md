@@ -20,13 +20,26 @@ query-level plan and actual execution measurements with `ANALYZE`. The revision
 needs an explicit first-measurement procedure and a sample baseline record, not
 just a list of tools.
 
-For the running invoice-list case, record the affected route and user action,
-metric and percentile, collection window, device segment, sample size, test-data
-shape, deployment version, and cold/warm cache state. Measure the same scope
-after the change. A single lab run or `EXPLAIN ANALYZE` result diagnoses one
-case; it is not a production p95 or evidence that users improved. These record
-fields are a proposed comparison discipline inferred from the sources above,
-not a published universal checklist.
+For the proposed order flow, first choose an outcome: placing an order and
+receiving an acknowledgement, seeing it marked paid, or completing a downstream
+action. Record that boundary, route or event, metric and percentile, collection
+window, segment, sample size, test-data shape, deployment version, and cache
+state. Measure the same outcome after the change. A single lab run or `EXPLAIN
+ANALYZE` result diagnoses one case; it is not a production p95 or evidence
+that users improved. These record fields are a proposed comparison discipline
+inferred from the sources above, not a published universal checklist.
+
+The user's proposed path crosses a synchronous request, a payment webhook and
+an `OrderPaid` event. [OpenTelemetry context propagation](https://opentelemetry.io/docs/concepts/context-propagation/)
+explains correlation across services, and its [messaging span
+conventions](https://opentelemetry.io/docs/specs/semconv/messaging/messaging-spans/)
+distinguish publishing from consumer processing. [Stripe's payment-event
+guidance](https://docs.stripe.com/payments/payment-element/migration) uses
+server-side webhooks for business-critical post-payment work. Thus the chapter
+should record request latency, payment-confirmation lag and each consumer's
+processing lag separately; a fast checkout response does not prove fast
+payment or fulfillment. The example is hypothetical and should not prescribe
+those services as the playbook's architecture.
 
 | Chapter lines | Assessment | Evidence and proposed treatment |
 |---|---|---|
