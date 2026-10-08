@@ -157,6 +157,7 @@ The chapter and guard are committed through `758c2cc` on
 denominator; the whole-branch reviewer found a user-clock versus route-clock
 gap, fixed test-first. Final suite: 1416/1416 across 185 files; format, lint,
 typecheck and the 50-page production build passed. See the W-3.15 tracker row
+and [execution report](superpowers/reports/2026-10-08-stage-09-chapter.md)
 for the RED/GREEN and review evidence.
 
 Deferred: the Stage 09 interactive port and its UI audits, W-6 `caching` and
