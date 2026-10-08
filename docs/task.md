@@ -17,9 +17,9 @@ grep it by id, don't read it whole.
 `develop`.** Stage 08's corrected chapter and ten-step port merged as
 `a03e190`; its `security` lookup sheet and original diagram followed as
 `739c8ed`. The latter's merged tree passed 1406 tests across 184 files, lint,
-typecheck and format. Stage 09's chapter revision and W-6 source research are
-complete on `docs/2026-10-08-stage-09-research`, awaiting a separate merge
-decision. Stage 09 remains unready; nothing from this round was pushed or deployed.
+typecheck and format. Stage 09's chapter revision and W-6 source research
+merged locally as `ad283ce`; the merged tree passed 1416 tests across 185
+files. Stage 09 remains unready; nothing from this round was pushed or deployed.
 
 Stage 08 was chosen after the Stage 16 round. Its source review preceded the
 port; `docs/superpowers/specs/2026-10-02-stage-08-security-audit-design.md`
@@ -143,7 +143,7 @@ checkout, payment and consumer clocks. The source audit also gathered W-6
 the earlier suggested order in `task-archive.md` leaves the remaining stages
 unranked.
 
-### W-3.15 — Stage 09, chapter audit ◐ *(branch complete; not merged)*
+### W-3.15 — Stage 09, chapter audit ☑ *(merged locally into `develop` as `ad283ce`)*
 
 The canonical chapter now starts with a baseline record before any candidate
 fix. It separates browser checkout time, provider and webhook delays, visible
@@ -152,8 +152,8 @@ uses traces to justify batching, then compares the same user outcome after the
 change. Unsupported index, bundle, image and low-traffic rules were corrected
 against [the source audit](../reference/stage-09-performance-sources.md).
 
-The chapter and guard are committed through `758c2cc` on
-`docs/2026-10-08-stage-09-research`. The cold reader exposed a missing timeout
+The chapter and guard were committed through `758c2cc` on
+`docs/2026-10-08-stage-09-research` and merged as `ad283ce`. The cold reader exposed a missing timeout
 denominator; the whole-branch reviewer found a user-clock versus route-clock
 gap, fixed test-first. Final suite: 1416/1416 across 185 files; format, lint,
 typecheck and the 50-page production build passed. See the W-3.15 tracker row
@@ -161,7 +161,7 @@ and [execution report](superpowers/reports/2026-10-08-stage-09-chapter.md)
 for the RED/GREEN and review evidence.
 
 Deferred: the Stage 09 interactive port and its UI audits, W-6 `caching` and
-`scaling` sheets, image publication, branch merge, push and deployment.
+`scaling` sheets, image publication, push and deployment.
 
 **Every stage carries an "AI plays" section** (D-34, D-35): where agents help in that
 stage's work and where they mislead, mirroring stage 01's. It is a dedicated stepper step
