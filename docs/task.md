@@ -13,11 +13,13 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current state (2026-10-05): W-3 is 14/18 and W-6 is 20/25 on local
+**Current state (2026-10-08): W-3 is 14/18 and W-6 is 20/25 on local
 `develop`.** Stage 08's corrected chapter and ten-step port merged as
 `a03e190`; its `security` lookup sheet and original diagram followed as
 `739c8ed`. The latter's merged tree passed 1406 tests across 184 files, lint,
-typecheck and format. Nothing from these rounds was pushed or deployed.
+typecheck and format. Stage 09's chapter revision and W-6 source research are
+complete on `docs/2026-10-08-stage-09-research`, awaiting a separate merge
+decision. Stage 09 remains unready; nothing from this round was pushed or deployed.
 
 Stage 08 was chosen after the Stage 16 round. Its source review preceded the
 port; `docs/superpowers/specs/2026-10-02-stage-08-security-audit-design.md`
@@ -71,10 +73,10 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(13/18 merged to `develop`; five remain: 08, 09, 10, 17 and 18. Stage 16 landed as `3d2c266`.)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(14/18 merged to `develop`; four remain: 09, 10, 17 and 18. Stage 08 landed as `a03e190`.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(nineteen of twenty-four registered sheets drawn on `develop` — `incident-management` merged as `a992d74`. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(20 of 25 registered sheets drawn on `develop` — `security` merged as `739c8ed`. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
 
 ### Dependency map
 
@@ -134,10 +136,32 @@ Map of what lands where:
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
-**Last round:** Stage 08 Security Audit. The chapter's claims and examples
-were checked against primary guidance and the installed Next.js docs before
-porting. The earlier suggested order in `task-archive.md` leaves the remaining
-stages unranked; Stage 09 is the next candidate, not a selected round.
+**Current round:** Stage 09 Performance Optimization. Its chapter now teaches
+the first measurement through a hypothetical order journey, with distinct
+checkout, payment and consumer clocks. The source audit also gathered W-6
+`caching` and `scaling` references. The interactive port is the next phase;
+the earlier suggested order in `task-archive.md` leaves the remaining stages
+unranked.
+
+### W-3.15 — Stage 09, chapter audit ◐ *(branch complete; not merged)*
+
+The canonical chapter now starts with a baseline record before any candidate
+fix. It separates browser checkout time, provider and webhook delays, visible
+Paid status and the three `OrderPaid` consumers. A worked 20-item cart example
+uses traces to justify batching, then compares the same user outcome after the
+change. Unsupported index, bundle, image and low-traffic rules were corrected
+against [the source audit](../reference/stage-09-performance-sources.md).
+
+The chapter and guard are committed through `758c2cc` on
+`docs/2026-10-08-stage-09-research`. The cold reader exposed a missing timeout
+denominator; the whole-branch reviewer found a user-clock versus route-clock
+gap, fixed test-first. Final suite: 1416/1416 across 185 files; format, lint,
+typecheck and the 50-page production build passed. See the W-3.15 tracker row
+and [execution report](superpowers/reports/2026-10-08-stage-09-chapter.md)
+for the RED/GREEN and review evidence.
+
+Deferred: the Stage 09 interactive port and its UI audits, W-6 `caching` and
+`scaling` sheets, image publication, branch merge, push and deployment.
 
 **Every stage carries an "AI plays" section** (D-34, D-35): where agents help in that
 stage's work and where they mislead, mirroring stage 01's. It is a dedicated stepper step
