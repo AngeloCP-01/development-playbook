@@ -136,12 +136,39 @@ Map of what lands where:
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
-**Current round:** Stage 09 Performance Optimization. Its chapter now teaches
-the first measurement through a hypothetical order journey, with distinct
-checkout, payment and consumer clocks. The source audit also gathered W-6
-`caching` and `scaling` references. The interactive port is the next phase;
-the earlier suggested order in `task-archive.md` leaves the remaining stages
-unranked.
+**Current round:** Stage 09 interactive port. The written port spec is approved,
+and the eight-task implementation plan is ready for review and execution-method
+selection. Its hypothetical order case and locally saved worksheet preserve the
+reviewed chapter's user clocks, baseline, diagnosis and comparable retest. No
+product code has been written in this planning round.
+
+### W-3.16 — Stage 09 interactive port ☐ *(specified and planned; awaiting execution choice)*
+
+Start from the [reviewed chapter](09-performance-optimization.md), its
+[design spec](superpowers/specs/2026-10-08-stage-09-performance-design.md),
+[chapter execution report](superpowers/reports/2026-10-08-stage-09-chapter.md),
+and the [source audit](../reference/stage-09-performance-sources.md). Read
+`web/PATTERNS.md` and `web/DESIGN.md` before choosing interactions. The
+[separate port spec](superpowers/specs/2026-10-08-stage-09-interactive-port-design.md)
+was approved on 2026-10-08. The
+[eight-task plan](superpowers/plans/2026-10-08-stage-09-interactive-port.md)
+is written and self-reviewed; next, review it and choose an execution method
+before implementing with TDD and the stage review/live-build loop.
+
+The port should make the reader choose a user-visible outcome, define its
+start/end observer, record a comparable first baseline, distinguish checkout,
+payment and `OrderPaid` consumer clocks, inspect diagnostic evidence, and only
+then choose and retest a fix. Use hypothetical data visibly labelled as such;
+this static site has no order backend or production telemetry. Keep the three
+event consumers as branches unless an explicit business rule makes them serial.
+
+Done for W-3.16 means the Stage 09 content is registered and `ready: true`,
+the doc-to-port coverage is checked, component-derived behavior has render
+tests, and both themes, responsive widths, touch targets and clean-console
+audits pass. Count W-3 as 15/18 only after its approved merge to `develop`.
+
+Deferred: the W-6 `caching` and `scaling` sheets, any third-party image,
+real ordering-system measurements, push and deployment.
 
 ### W-3.15 — Stage 09, chapter audit ☑ *(merged locally into `develop` as `ad283ce`)*
 

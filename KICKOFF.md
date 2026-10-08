@@ -1,14 +1,12 @@
 # Kickoff — Development Playbook
 
-**Next round, 2026-10-02: choose the next W-3 stage.** The bounded W-6
-`incident-management` companion merged locally into `develop` as `a992d74`
-(`--no-ff`). It is drawn and registered, with generated markdown. No image
-plate was selected; the Stage 16 source ledger records the candidate's errors.
-The branch gate passed 1389 tests across 181 files, format, lint, typecheck,
-a 49-page production build and browser audit 18/18. Stages 08–10, 17 and 18
-remain; W-3 is **13/18**. Nothing from this round was pushed or deployed.
-The merged tree also passed 1389/1389 tests, lint, typecheck and format.
-Read `docs/tracker.md` → Next up before choosing the next stage.
+**Next checkpoint, 2026-10-08: review the Stage 09 interactive-port plan and
+choose its execution method.** The port spec is approved (`e4074f2`, approval
+record `0f51069`); the eight-task plan is `bb42a76`. Its complete source and
+registry edits passed compiler/lint checks in memory. Product implementation,
+TDD runs and UI audits have not started. Stage 09 remains `ready: false`;
+W-3 is **14/18**, W-6 **20/25**. Read `docs/tracker.md` → Next up,
+`docs/task.md` → W-3.16, and the separate port spec and plan before executing.
 
 Paste the block below into a **new coding session** opened in
 `/Users/angelito/personal/Development-Playbook` to start a round with full context.
@@ -47,52 +45,66 @@ Before doing anything, read these for context:
   during its own execution — the D-52 fix the plan pre-authorized covered one panel,
   and the real number was four.
 
-### Project state (verified 2026-10-02; recheck before work)
+### Project state (verified 2026-10-08; recheck before work)
 
-Stages 01–07 and 11–16 are interactive on local `develop` (**13/18**); 08–10,
-17 and 18 remain. Stage 16 is `ready: true` after merge `3d2c266`; its port
-branch was deleted. W-6 has **19 of 24** registered sheets drawn on local
-`develop`; the Stage 16 companion merged as `a992d74`.
+Stages 01–08 and 11–16 are interactive on local `develop` (**14/18**); 09,
+10, 17 and 18 remain. Stage 08's port merged as `a03e190`. W-6 has **20 of
+25** registered sheets drawn, including Stage 08's `security` sheet, merged
+as `739c8ed`. Stage 09's revised chapter and source audit merged as
+`ad283ce`; its web stage remains a placeholder (`ready: false`).
 
-The Stage 16 source ledger is `reference/cheatsheet-sources.md` → *Stage 16
-gathering round*. It has six attributed external sources and eight local image
-captures. No graphic was selected for the new sheet: the NovelVista sequence
-contradicts the repaired chapter, several captures lack exact source URLs, and
-the slide template contains placeholder text.
+The Stage 09 chapter opens with an order journey and teaches the first
+measurement before any fix. It separates browser checkout latency, payment
+visibility, provider and webhook intervals, and the three `OrderPaid` consumers.
+The worked 20-item cart and 21 inventory queries are illustrative, not live
+measurements. A cold-reader pass and whole-branch review found and resolved
+timeout-denominator and user-clock gaps. The raw evidence and deferrals are in
+`docs/superpowers/reports/2026-10-08-stage-09-chapter.md`.
 
-The user chose a lean workflow for the bounded sheet: brief in-chat design,
-TDD, self-review and the local gate, without a separate spec or plan. The
-feature branch was deleted after the approved local merge.
+W-3.16 now has an approved port spec at
+`docs/superpowers/specs/2026-10-08-stage-09-interactive-port-design.md` and a
+written plan at `docs/superpowers/plans/2026-10-08-stage-09-interactive-port.md`.
+The user still needs to review that plan and choose Subagent-Driven or Inline
+execution. Subagent-Driven is recommended: separate sheet, journey, baseline,
+diagnostic and checklist tasks can be reviewed before their interfaces meet
+in stage assembly. Both methods retain this repository's TDD and review evidence.
+
+Read the canonical chapter, `web/PATTERNS.md`, `web/DESIGN.md` and
+`web/AGENTS.md` as well as the port spec and plan before writing code. The
+site has no ordering backend, so exercise data remains visibly hypothetical.
+The W-6 caching/scaling sheets remain separate.
 
 **Start here, in order:**
 
 1. **Check the branch before editing anything.** `git branch --show-current` should
    be `develop` unless a new work branch has been cut.
    If the answer is `main`, stop and read `docs/learnings/branch-discipline-101.md`.
-2. **Re-derive every number in this file before trusting it.** `git fetch`, then the
-   commands under "Branch state". This file has a documented history of being wrong
-   about numbers, all found by checking rather than reading.
+2. **Re-derive every number in this file before trusting it.** Run the
+   commands under "Branch state"; fetch only if remote state matters. This
+   file has a documented history of being wrong about numbers.
 3. **Run the two one-line checks that belong at every refresh:**
    `rg -n "NOT merged, NOT pushed, NOT deployed" docs/tracker.md` and
    `git ls-files reference/ | rg -iv "jpeg|jpg|png|webp|gif|\.md$"`.
    The reference check must return nothing. The tracker currently has one
    historical struck-through hit in its 2026-09-08 W-3.12 row; verify that
    every hit is struck through and immediately corrected, not a live status.
-4. **Choose the next W-3 stage.** Stages 08–10, 17 and 18 remain. Read their
-   canonical docs and the W-3 order in `docs/task.md` before setting scope.
+4. **Complete the written-plan review and execution choice.** Then execute
+   W-3.16 from its task slices, preserving the approved spec and the first
+   measurement ahead of optimization. Keep raw RED/GREEN and teeth evidence.
+   The plan specifies the execution branch and atomic stage registration.
 5. **Keep W-6.4 separate.** Glossary and stack surfacing remains open; ask
    before any future merge into `develop`, and never merge or push to `main`.
 
 ---
 
-#### The condensed history (01–07, 11–16, the reference hub)
+#### The condensed history (01–08, 11–16, the reference hub)
 
 Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them by ID.
 
-- **Stages 01–07 and 11–16 are interactive and merged.** 03 is 22 steps, 04
+- **Stages 01–08 and 11–16 are interactive and merged.** 03 is 22 steps, 04
   is 15, 05 is 13, 06 is 8, 07 is 6, 11 is 8, 12 is 6, 13 is 8 (platform-aware), 14 is 6,
-  15 is 16 (after the D-52 reshape), and 16 is 14. Coverage walks ran on
-  03–06, 11–14; the later ports have not had one yet. Stages 08–10 and 17–18
+  15 is 16 (after the D-52 reshape), and 16 is 14; Stage 08 is 10. Coverage walks ran on
+  03–06, 11–14; the later ports have not had one yet. Stages 09–10 and 17–18
   render a "sheet not drawn" placeholder; routing works for all 18.
 - **The standard review loop has per-task and whole-branch reviews.** The user
   chose one whole-branch review for the Stage 16 port to reduce ceremony;
@@ -105,9 +117,9 @@ Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them 
 - **Quality gates**: prettier (skips markdown and `highlighted.generated.ts`), eslint at
   `--max-warnings 0`, vitest in two projects, `test:e2e` (18-test Playwright audit),
   `test:dev-console` (outside the gate, once per stage round — TD-35, D-84).
-- **The W-6 branch passed 1389 tests across 181 files** before its local merge,
-  measured 2026-10-01. Lint, typecheck, format and production audit 18/18
-  were green; Stage 16's development-console audit was 1/1.
+- **The Stage 09 chapter merge passed 1416 tests across 185 files** on local
+  `develop` (2026-10-08). Branch format, lint, typecheck and production build
+  were green; the port's browser and development-console audits are still due.
 - **The e2e per-test timeout is 120s, not 60s** (`playwright.config.ts`, `2bb64e9`) — an
   18th stage in the sweep pushed WCAG AA and the disclosure sweep over the old budget;
   this is a repo-wide headroom fix, unrelated to stage 15's own content.
@@ -119,7 +131,6 @@ Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them 
 #### Branch state — re-derive before work
 
 ```bash
-git fetch
 git log -1 --oneline develop
 git log -1 --oneline origin/develop
 git log -1 --oneline main
@@ -130,13 +141,19 @@ git status --short --branch
 git ls-files reference/ | rg -iv "jpeg|jpg|png|webp|gif|\.md$"
 ```
 
-**Verified 2026-10-01 after `git fetch`:** local `develop` was at `d272a73`,
-six commits ahead of `origin/develop` (`3d9d70c`), and 137 ahead of `main`
-(`d659d32`); `main` was two ahead of `develop` by merge history. This kickoff
-edit will add another local commit, so run the commands above for current
-counts. The worktree was clean and this was the sole worktree. A separate
-`docs/2026-09-30-stage-16-handoff` branch still exists; the Stage 16 port
-branch was deleted after merge. Nothing from the port round has been pushed.
+Fetch first if you need to compare against the current remote; otherwise the
+`origin/*` lines above describe the last fetched refs.
+
+**Verified 2026-10-08 against local refs, without a fresh fetch:** `develop`
+is `c99bf64`, 32 commits ahead of the tracked `origin/develop` at `377c734`
+and 176 ahead of `main` at `d659d32`; `main` is two ahead of `develop` by
+merge history. The active planning branch is
+`docs/2026-10-08-stage-09-port-design`, with plan `bb42a76`. These planning
+commits are local and unmerged; no push occurred. The separate
+`docs/2026-10-08-stage-09-port-handoff` branch remains, and its scope was read
+and carried into current records without integrating that branch. Re-run the
+commands above for current counts; this records commit changes the planning
+branch, not `develop`.
 
 **Branch/push convention, unchanged:** work on `feat/`|`fix/`|`docs/<date>-` branches,
 cut from `develop`, never from `main`. Merge with `--no-ff` and a hand-written subject,
