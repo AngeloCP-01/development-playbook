@@ -26,10 +26,14 @@ current prose would teach unsupported shortcuts without a usable baseline.
   reproduce the symptom in a controlled lab or trace. Record route/action,
   metric and percentile, time window, device segment, sample size, deployment
   version, test-data shape, and cache state so the comparison can be repeated.
-- Use one invoice-list example throughout: baseline, user-facing target,
+- Use the proposed order flow throughout: baseline, user-facing target,
   bottleneck evidence, one justified intervention, and a production retest.
   Example values must be labelled illustrative, not represented as measurements
-  of this repository or a live invoice application.
+  of this repository or a live ordering application.
+- Teach that this flow has several clocks. A fast order-request response does
+  not establish that payment confirmation, inventory handling, logistics or
+  notification finished quickly. Choose one outcome to improve and measure
+  each relevant asynchronous boundary separately.
 - Correct the chapter against the cited primary sources, including all three
   Core Web Vitals, PostgreSQL plan interpretation, concurrent index caveats,
   Next.js 16 cache and bundle advice, and the limits of tracing and images.
@@ -41,14 +45,14 @@ current prose would teach unsupported shortcuts without a usable baseline.
 
 ## Non-goals
 
-- A live benchmark of this static playbook: it has no invoice backend, so a
+- A live benchmark of this static playbook: it has no ordering backend, so a
   fabricated production result would teach the wrong evidence standard.
 - Universal API or database latency budgets: their targets depend on the user
   journey and measured baseline. The chapter can show an example target with
   its rationale.
 - A catalog of scaling algorithms in the Stage 09 chapter: load balancing
   belongs in the planned W-6 `scaling` lookup sheet and is not the routine fix
-  for the invoice case.
+  for the order case.
 - Publishing a third-party image: no researched graphic has verified
   image-specific reuse rights and a suitable fit for the measurement loop.
 - W-6.4 glossary/stack surfacing or building the `caching` and `scaling`
@@ -66,6 +70,15 @@ current prose would teach unsupported shortcuts without a usable baseline.
   not claim a single lab run is a field percentile. Low traffic may leave too
   little field data for a stable percentile; state that limit and use a
   controlled baseline while waiting for enough observations.
+- The order flow is a hypothetical teaching case, not a required service
+  architecture. Show the `OrderPaid` consumers as separate paths after the
+  event; do not imply that inventory, logistics and notification always run
+  serially. State any business dependency that changes this in a real system.
+- Correlate the request, webhook and event consumer measurements using an
+  order or event identifier and available trace context. Do not put payment
+  secrets or personal data in telemetry. A trace may cross process boundaries
+  when context is propagated; it does not automatically span an external
+  payment provider's waiting period.
 - For Web Vitals use [Google's thresholds](https://web.dev/articles/vitals):
   LCP ≤2.5 s, INP ≤200 ms, CLS ≤0.1 at p75, assessed separately for mobile
   and desktop. Averages can be useful but do not replace tail percentiles.
@@ -81,22 +94,37 @@ current prose would teach unsupported shortcuts without a usable baseline.
 
 ### Chapter
 
-Open the work section with a first-measurement procedure. It should tell a
-reader where to look for field Web Vitals and route latency, how to choose one
-affected route/action and segment, how to run a repeatable lab check, and how
-to log the baseline. Keep page experience, request latency, and database
-query time distinct; they measure different parts of the journey. Link from a
-slow function or trace to an instrumented operation, then use an actual query
-plan when the database is implicated. Explain what to do when field samples are
-insufficient.
+Open the work section by mapping the order journey the user proposed:
 
-Keep the invoice list as the running case. Show a compact measurement record
-with clearly illustrative values and the evidence that leads to one fix. The
-case must show at least one plausible alternative rejected by measurement;
-otherwise “find the bottleneck” is only a slogan. Compare the same scope and
-cache state after the change and include a production observation window. If
-the result misses the target or regresses correctness, the decision is to
-investigate further or revert.
+```text
+Order request → validation → authentication → inventory check
+              → create order → initiate payment → response
+
+Payment webhook → update payment status → publish OrderPaid
+                                      ├→ inventory consumer
+                                      ├→ logistics consumer
+                                      └→ notification consumer
+```
+
+The response and webhook are different measurement boundaries; the three
+consumers are branches unless the product explicitly requires one to wait for
+another. First ask what the user experiences as slow: acknowledgement after
+placing the order, time until the order shows paid, or time until a downstream
+action finishes. Then show where to find a field baseline for that outcome,
+how to choose a route or event and segment, how to run a repeatable lab check,
+and how to log the baseline. Keep page experience, request latency, payment
+confirmation lag, consumer lag and database query time distinct. Link from a
+slow request or consumer trace to an instrumented operation, then use an
+actual query plan if the database is implicated. Explain what to do when
+field samples are insufficient.
+
+Show a compact measurement record with clearly illustrative values and the
+evidence that leads to one fix. The case must show at least one plausible
+alternative rejected by measurement; otherwise “find the bottleneck” is only
+a slogan. Compare the same outcome, segment and cache state after the change
+and include a production observation window. If the result misses the target
+or regresses correctness, investigate further or revert. Do not use an
+internal span's improvement as proof that the whole order journey improved.
 
 Reframe the existing fixes as conditional options. Keep N+1, indexes,
 independent awaits, cache, bundle analysis, images, and Server Components,
@@ -115,10 +143,11 @@ duplicate the future W-6 `scaling` sheet.
 ### Interactive port
 
 After chapter review, group panels by judgment rather than copying paragraph
-boundaries. Likely decisions are: which user action and metric to measure; what
-the baseline does and does not prove; where time is spent; whether an index,
-query-shape change, cache, or no change is justified; and how to compare and
-stop. Use the shared `Stepper` and existing disclosure and decision patterns.
+boundaries. Likely decisions are: which order outcome and metric to measure;
+where the request ends and asynchronous work begins; what the baseline does
+and does not prove; where time is spent; whether an index, query-shape change,
+cache, or no change is justified; and how to compare and stop. Use the shared
+`Stepper` and existing disclosure and decision patterns.
 The active step remains in the URL hash. An illustrative data set must be
 labelled as such; the interface must not imply it measured the reader's app.
 Include the standard AI step and keep each panel within the four-screen budget.
@@ -133,14 +162,16 @@ one is copied, and distinguish CDN caching from Next.js application caching.
 ## Testing
 
 - Write chapter guards before prose edits. They should fail on the missing
-  first-measurement method, absent CLS, overbroad scan/index rules, outdated
-  build instruction, and missing AI section. Show RED for the expected reason,
-  then GREEN and a teeth check for the new guards.
+  first-measurement method, the order-flow measurement boundaries, absent CLS,
+  overbroad scan/index rules, outdated build instruction, and missing AI
+  section. Show RED for the expected reason, then GREEN and a teeth check for
+  the new guards.
 - Check SQL and TypeScript examples against their actual tools and versions.
   Avoid pseudo-code in a fence that looks executable; if a fragment is only a
   sketch, label it clearly.
 - When porting, add render tests for data-derived decisions, baseline fields,
-  and the before/after verdict. Run RED/GREEN and a teeth check per behavior.
+  order-flow boundaries and the before/after verdict. Run RED/GREEN and a
+  teeth check per behavior.
 - Run format, lint, typecheck, unit/DOM tests, build, production browser audit,
   and the development-console audit for the stage round.
 
@@ -148,8 +179,9 @@ one is copied, and distinguish CDN caching from Next.js application caching.
 
 Review each changed claim against the source audit and installed framework
 docs. Check that field and lab values are never presented as interchangeable,
-that the same route/segment/window definition is used in the comparison, and
-that a database index is presented as a measured candidate. A cold reader
+that the same outcome/segment/window definition is used in the comparison,
+that webhook and consumer delays are not silently counted as request latency,
+and that a database index is presented as a measured candidate. A cold reader
 should be able to use the chapter alone to produce a baseline record before
 seeing any proposed fix. Review the chapter before its port; then review the
 whole branch, both themes, responsive widths, console, and stage-to-doc
