@@ -18,33 +18,70 @@ premature optimization buys complexity with no return.
 
 ## The work
 
-### Measure, then fix, then measure
+### Map the order journey
 
-The loop:
+First name the outcome that feels slow. “Ordering is slow” can mean a delayed
+response after Place order, a long wait for Paid, or a late notification. Those
+are different clocks. Here is a hypothetical order flow; your application may
+keep the same responsibilities in one process.
 
-1. **Measure.** Establish the current number.
-2. **Find the bottleneck.** Profile. Do not guess — intuition about performance is
-   reliably wrong, including yours.
-3. **Fix the biggest one.**
-4. **Measure again.** Confirm it helped. Sometimes it does not, and then you revert.
-5. **Stop when it is fast enough.** There is always another 5%. It is rarely worth it.
+```text
+Order request → validate → authenticate → check inventory
+              → create order → initiate payment → response
 
-Skipping step 4 is how codebases accumulate "optimizations" that made things slower and
-nobody noticed.
+Payment webhook → mark order paid → publish OrderPaid
+                                ├→ inventory consumer
+                                ├→ logistics consumer
+                                └→ notification consumer
+```
+
+The response ends the checkout request. Provider waiting and the later webhook
+are outside that request. The three consumers branch from OrderPaid; their
+dependencies are a product decision, not an assumed serial chain. Choose one
+outcome to improve, then measure the other boundaries only where they help
+explain it. Correlate the records with an opaque order or event ID and trace
+context where available. Keep payment secrets and customer details out of
+telemetry.
+
+### Measure the first baseline
+
+Write a baseline record before naming a fix:
+
+| Record | What to write |
+|---|---|
+| Outcome | The user-visible event and its start and end, such as Place order → response or webhook receipt → Paid |
+| Metric | Duration and percentile for that outcome; include failures and timeouts rather than measuring only successes |
+| Scope | Route or event name, deployment version, device or other relevant segment, and whether the cache was cold or warm |
+| Window and sample | Collection dates, number of observations, and the traffic or test-data shape |
+| Evidence | Field dashboard or request log for the user outcome; one trace or controlled run for diagnosis |
+
+For page loading and interactions, start with real-user Web Vitals in
+[Speed Insights](https://vercel.com/docs/speed-insights/metrics) or
+[PageSpeed Insights](https://web.dev/articles/vitals-measurement-getting-started)
+and compare mobile and desktop. For a server route, inspect its duration by
+route in your available monitoring; feature detail and retention vary by
+plan. For webhook-to-paid or OrderPaid-to-consumer lag, record timestamps at
+those boundaries and join them by an opaque identifier. A trace can explain
+instrumented work across services when [context is
+propagated](https://opentelemetry.io/docs/concepts/context-propagation/),
+but it does not automatically include time spent waiting at an external
+payment provider.
+
+Reproduce the same action in a controlled environment with stated device,
+network, cart size, data volume, and cache state. A controlled run helps
+diagnose a cause; it is not a production p95. If field traffic is too sparse
+for a stable percentile, say so and keep the controlled baseline until enough
+real observations accumulate. Never invent a field number to fill the gap.
 
 ### Decide what fast enough means
 
-Without a target, optimization has no stopping condition:
-
-- **LCP under 2.5s** at p75, on real user data
-- **INP under 200ms** at p75
-- **API responses under 300ms** at p95
-- **Database queries under 50ms** at p95
-
-Measure at percentiles, never averages. An average hides the tail, and the tail is where
-the angry users are. If p50 is 100ms and p99 is 8 seconds, one percent of requests are
-unusable — and that one percent is disproportionately your heaviest, most valuable users,
-because they have the most data.
+Choose a target for the outcome you recorded. [Google's good Core Web Vitals
+thresholds](https://web.dev/articles/vitals) are LCP ≤2.5 s, INP ≤200 ms,
+and CLS ≤0.1 at p75, assessed
+separately for mobile and desktop. An API p95 or database-query target belongs
+to your product and workload; 300 ms and 50 ms are example budgets, not web
+standards. Percentiles expose the slow tail that an average alone can hide.
+Record the target and why users need it before optimizing.
 
 ### Find the real bottleneck
 
