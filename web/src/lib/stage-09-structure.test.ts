@@ -43,8 +43,8 @@ test('the first optimization step defines a comparable order-flow baseline', () 
 
 test('order response, payment, and consumers have separate clocks', () => {
   const map = section(doc(), 'Map the order journey')
-  expect(map).toMatch(/request.+response/s)
-  expect(map).toMatch(/webhook.+paid/s)
+  expect(map).toMatch(/request[\s\S]+response/)
+  expect(map).toMatch(/webhook[\s\S]+paid/)
   expect(map).toContain('OrderPaid')
   for (const consumer of ['inventory', 'logistics', 'notification']) {
     expect(map.toLowerCase()).toContain(consumer)
@@ -58,10 +58,10 @@ test('the worked order fix is chosen from evidence and retested at the user boun
   const diagnosis = section(md, 'Find the real bottleneck')
   expect(diagnosis).toContain('Illustrative example')
   expect(diagnosis).toContain('20-item cart')
-  expect(diagnosis).toMatch(/21.+quer(y|ies)/s)
+  expect(diagnosis).toMatch(/21[\s\S]+quer(y|ies)/)
   expect(diagnosis).toMatch(/batch/i)
   expect(diagnosis).toMatch(/alternative|instead/i)
-  expect(diagnosis).toMatch(/before.+after/is)
+  expect(diagnosis).toMatch(/before[\s\S]+after/i)
   expect(diagnosis).toContain(
     '| Outcome | Place order → response | Same outcome |',
   )
@@ -75,7 +75,7 @@ test('a query plan is a diagnosis of one query, not the order-flow result', () =
   expect(diagnosis).toContain('EXPLAIN (ANALYZE, BUFFERS)')
   expect(diagnosis).toMatch(/single query|one query/i)
   expect(diagnosis).toMatch(/not.+p95/i)
-  expect(diagnosis).toMatch(/sequential scan.+cheaper/is)
+  expect(diagnosis).toMatch(/sequential scan[\s\S]+cheaper/i)
   expect(diagnosis).not.toContain(
     'Seq Scan` on a large table means a missing index.',
   )
@@ -84,12 +84,12 @@ test('a query plan is a diagnosis of one query, not the order-flow result', () =
 test('fixes remain hypotheses and indexing advice respects plan and write cost', () => {
   const md = doc()
   expect(md).toContain('### AI in performance optimization')
-  expect(md).toMatch(/index.+write cost/is)
-  expect(md).toMatch(/CONCURRENTLY.+transaction/is)
+  expect(md).toMatch(/index[\s\S]+write cost/i)
+  expect(md).toMatch(/CONCURRENTLY[\s\S]+transaction/i)
   expect(md).toMatch(/invalid index/i)
-  expect(md).toMatch(/updateTag.+Server Action/is)
+  expect(md).toMatch(/updateTag[\s\S]+Server Action/i)
   expect(md).toMatch(/bundle analyzer/i)
-  expect(md).toMatch(/LCP.+eager/is)
+  expect(md).toMatch(/LCP[\s\S]+eager/i)
   expect(md).not.toContain('Every column you filter or sort by')
   expect(md).not.toContain('Indexes exist for every filtered and sorted column')
   expect(md).not.toContain('Anything at low traffic.')
@@ -104,4 +104,15 @@ test('completion is tied to the selected outcome and includes correctness', () =
   expect(done).toMatch(/sample/i)
   expect(done).toMatch(/production|field/i)
   expect(done).toMatch(/correctness|tests/i)
+})
+
+test('baseline defines how timeouts and failures affect the percentile', () => {
+  const baseline = section(doc(), 'Measure the first baseline')
+  expect(baseline).toMatch(/percentile from completed/i)
+  expect(baseline).toMatch(/failures[\s\S]+timeouts[\s\S]+separately/i)
+})
+
+test('candidate index names the query shape it could help', () => {
+  const fixes = section(doc(), 'The fixes that usually matter')
+  expect(fixes).toMatch(/order.history[\s\S]+owner_id[\s\S]+created_at/i)
 })

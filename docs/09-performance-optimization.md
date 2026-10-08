@@ -73,6 +73,10 @@ diagnose a cause; it is not a production p95. If field traffic is too sparse
 for a stable percentile, say so and keep the controlled baseline until enough
 real observations accumulate. Never invent a field number to fill the gap.
 
+For the order examples here, calculate the duration percentile from completed
+outcomes and report failures and timeouts separately. State that rule in the
+baseline so the after measurement uses the same denominator.
+
 ### Decide what fast enough means
 
 Choose a target for the outcome you recorded. [Google's good Core Web Vitals
@@ -133,8 +137,9 @@ statistics, and workload before choosing one.
 These are candidates, not a ranking. Start with the evidence from the
 affected outcome.
 
-**Index or query shape.** A candidate index for an observed filter-and-sort
-query can be `(owner_id, created_at DESC)`, but its value depends on the plan,
+**Index or query shape.** For an order-history query filtered by owner and
+sorted by creation, a candidate index is `(owner_id, created_at DESC)`.
+Its value depends on the plan,
 table size, selectivity and write cost. Compare the same query and workload
 before and after. A normal `CREATE INDEX` blocks writes while building;
 `CONCURRENTLY` permits writes but takes longer, cannot run inside a
