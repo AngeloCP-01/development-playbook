@@ -2,11 +2,14 @@
 
 **Next checkpoint, 2026-10-09: finish the approved Stage 09 port with
 Subagent-Driven execution.** Work is on `feat/stage-09-performance-port`.
-Tasks 1–3 are implemented and independently reviewed; Task 4 is in progress.
-Resume from `.superpowers/sdd/2026-10-08-stage-09-interactive-port/progress.md`
-and the checked plan before dispatching work. Live stage audits and final
-review are still due. Stage 09 remains `ready: false`; local `develop` stays
-at W-3 **14/18**, W-6 **20/25**. No merge, push or deployment is authorized.
+All eight tasks are implemented and independently reviewed. Execution moved
+to the user-approved `.worktrees/stage-09-performance-port`; the parent
+checkout stays on the clean planning branch at `112aa42`.
+Resume from that worktree's progress ledger and checked plan. Final live
+verification found a shared Stepper state leak; its fix, final checks and
+whole-branch review remain. Stage 09 is `ready: true` on the feature branch;
+local `develop` stays at W-3 **14/18**, W-6 **20/25**. No merge, push or
+deployment is authorized.
 
 Paste the block below into a **new coding session** opened in
 `/Users/angelito/personal/Development-Playbook` to start a round with full context.
@@ -65,9 +68,11 @@ W-3.16 now has an approved port spec at
 `docs/superpowers/specs/2026-10-08-stage-09-interactive-port-design.md` and a
 written plan at `docs/superpowers/plans/2026-10-08-stage-09-interactive-port.md`.
 The user approved the plan and selected Subagent-Driven execution on
-2026-10-09. Tasks 1–3 passed independent review, with **1425/1425 tests
-across 188 files** after Task 3. The execution report retains raw TDD and
-teeth evidence; the scratch progress ledger records dispatches and rulings.
+2026-10-09. All eight tasks passed independent review. The feature branch
+contains twelve registered panels, a saved/exportable eleven-field record
+and a persisted five-check closing checklist. The execution report retains
+raw TDD and teeth evidence; the scratch progress ledger records dispatches
+and rulings.
 Subagent-Driven remains recommended because each component's contracts can
 be reviewed before assembly. Execute one implementation task at a time.
 
@@ -90,10 +95,10 @@ The W-6 caching/scaling sheets remain separate.
    The reference check must return nothing. The tracker currently has one
    historical struck-through hit in its 2026-09-08 W-3.12 row; verify that
    every hit is struck through and immediately corrected, not a live status.
-4. **Resume the approved Subagent-Driven execution from its ledger.** Execute
-   W-3.16 from the remaining task slices, preserving the approved spec and the first
-   measurement ahead of optimization. Keep raw RED/GREEN and teeth evidence.
-   The plan specifies the execution branch and atomic stage registration.
+4. **Resume final verification from the isolated worktree's ledger.** All
+   eight task slices are complete; do not redispatch them. Finish the
+   Stepper regression fix, interacted-state measurements and whole-branch
+   review. The registered stage keeps measurement ahead of optimization.
 5. **Keep W-6.4 separate.** Glossary and stack surfacing remains open; ask
    before any future merge into `develop`, and never merge or push to `main`.
 

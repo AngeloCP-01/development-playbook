@@ -137,9 +137,11 @@ Map of what lands where:
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
 **Current round:** Stage 09 interactive port. The user approved the eight-task
-plan and selected Subagent-Driven execution on 2026-10-09. Tasks 1–3 are
-implemented and independently reviewed on `feat/stage-09-performance-port`;
-Task 4 is in progress. Stage assembly, live audits and final review remain.
+plan and selected Subagent-Driven execution on 2026-10-09. All eight tasks are
+implemented and independently reviewed on `feat/stage-09-performance-port`
+in `.worktrees/stage-09-performance-port`. Stage 09 is registered and ready
+on that branch. Final live verification found a shared Stepper state leak;
+its regression fix, final gates and whole-branch review remain.
 
 ### W-3.16 — Stage 09 interactive port ◐ *(executing the approved plan)*
 
