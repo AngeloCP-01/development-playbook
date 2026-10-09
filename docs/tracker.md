@@ -880,15 +880,16 @@ of new work, not assumed to survive from the last `git checkout`.
 chapter, source audit and chapter-phase spec/plan were reviewed and tested; Stage 09 is
 still `ready: false`. No push or deployment occurred.
 
-**Next checkpoint: review the Stage 09 port plan and choose its execution method.**
-The [port spec](superpowers/specs/2026-10-08-stage-09-interactive-port-design.md)
-is approved; the [eight-task plan](superpowers/plans/2026-10-08-stage-09-interactive-port.md)
-is written with full test and implementation source. Its compiler/lint checks
-validated draft source in memory, not product behavior. Start execution only
-after plan review and method selection, using the chosen Superpowers execution
-skill. The earlier handoff scope was carried forward as documentation without
-merging its branch. Stage 09 stays unready until its port is built and reviewed.
-W-6 caching/scaling sheets and W-6.4 glossary/stack surfacing remain separate.
+**Next checkpoint, 2026-10-09: finish the approved Stage 09 port.** The user
+approved the [eight-task plan](superpowers/plans/2026-10-08-stage-09-interactive-port.md)
+and selected Subagent-Driven execution. Tasks 1–3 passed independent review
+on `feat/stage-09-performance-port`; Task 3 passed **1425/1425 tests across
+188 files**. The [execution report](superpowers/reports/2026-10-08-stage-09-interactive-port.md)
+retains raw evidence; the scratch ledger records task state and rulings.
+Stage 09 stays unready until atomic registration in Task 8. Complete live
+checks and whole-branch review before asking to merge into `develop`.
+W-3 stays 14/18 on `develop`, W-6 20/25. W-6 caching/scaling sheets and
+W-6.4 glossary/stack surfacing remain separate.
 
 Deferred: the Stage 16 document-review follow-ups, optional incident-record
 template, image publication and provenance, Stage 13 rollback wording repair,

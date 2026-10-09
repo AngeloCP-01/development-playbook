@@ -616,6 +616,8 @@ git commit -m 'feat(performance): practice defining the first baseline' -m 'Co-A
 
 ### Task 4: Judge diagnosis and before/after evidence
 
+Execution correction (2026-10-09, PLAN-AUTHORED ERROR): the missing-browser case inherited recorded attempts, an adequate sample and no failure increase. Its after cells now explicitly leave those observations unrecorded. An independent literal regression failed before the data correction; removing the completed-sample override failed only that regression.
+
 **Files:**
 - Create: `web/src/features/performance/decisions.ts`
 - Create: `web/src/features/performance/DecisionDrill.tsx`
@@ -627,7 +629,7 @@ git commit -m 'feat(performance): practice defining the first baseline' -m 'Co-A
 - Produces: `DecisionCase`, `ComparisonRow`, `BOTTLENECK_CASES`, `QUERY_CASES`, `COMPARISON_CASES`, `DecisionDrill({ title: string; cases: readonly DecisionCase[] })`, `INVENTORY_PLAN: Artifact`.
 - A case supplies its own options, correct id and explanation. Comparison cases additionally supply before/after fields displayed before the answer is committed.
 
-- [ ] **Step 1: Write data and render tests.**
+- [x] **Step 1: Write data and render tests.**
 
 #### Test source: `web/src/features/performance/decisions.test.ts`
 
@@ -639,7 +641,10 @@ import { BOTTLENECK_CASES, COMPARISON_CASES, QUERY_CASES } from './decisions'
 import { INVENTORY_PLAN } from './artifacts'
 
 test('the quoted SQL is the chapter artifact rather than a query the site claims to execute', () => {
-  const chapter = readFileSync(resolve(process.cwd(), '../docs/09-performance-optimization.md'), 'utf8')
+  const chapter = readFileSync(
+    resolve(process.cwd(), '../docs/09-performance-optimization.md'),
+    'utf8',
+  )
   const sql = chapter.match(/```sql\n([\s\S]*?)\n```/)?.[1]
   expect(INVENTORY_PLAN.lines.map((line) => line.text).join('\n')).toBe(sql)
 })
@@ -649,19 +654,50 @@ test('every case has a selectable answer and distinct option ids, since a missin
     expect(new Set(set.map((row) => row.id)).size).toBe(set.length)
     for (const row of set) {
       expect(row.options.some((option) => option.id === row.answer)).toBe(true)
-      expect(new Set(row.options.map((option) => option.id)).size).toBe(row.options.length)
+      expect(new Set(row.options.map((option) => option.id)).size).toBe(
+        row.options.length,
+      )
     }
   }
 })
 
 test('the comparison distinguishes missing evidence, changed scope, an acceptable outcome and harmful behavior', () => {
-  expect(COMPARISON_CASES.map((row) => row.answer)).toEqual(['observe', 'repeat', 'stop', 'revert'])
+  expect(COMPARISON_CASES.map((row) => row.answer)).toEqual([
+    'observe',
+    'repeat',
+    'stop',
+    'revert',
+  ])
   for (const row of COMPARISON_CASES) {
     expect(row.comparison?.map((field) => field.field)).toEqual([
-      'Outcome and observer', 'Population', 'Scope', 'Window and version',
-      'Completed sample', 'Failures and timeouts', 'User outcome and target', 'Correctness',
+      'Outcome and observer',
+      'Population',
+      'Scope',
+      'Window and version',
+      'Completed sample',
+      'Failures and timeouts',
+      'User outcome and target',
+      'Correctness',
     ])
   }
+})
+
+test('missing browser evidence cannot inherit an adequate completed sample or recorded attempt rates', () => {
+  const item = COMPARISON_CASES.find((row) => row.id === 'internal')!
+  expect(
+    item.comparison?.find((row) => row.field === 'Completed sample')?.after,
+  ).toBe('Browser completed count and sample limitations are not yet recorded')
+  expect(
+    item.comparison?.find((row) => row.field === 'Population')?.after,
+  ).toBe(
+    'Same planned completed-outcome duration rule; total attempts are not yet recorded',
+  )
+  expect(
+    item.comparison?.find((row) => row.field === 'Failures and timeouts')
+      ?.after,
+  ).toBe(
+    'Browser failure and timeout rates and attempt counts are not yet recorded',
+  )
 })
 ```
 
@@ -739,8 +775,8 @@ test('two drills use independent native radio names so choosing one cannot unche
 })
 ```
 
-- [ ] **Step 2: Capture RED.** Run `pnpm exec vitest run src/features/performance/decisions.test.ts src/features/performance/DecisionDrill.test.tsx`. Save the expected missing-file failures.
-- [ ] **Step 3: Write datasets, SQL artifact and one native-radio drill.**
+- [x] **Step 2: Capture RED.** Run `pnpm exec vitest run src/features/performance/decisions.test.ts src/features/performance/DecisionDrill.test.tsx`. Save the expected missing-file failures.
+- [x] **Step 3: Write datasets, SQL artifact and one native-radio drill.**
 
 #### Implementation source: `web/src/features/performance/decisions.ts`
 
@@ -757,45 +793,83 @@ export type DecisionCase = {
 
 export const BOTTLENECK_CASES: readonly DecisionCase[] = [
   {
-    id: 'cart', prompt: 'A controlled 20-item cart shows 21 inventory queries. Repeated round trips dominate server time. Which hypothesis is supported?',
+    id: 'cart',
+    prompt:
+      'A controlled 20-item cart shows 21 inventory queries. Repeated round trips dominate server time. Which hypothesis is supported?',
     options: [
-      { id: 'batch', label: 'Batch the availability lookup and preserve the stock decision' },
-      { id: 'image', label: 'Resize the checkout image to fix server inventory time' },
+      {
+        id: 'batch',
+        label: 'Batch the availability lookup and preserve the stock decision',
+      },
+      {
+        id: 'image',
+        label: 'Resize the checkout image to fix server inventory time',
+      },
       { id: 'observe', label: 'Declare a production win from the query count' },
-    ], answer: 'batch',
+    ],
+    answer: 'batch',
     why: 'The repeated calls support a batching experiment. The image cannot explain the observed server time. Retest the browser outcome and preserve stock and order behavior.',
   },
   {
-    id: 'unknown', prompt: 'Customers report slow checkout, but you have only one uninstrumented local run and no browser baseline. What comes first?',
+    id: 'unknown',
+    prompt:
+      'Customers report slow checkout, but you have only one uninstrumented local run and no browser baseline. What comes first?',
     options: [
-      { id: 'batch', label: 'Batch inventory without evidence of repeated calls' },
+      {
+        id: 'batch',
+        label: 'Batch inventory without evidence of repeated calls',
+      },
       { id: 'image', label: 'Resize the image because the page has one' },
-      { id: 'observe', label: 'Define the user clock and collect baseline and diagnostic evidence' },
-    ], answer: 'observe',
+      {
+        id: 'observe',
+        label:
+          'Define the user clock and collect baseline and diagnostic evidence',
+      },
+    ],
+    answer: 'observe',
     why: 'Record the chosen browser outcome before naming a cause. An absent database span does not prove no database work occurred. Instrument the relevant path and state when field samples are insufficient.',
   },
 ]
 
 const QUERY_OPTIONS = [
-  { id: 'keep', label: 'Keep the plan if the measured outcome meets its target' },
-  { id: 'investigate', label: 'Investigate statistics, data and the actual plan before choosing a change' },
-  { id: 'index', label: 'Test the owner and creation index against the same workload' },
+  {
+    id: 'keep',
+    label: 'Keep the plan if the measured outcome meets its target',
+  },
+  {
+    id: 'investigate',
+    label:
+      'Investigate statistics, data and the actual plan before choosing a change',
+  },
+  {
+    id: 'index',
+    label: 'Test the owner and creation index against the same workload',
+  },
 ] as const
 
 export const QUERY_CASES: readonly DecisionCase[] = [
   {
-    id: 'small', prompt: 'A small inventory table uses a sequential scan. Its measured query and user outcome meet their targets. What does the scan imply?',
-    options: QUERY_OPTIONS, answer: 'keep',
+    id: 'small',
+    prompt:
+      'A small inventory table uses a sequential scan. Its measured query and user outcome meet their targets. What does the scan imply?',
+    options: QUERY_OPTIONS,
+    answer: 'keep',
     why: 'A sequential scan can be cheaper for a small or low-selectivity table. The scan name alone does not diagnose a missing index or justify added write cost.',
   },
   {
-    id: 'estimates', prompt: 'Actual rows differ greatly from estimated rows on a slow query. Is the plan enough to name a missing index?',
-    options: QUERY_OPTIONS, answer: 'investigate',
+    id: 'estimates',
+    prompt:
+      'Actual rows differ greatly from estimated rows on a slow query. Is the plan enough to name a missing index?',
+    options: QUERY_OPTIONS,
+    answer: 'investigate',
     why: 'Inspect actual versus estimated rows, rows filtered, buffers and time. Statistics and workload are hypotheses to investigate. Planner cost is not milliseconds; one executed plan is not a production p95.',
   },
   {
-    id: 'history', prompt: 'A measured slow order-history query filters by owner and sorts by creation. The representative plan supports testing that access path. What experiment fits?',
-    options: QUERY_OPTIONS, answer: 'index',
+    id: 'history',
+    prompt:
+      'A measured slow order-history query filters by owner and sorts by creation. The representative plan supports testing that access path. What experiment fits?',
+    options: QUERY_OPTIONS,
+    answer: 'index',
     why: 'Test (owner_id, created_at DESC) as a candidate for this filter and sort. Compare the same workload and write cost; plan locking, transaction handling and failed-index cleanup.',
   },
 ]
@@ -808,30 +882,85 @@ const COMPARE_OPTIONS = [
 ] as const
 
 const COMPARABLE: readonly ComparisonRow[] = [
-  { field: 'Outcome and observer', before: 'Browser: Place order click to response receipt', after: 'Same browser observer and start/stop events' },
-  { field: 'Population', before: 'Completed-outcome duration p95; failures/timeouts separate', after: 'Same population rule; total attempts also recorded' },
-  { field: 'Scope', before: 'POST /orders; mobile Chrome; mobile-4g-v1 network; 10000-SKU fixture; 20-item cart; warm cache', after: 'Same route, mobile Chrome segment, mobile-4g-v1 network, 10000-SKU fixture, cart and warm cache' },
-  { field: 'Window and version', before: 'Seven-day baseline; order-before', after: 'Different seven-day post-deploy window; order-after' },
-  { field: 'Completed sample', before: 'Completed count and sample limitations documented', after: 'New completed count documented; adequate for this hypothetical comparison' },
-  { field: 'Failures and timeouts', before: 'Both rates and attempts recorded separately', after: 'Same definitions; no observed increase in this case' },
-  { field: 'User outcome and target', before: 'Observed browser outcome misses the stated user target', after: 'Comparable browser outcome meets that same target' },
-  { field: 'Correctness', before: 'Stock, payment and order behavior tested', after: 'Same behavior passes correctness checks' },
+  {
+    field: 'Outcome and observer',
+    before: 'Browser: Place order click to response receipt',
+    after: 'Same browser observer and start/stop events',
+  },
+  {
+    field: 'Population',
+    before: 'Completed-outcome duration p95; failures/timeouts separate',
+    after: 'Same population rule; total attempts also recorded',
+  },
+  {
+    field: 'Scope',
+    before:
+      'POST /orders; mobile Chrome; mobile-4g-v1 network; 10000-SKU fixture; 20-item cart; warm cache',
+    after:
+      'Same route, mobile Chrome segment, mobile-4g-v1 network, 10000-SKU fixture, cart and warm cache',
+  },
+  {
+    field: 'Window and version',
+    before: 'Seven-day baseline; order-before',
+    after: 'Different seven-day post-deploy window; order-after',
+  },
+  {
+    field: 'Completed sample',
+    before: 'Completed count and sample limitations documented',
+    after:
+      'New completed count documented; adequate for this hypothetical comparison',
+  },
+  {
+    field: 'Failures and timeouts',
+    before: 'Both rates and attempts recorded separately',
+    after: 'Same definitions; no observed increase in this case',
+  },
+  {
+    field: 'User outcome and target',
+    before: 'Observed browser outcome misses the stated user target',
+    after: 'Comparable browser outcome meets that same target',
+  },
+  {
+    field: 'Correctness',
+    before: 'Stock, payment and order behavior tested',
+    after: 'Same behavior passes correctness checks',
+  },
 ]
 
-function compared(changes: Partial<Record<string, string>>): readonly ComparisonRow[] {
-  return COMPARABLE.map((row) => ({ ...row, after: changes[row.field] ?? row.after }))
+function compared(
+  changes: Partial<Record<string, string>>,
+): readonly ComparisonRow[] {
+  return COMPARABLE.map((row) => ({
+    ...row,
+    after: changes[row.field] ?? row.after,
+  }))
 }
 
 export const COMPARISON_CASES: readonly DecisionCase[] = [
   {
-    id: 'internal', prompt: 'Batching reduced the controlled inventory round trips. The after browser record is missing. Has production checkout improved?',
-    options: COMPARE_OPTIONS, answer: 'observe',
-    comparison: compared({ 'User outcome and target': 'Browser p95 and its sample are not recorded; only query count improved' }),
+    id: 'internal',
+    prompt:
+      'Batching reduced the controlled inventory round trips. The after browser record is missing. Has production checkout improved?',
+    options: COMPARE_OPTIONS,
+    answer: 'observe',
+    comparison: compared({
+      'User outcome and target':
+        'Browser p95 and its sample are not recorded; only query count improved',
+      'Completed sample':
+        'Browser completed count and sample limitations are not yet recorded',
+      Population:
+        'Same planned completed-outcome duration rule; total attempts are not yet recorded',
+      'Failures and timeouts':
+        'Browser failure and timeout rates and attempt counts are not yet recorded',
+    }),
     why: 'The faster internal work is diagnostic. Collect the same browser outcome, sample, failures and timeouts before claiming a production win.',
   },
   {
-    id: 'scope', prompt: 'The after result looks faster, but changes the device segment, cache state and duration population. What can be concluded?',
-    options: COMPARE_OPTIONS, answer: 'repeat',
+    id: 'scope',
+    prompt:
+      'The after result looks faster, but changes the device segment, cache state and duration population. What can be concluded?',
+    options: COMPARE_OPTIONS,
+    answer: 'repeat',
     comparison: compared({
       Scope: 'Desktop, cold cache and a different cart/data shape',
       Population: 'Success-only percentile; timeout population omitted',
@@ -839,13 +968,20 @@ export const COMPARISON_CASES: readonly DecisionCase[] = [
     why: 'The comparison changed segment, workload, cache and population. Repeat the same outcome under a comparable scope, keeping failures and timeouts visible.',
   },
   {
-    id: 'meets', prompt: 'The comparable user outcome meets its target, failures and timeouts did not rise, and correctness is preserved. What next?',
-    options: COMPARE_OPTIONS, answer: 'stop', comparison: COMPARABLE,
+    id: 'meets',
+    prompt:
+      'The comparable user outcome meets its target, failures and timeouts did not rise, and correctness is preserved. What next?',
+    options: COMPARE_OPTIONS,
+    answer: 'stop',
+    comparison: COMPARABLE,
     why: 'Stop this optimization pass and observe the documented field window. Low or high traffic alone does not justify another change when the user target is met.',
   },
   {
-    id: 'harm', prompt: 'The browser outcome looks faster, but a stock check now accepts an unavailable item and failed orders increased. Is that a win?',
-    options: COMPARE_OPTIONS, answer: 'revert',
+    id: 'harm',
+    prompt:
+      'The browser outcome looks faster, but a stock check now accepts an unavailable item and failed orders increased. Is that a win?',
+    options: COMPARE_OPTIONS,
+    answer: 'revert',
     comparison: compared({
       'Failures and timeouts': 'Failed order rate increased',
       Correctness: 'Stock correctness check fails on an unavailable item',
@@ -940,9 +1076,9 @@ export function DecisionDrill({ title, cases }: { title: string; cases: readonly
 }
 ```
 
-- [ ] **Step 4: Capture GREEN.** Run both files and `pnpm typecheck`. Native arrow-key behavior needs Task 8's browser test; a jsdom `keydown` does not prove browser default actions.
-- [ ] **Step 5: Teeth check.** In the verdict paragraph only, replace `{item.why}` with `{choices[item.id] === item.answer ? item.why : null}`. Only `wrong and right answers both reveal...` should fail in the Task 4 suite. Restore the unconditional reasoning and rerun GREEN.
-- [ ] **Step 6: Format, lint, review and commit.** Commit `feat(performance): judge diagnostic and outcome evidence` with the required trailer. Keep diagnosis, comparison and SQL assertions in the report.
+- [x] **Step 4: Capture GREEN.** Run both files and `pnpm typecheck`. Native arrow-key behavior needs Task 8's browser test; a jsdom `keydown` does not prove browser default actions.
+- [x] **Step 5: Teeth check.** In the verdict paragraph only, replace `{item.why}` with `{choices[item.id] === item.answer ? item.why : null}`. Only `wrong and right answers both reveal...` should fail in the Task 4 suite. Restore the unconditional reasoning and rerun GREEN.
+- [x] **Step 6: Format, lint, review and commit.** Commit `feat(performance): judge diagnostic and outcome evidence` with the required trailer. Keep diagnosis, comparison and SQL assertions in the report.
 
 
 ```bash

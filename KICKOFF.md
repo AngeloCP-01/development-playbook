@@ -1,12 +1,12 @@
 # Kickoff — Development Playbook
 
-**Next checkpoint, 2026-10-08: review the Stage 09 interactive-port plan and
-choose its execution method.** The port spec is approved (`e4074f2`, approval
-record `0f51069`); the eight-task plan is `bb42a76`. Its complete source and
-registry edits passed compiler/lint checks in memory. Product implementation,
-TDD runs and UI audits have not started. Stage 09 remains `ready: false`;
-W-3 is **14/18**, W-6 **20/25**. Read `docs/tracker.md` → Next up,
-`docs/task.md` → W-3.16, and the separate port spec and plan before executing.
+**Next checkpoint, 2026-10-09: finish the approved Stage 09 port with
+Subagent-Driven execution.** Work is on `feat/stage-09-performance-port`.
+Tasks 1–3 are implemented and independently reviewed; Task 4 is in progress.
+Resume from `.superpowers/sdd/2026-10-08-stage-09-interactive-port/progress.md`
+and the checked plan before dispatching work. Live stage audits and final
+review are still due. Stage 09 remains `ready: false`; local `develop` stays
+at W-3 **14/18**, W-6 **20/25**. No merge, push or deployment is authorized.
 
 Paste the block below into a **new coding session** opened in
 `/Users/angelito/personal/Development-Playbook` to start a round with full context.
@@ -45,7 +45,7 @@ Before doing anything, read these for context:
   during its own execution — the D-52 fix the plan pre-authorized covered one panel,
   and the real number was four.
 
-### Project state (verified 2026-10-08; recheck before work)
+### Project state (verified 2026-10-09; recheck before work)
 
 Stages 01–08 and 11–16 are interactive on local `develop` (**14/18**); 09,
 10, 17 and 18 remain. Stage 08's port merged as `a03e190`. W-6 has **20 of
@@ -64,10 +64,12 @@ timeout-denominator and user-clock gaps. The raw evidence and deferrals are in
 W-3.16 now has an approved port spec at
 `docs/superpowers/specs/2026-10-08-stage-09-interactive-port-design.md` and a
 written plan at `docs/superpowers/plans/2026-10-08-stage-09-interactive-port.md`.
-The user still needs to review that plan and choose Subagent-Driven or Inline
-execution. Subagent-Driven is recommended: separate sheet, journey, baseline,
-diagnostic and checklist tasks can be reviewed before their interfaces meet
-in stage assembly. Both methods retain this repository's TDD and review evidence.
+The user approved the plan and selected Subagent-Driven execution on
+2026-10-09. Tasks 1–3 passed independent review, with **1425/1425 tests
+across 188 files** after Task 3. The execution report retains raw TDD and
+teeth evidence; the scratch progress ledger records dispatches and rulings.
+Subagent-Driven remains recommended because each component's contracts can
+be reviewed before assembly. Execute one implementation task at a time.
 
 Read the canonical chapter, `web/PATTERNS.md`, `web/DESIGN.md` and
 `web/AGENTS.md` as well as the port spec and plan before writing code. The
@@ -88,8 +90,8 @@ The W-6 caching/scaling sheets remain separate.
    The reference check must return nothing. The tracker currently has one
    historical struck-through hit in its 2026-09-08 W-3.12 row; verify that
    every hit is struck through and immediately corrected, not a live status.
-4. **Complete the written-plan review and execution choice.** Then execute
-   W-3.16 from its task slices, preserving the approved spec and the first
+4. **Resume the approved Subagent-Driven execution from its ledger.** Execute
+   W-3.16 from the remaining task slices, preserving the approved spec and the first
    measurement ahead of optimization. Keep raw RED/GREEN and teeth evidence.
    The plan specifies the execution branch and atomic stage registration.
 5. **Keep W-6.4 separate.** Glossary and stack surfacing remains open; ask

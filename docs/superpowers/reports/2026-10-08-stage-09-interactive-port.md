@@ -1069,3 +1069,695 @@ summary: (done in 2.43 seconds)
 ## Task 3 independent review
 
 Spec and quality: review clean. No findings. All ten terminal fences match retained logs. Trailer verified. Review source: `task-3-review.md`.
+
+
+---
+
+# Task 4 implementation report
+
+Implemented the diagnosis, query-plan, and hypothetical before/after datasets; the quoted SQL artifact; and a native-radio decision drill. The drill locks the first commit, reveals reasoning on both verdict branches, derives correctness from supplied answers, resets state, and uses distinct useId radio names across instances. Verdicts use go/danger; selection uses brand. No invented p95 or traffic count is supplied.
+
+Owned files: web/src/features/performance/decisions.ts, DecisionDrill.tsx, artifacts.ts, decisions.test.ts, DecisionDrill.test.tsx.
+
+Self-review: selectable answers and distinct IDs validated; SQL matches the canonical chapter verbatim; comparison evidence renders before commit; altered supplied answer data changes the rendered verdict. Rationale regression and missing-sample correction both have focused teeth checks. Existing approved plan source was retained except for the correction below. No unrelated files staged.
+
+Important, PLAN-AUTHORED ERROR: the internal/missing-browser comparison inherited adequate sample and recorded rates from COMPARABLE despite absent browser evidence. Raised to coordinator, who authorized explicit missing completed sample, attempt totals, and failure/timeout rates. Added independent literal assertions before correcting those three cells. Diagnosis and correctness evidence remain as stipulated. No canonical chapter factual correction was needed.
+
+Deferred: Task 8 live browser native-arrow behavior, contrast, responsive overflow/touch checks, production audit and dev-console checks; stage registration; shared drill extraction; real ordering telemetry; merge, push, deployment. The stage data and SQL remain deliberate hand-ported chapter content, matching the existing architecture.
+
+## import-red
+
+Log: `.superpowers/sdd/2026-10-08-stage-09-interactive-port/task-4-import-red.log`
+
+Exit: 1. Expected missing decisions and DecisionDrill modules; establishes the import RED.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |unit| src/features/performance/decisions.test.ts (0 test)
+ ❯ |dom| src/features/performance/DecisionDrill.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/features/performance/decisions.test.ts [ src/features/performance/decisions.test.ts ]
+Error: Cannot find module './decisions' imported from /Users/angelito/personal/Development-Playbook/web/src/features/performance/decisions.test.ts
+ ❯ src/features/performance/decisions.test.ts:4:1
+      2| import { resolve } from 'node:path'
+      3| import { expect, test } from 'vitest'
+      4| import { BOTTLENECK_CASES, COMPARISON_CASES, QUERY_CASES } from './dec…
+       | ^
+      5| import { INVENTORY_PLAN } from './artifacts'
+      6|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |dom| src/features/performance/DecisionDrill.test.tsx [ src/features/performance/DecisionDrill.test.tsx ]
+Error: Failed to resolve import "./DecisionDrill" from "src/features/performance/DecisionDrill.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/angelito/personal/Development-Playbook/web/src/features/performance/DecisionDrill.test.tsx:3:30
+  1  |  import { fireEvent, render, screen, within } from "@testing-library/react";
+  2  |  import { expect, test } from "vitest";
+  3  |  import { DecisionDrill } from "./DecisionDrill";
+     |                                 ^
+  4  |  import { BOTTLENECK_CASES, COMPARISON_CASES, QUERY_CASES } from "./decisions";
+  5  |  var _jsxFileName = "/Users/angelito/personal/Development-Playbook/web/src/features/performance/DecisionDrill.test.tsx";
+ ❯ TransformPluginContext._formatLog node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30416:39
+ ❯ TransformPluginContext.error node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30413:14
+ ❯ normalizeUrl node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27438:18
+ ❯ node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27506:30
+ ❯ TransformPluginContext.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27474:4
+ ❯ EnvironmentPluginContainer.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30201:14
+ ❯ loadAndTransform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:20124:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  08:53:49
+   Duration  844ms (transform 29ms, setup 96ms, import 0ms, tests 0ms, environment 599ms)
+
+```
+
+## assertion-red
+
+Log: `.superpowers/sdd/2026-10-08-stage-09-interactive-port/task-4-assertion-red.log`
+
+Exit: 1. Failed for the right reason: the minimal skeleton has empty SQL, no selectable answer, missing comparison verdict data, and no drill controls. All seven actual assertions failed.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |unit| src/features/performance/decisions.test.ts (3 tests | 3 failed) 9ms
+   × the quoted SQL is the chapter artifact rather than a query the site claims to execute 4ms
+   × every case has a selectable answer and distinct option ids, since a missing answer makes a drill unfinishable 1ms
+   × the comparison distinguishes missing evidence, changed scope, an acceptable outcome and harmful behavior 3ms
+ ❯ |dom| src/features/performance/DecisionDrill.test.tsx (4 tests | 4 failed) 99ms
+   × wrong and right answers both reveal the rationale and the first commit stays locked 75ms
+   × comparison verdicts follow user evidence instead of the internal query improvement 11ms
+   × changed answer data changes the rendered verdict, rather than a hidden id-based answer map 7ms
+   × two drills use independent native radio names so choosing one cannot uncheck the other 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 7 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/features/performance/decisions.test.ts > the quoted SQL is the chapter artifact rather than a query the site claims to execute
+AssertionError: expected '' to be 'EXPLAIN (ANALYZE, BUFFERS)\nSELECT sk…' // Object.is equality
+
+- Expected
++ Received
+
+- EXPLAIN (ANALYZE, BUFFERS)
+- SELECT sku, available FROM inventory WHERE sku IN ('A', 'B');
+
+ ❯ src/features/performance/decisions.test.ts:10:68
+      8|   const chapter = readFileSync(resolve(process.cwd(), '../docs/09-perf…
+      9|   const sql = chapter.match(/```sql\n([\s\S]*?)\n```/)?.[1]
+     10|   expect(INVENTORY_PLAN.lines.map((line) => line.text).join('\n')).toB…
+       |                                                                    ^
+     11| })
+     12|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯
+
+ FAIL  |unit| src/features/performance/decisions.test.ts > every case has a selectable answer and distinct option ids, since a missing answer makes a drill unfinishable
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/performance/decisions.test.ts:17:70
+     15|     expect(new Set(set.map((row) => row.id)).size).toBe(set.length)
+     16|     for (const row of set) {
+     17|       expect(row.options.some((option) => option.id === row.answer)).t…
+       |                                                                      ^
+     18|       expect(new Set(row.options.map((option) => option.id)).size).toB…
+     19|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯
+
+ FAIL  |unit| src/features/performance/decisions.test.ts > the comparison distinguishes missing evidence, changed scope, an acceptable outcome and harmful behavior
+AssertionError: expected [ 'missing' ] to deeply equal [ 'observe', 'repeat', 'stop', …(1) ]
+
+- Expected
++ Received
+
+  [
+-   "observe",
+-   "repeat",
+-   "stop",
+-   "revert",
++   "missing",
+  ]
+
+ ❯ src/features/performance/decisions.test.ts:24:53
+     22|
+     23| test('the comparison distinguishes missing evidence, changed scope, an…
+     24|   expect(COMPARISON_CASES.map((row) => row.answer)).toEqual(['observe'…
+       |                                                     ^
+     25|   for (const row of COMPARISON_CASES) {
+     26|     expect(row.comparison?.map((field) => field.field)).toEqual([
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯
+
+ FAIL  |dom| src/features/performance/DecisionDrill.test.tsx > wrong and right answers both reveal the rationale and the first commit stays locked
+TestingLibraryElementError: Unable to find an accessible element with the role "radio" and name "First"
+
+Here are the accessible roles:
+
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<p>[39m
+      [0mCart diagnosis[0m
+    [36m</p>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/DecisionDrill.test.tsx:18:26
+     16|   expect(screen.queryByText(item.why)).toBeNull()
+     17|   const wrong = item.options.find((row) => row.id !== item.answer)!
+     18|   fireEvent.click(screen.getByRole('radio', { name: wrong.label }))
+       |                          ^
+     19|   fireEvent.click(screen.getByRole('button', { name: 'Commit decision'…
+     20|   expect(screen.getByText(item.why)).toBeTruthy()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯
+
+ FAIL  |dom| src/features/performance/DecisionDrill.test.tsx > comparison verdicts follow user evidence instead of the internal query improvement
+TestingLibraryElementError: Unable to find an accessible element with the role "table" and name "Before and after evidence"
+
+Here are the accessible roles:
+
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<p>[39m
+      [0mCompare outcomes[0m
+    [36m</p>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/DecisionDrill.test.tsx:36:26
+     34|   render(<DecisionDrill title="Compare outcomes" cases={COMPARISON_CAS…
+     35|   for (const [index, item] of COMPARISON_CASES.entries()) {
+     36|     const table = screen.getByRole('table', { name: 'Before and after …
+       |                          ^
+     37|     for (const row of item.comparison ?? []) {
+     38|       expect(table.textContent).toContain(row.before)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯
+
+ FAIL  |dom| src/features/performance/DecisionDrill.test.tsx > changed answer data changes the rendered verdict, rather than a hidden id-based answer map
+TestingLibraryElementError: Unable to find an accessible element with the role "radio" and name "Second"
+
+Here are the accessible roles:
+
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<p>[39m
+      [0mChanged case[0m
+    [36m</p>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/DecisionDrill.test.tsx:52:26
+     50|   const custom = { ...source, answer: source.options[1].id, why: 'Chan…
+     51|   render(<DecisionDrill title="Changed case" cases={[custom]} />)
+     52|   fireEvent.click(screen.getByRole('radio', { name: custom.options[1].…
+       |                          ^
+     53|   fireEvent.click(screen.getByRole('button', { name: 'Commit decision'…
+     54|   expect(screen.getByText('1 of 1 decisions correct')).toBeTruthy()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯
+
+ FAIL  |dom| src/features/performance/DecisionDrill.test.tsx > two drills use independent native radio names so choosing one cannot uncheck the other
+TestingLibraryElementError: Unable to find an accessible element with the role "group" and name "Missing case"
+
+Here are the accessible roles:
+
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<p>[39m
+      [0mFirst[0m
+    [36m</p>[39m
+    [36m<p>[39m
+      [0mSecond[0m
+    [36m</p>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+ ❯ src/features/performance/DecisionDrill.test.tsx:60:25
+     58| test('two drills use independent native radio names so choosing one ca…
+     59|   render(<><DecisionDrill title="First" cases={QUERY_CASES} /><Decisio…
+     60|   const groups = screen.getAllByRole('group', { name: QUERY_CASES[0].p…
+       |                         ^
+     61|   const first = within(groups[0]).getAllByRole('radio')[0] as HTMLInpu…
+     62|   const second = within(groups[1]).getAllByRole('radio')[1] as HTMLInp…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  7 failed (7)
+   Start at  08:54:04
+   Duration  841ms (transform 37ms, setup 81ms, import 42ms, tests 107ms, environment 535ms)
+
+```
+
+## green
+
+Log: `.superpowers/sdd/2026-10-08-stage-09-interactive-port/task-4-green.log`
+
+Exit: 0. Seven tests passed against the implementation.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  08:54:13
+   Duration  995ms (transform 56ms, setup 93ms, import 100ms, tests 207ms, environment 528ms)
+
+```
+
+## teeth
+
+Log: `.superpowers/sdd/2026-10-08-stage-09-interactive-port/task-4-teeth.log`
+
+Exit: 1. Expected failure: wrong-answer rationale was deliberately hidden. Only the wrong/right rationale test failed; six passed.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/DecisionDrill.test.tsx (4 tests | 1 failed) 209ms
+   × wrong and right answers both reveal the rationale and the first commit stays locked 100ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/DecisionDrill.test.tsx > wrong and right answers both reveal the rationale and the first commit stays locked
+TestingLibraryElementError: Unable to find an element with the text: The repeated calls support a batching experiment. The image cannot explain the observed server time. Retest the browser outcome and preserve stock and order behavior.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"border border-line bg-raised p-5 sm:p-6 "[39m
+    [36m>[39m
+      [36m<p[39m
+        [33mclass[39m=[32m"t-label mb-2 text-brand"[39m
+      [36m>[39m
+        [0mHypothetical exercise[0m
+      [36m</p>[39m
+      [36m<h3[39m
+        [33mclass[39m=[32m"t-head mb-3 text-lg"[39m
+      [36m>[39m
+        [0mCart diagnosis[0m
+      [36m</h3>[39m
+      [36m<p[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"t-data mb-4 text-sm text-muted"[39m
+      [36m>[39m
+        [0m0 of 1 decisions correct[0m
+      [36m</p>[39m
+      [36m<fieldset[39m
+        [33mclass[39m=[32m"min-w-0 space-y-2"[39m
+        [33mdisabled[39m=[32m""[39m
+      [36m>[39m
+        [36m<legend[39m
+          [33mclass[39m=[32m"mb-3 text-sm font-medium"[39m
+        [36m>[39m
+          [0mA controlled 20-item cart shows 21 inventory queries. Repeated round trips dominate server time. Which hypothesis is supported?[0m
+        [36m</legend>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"relative flex min-h-11 cursor-pointer items-start gap-3 border border-line p-3 text-sm focus-within:outline-2 focus-within:outline-brand"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"peer absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-default"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mname[39m=[32m"_r_0_-cart"[39m
+            [33mtype[39m=[32m"radio"[39m
+            [33mvalue[39m=[32m"batch"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"mt-1 size-4 shrink-0 border border-line peer-checked:border-brand peer-checked:bg-brand"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"min-w-0 break-words"[39m
+          [36m>[39m
+            [0mBatch the availability lookup and preserve the stock decision[0m
+          [36m</span>[39m
+        [36m</label>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"relative flex min-h-11 cursor-pointer items-start gap-3 border border-line p-3 text-sm focus-within:outline-2 focus-within:outline-brand"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"peer absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-default"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mname[39m=[32m"_r_0_-cart"[39m
+            [33mtype[39m=[32m"radio"[39m
+            [33mvalue[39m=[32m"image"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"mt-1 size-4 shrink-0 border border-line peer-checked:border-brand peer-checked:bg-brand"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"min-w-0 break-words"[39m
+          [36m>[39m
+            [0mResize the checkout image to fix server inventory time[0m
+          [36m</span>[39m
+        [36m</label>[39m
+        [36m<label[39m
+          [33mclass[39m=[32m"relative flex min-h-11 cursor-pointer items-start gap-3 border border-line p-3 text-sm focus-within:outline-2 focus-within:outline-brand"[39m
+        [36m>[39m
+          [36m<input[39m
+            [33mclass[39m=[32m"peer absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-default"[39m
+            [33mdisabled[39m=[32m""[39m
+            [33mname[39m=[32m"_r_0_-cart"[39m
+            [33mtype[39m=[32m"radio"[39m
+            [33mvalue[39m=[32m"observe"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33maria-hidden[39m=[32m"true"[39m
+            [33mclass[39m=[32m"mt-1 size-4 shrink-0 border border-line peer-checked:border-brand peer-checked:bg-brand"[39m
+          [36m/>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"min-w-0 break-words"[39m
+          [36m>[39m
+            [0mDeclare a production win from the query count[0m
+          [36m</span>[39m
+        [36m</label>[39m
+      [36m</fieldset>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"mt-4 min-h-11 border border-line px-4 text-sm disabled:cursor-default disabled:text-subtle"[39m
+        [33mdisabled[39m=[32m""[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mCommit decision[0m
+      [36m</button>[39m
+      [36m<div[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"mt-4"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"text-sm font-medium text-danger"[39m
+        [36m>[39m
+          [0mNeeds correction[0m
+        [36m</p>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"mt-2 text-sm leading-relaxed text-muted"[39m
+        [36m/>[39m
+      [36m</div>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"mt-4 min-h-11 border border-line px-4 text-sm"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mNext case[0m
+      [36m</button>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"mt-4 ml-2 min-h-11 border border-line px-4 text-sm"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mReset decisions[0m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/DecisionDrill.test.tsx:20:17
+     18|   fireEvent.click(screen.getByRole('radio', { name: wrong.label }))
+     19|   fireEvent.click(screen.getByRole('button', { name: 'Commit decision'…
+     20|   expect(screen.getByText(item.why)).toBeTruthy()
+       |                 ^
+     21|   expect(screen.getByText('0 of 1 decisions correct')).toBeTruthy()
+     22|   for (const radio of screen.getAllByRole('radio')) expect((radio as H…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 6 passed (7)
+   Start at  08:54:34
+   Duration  967ms (transform 61ms, setup 103ms, import 105ms, tests 212ms, environment 488ms)
+
+```
+
+## restored
+
+Log: `.superpowers/sdd/2026-10-08-stage-09-interactive-port/task-4-restored.log`
+
+Exit: 0. Unconditional rationale restored: seven tests passed.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  08:54:37
+   Duration  820ms (transform 57ms, setup 62ms, import 105ms, tests 210ms, environment 394ms)
+
+```
+
+## correction-red
+
+Log: `.superpowers/sdd/2026-10-08-stage-09-interactive-port/task-4-correction-red.log`
+
+Exit: 1. Failed for the right reason: the missing-browser case inherited an adequate completed sample despite missing browser evidence. One failed, seven passed.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |unit| src/features/performance/decisions.test.ts (4 tests | 1 failed) 6ms
+   × missing browser evidence cannot inherit an adequate completed sample or recorded attempt rates 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/features/performance/decisions.test.ts > missing browser evidence cannot inherit an adequate completed sample or recorded attempt rates
+AssertionError: expected 'New completed count documented; adequ…' to be 'Browser completed count and sample li…' // Object.is equality
+
+Expected: "Browser completed count and sample limitations are not yet recorded"
+Received: "New completed count documented; adequate for this hypothetical comparison"
+
+ ❯ src/features/performance/decisions.test.ts:35:83
+     33| test('missing browser evidence cannot inherit an adequate completed sa…
+     34|   const item = COMPARISON_CASES.find((row) => row.id === 'internal')!
+     35|   expect(item.comparison?.find((row) => row.field === 'Completed sampl…
+       |                                                                                   ^
+     36|   expect(item.comparison?.find((row) => row.field === 'Population')?.a…
+     37|   expect(item.comparison?.find((row) => row.field === 'Failures and ti…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 7 passed (8)
+   Start at  08:54:53
+   Duration  906ms (transform 52ms, setup 73ms, import 102ms, tests 228ms, environment 455ms)
+
+```
+
+## correction-green
+
+Log: `.superpowers/sdd/2026-10-08-stage-09-interactive-port/task-4-correction-green.log`
+
+Exit: 0. Missing completed sample, planned population with missing attempt totals, and unrecorded failure/timeout rates are explicit; eight tests passed.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  2 passed (2)
+      Tests  8 passed (8)
+   Start at  08:54:55
+   Duration  383.25s (transform 277ms, setup 905ms, import 420ms, tests 1.07s, environment 380.75s)
+
+```
+
+## correction-teeth
+
+Log: `.superpowers/sdd/2026-10-08-stage-09-interactive-port/task-4-correction-teeth.log`
+
+Exit: 1. Deliberately removed completed-sample override. Only the new consistency test failed; seven passed.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |unit| src/features/performance/decisions.test.ts (4 tests | 1 failed) 6ms
+   × missing browser evidence cannot inherit an adequate completed sample or recorded attempt rates 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/features/performance/decisions.test.ts > missing browser evidence cannot inherit an adequate completed sample or recorded attempt rates
+AssertionError: expected 'New completed count documented; adequ…' to be 'Browser completed count and sample li…' // Object.is equality
+
+Expected: "Browser completed count and sample limitations are not yet recorded"
+Received: "New completed count documented; adequate for this hypothetical comparison"
+
+ ❯ src/features/performance/decisions.test.ts:35:83
+     33| test('missing browser evidence cannot inherit an adequate completed sa…
+     34|   const item = COMPARISON_CASES.find((row) => row.id === 'internal')!
+     35|   expect(item.comparison?.find((row) => row.field === 'Completed sampl…
+       |                                                                                   ^
+     36|   expect(item.comparison?.find((row) => row.field === 'Population')?.a…
+     37|   expect(item.comparison?.find((row) => row.field === 'Failures and ti…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 7 passed (8)
+   Start at  09:01:39
+   Duration  996ms (transform 61ms, setup 101ms, import 108ms, tests 219ms, environment 516ms)
+
+```
+
+## format
+
+Log: `.superpowers/sdd/2026-10-08-stage-09-interactive-port/task-4-format.log`
+
+Exit: 0. Prettier formatted the five owned files.
+
+```text
+src/features/performance/decisions.ts 40ms
+src/features/performance/DecisionDrill.tsx 20ms
+src/features/performance/artifacts.ts 1ms
+src/features/performance/decisions.test.ts 18ms
+src/features/performance/DecisionDrill.test.tsx 14ms
+```
+
+## correction-restored
+
+Log: `.superpowers/sdd/2026-10-08-stage-09-interactive-port/task-4-correction-restored.log`
+
+Exit: 0. Missing-sample override restored and formatted: eight tests passed.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  2 passed (2)
+      Tests  8 passed (8)
+   Start at  09:01:42
+   Duration  770ms (transform 47ms, setup 62ms, import 100ms, tests 232ms, environment 330ms)
+
+```
+
+## full
+
+Log: `.superpowers/sdd/2026-10-08-stage-09-interactive-port/task-4-full.log`
+
+Exit: 0. Full pnpm test passed: 1433 tests across 190 files. No failures or warnings.
+
+```text
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/web
+> vitest run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  190 passed (190)
+      Tests  1433 passed (1433)
+   Start at  09:01:53
+   Duration  26.60s (transform 11.81s, setup 12.70s, import 30.96s, tests 41.35s, environment 65.62s)
+
+```
+
+## typecheck
+
+Log: `.superpowers/sdd/2026-10-08-stage-09-interactive-port/task-4-typecheck.log`
+
+Exit: 0. pnpm typecheck generated routes then checked TypeScript successfully.
+
+```text
+
+> web@0.1.0 typecheck /Users/angelito/personal/Development-Playbook/web
+> next typegen && tsc --noEmit
+
+Generating route types...
+✓ Types generated successfully
+```
+
+## lint
+
+Log: `.superpowers/sdd/2026-10-08-stage-09-interactive-port/task-4-lint.log`
+
+Exit: 0. Repository lint passed with zero warnings.
+
+```text
+
+> web@0.1.0 lint /Users/angelito/personal/Development-Playbook/web
+> eslint --max-warnings 0
+
+```
+
+Commit: `592a9e0` (`feat(performance): judge diagnostic and outcome evidence`), five owned files, 530 insertions. Commit hooks passed format and lint.
+
+Evidence handling: initial fence-validation regex was too broad and matched SQL triple backticks inside raw assertion output. Revalidated all 13 fences using full delimiter lines; each equals its retained log exactly. No log content changed. Initial git staging hit the filesystem sandbox's read-only .git restriction; authorized escalated staging/commit succeeded. No approval rejection occurred.
+
+## Task 4 independent review
+
+Review clean after one PLAN-AUTHORED ERROR fixed. No outstanding findings. All thirteen logs exactly match their report fences. Commit trailer verified. Review source: `task-4-review.md`.

@@ -136,13 +136,12 @@ Map of what lands where:
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
-**Current round:** Stage 09 interactive port. The written port spec is approved,
-and the eight-task implementation plan is ready for review and execution-method
-selection. Its hypothetical order case and locally saved worksheet preserve the
-reviewed chapter's user clocks, baseline, diagnosis and comparable retest. No
-product code has been written in this planning round.
+**Current round:** Stage 09 interactive port. The user approved the eight-task
+plan and selected Subagent-Driven execution on 2026-10-09. Tasks 1–3 are
+implemented and independently reviewed on `feat/stage-09-performance-port`;
+Task 4 is in progress. Stage assembly, live audits and final review remain.
 
-### W-3.16 — Stage 09 interactive port ☐ *(specified and planned; awaiting execution choice)*
+### W-3.16 — Stage 09 interactive port ◐ *(executing the approved plan)*
 
 Start from the [reviewed chapter](09-performance-optimization.md), its
 [design spec](superpowers/specs/2026-10-08-stage-09-performance-design.md),
@@ -152,8 +151,9 @@ and the [source audit](../reference/stage-09-performance-sources.md). Read
 [separate port spec](superpowers/specs/2026-10-08-stage-09-interactive-port-design.md)
 was approved on 2026-10-08. The
 [eight-task plan](superpowers/plans/2026-10-08-stage-09-interactive-port.md)
-is written and self-reviewed; next, review it and choose an execution method
-before implementing with TDD and the stage review/live-build loop.
+is approved for Subagent-Driven execution. Resume from its checked tasks and
+the scratch progress ledger; the [execution report](superpowers/reports/2026-10-08-stage-09-interactive-port.md)
+preserves TDD and review evidence.
 
 The port should make the reader choose a user-visible outcome, define its
 start/end observer, record a comparable first baseline, distinguish checkout,
