@@ -79,9 +79,8 @@ Error: Cannot find module './performance-sheet' imported from /Users/angelito/pe
       Tests no tests
    Start at 08:30:30
    Duration 129ms (transform 17ms, setup 0ms, import 0ms, tests 0ms, environment 0ms)
-
-exit_code=1
 ```
+Command exit status: 1
 
 #### Original focused GREEN
 
@@ -94,9 +93,8 @@ Command: `pnpm exec vitest run src/lib/performance-sheet.test.ts`.
       Tests  3 passed (3)
    Start at 08:30:48
    Duration 167ms (transform 28ms, setup 0ms, import 52ms, tests 2ms, environment 0ms)
-
-exit_code=0
 ```
+Command exit status: 0
 
 #### Original full suite
 
@@ -112,9 +110,8 @@ Command: `pnpm test`.
       Tests  1419 passed (1419)
    Start at 08:31:11
    Duration 17.72s (transform 9.43s, setup 8.41s, import 22.30s, tests 24.46s, environment 40.22s)
-
-exit_code=0
 ```
+Command exit status: 0
 
 ### Evidence repair: new controlled verification
 
@@ -127,6 +124,7 @@ Each raw output is also retained in `.superpowers/sdd/2026-10-08-stage-09-intera
 Raw capture: `task-1-evidence-repair-red.log`.
 
 ```text
+
  RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
 
  ❯ |unit| src/lib/performance-sheet.test.ts (3 tests | 3 failed) 8ms
@@ -222,6 +220,7 @@ AssertionError: expected '' to be '# Performance measurement record\n\n#…' // 
 
  ❯ src/lib/performance-sheet.test.ts:38:18
 
+
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
 
  FAIL  |unit| src/lib/performance-sheet.test.ts > the baseline and follow-up views partition the record without losing a field
@@ -231,12 +230,12 @@ AssertionError: expected [] to deeply equal [ 'outcome', 'metric', 'scope', …(
 + Received
 
 - [
--   'outcome',
--   'metric',
--   'scope',
--   'window',
--   'evidence',
--   'target',
+-   "outcome",
+-   "metric",
+-   "scope",
+-   "window",
+-   "evidence",
+-   "target",
 - ]
 + []
 
@@ -250,28 +249,33 @@ AssertionError: expected [] to deeply equal [ 'outcome', 'metric', 'scope', …(
 
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
 
+
  Test Files  1 failed (1)
       Tests  3 failed (3)
-   Start at 08:35:52
-   Duration 117ms (transform 18ms, setup 0ms, import 25ms, tests 8ms, environment 0ms)
+   Start at  08:35:52
+   Duration  117ms (transform 18ms, setup 0ms, import 25ms, tests 8ms, environment 0ms)
 
-exit_code=1
+
 ```
+Command exit status: 1
 
 #### New GREEN after restoration
 
 Raw capture: `task-1-evidence-repair-green.log`.
 
 ```text
+
  RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
 
  Test Files  1 passed (1)
       Tests  3 passed (3)
-   Start at 08:35:56
-   Duration 99ms (transform 16ms, setup 0ms, import 22ms, tests 2ms, environment 0ms)
+   Start at  08:35:56
+   Duration  99ms (transform 16ms, setup 0ms, import 22ms, tests 2ms, environment 0ms)
 
-exit_code=0
+
 ```
+Command exit status: 0
 
 #### Teeth mutation
 
@@ -280,6 +284,7 @@ Changed only the Markdown fallback from `not recorded` to `missing`.
 Raw capture: `task-1-evidence-repair-teeth.log`.
 
 ```text
+
  RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
 
  ❯ |unit| src/lib/performance-sheet.test.ts (3 tests | 1 failed) 6ms
@@ -352,30 +357,36 @@ AssertionError: expected '# Performance measurement record\n\n#…' to be '# Per
 
  ❯ src/lib/performance-sheet.test.ts:38:18
 
+
 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
 
  Test Files  1 failed (1)
       Tests  1 failed | 2 passed (3)
-   Start at 08:36:00
-   Duration 104ms (transform 16ms, setup 0ms, import 22ms, tests 6ms, environment 0ms)
+   Start at  08:36:00
+   Duration  104ms (transform 16ms, setup 0ms, import 22ms, tests 6ms, environment 0ms)
 
-exit_code=1
+
 ```
+Command exit status: 1
 
 #### Restored GREEN and source equality
 
 Raw capture: `task-1-evidence-repair-restored-green.log`. Following the passing test run, `git diff --exit-code -- src/lib/performance-sheet.ts` returned exit 0 with no output.
 
 ```text
+
  RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
 
  Test Files  1 passed (1)
       Tests  3 passed (3)
-   Start at 08:36:04
-   Duration 107ms (transform 15ms, setup 0ms, import 21ms, tests 2ms, environment 0ms)
+   Start at  08:36:04
+   Duration  107ms (transform 15ms, setup 0ms, import 21ms, tests 2ms, environment 0ms)
 
-exit_code=0
+
 ```
+Command exit status: 0
 
 ### Verification
 
@@ -394,3 +405,21 @@ exit_code=0
 ### Evidence-report repair
 
 The initial shell command used repository-root paths while running from `web/`; it failed to modify the model and accidentally wrote a passing run to the RED filename. That mislabeled file was deleted immediately and excluded from evidence. The correctly named logs above were captured after correcting the working-directory paths.
+
+### Task 1 evidence report repair round 2
+
+No product files changed, and no tests were rerun. Following the rereview, a Python script read each of the four retained `.log` files as text and replaced the corresponding `Raw capture:` text fence in both the scratch report and this canonical report with that file's contents. It added only a final newline when a source log lacked one. The script also removed every synthetic `exit_code=` line from all text fences, including original test excerpts, and moved those statuses to prose immediately after their fences.
+
+A second Python check extracted each of the four named fences from both reports and compared them with their corresponding retained logs after normalizing only one final newline. Actual check output:
+
+```text
+PASS .superpowers/sdd/2026-10-08-stage-09-interactive-port/task-1-report.md == task-1-evidence-repair-red.log (only final newline normalized)
+PASS .superpowers/sdd/2026-10-08-stage-09-interactive-port/task-1-report.md == task-1-evidence-repair-green.log (only final newline normalized)
+PASS .superpowers/sdd/2026-10-08-stage-09-interactive-port/task-1-report.md == task-1-evidence-repair-teeth.log (only final newline normalized)
+PASS .superpowers/sdd/2026-10-08-stage-09-interactive-port/task-1-report.md == task-1-evidence-repair-restored-green.log (only final newline normalized)
+PASS docs/superpowers/reports/2026-10-08-stage-09-interactive-port.md == task-1-evidence-repair-red.log (only final newline normalized)
+PASS docs/superpowers/reports/2026-10-08-stage-09-interactive-port.md == task-1-evidence-repair-green.log (only final newline normalized)
+PASS docs/superpowers/reports/2026-10-08-stage-09-interactive-port.md == task-1-evidence-repair-teeth.log (only final newline normalized)
+PASS docs/superpowers/reports/2026-10-08-stage-09-interactive-port.md == task-1-evidence-repair-restored-green.log (only final newline normalized)
+PASS all 8 report/log comparisons
+```
