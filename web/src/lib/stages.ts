@@ -109,7 +109,7 @@ export const STAGES: Stage[] = [
     blurb: 'Make it fast enough, using measurements rather than instinct.',
     group: 'Building',
     timing: 'When something is measurably slow. Never preemptively.',
-    ready: false,
+    ready: true,
   },
   {
     num: '10',

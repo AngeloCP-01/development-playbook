@@ -7,6 +7,7 @@ import { Development } from './development/Development'
 import { Testing } from './testing/Testing'
 import { CodeReview } from './code-review/CodeReview'
 import { SecurityAudit } from './security-audit/SecurityAudit'
+import { PerformanceOptimization } from './performance/PerformanceOptimization'
 import CiCd from './ci-cd/CiCd'
 import { Staging } from './staging/Staging'
 import { ProductionDeployment } from './production-deployment/ProductionDeployment'
@@ -27,6 +28,7 @@ export const STAGE_CONTENT: Record<string, ComponentType> = {
   '06-testing': Testing,
   '07-code-review': CodeReview,
   '08-security-audit': SecurityAudit,
+  '09-performance-optimization': PerformanceOptimization,
   '11-ci-cd': CiCd,
   '12-staging': Staging,
   '13-production-deployment': ProductionDeployment,
