@@ -2860,3 +2860,711 @@ summary: (done in 2.17 seconds)
 ## Task 6 independent review
 
 Spec and quality: review clean. No findings. All eleven raw fences match their logs and recorded exits. Commit trailer verified. Review source: `task-6-review.md`.
+
+
+---
+
+# Task 7 implementation report
+
+Implemented the approved twelve teaching panels, seven optimization candidates, eight traps, three AI plays, evidence prompt and canonical coverage mapping. Added six terms and five Stage 09 references to their canonical registries, and generated the glossary with `pnpm gen:glossary`. Stage registration and readiness are untouched. Coordinator expanded ownership narrowly to canonical chapter vocabulary after the full-suite guard caught a plan-authored registry/chapter mismatch.
+
+## Test rationale and deviations
+
+The controlled disclosure test detects dropping a candidate's evidence, risk or comparable retest. The supplied test only inspected evidence and retest per row; added risk per row with InlineCode backticks removed, as agreed with the coordinator. The remaining tests detect ignored injected candidate data, inaccessible trap disclosures, conflated local budgets, corrupted copyable SQL lines, and missing clipboard fallback/evidence prompt contracts.
+
+The import RED is missing modules only, not substantive behavior evidence. The minimal compilable skeleton then produced eight actual assertion failures: empty coverage, missing canonical term metadata, absent disclosures, absent target thresholds, absent SQL lines, and absent prompt copy controls. This failed for the right reason: the requested features and metadata had not yet been implemented.
+
+The first implementation attempt passed 26/27 but failed the SQL render with `ResizeObserver is not defined`. Corrected initial diagnosis after tracing shared test setup: setup.ts already installs NoopResizeObserver, but the plan-authored blanket `afterEach(vi.unstubAllGlobals)` removes it after the first test. The SQL test now installs a local no-op browser API stub; it does not mock the real artifact, change the shared setup, or assert observer behavior. This setup failure is not claimed as implementation RED or GREEN.
+
+The specified teeth mutation omitted the entire risk RevealFacet. Exactly the candidate disclosure test failed, at the added per-row risk assertion; seven Task 7 tests stayed green. Restored the complete risk facet and formatted before restored GREEN.
+
+One generator invocation was attempted from repository root with a web-relative log destination; shell redirection failed before pnpm ran. Retried from web/. No generator output was falsely claimed from that failed invocation.
+
+## Canonical vocabulary correction
+
+The initial full-suite run failed for the expected registry-to-chapter mismatch: `a term pointing at a stage names something that stage actually says` reported four new orphans (LCP, INP, CLS and cache invalidation). This is PLAN-AUTHORED, not an implementer deviation: prescribed names and see links were absent verbatim from the canonical chapter. The coordinator approved narrow ownership of `docs/09-performance-optimization.md`, retaining all prescribed glossary names and metadata rather than weakening the guard or orphan allowlist.
+
+Expanded the three first-encounter metric names while preserving ≤2.5 s, ≤200 ms, ≤0.1, p75 and both mobile/desktop segments, and named “cache invalidation” in the existing API caveat. Focused chapter/term/content guards passed 13/13. Removing only the expanded LCP name made exactly the orphan guard fail (12 others passed); restored name returned to 13/13. Humanizer pass preserved the plain technical threshold and API statements; no semantic rewrite was needed. Canonical chapter commits separately before the feature commit.
+
+## Self-review
+
+Preserved the drawing theme, native reusable disclosure/drill controls, explicit term spacing, semantic warning colour for correctness risk and brand attention labels. All invented measurements are labeled hypothetical; no real production p95 is claimed. SQL remains the two exact artifact lines. API caveats preserve Server Actions-only updateTag, migration locking/transaction/invalid-index risks, eager LCP loading and compatible static-export loader requirements. No runtime caching is enabled.
+
+Humanizer pass: retained specific technical caveats and concrete language. Draft change: “This practice now uses browser checkout” → “This practice uses browser checkout.” Remaining review found no clustered filler or inflated claims requiring a rewrite. Final removes diff-anchored “now” without altering the teaching contract.
+
+Deferred: Stage 8 registration/readiness and six term opening checks, live production/dev console/contrast/responsive auditing after assembly, real telemetry, W-6 sheets, shared-drill extraction, merge/push/deployment, and coordinator-owned canonical documentation.
+
+## Completion
+
+Commits: `af9cc5e` (canonical vocabulary) and `159e47c` (teaching panels and registries). Final full suite: **1451/1451 tests, 195/195 files**. Focused Task 7/registry suite: 27/27; canonical chapter suite: 13/13. Typecheck, lint and owned formatting passed. Commit hooks reported every owned TypeScript file unchanged by formatting and lint passed. Working tree clean after both commits. NOT merged, NOT pushed, NOT deployed.
+
+Git metadata writes initially failed sandbox restrictions (`index.lock: Operation not permitted`); retried with approved git escalation. No automatic-review rejection occurred. The initial failed commit output is retained.
+
+No unresolved Task 7 implementation defect. Stage-level browser checks and term opening remain coordinator/Task 8 follow-up, since this task does not register the stage.
+
+## Evidence
+
+### Initial missing-module RED (exit 1; no assertion evidence)
+
+Raw log: `task-7-import-red.log`. Actual exit status: 1.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |unit| src/features/performance/content.test.ts (0 test)
+ ❯ |dom| src/features/performance/panels.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/features/performance/content.test.ts [ src/features/performance/content.test.ts ]
+Error: Cannot find module './content' imported from /Users/angelito/personal/Development-Playbook/web/src/features/performance/content.test.ts
+ ❯ src/features/performance/content.test.ts:6:1
+      4| import { getTerm } from '@/lib/terms'
+      5| import { getReferences } from '@/lib/references'
+      6| import { AI_PROMPT, COVERAGE, FIXES, TRAPS } from './content'
+       | ^
+      7|
+      8| const chapter = () => readFileSync(resolve(process.cwd(), '../docs/09-…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |dom| src/features/performance/panels.test.tsx [ src/features/performance/panels.test.tsx ]
+Error: Failed to resolve import "./panels-diagnose" from "src/features/performance/panels.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/angelito/personal/Development-Playbook/web/src/features/performance/panels.test.tsx:4:39
+  2  |  import { afterEach, expect, test, vi } from "vitest";
+  3  |  import { AIPanel, TrapsPanel } from "./panels-close";
+  4  |  import { FixesPanel, QueryPanel } from "./panels-diagnose";
+     |                                          ^
+  5  |  import { TargetsPanel } from "./panels-measure";
+  6  |  import { AI_PROMPT, FIXES, TRAPS } from "./content";
+ ❯ TransformPluginContext._formatLog node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30416:39
+ ❯ TransformPluginContext.error node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30413:14
+ ❯ normalizeUrl node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27438:18
+ ❯ node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27506:30
+ ❯ TransformPluginContext.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27474:4
+ ❯ EnvironmentPluginContainer.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30201:14
+ ❯ loadAndTransform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:20124:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  09:17:01
+   Duration  826ms (transform 60ms, setup 90ms, import 0ms, tests 0ms, environment 609ms)
+
+```
+
+### Compilable skeleton assertion RED (exit 1; 8 expected failures)
+
+Raw log: `task-7-assertion-red.log`. Actual exit status: 1.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |unit| src/features/performance/content.test.ts (2 tests | 2 failed) 6ms
+   × coverage names every canonical section including bold fix and trap items 5ms
+   × new first-encounter terms and five extending references exist in their single sources 1ms
+ ❯ |dom| src/features/performance/panels.test.tsx (6 tests | 6 failed) 75ms
+   × every candidate reveals evidence, correctness risk and comparable retest instead of a blanket recommendation 61ms
+   × changed candidate data changes what the reader sees rather than only passing a data invariant 3ms
+   × every canonical trap is consultable by its own label 3ms
+   × targets distinguish inclusive published thresholds from local product budgets 2ms
+   × the SQL artifact renders its exact copyable lines separately from notes 3ms
+   × the AI prompt requires real evidence and handles rejected copying without an unhandled promise 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/features/performance/content.test.ts > coverage names every canonical section including bold fix and trap items
+AssertionError: expected [] to deeply equal [ 'Entry criteria', …(11) ]
+
+- Expected
++ Received
+
+- [
+-   "Entry criteria",
+-   "Map the order journey",
+-   "Measure the first baseline",
+-   "Decide what fast enough means",
+-   "Find the real bottleneck",
+-   "The fixes that usually matter",
+-   "When not to optimize",
+-   "AI in performance optimization",
+-   "Artifacts",
+-   "Definition of done",
+-   "Scaling to a team",
+-   "Traps",
+- ]
++ []
+
+ ❯ src/features/performance/content.test.ts:13:33
+     11|   const md = chapter()
+     12|   const headings = [...md.matchAll(/^#{2,3} (.+)$/gm)].map((m) => m[1]…
+     13|   expect(Object.keys(COVERAGE)).toEqual(headings)
+       |                                 ^
+     14|   const fixes = md.split('### The fixes that usually matter')[1].split…
+     15|   const titles = (text: string) => [...text.matchAll(/^\*\*([^*]+)\.\*…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  |unit| src/features/performance/content.test.ts > new first-encounter terms and five extending references exist in their single sources
+AssertionError: expected undefined to be '09-performance-optimization' // Object.is equality
+
+- Expected:
+"09-performance-optimization"
+
++ Received:
+undefined
+
+ ❯ src/features/performance/content.test.ts:22:30
+     20| test('new first-encounter terms and five extending references exist in…
+     21|   for (const id of ['lcp', 'inp', 'cls', 'n-plus-one', 'query-plan', '…
+     22|     expect(getTerm(id)?.see).toBe('09-performance-optimization')
+       |                              ^
+     23|   }
+     24|   expect(getReferences('09-performance-optimization').map((row) => row…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  |dom| src/features/performance/panels.test.tsx > every candidate reveals evidence, correctness risk and comparable retest instead of a blanket recommendation
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Index or query shape"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/panels.test.tsx:14:27
+     12|   render(<FixesPanel />)
+     13|   for (const row of FIXES) {
+     14|     const toggle = screen.getByRole('button', { name: row.title })
+       |                           ^
+     15|     fireEvent.click(toggle)
+     16|     const detail = document.getElementById(toggle.getAttribute('aria-c…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  |dom| src/features/performance/panels.test.tsx > changed candidate data changes what the reader sees rather than only passing a data invariant
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/Index or query shape/`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/panels.test.tsx:35:26
+     33| test('changed candidate data changes what the reader sees rather than …
+     34|   render(<FixesPanel fixes={[{ ...FIXES[0], retest: 'Measure the chang…
+     35|   fireEvent.click(screen.getByRole('button', { name: /Index or query s…
+       |                          ^
+     36|   expect(screen.getByText('Measure the changed user boundary.')).toBeT…
+     37| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  |dom| src/features/performance/panels.test.tsx > every canonical trap is consultable by its own label
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/Optimizing without measuring/`
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/panels.test.tsx:42:28
+     40|   render(<TrapsPanel />)
+     41|   for (const row of TRAPS) {
+     42|     fireEvent.click(screen.getByRole('button', { name: new RegExp(row.…
+       |                            ^
+     43|     expect(screen.getByText(row.detail)).toBeTruthy()
+     44|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  |dom| src/features/performance/panels.test.tsx > targets distinguish inclusive published thresholds from local product budgets
+AssertionError: expected '' to contain 'LCP ≤2.5 s'
+
+- Expected
++ Received
+
+- LCP ≤2.5 s
+
+ ❯ src/features/performance/panels.test.tsx:49:37
+     47| test('targets distinguish inclusive published thresholds from local pr…
+     48|   render(<TargetsPanel />)
+     49|   expect(document.body.textContent).toContain('LCP ≤2.5 s')
+       |                                     ^
+     50|   expect(document.body.textContent).toContain('INP ≤200 ms')
+     51|   expect(document.body.textContent).toContain('CLS ≤0.1')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  |dom| src/features/performance/panels.test.tsx > the SQL artifact renders its exact copyable lines separately from notes
+AssertionError: expected [] to deeply equal [ 'EXPLAIN (ANALYZE, BUFFERS)', …(1) ]
+
+- Expected
++ Received
+
+- [
+-   "EXPLAIN (ANALYZE, BUFFERS)",
+-   "SELECT sku, available FROM inventory WHERE sku IN ('A', 'B');",
+- ]
++ []
+
+ ❯ src/features/performance/panels.test.tsx:59:17
+     57|   const { container } = render(<QueryPanel />)
+     58|   const lines = [...container.querySelectorAll('[data-artifact-line]')…
+     59|   expect(lines).toEqual(INVENTORY_PLAN.lines.map((line) => line.text))
+       |                 ^
+     60| })
+     61|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  |dom| src/features/performance/panels.test.tsx > the AI prompt requires real evidence and handles rejected copying without an unhandled promise
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name "Copy evidence prompt"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/panels.test.tsx:66:50
+     64|   vi.stubGlobal('navigator', { clipboard: { writeText } })
+     65|   render(<AIPanel />)
+     66|   await act(async () => { fireEvent.click(screen.getByRole('button', {…
+       |                                                  ^
+     67|   expect(writeText).toHaveBeenCalledWith(AI_PROMPT)
+     68|   expect((screen.getByLabelText('Evidence prompt') as HTMLTextAreaElem…
+ ❯ node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.3_@type_796f041f1bf25f255ff84691b91a8ac6/node_modules/@testing-library/react/dist/act-compat.js:47:24
+ ❯ process.env.NODE_ENV.exports.act node_modules/.pnpm/react@19.2.4/node_modules/react/cjs/react.development.js:814:22
+ ❯ node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.3_@type_796f041f1bf25f255ff84691b91a8ac6/node_modules/@testing-library/react/dist/act-compat.js:46:25
+ ❯ src/features/performance/panels.test.tsx:66:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  8 failed (8)
+   Start at  09:17:16
+   Duration  928ms (transform 138ms, setup 83ms, import 168ms, tests 82ms, environment 648ms)
+
+```
+
+### Generated glossary (exit 0; 1 snapshot updated)
+
+Raw log: `task-7-generator.log`. Actual exit status: 0.
+
+```text
+
+> web@0.1.0 gen:glossary /Users/angelito/personal/Development-Playbook/web
+> vitest run src/lib/glossary.test.ts --update
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+  Snapshots  1 updated 
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  09:17:36
+   Duration  370ms (transform 59ms, setup 0ms, import 71ms, tests 11ms, environment 0ms)
+
+```
+
+### First implementation attempt: environment/setup failure (exit 1; 26 passed, SQL ResizeObserver failure)
+
+Raw log: `task-7-green.log`. Actual exit status: 1.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/panels.test.tsx (6 tests | 1 failed) 364ms
+   × the SQL artifact renders its exact copyable lines separately from notes 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/panels.test.tsx > the SQL artifact renders its exact copyable lines separately from notes
+ReferenceError: ResizeObserver is not defined
+ ❯ src/components/ArtifactControls.tsx:51:22
+     49|     // Width is the only thing that changes the answer, and it changes…
+     50|     // viewport resize and on the rail collapsing at `lg`.
+     51|     const observer = new ResizeObserver(sync)
+       |                      ^
+     52|     observer.observe(root)
+     53|     return () => observer.disconnect()
+ ❯ commitAttachRef node_modules/.pnpm/react-dom@19.2.4_react@19.2.4/node_modules/react-dom/cjs/react-dom-client.development.js:13482:44
+ ❯ runWithFiberInDEV node_modules/.pnpm/react-dom@19.2.4_react@19.2.4/node_modules/react-dom/cjs/react-dom-client.development.js:874:13
+ ❯ safelyAttachRef node_modules/.pnpm/react-dom@19.2.4_react@19.2.4/node_modules/react-dom/cjs/react-dom-client.development.js:13500:9
+ ❯ commitLayoutEffectOnFiber node_modules/.pnpm/react-dom@19.2.4_react@19.2.4/node_modules/react-dom/cjs/react-dom-client.development.js:14089:26
+ ❯ recursivelyTraverseLayoutEffects node_modules/.pnpm/react-dom@19.2.4_react@19.2.4/node_modules/react-dom/cjs/react-dom-client.development.js:15159:11
+ ❯ commitLayoutEffectOnFiber node_modules/.pnpm/react-dom@19.2.4_react@19.2.4/node_modules/react-dom/cjs/react-dom-client.development.js:13949:11
+ ❯ recursivelyTraverseLayoutEffects node_modules/.pnpm/react-dom@19.2.4_react@19.2.4/node_modules/react-dom/cjs/react-dom-client.development.js:15159:11
+ ❯ commitLayoutEffectOnFiber node_modules/.pnpm/react-dom@19.2.4_react@19.2.4/node_modules/react-dom/cjs/react-dom-client.development.js:14065:11
+ ❯ recursivelyTraverseLayoutEffects node_modules/.pnpm/react-dom@19.2.4_react@19.2.4/node_modules/react-dom/cjs/react-dom-client.development.js:15159:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 26 passed (27)
+   Start at  09:17:38
+   Duration  1.44s (transform 348ms, setup 79ms, import 508ms, tests 407ms, environment 673ms)
+
+```
+
+### Focused GREEN (exit 0; 27/27)
+
+Raw log: `task-7-green-fixed.log`. Actual exit status: 0.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  5 passed (5)
+      Tests  27 passed (27)
+   Start at  09:18:14
+   Duration  1.75s (transform 963ms, setup 100ms, import 1.15s, tests 424ms, environment 746ms)
+
+```
+
+### Owned-file formatting (exit 0)
+
+Raw log: `task-7-format.log`. Actual exit status: 0.
+
+```text
+src/features/performance/content.ts 41ms
+src/features/performance/panels-measure.tsx 12ms
+src/features/performance/panels-diagnose.tsx 12ms
+src/features/performance/panels-close.tsx 8ms
+src/features/performance/content.test.ts 8ms
+src/features/performance/panels.test.tsx 17ms
+src/lib/terms.ts 50ms
+src/lib/references.ts 13ms
+```
+
+### Restored focused GREEN after mutation and formatting (exit 0; 27/27)
+
+Raw log: `task-7-restored.log`. Actual exit status: 0.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  5 passed (5)
+      Tests  27 passed (27)
+   Start at  09:18:37
+   Duration  2.63s (transform 685ms, setup 132ms, import 997ms, tests 694ms, environment 1.02s)
+
+```
+
+### Lint (exit 0)
+
+Raw log: `task-7-lint.log`. Actual exit status: 0.
+
+```text
+
+> web@0.1.0 lint /Users/angelito/personal/Development-Playbook/web
+> eslint --max-warnings 0
+
+```
+
+### Typecheck with route generation (exit 0)
+
+Raw log: `task-7-typecheck.log`. Actual exit status: 0.
+
+```text
+
+> web@0.1.0 typecheck /Users/angelito/personal/Development-Playbook/web
+> next typegen && tsc --noEmit
+
+Generating route types...
+✓ Types generated successfully
+```
+
+### Risk disclosure omission teeth check (exit 1; exactly 1 failed, 7 passed)
+
+Raw log: `task-7-teeth.log`. Actual exit status: 1.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/panels.test.tsx (6 tests | 1 failed) 278ms
+   × every candidate reveals evidence, correctness risk and comparable retest instead of a blanket recommendation 129ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/panels.test.tsx > every candidate reveals evidence, correctness risk and comparable retest instead of a blanket recommendation
+AssertionError: expected 'EvidenceA representative slow order-h…' to contain 'Normal CREATE INDEX blocks writes whi…'
+
+Expected: "Normal CREATE INDEX blocks writes while building. CONCURRENTLY takes longer, cannot run inside a transaction block, and failure can leave an invalid index. Check the migration runner and cleanup."
+Received: "EvidenceA representative slow order-history plan can justify testing (owner_id, created_at DESC) for the owner filter and creation sort. Consider table size, selectivity and write cost.Comparable retestCompare the same query and workload, then measure the selected user outcome. Keep correctness and write cost visible."
+
+ ❯ src/features/performance/panels.test.tsx:18:32
+     16|     const detail = document.getElementById(toggle.getAttribute('aria-c…
+     17|     expect(detail.textContent).toContain(row.evidence.replace(/`/g, ''…
+     18|     expect(detail.textContent).toContain(row.risk.replace(/`/g, ''))
+       |                                ^
+     19|     expect(detail.textContent).toContain(row.retest)
+     20|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 7 passed (8)
+   Start at  09:18:18
+   Duration  1.11s (transform 212ms, setup 104ms, import 274ms, tests 280ms, environment 432ms)
+
+```
+
+### Initial full suite (exit 1; 1450 passed, 1 failed across 195 files)
+
+Raw log: `task-7-full.log`. Actual exit status: 1.
+
+```text
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/web
+> vitest run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |unit| src/lib/term-usage.test.ts (2 tests | 1 failed) 53ms
+   × a term pointing at a stage names something that stage actually says 42ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/lib/term-usage.test.ts > a term pointing at a stage names something that stage actually says
+AssertionError: expected [ …(33) ] to deeply equal [ …(29) ]
+
+- Expected
++ Received
+
+@@ -1,6 +1,10 @@
+  [
++   "lcp -> 09-performance-optimization (never says \"LCP (Largest Contentful Paint)\")",
++   "inp -> 09-performance-optimization (never says \"INP (Interaction to Next Paint)\")",
++   "cls -> 09-performance-optimization (never says \"CLS (Cumulative Layout Shift)\")",
++   "cache-invalidation -> 09-performance-optimization (never says \"Cache invalidation\")",
+    "opportunity-solution-tree -> 01-product-discovery (never says \"Opportunity solution tree\")",
+    "problem-interview -> 01-product-discovery (never says \"Problem interview\")",
+    "mvp -> 02-planning (never says \"MVP (Minimum Viable Product)\")",
+    "product-roadmap -> 02-planning (never says \"Product roadmap\")",
+    "product-vision -> 02-planning (never says \"Product vision\")",
+
+ ❯ src/lib/term-usage.test.ts:98:21
+     96|   }
+     97|
+     98|   expect(offenders).toEqual(KNOWN_ORPHANS)
+       |                     ^
+     99| })
+    100|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 194 passed (195)
+      Tests  1 failed | 1450 passed (1451)
+   Start at  09:18:53
+   Duration  28.06s (transform 16.84s, setup 12.86s, import 38.46s, tests 47.42s, environment 64.48s)
+
+ ELIFECYCLE  Test failed. See above for more details.
+```
+
+### Canonical vocabulary GREEN (exit 0; 13/13)
+
+Raw log: `task-7-chapter-green.log`. Actual exit status: 0.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  3 passed (3)
+      Tests  13 passed (13)
+   Start at  09:20:58
+   Duration  181ms (transform 120ms, setup 0ms, import 151ms, tests 37ms, environment 0ms)
+
+```
+
+### Expanded LCP name removal teeth (exit 1; orphan guard only, 12 passed)
+
+Raw log: `task-7-chapter-teeth.log`. Actual exit status: 1.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |unit| src/lib/term-usage.test.ts (2 tests | 1 failed) 32ms
+   × a term pointing at a stage names something that stage actually says 21ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/lib/term-usage.test.ts > a term pointing at a stage names something that stage actually says
+AssertionError: expected [ …(30) ] to deeply equal [ …(29) ]
+
+- Expected
++ Received
+
+@@ -1,6 +1,7 @@
+  [
++   "lcp -> 09-performance-optimization (never says \"LCP (Largest Contentful Paint)\")",
+    "opportunity-solution-tree -> 01-product-discovery (never says \"Opportunity solution tree\")",
+    "problem-interview -> 01-product-discovery (never says \"Problem interview\")",
+    "mvp -> 02-planning (never says \"MVP (Minimum Viable Product)\")",
+    "product-roadmap -> 02-planning (never says \"Product roadmap\")",
+    "product-vision -> 02-planning (never says \"Product vision\")",
+
+ ❯ src/lib/term-usage.test.ts:98:21
+     96|   }
+     97|
+     98|   expect(offenders).toEqual(KNOWN_ORPHANS)
+       |                     ^
+     99| })
+    100|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 12 passed (13)
+   Start at  09:21:00
+   Duration  171ms (transform 106ms, setup 0ms, import 137ms, tests 40ms, environment 0ms)
+
+```
+
+### Restored canonical vocabulary GREEN (exit 0; 13/13)
+
+Raw log: `task-7-chapter-restored.log`. Actual exit status: 0.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  3 passed (3)
+      Tests  13 passed (13)
+   Start at  09:21:02
+   Duration  177ms (transform 107ms, setup 0ms, import 138ms, tests 36ms, environment 0ms)
+
+```
+
+### Canonical vocabulary formatting (exit 0)
+
+Raw log: `task-7-chapter-format.log`. Actual exit status: 0.
+
+```text
+```
+
+### Final full suite GREEN (exit 0; 1451/1451 across 195 files)
+
+Raw log: `task-7-full-restored.log`. Actual exit status: 0.
+
+```text
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/web
+> vitest run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  195 passed (195)
+      Tests  1451 passed (1451)
+   Start at  09:21:18
+   Duration  22.42s (transform 10.96s, setup 10.73s, import 26.81s, tests 29.72s, environment 55.74s)
+
+```
+
+### Initial sandbox-limited canonical commit attempt (exit 128)
+
+Raw log: `task-7-doc-commit.log`. Actual exit status: 128.
+
+```text
+fatal: Unable to create '/Users/angelito/personal/Development-Playbook/.git/index.lock': Operation not permitted
+```
+
+### Canonical vocabulary commit (exit 0; af9cc5e)
+
+Raw log: `task-7-doc-commit-escalated.log`. Actual exit status: 0.
+
+```text
+╭───────────────────────────────────────╮
+│ lefthook  v2.1.10   hook:  [1mpre-commit[m │
+╰───────────────────────────────────────╯
+│  lint (skip) no files for inspection
+│  format (skip) no files for inspection
+[38;2;56;56;56m  ────────────────────────────────────[m
+summary: (done in 0.02 seconds)
+[feat/stage-09-performance-port af9cc5e] docs(performance): expand first-encounter metric names
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+```
+
+### Owned feature commit and hooks (exit 0; 159e47c)
+
+Raw log: `task-7-feature-commit.log`. Actual exit status: 0.
+
+```text
+╭───────────────────────────────────────╮
+│ lefthook  v2.1.10   hook:  [1mpre-commit[m │
+╰───────────────────────────────────────╯
+┃  format ❯ 
+src/features/performance/content.test.ts 41ms (unchanged)
+src/features/performance/content.ts 12ms (unchanged)
+src/features/performance/panels-close.tsx 11ms (unchanged)
+src/features/performance/panels-diagnose.tsx 11ms (unchanged)
+src/features/performance/panels-measure.tsx 8ms (unchanged)
+src/features/performance/panels.test.tsx 11ms (unchanged)
+src/lib/references.ts 23ms (unchanged)
+src/lib/terms.ts 26ms (unchanged)
+
+┃  lint ❯ 
+
+[38;2;56;56;56m  ────────────────────────────────────[m
+summary: (done in 2.22 seconds)
+✓ format (0.53 seconds)
+✓ lint (2.18 seconds)
+[feat/stage-09-performance-port 159e47c] feat(performance): teach evidence-based optimization candidates
+ 9 files changed, 779 insertions(+)
+ create mode 100644 web/src/features/performance/content.test.ts
+ create mode 100644 web/src/features/performance/content.ts
+ create mode 100644 web/src/features/performance/panels-close.tsx
+ create mode 100644 web/src/features/performance/panels-diagnose.tsx
+ create mode 100644 web/src/features/performance/panels-measure.tsx
+ create mode 100644 web/src/features/performance/panels.test.tsx
+```
+
+## Report integrity
+
+Programmatically extracted all 19 terminal fences and checked exact equality with retained log files, plus each separately recorded process exit. All 19 matched.
+
+## Task 7 independent review
+
+Spec compliant; task approved after two PLAN-AUTHORED corrections. No unresolved findings. All nineteen logs/exits match the report exactly; both isolated teeth checks substantiate the fixes. Commit trailers verified. Review source: `task-7-review.md`.

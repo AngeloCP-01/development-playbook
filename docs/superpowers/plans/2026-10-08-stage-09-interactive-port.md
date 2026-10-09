@@ -1516,6 +1516,8 @@ git commit -m 'feat(performance): record completion and team ownership' -m 'Co-A
 
 ### Task 7: Assemble the teaching panels, vocabulary and source list
 
+Execution corrections (2026-10-09): the candidate render test now observes risk for each controlled panel. Planned blanket global cleanup removed the existing shared ResizeObserver stub, so the SQL test restores that browser API locally. The reverse term-usage guard caught four prescribed names absent from the canonical chapter; narrow vocabulary amendments in `docs/09-performance-optimization.md` expand LCP/INP/CLS and name cache invalidation without changing thresholds or API advice. These two plan-authored defects have retained failed runs, focused GREEN and isolated teeth checks. The chapter amendment is a separate documentation commit.
+
 **Files:**
 - Create: `web/src/features/performance/content.ts`
 - Create: `web/src/features/performance/panels-measure.tsx`
@@ -1526,13 +1528,14 @@ git commit -m 'feat(performance): record completion and team ownership' -m 'Co-A
 - Modify: `web/src/lib/terms.ts` (six missing entries inside `TERMS`)
 - Modify: `web/src/lib/references.ts` (one five-reference Stage 09 entry)
 - Generate: `reference/glossary.md` via `pnpm gen:glossary`
+- Modify narrowly: `docs/09-performance-optimization.md` (first-encounter vocabulary, execution ruling above)
 
 **Interfaces:**
 - Consumes: Tasks 2 through 6 components and datasets; `Figure`, `Term`, `RevealList`, `RevealFacet`, `AnnotatedArtifact`, and UI primitives.
 - Produces: `FIXES`, `TRAPS`, `AI_PLAYS`, `AI_PROMPT`, `COVERAGE`, `FixRow`, `TrapRow` and all twelve named panel functions below.
 - The stage is still unregistered. Task 8 alone changes its exposure to routing.
 
-- [ ] **Step 1: Write source and panel render tests.**
+- [x] **Step 1: Write source and panel render tests.**
 
 #### Test source: `web/src/features/performance/content.test.ts`
 
@@ -1583,15 +1586,20 @@ import { TargetsPanel } from './panels-measure'
 import { AI_PROMPT, FIXES, TRAPS } from './content'
 import { INVENTORY_PLAN } from './artifacts'
 
-afterEach(() => { vi.unstubAllGlobals() })
+afterEach(() => {
+  vi.unstubAllGlobals()
+})
 
 test('every candidate reveals evidence, correctness risk and comparable retest instead of a blanket recommendation', () => {
   render(<FixesPanel />)
   for (const row of FIXES) {
     const toggle = screen.getByRole('button', { name: row.title })
     fireEvent.click(toggle)
-    const detail = document.getElementById(toggle.getAttribute('aria-controls')!)!
+    const detail = document.getElementById(
+      toggle.getAttribute('aria-controls')!,
+    )!
     expect(detail.textContent).toContain(row.evidence.replace(/`/g, ''))
+    expect(detail.textContent).toContain(row.risk.replace(/`/g, ''))
     expect(detail.textContent).toContain(row.retest)
   }
   const body = document.body.textContent ?? ''
@@ -1607,7 +1615,11 @@ test('every candidate reveals evidence, correctness risk and comparable retest i
 })
 
 test('changed candidate data changes what the reader sees rather than only passing a data invariant', () => {
-  render(<FixesPanel fixes={[{ ...FIXES[0], retest: 'Measure the changed user boundary.' }]} />)
+  render(
+    <FixesPanel
+      fixes={[{ ...FIXES[0], retest: 'Measure the changed user boundary.' }]}
+    />,
+  )
   fireEvent.click(screen.getByRole('button', { name: /Index or query shape/ }))
   expect(screen.getByText('Measure the changed user boundary.')).toBeTruthy()
 })
@@ -1625,13 +1637,25 @@ test('targets distinguish inclusive published thresholds from local product budg
   expect(document.body.textContent).toContain('LCP ≤2.5 s')
   expect(document.body.textContent).toContain('INP ≤200 ms')
   expect(document.body.textContent).toContain('CLS ≤0.1')
-  expect(document.body.textContent).toContain('p75, separately for mobile and desktop')
+  expect(document.body.textContent).toContain(
+    'p75, separately for mobile and desktop',
+  )
   expect(document.body.textContent).toContain('example budgets')
 })
 
 test('the SQL artifact renders its exact copyable lines separately from notes', () => {
+  vi.stubGlobal(
+    'ResizeObserver',
+    class {
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    },
+  )
   const { container } = render(<QueryPanel />)
-  const lines = [...container.querySelectorAll('[data-artifact-line]')].map((node) => node.textContent)
+  const lines = [...container.querySelectorAll('[data-artifact-line]')].map(
+    (node) => node.textContent,
+  )
   expect(lines).toEqual(INVENTORY_PLAN.lines.map((line) => line.text))
 })
 
@@ -1639,17 +1663,25 @@ test('the AI prompt requires real evidence and handles rejected copying without 
   const writeText = vi.fn().mockRejectedValue(new Error('Clipboard denied'))
   vi.stubGlobal('navigator', { clipboard: { writeText } })
   render(<AIPanel />)
-  await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Copy evidence prompt' })) })
+  await act(async () => {
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Copy evidence prompt' }),
+    )
+  })
   expect(writeText).toHaveBeenCalledWith(AI_PROMPT)
-  expect((screen.getByLabelText('Evidence prompt') as HTMLTextAreaElement).value).toBe(AI_PROMPT)
-  expect(screen.getByRole('status', { name: 'Copy status' }).textContent).toMatch(/Copy is unavailable/)
+  expect(
+    (screen.getByLabelText('Evidence prompt') as HTMLTextAreaElement).value,
+  ).toBe(AI_PROMPT)
+  expect(
+    screen.getByRole('status', { name: 'Copy status' }).textContent,
+  ).toMatch(/Copy is unavailable/)
 })
 ```
 
 The candidate test observes each controlled panel's text, including strings split into code spans by `InlineCode`.
 
-- [ ] **Step 2: Capture RED.** Run `pnpm exec vitest run src/features/performance/content.test.ts src/features/performance/panels.test.tsx`. The terms/reference assertion also fails until their canonical registries are updated.
-- [ ] **Step 3: Write teaching data and panels.**
+- [x] **Step 2: Capture RED.** Run `pnpm exec vitest run src/features/performance/content.test.ts src/features/performance/panels.test.tsx`. The terms/reference assertion also fails until their canonical registries are updated.
+- [x] **Step 3: Write teaching data and panels.**
 
 #### Implementation source: `web/src/features/performance/content.ts`
 
@@ -1893,7 +1925,7 @@ export function TrapsPanel({ traps = TRAPS }: { traps?: readonly TrapRow[] }) {
 }
 ```
 
-- [ ] **Step 4: Add the six canonical glossary entries below inside `TERMS`.** Reuse existing `baseline` and `percentile`; do not change their definitions or generate a second glossary source.
+- [x] **Step 4: Add the six canonical glossary entries below inside `TERMS`.** Reuse existing `baseline` and `percentile`; do not change their definitions or generate a second glossary source.
 
 #### Insertion source: `web/src/lib/terms.ts`, inside `TERMS`
 
@@ -1936,7 +1968,7 @@ export function TrapsPanel({ traps = TRAPS }: { traps?: readonly TrapRow[] }) {
   },
 ```
 
-- [ ] **Step 5: Add the curated reference entry inside `REFERENCES`.**
+- [x] **Step 5: Add the curated reference entry inside `REFERENCES`.**
 
 #### Insertion source: `web/src/lib/references.ts`, inside `REFERENCES`
 
@@ -1950,9 +1982,9 @@ export function TrapsPanel({ traps = TRAPS }: { traps?: readonly TrapRow[] }) {
   ],
 ```
 
-- [ ] **Step 6: Generate the glossary and capture GREEN.** Run `pnpm gen:glossary`, then `pnpm exec vitest run src/features/performance/content.test.ts src/features/performance/panels.test.tsx src/lib/terms.test.ts src/lib/references.test.ts src/lib/glossary.test.ts` and `pnpm typecheck`. Save the rendered assertions and generator results.
-- [ ] **Step 7: Teeth check.** In `FixesPanel`, temporarily omit the entire `RevealFacet` containing `row.risk`. Only `every candidate reveals evidence, correctness risk...` should fail in the Task 7 suite; the title/data coverage guards still pass. Restore and run GREEN again. Verify the six new terms are actually opened in the stage-level Task 8 checks, not only present in `TERMS`.
-- [ ] **Step 8: Format, lint, review and commit.** Commit `feat(performance): teach evidence-based optimization candidates` with the required trailer. Include the generated glossary in the implementation commit; do not hand-edit it. Review the panels' prose with `humanizer:humanizer`, preserving all technical caveats.
+- [x] **Step 6: Generate the glossary and capture GREEN.** Run `pnpm gen:glossary`, then `pnpm exec vitest run src/features/performance/content.test.ts src/features/performance/panels.test.tsx src/lib/terms.test.ts src/lib/references.test.ts src/lib/glossary.test.ts` and `pnpm typecheck`. Save the rendered assertions and generator results.
+- [x] **Step 7: Teeth check.** In `FixesPanel`, temporarily omit the entire `RevealFacet` containing `row.risk`. Only `every candidate reveals evidence, correctness risk...` should fail in the Task 7 suite; the title/data coverage guards still pass. Restore and run GREEN again. Verify the six new terms are actually opened in the stage-level Task 8 checks, not only present in `TERMS`.
+- [x] **Step 8: Format, lint, review and commit.** Commit `feat(performance): teach evidence-based optimization candidates` with the required trailer. Include the generated glossary in the implementation commit; do not hand-edit it. Review the panels' prose with `humanizer:humanizer`, preserving all technical caveats.
 
 
 ```bash
