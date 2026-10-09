@@ -793,3 +793,279 @@ summary: (done in 2.17 seconds)
  create mode 100644 web/src/features/performance/journey.ts
 ```
 
+
+## Task 2 independent review
+
+Spec and quality: review clean. No findings. All ten raw fences match retained logs. Commit trailer verified; assembled-stage live checks remain pending. Review source: `task-2-review.md`.
+
+
+---
+
+# Task 3 implementation report
+
+Commit: `ee2d71a80734efea6a68ab03983f5af9a63cbd8a`.
+
+Implemented the approved five-field baseline practice in `web/src/features/performance/baseline.ts`, `BaselineLab.tsx`, and `BaselineLab.test.tsx`. Practice answers stay in component state. Readers commit each judgment before seeing reasoning, cannot change committed answers, can reset, and inspect their actual selections with individual verdicts. The score counts correct judgments rather than treating filled fields as valid. The record keeps field p95 unknown and separates user-outcome evidence from diagnostic evidence.
+
+Self-review: compared the implementation to the supplied API/source contract; only Prettier changes differ. Verified native radio semantics, full-label input hit areas and min-h-11 controls, unique useId grouping, empty initial live messages, semantic go/danger verdicts, brand selection, no persistence writes, retained wrong answer text, and reset of index/draft/choices. No unrelated files staged. The existing stage content duplication is extended by the approved hand-port; chapter prose remains canonical.
+
+Concerns: no discovered plan defect or test failure after restoration. Initial staging failed with `Unable to create .git/index.lock: Operation not permitted`; scoped authorized escalation succeeded. This was a filesystem sandbox boundary, not an automatic approval rejection. This component has not been inspected in a live assembled stage; contrast, responsive/panel-height, production console, and development-console audits remain with the coordinator's stage verification.
+
+Deferred: registry/ready assembly (Task 8), reader worksheet (Task 7), W-6 sheets, real telemetry, shared-drill extraction, live browser audits, merge, push and deployment. Coordinator-owned plan and canonical report edits remain dirty and uncommitted.
+
+Read: root/web AGENTS.md, constraints and worker contract, TDD skill and writing-good-tests.md, verification-before-completion skill, PATTERNS.md, DESIGN.md, installed Next use-client directive and server/client component guidance.
+
+Raw evidence below is inserted directly from retained logs. Exit statuses and interpretations are outside terminal fences.
+
+## red-import
+
+Command: `pnpm exec vitest run src/features/performance/BaselineLab.test.tsx`
+
+Exit status: 1. Initial missing-module RED: BaselineLab did not exist; this proves missing implementation, not behavior.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/BaselineLab.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/BaselineLab.test.tsx [ src/features/performance/BaselineLab.test.tsx ]
+Error: Failed to resolve import "./BaselineLab" from "src/features/performance/BaselineLab.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/angelito/personal/Development-Playbook/web/src/features/performance/BaselineLab.test.tsx:3:28
+  1  |  import { fireEvent, render, screen } from "@testing-library/react";
+  2  |  import { expect, test } from "vitest";
+  3  |  import { BaselineLab } from "./BaselineLab";
+     |                               ^
+  4  |  import { BASELINE_PRACTICE } from "./baseline";
+  5  |  var _jsxFileName = "/Users/angelito/personal/Development-Playbook/web/src/features/performance/BaselineLab.test.tsx";
+ ❯ TransformPluginContext._formatLog node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30416:39
+ ❯ TransformPluginContext.error node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30413:14
+ ❯ normalizeUrl node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27438:18
+ ❯ node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27506:30
+ ❯ TransformPluginContext.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27474:4
+ ❯ EnvironmentPluginContainer.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30201:14
+ ❯ loadAndTransform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:20124:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  08:48:39
+   Duration  761ms (transform 17ms, setup 99ms, import 0ms, tests 0ms, environment 534ms)
+
+```
+
+## red-assertion
+
+Command: `pnpm exec vitest run src/features/performance/BaselineLab.test.tsx -t 'reasoning appears only after commit'`
+
+Exit status: 1. Behavioral RED failed for the right reason: the minimal native-radio skeleton allowed commit before a choice; expected disabled true, received false. Two unrelated tests were intentionally skipped.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/BaselineLab.test.tsx (3 tests | 1 failed | 2 skipped) 76ms
+   × reasoning appears only after commit and reset clears committed hindsight 76ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/BaselineLab.test.tsx > reasoning appears only after commit and reset clears committed hindsight
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/performance/BaselineLab.test.tsx:35:27
+     33|   expect(screen.queryByText(first.why)).toBeNull()
+     34|   const commit = screen.getByRole('button', { name: 'Commit measuremen…
+     35|   expect(commit.disabled).toBe(true)
+       |                           ^
+     36|   fireEvent.click(screen.getByRole('radio', { name: first.options[1].l…
+     37|   fireEvent.click(commit)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 skipped (3)
+   Start at  08:48:53
+   Duration  862ms (transform 38ms, setup 128ms, import 16ms, tests 76ms, environment 540ms)
+
+```
+
+## green
+
+Command: `pnpm exec vitest run src/features/performance/BaselineLab.test.tsx`
+
+Exit status: 0. All three planned render tests passed.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  08:49:09
+   Duration  996ms (transform 46ms, setup 99ms, import 86ms, tests 221ms, environment 507ms)
+
+```
+
+## teeth
+
+Command: `pnpm exec vitest run src/features/performance/BaselineLab.test.tsx`
+
+Exit status: 1. Specified assembled-record-only mutation replaced selected?.label with the correct-answer lookup. Exactly the wrong-observer test failed because the selected server label disappeared; the other two passed.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/BaselineLab.test.tsx (3 tests | 1 failed) 201ms
+   × a wrong observer remains visible in the assembled record, since a completed form is not a valid baseline 142ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/BaselineLab.test.tsx > a wrong observer remains visible in the assembled record, since a completed form is not a valid baseline
+AssertionError: expected 'Practice baseline recordOutcomePlace …' to contain 'Server handler entry to server respon…'
+
+Expected: "Server handler entry to server response"
+Received: "Practice baseline recordOutcomePlace order click to response receipt in the browserNeeds correction. The browser observes the selected user outcome. Server route duration is diagnostic and excludes part of the user wait.Metric and populationDuration p95 from completed outcomes; report total attempts, completed samples, failures and timeouts separatelyCorrect. State the completed-outcome denominator and keep the same rule after the change. Failure counts can overlap completed outcomes; they are not a partition to sum.ScopePOST /orders; version order-before; mobile Chrome; network profile mobile-4g-v1; 20-item cart; hypothetical inventory of 10000 SKUs; warm cacheCorrect. Name the route, deployment, segment, cart/data shape and cache state. Change the version deliberately and keep the workload comparable.Window and samplePlanned field window 2026-10-01 to 2026-10-07; completed sample and attempt counts not yet recorded; p95 not yet recordedCorrect. Leave unknown field values unfilled. Record sparse samples as insufficient, retain a controlled baseline and name the next observation window.EvidenceBrowser outcome record when collected; route trace and controlled cart reproduction as separate diagnostic evidenceCorrect. A trace explains instrumented work. A controlled run or one query plan cannot fill the user-outcome field percentile."
+
+ ❯ src/features/performance/BaselineLab.test.tsx:22:30
+     20|   finish(true)
+     21|   const record = screen.getByRole('region', { name: 'Practice baseline…
+     22|   expect(record.textContent).toContain('Server handler entry to server…
+       |                              ^
+     23|   expect(record.textContent).toContain('Needs correction')
+     24|   expect(record.textContent).toContain('completed outcomes')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  08:49:12
+   Duration  759ms (transform 38ms, setup 71ms, import 71ms, tests 201ms, environment 331ms)
+
+```
+
+## restored
+
+Command: `pnpm exec vitest run src/features/performance/BaselineLab.test.tsx`
+
+Exit status: 0. Restored selected?.label; all three tests passed.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  08:49:14
+   Duration  839ms (transform 41ms, setup 69ms, import 76ms, tests 199ms, environment 415ms)
+
+```
+
+## format
+
+Command: `pnpm exec prettier --write src/features/performance/baseline.ts src/features/performance/BaselineLab.tsx src/features/performance/BaselineLab.test.tsx`
+
+Exit status: 0. Formatted only owned files.
+
+```text
+src/features/performance/baseline.ts 32ms
+src/features/performance/BaselineLab.tsx 21ms
+src/features/performance/BaselineLab.test.tsx 14ms
+```
+
+## typecheck
+
+Command: `pnpm typecheck`
+
+Exit status: 0. Next route generation and TypeScript passed.
+
+```text
+
+> web@0.1.0 typecheck /Users/angelito/personal/Development-Playbook/web
+> next typegen && tsc --noEmit
+
+Generating route types...
+✓ Types generated successfully
+```
+
+## lint
+
+Command: `pnpm lint`
+
+Exit status: 0. Zero warnings gate passed.
+
+```text
+
+> web@0.1.0 lint /Users/angelito/personal/Development-Playbook/web
+> eslint --max-warnings 0
+
+```
+
+## full-suite
+
+Command: `pnpm test`
+
+Exit status: 0. Full suite run once before commit: 1425/1425 tests, 188/188 files, no errors.
+
+```text
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/web
+> vitest run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  188 passed (188)
+      Tests  1425 passed (1425)
+   Start at  08:49:29
+   Duration  24.17s (transform 10.21s, setup 11.82s, import 25.51s, tests 41.04s, environment 59.99s)
+
+```
+
+## commit
+
+Command: `git commit -m 'feat(performance): practice defining the first baseline' -m 'Co-Authored-By: Codex Opus 4.8 (1M context) <noreply@anthropic.com>'`
+
+Exit status: 0. Commit hooks passed and left the owned source unchanged.
+
+```text
+╭───────────────────────────────────────╮
+│ lefthook  v2.1.10   hook:  [1mpre-commit[m │
+╰───────────────────────────────────────╯
+┃  format ❯ 
+src/features/performance/BaselineLab.test.tsx 57ms (unchanged)
+src/features/performance/BaselineLab.tsx 23ms (unchanged)
+src/features/performance/baseline.ts 5ms (unchanged)
+
+┃  lint ❯ 
+
+[38;2;56;56;56m  ────────────────────────────────────[m
+summary: (done in 2.43 seconds)
+✓ format (0.56 seconds)
+✓ lint (2.42 seconds)
+[feat/stage-09-performance-port ee2d71a] feat(performance): practice defining the first baseline
+ 3 files changed, 327 insertions(+)
+ create mode 100644 web/src/features/performance/BaselineLab.test.tsx
+ create mode 100644 web/src/features/performance/BaselineLab.tsx
+ create mode 100644 web/src/features/performance/baseline.ts
+```
+
+## Task 3 independent review
+
+Spec and quality: review clean. No findings. All ten terminal fences match retained logs. Trailer verified. Review source: `task-3-review.md`.

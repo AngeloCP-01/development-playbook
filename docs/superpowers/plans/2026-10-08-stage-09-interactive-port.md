@@ -206,7 +206,7 @@ git commit -m 'feat(performance): define comparable measurement records' -m 'Co-
 - Produces: `Outcome`, `OUTCOMES`, `ORDER_REQUEST`, `OrderJourney({ outcomes?: readonly Outcome[] })`.
 - The baseline exercise later uses a fixed checkout scenario. This inspector does not mutate the saved worksheet or relabel the other exercises.
 
-- [ ] **Step 1: Write the render tests.**
+- [x] **Step 1: Write the render tests.**
 
 #### Test source: `web/src/features/performance/OrderJourney.test.tsx`
 
@@ -249,8 +249,8 @@ test('the detail follows changed input data rather than an outcome-id lookup hid
 
 The journey test uses an ES2017-compatible multiline expression. Keep that target when adding later plan guards.
 
-- [ ] **Step 2: Capture RED.** Run `pnpm exec vitest run src/features/performance/OrderJourney.test.tsx`. Expected initial failure: missing component. The observer and independent-branch assertions must run after implementation, not merely test imports.
-- [ ] **Step 3: Write the journey data and inspector.**
+- [x] **Step 2: Capture RED.** Run `pnpm exec vitest run src/features/performance/OrderJourney.test.tsx`. Expected initial failure: missing component. The observer and independent-branch assertions must run after implementation, not merely test imports.
+- [x] **Step 3: Write the journey data and inspector.**
 
 #### Implementation source: `web/src/features/performance/journey.ts`
 
@@ -373,9 +373,9 @@ export function OrderJourney({ outcomes = OUTCOMES }: { outcomes?: readonly Outc
 }
 ```
 
-- [ ] **Step 4: Run GREEN.** Run the focused render file and `pnpm typecheck`. Confirm five outcome selections render their own boundaries and the three branches remain siblings.
-- [ ] **Step 5: Teeth check.** Temporarily replace the rendered stop cell's `outcome.stop` with `outcome.id === 'payment' ? 'Paid persisted on the server' : outcome.stop`. Only the all-clocks boundary test should fail. Restore and rerun the entire render file.
-- [ ] **Step 6: Format, lint, review and commit.** Format the three files, run `pnpm lint`, and commit `feat(performance): inspect user and consumer clocks` with the required trailer. Save evidence in the report.
+- [x] **Step 4: Run GREEN.** Run the focused render file and `pnpm typecheck`. Confirm five outcome selections render their own boundaries and the three branches remain siblings.
+- [x] **Step 5: Teeth check.** Temporarily replace the rendered stop cell's `outcome.stop` with `outcome.id === 'payment' ? 'Paid persisted on the server' : outcome.stop`. Only the all-clocks boundary test should fail. Restore and rerun the entire render file.
+- [x] **Step 6: Format, lint, review and commit.** Format the three files, run `pnpm lint`, and commit `feat(performance): inspect user and consumer clocks` with the required trailer. Save evidence in the report.
 
 
 ```bash
@@ -396,7 +396,7 @@ git commit -m 'feat(performance): inspect user and consumer clocks' -m 'Co-Autho
 - Produces: `BaselineField`, `BASELINE_PRACTICE`, `BaselineLab({ fields?: readonly BaselineField[] })`.
 - The practice record uses five fields; the reader's own worksheet adds a separate target field. Practice answers stay component-local and never write to localStorage.
 
-- [ ] **Step 1: Write the render tests.**
+- [x] **Step 1: Write the render tests.**
 
 #### Test source: `web/src/features/performance/BaselineLab.test.tsx`
 
@@ -458,8 +458,8 @@ test('a completed practice preserves field evidence and the correct clock withou
 })
 ```
 
-- [ ] **Step 2: Capture RED.** Run `pnpm exec vitest run src/features/performance/BaselineLab.test.tsx`. Expected: the missing builder fails initially; then the wrong-observer and answer-lock assertions protect behavior.
-- [ ] **Step 3: Write the baseline dataset and builder.**
+- [x] **Step 2: Capture RED.** Run `pnpm exec vitest run src/features/performance/BaselineLab.test.tsx`. Expected: the missing builder fails initially; then the wrong-observer and answer-lock assertions protect behavior.
+- [x] **Step 3: Write the baseline dataset and builder.**
 
 #### Implementation source: `web/src/features/performance/baseline.ts`
 
@@ -602,9 +602,9 @@ export function BaselineLab({ fields = BASELINE_PRACTICE }: { fields?: readonly 
 }
 ```
 
-- [ ] **Step 4: Capture GREEN.** Run the focused test file and `pnpm typecheck`. Confirm native radio inputs, empty-before-update live messages, answer locking and an assembled record that shows selected wrong values.
-- [ ] **Step 5: Teeth check.** In the assembled record only, replace `selected?.label` with `row.options.find((option) => option.id === row.answer)?.label`. Only the wrong-observer assembled-record test should fail; the all-correct practice still passes. Restore and rerun GREEN.
-- [ ] **Step 6: Format, lint, review and commit.** Commit `feat(performance): practice defining the first baseline` with the required trailer and report evidence.
+- [x] **Step 4: Capture GREEN.** Run the focused test file and `pnpm typecheck`. Confirm native radio inputs, empty-before-update live messages, answer locking and an assembled record that shows selected wrong values.
+- [x] **Step 5: Teeth check.** In the assembled record only, replace `selected?.label` with `row.options.find((option) => option.id === row.answer)?.label`. Only the wrong-observer assembled-record test should fail; the all-correct practice still passes. Restore and rerun GREEN.
+- [x] **Step 6: Format, lint, review and commit.** Commit `feat(performance): practice defining the first baseline` with the required trailer and report evidence.
 
 
 ```bash
