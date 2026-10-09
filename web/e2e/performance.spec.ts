@@ -251,3 +251,56 @@ test('an internal improvement requires more observation rather than a production
     panel.getByText(/before claiming a production win/),
   ).toBeVisible()
 })
+
+test('an open glossary definition stays inside every viewport after resizing in both themes', async ({
+  page,
+}) => {
+  const failures: string[] = []
+  for (const theme of ['light', 'dark'] as const) {
+    await page.setViewportSize({ width: 2560, height: 768 })
+    await page.goto(`${STAGE}#target`, { waitUntil: 'networkidle' })
+    await page.evaluate((themeName) => {
+      localStorage.setItem('playbook:theme', JSON.stringify(themeName))
+    }, theme)
+    await page.reload({ waitUntil: 'networkidle' })
+    await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
+    await page
+      .getByRole('button', { name: 'Cumulative Layout Shift', exact: true })
+      .click()
+    const note = page.locator('#panel-target').getByRole('note')
+    await expect(note).toBeVisible()
+    for (const width of [2560, 768, 1024, 320, 390, 1440, 1920]) {
+      await page.setViewportSize({ width, height: 768 })
+      const geometry = await note.evaluate(async (element) => {
+        await new Promise<void>((resolve) =>
+          requestAnimationFrame(() => resolve()),
+        )
+        const rect = element.getBoundingClientRect()
+        return {
+          left: rect.left,
+          right: rect.right,
+          overflow: document.documentElement.scrollWidth - innerWidth,
+        }
+      })
+      console.log(
+        'PERFORMANCE_GLOSSARY_RESIZE ' +
+          JSON.stringify({ theme, width, ...geometry }),
+      )
+      if (
+        geometry.left < -1 ||
+        geometry.right > width + 1 ||
+        geometry.overflow > 1
+      ) {
+        failures.push(`${theme}/${width}: ${JSON.stringify(geometry)}`)
+      }
+      await expect(note).toBeVisible()
+      await expect(
+        page.getByRole('button', {
+          name: 'Cumulative Layout Shift',
+          exact: true,
+        }),
+      ).toHaveAttribute('aria-expanded', 'true')
+    }
+  }
+  expect(failures, failures.join('\n')).toEqual([])
+})
