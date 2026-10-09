@@ -18,6 +18,56 @@ export type Term = {
 }
 
 export const TERMS: Record<string, Term> = {
+  lcp: {
+    name: 'LCP (Largest Contentful Paint)',
+    see: '09-performance-optimization',
+    short: 'The time until the largest visible content element is painted.',
+    full: 'A Core Web Vital for loading experience. It records when the largest eligible content element in the viewport is painted. The good threshold is 2.5 seconds or less at p75, assessed separately for mobile and desktop.',
+    soWhat:
+      'A slow hero image or delayed server response can affect LCP. It does not measure the whole checkout or payment operation.',
+  },
+  inp: {
+    name: 'INP (Interaction to Next Paint)',
+    see: '09-performance-optimization',
+    short: 'A measure of how promptly a page paints after user interaction.',
+    full: 'A Core Web Vital for responsiveness across qualifying interactions during a page visit. It includes time waiting for handlers, their processing, and the next paint. The good threshold is 200 milliseconds or less at p75, assessed separately for mobile and desktop.',
+    soWhat:
+      'A button can feel unresponsive even when its network request is fast. Measure interaction response separately from the entire business operation.',
+  },
+  cls: {
+    name: 'CLS (Cumulative Layout Shift)',
+    see: '09-performance-optimization',
+    short: 'A score describing unexpected movement of visible page content.',
+    full: 'A Core Web Vital for visual stability, based on qualifying unexpected layout shifts. It is a score, not a duration. The good threshold is 0.1 or less at p75, assessed separately for mobile and desktop.',
+    soWhat:
+      'Faster loading should not make controls jump while a reader tries to use them. Reserve space for content such as images.',
+  },
+  'n-plus-one': {
+    name: 'N+1 queries',
+    see: '09-performance-optimization',
+    short:
+      'One initial query followed by another query for each returned item.',
+    full: 'A data-access pattern in which a list lookup triggers repeated per-item queries. A 20-item list can then require 21 queries. Trace or query-log evidence establishes whether those round trips matter for the selected outcome.',
+    soWhat:
+      'Batching or joining may reduce round trips, but the stock or authorization decision and the user-visible result must stay correct.',
+  },
+  'query-plan': {
+    name: 'Query plan',
+    see: '09-performance-optimization',
+    short: 'The database operations chosen to execute a query.',
+    full: 'A plan describes scans, joins, filters and other operations. PostgreSQL EXPLAIN shows estimates; ANALYZE executes the query and adds actual observations. Compare estimates, actual rows, filtering, buffers and time. Planner cost is not milliseconds.',
+    soWhat:
+      'A sequential scan can be an appropriate choice. Read the plan and workload before assuming an index will help.',
+  },
+  'cache-invalidation': {
+    name: 'Cache invalidation',
+    see: '09-performance-optimization',
+    short:
+      'A rule for expiring or refreshing cached data when it stops being valid.',
+    full: 'A cached read needs a freshness rule, such as a lifetime or an update-triggered invalidation. APIs differ: Next.js updateTag is limited to Server Actions and makes the next read wait for fresh tagged data.',
+    soWhat:
+      'A fast response containing stale stock or pricing can harm correctness. Test freshness and authorization alongside latency.',
+  },
   'product-discovery': {
     name: 'Product discovery',
     see: '01-product-discovery',
