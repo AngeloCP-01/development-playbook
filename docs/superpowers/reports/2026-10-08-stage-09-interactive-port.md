@@ -3568,3 +3568,676 @@ Programmatically extracted all 19 terminal fences and checked exact equality wit
 ## Task 7 independent review
 
 Spec compliant; task approved after two PLAN-AUTHORED corrections. No unresolved findings. All nineteen logs/exits match the report exactly; both isolated teeth checks substantiate the fixes. Commit trailers verified. Review source: `task-7-review.md`.
+
+
+---
+
+# Task 8 implementation report
+
+Base: `7ea84fd`. Task: register the complete interactive Stage 09 and prove its browser flow.
+
+## Recovery history
+
+The original implementer, `/root/implement_8`, stopped on an Astra usage limit after completing the original RED sequence, writing the seven owned files, updating the three registries together and capturing focused GREEN. No Task 8 commit or report existed. This recovery retained its five original logs and exits, inspected the existing source against the approved brief, and did not repeat RED or reset the implementation. The remaining teeth, restored GREEN, formatting, typecheck, lint, full suite and browser GREEN were executed by `/root/implement_8_recovery`.
+
+## Implementation and files
+
+- `web/src/features/performance/steps.ts`: twelve ordered typed step ids and panels, with user-outcome judgment labels and hints.
+- `web/src/features/performance/PerformanceOptimization.tsx`: shared Stepper plus the five curated References.
+- `web/src/features/performance/PerformanceOptimization.test.tsx`: five real render tests for semantic labels, registration, mapped controls, six glossary first appearances and one persisted record across panel changes.
+- `web/e2e/performance.spec.ts`: four production browser cases for native radio keys/locking, worksheet direct links/Back/reload/literal input in both themes, permission-denied retention/manual export, and internal-improvement judgment correction.
+- `web/src/features/stage-content.ts`, `web/src/features/step-ids.ts`, `web/src/lib/stages.ts`: atomic Stage 09 registration, ids declaration and ready:true. No other stage metadata changed.
+
+## Self-review and limits
+
+The implementation matches the Task 8 source contracts after Prettier formatting. Every panel function is wired once to its approved id; the wrapper preserves the shared Stepper hash/back contract; the References slug is correct. The registry diff contains only the required imports/entries and Stage 09 ready field. `git diff --check` is clean. Render tests exercise the actual stage and shared components with independently declared ids/labels; the specified label mutation proves why the semantic guard is separate from the id guard. No shared hook, setup, gate or unrelated files changed.
+
+Task-level validation: focused 70/70 across 13 files (recovered); semantic-label teeth one failed/20 passed; restored 21/21; final full suite 1457/1457 across 196 files; typecheck and lint pass; fresh production browser 4/4. The configured server has ended after Playwright. The port check before GREEN found no listener on 3100, so no process was stopped. The sandbox blocked a default localhost probe (EPERM); scoped read-only inspection and the required browser/build run succeeded with escalation. The old font failure remains environment evidence, not a product failure.
+
+Deferred: independent task review; root's whole-branch review and full gate; revealed-state contrast/target/focus/height measurement and manual Chrome coverage walk; ledger/handoff aggregation; worktree migration at the clean reviewed-task boundary; W-6 sheets, real ordering telemetry, shared-drill extraction and shared hook repairs; merge, push and production promotion. This report does not claim integration readiness or deployment.
+
+## Build freshness
+
+The placeholder browser RED used BUILD_ID `f3vsEESOrVngybq2V9a_K`, captured in `task8-placeholder-build.json`. Browser GREEN used a newly built BUILD_ID and the unchanged configured freshness guard. Metadata below is read from the actual `.next/BUILD_ID`; its mtime exceeds every source file and its id differs from the placeholder.
+
+```json
+{
+  "build_id": "Yk-7Ej2Ymx6U_vJuhQMsx",
+  "build_id_mtime_ns": 1791525059051690061,
+  "source_newest_mtime_ns": 1791524994442524960
+}
+```
+
+## Raw terminal evidence
+
+All commands run from `web/`. Each fence contains its retained log verbatim; exits and interpretations are outside fences.
+
+### task8-01-missing-module-red
+
+Command: `pnpm exec vitest run src/features/performance/PerformanceOptimization.test.tsx`. Exit: `1`.
+
+Recovered initial import RED: the stage module did not exist. This establishes the missing boundary, not the assertion RED.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/PerformanceOptimization.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/PerformanceOptimization.test.tsx [ src/features/performance/PerformanceOptimization.test.tsx ]
+Error: Failed to resolve import "./PerformanceOptimization" from "src/features/performance/PerformanceOptimization.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/angelito/personal/Development-Playbook/web/src/features/performance/PerformanceOptimization.test.tsx:6:40
+  4  |  import { STAGE_CONTENT } from "@/features/stage-content";
+  5  |  import { STEP_IDS_BY_SLUG } from "@/features/step-ids";
+  6  |  import { PerformanceOptimization } from "./PerformanceOptimization";
+     |                                           ^
+  7  |  import { COVERAGE } from "./content";
+  8  |  var _jsxFileName = "/Users/angelito/personal/Development-Playbook/web/src/features/performance/PerformanceOptimizatio...
+ ❯ TransformPluginContext._formatLog node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30416:39
+ ❯ TransformPluginContext.error node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30413:14
+ ❯ normalizeUrl node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27438:18
+ ❯ node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27506:30
+ ❯ TransformPluginContext.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27474:4
+ ❯ EnvironmentPluginContainer.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30201:14
+ ❯ loadAndTransform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:20124:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  09:26:49
+   Duration  801ms (transform 23ms, setup 117ms, import 0ms, tests 0ms, environment 561ms)
+
+```
+
+### task8-02-assertion-red
+
+Command: `pnpm exec vitest run src/features/performance/PerformanceOptimization.test.tsx`. Exit: `1`.
+
+Recovered assertion RED failed for the right reason: a compilable empty wrapper exposes no tabs or panels, and Stage 09 remains ready:false. All five assertions fail against the missing implementation.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/PerformanceOptimization.test.tsx (5 tests | 5 failed) 66ms
+   × the rail names the outcome judgments in order rather than treating internal progress as the verdict 59ms
+   × ready, registration and declared ids expose the same stage 2ms
+   × the stage actually renders the mapped judgments and their interactive evidence 2ms
+   × first appearances open all six new terms where the reader encounters them 1ms
+   × saved baseline and follow-up fields remain one record after the actual stepper switches panels 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/PerformanceOptimization.test.tsx > the rail names the outcome judgments in order rather than treating internal progress as the verdict
+TestingLibraryElementError: Unable to find an accessible element with the role "tab"
+
+There are no accessible roles. But there might be some inaccessible roles. If you wish to access them, then set the `hidden` option to `true`. Learn more about this here: https://testing-library.com/docs/dom-testing-library/api-queries#byrole
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div />[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:109:15
+ ❯ src/features/performance/PerformanceOptimization.test.tsx:24:23
+     22| test('the rail names the outcome judgments in order rather than treati…
+     23|   render(<PerformanceOptimization />)
+     24|   const tabs = screen.getAllByRole('tab')
+       |                       ^
+     25|   expect(tabs.map((node) => node.id)).toEqual(IDS.map((id) => `tab-${i…
+     26|   LABELS.forEach((label, index) => expect(tabs[index].textContent).toC…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  |dom| src/features/performance/PerformanceOptimization.test.tsx > ready, registration and declared ids expose the same stage
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/performance/PerformanceOptimization.test.tsx:30:58
+     28|
+     29| test('ready, registration and declared ids expose the same stage', () …
+     30|   expect(getStage('09-performance-optimization')?.ready).toBe(true)
+       |                                                          ^
+     31|   expect(STAGE_CONTENT['09-performance-optimization']).toBe(Performanc…
+     32|   expect(STEP_IDS_BY_SLUG['09-performance-optimization']).toEqual(IDS)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  |dom| src/features/performance/PerformanceOptimization.test.tsx > the stage actually renders the mapped judgments and their interactive evidence
+Error: Unable to fire a "click" event - please provide a DOM element.
+ ❯ createEvent node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/events.js:27:11
+ ❯ Function.createEvent.<computed> [as click] node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/events.js:106:38
+ ❯ Function.fireEvent.<computed> [as click] node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/events.js:110:68
+ ❯ Function.fireEvent.<computed> [as click] node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.3_@type_796f041f1bf25f255ff84691b91a8ac6/node_modules/@testing-library/react/dist/fire-event.js:15:52
+ ❯ go src/features/performance/PerformanceOptimization.test.tsx:18:13
+     16|
+     17| function go(id: string) {
+     18|   fireEvent.click(document.getElementById(`tab-${id}`)!)
+       |             ^
+     19|   return screen.getByRole('tabpanel')
+     20| }
+ ❯ src/features/performance/PerformanceOptimization.test.tsx:39:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  |dom| src/features/performance/PerformanceOptimization.test.tsx > first appearances open all six new terms where the reader encounters them
+Error: Unable to fire a "click" event - please provide a DOM element.
+ ❯ createEvent node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/events.js:27:11
+ ❯ Function.createEvent.<computed> [as click] node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/events.js:106:38
+ ❯ Function.fireEvent.<computed> [as click] node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/events.js:110:68
+ ❯ Function.fireEvent.<computed> [as click] node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.3_@type_796f041f1bf25f255ff84691b91a8ac6/node_modules/@testing-library/react/dist/fire-event.js:15:52
+ ❯ go src/features/performance/PerformanceOptimization.test.tsx:18:13
+     16|
+     17| function go(id: string) {
+     18|   fireEvent.click(document.getElementById(`tab-${id}`)!)
+       |             ^
+     19|   return screen.getByRole('tabpanel')
+     20| }
+ ❯ src/features/performance/PerformanceOptimization.test.tsx:62:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  |dom| src/features/performance/PerformanceOptimization.test.tsx > saved baseline and follow-up fields remain one record after the actual stepper switches panels
+Error: Unable to fire a "click" event - please provide a DOM element.
+ ❯ createEvent node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/events.js:27:11
+ ❯ Function.createEvent.<computed> [as click] node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/events.js:106:38
+ ❯ Function.fireEvent.<computed> [as click] node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/events.js:110:68
+ ❯ Function.fireEvent.<computed> [as click] node_modules/.pnpm/@testing-library+react@16.3.2_@testing-library+dom@10.4.1_@types+react-dom@19.2.3_@type_796f041f1bf25f255ff84691b91a8ac6/node_modules/@testing-library/react/dist/fire-event.js:15:52
+ ❯ go src/features/performance/PerformanceOptimization.test.tsx:18:13
+     16|
+     17| function go(id: string) {
+     18|   fireEvent.click(document.getElementById(`tab-${id}`)!)
+       |             ^
+     19|   return screen.getByRole('tabpanel')
+     20| }
+ ❯ src/features/performance/PerformanceOptimization.test.tsx:71:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed (5)
+   Start at  09:26:58
+   Duration  1.54s (transform 630ms, setup 82ms, import 793ms, tests 66ms, environment 506ms)
+
+```
+
+### task8-03-browser-red-attempt
+
+Command: `pnpm exec playwright test e2e/performance.spec.ts`. Exit: `1`.
+
+Recovered environment failure: three Google Fonts downloads failed before a server could start. This is not feature RED.
+
+```text
+[WebServer] (node:41231) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:41244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:41244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] Turbopack build encountered 3 warnings:
+[WebServer] [next]/internal/font/google/archivo_d462d458.module.css
+[WebServer] Error while requesting resource
+[WebServer] There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap
+[WebServer] 
+[WebServer] 
+[WebServer] [next]/internal/font/google/jetbrains_mono_f8290d5a.module.css
+[WebServer] Error while requesting resource
+[WebServer] There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&display=swap
+[WebServer] 
+[WebServer] 
+[WebServer] [next]/internal/font/google/newsreader_8524af2f.module.css
+[WebServer] Error while requesting resource
+[WebServer] There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Newsreader:wght@200..800&display=swap
+[WebServer] 
+[WebServer] 
+[WebServer] 
+[WebServer] > Build error occurred
+[WebServer] Error: Turbopack build failed with 3 errors:
+[WebServer] [next]/internal/font/google/archivo_d462d458.module.css
+[WebServer] next/font: error:
+[WebServer] Failed to fetch `Archivo` from Google Fonts.
+[WebServer] 
+[WebServer] 
+[WebServer] [next]/internal/font/google/jetbrains_mono_f8290d5a.module.css
+[WebServer] next/font: error:
+[WebServer] Failed to fetch `JetBrains Mono` from Google Fonts.
+[WebServer] 
+[WebServer] 
+[WebServer] [next]/internal/font/google/newsreader_8524af2f.module.css
+[WebServer] next/font: error:
+[WebServer] Failed to fetch `Newsreader` from Google Fonts.
+[WebServer] 
+[WebServer] 
+[WebServer]     at ignore-listed frames
+Error: Process from config.webServer was not able to start. Exit code: 1
+
+```
+
+### task8-04-browser-red
+
+Command: `pnpm exec playwright test e2e/performance.spec.ts`. Exit: `1`.
+
+Recovered real browser RED failed for the right reason against a fresh placeholder build: zero baseline radios, absent worksheet fields and no comparison table. All four cases fail on those missing stage controls.
+
+```text
+[WebServer] (node:43938) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:43951) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:43951) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:44045) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:44703) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:44704) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:44707) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:44705) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:44702) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:44708) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:44706) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:44784) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:44872) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:45115) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  1 e2e/performance.spec.ts:6:5 › performance choices use native radio keys and keep the first committed answer (6.0s)
+(node:45594) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  2 e2e/performance.spec.ts:25:5 › performance worksheets support direct links, Back and reload with long literal input in both themes (2.0m)
+(node:53142) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  3 e2e/performance.spec.ts:55:5 › permission failures retain the worksheet and offer manual export with zero page errors (2.0m)
+(node:59234) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 e2e/performance.spec.ts:85:5 › an internal improvement requires more observation rather than a production win (5.7s)
+
+
+  1) e2e/performance.spec.ts:6:5 › performance choices use native radio keys and keep the first committed answer 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('#panel-baseline').getByRole('radio')
+    Expected: 2
+    Received: 0
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" with timeout 5000ms
+      - waiting for locator('#panel-baseline').getByRole('radio')
+        14 × locator resolved to 0 elements
+           - unexpected value "0"
+
+
+       8 |   const panel = page.locator('#panel-baseline')
+       9 |   const radios = panel.getByRole('radio')
+    > 10 |   await expect(radios).toHaveCount(2)
+         |                        ^
+      11 |   await radios.nth(0).focus()
+      12 |   await radios.nth(0).press('Space')
+      13 |   await expect(radios.nth(0)).toBeChecked()
+        at /Users/angelito/personal/Development-Playbook/web/e2e/performance.spec.ts:10:24
+
+    Error Context: test-results/performance-performance-ch-e910e--the-first-committed-answer/error-context.md
+
+  2) e2e/performance.spec.ts:25:5 › performance worksheets support direct links, Back and reload with long literal input in both themes 
+
+    Test timeout of 120000ms exceeded.
+
+    Error: locator.fill: Test timeout of 120000ms exceeded.
+    Call log:
+      - waiting for getByLabel('Outcome and observer', { exact: true })
+
+
+      33 |     await page.reload({ waitUntil: 'networkidle' })
+      34 |     await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
+    > 35 |     await page.getByLabel('Outcome and observer', { exact: true }).fill(literal)
+         |                                                                    ^
+      36 |     await page.locator('#tab-followup').click()
+      37 |     await expect(page.locator('#panel-followup')).toBeVisible()
+      38 |     await page.getByLabel('Verdict and open gap', { exact: true }).fill('More field evidence required')
+        at /Users/angelito/personal/Development-Playbook/web/e2e/performance.spec.ts:35:68
+
+    Error Context: test-results/performance-performance-wo-abeb7-iteral-input-in-both-themes/error-context.md
+
+  3) e2e/performance.spec.ts:55:5 › permission failures retain the worksheet and offer manual export with zero page errors 
+
+    Test timeout of 120000ms exceeded.
+
+    Error: locator.fill: Test timeout of 120000ms exceeded.
+    Call log:
+      - waiting for getByLabel('Outcome and observer', { exact: true })
+
+
+      73 |   }, PERFORMANCE_KEY)
+      74 |   await page.goto(`${STAGE}#record`, { waitUntil: 'networkidle' })
+    > 75 |   await page.getByLabel('Outcome and observer', { exact: true }).fill('Unsaved observer and outcome')
+         |                                                                  ^
+      76 |   await page.getByLabel('Scope', { exact: true }).fill('Unsaved scope')
+      77 |   await expect(page.getByLabel('Outcome and observer', { exact: true })).toHaveValue('Unsaved observer and outcome')
+      78 |   await expect(page.getByText(/Saving is unavailable/)).toBeVisible()
+        at /Users/angelito/personal/Development-Playbook/web/e2e/performance.spec.ts:75:66
+
+    Error Context: test-results/performance-permission-fai-3a1fd-xport-with-zero-page-errors/error-context.md
+
+  4) e2e/performance.spec.ts:85:5 › an internal improvement requires more observation rather than a production win 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: locator('#panel-compare').getByRole('table', { name: 'Before and after evidence' })
+    Expected substring: "Browser p95 and its sample are not recorded"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toContainText" with timeout 5000ms
+      - waiting for locator('#panel-compare').getByRole('table', { name: 'Before and after evidence' })
+
+
+      86 |   await page.goto(`${STAGE}#compare`, { waitUntil: 'networkidle' })
+      87 |   const panel = page.locator('#panel-compare')
+    > 88 |   await expect(panel.getByRole('table', { name: 'Before and after evidence' })).toContainText('Browser p95 and its sample are not recorded')
+         |                                                                                 ^
+      89 |   await panel.getByRole('radio', { name: 'Stop this optimization pass and observe the outcome' }).check()
+      90 |   await panel.getByRole('button', { name: 'Commit decision' }).click()
+      91 |   await expect(panel.getByText('Needs correction')).toBeVisible()
+        at /Users/angelito/personal/Development-Playbook/web/e2e/performance.spec.ts:88:81
+
+    Error Context: test-results/performance-an-internal-im-75942-ather-than-a-production-win/error-context.md
+
+  4 failed
+    e2e/performance.spec.ts:6:5 › performance choices use native radio keys and keep the first committed answer 
+    e2e/performance.spec.ts:25:5 › performance worksheets support direct links, Back and reload with long literal input in both themes 
+    e2e/performance.spec.ts:55:5 › permission failures retain the worksheet and offer manual export with zero page errors 
+    e2e/performance.spec.ts:85:5 › an internal improvement requires more observation rather than a production win 
+```
+
+### task8-05-focused-green
+
+Command: `pnpm exec vitest run src/features/performance src/lib/performance-sheet.test.ts src/lib/stages.test.ts src/features/rails.test.tsx`. Exit: `0`.
+
+Recovered focused GREEN: 70 tests pass across 13 files after assembly and atomic registration.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  13 passed (13)
+      Tests  70 passed (70)
+   Start at  09:32:26
+   Duration  4.81s (transform 4.57s, setup 2.18s, import 6.81s, tests 3.17s, environment 12.97s)
+
+```
+
+### task8-06-label-teeth
+
+Command: `pnpm exec vitest run src/features/performance/PerformanceOptimization.test.tsx src/features/rails.test.tsx`. Exit: `1`.
+
+Recovery teeth: only compare.label changed to Internal progress. Exactly the semantic rail label test fails; four other stage tests and all 16 rail-id guards pass (20 pass, one fail). Expected Compare outcomes; received 07Internal progress.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/PerformanceOptimization.test.tsx (5 tests | 1 failed) 376ms
+   × the rail names the outcome judgments in order rather than treating internal progress as the verdict 102ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/PerformanceOptimization.test.tsx > the rail names the outcome judgments in order rather than treating internal progress as the verdict
+AssertionError: expected '07Internal progress' to contain 'Compare outcomes'
+
+Expected: "Compare outcomes"
+Received: "07Internal progress"
+
+ ❯ src/features/performance/PerformanceOptimization.test.tsx:26:68
+     24|   const tabs = screen.getAllByRole('tab')
+     25|   expect(tabs.map((node) => node.id)).toEqual(IDS.map((id) => `tab-${i…
+     26|   LABELS.forEach((label, index) => expect(tabs[index].textContent).toC…
+       |                                                                    ^
+     27| })
+     28|
+ ❯ src/features/performance/PerformanceOptimization.test.tsx:26:10
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 20 passed (21)
+   Start at  13:49:37
+   Duration  2.52s (transform 1.65s, setup 307ms, import 2.10s, tests 514ms, environment 1.59s)
+
+```
+
+### task8-07-restored-green
+
+Command: `pnpm exec vitest run src/features/performance/PerformanceOptimization.test.tsx src/features/rails.test.tsx`. Exit: `0`.
+
+Restored the exact pre-mutation steps file: all 21 tests pass across two files.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  2 passed (2)
+      Tests  21 passed (21)
+   Start at  13:49:48
+   Duration  2.29s (transform 1.49s, setup 308ms, import 1.93s, tests 636ms, environment 1.28s)
+
+```
+
+### task8-08-format
+
+Command: `pnpm exec prettier --write src/features/performance/steps.ts src/features/performance/PerformanceOptimization.tsx src/features/performance/PerformanceOptimization.test.tsx e2e/performance.spec.ts src/features/stage-content.ts src/features/step-ids.ts src/lib/stages.ts`. Exit: `0`.
+
+Only the seven owned files formatted; no behavior changes.
+
+```text
+src/features/performance/steps.ts 33ms
+src/features/performance/PerformanceOptimization.tsx 3ms
+src/features/performance/PerformanceOptimization.test.tsx 21ms
+e2e/performance.spec.ts 38ms
+src/features/stage-content.ts 6ms (unchanged)
+src/features/step-ids.ts 3ms (unchanged)
+src/lib/stages.ts 11ms (unchanged)
+```
+
+### task8-09-typecheck
+
+Command: `pnpm typecheck`. Exit: `0`.
+
+Route typegen plus tsc pass.
+
+```text
+
+> web@0.1.0 typecheck /Users/angelito/personal/Development-Playbook/web
+> next typegen && tsc --noEmit
+
+Generating route types...
+✓ Types generated successfully
+```
+
+### task8-10-lint
+
+Command: `pnpm lint`. Exit: `0`.
+
+ESLint passes with zero warnings.
+
+```text
+
+> web@0.1.0 lint /Users/angelito/personal/Development-Playbook/web
+> eslint --max-warnings 0
+
+```
+
+### task8-11-full-suite
+
+Command: `pnpm test`. Exit: `0`.
+
+Full project GREEN: 1457 tests pass across 196 files, including the formatted final sources.
+
+```text
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/web
+> vitest run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  196 passed (196)
+      Tests  1457 passed (1457)
+   Start at  13:50:04
+   Duration  36.68s (transform 14.89s, setup 21.21s, import 38.01s, tests 65.69s, environment 93.78s)
+
+```
+
+### task8-12-browser-green
+
+Command: `pnpm exec playwright test e2e/performance.spec.ts --output=../.superpowers/sdd/2026-10-08-stage-09-interactive-port/task8-browser-green-artifacts`. Exit: `0`.
+
+All four browser cases pass against a fresh production build. The configured webServer owns the build and server; globalSetup accepts freshness. Node prints NO_COLOR/FORCE_COLOR environment warnings, retained below. No application page errors in the explicit permission-failure check.
+
+```text
+[WebServer] (node:65883) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:65900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:65900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:65946) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:66479) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:66484) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:66480) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:66482) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:66477) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:66483) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:66478) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:66656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:66671) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:66680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 e2e/performance.spec.ts:6:5 › performance choices use native radio keys and keep the first committed answer (1.3s)
+  ✓  2 e2e/performance.spec.ts:29:5 › performance worksheets support direct links, Back and reload with long literal input in both themes (3.9s)
+  ✓  3 e2e/performance.spec.ts:80:5 › permission failures retain the worksheet and offer manual export with zero page errors (751ms)
+  ✓  4 e2e/performance.spec.ts:127:5 › an internal improvement requires more observation rather than a production win (815ms)
+
+  4 passed (18.8s)
+```
+
+### task8-13-server-ended
+
+Command: `lsof -nP -iTCP:3100 -sTCP:LISTEN`. Exit: `1`.
+
+Exit 1 with no stdout is the expected no-listener result, confirming that the configured Task 8 server has ended.
+
+```text
+```
+
+### task8-14-commit
+
+Command: `python3 .superpowers/sdd/2026-10-08-stage-09-interactive-port/task8-commit.py`. Exit: `1`.
+
+The default sandbox prevented .git/index.lock creation during git add; no commit was created and the index stayed unstaged. This is environment evidence.
+
+```text
+fatal: Unable to create '/Users/angelito/personal/Development-Playbook/.git/index.lock': Operation not permitted
+Traceback (most recent call last):
+  File "/Users/angelito/personal/Development-Playbook/.superpowers/sdd/2026-10-08-stage-09-interactive-port/task8-commit.py", line 4, in <module>
+    subprocess.run(["git", "add", "--", *owned], check=True)
+  File "/Users/angelito/.pyenv/versions/3.12.7/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', 'add', '--', 'web/src/features/performance/steps.ts', 'web/src/features/performance/PerformanceOptimization.tsx', 'web/src/features/performance/PerformanceOptimization.test.tsx', 'web/e2e/performance.spec.ts', 'web/src/features/stage-content.ts', 'web/src/features/step-ids.ts', 'web/src/lib/stages.ts']' returned non-zero exit status 128.
+```
+
+### task8-15-commit-escalated
+
+Command: `python3 .superpowers/sdd/2026-10-08-stage-09-interactive-port/task8-commit.py`. Exit: `0`.
+
+Scoped escalation completed the approved seven-file local commit. Lefthook format and lint passed, with every owned source file unchanged by the hook.
+
+```text
+╭───────────────────────────────────────╮
+│ lefthook  v2.1.10   hook:  [1mpre-commit[m │
+╰───────────────────────────────────────╯
+┃  format ❯ 
+e2e/performance.spec.ts 83ms (unchanged)
+src/features/performance/PerformanceOptimization.test.tsx 24ms (unchanged)
+src/features/performance/PerformanceOptimization.tsx 4ms (unchanged)
+src/features/performance/steps.ts 9ms (unchanged)
+src/features/stage-content.ts 6ms (unchanged)
+src/features/step-ids.ts 4ms (unchanged)
+src/lib/stages.ts 15ms (unchanged)
+
+┃  lint ❯ 
+
+[38;2;56;56;56m  ────────────────────────────────────[m
+summary: (done in 3.44 seconds)
+✓ format (0.80 seconds)
+✓ lint (3.43 seconds)
+[feat/stage-09-performance-port 59b0e05] feat(performance): register the interactive stage
+ 7 files changed, 417 insertions(+), 1 deletion(-)
+ create mode 100644 web/e2e/performance.spec.ts
+ create mode 100644 web/src/features/performance/PerformanceOptimization.test.tsx
+ create mode 100644 web/src/features/performance/PerformanceOptimization.tsx
+ create mode 100644 web/src/features/performance/steps.ts
+```
+
+### task8-16-final-state
+
+Command: `python3 final-state check (retained invocation checks git status, seven commit files, subject/trailer and committed diff whitespace)`. Exit: `0`.
+
+Commit 59b0e058c96f79dc5e3d91dd12bb756833a05014 verified. Tree clean; exactly seven owned files; required subject/trailer present; committed diff whitespace clean. No merge or push performed.
+
+```text
+HEAD=59b0e058c96f79dc5e3d91dd12bb756833a05014
+PASS: clean working tree; exactly seven owned commit files; subject and trailer verified.
+PASS: committed diff whitespace check.
+```
+
+## Commit and handoff
+
+Committed only the seven owned files as `59b0e058c96f79dc5e3d91dd12bb756833a05014`, `feat(performance): register the interactive stage`, with the required Co-Authored-By trailer. Working tree is clean. Independent review, root verification and records remain pending; not merged, not pushed, not deployed.
+
+## Task 8 independent review
+
+Spec compliant; task approved, no blockers. M1 (PRE-EXISTING environment): NO_COLOR/FORCE_COLOR warnings in retained terminal output. Final verification will remove NO_COLOR only from subprocess environments; the original output remains verbatim. All sixteen raw fences and exits match. Fresh BUILD_ID differs from placeholder; commit trailer verified. Review source: `task-8-review.md`.
+
+The user selected an isolated worktree after execution had begun. All eight tasks are now implemented and reviewed, so the feature branch moves at this clean boundary before final gates. The original planning checkout returns to `docs/2026-10-08-stage-09-port-design` at `112aa42`. No merge or push approval was granted.

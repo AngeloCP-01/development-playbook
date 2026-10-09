@@ -2008,7 +2008,7 @@ git commit -m 'feat(performance): teach evidence-based optimization candidates' 
 - Produces: ordered `STEP_IDS`, typed `STEPS`, exported `PerformanceOptimization()` and a fully registered Stage 09.
 - `COVERAGE` names canonical headings; this task observes that the actual stage renders their assigned panels and controls.
 
-- [ ] **Step 1: Write the stage-level render tests and browser spec before registration.**
+- [x] **Step 1: Write the stage-level render tests and browser spec before registration.**
 
 #### Test source: `web/src/features/performance/PerformanceOptimization.test.tsx`
 
@@ -2188,8 +2188,8 @@ test('an internal improvement requires more observation rather than a production
 })
 ```
 
-- [ ] **Step 2: Capture integration RED.** Run `pnpm exec vitest run src/features/performance/PerformanceOptimization.test.tsx`. Run `pnpm exec playwright test e2e/performance.spec.ts` before registering the stage. The current route is a placeholder, so missing baseline radios/worksheet/comparison table are the expected browser RED. Preserve actual output rather than an asserted prediction. If the build cannot start because of fonts, port conflicts or environment setup, resolve that setup and rerun; those failures do not count as RED for the feature.
-- [ ] **Step 3: Write typed step declarations and the stage wrapper.**
+- [x] **Step 2: Capture integration RED.** Run `pnpm exec vitest run src/features/performance/PerformanceOptimization.test.tsx`. Run `pnpm exec playwright test e2e/performance.spec.ts` before registering the stage. The current route is a placeholder, so missing baseline radios/worksheet/comparison table are the expected browser RED. Preserve actual output rather than an asserted prediction. If the build cannot start because of fonts, port conflicts or environment setup, resolve that setup and rerun; those failures do not count as RED for the feature.
+- [x] **Step 3: Write typed step declarations and the stage wrapper.**
 
 #### Implementation source: `web/src/features/performance/steps.ts`
 
@@ -2231,7 +2231,7 @@ export function PerformanceOptimization() {
 }
 ```
 
-- [ ] **Step 4: Update the three existing registries in one working-tree operation.** Add these exact imports and entries; change only Stage 09's `ready` field.
+- [x] **Step 4: Update the three existing registries in one working-tree operation.** Add these exact imports and entries; change only Stage 09's `ready` field.
 
 ```ts
 // src/features/stage-content.ts: imports and STAGE_CONTENT entry
@@ -2250,9 +2250,9 @@ ready: true,
 
 These are insertion fragments, not a new module. Do not apply the standalone `ready` line to another stage or commit a partial registration.
 
-- [ ] **Step 5: Capture GREEN and inspect actual coverage.** Run `pnpm exec vitest run src/features/performance src/lib/performance-sheet.test.ts src/lib/stages.test.ts src/features/rails.test.tsx`, `pnpm typecheck` and `pnpm exec playwright test e2e/performance.spec.ts`. The browser command owns a fresh production build; ensure its server is current before accepting GREEN.
-- [ ] **Step 6: Teeth check.** Change only the `compare` step's label from `'Compare outcomes'` to `'Internal progress'`. Run the entire stage render file; only `the rail names the outcome judgments...` should fail. Restore and rerun GREEN. The existing rail-id guard remains green during this mutation, showing why semantic labels have their own assertion.
-- [ ] **Step 7: Format, lint, review and commit.** Commit `feat(performance): register the interactive stage` with the required trailer. This commit includes the three registries together, the wrapper, steps and browser spec. Registration is now locally ready; final gates and whole-branch review still determine readiness for integration.
+- [x] **Step 5: Capture GREEN and inspect actual coverage.** Run `pnpm exec vitest run src/features/performance src/lib/performance-sheet.test.ts src/lib/stages.test.ts src/features/rails.test.tsx`, `pnpm typecheck` and `pnpm exec playwright test e2e/performance.spec.ts`. The browser command owns a fresh production build; ensure its server is current before accepting GREEN.
+- [x] **Step 6: Teeth check.** Change only the `compare` step's label from `'Compare outcomes'` to `'Internal progress'`. Run the entire stage render file; only `the rail names the outcome judgments...` should fail. Restore and rerun GREEN. The existing rail-id guard remains green during this mutation, showing why semantic labels have their own assertion.
+- [x] **Step 7: Format, lint, review and commit.** Commit `feat(performance): register the interactive stage` with the required trailer. This commit includes the three registries together, the wrapper, steps and browser spec. Registration is now locally ready; final gates and whole-branch review still determine readiness for integration.
 
 
 ```bash
