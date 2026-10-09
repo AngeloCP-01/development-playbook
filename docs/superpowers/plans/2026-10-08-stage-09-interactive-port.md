@@ -1364,7 +1364,7 @@ git commit -m 'feat(performance): save and export the measurement worksheet' -m 
 - Produces: `DONE`, `TEAM`, `ARTIFACTS`, `CHECKLIST_KEY`, `PerformanceChecklist()`.
 - Consumes: `useLocalStorage<unknown>` and shared `TeamNotes`. The checklist key differs from the worksheet key; only valid known ids affect its count.
 
-- [ ] **Step 1: Write canonical-data and render tests.**
+- [x] **Step 1: Write canonical-data and render tests.**
 
 #### Test source: `web/src/features/performance/checklist.test.ts`
 
@@ -1424,8 +1424,8 @@ test('team notes include a named budget, query-plan review and ownership of the 
 })
 ```
 
-- [ ] **Step 2: Capture RED.** Run `pnpm exec vitest run src/features/performance/checklist.test.ts src/features/performance/PerformanceChecklist.test.tsx`.
-- [ ] **Step 3: Write the canonical checklist and component.**
+- [x] **Step 2: Capture RED.** Run `pnpm exec vitest run src/features/performance/checklist.test.ts src/features/performance/PerformanceChecklist.test.tsx`.
+- [x] **Step 3: Write the canonical checklist and component.**
 
 #### Implementation source: `web/src/features/performance/checklist.ts`
 
@@ -1502,9 +1502,9 @@ export function PerformanceChecklist() {
 }
 ```
 
-- [ ] **Step 4: Capture GREEN.** Run both files and `pnpm typecheck`. Count only unique known ids and verify the worksheet key remains untouched.
-- [ ] **Step 5: Teeth check.** In the TeamNotes rendering only, change `TEAM.map` to `TEAM.filter((row) => row.id !== 'owner').map`. Only the team-notes render test should fail. Restore and rerun GREEN; the data test must remain green during the mutation, demonstrating why rendering needs its own test.
-- [ ] **Step 6: Format, lint, review and commit.** Commit `feat(performance): record completion and team ownership` with the required trailer and evidence report.
+- [x] **Step 4: Capture GREEN.** Run both files and `pnpm typecheck`. Count only unique known ids and verify the worksheet key remains untouched.
+- [x] **Step 5: Teeth check.** In the TeamNotes rendering only, change `TEAM.map` to `TEAM.filter((row) => row.id !== 'owner').map`. Only the team-notes render test should fail. Restore and rerun GREEN; the data test must remain green during the mutation, demonstrating why rendering needs its own test.
+- [x] **Step 6: Format, lint, review and commit.** Commit `feat(performance): record completion and team ownership` with the required trailer and evidence report.
 
 
 ```bash

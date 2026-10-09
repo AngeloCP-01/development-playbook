@@ -2233,3 +2233,630 @@ summary: (done in 2.32 seconds)
 ## Task 5 independent review
 
 Spec and quality: review clean. No findings. All eleven report fences exactly match retained logs. Commit trailer verified. Review source: `task-5-review.md`.
+
+
+---
+
+# Task 6 implementation report
+
+Implemented the five canonical completion checks with persistent unique known ids, reset isolation from the worksheet, four artifact reminders and the four shared TeamNotes rows. Used a distinct checklist key and the existing shared storage hook unchanged.
+
+Files: checklist.ts, PerformanceChecklist.tsx, checklist.test.ts, PerformanceChecklist.test.tsx under web/src/features/performance/.
+
+Self-review: source/API matches the approved task; native labeled inputs, per-instance ids, aria-live counts, 44px controls, known-id filtering and Set deduplication. Tests cover persistence, reset isolation, malformed data and rendered team ownership. No task defects found.
+
+Deferred: stage registry assembly, live production/development browser audits, canonical report/ledger updates, merge, push and deployment remain with the coordinator. No live-browser validation claimed.
+
+## import-red
+
+True process exit: 1. Initial import RED: both absent task modules. This is setup evidence, not the assertion RED.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |unit| src/features/performance/checklist.test.ts (0 test)
+ ❯ |dom| src/features/performance/PerformanceChecklist.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/features/performance/checklist.test.ts [ src/features/performance/checklist.test.ts ]
+Error: Cannot find module './checklist' imported from /Users/angelito/personal/Development-Playbook/web/src/features/performance/checklist.test.ts
+ ❯ src/features/performance/checklist.test.ts:4:1
+      2| import { resolve } from 'node:path'
+      3| import { expect, test } from 'vitest'
+      4| import { DONE, TEAM, ARTIFACTS } from './checklist'
+       | ^
+      5|
+      6| test('completion checks are the canonical chapter checks rather than a…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |dom| src/features/performance/PerformanceChecklist.test.tsx [ src/features/performance/PerformanceChecklist.test.tsx ]
+Error: Failed to resolve import "./checklist" from "src/features/performance/PerformanceChecklist.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/angelito/personal/Development-Playbook/web/src/features/performance/PerformanceChecklist.test.tsx:4:42
+  2  |  import { beforeEach, expect, test } from "vitest";
+  3  |  import { PerformanceChecklist } from "./PerformanceChecklist";
+  4  |  import { CHECKLIST_KEY, DONE, TEAM } from "./checklist";
+     |                                             ^
+  5  |  var _jsxFileName = "/Users/angelito/personal/Development-Playbook/web/src/features/performance/PerformanceChecklist.t...
+  6  |  import { jsxDEV as _jsxDEV } from "react/jsx-dev-runtime";
+ ❯ TransformPluginContext._formatLog node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30416:39
+ ❯ TransformPluginContext.error node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30413:14
+ ❯ normalizeUrl node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27438:18
+ ❯ node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27506:30
+ ❯ TransformPluginContext.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27474:4
+ ❯ EnvironmentPluginContainer.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30201:14
+ ❯ loadAndTransform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:20124:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  09:11:47
+   Duration  784ms (transform 28ms, setup 92ms, import 0ms, tests 0ms, environment 562ms)
+
+```
+
+## assertion-red
+
+True process exit: 1. Genuine assertion RED failed for the right reason: canonical checks absent, native checkbox and recorded count absent, team disclosure absent. Four tests failed against the compilable minimal skeleton.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |unit| src/features/performance/checklist.test.ts (1 test | 1 failed) 5ms
+   × completion checks are the canonical chapter checks rather than an index-by-reflex list 5ms
+ ❯ |dom| src/features/performance/PerformanceChecklist.test.tsx (3 tests | 3 failed) 71ms
+   × ticked evidence persists on remount and reset removes the checklist without touching the worksheet 63ms
+   × unknown, duplicate or malformed saved ids do not create a false completion count 2ms
+   × team notes include a named budget, query-plan review and ownership of the after window 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/features/performance/checklist.test.ts > completion checks are the canonical chapter checks rather than an index-by-reflex list
+AssertionError: expected [ 'Completion evidence placeholder' ] to deeply equal [ …(5) ]
+
+- Expected
++ Received
+
+  [
+-   "The same outcome is measured before and after, with comparable segment, data and cache state",
+-   "The production or field comparison records the window, sample, percentile, failures and timeouts",
+-   "The measured outcome meets its stated target, or the unresolved gap is recorded",
+-   "Correctness tests pass and the order, payment and inventory behavior remains intact",
+-   "A failed or harmful change is reverted or explicitly carried as an open problem",
++   "Completion evidence placeholder",
+  ]
+
+ ❯ src/features/performance/checklist.test.ts:9:39
+      7|   const chapter = readFileSync(resolve(process.cwd(), '../docs/09-perf…
+      8|   const done = chapter.split('## Definition of done')[1].split('---')[…
+      9|   expect(DONE.map((row) => row.text)).toEqual([...done.matchAll(/^- \[…
+       |                                       ^
+     10|   expect(ARTIFACTS).toHaveLength(4)
+     11|   expect(TEAM.map((row) => row.id)).toEqual(['targets', 'budget', 'pla…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |dom| src/features/performance/PerformanceChecklist.test.tsx > ticked evidence persists on remount and reset removes the checklist without touching the worksheet
+TestingLibraryElementError: Unable to find an accessible element with the role "checkbox" and name "Completion evidence placeholder"
+
+Here are the accessible roles:
+
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<p>[39m
+      [0mCompletion checklist pending[0m
+    [36m</p>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/PerformanceChecklist.test.tsx:11:26
+      9|   window.localStorage.setItem('playbook:performance-worksheet:v1', '{"…
+     10|   const view = render(<PerformanceChecklist />)
+     11|   fireEvent.click(screen.getByRole('checkbox', { name: DONE[0].text }))
+       |                          ^
+     12|   expect(screen.getByText('1 of 5 checks recorded')).toBeTruthy()
+     13|   view.unmount()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |dom| src/features/performance/PerformanceChecklist.test.tsx > unknown, duplicate or malformed saved ids do not create a false completion count
+TestingLibraryElementError: Unable to find an element with the text: 0 of 5 checks recorded. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<p>[39m
+      [0mCompletion checklist pending[0m
+    [36m</p>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/PerformanceChecklist.test.tsx:25:19
+     23|     window.localStorage.setItem(CHECKLIST_KEY, raw)
+     24|     const view = render(<PerformanceChecklist />)
+     25|     expect(screen.getByText(raw.includes('obsolete') ? '1 of 5 checks …
+       |                   ^
+     26|     view.unmount()
+     27|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |dom| src/features/performance/PerformanceChecklist.test.tsx > team notes include a named budget, query-plan review and ownership of the after window
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/If you are not solo/i`
+
+Here are the accessible roles:
+
+  paragraph:
+
+  Name "":
+  [36m<p />[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<p>[39m
+      [0mCompletion checklist pending[0m
+    [36m</p>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/PerformanceChecklist.test.tsx:32:23
+     30| test('team notes include a named budget, query-plan review and ownersh…
+     31|   render(<PerformanceChecklist />)
+     32|   const open = screen.getByRole('button', { name: /If you are not solo…
+       |                       ^
+     33|   fireEvent.click(open)
+     34|   for (const row of TEAM) expect(screen.getByText(row.detail)).toBeTru…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  4 failed (4)
+   Start at  09:12:00
+   Duration  785ms (transform 37ms, setup 90ms, import 44ms, tests 76ms, environment 513ms)
+
+```
+
+## green
+
+True process exit: 0. Focused GREEN: four tests passed after implementing the supplied source.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  2 passed (2)
+      Tests  4 passed (4)
+   Start at  09:12:13
+   Duration  889ms (transform 69ms, setup 91ms, import 128ms, tests 132ms, environment 498ms)
+
+```
+
+## teeth
+
+True process exit: 1. Teeth mutation hid only TEAM owner in the render. Exactly the team-notes render test failed because the observation owner detail was absent. The data test and other two render tests passed.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/PerformanceChecklist.test.tsx (3 tests | 1 failed) 130ms
+   × team notes include a named budget, query-plan review and ownership of the after window 12ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/PerformanceChecklist.test.tsx > team notes include a named budget, query-plan review and ownership of the after window
+TestingLibraryElementError: Unable to find an element with the text: Assign who observes the outcome after deployment and decides whether the change helped.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"border border-line bg-raised p-5 sm:p-6 "[39m
+    [36m>[39m
+      [36m<p[39m
+        [33maria-live[39m=[32m"polite"[39m
+        [33mclass[39m=[32m"t-data mb-4 text-sm text-muted"[39m
+      [36m>[39m
+        [0m0[0m
+        [0m of [0m
+        [0m5[0m
+        [0m checks recorded[0m
+      [36m</p>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"space-y-2"[39m
+      [36m>[39m
+        [36m<li[39m
+          [33mclass[39m=[32m"measure-full"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"relative flex min-h-11 cursor-pointer items-start gap-3 border border-line p-3 text-sm focus-within:outline-2 focus-within:outline-brand"[39m
+            [33mfor[39m=[32m"_r_c_-comparable"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"peer absolute inset-0 h-full w-full cursor-pointer opacity-0"[39m
+              [33mid[39m=[32m"_r_c_-comparable"[39m
+              [33mtype[39m=[32m"checkbox"[39m
+            [36m/>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"mt-1 size-4 shrink-0 border border-line peer-checked:border-brand peer-checked:bg-brand"[39m
+            [36m/>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"min-w-0 break-words"[39m
+            [36m>[39m
+              [0mThe same outcome is measured before and after, with comparable segment, data and cache state[0m
+            [36m</span>[39m
+          [36m</label>[39m
+        [36m</li>[39m
+        [36m<li[39m
+          [33mclass[39m=[32m"measure-full"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"relative flex min-h-11 cursor-pointer items-start gap-3 border border-line p-3 text-sm focus-within:outline-2 focus-within:outline-brand"[39m
+            [33mfor[39m=[32m"_r_c_-field"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"peer absolute inset-0 h-full w-full cursor-pointer opacity-0"[39m
+              [33mid[39m=[32m"_r_c_-field"[39m
+              [33mtype[39m=[32m"checkbox"[39m
+            [36m/>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"mt-1 size-4 shrink-0 border border-line peer-checked:border-brand peer-checked:bg-brand"[39m
+            [36m/>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"min-w-0 break-words"[39m
+            [36m>[39m
+              [0mThe production or field comparison records the window, sample, percentile, failures and timeouts[0m
+            [36m</span>[39m
+          [36m</label>[39m
+        [36m</li>[39m
+        [36m<li[39m
+          [33mclass[39m=[32m"measure-full"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"relative flex min-h-11 cursor-pointer items-start gap-3 border border-line p-3 text-sm focus-within:outline-2 focus-within:outline-brand"[39m
+            [33mfor[39m=[32m"_r_c_-target"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"peer absolute inset-0 h-full w-full cursor-pointer opacity-0"[39m
+              [33mid[39m=[32m"_r_c_-target"[39m
+              [33mtype[39m=[32m"checkbox"[39m
+            [36m/>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"mt-1 size-4 shrink-0 border border-line peer-checked:border-brand peer-checked:bg-brand"[39m
+            [36m/>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"min-w-0 break-words"[39m
+            [36m>[39m
+              [0mThe measured outcome meets its stated target, or the unresolved gap is recorded[0m
+            [36m</span>[39m
+          [36m</label>[39m
+        [36m</li>[39m
+        [36m<li[39m
+          [33mclass[39m=[32m"measure-full"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"relative flex min-h-11 cursor-pointer items-start gap-3 border border-line p-3 text-sm focus-within:outline-2 focus-within:outline-brand"[39m
+            [33mfor[39m=[32m"_r_c_-correctness"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"peer absolute inset-0 h-full w-full cursor-pointer opacity-0"[39m
+              [33mid[39m=[32m"_r_c_-correctness"[39m
+              [33mtype[39m=[32m"checkbox"[39m
+            [36m/>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"mt-1 size-4 shrink-0 border border-line peer-checked:border-brand peer-checked:bg-brand"[39m
+            [36m/>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"min-w-0 break-words"[39m
+            [36m>[39m
+              [0mCorrectness tests pass and the order, payment and inventory behavior remains intact[0m
+            [36m</span>[39m
+          [36m</label>[39m
+        [36m</li>[39m
+        [36m<li[39m
+          [33mclass[39m=[32m"measure-full"[39m
+        [36m>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"relative flex min-h-11 cursor-pointer items-start gap-3 border border-line p-3 text-sm focus-within:outline-2 focus-within:outline-brand"[39m
+            [33mfor[39m=[32m"_r_c_-disposition"[39m
+          [36m>[39m
+            [36m<input[39m
+              [33mclass[39m=[32m"peer absolute inset-0 h-full w-full cursor-pointer opacity-0"[39m
+              [33mid[39m=[32m"_r_c_-disposition"[39m
+              [33mtype[39m=[32m"checkbox"[39m
+            [36m/>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"mt-1 size-4 shrink-0 border border-line peer-checked:border-brand peer-checked:bg-brand"[39m
+            [36m/>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"min-w-0 break-words"[39m
+            [36m>[39m
+              [0mA failed or harmful change is reverted or explicitly carried as an open problem[0m
+            [36m</span>[39m
+          [36m</label>[39m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<button[39m
+        [33mclass[39m=[32m"mt-4 min-h-11 border border-line px-4 text-sm"[39m
+        [33mtype[39m=[32m"button"[39m
+      [36m>[39m
+        [0mReset completion checks[0m
+      [36m</button>[39m
+      [36m<h3[39m
+        [33mclass[39m=[32m"t-head mt-6 text-lg"[39m
+      [36m>[39m
+        [0mKeep these artifacts[0m
+      [36m</h3>[39m
+      [36m<ul[39m
+        [33mclass[39m=[32m"mt-3 list-disc space-y-2 pl-5 text-sm text-muted"[39m
+      [36m>[39m
+        [36m<li>[39m
+          [0mA baseline record naming the outcome, metric, scope, window, sample and target[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [0mThe trace, query plan or controlled run that supports the chosen hypothesis[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [0mThe change and its correctness/rollback checks[0m
+        [36m</li>[39m
+        [36m<li>[39m
+          [0mA comparable before and after record, including unsuccessful attempts[0m
+        [36m</li>[39m
+      [36m</ul>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"mt-6"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"border border-line bg-raised p-5 sm:p-6 p-0"[39m
+        [36m>[39m
+          [36m<h3>[39m
+            [36m<button[39m
+              [33maria-controls[39m=[32m"_r_d_"[39m
+              [33maria-expanded[39m=[32m"true"[39m
+              [33mclass[39m=[32m"flex min-h-11 w-full items-center justify-between gap-3.5 px-5 py-3.5 text-left transition-colors duration-150 hover:bg-sunken lg:min-h-9"[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [36m<span[39m
+                [33mclass[39m=[32m"text-sm font-medium text-fg"[39m
+              [36m>[39m
+                [0mIf you are not solo[0m
+              [36m</span>[39m
+              [36m<svg[39m
+                [33maria-hidden[39m=[32m"true"[39m
+                [33mclass[39m=[32m"lucide lucide-chevron-down size-4 shrink-0 text-subtle transition-transform duration-150 rotate-180"[39m
+                [33mfill[39m=[32m"none"[39m
+                [33mheight[39m=[32m"24"[39m
+                [33mstroke[39m=[32m"currentColor"[39m
+                [33mstroke-linecap[39m=[32m"round"[39m
+                [33mstroke-linejoin[39m=[32m"round"[39m
+                [33mstroke-width[39m=[32m"2"[39m
+                [33mviewBox[39m=[32m"0 0 24 24"[39m
+                [33mwidth[39m=[32m"24"[39m
+                [33mxmlns[39m=[32m"http://www.w3.org/2000/svg"[39m
+              [36m>[39m
+                [36m<path[39m
+                  [33md[39m=[32m"m6 9 6 6 6-6"[39m
+                [36m/>[39m
+              [36m</svg>[39m
+            [36m</button>[39m
+          [36m</h3>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"space-y-2.5 border-t border-line bg-sunken px-5 py-4 text-[0.9375rem] leading-relaxed text-muted"[39m
+            [33mid[39m=[32m"_r_d_"[39m
+          [36m>[39m
+            [36m<ul[39m
+              [33mclass[39m=[32m"space-y-4"[39m
+            [36m>[39m
+              [36m<li>[39m
+                [36m<h4[39m
+                  [33mclass[39m=[32m"text-sm font-medium"[39m
+                [36m>[39m
+                  [0mPublish the targets[0m
+                [36m</h4>[39m
+                [36m<p[39m
+                  [33mclass[39m=[32m"mt-1 text-sm text-muted"[39m
+                [36m>[39m
+                  [0mPublish the outcome, target and scope so everyone measures the same thing.[0m
+                [36m</p>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<h4[39m
+                  [33mclass[39m=[32m"text-sm font-medium"[39m
+                [36m>[39m
+                  [0mName the CI budget[0m
+                [36m</h4>[39m
+                [36m<p[39m
+                  [33mclass[39m=[32m"mt-1 text-sm text-muted"[39m
+                [36m>[39m
+                  [0mState the CI metric, threshold and representative run. A passing build alone is not a bundle-size budget.[0m
+                [36m</p>[39m
+              [36m</li>[39m
+              [36m<li>[39m
+                [36m<h4[39m
+                  [33mclass[39m=[32m"text-sm font-medium"[39m
+                [36m>[39m
+                  [0mReview query plans[0m
+                [36m</h4>[39m
+                [36m<p[39m
+                  [33mclass[39m=[32m"mt-1 text-sm text-muted"[39m
+                [36m>[39m
+                  [0mReview relevant query plans when data access changes on a measured slow path.[0m
+                [36m</p>[39m
+              [36m</li>[39m
+            [36m</ul>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/PerformanceChecklist.test.tsx:34:41
+     32|   const open = screen.getByRole('button', { name: /If you are not solo…
+     33|   fireEvent.click(open)
+     34|   for (const row of TEAM) expect(screen.getByText(row.detail)).toBeTru…
+       |                                         ^
+     35|   expect(open.getAttribute('aria-expanded')).toBe('true')
+     36| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 3 passed (4)
+   Start at  09:12:15
+   Duration  782ms (transform 48ms, setup 60ms, import 94ms, tests 132ms, environment 434ms)
+
+```
+
+## format
+
+True process exit: 0. Formatted only the four owned files.
+
+```text
+src/features/performance/checklist.ts 27ms
+src/features/performance/PerformanceChecklist.tsx 16ms
+src/features/performance/checklist.test.ts 7ms
+src/features/performance/PerformanceChecklist.test.tsx 8ms
+```
+
+## restored-green
+
+True process exit: 0. Restored TEAM owner rendering and formatted; all four focused tests passed.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  2 passed (2)
+      Tests  4 passed (4)
+   Start at  09:12:29
+   Duration  899ms (transform 59ms, setup 113ms, import 106ms, tests 142ms, environment 473ms)
+
+```
+
+## full-suite
+
+True process exit: 0. Full project suite: 193 test files and 1443 tests passed. No failures or warnings observed.
+
+```text
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/web
+> vitest run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  193 passed (193)
+      Tests  1443 passed (1443)
+   Start at  09:12:31
+   Duration  22.97s (transform 13.20s, setup 9.63s, import 30.89s, tests 31.64s, environment 53.19s)
+
+```
+
+## typecheck
+
+True process exit: 0. Route typegen and TypeScript passed through pnpm typecheck.
+
+```text
+
+> web@0.1.0 typecheck /Users/angelito/personal/Development-Playbook/web
+> next typegen && tsc --noEmit
+
+Generating route types...
+✓ Types generated successfully
+```
+
+## lint
+
+True process exit: 0. Project eslint --max-warnings 0 passed.
+
+```text
+
+> web@0.1.0 lint /Users/angelito/personal/Development-Playbook/web
+> eslint --max-warnings 0
+
+```
+
+Commit: 7385e1176ed2bf3466c30dca68f18bd3557f11fd. Only the four owned files were committed with the required trailer; working tree is clean.
+
+The initial unprivileged git add and commit were blocked by the normal read-only .git sandbox (index.lock creation denied). Scoped authorized escalation completed staging and commit; this is resolved and no review rejection occurred.
+
+## commit
+
+True process exit: 128. Normal sandbox write restriction.
+
+```text
+fatal: Unable to create '/Users/angelito/personal/Development-Playbook/.git/index.lock': Operation not permitted
+```
+
+## commit-authorized
+
+True process exit: 0. Authorized commit succeeded; commit hooks formatted unchanged files and lint passed.
+
+```text
+╭───────────────────────────────────────╮
+│ lefthook  v2.1.10   hook:  [1mpre-commit[m │
+╰───────────────────────────────────────╯
+┃  format ❯ 
+src/features/performance/PerformanceChecklist.test.tsx 38ms (unchanged)
+src/features/performance/PerformanceChecklist.tsx 16ms (unchanged)
+src/features/performance/checklist.test.ts 4ms (unchanged)
+src/features/performance/checklist.ts 3ms (unchanged)
+
+┃  lint ❯ 
+
+[38;2;56;56;56m  ────────────────────────────────────[m
+summary: (done in 2.17 seconds)
+✓ format (0.40 seconds)
+✓ lint (2.16 seconds)
+[feat/stage-09-performance-port 7385e11] feat(performance): record completion and team ownership
+ 4 files changed, 222 insertions(+)
+ create mode 100644 web/src/features/performance/PerformanceChecklist.test.tsx
+ create mode 100644 web/src/features/performance/PerformanceChecklist.tsx
+ create mode 100644 web/src/features/performance/checklist.test.ts
+ create mode 100644 web/src/features/performance/checklist.ts
+```
+
+
+## Task 6 independent review
+
+Spec and quality: review clean. No findings. All eleven raw fences match their logs and recorded exits. Commit trailer verified. Review source: `task-6-review.md`.
