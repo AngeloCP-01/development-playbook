@@ -91,9 +91,9 @@ baseline so the after measurement uses the same denominator.
 ### Decide what fast enough means
 
 Choose a target for the outcome you recorded. [Google's good Core Web Vitals
-thresholds](https://web.dev/articles/vitals) are LCP ≤2.5 s, INP ≤200 ms,
-and CLS ≤0.1 at p75, assessed
-separately for mobile and desktop. An API p95 or database-query target belongs
+thresholds](https://web.dev/articles/vitals) are LCP (Largest Contentful Paint)
+≤2.5 s, INP (Interaction to Next Paint) ≤200 ms, and CLS (Cumulative Layout Shift)
+≤0.1 at p75, assessed separately for mobile and desktop. An API p95 or database-query target belongs
 to your product and workload; 300 ms and 50 ms are example budgets, not web
 standards. Percentiles expose the slow tail that an average alone can hide.
 Record the target and why users need it before optimizing.
@@ -173,7 +173,7 @@ payment or inventory step.
 Components](https://nextjs.org/docs/app/api-reference/directives/use-cache)
 supports `'use cache'`, `cacheLife` and `cacheTag`. A Server Action that writes
 the tagged data can call `updateTag` so the next read waits for fresh data.
-That API is limited to Server Actions; TTL and other invalidation paths have
+That API is limited to Server Actions; TTL and other cache invalidation paths have
 different semantics. Test freshness and authorization as well as speed.
 
 **Client bundles.** A production build checks that the app builds; [Next.js 16
