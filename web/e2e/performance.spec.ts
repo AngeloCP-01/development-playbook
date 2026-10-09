@@ -304,3 +304,107 @@ test('an open glossary definition stays inside every viewport after resizing in 
   }
   expect(failures, failures.join('\n')).toEqual([])
 })
+
+test('each performance judgment starts fresh after switching from completed drills in both themes', async ({
+  page,
+}) => {
+  const failures: string[] = []
+  for (const theme of ['light', 'dark'] as const) {
+    await page.goto(`${STAGE}#bottleneck`, { waitUntil: 'networkidle' })
+    await page.evaluate((themeName) => {
+      localStorage.setItem('playbook:theme', JSON.stringify(themeName))
+    }, theme)
+    await page.reload({ waitUntil: 'networkidle' })
+    await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
+    const bottleneck = page.locator('#panel-bottleneck')
+    await bottleneck
+      .getByRole('radio', {
+        name: 'Batch the availability lookup and preserve the stock decision',
+        exact: true,
+      })
+      .check()
+    await bottleneck
+      .getByRole('button', { name: 'Commit decision', exact: true })
+      .click()
+    await bottleneck
+      .getByRole('button', { name: 'Next case', exact: true })
+      .click()
+    await bottleneck
+      .getByRole('radio', {
+        name: 'Define the user clock and collect baseline and diagnostic evidence',
+        exact: true,
+      })
+      .check()
+    await bottleneck
+      .getByRole('button', { name: 'Commit decision', exact: true })
+      .click()
+    await expect(
+      bottleneck.getByText('2 of 2 decisions correct', { exact: true }),
+    ).toBeVisible()
+
+    const fresh = async (id: 'query' | 'bottleneck', from: string) => {
+      await page.locator(`#tab-${id}`).click()
+      const panel = page.locator(`#panel-${id}`)
+      await expect(panel).toBeVisible()
+      const state = await panel.evaluate((element) => {
+        const commit = [...element.querySelectorAll('button')].find(
+          (button) => button.textContent?.trim() === 'Commit decision',
+        )
+        return {
+          prompt: element.querySelector('legend')?.textContent?.trim() ?? '',
+          results: [...element.querySelectorAll('p[aria-live="polite"]')]
+            .map((result) => result.textContent?.trim() ?? '')
+            .filter(Boolean),
+          selected: element.querySelectorAll('input[type="radio"]:checked')
+            .length,
+          commitDisabled: commit?.disabled ?? null,
+        }
+      })
+      console.log(
+        'PERFORMANCE_DRILL_RESET ' +
+          JSON.stringify({ theme, id, from, ...state }),
+      )
+      const first =
+        id === 'query'
+          ? 'A small inventory table uses a sequential scan.'
+          : 'A controlled 20-item cart shows 21 inventory queries.'
+      if (
+        !state.prompt.startsWith(first) ||
+        state.results.length !== 0 ||
+        state.selected !== 0 ||
+        state.commitDisabled !== true
+      ) {
+        failures.push(`${theme}/${id}/${from}: ${JSON.stringify(state)}`)
+      }
+    }
+    await fresh('query', 'completed-bottleneck')
+    await fresh('bottleneck', 'return-from-query')
+    await page.locator('#tab-compare').click()
+    const compare = page.locator('#panel-compare')
+    await compare
+      .getByRole('button', { name: 'Reset decisions', exact: true })
+      .click()
+    const answers = [
+      'Collect the missing user-outcome evidence',
+      'Repeat with a comparable scope and population',
+      'Stop this optimization pass and observe the outcome',
+      'Investigate or revert the harmful change',
+    ]
+    for (const [index, answer] of answers.entries()) {
+      await compare.getByRole('radio', { name: answer, exact: true }).check()
+      await compare
+        .getByRole('button', { name: 'Commit decision', exact: true })
+        .click()
+      if (index < answers.length - 1)
+        await compare
+          .getByRole('button', { name: 'Next case', exact: true })
+          .click()
+    }
+    await expect(
+      compare.getByText('4 of 4 decisions correct', { exact: true }),
+    ).toBeVisible()
+    await fresh('query', 'completed-comparison')
+    await fresh('bottleneck', 'completed-comparison-via-query')
+  }
+  expect(failures, failures.join('\n')).toEqual([])
+})
