@@ -105,22 +105,130 @@ test('permission failures retain the worksheet and offer manual export with zero
       },
     })
   }, PERFORMANCE_KEY)
-  await page.goto(`${STAGE}#record`, { waitUntil: 'networkidle' })
-  await page
-    .getByLabel('Outcome and observer', { exact: true })
-    .fill('Unsaved observer and outcome')
-  await page.getByLabel('Scope', { exact: true }).fill('Unsaved scope')
-  await expect(
-    page.getByLabel('Outcome and observer', { exact: true }),
-  ).toHaveValue('Unsaved observer and outcome')
-  await expect(page.getByText(/Saving is unavailable/)).toBeVisible()
-  await page.getByRole('button', { name: 'Copy as Markdown' }).click()
-  await expect(page.getByLabel('Markdown record', { exact: true })).toHaveValue(
-    /Unsaved observer and outcome[\s\S]*Unsaved scope/,
-  )
-  await expect(page.getByRole('status', { name: 'Copy status' })).toContainText(
-    'Copy is unavailable',
-  )
+  const measureState = async (
+    id: 'save-denied' | 'copy-denied',
+    theme: 'light' | 'dark',
+  ) => {
+    for (const width of [320, 390, 768, 1024, 1440, 1920, 2560]) {
+      await page.setViewportSize({ width, height: 768 })
+      const measurement = await page.evaluate(
+        ({ state, theme, width }) => {
+          const panel = document.getElementById('panel-record')
+          if (!panel)
+            throw new Error('The denied-state worksheet panel is missing')
+          const warning = [...panel.querySelectorAll('p')].find((element) =>
+            element.textContent?.includes('Saving is unavailable'),
+          )
+          const status = panel.querySelector(
+            '[role="status"][aria-label="Copy status"]',
+          )
+          const manual = panel.querySelector('textarea[readonly]')
+          const labels = [...panel.querySelectorAll('label')]
+          const outcome = labels.find(
+            (label) => label.textContent?.trim() === 'Outcome and observer',
+          )?.control
+          const scope = labels.find(
+            (label) => label.textContent?.trim() === 'Scope',
+          )?.control
+          const observed =
+            state === 'copy-denied'
+              ? ([
+                  ['save-warning', warning],
+                  ['copy-status', status],
+                  ['manual-markdown', manual],
+                ] as const)
+              : ([
+                  ['save-warning', warning],
+                  ['draft-outcome', outcome],
+                  ['draft-scope', scope],
+                ] as const)
+          const pairs = observed.map(([pairId, element]) => {
+            if (!element)
+              throw new Error(`Missing denied-state contrast target: ${pairId}`)
+            const sample =
+              element instanceof HTMLTextAreaElement
+                ? element.value
+                : (element.textContent?.trim() ?? '')
+            if (!sample)
+              throw new Error(`Empty denied-state contrast target: ${pairId}`)
+            const style = getComputedStyle(element)
+            const bgs: string[] = []
+            let ancestor: Element | null = element
+            while (ancestor) {
+              bgs.push(getComputedStyle(ancestor).backgroundColor)
+              ancestor = ancestor.parentElement
+            }
+            return {
+              id: pairId,
+              fg: style.color,
+              bgs,
+              fontSize: style.fontSize,
+              fontWeight: style.fontWeight,
+              sample: sample.slice(0, 160),
+            }
+          })
+          const smallTargets = [
+            ...panel.querySelectorAll('button, textarea, input, select'),
+          ]
+            .map((element) => ({
+              id: element.id || element.textContent?.trim() || element.tagName,
+              width: element.getBoundingClientRect().width,
+              height: element.getBoundingClientRect().height,
+            }))
+            .filter(
+              (target) =>
+                target.width > 0 &&
+                target.height > 0 &&
+                (target.width < 44 || target.height < 44),
+            )
+          return {
+            theme,
+            width,
+            id: panel.id,
+            state,
+            height: panel.getBoundingClientRect().height,
+            overflow: document.documentElement.scrollWidth > innerWidth + 1,
+            pairs,
+            smallTargets,
+          }
+        },
+        { state: id, theme, width },
+      )
+      console.log('PERFORMANCE_PERMISSION_STATE ' + JSON.stringify(measurement))
+      expect(measurement.overflow, `${theme}/${width}/${id} overflow`).toBe(
+        false,
+      )
+      expect(measurement.pairs).toHaveLength(3)
+      if (width < 1024) expect(measurement.smallTargets).toEqual([])
+      if (width === 1024)
+        expect(measurement.height).toBeLessThanOrEqual(4 * 768)
+    }
+  }
+  for (const theme of ['light', 'dark'] as const) {
+    await page.goto(`${STAGE}#record`, { waitUntil: 'networkidle' })
+    await page.evaluate((themeName) => {
+      localStorage.setItem('playbook:theme', JSON.stringify(themeName))
+    }, theme)
+    await page.reload({ waitUntil: 'networkidle' })
+    await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
+    await page
+      .getByLabel('Outcome and observer', { exact: true })
+      .fill('Unsaved observer and outcome')
+    await page.getByLabel('Scope', { exact: true }).fill('Unsaved scope')
+    await expect(
+      page.getByLabel('Outcome and observer', { exact: true }),
+    ).toHaveValue('Unsaved observer and outcome')
+    await expect(page.getByText(/Saving is unavailable/)).toBeVisible()
+    await measureState('save-denied', theme)
+    await page.getByRole('button', { name: 'Copy as Markdown' }).click()
+    await expect(
+      page.getByLabel('Markdown record', { exact: true }),
+    ).toHaveValue(/Unsaved observer and outcome[\s\S]*Unsaved scope/)
+    await expect(
+      page.getByRole('status', { name: 'Copy status' }),
+    ).toContainText('Copy is unavailable')
+    await measureState('copy-denied', theme)
+  }
   expect(errors).toEqual([])
 })
 
