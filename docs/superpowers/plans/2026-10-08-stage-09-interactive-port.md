@@ -72,7 +72,7 @@ For each task, write the listed tests first, run their focused command and save 
 - Produces: `PerformanceSheet`, `SheetField`, `PERFORMANCE_KEY`, `EMPTY_PERFORMANCE_SHEET`, `BASELINE_FIELDS`, `FOLLOWUP_FIELDS`, `SHEET_FIELDS`, `normalizePerformanceSheet(value: unknown): PerformanceSheet`, `performanceMarkdown(sheet: PerformanceSheet): string`.
 - Both worksheet views must write all eleven fields through this model.
 
-- [ ] **Step 1: Write the unit tests.**
+- [x] **Step 1: Write the unit tests.**
 
 #### Test source: `web/src/lib/performance-sheet.test.ts`
 
@@ -112,8 +112,8 @@ test('the baseline and follow-up views partition the record without losing a fie
 })
 ```
 
-- [ ] **Step 2: Capture RED.** Run `pnpm exec vitest run src/lib/performance-sheet.test.ts`. The missing module is the expected initial failure. If a stub is used to isolate assertions, rerun until the malformed-value/export assertions fail for the intended reason.
-- [ ] **Step 3: Write the model.**
+- [x] **Step 2: Capture RED.** Run `pnpm exec vitest run src/lib/performance-sheet.test.ts`. The missing module is the expected initial failure. If a stub is used to isolate assertions, rerun until the malformed-value/export assertions fail for the intended reason.
+- [x] **Step 3: Write the model.**
 
 #### Implementation source: `web/src/lib/performance-sheet.ts`
 
@@ -182,9 +182,9 @@ export function performanceMarkdown(sheet: PerformanceSheet): string {
 }
 ```
 
-- [ ] **Step 4: Run GREEN.** Run the same unit command; save the raw output.
-- [ ] **Step 5: Teeth check.** Save `src/lib/performance-sheet.ts` to a task-specific temporary file. Change only the implementation's `'not recorded'` fallback to `'missing'`; run the complete Task 1 test file. Only `Markdown exports the entire record...` should fail. Restore the saved source and run GREEN again. The test compares the complete exported artifact with an independent literal expectation.
-- [ ] **Step 6: Format, lint, review and commit.** Run `pnpm exec prettier --write src/lib/performance-sheet{,.test}.ts` and `pnpm lint`. Commit `feat(performance): define comparable measurement records`, including the required co-author trailer. Record the test names, RED reason and teeth result in the report.
+- [x] **Step 4: Run GREEN.** Run the same unit command; save the raw output.
+- [x] **Step 5: Teeth check.** Save `src/lib/performance-sheet.ts` to a task-specific temporary file. Change only the implementation's `'not recorded'` fallback to `'missing'`; run the complete Task 1 test file. Only `Markdown exports the entire record...` should fail. Restore the saved source and run GREEN again. The test compares the complete exported artifact with an independent literal expectation.
+- [x] **Step 6: Format, lint, review and commit.** Run `pnpm exec prettier --write src/lib/performance-sheet{,.test}.ts` and `pnpm lint`. Commit `feat(performance): define comparable measurement records`, including the required co-author trailer. Record the test names, RED reason and teeth result in the report.
 
 
 ```bash

@@ -423,3 +423,373 @@ PASS docs/superpowers/reports/2026-10-08-stage-09-interactive-port.md == task-1-
 PASS docs/superpowers/reports/2026-10-08-stage-09-interactive-port.md == task-1-evidence-repair-restored-green.log (only final newline normalized)
 PASS all 8 report/log comparisons
 ```
+
+### Task 1 independent review
+
+Sol reviewed the model as spec compliant and code quality approved. I1
+(blocking, implementer-authored evidence error) concerned editorial changes
+inside raw-output fences. Two report repairs disclosed missing original logs
+and preserved new controlled captures verbatim. Scoped re-review confirmed
+all eight fence/log comparisons match; I1 is addressed. The product code
+remained unchanged through both repairs. Task 1 is review clean.
+
+
+---
+
+# Task 2 report: separate order-journey clocks
+
+Status: implemented and committed as `e2558fd83591b022908d886b0872eaac4476ee99` (`feat(performance): inspect user and consumer clocks`).
+Base supplied by controller: `deaf861`. Branch: `feat/stage-09-performance-port`.
+
+## Implementation
+
+Owned files only:
+- `web/src/features/performance/journey.ts`: Outcome API, six checkout request responsibilities, five measurement outcomes with the brief's exact observers, boundaries, evidence, diagnosis and limits.
+- `web/src/features/performance/OrderJourney.tsx`: selectable clocks with a labeled live detail region, three sibling OrderPaid consumers, native pressed buttons and generated detail IDs.
+- `web/src/features/performance/OrderJourney.test.tsx`: three real render tests, including changed input data.
+
+## TDD and self-review
+
+Before writing tests, the breaks identified were missing or substituted selected-clock boundaries, a serial or missing consumer branch, a notification delivery promise, and hardcoded default outcome details that ignore supplied data. Tests were written before either implementation file. The initial missing-module failure was followed by a minimal compilable component and real assertion failures before the full component.
+
+Assertion RED failed for the expected reason: the minimal inspector omitted the hypothetical label and consumer list, and its detail omitted the custom observer (expected “Test browser observer”, received “Browser checkout”). No test environment error caused assertion RED.
+
+Focused GREEN: 3/3. The specified teeth mutation replaced only payment's rendered stop with “Paid persisted on the server”; only the all-clocks boundary test failed, specifically expecting “Paid visible to the user”. Restored GREEN: 3/3. Full suite: 1422/1422 across 187 files. Formatting, lint and typecheck all returned 0. The pre-commit format/lint hooks passed.
+
+Self-review: verified exact brief content and API, data-derived details, sibling branch semantics, aria-pressed selection and aria-controls IDs, polite selected-detail updates, theme tokens, 44px controls below lg, and the existing global focus-visible rule. Read AGENTS.md, worker contract, constraints, TDD and writing-good-tests, relevant installed Next.js Server/Client and use-client docs, DESIGN.md, PATTERNS.md, frontend-design's pinned-brief guidance, and verification-before-completion. No plan discrepancy or task error found.
+
+Deferred: stage registry/readiness/assembly, worksheet and other exercises, saved records, real telemetry, glossary changes, shared extraction, merge/push/deploy. Live browser contrast/responsive/panel-weight and production/development console checks remain for the coordinator's assembled-stage verification; no live-browser result is claimed here. Coordinator-owned modified plan and canonical report were not staged.
+
+## Retained raw evidence
+
+Every terminal fence below is copied programmatically from its retained log file, including ANSI sequences and any truncation markers the tools themselves emitted. Exit metadata belongs outside the fences. Commands used `pnpm --dir web`, which executes from `web/`.
+
+### red-import
+
+Command: `pnpm --dir web exec vitest run src/features/performance/OrderJourney.test.tsx`
+
+Exit status: 1. Expected initial missing component import; no tests yet.
+
+Source: `task-2-red-import.log`
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/OrderJourney.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/OrderJourney.test.tsx [ src/features/performance/OrderJourney.test.tsx ]
+Error: Failed to resolve import "./OrderJourney" from "src/features/performance/OrderJourney.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/angelito/personal/Development-Playbook/web/src/features/performance/OrderJourney.test.tsx:3:29
+  1  |  import { fireEvent, render, screen, within } from "@testing-library/react";
+  2  |  import { expect, test } from "vitest";
+  3  |  import { OrderJourney } from "./OrderJourney";
+     |                                ^
+  4  |  import { OUTCOMES } from "./journey";
+  5  |  var _jsxFileName = "/Users/angelito/personal/Development-Playbook/web/src/features/performance/OrderJourney.test.tsx";
+ ❯ TransformPluginContext._formatLog node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30416:39
+ ❯ TransformPluginContext.error node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30413:14
+ ❯ normalizeUrl node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27438:18
+ ❯ node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27506:30
+ ❯ TransformPluginContext.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27474:4
+ ❯ EnvironmentPluginContainer.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30201:14
+ ❯ loadAndTransform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:20124:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  08:43:43
+   Duration  872ms (transform 16ms, setup 98ms, import 0ms, tests 0ms, environment 639ms)
+
+```
+
+### red-assertion
+
+Command: `pnpm --dir web exec vitest run src/features/performance/OrderJourney.test.tsx`
+
+Exit status: 1. Expected real behavior failures against minimal component; 3 failed.
+
+Source: `task-2-red-assertion.log`
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/OrderJourney.test.tsx (3 tests | 3 failed) 68ms
+   × each selected clock renders its real observer and boundaries, since a fast route cannot prove a fast user outcome 15ms
+   × OrderPaid has three independent consumer branches and never promises notification delivery 46ms
+   × the detail follows changed input data rather than an outcome-id lookup hidden in the component 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/OrderJourney.test.tsx > each selected clock renders its real observer and boundaries, since a fast route cannot prove a fast user outcome
+TestingLibraryElementError: Unable to find an element with the text: Hypothetical exercise. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33maria-label[39m=[32m"Selected measurement"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/OrderJourney.test.tsx:8:17
+      6| test('each selected clock renders its real observer and boundaries, si…
+      7|   render(<OrderJourney />)
+      8|   expect(screen.getByText('Hypothetical exercise')).toBeTruthy()
+       |                 ^
+      9|   for (const outcome of OUTCOMES) {
+     10|     fireEvent.click(screen.getByRole('button', { name: outcome.label }…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |dom| src/features/performance/OrderJourney.test.tsx > OrderPaid has three independent consumer branches and never promises notification delivery
+TestingLibraryElementError: Unable to find an accessible element with the role "list" and name "Independent OrderPaid consumers"
+
+Here are the accessible roles:
+
+  region:
+
+  Name "Selected measurement":
+  [36m<section[39m
+    [33maria-label[39m=[32m"Selected measurement"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<section[39m
+      [33maria-label[39m=[32m"Selected measurement"[39m
+    [36m/>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/OrderJourney.test.tsx:21:27
+     19| test('OrderPaid has three independent consumer branches and never prom…
+     20|   render(<OrderJourney />)
+     21|   const branches = screen.getByRole('list', { name: 'Independent Order…
+       |                           ^
+     22|   expect(within(branches).getAllByRole('listitem')).toHaveLength(3)
+     23|   expect(branches.textContent).toMatch(/Inventory[\s\S]*Logistics[\s\S…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |dom| src/features/performance/OrderJourney.test.tsx > the detail follows changed input data rather than an outcome-id lookup hidden in the component
+AssertionError: expected 'Browser checkout' to contain 'Test browser observer'
+
+Expected: "Test browser observer"
+Received: "Browser checkout"
+
+ ❯ src/features/performance/OrderJourney.test.tsx:32:30
+     30|   render(<OrderJourney outcomes={[custom]} />)
+     31|   const detail = screen.getByRole('region', { name: 'Selected measurem…
+     32|   expect(detail.textContent).toContain('Test browser observer')
+       |                              ^
+     33|   expect(detail.textContent).toContain('Test visible stop')
+     34| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed (3)
+   Start at  08:43:53
+   Duration  733ms (transform 21ms, setup 79ms, import 13ms, tests 68ms, environment 485ms)
+
+```
+
+### green
+
+Command: `pnpm --dir web exec vitest run src/features/performance/OrderJourney.test.tsx`
+
+Exit status: 0. Complete inspector; 3 passed.
+
+Source: `task-2-green.log`
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  08:44:01
+   Duration  880ms (transform 35ms, setup 89ms, import 68ms, tests 119ms, environment 523ms)
+
+```
+
+### teeth
+
+Command: `pnpm --dir web exec vitest run src/features/performance/OrderJourney.test.tsx`
+
+Exit status: 1. Specified payment stop mutation; exactly 1 failed, 2 passed.
+
+Source: `task-2-teeth.log`
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/OrderJourney.test.tsx (3 tests | 1 failed) 108ms
+   × each selected clock renders its real observer and boundaries, since a fast route cannot prove a fast user outcome 86ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/OrderJourney.test.tsx > each selected clock renders its real observer and boundaries, since a fast route cannot prove a fast user outcome
+AssertionError: expected 'Visible payment statusObserverUser-vi…' to contain 'Paid visible to the user'
+
+Expected: "Paid visible to the user"
+Received: "Visible payment statusObserverUser-visible payment displayStartPayment submittedStopPaid persisted on the serverEvidencePayment submission and visible Paid timestamps for the same order.Diagnostic intervalsSeparate payment initiation to webhook receipt, webhook receipt to persisted Paid, and persisted Paid to visible status.LimitA fast webhook handler does not establish how long the provider waited or the user waited for the status display."
+
+ ❯ src/features/performance/OrderJourney.test.tsx:14:32
+     12|     expect(detail.textContent).toContain(outcome.observer)
+     13|     expect(detail.textContent).toContain(outcome.start)
+     14|     expect(detail.textContent).toContain(outcome.stop)
+       |                                ^
+     15|     expect(detail.textContent).toContain(outcome.limits)
+     16|   }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 passed (3)
+   Start at  08:44:11
+   Duration  919ms (transform 38ms, setup 84ms, import 76ms, tests 108ms, environment 561ms)
+
+```
+
+### restored
+
+Command: `pnpm --dir web exec vitest run src/features/performance/OrderJourney.test.tsx`
+
+Exit status: 0. Restored and formatted inspector; 3 passed.
+
+Source: `task-2-restored.log`
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  08:44:25
+   Duration  1.01s (transform 54ms, setup 183ms, import 94ms, tests 141ms, environment 482ms)
+
+```
+
+### format
+
+Command: `pnpm --dir web exec prettier --write src/features/performance/journey.ts src/features/performance/OrderJourney.tsx src/features/performance/OrderJourney.test.tsx`
+
+Exit status: 0. Owned files formatted.
+
+Source: `task-2-format.log`
+
+```text
+src/features/performance/journey.ts 37ms
+src/features/performance/OrderJourney.tsx 20ms
+src/features/performance/OrderJourney.test.tsx 7ms
+```
+
+### typecheck
+
+Command: `pnpm --dir web typecheck`
+
+Exit status: 0. Route typegen and application tsc passed.
+
+Source: `task-2-typecheck.log`
+
+```text
+
+> web@0.1.0 typecheck /Users/angelito/personal/Development-Playbook/web
+> next typegen && tsc --noEmit
+
+Generating route types...
+✓ Types generated successfully
+```
+
+### lint
+
+Command: `pnpm --dir web lint`
+
+Exit status: 0. Zero-warning lint passed.
+
+Source: `task-2-lint.log`
+
+```text
+
+> web@0.1.0 lint /Users/angelito/personal/Development-Playbook/web
+> eslint --max-warnings 0
+
+```
+
+### full-suite
+
+Command: `pnpm --dir web test`
+
+Exit status: 0. 1422 tests in 187 files passed.
+
+Source: `task-2-full-suite.log`
+
+```text
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/web
+> vitest run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  187 passed (187)
+      Tests  1422 passed (1422)
+   Start at  08:44:28
+   Duration  24.45s (transform 9.95s, setup 12.07s, import 27.91s, tests 38.49s, environment 61.48s)
+
+```
+
+### commit
+
+Command: `git add <three owned files>; git commit -m 'feat(performance): inspect user and consumer clocks' -m '<required trailer>'`
+
+Exit status: 0. Only the three owned files committed; pre-commit hooks passed.
+
+Source: `task-2-commit.log`
+
+```text
+╭───────────────────────────────────────╮
+│ lefthook  v2.1.10   hook:  [1mpre-commit[m │
+╰───────────────────────────────────────╯
+┃  format ❯ 
+src/features/performance/OrderJourney.test.tsx 77ms (unchanged)
+src/features/performance/OrderJourney.tsx 57ms (unchanged)
+src/features/performance/journey.ts 7ms (unchanged)
+
+┃  lint ❯ 
+
+[38;2;56;56;56m  ────────────────────────────────────[m
+summary: (done in 2.17 seconds)
+✓ format (0.53 seconds)
+✓ lint (2.15 seconds)
+[feat/stage-09-performance-port e2558fd] feat(performance): inspect user and consumer clocks
+ 3 files changed, 223 insertions(+)
+ create mode 100644 web/src/features/performance/OrderJourney.test.tsx
+ create mode 100644 web/src/features/performance/OrderJourney.tsx
+ create mode 100644 web/src/features/performance/journey.ts
+```
+
