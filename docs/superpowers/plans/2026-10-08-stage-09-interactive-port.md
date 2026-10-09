@@ -1101,7 +1101,7 @@ git commit -m 'feat(performance): judge diagnostic and outcome evidence' -m 'Co-
 - `CopyText` is also the AI prompt's safe clipboard control in Task 7. No shared artifact-control change is included.
 - Ordinary saved values survive remount/reload and storage events. When storage is unavailable, retain the mounted component's draft and disclose that it will not survive reload; do not promise persistence for unavailable storage.
 
-- [ ] **Step 1: Write the render tests.**
+- [x] **Step 1: Write the render tests.**
 
 #### Test source: `web/src/features/performance/PerformanceWorksheet.test.tsx`
 
@@ -1224,8 +1224,8 @@ test('a storage event refreshes the other view and the next edit preserves that 
 })
 ```
 
-- [ ] **Step 2: Capture RED.** Run `pnpm exec vitest run src/features/performance/PerformanceWorksheet.test.tsx`. Missing component is the expected initial failure. Later failures must concern retaining input, normalization or clipboard behavior, not a missing DOM setup.
-- [ ] **Step 3: Write the safe copy control and worksheet.**
+- [x] **Step 2: Capture RED.** Run `pnpm exec vitest run src/features/performance/PerformanceWorksheet.test.tsx`. Missing component is the expected initial failure. Later failures must concern retaining input, normalization or clipboard behavior, not a missing DOM setup.
+- [x] **Step 3: Write the safe copy control and worksheet.**
 
 #### Implementation source: `web/src/features/performance/CopyText.tsx`
 
@@ -1340,9 +1340,9 @@ export function PerformanceWorksheet({ view }: { view: 'baseline' | 'followup' }
 
 The shared hook's updater executes synchronously, so the handler can verify the exact resolved record after the write. The stage-local `draft` retains the next record when that verification is impossible. This is not an effect-driven storage read and introduces no `setState` in an effect. A denied-storage draft is explicitly limited to the mounted instance; ordinary stored records survive both panels and reloads.
 
-- [ ] **Step 4: Capture GREEN.** Run the focused render suite, Task 1's unit suite and `pnpm typecheck`. Verify the clipboard Promise is awaited through `act` in tests; a green synchronous click alone does not prove export.
-- [ ] **Step 5: Teeth check.** Replace only `setDraft(saved ? null : next)` with `setDraft(null)` in `PerformanceWorksheet.tsx`. Only `denied reads or writes retain...` should fail in this task's suite. Restore and rerun GREEN, including the normal persistence test.
-- [ ] **Step 6: Format, lint, review and commit.** Commit `feat(performance): save and export the measurement worksheet` with the required trailer. Include permission-failure evidence in the report; do not change `useLocalStorage.ts`.
+- [x] **Step 4: Capture GREEN.** Run the focused render suite, Task 1's unit suite and `pnpm typecheck`. Verify the clipboard Promise is awaited through `act` in tests; a green synchronous click alone does not prove export.
+- [x] **Step 5: Teeth check.** Replace only `setDraft(saved ? null : next)` with `setDraft(null)` in `PerformanceWorksheet.tsx`. Only `denied reads or writes retain...` should fail in this task's suite. Restore and rerun GREEN, including the normal persistence test.
+- [x] **Step 6: Format, lint, review and commit.** Commit `feat(performance): save and export the measurement worksheet` with the required trailer. Include permission-failure evidence in the report; do not change `useLocalStorage.ts`.
 
 
 ```bash

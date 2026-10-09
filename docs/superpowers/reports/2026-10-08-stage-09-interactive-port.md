@@ -1761,3 +1761,475 @@ Evidence handling: initial fence-validation regex was too broad and matched SQL 
 ## Task 4 independent review
 
 Review clean after one PLAN-AUTHORED ERROR fixed. No outstanding findings. All thirteen logs exactly match their report fences. Commit trailer verified. Review source: `task-4-review.md`.
+
+
+---
+
+# Task 5 implementation report
+
+Status: implemented and committed as 831f14d53236a6e5b717ba9f1b2c6e1a983ed237.
+
+Owned files: `web/src/features/performance/CopyText.tsx`, `web/src/features/performance/PerformanceWorksheet.tsx`, `web/src/features/performance/PerformanceWorksheet.test.tsx`.
+
+Implementation: baseline and follow-up share an eleven-field normalized record through unchanged `useLocalStorage<unknown>`. Whole-record export awaits the clipboard operation and reveals exact read-only Markdown on rejection. Confirmed clear removes both views. Failed storage verification retains the mounted draft and displays the unavailable-saving warning.
+
+Self-review: labels and hints use unique ids; status/count updates are announced; button targets are at least 44px; no effect-driven state updates; no hypothetical answers seed the record. The synchronous updater reads the newest record, preserving unseen fields. Clipboard mocking is confined to the external browser operation; storage and worksheet behavior remain real.
+
+Test rationale: losing unseen fields, accepting malformed stored values, dropping unsaved input, swallowing clipboard rejection, clearing without confirmation, or ignoring storage events should fail these tests. The approved render suite compares the clipboard boundary payload against the separately tested Markdown builder.
+
+Evidence: initial import RED was the missing component, then a compilable inert-field skeleton produced actual assertion RED: clipboard payload was undefined and clear left the saved record intact. This failed for the expected reason, missing persistence/export behavior, with a working jsdom setup. The malformed-record skeleton test also raised a JSON parse error because no save normalized the corrupted value; that error is retained below. Full implementation passed nine focused/data tests. The specified mutation removed draft retention and caused exactly the denied-read/write test to fail (`expected '' to be 'Unsaved browser outcome'`); restoring it passed all nine again. Full project suite: 1439 tests across 191 files passed. Typecheck, owned formatting, and lint passed.
+
+Permission evidence: normal git staging/commit could not create `.git/index.lock` under the filesystem sandbox (exit 128). Escalated staging and commit succeeded; no automatic review rejection occurred. Commit hooks passed format and lint.
+
+Concerns: no task-level defects found. Browser contrast/responsive, production audit, and development-console checks belong to the assembled-stage verification; this report claims only the recorded render/data/static checks.
+
+Deferred: unavailable-storage drafts do not survive unmount/reload, by the approved contract; shared-hook changes, stage registration, browser audits, documentation ledgers, merge, push, and deployment remain outside this task.
+
+## Initial missing-module RED
+
+Retained log: `task-5-import-red.log`; actual process exit: 1.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/PerformanceWorksheet.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/PerformanceWorksheet.test.tsx [ src/features/performance/PerformanceWorksheet.test.tsx ]
+Error: Failed to resolve import "./PerformanceWorksheet" from "src/features/performance/PerformanceWorksheet.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/angelito/personal/Development-Playbook/web/src/features/performance/PerformanceWorksheet.test.tsx:3:37
+  1  |  import { act, fireEvent, render, screen } from "@testing-library/react";
+  2  |  import { afterEach, beforeEach, expect, test, vi } from "vitest";
+  3  |  import { PerformanceWorksheet } from "./PerformanceWorksheet";
+     |                                        ^
+  4  |  import { EMPTY_PERFORMANCE_SHEET, PERFORMANCE_KEY, performanceMarkdown, SHEET_FIELDS } from "@/lib/performance-sheet";
+  5  |  var _jsxFileName = "/Users/angelito/personal/Development-Playbook/web/src/features/performance/PerformanceWorksheet.t...
+ ❯ TransformPluginContext._formatLog node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30416:39
+ ❯ TransformPluginContext.error node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30413:14
+ ❯ normalizeUrl node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27438:18
+ ❯ node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27506:30
+ ❯ TransformPluginContext.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27474:4
+ ❯ EnvironmentPluginContainer.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30201:14
+ ❯ loadAndTransform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:20124:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  09:06:41
+   Duration  980ms (transform 17ms, setup 103ms, import 0ms, tests 0ms, environment 727ms)
+
+```
+
+## Compilable skeleton assertion RED
+
+Retained log: `task-5-assertion-red.log`; actual process exit: 1.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/PerformanceWorksheet.test.tsx (6 tests | 6 failed) 133ms
+   × baseline and follow-up edits survive panel remounts and export the whole record from either view 90ms
+   × malformed or partial stored values never crash and a later edit keeps valid fields from the other view 3ms
+   × denied reads or writes retain a mounted editable draft and export it instead of claiming it was saved 6ms
+   × a rejected clipboard operation offers exact manual Markdown without losing the worksheet 15ms
+   × clearing requires confirmation and resets fields from both views rather than just the visible form 14ms
+   × a storage event refreshes the other view and the next edit preserves that unseen field 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/PerformanceWorksheet.test.tsx > baseline and follow-up edits survive panel remounts and export the whole record from either view
+AssertionError: expected last "vi.fn()" call to have been called with [ Array(1) ]
+
+- Expected:
+[
+  "# Performance measurement record
+
+## Outcome and observer
+
+Browser click to response
+
+## Metric and population
+
+Completed p95; failures/timeouts separate
+
+## Scope
+
+not recorded
+
+## Window and sample
+
+not recorded
+
+## Baseline evidence
+
+not recorded
+
+## Target and rationale
+
+not recorded
+
+## Hypothesis and alternative
+
+not recorded
+
+## Change and version
+
+not recorded
+
+## After evidence
+
+not recorded
+
+## Correctness and rollback
+
+not recorded
+
+## Verdict and open gap
+
+More field observations needed
+",
+]
+
++ Received:
+undefined
+
+ ❯ src/features/performance/PerformanceWorksheet.test.tsx:32:21
+     30|   }
+     31|   await act(async () => { fireEvent.click(screen.getByRole('button', {…
+     32|   expect(writeText).toHaveBeenLastCalledWith(performanceMarkdown(expec…
+       |                     ^
+     33|   expect(screen.getByRole('status', { name: 'Copy status' }).textConte…
+     34|   expect(JSON.parse(window.localStorage.getItem(PERFORMANCE_KEY)!)).to…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  |dom| src/features/performance/PerformanceWorksheet.test.tsx > malformed or partial stored values never crash and a later edit keeps valid fields from the other view
+SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+ ❯ src/features/performance/PerformanceWorksheet.test.tsx:46:24
+     44|     const view = render(<PerformanceWorksheet view="baseline" />)
+     45|     edit('Scope', 'Mobile; warm cache')
+     46|     const saved = JSON.parse(window.localStorage.getItem(PERFORMANCE_K…
+       |                        ^
+     47|     expect(saved.scope).toBe('Mobile; warm cache')
+     48|     expect(typeof saved.metric).toBe('string')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  |dom| src/features/performance/PerformanceWorksheet.test.tsx > denied reads or writes retain a mounted editable draft and export it instead of claiming it was saved
+TestingLibraryElementError: Unable to find an element with the text: /Saving is unavailable/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div>[39m
+      [36m<label>[39m
+        [0mOutcome and observer[0m
+        [36m<textarea />[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mMetric and population[0m
+        [36m<textarea />[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mScope[0m
+        [36m<textarea />[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mWindow and sample[0m
+        [36m<textarea />[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mBaseline evidence[0m
+        [36m<textarea />[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mTarget and rationale[0m
+        [36m<textarea />[39m
+      [36m</label>[39m
+      [36m<button>[39m
+        [0mCopy as Markdown[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mClear whole record[0m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/PerformanceWorksheet.test.tsx:65:19
+     63|     edit('Scope', 'Unsaved scope')
+     64|     expect((screen.getByLabelText('Outcome and observer') as HTMLTextA…
+     65|     expect(screen.getByText(/Saving is unavailable/)).toBeTruthy()
+       |                   ^
+     66|     await act(async () => { fireEvent.click(screen.getByRole('button',…
+     67|     expect(writeText).toHaveBeenLastCalledWith(performanceMarkdown({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  |dom| src/features/performance/PerformanceWorksheet.test.tsx > a rejected clipboard operation offers exact manual Markdown without losing the worksheet
+TestingLibraryElementError: Unable to find a label with the text of: Markdown record
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div>[39m
+      [36m<label>[39m
+        [0mHypothesis and alternative[0m
+        [36m<textarea />[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mChange and version[0m
+        [36m<textarea />[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mAfter evidence[0m
+        [36m<textarea />[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mCorrectness and rollback[0m
+        [36m<textarea />[39m
+      [36m</label>[39m
+      [36m<label>[39m
+        [0mVerdict and open gap[0m
+        [36m<textarea />[39m
+      [36m</label>[39m
+      [36m<button>[39m
+        [0mCopy as Markdown[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mClear whole record[0m
+      [36m</button>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/performance/PerformanceWorksheet.test.tsx:80:25
+     78|   edit('Hypothesis and alternative', 'Repeated queries explain the con…
+     79|   await act(async () => { fireEvent.click(screen.getByRole('button', {…
+     80|   const manual = screen.getByLabelText('Markdown record') as HTMLTextA…
+       |                         ^
+     81|   expect(manual.readOnly).toBe(true)
+     82|   expect(manual.value).toBe(performanceMarkdown({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  |dom| src/features/performance/PerformanceWorksheet.test.tsx > clearing requires confirmation and resets fields from both views rather than just the visible form
+AssertionError: expected '{"outcome":"Saved outcome","metric":"…' to be null
+
+- Expected:
+null
+
++ Received:
+"{\"outcome\":\"Saved outcome\",\"metric\":\"\",\"scope\":\"\",\"window\":\"\",\"evidence\":\"\",\"target\":\"\",\"hypothesis\":\"\",\"change\":\"\",\"after\":\"\",\"correctness\":\"\",\"verdict\":\"Saved verdict\"}"
+
+ ❯ src/features/performance/PerformanceWorksheet.test.tsx:99:56
+     97|   confirm.mockReturnValue(true)
+     98|   fireEvent.click(screen.getByRole('button', { name: 'Clear whole reco…
+     99|   expect(window.localStorage.getItem(PERFORMANCE_KEY)).toBeNull()
+       |                                                        ^
+    100|   expect((screen.getByLabelText('Outcome and observer') as HTMLTextAre…
+    101|   expect(screen.getByText('0 of 11 fields recorded')).toBeTruthy()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  |dom| src/features/performance/PerformanceWorksheet.test.tsx > a storage event refreshes the other view and the next edit preserves that unseen field
+AssertionError: expected '' to be 'Changed in another tab' // Object.is equality
+
+- Expected
++ Received
+
+- Changed in another tab
+
+ ❯ src/features/performance/PerformanceWorksheet.test.tsx:112:88
+    110|     window.dispatchEvent(new StorageEvent('storage', { key: PERFORMANC…
+    111|   })
+    112|   expect((screen.getByLabelText('Outcome and observer') as HTMLTextAre…
+       |                                                                                        ^
+    113|   edit('Scope', 'Same scope')
+    114|   expect(JSON.parse(window.localStorage.getItem(PERFORMANCE_KEY)!).ver…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed (6)
+   Start at  09:06:50
+   Duration  1.37s (transform 48ms, setup 113ms, import 27ms, tests 133ms, environment 959ms)
+
+```
+
+## Focused/data GREEN
+
+Retained log: `task-5-green.log`; actual process exit: 0.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  2 passed (2)
+      Tests  9 passed (9)
+   Start at  09:06:58
+   Duration  1.23s (transform 65ms, setup 83ms, import 123ms, tests 169ms, environment 504ms)
+
+```
+
+## Specified teeth mutation
+
+Retained log: `task-5-teeth.log`; actual process exit: 1.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+ ❯ |dom| src/features/performance/PerformanceWorksheet.test.tsx (6 tests | 1 failed) 149ms
+   × denied reads or writes retain a mounted editable draft and export it instead of claiming it was saved 10ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/performance/PerformanceWorksheet.test.tsx > denied reads or writes retain a mounted editable draft and export it instead of claiming it was saved
+AssertionError: expected '' to be 'Unsaved browser outcome' // Object.is equality
+
+- Expected
++ Received
+
+- Unsaved browser outcome
+
+ ❯ src/features/performance/PerformanceWorksheet.test.tsx:64:90
+     62|     edit('Outcome and observer', 'Unsaved browser outcome')
+     63|     edit('Scope', 'Unsaved scope')
+     64|     expect((screen.getByLabelText('Outcome and observer') as HTMLTextA…
+       |                                                                                          ^
+     65|     expect(screen.getByText(/Saving is unavailable/)).toBeTruthy()
+     66|     await act(async () => { fireEvent.click(screen.getByRole('button',…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  09:07:08
+   Duration  987ms (transform 46ms, setup 89ms, import 84ms, tests 149ms, environment 571ms)
+
+```
+
+## Owned-file formatting
+
+Retained log: `task-5-format.log`; actual process exit: 0.
+
+```text
+src/features/performance/CopyText.tsx 36ms
+src/features/performance/PerformanceWorksheet.tsx 17ms
+src/features/performance/PerformanceWorksheet.test.tsx 30ms
+```
+
+## Restored focused/data GREEN
+
+Retained log: `task-5-restored-green.log`; actual process exit: 0.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  2 passed (2)
+      Tests  9 passed (9)
+   Start at  09:07:17
+   Duration  929ms (transform 58ms, setup 101ms, import 108ms, tests 172ms, environment 483ms)
+
+```
+
+## Full project suite
+
+Retained log: `task-5-full-suite.log`; actual process exit: 0.
+
+```text
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/web
+> vitest run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/web
+
+
+ Test Files  191 passed (191)
+      Tests  1439 passed (1439)
+   Start at  09:07:18
+   Duration  30.13s (transform 14.43s, setup 14.47s, import 36.15s, tests 46.95s, environment 71.39s)
+
+```
+
+## Typecheck
+
+Retained log: `task-5-typecheck.log`; actual process exit: 0.
+
+```text
+
+> web@0.1.0 typecheck /Users/angelito/personal/Development-Playbook/web
+> next typegen && tsc --noEmit
+
+Generating route types...
+✓ Types generated successfully
+```
+
+## Lint
+
+Retained log: `task-5-lint.log`; actual process exit: 0.
+
+```text
+
+> web@0.1.0 lint /Users/angelito/personal/Development-Playbook/web
+> eslint --max-warnings 0
+
+```
+
+## Sandbox commit attempt
+
+Retained log: `task-5-commit.log`; actual process exit: 128.
+
+```text
+fatal: Unable to create '/Users/angelito/personal/Development-Playbook/.git/index.lock': Operation not permitted
+```
+
+## Escalated commit and hooks
+
+Retained log: `task-5-commit-escalated.log`; actual process exit: 0.
+
+```text
+╭───────────────────────────────────────╮
+│ lefthook  v2.1.10   hook:  [1mpre-commit[m │
+╰───────────────────────────────────────╯
+┃  format ❯ 
+src/features/performance/CopyText.tsx 38ms (unchanged)
+src/features/performance/PerformanceWorksheet.test.tsx 24ms (unchanged)
+src/features/performance/PerformanceWorksheet.tsx 14ms (unchanged)
+
+┃  lint ❯ 
+
+[38;2;56;56;56m  ────────────────────────────────────[m
+summary: (done in 2.32 seconds)
+✓ format (0.39 seconds)
+✓ lint (2.30 seconds)
+[feat/stage-09-performance-port 831f14d] feat(performance): save and export the measurement worksheet
+ 3 files changed, 383 insertions(+)
+ create mode 100644 web/src/features/performance/CopyText.tsx
+ create mode 100644 web/src/features/performance/PerformanceWorksheet.test.tsx
+ create mode 100644 web/src/features/performance/PerformanceWorksheet.tsx
+```
+
+
+## Task 5 independent review
+
+Spec and quality: review clean. No findings. All eleven report fences exactly match retained logs. Commit trailer verified. Review source: `task-5-review.md`.
