@@ -85,6 +85,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-10-12 | W-3.16 (integration) | **The user approved local no-ff integration of the reviewed Stage 09 feature into `develop`.** This receipt takes effect with that merge: W-3 becomes **15/18**, W-6 stays **20/25**; stages 10, 17 and 18 remain. | Reviewed feature `0842dea`, assembly `59b0e05`, final application `c8b7349`. [Integration receipt](superpowers/reports/2026-10-12-stage-09-integration.md) carries the merge-history query; [whole-branch review](superpowers/reports/2026-10-12-stage-09-whole-branch-review.md) is Ready to merge, zero new findings. Reviewed-branch evidence: 1459/1459 tests across 198 files, 24/24 production audit, 1/1 development-console audit and 574/574 measured observations. Merged-tree verification follows the approved merge; its actual log and SHA are recorded at handoff, without predicting a pass here. | **Local integration only; no push or deployment authorized.** Deferred: W-6 caching/scaling sheets, image publication, real order benchmarks, shared-drill extraction and storage-hook repairs, and promotion to `main`. |
 | 2026-10-12 | W-3.16 (verification) | **Stage 09's twelve-panel port and verification fixes are implemented and independently reviewed per task on `feat/stage-09-performance-port`.** It teaches five user clocks, committed baseline and diagnostic judgments, seven candidate fixes, a saved/exportable eleven-field own-app record and five closing checks. The independent whole-branch review returned **Ready to merge**, with no new findings. | Atomic registration `59b0e05`; final application tip `c8b7349`. Narrow shared fixes `915c991` (glossary resize) and `c8b7349` (Stepper state identity) have genuine DOM/browser RED, GREEN and isolated teeth, then independent review. The stale missing-rail fixture is repaired in `90da921`. At the unchanged application tree: **1459/1459 tests across 198 files**, format/lint/typecheck, 50-page build, production audit **24/24**, development-console audit **1/1**. Chrome's 546 manual snapshots plus 28 denied-state observations pass calculated AA and geometry: lowest text contrast **4.652:1**, largest revealed panel **3.324 screens** at 1024×768. [Whole-branch review](superpowers/reports/2026-10-12-stage-09-whole-branch-review.md) covers 30 commits / 54 files; fresh reviewed-head tests passed **1459/1459** on 2026-10-12. [Final raw gate output and coverage](superpowers/reports/2026-10-09-stage-09-final-verification.md); [task/fix transcripts and provenance](superpowers/reports/2026-10-08-stage-09-interactive-port.md). `adb2030` records the user's intervening documentation-only progress; tracked origin includes it. | **Not merged into `develop`, not deployed; the separate integration decision remains.** W-3 stays 14/18 on `develop`; W-6 stays 20/25. Deferred: caching/scaling sheets, image publication, real order benchmarks, shared-drill extraction and storage-hook repairs, further pushes and promotion to `main`. |
 | 2026-10-08 | W-3.16 (planned) | **Stage 09's port spec is approved and its implementation plan is written; execution has not started.** Eight task slices pair the hypothetical order exercise with a saved/exportable own-app record, preserving user clocks, baseline-before-fix ordering, diagnostic limits and comparable retest. | Spec `e4074f2`, approval record `0f51069`, plan `bb42a76` ([plan](superpowers/plans/2026-10-08-stage-09-interactive-port.md)). Thirty complete planned source blocks and five registry edits typechecked in memory; all 35 source/registry overlays linted with zero errors/warnings. Structural review checked all task interfaces and source blocks. Two JSX apostrophes were corrected before the final lint pass. The plan has 9 unit, 30 DOM and 4 browser test declarations; **these proposed tests were not executed during planning**. The existing tracker-ledger guard passed 2/2 after the records update. `web/` is unchanged and Stage 09 remains `ready: false`; W-3 is 14/18 and W-6 is 20/25. | **Written-plan review and execution-method selection precede implementation.** TDD runs, per-task/final reviews and live UI audits remain due. W-6 caching/scaling sheets, third-party images, real order measurements, older shared-drill/storage repairs, merge, push and production promotion stay separate. |
 | 2026-10-08 | W-3.16 (handoff) | **The next-session scope for Stage 09's interactive port is recorded in `docs/task.md`, `## Next up` and `KICKOFF.md`.** It starts with defining and recording a user-visible baseline, then diagnosis and retest, using the reviewed hypothetical order case. This is a handoff, not a port implementation. | Handoff commit `adf6e20` on the separate documentation branch points to the merged chapter (`ad283ce`), its spec, execution report, primary-source audit and the web patterns/design guides. `stages.ts` still has `ready: false`; W-3 remains 14/18 and W-6 remains 20/25. | **No port code, new port spec/plan, merge, push or deployment in this slice.** The W-6 `caching`/`scaling` sheets and real order telemetry remain separate. |
@@ -881,19 +882,17 @@ of new work, not assumed to survive from the last `git checkout`.
 chapter, source audit and chapter-phase spec/plan were reviewed and tested; Stage 09 is
 still `ready: false`. No push or deployment occurred.
 
-**Next checkpoint, 2026-10-12: review the verified Stage 09 branch and decide integration.** The user
-approved the [eight-task plan](superpowers/plans/2026-10-08-stage-09-interactive-port.md)
-and selected Subagent-Driven execution. All eight tasks and verification fixes
-passed independent review on `feat/stage-09-performance-port` in
-`.worktrees/stage-09-performance-port`. Stage 09 is registered and ready
-there; the application gate passed **1459/1459 across 198 files**, production
-audit **24/24** and development-console audit **1/1**. The
-[final verification](superpowers/reports/2026-10-09-stage-09-final-verification.md)
-preserves raw gate output and 574 interacted-state observations. The [whole-branch review](superpowers/reports/2026-10-12-stage-09-whole-branch-review.md)
-returned Ready to merge, with no new findings across 54 changed files.
-Ask before merging into `develop`.
-W-3 stays 14/18 on `develop`, W-6 20/25. W-6 caching/scaling sheets and
-W-6.4 glossary/stack surfacing remain separate.
+**Integration handoff, 2026-10-12:** the user selected local no-ff merge of
+Stage 09 into `develop`. This handoff is carried by that merge: W-3 becomes
+**15/18**, W-6 stays **20/25**. The twelve-panel port, eight tasks and all
+verification fixes are complete. The [whole-branch review](superpowers/reports/2026-10-12-stage-09-whole-branch-review.md)
+returned Ready to merge, with no new findings. The
+[integration receipt](superpowers/reports/2026-10-12-stage-09-integration.md)
+separates reviewed-branch results from the merged-tree checks that follow.
+
+Next scope is unselected: W-3 stages 10, 17 and 18, the W-6 caching/scaling
+companions, or W-6.4 glossary/stack surfacing remain. Main and production
+promotion stay the user's. No further push is authorized by this local merge.
 
 Deferred: the Stage 16 document-review follow-ups, optional incident-record
 template, image publication and provenance, Stage 13 rollback wording repair,

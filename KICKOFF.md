@@ -1,19 +1,14 @@
 # Kickoff — Development Playbook
 
-**Next checkpoint, 2026-10-12: decide Stage 09
-integration.** Work is on `feat/stage-09-performance-port`.
-All eight tasks are implemented and independently reviewed. Execution moved
-to the user-approved `.worktrees/stage-09-performance-port`; the parent
-checkout stays on the planning branch at `112aa42`, with tracked files unchanged.
-Resume from that worktree's checked plan and reports. All verification fixes,
-the final application gate and live measurements are complete. Whole-branch
-review returned Ready to merge with no new findings. Stage 09 is `ready: true` on the feature branch;
-local `develop` stays at W-3 **14/18**, W-6 **20/25**. No merge, push or
-deployment is authorized.
+**Integration handoff, 2026-10-12:** the user approved the Stage 09 feature's
+local no-ff merge into `develop`. This handoff travels with that merge and
+applies to its resulting tree. W-3 becomes **15/18**, W-6 stays **20/25**.
+Stages 10, 17 and 18 remain; no next round has been selected.
 
-Paste the block below into a **new coding session** opened in
-`/Users/angelito/personal/Development-Playbook/.worktrees/stage-09-performance-port`
-to finish this branch. The parent checkout holds the planning branch.
+Open the next session in `/Users/angelito/personal/Development-Playbook`.
+Read the [integration receipt](docs/superpowers/reports/2026-10-12-stage-09-integration.md)
+and the final review before starting new work. Query the merge SHA and current
+refs; the feature worktree is removed only after merged-tree verification.
 
 Update the *Project state* section before pasting — a stale kickoff is worse than none,
 because it is trusted.
@@ -51,11 +46,11 @@ Before doing anything, read these for context:
 
 ### Project state (verified 2026-10-12; recheck before work)
 
-Stages 01–08 and 11–16 are interactive on local `develop` (**14/18**); 09,
-10, 17 and 18 remain. Stage 08's port merged as `a03e190`. W-6 has **20 of
+After the approved merge, stages 01–09 and 11–16 are interactive on local
+`develop` (**15/18**); 10, 17 and 18 remain. Stage 08's port merged as `a03e190`. W-6 has **20 of
 25** registered sheets drawn, including Stage 08's `security` sheet, merged
 as `739c8ed`. Stage 09's revised chapter and source audit merged as
-`ad283ce`; its web stage remains a placeholder (`ready: false`).
+`ad283ce`; its twelve-panel port is included in this approved integration.
 
 The Stage 09 chapter opens with an order journey and teaches the first
 measurement before any fix. It separates browser checkout latency, payment
@@ -78,7 +73,9 @@ The [final verification](docs/superpowers/reports/2026-10-09-stage-09-final-veri
 retains gate output, chapter coverage and 574 interacted-state observations.
 The task report retains raw TDD and teeth evidence.
 The [whole-branch review](docs/superpowers/reports/2026-10-12-stage-09-whole-branch-review.md)
-returned Ready to merge; the separate integration decision is due.
+returned Ready to merge. The user selected local integration on 2026-10-12;
+the integration receipt distinguishes reviewed-branch evidence from the
+merged-tree checks that follow.
 Subagent-Driven remains recommended because each component's contracts can
 be reviewed before assembly. Execute one implementation task at a time.
 
@@ -89,8 +86,9 @@ The W-6 caching/scaling sheets remain separate.
 
 **Start here, in order:**
 
-1. **Check the branch before editing anything.** In this worktree,
-   `git branch --show-current` should be `feat/stage-09-performance-port`.
+1. **Check the branch before editing anything.** The merged checkout is on
+   `develop`; create a work branch before the next edit, as branch discipline
+   requires.
    If the answer is `main`, stop and read `docs/learnings/branch-discipline-101.md`.
 2. **Re-derive every number in this file before trusting it.** Run the
    commands under "Branch state"; fetch only if remote state matters. This
@@ -101,23 +99,23 @@ The W-6 caching/scaling sheets remain separate.
    The reference check must return nothing. The tracker currently has one
    historical struck-through hit in its 2026-09-08 W-3.12 row; verify that
    every hit is struck through and immediately corrected, not a live status.
-4. **Resume final verification from the isolated worktree's ledger.** All
-   eight task slices are complete; do not redispatch them. Finish the
-   integration handoff. The registered stage keeps
-   measurement ahead of optimization; its verification fixes are complete.
+4. **Do not redispatch the Stage 09 tasks.** All eight tasks, their fixes,
+   final review and live checks are complete. Consult the integration receipt
+   and recorded merged-tree output for the landing evidence. Choose the next
+   scope with the user rather than starting another port automatically.
 5. **Keep W-6.4 separate.** Glossary and stack surfacing remains open; ask
    before any future merge into `develop`, and never merge or push to `main`.
 
 ---
 
-#### The condensed history (01–08, 11–16, the reference hub)
+#### The condensed history (01–09, 11–16, the reference hub)
 
 Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them by ID.
 
-- **Stages 01–08 and 11–16 are interactive and merged.** 03 is 22 steps, 04
+- **Stages 01–09 and 11–16 are interactive after this integration.** 03 is 22 steps, 04
   is 15, 05 is 13, 06 is 8, 07 is 6, 11 is 8, 12 is 6, 13 is 8 (platform-aware), 14 is 6,
-  15 is 16 (after the D-52 reshape), and 16 is 14; Stage 08 is 10. Coverage walks ran on
-  03–06, 11–14; the later ports have not had one yet. Stages 09–10 and 17–18
+  15 is 16 (after the D-52 reshape), and 16 is 14; Stage 08 is 10 and Stage 09 is 12.
+  Coverage walks ran on 03–06, 09 and 11–14. After this integration, stages 10, 17 and 18
   render a "sheet not drawn" placeholder; routing works for all 18.
 - **The standard review loop has per-task and whole-branch reviews.** The user
   chose one whole-branch review for the Stage 16 port to reduce ceremony;
@@ -158,18 +156,17 @@ git ls-files reference/ | rg -iv "jpeg|jpg|png|webp|gif|\.md$"
 Fetch first if you need to compare against the current remote; otherwise the
 `origin/*` lines above describe the last fetched refs.
 
-**Verified 2026-10-12 against local refs, without a fresh fetch:** `develop`
-is `c99bf64`, 32 commits ahead of the tracked `origin/develop` at `377c734`
-and 176 ahead of `main` at `d659d32`; `main` is two ahead of `develop` by
-merge history. The isolated worktree holds `feat/stage-09-performance-port`;
-at `adb2030` it is 28 commits off `develop` and matches its tracked origin.
-That intervening commit is documentation only; its application tree matches
-tested `c8b7349`. Final records commits will change this count. The parent
-holds `docs/2026-10-08-stage-09-port-design` at `112aa42`. The separate
-`docs/2026-10-08-stage-09-port-handoff` branch remains, and its scope was read
-and carried into current records without integrating that branch. Re-run the
-commands above for current counts; this records commit changes the feature
-branch, not `develop`.
+**Integration snapshot, prepared 2026-10-12:** target `develop` was
+`c99bf64`; reviewed feature tip was `0842dea`. The subsequent receipt commit
+changes documentation only. This record is carried by the approved no-ff
+merge, so its own SHA and current ahead counts must be queried using the
+commands above. `main` stays `d659d32`; tracked `origin/develop` was `377c734`
+without a fresh fetch. The user previously pushed the feature through
+`adb2030`; this local integration does not authorize another push.
+
+The planning branch `docs/2026-10-08-stage-09-port-design` remains at `112aa42`.
+The separate handoff branch's scope was reconciled without merging that branch.
+The parent checkout's untracked `.pnpm-store/` cache is left in place.
 
 **Branch/push convention, unchanged:** work on `feat/`|`fix/`|`docs/<date>-` branches,
 cut from `develop`, never from `main`. Merge with `--no-ff` and a hand-written subject,
