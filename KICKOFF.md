@@ -1,18 +1,19 @@
 # Kickoff — Development Playbook
 
-**Next checkpoint, 2026-10-09: finish the approved Stage 09 port with
-Subagent-Driven execution.** Work is on `feat/stage-09-performance-port`.
+**Next checkpoint, 2026-10-12: finish whole-branch review and decide Stage 09
+integration.** Work is on `feat/stage-09-performance-port`.
 All eight tasks are implemented and independently reviewed. Execution moved
 to the user-approved `.worktrees/stage-09-performance-port`; the parent
-checkout stays on the clean planning branch at `112aa42`.
-Resume from that worktree's progress ledger and checked plan. Final live
-verification found a shared Stepper state leak; its fix, final checks and
-whole-branch review remain. Stage 09 is `ready: true` on the feature branch;
+checkout stays on the planning branch at `112aa42`, with tracked files unchanged.
+Resume from that worktree's checked plan and reports. All verification fixes,
+the final application gate and live measurements are complete; whole-branch
+review remains. Stage 09 is `ready: true` on the feature branch;
 local `develop` stays at W-3 **14/18**, W-6 **20/25**. No merge, push or
 deployment is authorized.
 
 Paste the block below into a **new coding session** opened in
-`/Users/angelito/personal/Development-Playbook` to start a round with full context.
+`/Users/angelito/personal/Development-Playbook/.worktrees/stage-09-performance-port`
+to finish this branch. The parent checkout holds the planning branch.
 
 Update the *Project state* section before pasting — a stale kickoff is worse than none,
 because it is trusted.
@@ -48,7 +49,7 @@ Before doing anything, read these for context:
   during its own execution — the D-52 fix the plan pre-authorized covered one panel,
   and the real number was four.
 
-### Project state (verified 2026-10-09; recheck before work)
+### Project state (verified 2026-10-12; recheck before work)
 
 Stages 01–08 and 11–16 are interactive on local `develop` (**14/18**); 09,
 10, 17 and 18 remain. Stage 08's port merged as `a03e190`. W-6 has **20 of
@@ -70,9 +71,12 @@ written plan at `docs/superpowers/plans/2026-10-08-stage-09-interactive-port.md`
 The user approved the plan and selected Subagent-Driven execution on
 2026-10-09. All eight tasks passed independent review. The feature branch
 contains twelve registered panels, a saved/exportable eleven-field record
-and a persisted five-check closing checklist. The execution report retains
-raw TDD and teeth evidence; the scratch progress ledger records dispatches
-and rulings.
+and a persisted five-check closing checklist. Final application checks at
+`c8b7349`: **1459 tests across 198 files**, format/lint/typecheck, 50-page
+build, production audit **24/24** and development-console audit **1/1**.
+The [final verification](docs/superpowers/reports/2026-10-09-stage-09-final-verification.md)
+retains gate output, chapter coverage and 574 interacted-state observations.
+The task report retains raw TDD and teeth evidence. Whole-branch review is due.
 Subagent-Driven remains recommended because each component's contracts can
 be reviewed before assembly. Execute one implementation task at a time.
 
@@ -83,8 +87,8 @@ The W-6 caching/scaling sheets remain separate.
 
 **Start here, in order:**
 
-1. **Check the branch before editing anything.** `git branch --show-current` should
-   be `develop` unless a new work branch has been cut.
+1. **Check the branch before editing anything.** In this worktree,
+   `git branch --show-current` should be `feat/stage-09-performance-port`.
    If the answer is `main`, stop and read `docs/learnings/branch-discipline-101.md`.
 2. **Re-derive every number in this file before trusting it.** Run the
    commands under "Branch state"; fetch only if remote state matters. This
@@ -97,8 +101,8 @@ The W-6 caching/scaling sheets remain separate.
    every hit is struck through and immediately corrected, not a live status.
 4. **Resume final verification from the isolated worktree's ledger.** All
    eight task slices are complete; do not redispatch them. Finish the
-   Stepper regression fix, interacted-state measurements and whole-branch
-   review. The registered stage keeps measurement ahead of optimization.
+   whole-branch review and integration handoff. The registered stage keeps
+   measurement ahead of optimization; its verification fixes are complete.
 5. **Keep W-6.4 separate.** Glossary and stack surfacing remains open; ask
    before any future merge into `develop`, and never merge or push to `main`.
 
@@ -122,11 +126,12 @@ Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them 
 - **Glossary and stage metadata are single-sourced** (D-36): terms live in
   `web/src/lib/terms.ts` (`pnpm gen:glossary`), never hand-edit `glossary.md`.
 - **Quality gates**: prettier (skips markdown and `highlighted.generated.ts`), eslint at
-  `--max-warnings 0`, vitest in two projects, `test:e2e` (18-test Playwright audit),
+  `--max-warnings 0`, vitest in two projects, `test:e2e` (24-test Playwright audit),
   `test:dev-console` (outside the gate, once per stage round — TD-35, D-84).
 - **The Stage 09 chapter merge passed 1416 tests across 185 files** on local
   `develop` (2026-10-08). Branch format, lint, typecheck and production build
-  were green; the port's browser and development-console audits are still due.
+  were green. The port's browser and development-console audits passed on its
+  feature branch on 2026-10-09; see the current evidence above.
 - **The e2e per-test timeout is 120s, not 60s** (`playwright.config.ts`, `2bb64e9`) — an
   18th stage in the sweep pushed WCAG AA and the disclosure sweep over the old budget;
   this is a repo-wide headroom fix, unrelated to stage 15's own content.
@@ -151,15 +156,17 @@ git ls-files reference/ | rg -iv "jpeg|jpg|png|webp|gif|\.md$"
 Fetch first if you need to compare against the current remote; otherwise the
 `origin/*` lines above describe the last fetched refs.
 
-**Verified 2026-10-08 against local refs, without a fresh fetch:** `develop`
+**Verified 2026-10-12 against local refs, without a fresh fetch:** `develop`
 is `c99bf64`, 32 commits ahead of the tracked `origin/develop` at `377c734`
 and 176 ahead of `main` at `d659d32`; `main` is two ahead of `develop` by
-merge history. The active planning branch is
-`docs/2026-10-08-stage-09-port-design`, with plan `bb42a76`. These planning
-commits are local and unmerged; no push occurred. The separate
+merge history. The isolated worktree holds `feat/stage-09-performance-port`;
+at `adb2030` it is 28 commits off `develop` and matches its tracked origin.
+That intervening commit is documentation only; its application tree matches
+tested `c8b7349`. Final records commits will change this count. The parent
+holds `docs/2026-10-08-stage-09-port-design` at `112aa42`. The separate
 `docs/2026-10-08-stage-09-port-handoff` branch remains, and its scope was read
 and carried into current records without integrating that branch. Re-run the
-commands above for current counts; this records commit changes the planning
+commands above for current counts; this records commit changes the feature
 branch, not `develop`.
 
 **Branch/push convention, unchanged:** work on `feat/`|`fix/`|`docs/<date>-` branches,
