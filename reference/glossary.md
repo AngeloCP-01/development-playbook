@@ -35,6 +35,8 @@ drift apart.
 
 **C4 model** — Simon Brown’s convention for architecture diagrams. Context shows your system and the outside world it talks to. Container shows the deployable things inside it — the application, the database, the worker. Component shows the pieces inside one container. Code is classes and functions. See [03 — Architecture](../docs/03-architecture.md).
 
+**Cache invalidation** — A cached read needs a freshness rule, such as a lifetime or an update-triggered invalidation. APIs differ: Next.js updateTag is limited to Server Actions and makes the next read wait for fresh tagged data. See [09 — Performance Optimization](../docs/09-performance-optimization.md).
+
 **Canary** — Releasing a change to a small slice of traffic first, watching it, then widening. On Vercel it is approximated with skew protection and staged rollouts rather than true traffic splitting. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **CAP theorem** — For a system spread across nodes: during a network partition you may either refuse requests to stay consistent, or serve them and let copies disagree. Consistency and availability are only jointly achievable when nothing is partitioned. See [03 — Architecture](../docs/03-architecture.md).
@@ -44,6 +46,8 @@ drift apart.
 **Circuit breaker** — A wrapper that counts consecutive failures, and once past a threshold stops attempting the call at all for a cooldown period, failing fast instead. After the cooldown it lets one request through to test whether the dependency recovered. See [03 — Architecture](../docs/03-architecture.md).
 
 **Client Component** — A component marked ‘use client’. It still renders once on the server to produce the page’s first HTML, then ships its own code to the browser and takes over there — which is what lets it hold state, run event handlers, and read something like window. See [05 — Development](../docs/05-development.md).
+
+**CLS (Cumulative Layout Shift)** — A Core Web Vital for visual stability, based on qualifying unexpected layout shifts. It is a score, not a duration. The good threshold is 0.1 or less at p75, assessed separately for mobile and desktop. See [09 — Performance Optimization](../docs/09-performance-optimization.md).
 
 **Code coverage** — The percentage of lines or branches a test suite executes when it runs. See [06 — Testing](../docs/06-testing.md).
 
@@ -115,6 +119,8 @@ drift apart.
 
 **Incident commander** — Keeps ownership, decisions, communication and handoffs clear while responders limit impact. A solo developer can hold this role alongside technical work. See [16 — Incident Management](../docs/16-incident-management.md).
 
+**INP (Interaction to Next Paint)** — A Core Web Vital for responsiveness across qualifying interactions during a page visit. It includes time waiting for handlers, their processing, and the next paint. The good threshold is 200 milliseconds or less at p75, assessed separately for mobile and desktop. See [09 — Performance Optimization](../docs/09-performance-optimization.md).
+
 **Invariant test** — A test asserting the shape of data rather than its values — counts, uniqueness, cross-references between files, rather than what any one field contains. See [06 — Testing](../docs/06-testing.md).
 
 **Isolation level** — A per-transaction setting trading strictness against concurrency. Postgres defaults to read committed: you never see uncommitted rows, but you do see rows others commit while you are still running. Serializable behaves as though transactions ran one at a time, and aborts one when it cannot guarantee that. See [03 — Architecture](../docs/03-architecture.md).
@@ -122,6 +128,8 @@ drift apart.
 **Jobs to be done (JTBD)** — A framing that describes users by the job they are "hiring" a product to do — "help me look organised to my clients" — rather than by who they are. Two people with nothing demographically in common can share a job.
 
 **Join table** — When a client can belong to several users and a user to several clients, neither table can hold the relationship in a column. A third table holds pairs of ids instead — one row per connection. See [03 — Architecture](../docs/03-architecture.md).
+
+**LCP (Largest Contentful Paint)** — A Core Web Vital for loading experience. It records when the largest eligible content element in the viewport is painted. The good threshold is 2.5 seconds or less at p75, assessed separately for mobile and desktop. See [09 — Performance Optimization](../docs/09-performance-optimization.md).
 
 **Leading question** — "Would this save you time?" contains its own answer. The polite response is yes, it costs the respondent nothing, and you learn only that they are agreeable.
 
@@ -140,6 +148,8 @@ drift apart.
 **Monolith** — A system where all the code runs together rather than being split across services that talk over a network. Internal structure can still be strict; the distinction is about deployment and process boundaries, not tidiness. See [03 — Architecture](../docs/03-architecture.md).
 
 **MVP (Minimum Viable Product)** — Minimum viable product: the least you can build that still achieves the result you wrote down, so that real usage can tell you what to build next. It is defined by the outcome, not by a feature count. See [02 — Product Planning](../docs/02-planning.md).
+
+**N+1 queries** — A data-access pattern in which a list lookup triggers repeated per-item queries. A 20-item list can then require 21 queries. Trace or query-log evidence establishes whether those round trips matter for the selected outcome. See [09 — Performance Optimization](../docs/09-performance-optimization.md).
 
 **Normalisation** — A series of increasingly strict forms — first, second and third normal form are the ones that matter in practice — describing how far a schema has removed duplicated facts. Third normal form roughly means every column depends on the key, the whole key, and nothing but the key. See [03 — Architecture](../docs/03-architecture.md).
 
@@ -176,6 +186,8 @@ drift apart.
 **Production-grade** — The state where someone other than you depends on the software working. It is about consequences, not scale: ten paying users make software production-grade; ten thousand on a toy do not.
 
 **Provenance (review)** — A tag on a review finding that says where the defect came from: new in this PR, already present in the codebase (PRE-EXISTING), or introduced by the plan itself (PLAN-AUTHORED ERROR). The distinction changes who fixes it and whether it blocks this merge. See [07 — Code Review](../docs/07-code-review.md).
+
+**Query plan** — A plan describes scans, joins, filters and other operations. PostgreSQL EXPLAIN shows estimates; ANALYZE executes the query and adds actual observations. Compare estimates, actual rows, filtering, buffers and time. Planner cost is not milliseconds. See [09 — Performance Optimization](../docs/09-performance-optimization.md).
 
 **Read replica** — A secondary instance kept up to date from the primary, used to spread read load. Writes still go to one place, so replicas scale reads and do nothing for write throughput. See [03 — Architecture](../docs/03-architecture.md).
 

@@ -13,17 +13,20 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current state (2026-10-08): W-3 is 14/18 and W-6 is 20/25 on local
-`develop`.** Stage 08's corrected chapter and ten-step port merged as
+**Integration handoff (2026-10-12): the user approved the Stage 09 no-ff
+merge into local `develop`.** This record takes effect with that merge:
+W-3 is 15/18 and W-6 is 20/25. Stage 08's corrected chapter and ten-step port merged as
 `a03e190`; its `security` lookup sheet and original diagram followed as
 `739c8ed`. The latter's merged tree passed 1406 tests across 184 files, lint,
 typecheck and format. Stage 09's chapter revision and W-6 source research
 merged locally as `ad283ce`; the merged tree passed 1416 tests across 185
-files. Stage 09 remains unready; nothing from this round was pushed or deployed.
+files. Stage 09's twelve-panel port is ready on its feature branch, with
+final application gates complete and whole-branch review clean. The user
+approved its local integration; production promotion remains separate.
 
 Stage 08 was chosen after the Stage 16 round. Its source review preceded the
 port; `docs/superpowers/specs/2026-10-02-stage-08-security-audit-design.md`
-records the scope. Stages 09, 10, 17 and 18 remain; W-6.4 glossary/stack
+records the scope. After integration, stages 10, 17 and 18 remain; W-6.4 glossary/stack
 surfacing is a separate task.
 
 Two deliverables from one body of content.
@@ -132,16 +135,55 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(14/18 merged to `develop`; four remain: 09, 10, 17 and 18. Stage 08 landed as `a03e190`; see tracker W-3.14 for evidence.)*
+### W-3 — Stages 02–18 interactive ◐ *(15/18 after the approved Stage 09 integration; three remain: 10, 17 and 18. See tracker W-3.16 and its integration receipt.)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
-**Current round:** Stage 09 Performance Optimization. Its chapter now teaches
-the first measurement through a hypothetical order journey, with distinct
-checkout, payment and consumer clocks. The source audit also gathered W-6
-`caching` and `scaling` references. The interactive port is the next phase;
-the earlier suggested order in `task-archive.md` leaves the remaining stages
-unranked.
+**Current round:** Stage 09 interactive port. The user approved the eight-task
+plan and selected Subagent-Driven execution on 2026-10-09. All eight tasks are
+implemented and independently reviewed on `feat/stage-09-performance-port`
+in `.worktrees/stage-09-performance-port`. Stage 09 is registered and ready
+on that branch. Final verification fixes passed independent review.
+The gate passed 1459 tests across 198 files, 24 production browser checks
+and the development-console audit. The independent whole-branch review
+returned Ready to merge, with no new findings. The separate integration
+decision was made: local merge into `develop`, 2026-10-12.
+
+### W-3.16 — Stage 09 interactive port ☑ *(included in the approved local integration)*
+
+Start from the [reviewed chapter](09-performance-optimization.md), its
+[design spec](superpowers/specs/2026-10-08-stage-09-performance-design.md),
+[chapter execution report](superpowers/reports/2026-10-08-stage-09-chapter.md),
+and the [source audit](../reference/stage-09-performance-sources.md). Read
+`web/PATTERNS.md` and `web/DESIGN.md` before choosing interactions. The
+[separate port spec](superpowers/specs/2026-10-08-stage-09-interactive-port-design.md)
+was approved on 2026-10-08. The
+[eight-task plan](superpowers/plans/2026-10-08-stage-09-interactive-port.md)
+was executed with Subagent-Driven development. Its tasks are complete; the
+[execution report](superpowers/reports/2026-10-08-stage-09-interactive-port.md)
+preserves TDD and review evidence. The
+[final verification](superpowers/reports/2026-10-09-stage-09-final-verification.md)
+records the full gate, 574 interacted-state measurements and chapter coverage.
+The [whole-branch review](superpowers/reports/2026-10-12-stage-09-whole-branch-review.md)
+covers all 54 changed files and records the remaining scope limits.
+
+The port should make the reader choose a user-visible outcome, define its
+start/end observer, record a comparable first baseline, distinguish checkout,
+payment and `OrderPaid` consumer clocks, inspect diagnostic evidence, and only
+then choose and retest a fix. Use hypothetical data visibly labelled as such;
+this static site has no order backend or production telemetry. Keep the three
+event consumers as branches unless an explicit business rule makes them serial.
+
+Done for W-3.16 means the Stage 09 content is registered and `ready: true`,
+the doc-to-port coverage is checked, component-derived behavior has render
+tests, and both themes, responsive widths, touch targets and clean-console
+audits pass. The user approved that merge on 2026-10-12. The
+[integration receipt](superpowers/reports/2026-10-12-stage-09-integration.md)
+travels with the no-ff merge and distinguishes the reviewed branch from the
+merged-tree verification.
+
+Deferred: the W-6 `caching` and `scaling` sheets, any third-party image,
+real ordering-system measurements, push and deployment.
 
 ### W-3.15 — Stage 09, chapter audit ☑ *(merged locally into `develop` as `ad283ce`)*
 

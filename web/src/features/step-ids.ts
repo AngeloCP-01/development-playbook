@@ -6,6 +6,7 @@ import { STEP_IDS as DEVELOPMENT } from './development/steps'
 import { STEP_IDS as TESTING } from './testing/steps'
 import { STEP_IDS as CODE_REVIEW } from './code-review/steps'
 import { STEP_IDS as SECURITY_AUDIT } from './security-audit/content'
+import { STEP_IDS as PERFORMANCE } from './performance/steps'
 import { STEP_IDS as CI_CD } from './ci-cd/steps'
 import { STEP_IDS as STAGING } from './staging/steps'
 import { STEP_IDS as PRODUCTION_DEPLOYMENT } from './production-deployment/steps'
@@ -39,6 +40,7 @@ export const STEP_IDS_BY_SLUG: Record<string, readonly string[]> = {
   '06-testing': TESTING,
   '07-code-review': CODE_REVIEW,
   '08-security-audit': SECURITY_AUDIT,
+  '09-performance-optimization': PERFORMANCE,
   '11-ci-cd': CI_CD,
   '12-staging': STAGING,
   '13-production-deployment': PRODUCTION_DEPLOYMENT,

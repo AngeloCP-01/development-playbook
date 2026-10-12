@@ -12,3 +12,6 @@ reference/*.pdf
 reference/cover-letter*
 reference/*resume*
 reference/*cv*
+
+# Isolated implementation checkouts.
+.worktrees/

@@ -15,6 +15,38 @@ export type Reference = {
 }
 
 export const REFERENCES: Record<string, Reference[]> = {
+  '09-performance-optimization': [
+    {
+      title: 'Web Vitals',
+      source: 'Google · web.dev',
+      url: 'https://web.dev/articles/vitals',
+      adds: 'Definitions, inclusive good thresholds and the mobile/desktop p75 assessment behind the page-experience targets.',
+    },
+    {
+      title: 'Why lab and field data can differ',
+      source: 'Google · web.dev',
+      url: 'https://web.dev/articles/lab-and-field-data-differences',
+      adds: 'Explains how controlled diagnosis and real-user observation answer different questions, and why a lab gain may not match field results.',
+    },
+    {
+      title: 'Using EXPLAIN',
+      source: 'PostgreSQL 18 documentation',
+      url: 'https://www.postgresql.org/docs/18/using-explain.html',
+      adds: 'Worked scan and plan examples, estimated versus actual execution details, and caveats for interpreting planner cost.',
+    },
+    {
+      title: 'Next.js use cache',
+      source: 'Next.js documentation',
+      url: 'https://nextjs.org/docs/app/api-reference/directives/use-cache',
+      adds: 'The version-specific Cache Components boundary, cache lifetime and tagging APIs to verify before choosing application caching.',
+    },
+    {
+      title: 'Context propagation',
+      source: 'OpenTelemetry documentation',
+      url: 'https://opentelemetry.io/docs/concepts/context-propagation/',
+      adds: 'How trace context correlates work across boundaries; a propagated trace still depends on which operations were instrumented.',
+    },
+  ],
   '01-product-discovery': [
     {
       title: 'Opportunity Solution Trees',

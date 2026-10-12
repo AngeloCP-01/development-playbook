@@ -191,8 +191,10 @@ export function Stepper({ steps }: { steps: Step[] }) {
             without depending on the exemption surviving the boundary. The
             wrapper also keeps the streamed node out of the panel's children
             array, so it is no longer a candidate for that check at all.
-            `Fragment` renders no DOM: the prerendered HTML is unchanged. */}
-        <Fragment key="content">{step.content}</Fragment>
+            `Fragment` renders no DOM: the prerendered HTML is unchanged.
+            The step id also remounts resolved client children, so local drill
+            state cannot carry into a different panel. */}
+        <Fragment key={step.id}>{step.content}</Fragment>
       </div>
 
       <nav
