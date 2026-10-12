@@ -1,13 +1,13 @@
 # Kickoff — Development Playbook
 
-**Next checkpoint, 2026-10-12: finish whole-branch review and decide Stage 09
+**Next checkpoint, 2026-10-12: decide Stage 09
 integration.** Work is on `feat/stage-09-performance-port`.
 All eight tasks are implemented and independently reviewed. Execution moved
 to the user-approved `.worktrees/stage-09-performance-port`; the parent
 checkout stays on the planning branch at `112aa42`, with tracked files unchanged.
 Resume from that worktree's checked plan and reports. All verification fixes,
-the final application gate and live measurements are complete; whole-branch
-review remains. Stage 09 is `ready: true` on the feature branch;
+the final application gate and live measurements are complete. Whole-branch
+review returned Ready to merge with no new findings. Stage 09 is `ready: true` on the feature branch;
 local `develop` stays at W-3 **14/18**, W-6 **20/25**. No merge, push or
 deployment is authorized.
 
@@ -76,7 +76,9 @@ and a persisted five-check closing checklist. Final application checks at
 build, production audit **24/24** and development-console audit **1/1**.
 The [final verification](docs/superpowers/reports/2026-10-09-stage-09-final-verification.md)
 retains gate output, chapter coverage and 574 interacted-state observations.
-The task report retains raw TDD and teeth evidence. Whole-branch review is due.
+The task report retains raw TDD and teeth evidence.
+The [whole-branch review](docs/superpowers/reports/2026-10-12-stage-09-whole-branch-review.md)
+returned Ready to merge; the separate integration decision is due.
 Subagent-Driven remains recommended because each component's contracts can
 be reviewed before assembly. Execute one implementation task at a time.
 
@@ -101,7 +103,7 @@ The W-6 caching/scaling sheets remain separate.
    every hit is struck through and immediately corrected, not a live status.
 4. **Resume final verification from the isolated worktree's ledger.** All
    eight task slices are complete; do not redispatch them. Finish the
-   whole-branch review and integration handoff. The registered stage keeps
+   integration handoff. The registered stage keeps
    measurement ahead of optimization; its verification fixes are complete.
 5. **Keep W-6.4 separate.** Glossary and stack surfacing remains open; ask
    before any future merge into `develop`, and never merge or push to `main`.

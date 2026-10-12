@@ -5,7 +5,8 @@ Branch: `feat/stage-09-performance-port`. Execution method: Subagent-Driven.
 Status: all eight tasks and verification fixes implemented and independently
 reviewed. Final application gates and live measurements are complete; see
 [final verification](2026-10-09-stage-09-final-verification.md).
-Whole-branch review and the separate integration decision remain.
+[Whole-branch review](2026-10-12-stage-09-whole-branch-review.md) returned
+Ready to merge with no new findings. The separate integration decision remains.
 The user recorded progress in `adb2030`; its application tree matches the
 verified `c8b7349`. No merge or deployment occurred.
 

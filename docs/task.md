@@ -20,7 +20,7 @@ grep it by id, don't read it whole.
 typecheck and format. Stage 09's chapter revision and W-6 source research
 merged locally as `ad283ce`; the merged tree passed 1416 tests across 185
 files. Stage 09's twelve-panel port is ready on its feature branch, with
-final application gates complete and whole-branch review pending. It has
+final application gates complete and whole-branch review clean. It has
 not merged into `develop` or deployed.
 
 Stage 08 was chosen after the Stage 16 round. Its source review preceded the
@@ -144,10 +144,11 @@ implemented and independently reviewed on `feat/stage-09-performance-port`
 in `.worktrees/stage-09-performance-port`. Stage 09 is registered and ready
 on that branch. Final verification fixes passed independent review.
 The gate passed 1459 tests across 198 files, 24 production browser checks
-and the development-console audit. Whole-branch review and the separate
-integration decision remain.
+and the development-console audit. The independent whole-branch review
+returned Ready to merge, with no new findings. The separate integration
+decision remains.
 
-### W-3.16 — Stage 09 interactive port ◐ *(verified branch; final review due)*
+### W-3.16 — Stage 09 interactive port ◐ *(reviewed branch; awaiting integration)*
 
 Start from the [reviewed chapter](09-performance-optimization.md), its
 [design spec](superpowers/specs/2026-10-08-stage-09-performance-design.md),
@@ -162,6 +163,8 @@ the scratch progress ledger; the [execution report](superpowers/reports/2026-10-
 preserves TDD and review evidence. The
 [final verification](superpowers/reports/2026-10-09-stage-09-final-verification.md)
 records the full gate, 574 interacted-state measurements and chapter coverage.
+The [whole-branch review](superpowers/reports/2026-10-12-stage-09-whole-branch-review.md)
+covers all 54 changed files and records the remaining scope limits.
 
 The port should make the reader choose a user-visible outcome, define its
 start/end observer, record a comparable first baseline, distinguish checkout,

@@ -2,8 +2,9 @@
 
 Application checks ran on 2026-10-09 at `c8b7349`. The session resumed on
 2026-10-12 at `adb2030`; that intervening commit changes documentation only,
-and its diff against the tested application tree is empty. Final whole-branch
-review remains due. No merge or deployment occurred.
+and its diff against the tested application tree is empty. The
+[whole-branch review](2026-10-12-stage-09-whole-branch-review.md) returned
+Ready to merge with no new findings. No merge or deployment occurred.
 
 The feature branch registers twelve freely navigable, hash-addressable
 panels. Five outcome inspectors distinguish browser checkout, visible Paid
