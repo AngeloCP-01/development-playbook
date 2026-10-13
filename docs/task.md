@@ -14,7 +14,7 @@ grep it by id, don't read it whole.
 ## Overview
 
 **Current checkpoint (2026-10-13): Stage 09's interactive port merged locally
-into `develop` as `7a5576a`; its W-6 caching/scaling companions are next.**
+into `develop` as `7a5576a`; its W-6 caching/scaling design is in review.**
 W-3 is 15/18 and W-6 is 20/25. Stage 08's corrected chapter and ten-step port merged as
 `a03e190`; its `security` lookup sheet and original diagram followed as
 `739c8ed`. The latter's merged tree passed 1406 tests across 184 files, lint,
@@ -540,8 +540,15 @@ the feature branch was deleted. Evidence and
 deferrals are in the W-6.3p tracker row, source ledger, and
 `docs/superpowers/reports/2026-10-05-security-reference-sheet.md`.
 
-**W-6.3q — Stage 09 caching/scaling lookup companions ☐ (selected next,
+**W-6.3q — Stage 09 caching/scaling lookup companions ◐ (design review,
 2026-10-13)**
+
+The user approved practical decision guides with concrete examples. The
+[written spec](superpowers/specs/2026-10-13-stage-09-reference-design.md)
+is committed as `810af91` on `docs/2026-10-13-stage-09-reference-design`.
+It proposes five caching sections, four infrastructure-scaling sections and
+optional supporting citations. Written-spec approval precedes the implementation
+plan; no plan or product code has been written for this round.
 
 Follow the completed Stage 09 port with a bounded reference round under D-88.
 Start from [the gathered source audit](../reference/stage-09-performance-sources.md)

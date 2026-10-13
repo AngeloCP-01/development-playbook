@@ -3,7 +3,9 @@
 **Next-session handoff, 2026-10-13:** Stage 09's interactive port merged locally
 into `develop` as `7a5576a`. W-3 is **15/18**, W-6 is **20 drawn / 25 registered**.
 The user selected **W-6.3q: Stage 09 caching/scaling lookup companions** next.
-Their sources are gathered; sheet implementation has not started.
+Practical-guide breadth is approved; the [written spec](docs/superpowers/specs/2026-10-13-stage-09-reference-design.md)
+is committed as `810af91` and awaits review. No implementation plan or sheet code
+has been written.
 
 Open the next session in `/Users/angelito/personal/Development-Playbook`.
 Read task W-6.3q and the current tracker Next up entry, then
@@ -90,9 +92,10 @@ Stage 09's team-scaling section does not prescribe load balancing as a routine
 fix. Prefer original diagrams if needed; no gathered image has been selected
 or cleared for publication.
 
-The sheet boundaries and spec/plan need approval before implementation. Use
-brainstorming first, recheck the gathered first-party sources, and choose the
-execution approach after the plan exists. The earlier Subagent-Driven choice
+The written spec proposes five caching sections, four infrastructure-scaling
+sections and optional supporting citations in the existing renderer. Review that
+artifact before writing the implementation plan; choose the execution approach
+after the plan exists. Its source checks and self-review are complete. The earlier Subagent-Driven choice
 applied to the completed port. Read the existing reference renderer/data types,
 `web/PATTERNS.md`, `web/DESIGN.md` and `web/AGENTS.md` before writing web code.
 The site has no order backend; measurements in examples remain hypothetical.
@@ -112,8 +115,9 @@ The site has no order backend; measurements in examples remain hypothetical.
    The reference check must return nothing. The tracker currently has one
    historical struck-through hit in its 2026-09-08 W-3.12 row; verify that
    every hit is struck through and immediately corrected, not a live status.
-4. **Begin W-6.3q with brainstorming.** Confirm the caching/scaling lookup
-   boundaries from the gathered sources, then write the spec and plan. The
+4. **Resume W-6.3q at written-spec review.** Practical-guide breadth is already
+   approved. Read `docs/superpowers/specs/2026-10-13-stage-09-reference-design.md`;
+   get its review before writing the plan. The
    Stage 09 port's eight tasks, fixes, final review and live checks are complete;
    use their reports as evidence rather than redispatching the port plan.
 5. **Keep W-6.4 separate.** Glossary and stack surfacing remains open; ask
@@ -168,6 +172,13 @@ git ls-files reference/ | rg -iv "jpeg|jpg|png|webp|gif|\.md$"
 
 Fetch first if you need to compare against the current remote; otherwise the
 `origin/*` lines above describe the last fetched refs.
+
+**Current design checkout:** `docs/2026-10-13-stage-09-reference-design`, cut
+from local `develop` at `597fe0b`. Spec commit `810af91` is not merged; inspect
+the branch tip for subsequent records commits. The prior task/tracker/kickoff
+handoff merged as `597fe0b`, and its merged tree passed 1459 tests across 198
+files. No push or deployment occurred. Reuse the current design branch for
+review corrections; implementation isolation is chosen after plan approval.
 
 **Snapshot before the records merge, 2026-10-13:** local `develop` is
 `7a5576a`, 65 commits ahead of tracked `origin/develop` (`377c734`), and
