@@ -13,21 +13,23 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Integration handoff (2026-10-12): the user approved the Stage 09 no-ff
-merge into local `develop`.** This record takes effect with that merge:
+**Current checkpoint (2026-10-13): Stage 09's interactive port merged locally
+into `develop` as `7a5576a`; its W-6 caching/scaling companions are next.**
 W-3 is 15/18 and W-6 is 20/25. Stage 08's corrected chapter and ten-step port merged as
 `a03e190`; its `security` lookup sheet and original diagram followed as
 `739c8ed`. The latter's merged tree passed 1406 tests across 184 files, lint,
 typecheck and format. Stage 09's chapter revision and W-6 source research
 merged locally as `ad283ce`; the merged tree passed 1416 tests across 185
-files. Stage 09's twelve-panel port is ready on its feature branch, with
-final application gates complete and whole-branch review clean. The user
-approved its local integration; production promotion remains separate.
+files. Stage 09's twelve-panel port passed whole-branch review and the merged-tree
+gate: 1459 tests across 198 files, format, lint, typecheck and a fresh 50-page
+build. Its local feature branch and worktree were removed after verification.
+No push or production promotion occurred.
 
 Stage 08 was chosen after the Stage 16 round. Its source review preceded the
 port; `docs/superpowers/specs/2026-10-02-stage-08-security-audit-design.md`
-records the scope. After integration, stages 10, 17 and 18 remain; W-6.4 glossary/stack
-surfacing is a separate task.
+records the scope. Stages 10, 17 and 18 remain. The user selected W-6 for Stage 09
+on 2026-10-13; W-6.3q below records the next scope. W-6.4 glossary/stack surfacing
+is a separate task.
 
 Two deliverables from one body of content.
 
@@ -76,10 +78,10 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(14/18 merged to `develop`; four remain: 09, 10, 17 and 18. Stage 08 landed as `a03e190`.)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(15/18 merged to local `develop`; three remain: 10, 17 and 18. Stage 09 landed as `7a5576a`.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(20 of 25 registered sheets drawn on `develop` — `security` merged as `739c8ed`. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(20 of 25 registered sheets drawn on `develop` — `security` merged as `739c8ed`. Stage 09 caching/scaling companions are next, gathered but unregistered. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
 
 ### Dependency map
 
@@ -135,21 +137,24 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(15/18 after the approved Stage 09 integration; three remain: 10, 17 and 18. See tracker W-3.16 and its integration receipt.)*
+### W-3 — Stages 02–18 interactive ◐ *(15/18 merged to local `develop`; three remain: 10, 17 and 18. Stage 09 merged as `7a5576a`.)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
-**Current round:** Stage 09 interactive port. The user approved the eight-task
+**Latest completed round:** Stage 09 interactive port. The user approved the eight-task
 plan and selected Subagent-Driven execution on 2026-10-09. All eight tasks are
-implemented and independently reviewed on `feat/stage-09-performance-port`
-in `.worktrees/stage-09-performance-port`. Stage 09 is registered and ready
-on that branch. Final verification fixes passed independent review.
+implemented and independently reviewed before the approved no-ff merge
+`7a5576a` into local `develop` on 2026-10-12. Stage 09 is registered and ready.
+Final verification fixes passed independent review.
 The gate passed 1459 tests across 198 files, 24 production browser checks
 and the development-console audit. The independent whole-branch review
-returned Ready to merge, with no new findings. The separate integration
-decision was made: local merge into `develop`, 2026-10-12.
+returned Ready to merge, with no new findings. The merged tree then passed
+format, lint, typecheck, 1459 tests across 198 files and a fresh 50-page build.
+The browser results apply to the identical application tree; those suites were
+not rerun after merge. The local feature branch and worktree were removed.
+**Next selected round:** W-6.3q, Stage 09 caching/scaling companions.
 
-### W-3.16 — Stage 09 interactive port ☑ *(included in the approved local integration)*
+### W-3.16 — Stage 09 interactive port ☑ *(merged locally into `develop` as `7a5576a`, 2026-10-12)*
 
 Start from the [reviewed chapter](09-performance-optimization.md), its
 [design spec](superpowers/specs/2026-10-08-stage-09-performance-design.md),
@@ -177,10 +182,12 @@ event consumers as branches unless an explicit business rule makes them serial.
 Done for W-3.16 means the Stage 09 content is registered and `ready: true`,
 the doc-to-port coverage is checked, component-derived behavior has render
 tests, and both themes, responsive widths, touch targets and clean-console
-audits pass. The user approved that merge on 2026-10-12. The
+audits pass. These checks are complete, and the user-approved merge landed on
+2026-10-12. The
 [integration receipt](superpowers/reports/2026-10-12-stage-09-integration.md)
-travels with the no-ff merge and distinguishes the reviewed branch from the
-merged-tree verification.
+travelled with the no-ff merge. Actual post-merge results are recorded in the
+W-3.16 merged-tree tracker row; raw output remains in
+`.superpowers/sdd/2026-10-08-stage-09-interactive-port/merged-verification.md`.
 
 Deferred: the W-6 `caching` and `scaling` sheets, any third-party image,
 real ordering-system measurements, push and deployment.
@@ -532,6 +539,39 @@ captures, not published plates. The sheet adds one entry to the registry, so
 the feature branch was deleted. Evidence and
 deferrals are in the W-6.3p tracker row, source ledger, and
 `docs/superpowers/reports/2026-10-05-security-reference-sheet.md`.
+
+**W-6.3q — Stage 09 caching/scaling lookup companions ☐ (selected next,
+2026-10-13)**
+
+Follow the completed Stage 09 port with a bounded reference round under D-88.
+Start from [the gathered source audit](../reference/stage-09-performance-sources.md)
+and [the source ledger](../reference/cheatsheet-sources.md). Neither `caching`
+nor `scaling` is registered or drawn yet; selecting this scope leaves W-6 at
+**20 drawn / 25 registered**.
+
+Recommended approach: define the caching lookup first, since it directly supports
+Stage 09's measured-fix exercise, then bound scaling as a separate infrastructure
+lookup. Stage 09's team-scaling section does not prescribe load balancing as a
+routine performance fix. Prefer original diagrams if a visual helps; the gathered
+research did not select or clear an image for publication.
+
+- [ ] Recheck the gathered first-party sources and agree the sheet boundaries
+      through brainstorming before writing a spec or implementation plan
+- [ ] Define caching guidance that separates application-cache lifetime and
+      invalidation from CDN freshness and response status
+- [ ] Define scaling guidance around healthy-target routing, workload-dependent
+      algorithm choice, capacity limits and overload behavior
+- [ ] Write and approve the bounded spec/plan, then implement through TDD and
+      per-task review using the existing reference renderer and design system
+- [ ] Verify both themes, responsive layout, accessible content and production/
+      development consoles; complete whole-branch review before integration
+- [ ] Record actual registry/drawn counts and merge evidence after separately
+      approved integration; refresh the next-session handoff before use
+
+Deferred: W-3 stages 10, 17 and 18; W-6.4 glossary/stack surfacing; the five
+language sheets; image republication; real order benchmarks; shared-drill/storage
+repairs; push and production promotion. No W-6 implementation starts in this
+records update.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 

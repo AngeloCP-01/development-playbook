@@ -3,11 +3,12 @@
 **Purpose:** the log. What actually shipped, what was decided and why, and what
 debt was taken on. Scope and planning live in [task.md](task.md).
 
-**Last updated:** 2026-10-08
-**Current phase:** W-3 and W-6 remain open. Fourteen of eighteen stages are
-interactive on `develop` (01–08 and 11–16); four remain. Twenty of
+**Last updated:** 2026-10-13
+**Current phase:** W-3 and W-6 remain open. Fifteen of eighteen stages are
+interactive on local `develop` (01–09 and 11–16); stages 10, 17 and 18 remain. Twenty of
 twenty-five reference sheets are drawn on local `develop`, including Stage 08's
-`security` sheet.
+`security` sheet. The next selected scope is W-6.3q: Stage 09's caching/scaling
+lookup companions. Their sources are gathered; neither sheet is registered or drawn.
 Re-derive every count here rather than quoting it.
 
 **The site is live** at https://acp-dev-playbook.vercel.app and verifies itself with
@@ -85,6 +86,8 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-10-13 | W-6.3q (handoff) | **The user selected W-6 for Stage 09 as the next round.** `docs/task.md` records the caching/scaling companions, source-audit starting point and scope limits. This is a records update; implementation has not started. | [Gathered first-party sources](../reference/stage-09-performance-sources.md), [source ledger](../reference/cheatsheet-sources.md), task W-6.3q and the current Next up entry. The registry still has **20 drawn / 25 registered**; neither `caching` nor `scaling` is registered. W-3 stays **15/18** after merge `7a5576a`. Records checks: tracker-ledger guards **2/2**, counts rederived from the stage/cheatsheet registries, all eight added local links resolve, and `git diff --check` is clean. | **Sheet boundaries, approved spec/plan, TDD, review and live verification are still due.** Deferred: W-3 stages 10/17/18, five language sheets, W-6.4 glossary/stack surfacing, image republication, real order measurements, shared-drill/storage repairs, merge of this records branch, push and production promotion. |
+| 2026-10-12 | W-3.16 (merged-tree) | **Stage 09's reviewed twelve-panel interactive port merged locally into `develop` as `7a5576a`.** W-3 is **15/18**, with 10, 17 and 18 remaining; W-6 stays **20/25**. The local feature branch and worktree were removed after verification; all 458 scratch evidence files were preserved with matching SHA256 hashes. This completes the integration approved in the following row. | Approved no-ff merge `7a5576a` has parents `c99bf64` and `1c781a9`; its complete tree matched the feature tip. Post-merge format, lint, route typegen/TypeScript, **1459/1459 tests across 198 files** and a fresh **50-page build** all exited 0. Raw output is retained locally in `.superpowers/sdd/2026-10-08-stage-09-interactive-port/merged-verification.md`. The application tree matches reviewed `c8b7349`, so pre-merge **24/24 production audit**, **1/1 development-console audit** and **574/574 measured observations** remain applicable; the browser suites were not rerun after merge. [Whole-branch review](superpowers/reports/2026-10-12-stage-09-whole-branch-review.md): Ready to merge, no new findings. [Merge-carried receipt](superpowers/reports/2026-10-12-stage-09-integration.md). | **Not pushed or deployed.** `main` and the older remote feature branch were left unchanged. Deferred: caching/scaling sheets, image publication, real order benchmarks, shared-drill extraction and storage-hook repairs, and production promotion. |
 | 2026-10-12 | W-3.16 (integration) | **The user approved local no-ff integration of the reviewed Stage 09 feature into `develop`.** This receipt takes effect with that merge: W-3 becomes **15/18**, W-6 stays **20/25**; stages 10, 17 and 18 remain. | Reviewed feature `0842dea`, assembly `59b0e05`, final application `c8b7349`. [Integration receipt](superpowers/reports/2026-10-12-stage-09-integration.md) carries the merge-history query; [whole-branch review](superpowers/reports/2026-10-12-stage-09-whole-branch-review.md) is Ready to merge, zero new findings. Reviewed-branch evidence: 1459/1459 tests across 198 files, 24/24 production audit, 1/1 development-console audit and 574/574 measured observations. Merged-tree verification follows the approved merge; its actual log and SHA are recorded at handoff, without predicting a pass here. | **Local integration only; no push or deployment authorized.** Deferred: W-6 caching/scaling sheets, image publication, real order benchmarks, shared-drill extraction and storage-hook repairs, and promotion to `main`. |
 | 2026-10-12 | W-3.16 (verification) | **Stage 09's twelve-panel port and verification fixes are implemented and independently reviewed per task on `feat/stage-09-performance-port`.** It teaches five user clocks, committed baseline and diagnostic judgments, seven candidate fixes, a saved/exportable eleven-field own-app record and five closing checks. The independent whole-branch review returned **Ready to merge**, with no new findings. | Atomic registration `59b0e05`; final application tip `c8b7349`. Narrow shared fixes `915c991` (glossary resize) and `c8b7349` (Stepper state identity) have genuine DOM/browser RED, GREEN and isolated teeth, then independent review. The stale missing-rail fixture is repaired in `90da921`. At the unchanged application tree: **1459/1459 tests across 198 files**, format/lint/typecheck, 50-page build, production audit **24/24**, development-console audit **1/1**. Chrome's 546 manual snapshots plus 28 denied-state observations pass calculated AA and geometry: lowest text contrast **4.652:1**, largest revealed panel **3.324 screens** at 1024×768. [Whole-branch review](superpowers/reports/2026-10-12-stage-09-whole-branch-review.md) covers 30 commits / 54 files; fresh reviewed-head tests passed **1459/1459** on 2026-10-12. [Final raw gate output and coverage](superpowers/reports/2026-10-09-stage-09-final-verification.md); [task/fix transcripts and provenance](superpowers/reports/2026-10-08-stage-09-interactive-port.md). `adb2030` records the user's intervening documentation-only progress; tracked origin includes it. | **Not merged into `develop`, not deployed; the separate integration decision remains.** W-3 stays 14/18 on `develop`; W-6 stays 20/25. Deferred: caching/scaling sheets, image publication, real order benchmarks, shared-drill extraction and storage-hook repairs, further pushes and promotion to `main`. |
 | 2026-10-08 | W-3.16 (planned) | **Stage 09's port spec is approved and its implementation plan is written; execution has not started.** Eight task slices pair the hypothetical order exercise with a saved/exportable own-app record, preserving user clocks, baseline-before-fix ordering, diagnostic limits and comparable retest. | Spec `e4074f2`, approval record `0f51069`, plan `bb42a76` ([plan](superpowers/plans/2026-10-08-stage-09-interactive-port.md)). Thirty complete planned source blocks and five registry edits typechecked in memory; all 35 source/registry overlays linted with zero errors/warnings. Structural review checked all task interfaces and source blocks. Two JSX apostrophes were corrected before the final lint pass. The plan has 9 unit, 30 DOM and 4 browser test declarations; **these proposed tests were not executed during planning**. The existing tracker-ledger guard passed 2/2 after the records update. `web/` is unchanged and Stage 09 remains `ready: false`; W-3 is 14/18 and W-6 is 20/25. | **Written-plan review and execution-method selection precede implementation.** TDD runs, per-task/final reviews and live UI audits remain due. W-6 caching/scaling sheets, third-party images, real order measurements, older shared-drill/storage repairs, merge, push and production promotion stay separate. |
@@ -876,6 +879,35 @@ of new work, not assumed to survive from the last `git checkout`.
 ---
 
 ## Next up
+
+**2026-10-13: W-6 for Stage 09 is selected next.** The twelve-panel port merged
+locally into `develop` as `7a5576a` on 2026-10-12. W-3 is **15/18** and W-6 is
+**20 drawn / 25 registered**. The merged tree passed 1459 tests across 198 files,
+format, lint, typecheck and a fresh 50-page build. The local feature branch and
+worktree are removed; source and verification evidence are preserved. No push
+or deployment occurred.
+
+**Next checkpoint: W-6.3q, caching/scaling lookup companions.** Read the
+[gathered source audit](../reference/stage-09-performance-sources.md) and
+[source ledger](../reference/cheatsheet-sources.md), then agree a bounded scope
+through brainstorming before the spec/plan and TDD implementation. Neither
+sheet is registered or drawn, so the reference count has not advanced.
+
+Recommended approach: start with caching, which directly supports Stage 09's
+measured-fix exercise, and treat infrastructure scaling as a separate lookup.
+Preserve the distinction between application-cache invalidation and CDN
+freshness; routing and overload guidance must not become an automatic Stage 09
+fix. Prefer original diagrams if needed; no source image has been selected or
+cleared for publication. `KICKOFF.md` now carries this checkpoint; recheck its
+project and branch state before a new session uses it.
+
+Deferred: W-3 stages 10, 17 and 18; five language sheets; W-6.4 glossary/stack
+surfacing; Stage 16 document-review follow-ups and optional incident-record
+template; image publication and provenance; real order benchmarks;
+shared-drill/storage repairs; Stage 13 rollback wording repair; push and
+production promotion. Every merge still needs a separate user decision.
+
+**Historical next-up record, 2026-10-08 through 2026-10-12 (before the port merge):**
 
 **2026-10-08: Stage 09's researched chapter merged locally into `develop` as
 `ad283ce`.** W-3 remains **14/18** and W-6 **20/25**. The
