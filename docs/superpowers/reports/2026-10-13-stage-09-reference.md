@@ -2058,3 +2058,748 @@ Exit: 0. All 1481 tests passed across 203 files. Formatting, lint and generated-
 **Branch boundary:** Task commit `f1bb218`; reported full suite 1,481/1,481 across 203 files, lint/typecheck/format exit 0. Build and live-browser checks are pending later-task verification. Clean tree, trailer and ancestry remain controller-owned checks. NOT merged, NOT deployed.
 
 Controller resolution: Task 1 reviewed source ordering, helper freshness and real DOM/Markdown contracts remain in force; no shared renderer change in Task 2. Full live seven-link ordering/targets and catalogue counts are explicitly Task 4 checks, not missing Task 2 content. Approved spec/plan exist in this branch, develop ancestry check exited 0, exact coauthor trailer verified with git log, tracked tree and diff check clean. Registration, generated snapshots and combined browser/records evidence remain pending Task 4. Task 2: review clean.
+
+## Task 3: infrastructure scaling lookup
+
+Base: `8e2a5c03b8015dc5fc8e54e6ae7ee4195d005114`. Branch: `feat/stage-09-reference-companions`. Worktree: `.worktrees/stage-09-reference`.
+
+Added the supplied static scaling data and tests before registration. The sheet distinguishes infrastructure from team practice, keeps ALB feature incompatibilities beside routing choices, explains fail-open health behavior and shared dependency limits, and retains bounded retries and reconciliation for uncertain writes or charges. Source order is AWS attributes, AWS health, Google SRE overload. The command is a literal read-only teaching example, not executed by the app.
+
+RED failed for the expected missing implementation: both suites could not import `scaling.ts`. This is an import/setup failure, not behavioral proof. The later teeth run supplies that proof. Initial GREEN passed 8/8.
+
+Teeth check: temporarily replaced `it fails open and can route to them regardless of health status` with `it blocks all traffic to unhealthy targets` and ran the whole unit file. Exactly `failed health checks are not a guarantee of zero traffic when ALB fails open` failed; the other five tests passed. The failure was for the right reason: the rendered data falsely promised blocked traffic instead of ALB fail-open routing. Restored the original prose and both files returned to 8/8 GREEN.
+
+Humanizer review: draft and final retain the approved prose verbatim. No remaining filler, inflated claims, dramatic fragments or em/en dashes warrant rewriting. Provider-specific caveats, ALB abbreviation, percentile population, authorization/payment safety and timeout reconciliation are factual requirements. These were preserved; terminal evidence is exempt from the prose review. First-party provenance was rechecked by the controller in `controller-source-check.md` on 2026-10-13; this task makes no infrastructure experiment claim.
+
+Self-review: checked all three authored files against the brief. No registry, shared renderer, generated markdown, configuration, stage content or dependency edits. The DOM tests exercise the real renderer, verify the stage link, all three credits, the read-only AWS command and the consequential safety text. Unit guards cover limits, algorithm compatibility, health, retries and outcome verification.
+
+Concerns: no task-local concern identified. Independent task review remains controller-owned.
+
+Deferred: Task 4 registration, generated snapshots/markdown, tracker/task/KICKOFF updates, combined live-build contrast, responsive/touch and production/development console verification. No merge, push or deployment.
+
+### red
+
+Command from `web/`: `pnpm exec vitest run src/lib/cheatsheets/scaling.test.ts src/components/ScalingReference.test.tsx`. Exit: 1.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+
+ ❯ |unit| src/lib/cheatsheets/scaling.test.ts (0 test)
+ ❯ |dom| src/components/ScalingReference.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/lib/cheatsheets/scaling.test.ts [ src/lib/cheatsheets/scaling.test.ts ]
+Error: Cannot find module './scaling' imported from /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web/src/lib/cheatsheets/scaling.test.ts
+ ❯ src/lib/cheatsheets/scaling.test.ts:2:1
+      1| import { expect, test } from 'vitest'
+      2| import { scaling } from './scaling'
+       | ^
+      3| import { sheetSources } from './sheet-sources'
+      4| const rows = scaling.sections.flatMap((section) => section.rows)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  |dom| src/components/ScalingReference.test.tsx [ src/components/ScalingReference.test.tsx ]
+Error: Failed to resolve import "@/lib/cheatsheets/scaling" from "src/components/ScalingReference.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web/src/components/ScalingReference.test.tsx:3:24
+  1  |  import { render, screen, within } from "@testing-library/react";
+  2  |  import { expect, test } from "vitest";
+  3  |  import { scaling } from "@/lib/cheatsheets/scaling";
+     |                           ^
+  4  |  import { CheatsheetView } from "./Cheatsheet";
+  5  |  var _jsxFileName = "/Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web/src/components/Sc...
+ ❯ TransformPluginContext._formatLog node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30416:39
+ ❯ TransformPluginContext.error node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30413:14
+ ❯ normalizeUrl node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27438:18
+ ❯ node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27506:30
+ ❯ TransformPluginContext.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27474:4
+ ❯ EnvironmentPluginContainer.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30201:14
+ ❯ loadAndTransform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:20124:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  no tests
+   Start at  13:43:31
+   Duration  1.07s (transform 40ms, setup 154ms, import 0ms, tests 0ms, environment 741ms)
+
+
+```
+
+### green
+
+Command from `web/`: `pnpm exec vitest run src/lib/cheatsheets/scaling.test.ts src/components/ScalingReference.test.tsx`. Exit: 0.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+
+
+ Test Files  2 passed (2)
+      Tests  8 passed (8)
+   Start at  13:43:46
+   Duration  1.70s (transform 235ms, setup 151ms, import 394ms, tests 232ms, environment 815ms)
+
+
+```
+
+### teeth
+
+Command from `web/`: `pnpm exec vitest run src/lib/cheatsheets/scaling.test.ts`. Exit: 1.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+
+ ❯ |unit| src/lib/cheatsheets/scaling.test.ts (6 tests | 1 failed) 8ms
+   × failed health checks are not a guarantee of zero traffic when ALB fails open 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/lib/cheatsheets/scaling.test.ts > failed health checks are not a guarantee of zero traffic when ALB fails open
+AssertionError: expected 'ALB normally routes to healthy target…' to match /all registered targets are unhealthy.…/
+
+- Expected:
+/all registered targets are unhealthy.*fails open.*regardless of health/
+
++ Received:
+"ALB normally routes to healthy targets. If all registered targets are unhealthy, it blocks all traffic to unhealthy targets."
+
+ ❯ src/lib/cheatsheets/scaling.test.ts:38:52
+     36| })
+     37| test('failed health checks are not a guarantee of zero traffic when AL…
+     38|   expect(find('Health checks and fail-open').what).toMatch(
+       |                                                    ^
+     39|     /all registered targets are unhealthy.*fails open.*regardless of h…
+     40|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  13:44:05
+   Duration  171ms (transform 29ms, setup 0ms, import 40ms, tests 8ms, environment 0ms)
+
+
+```
+
+### restored-green
+
+Command from `web/`: `pnpm exec vitest run src/lib/cheatsheets/scaling.test.ts src/components/ScalingReference.test.tsx`. Exit: 0.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+
+
+ Test Files  2 passed (2)
+      Tests  8 passed (8)
+   Start at  13:44:09
+   Duration  1.52s (transform 182ms, setup 122ms, import 319ms, tests 221ms, environment 773ms)
+
+
+```
+
+### Task 3 gate
+
+Full suite: 1,489/1,489 tests across 205 files. Format, lint and typecheck exited 0. No failed tests, warnings or errors observed in the gate output. `git diff --check` exited 0; tracked changes are limited to the canonical evidence report and the three Task 3 files. Build and live-browser checks remain deferred until registration.
+
+#### format
+
+Command from `web/`: `pnpm format`. Exit: 0.
+
+```text
+
+> web@0.1.0 format /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+> prettier --write .
+
+.prettierrc 37ms (unchanged)
+e2e/audit-pages.spec.ts 62ms (unchanged)
+e2e/audit-pages.ts 22ms (unchanged)
+e2e/audit.spec.ts 151ms (unchanged)
+e2e/count-expandables.mjs 38ms (unchanged)
+e2e/dev-console.spec.ts 15ms (unchanged)
+e2e/global-setup.ts 5ms (unchanged)
+e2e/panel-states.ts 27ms (unchanged)
+e2e/performance.spec.ts 87ms (unchanged)
+e2e/smoke.spec.ts 24ms (unchanged)
+eslint.config.mjs 4ms (unchanged)
+next.config.ts 3ms (unchanged)
+package.json 3ms (unchanged)
+playwright.config.ts 10ms (unchanged)
+playwright.dev.ts 3ms (unchanged)
+playwright.prod.ts 2ms (unchanged)
+pnpm-workspace.yaml 8ms (unchanged)
+postcss.config.mjs 3ms (unchanged)
+skills-lock.json 3ms (unchanged)
+src/app/deploy-config.test.ts 62ms (unchanged)
+src/app/globals.css 134ms (unchanged)
+src/app/layout.tsx 35ms (unchanged)
+src/app/page.tsx 13ms (unchanged)
+src/app/public-assets.test.ts 7ms (unchanged)
+src/app/reference/[slug]/page.tsx 4ms (unchanged)
+src/app/reference/page.tsx 13ms (unchanged)
+src/app/robots.ts 3ms (unchanged)
+src/app/seo.test.ts 12ms (unchanged)
+src/app/sitemap.ts 3ms (unchanged)
+src/app/stages/[slug]/page.tsx 14ms (unchanged)
+src/components/AnnotatedArtifact.tsx 6ms (unchanged)
+src/components/artifact.test.ts 2ms (unchanged)
+src/components/artifact.ts 3ms (unchanged)
+src/components/ArtifactControls.tsx 6ms (unchanged)
+src/components/CachingReference.test.tsx 9ms (unchanged)
+src/components/Cheatsheet.test.tsx 27ms (unchanged)
+src/components/Cheatsheet.tsx 16ms (unchanged)
+src/components/CheatsheetSources.test.tsx 12ms (unchanged)
+src/components/Figure.tsx 3ms (unchanged)
+src/components/InlineCode.test.tsx 13ms (unchanged)
+src/components/InlineCode.tsx 6ms (unchanged)
+src/components/References.test.tsx 3ms (unchanged)
+src/components/References.tsx 9ms (unchanged)
+src/components/RevealFacet.source.test.ts 7ms (unchanged)
+src/components/RevealFacet.test.tsx 5ms (unchanged)
+src/components/RevealFacet.tsx 5ms (unchanged)
+src/components/RevealList.test.tsx 35ms (unchanged)
+src/components/RevealList.tsx 8ms (unchanged)
+src/components/ScalingReference.test.tsx 3ms (unchanged)
+src/components/Sidebar.test.tsx 8ms (unchanged)
+src/components/Sidebar.tsx 25ms (unchanged)
+src/components/stepper-numbering.test.ts 2ms (unchanged)
+src/components/Stepper.test.tsx 6ms (unchanged)
+src/components/Stepper.tsx 21ms (unchanged)
+src/components/TeamNotes.tsx 4ms (unchanged)
+src/components/term-visuals.tsx 8ms (unchanged)
+src/components/Term.test.tsx 11ms (unchanged)
+src/components/Term.tsx 10ms (unchanged)
+src/components/ThemeToggle.tsx 4ms (unchanged)
+src/components/TitleBlock.tsx 5ms (unchanged)
+src/components/ui.tsx 6ms (unchanged)
+src/features/architecture/ADRAnatomy.tsx 7ms (unchanged)
+src/features/architecture/ai-plays.test.ts 13ms (unchanged)
+src/features/architecture/ai-plays.ts 4ms (unchanged)
+src/features/architecture/AIArchitecturePlays.tsx 13ms (unchanged)
+src/features/architecture/ArchCarryForward.tsx 9ms (unchanged)
+src/features/architecture/Architecture.tsx 65ms (unchanged)
+src/features/architecture/AuthPaths.tsx 8ms (unchanged)
+src/features/architecture/AuthzPatterns.tsx 9ms (unchanged)
+src/features/architecture/BoundaryMap.tsx 6ms (unchanged)
+src/features/architecture/CharacteristicPicker.tsx 7ms (unchanged)
+src/features/architecture/characteristics-store.test.ts 2ms (unchanged)
+src/features/architecture/characteristics-store.ts 2ms (unchanged)
+src/features/architecture/characteristics.test.ts 13ms (unchanged)
+src/features/architecture/characteristics.ts 6ms (unchanged)
+src/features/architecture/concurrency.test.ts 12ms (unchanged)
+src/features/architecture/concurrency.ts 6ms (unchanged)
+src/features/architecture/ContractCost.tsx 4ms (unchanged)
+src/features/architecture/contracts.test.ts 33ms (unchanged)
+src/features/architecture/contracts.ts 8ms (unchanged)
+src/features/architecture/DataFlow.tsx 6ms (unchanged)
+src/features/architecture/ddl-sync.test.ts 6ms (unchanged)
+src/features/architecture/defer.test.ts 12ms (unchanged)
+src/features/architecture/defer.ts 7ms (unchanged)
+src/features/architecture/DeferredList.tsx 3ms (unchanged)
+src/features/architecture/DeleteBehaviour.tsx 2ms (unchanged)
+src/features/architecture/DeploymentStyles.tsx 2ms (unchanged)
+src/features/architecture/DomainSketch.tsx 3ms (unchanged)
+src/features/architecture/DomainWorksheet.tsx 8ms (unchanged)
+src/features/architecture/DriftDiagram.tsx 4ms (unchanged)
+src/features/architecture/ERView.tsx 3ms (unchanged)
+src/features/architecture/EvolutionNotes.tsx 1ms (unchanged)
+src/features/architecture/evolve.test.ts 6ms (unchanged)
+src/features/architecture/evolve.ts 3ms (unchanged)
+src/features/architecture/ExpandContract.tsx 11ms (unchanged)
+src/features/architecture/FitnessExamples.tsx 2ms (unchanged)
+src/features/architecture/IdempotencyBlock.tsx 3ms (unchanged)
+src/features/architecture/InternalOrganisation.tsx 6ms (unchanged)
+src/features/architecture/IsolationLevels.tsx 6ms (unchanged)
+src/features/architecture/LockingChoice.tsx 5ms (unchanged)
+src/features/architecture/LockingStrategies.tsx 2ms (unchanged)
+src/features/architecture/ModelInterrogation.test.tsx 3ms (unchanged)
+src/features/architecture/ModelInterrogation.tsx 6ms (unchanged)
+src/features/architecture/normal-forms.test.ts 8ms (unchanged)
+src/features/architecture/normal-forms.ts 2ms (unchanged)
+src/features/architecture/Normalisation.tsx 2ms (unchanged)
+src/features/architecture/OneAppCosts.tsx 2ms (unchanged)
+src/features/architecture/PartialUniqueIndex.tsx 2ms (unchanged)
+src/features/architecture/ResiliencePatterns.tsx 3ms (unchanged)
+src/features/architecture/ReversibilityAxis.tsx 8ms (unchanged)
+src/features/architecture/ReversibilityTable.tsx 12ms (unchanged)
+src/features/architecture/RouteShape.tsx 4ms (unchanged)
+src/features/architecture/ScalingMoves.test.tsx 2ms (unchanged)
+src/features/architecture/ScalingMoves.tsx 5ms (unchanged)
+src/features/architecture/schema-blocks.test.ts 13ms (unchanged)
+src/features/architecture/schema-blocks.ts 5ms (unchanged)
+src/features/architecture/SchemaInspector.test.tsx 2ms (unchanged)
+src/features/architecture/SchemaInspector.tsx 5ms (unchanged)
+src/features/architecture/scoring.test.ts 25ms (unchanged)
+src/features/architecture/scoring.ts 20ms (unchanged)
+src/features/architecture/sketch.test.ts 34ms (unchanged)
+src/features/architecture/sketch.ts 12ms (unchanged)
+src/features/architecture/soft-delete.test.ts 4ms (unchanged)
+src/features/architecture/soft-delete.ts 4ms (unchanged)
+src/features/architecture/SoftDelete.tsx 2ms (unchanged)
+src/features/architecture/SplitTrigger.tsx 6ms (unchanged)
+src/features/architecture/steps.ts 1ms (unchanged)
+src/features/architecture/styles.test.ts 7ms (unchanged)
+src/features/architecture/styles.ts 4ms (unchanged)
+src/features/architecture/SyncAsync.tsx 3ms (unchanged)
+src/features/architecture/SystemSketch.tsx 4ms (unchanged)
+src/features/architecture/TraceForward.tsx 2ms (unchanged)
+src/features/architecture/YourCharacteristics.tsx 4ms (unchanged)
+src/features/ci-cd/ai-plays.test.ts 5ms (unchanged)
+src/features/ci-cd/ai-plays.ts 2ms (unchanged)
+src/features/ci-cd/AIPlays.test.tsx 2ms (unchanged)
+src/features/ci-cd/AIPlays.tsx 3ms (unchanged)
+src/features/ci-cd/ci-artifact.test.ts 2ms (unchanged)
+src/features/ci-cd/ci-artifact.ts 3ms (unchanged)
+src/features/ci-cd/CiCd.test.tsx 3ms (unchanged)
+src/features/ci-cd/CiCd.tsx 17ms (unchanged)
+src/features/ci-cd/dependabot-artifact.test.ts 3ms (unchanged)
+src/features/ci-cd/dependabot-artifact.ts 2ms (unchanged)
+src/features/ci-cd/doc-source.ts 1ms (unchanged)
+src/features/ci-cd/e2e-artifact.test.ts 3ms (unchanged)
+src/features/ci-cd/e2e-artifact.ts 2ms (unchanged)
+src/features/ci-cd/ordering-exercise.test.ts 4ms (unchanged)
+src/features/ci-cd/ordering-exercise.ts 3ms (unchanged)
+src/features/ci-cd/OrderingExercise.test.tsx 5ms (unchanged)
+src/features/ci-cd/OrderingExercise.tsx 7ms (unchanged)
+src/features/ci-cd/prose.test.ts 6ms (unchanged)
+src/features/ci-cd/scaling.ts 2ms (unchanged)
+src/features/ci-cd/steps.test.ts 1ms (unchanged)
+src/features/ci-cd/steps.ts 1ms (unchanged)
+src/features/ci-cd/traps.test.ts 3ms (unchanged)
+src/features/ci-cd/traps.ts 1ms (unchanged)
+src/features/code-review/ai-plays.test.ts 2ms (unchanged)
+src/features/code-review/ai-plays.ts 2ms (unchanged)
+src/features/code-review/AIPlays.test.tsx 2ms (unchanged)
+src/features/code-review/AIPlays.tsx 2ms (unchanged)
+src/features/code-review/checklist-items.test.ts 2ms (unchanged)
+src/features/code-review/checklist-items.ts 3ms (unchanged)
+src/features/code-review/CodeReview.tsx 12ms (unchanged)
+src/features/code-review/CodeReviewChecklist.test.tsx 2ms (unchanged)
+src/features/code-review/CodeReviewChecklist.tsx 7ms (unchanged)
+src/features/code-review/doc-source.ts 1ms (unchanged)
+src/features/code-review/done.test.ts 2ms (unchanged)
+src/features/code-review/done.ts 1ms (unchanged)
+src/features/code-review/pr-template.test.ts 2ms (unchanged)
+src/features/code-review/pr-template.ts 1ms (unchanged)
+src/features/code-review/prose.test.ts 6ms (unchanged)
+src/features/code-review/review-areas.test.ts 2ms (unchanged)
+src/features/code-review/review-areas.ts 1ms (unchanged)
+src/features/code-review/review-drill.test.ts 2ms (unchanged)
+src/features/code-review/review-drill.ts 2ms (unchanged)
+src/features/code-review/ReviewDrill.test.tsx 7ms (unchanged)
+src/features/code-review/ReviewDrill.tsx 4ms (unchanged)
+src/features/code-review/self-review.test.ts 3ms (unchanged)
+src/features/code-review/self-review.ts 1ms (unchanged)
+src/features/code-review/SelfReviewMatch.test.tsx 5ms (unchanged)
+src/features/code-review/SelfReviewMatch.tsx 5ms (unchanged)
+src/features/code-review/severity-drill.test.ts 3ms (unchanged)
+src/features/code-review/severity-drill.ts 2ms (unchanged)
+src/features/code-review/SeverityDrill.test.tsx 4ms (unchanged)
+src/features/code-review/SeverityDrill.tsx 6ms (unchanged)
+src/features/code-review/steps.test.ts 2ms (unchanged)
+src/features/code-review/steps.ts 1ms (unchanged)
+src/features/code-review/team.test.ts 2ms (unchanged)
+src/features/code-review/team.ts 1ms (unchanged)
+src/features/code-review/traps.test.ts 5ms (unchanged)
+src/features/code-review/traps.ts 2ms (unchanged)
+src/features/development/ai-plays.test.ts 4ms (unchanged)
+src/features/development/ai-plays.ts 2ms (unchanged)
+src/features/development/AIPlays.test.tsx 2ms (unchanged)
+src/features/development/AIPlays.tsx 3ms (unchanged)
+src/features/development/artifacts.test.ts 4ms (unchanged)
+src/features/development/artifacts.ts 8ms (unchanged)
+src/features/development/AuthorizationDrill.test.tsx 12ms (unchanged)
+src/features/development/AuthorizationDrill.tsx 6ms (unchanged)
+src/features/development/checklist.test.ts 8ms (unchanged)
+src/features/development/checklist.ts 2ms (unchanged)
+src/features/development/ClientBoundary.test.tsx 5ms (unchanged)
+src/features/development/ClientBoundary.tsx 8ms (unchanged)
+src/features/development/DevChecklist.test.tsx 8ms (unchanged)
+src/features/development/DevChecklist.tsx 6ms (unchanged)
+src/features/development/Development.tsx 31ms (unchanged)
+src/features/development/doc-source.ts 1ms (unchanged)
+src/features/development/loop.test.ts 4ms (unchanged)
+src/features/development/loop.ts 2ms (unchanged)
+src/features/development/LoopFlow.test.tsx 5ms (unchanged)
+src/features/development/LoopFlow.tsx 4ms (unchanged)
+src/features/development/prose.test.ts 6ms (unchanged)
+src/features/development/snippets.test.ts 3ms (unchanged)
+src/features/development/snippets.ts 2ms (unchanged)
+src/features/development/steps.test.ts 1ms (unchanged)
+src/features/development/steps.ts 1ms (unchanged)
+src/features/development/traps.test.ts 2ms (unchanged)
+src/features/development/traps.ts 1ms (unchanged)
+src/features/discovery/AIWorkflow.tsx 5ms (unchanged)
+src/features/discovery/DiscoveryFlow.tsx 6ms (unchanged)
+src/features/discovery/OpportunityTree.tsx 7ms (unchanged)
+src/features/discovery/PipelineFit.tsx 3ms (unchanged)
+src/features/discovery/ProductDiscovery.tsx 15ms (unchanged)
+src/features/discovery/QuestionLab.tsx 9ms (unchanged)
+src/features/discovery/SeverityScorer.tsx 4ms (unchanged)
+src/features/discovery/steps.test.ts 1ms (unchanged)
+src/features/discovery/steps.ts 1ms (unchanged)
+src/features/discovery/Toolkit.tsx 6ms (unchanged)
+src/features/discovery/ValidationLadder.tsx 3ms (unchanged)
+src/features/discovery/WorkedExample.tsx 6ms (unchanged)
+src/features/discovery/Worksheet.tsx 9ms (unchanged)
+src/features/incident-management/IncidentChecklist.tsx 9ms (unchanged)
+src/features/incident-management/IncidentManagement.tsx 1ms (unchanged)
+src/features/incident-management/NudgeRehearsal.tsx 10ms (unchanged)
+src/features/incident-management/panels-followup.tsx 19ms (unchanged)
+src/features/incident-management/panels-response.tsx 12ms (unchanged)
+src/features/incident-management/steps.ts 1ms (unchanged)
+src/features/observability/ai-plays.test.ts 3ms (unchanged)
+src/features/observability/ai-plays.ts 2ms (unchanged)
+src/features/observability/AIPlays.test.tsx 2ms (unchanged)
+src/features/observability/AIPlays.tsx 2ms (unchanged)
+src/features/observability/alert-triage.test.ts 3ms (unchanged)
+src/features/observability/alert-triage.ts 2ms (unchanged)
+src/features/observability/artifacts.test.ts 4ms (unchanged)
+src/features/observability/artifacts.ts 4ms (unchanged)
+src/features/observability/checklist.test.ts 3ms (unchanged)
+src/features/observability/checklist.ts 6ms (unchanged)
+src/features/observability/doc-source.ts 1ms (unchanged)
+src/features/observability/drill-types.ts 2ms (unchanged)
+src/features/observability/Drill.test.tsx 6ms (unchanged)
+src/features/observability/Drill.tsx 14ms (unchanged)
+src/features/observability/log-levels.test.ts 3ms (unchanged)
+src/features/observability/log-levels.ts 2ms (unchanged)
+src/features/observability/Observability.test.tsx 5ms (unchanged)
+src/features/observability/Observability.tsx 1ms (unchanged)
+src/features/observability/ObservabilityChecklist.test.tsx 4ms (unchanged)
+src/features/observability/ObservabilityChecklist.tsx 5ms (unchanged)
+src/features/observability/panels-act.test.tsx 4ms (unchanged)
+src/features/observability/panels-act.tsx 43ms (unchanged)
+src/features/observability/panels-collect.test.tsx 12ms (unchanged)
+src/features/observability/panels-collect.tsx 27ms (unchanged)
+src/features/observability/prose.test.ts 2ms (unchanged)
+src/features/observability/scrubber.test.ts 4ms (unchanged)
+src/features/observability/scrubber.ts 2ms (unchanged)
+src/features/observability/signals.test.ts 3ms (unchanged)
+src/features/observability/signals.ts 1ms (unchanged)
+src/features/observability/silence.test.ts 3ms (unchanged)
+src/features/observability/silence.ts 1ms (unchanged)
+src/features/observability/steps.test.ts 1ms (unchanged)
+src/features/observability/steps.ts 1ms (unchanged)
+src/features/observability/traps.test.ts 3ms (unchanged)
+src/features/observability/traps.ts 1ms (unchanged)
+src/features/performance/artifacts.ts 1ms (unchanged)
+src/features/performance/baseline.ts 2ms (unchanged)
+src/features/performance/BaselineLab.test.tsx 4ms (unchanged)
+src/features/performance/BaselineLab.tsx 6ms (unchanged)
+src/features/performance/checklist.test.ts 2ms (unchanged)
+src/features/performance/checklist.ts 1ms (unchanged)
+src/features/performance/content.test.ts 2ms (unchanged)
+src/features/performance/content.ts 3ms (unchanged)
+src/features/performance/CopyText.tsx 2ms (unchanged)
+src/features/performance/DecisionDrill.test.tsx 7ms (unchanged)
+src/features/performance/DecisionDrill.tsx 7ms (unchanged)
+src/features/performance/decisions.test.ts 6ms (unchanged)
+src/features/performance/decisions.ts 8ms (unchanged)
+src/features/performance/journey.ts 3ms (unchanged)
+src/features/performance/OrderJourney.test.tsx 5ms (unchanged)
+src/features/performance/OrderJourney.tsx 7ms (unchanged)
+src/features/performance/panels-close.tsx 4ms (unchanged)
+src/features/performance/panels-diagnose.tsx 6ms (unchanged)
+src/features/performance/panels-measure.tsx 4ms (unchanged)
+src/features/performance/panels.test.tsx 9ms (unchanged)
+src/features/performance/PerformanceChecklist.test.tsx 5ms (unchanged)
+src/features/performance/PerformanceChecklist.tsx 10ms (unchanged)
+src/features/performance/PerformanceOptimization.test.tsx 11ms (unchanged)
+src/features/performance/PerformanceOptimization.tsx 1ms (unchanged)
+src/features/performance/PerformanceWorksheet.test.tsx 11ms (unchanged)
+src/features/performance/PerformanceWorksheet.tsx 6ms (unchanged)
+src/features/performance/steps.ts 4ms (unchanged)
+src/features/planning/AIPlanningPlays.tsx 8ms (unchanged)
+src/features/planning/CarryForward.tsx 4ms (unchanged)
+src/features/planning/CutFunnel.tsx 4ms (unchanged)
+src/features/planning/CutTable.tsx 5ms (unchanged)
+src/features/planning/DecompositionLadder.tsx 7ms (unchanged)
+src/features/planning/DoneStatement.tsx 21ms (unchanged)
+src/features/planning/HorizonBands.tsx 13ms (unchanged)
+src/features/planning/HorizonBoard.tsx 2ms (unchanged)
+src/features/planning/HorizonTriage.tsx 14ms (unchanged)
+src/features/planning/PlanAnatomy.tsx 6ms (unchanged)
+src/features/planning/Planning.tsx 30ms (unchanged)
+src/features/planning/PlanningScope.tsx 3ms (unchanged)
+src/features/planning/PlanWorksheet.tsx 8ms (unchanged)
+src/features/planning/RiskOrder.tsx 5ms (unchanged)
+src/features/planning/scoring.test.ts 16ms (unchanged)
+src/features/planning/scoring.ts 8ms (unchanged)
+src/features/planning/SizeScorer.tsx 6ms (unchanged)
+src/features/planning/SliceAnatomy.tsx 2ms (unchanged)
+src/features/planning/SliceSequencer.tsx 9ms (unchanged)
+src/features/planning/SpikeCard.tsx 10ms (unchanged)
+src/features/planning/steps.test.ts 1ms (unchanged)
+src/features/planning/steps.ts 1ms (unchanged)
+src/features/post-deployment-verification/ai-plays.test.ts 4ms (unchanged)
+src/features/post-deployment-verification/ai-plays.ts 1ms (unchanged)
+src/features/post-deployment-verification/AIPlays.test.tsx 2ms (unchanged)
+src/features/post-deployment-verification/AIPlays.tsx 2ms (unchanged)
+src/features/post-deployment-verification/aws-verification.test.ts 5ms (unchanged)
+src/features/post-deployment-verification/aws-verification.ts 2ms (unchanged)
+src/features/post-deployment-verification/checklist.test.ts 3ms (unchanged)
+src/features/post-deployment-verification/checklist.ts 2ms (unchanged)
+src/features/post-deployment-verification/doc-source.ts 1ms (unchanged)
+src/features/post-deployment-verification/PostDeploymentVerification.test.tsx 3ms (unchanged)
+src/features/post-deployment-verification/PostDeploymentVerification.tsx 13ms (unchanged)
+src/features/post-deployment-verification/prose.test.ts 2ms (unchanged)
+src/features/post-deployment-verification/steps.test.ts 1ms (unchanged)
+src/features/post-deployment-verification/steps.ts 1ms (unchanged)
+src/features/post-deployment-verification/traps.test.ts 3ms (unchanged)
+src/features/post-deployment-verification/traps.ts 1ms (unchanged)
+src/features/post-deployment-verification/VerificationChecklist.test.tsx 5ms (unchanged)
+src/features/post-deployment-verification/VerificationChecklist.tsx 9ms (unchanged)
+src/features/production-deployment/ai-plays.test.ts 2ms (unchanged)
+src/features/production-deployment/ai-plays.ts 2ms (unchanged)
+src/features/production-deployment/AIPlays.test.tsx 2ms (unchanged)
+src/features/production-deployment/AIPlays.tsx 2ms (unchanged)
+src/features/production-deployment/aws-data.test.ts 2ms (unchanged)
+src/features/production-deployment/aws-data.ts 2ms (unchanged)
+src/features/production-deployment/checklist.test.ts 3ms (unchanged)
+src/features/production-deployment/checklist.ts 2ms (unchanged)
+src/features/production-deployment/DeploymentChecklist.test.tsx 2ms (unchanged)
+src/features/production-deployment/DeploymentChecklist.tsx 4ms (unchanged)
+src/features/production-deployment/doc-source.ts 1ms (unchanged)
+src/features/production-deployment/migration-artifact.test.ts 1ms (unchanged)
+src/features/production-deployment/migration-artifact.ts 1ms (unchanged)
+src/features/production-deployment/pipeline-artifact.test.ts 2ms (unchanged)
+src/features/production-deployment/pipeline-artifact.ts 1ms (unchanged)
+src/features/production-deployment/ProductionDeployment.test.tsx 2ms (unchanged)
+src/features/production-deployment/ProductionDeployment.tsx 17ms (unchanged)
+src/features/production-deployment/prose.test.ts 2ms (unchanged)
+src/features/production-deployment/steps.test.ts 1ms (unchanged)
+src/features/production-deployment/steps.ts 1ms (unchanged)
+src/features/production-deployment/traps.test.ts 3ms (unchanged)
+src/features/production-deployment/traps.ts 4ms (unchanged)
+src/features/rails.test.tsx 3ms (unchanged)
+src/features/security-audit/content.ts 2ms (unchanged)
+src/features/security-audit/IdorProbe.tsx 2ms (unchanged)
+src/features/security-audit/PolicyMatrix.tsx 3ms (unchanged)
+src/features/security-audit/SecurityAudit.test.tsx 6ms (unchanged)
+src/features/security-audit/SecurityAudit.tsx 13ms (unchanged)
+src/features/setup/ai-plays.test.ts 5ms (unchanged)
+src/features/setup/ai-plays.ts 1ms (unchanged)
+src/features/setup/AIPlays.test.tsx 2ms (unchanged)
+src/features/setup/AIPlays.tsx 7ms (unchanged)
+src/features/setup/AnnotatedArtifact.test.tsx 6ms (unchanged)
+src/features/setup/artifact-affordances.test.tsx 6ms (unchanged)
+src/features/setup/artifacts.test.ts 4ms (unchanged)
+src/features/setup/artifacts.ts 7ms (unchanged)
+src/features/setup/blockers.test.ts 3ms (unchanged)
+src/features/setup/blockers.ts 2ms (unchanged)
+src/features/setup/checklist.test.ts 5ms (unchanged)
+src/features/setup/checklist.ts 2ms (unchanged)
+src/features/setup/client-trap.test.ts 3ms (unchanged)
+src/features/setup/client-trap.ts 1ms (unchanged)
+src/features/setup/ClientTrap.test.tsx 6ms (unchanged)
+src/features/setup/ClientTrap.tsx 11ms (unchanged)
+src/features/setup/DeployBlockers.test.tsx 12ms (unchanged)
+src/features/setup/DeployBlockers.tsx 5ms (unchanged)
+src/features/setup/doc-source.ts 1ms (unchanged)
+src/features/setup/env-restart.test.ts 2ms (unchanged)
+src/features/setup/PinExercise.test.tsx 9ms (unchanged)
+src/features/setup/PinExercise.tsx 7ms (unchanged)
+src/features/setup/pins.test.ts 4ms (unchanged)
+src/features/setup/pins.ts 1ms (unchanged)
+src/features/setup/Setup.test.tsx 3ms (unchanged)
+src/features/setup/Setup.tsx 36ms (unchanged)
+src/features/setup/SetupChecklist.test.tsx 4ms (unchanged)
+src/features/setup/SetupChecklist.tsx 5ms (unchanged)
+src/features/setup/steps.test.ts 2ms (unchanged)
+src/features/setup/steps.ts 1ms (unchanged)
+src/features/setup/traps.test.ts 3ms (unchanged)
+src/features/setup/traps.ts 1ms (unchanged)
+src/features/setup/tree.test.ts 4ms (unchanged)
+src/features/setup/tree.ts 3ms (unchanged)
+src/features/setup/TreeInspector.test.tsx 7ms (unchanged)
+src/features/setup/TreeInspector.tsx 5ms (unchanged)
+src/features/stage-08-port.test.tsx 2ms (unchanged)
+src/features/stage-16-port.test.tsx 18ms (unchanged)
+src/features/stage-content.ts 2ms (unchanged)
+src/features/staging/ai-plays.test.ts 3ms (unchanged)
+src/features/staging/ai-plays.ts 4ms (unchanged)
+src/features/staging/AIPlays.test.tsx 3ms (unchanged)
+src/features/staging/AIPlays.tsx 8ms (unchanged)
+src/features/staging/checklist-items.test.ts 3ms (unchanged)
+src/features/staging/checklist-items.tsx 2ms (unchanged)
+src/features/staging/checklist.test.ts 5ms (unchanged)
+src/features/staging/checklist.ts 1ms (unchanged)
+src/features/staging/doc-source.ts 1ms (unchanged)
+src/features/staging/PreviewOrStaging.test.tsx 6ms (unchanged)
+src/features/staging/PreviewOrStaging.tsx 4ms (unchanged)
+src/features/staging/prose.test.ts 2ms (unchanged)
+src/features/staging/scenarios.test.ts 2ms (unchanged)
+src/features/staging/scenarios.ts 4ms (unchanged)
+src/features/staging/seed-data.test.ts 2ms (unchanged)
+src/features/staging/seed-data.ts 1ms (unchanged)
+src/features/staging/Staging.test.tsx 2ms (unchanged)
+src/features/staging/Staging.tsx 27ms (unchanged)
+src/features/staging/StagingChecklist.test.tsx 31ms (unchanged)
+src/features/staging/StagingChecklist.tsx 9ms (unchanged)
+src/features/staging/steps.test.ts 3ms (unchanged)
+src/features/staging/steps.ts 2ms (unchanged)
+src/features/staging/traps.test.ts 3ms (unchanged)
+src/features/staging/traps.ts 2ms (unchanged)
+src/features/step-ids.ts 4ms (unchanged)
+src/features/testing/ai-plays.test.ts 3ms (unchanged)
+src/features/testing/ai-plays.ts 4ms (unchanged)
+src/features/testing/AIPlays.test.tsx 2ms (unchanged)
+src/features/testing/AIPlays.tsx 6ms (unchanged)
+src/features/testing/artifacts.test.ts 4ms (unchanged)
+src/features/testing/artifacts.ts 4ms (unchanged)
+src/features/testing/checklist.test.ts 4ms (unchanged)
+src/features/testing/checklist.ts 3ms (unchanged)
+src/features/testing/doc-source.ts 1ms (unchanged)
+src/features/testing/layers.test.ts 8ms (unchanged)
+src/features/testing/layers.ts 2ms (unchanged)
+src/features/testing/LayerThread.test.tsx 2ms (unchanged)
+src/features/testing/LayerThread.tsx 5ms (unchanged)
+src/features/testing/probes.test.ts 2ms (unchanged)
+src/features/testing/probes.ts 1ms (unchanged)
+src/features/testing/prose.test.ts 7ms (unchanged)
+src/features/testing/steps.test.ts 1ms (unchanged)
+src/features/testing/steps.ts 1ms (unchanged)
+src/features/testing/teeth.test.ts 2ms (unchanged)
+src/features/testing/teeth.ts 1ms (unchanged)
+src/features/testing/TeethCheck.test.tsx 7ms (unchanged)
+src/features/testing/TeethCheck.tsx 9ms (unchanged)
+src/features/testing/Testing.test.tsx 3ms (unchanged)
+src/features/testing/Testing.tsx 19ms (unchanged)
+src/features/testing/TestingChecklist.test.tsx 3ms (unchanged)
+src/features/testing/TestingChecklist.tsx 6ms (unchanged)
+src/features/testing/traps.test.ts 2ms (unchanged)
+src/features/testing/traps.ts 2ms (unchanged)
+src/features/testing/triage.test.ts 5ms (unchanged)
+src/features/testing/triage.ts 3ms (unchanged)
+src/features/testing/TriageDrill.test.tsx 4ms (unchanged)
+src/features/testing/TriageDrill.tsx 7ms (unchanged)
+src/lib/architecture-sheet.test.ts 3ms (unchanged)
+src/lib/architecture-sheet.ts 3ms (unchanged)
+src/lib/cheatsheets/api-design.ts 2ms (unchanged)
+src/lib/cheatsheets/architecture-patterns.ts 2ms (unchanged)
+src/lib/cheatsheets/aws-deployment.ts 3ms (unchanged)
+src/lib/cheatsheets/caching.test.ts 6ms (unchanged)
+src/lib/cheatsheets/caching.ts 2ms (unchanged)
+src/lib/cheatsheets/ci-cd.ts 4ms (unchanged)
+src/lib/cheatsheets/clean-code.ts 4ms (unchanged)
+src/lib/cheatsheets/code-review.ts 2ms (unchanged)
+src/lib/cheatsheets/coding-standards.ts 1ms (unchanged)
+src/lib/cheatsheets/deployment-environments.ts 1ms (unchanged)
+src/lib/cheatsheets/design-patterns.ts 2ms (unchanged)
+src/lib/cheatsheets/generate-highlighted.test.ts 1ms (unchanged)
+src/lib/cheatsheets/generate-highlighted.ts 2ms (unchanged)
+src/lib/cheatsheets/git-branching.ts 3ms (unchanged)
+src/lib/cheatsheets/git-cheatsheet.ts 3ms (unchanged)
+src/lib/cheatsheets/git-commands.ts 3ms (unchanged)
+src/lib/cheatsheets/github-actions.ts 4ms (unchanged)
+src/lib/cheatsheets/incident-management.ts 2ms (unchanged)
+src/lib/cheatsheets/index.test.ts 18ms (unchanged)
+src/lib/cheatsheets/index.ts 3ms (unchanged)
+src/lib/cheatsheets/planned.ts 1ms (unchanged)
+src/lib/cheatsheets/playwright.ts 3ms (unchanged)
+src/lib/cheatsheets/post-deploy-verification.ts 9ms (unchanged)
+src/lib/cheatsheets/render-citations.test.ts 3ms (unchanged)
+src/lib/cheatsheets/render.test.ts 1ms (unchanged)
+src/lib/cheatsheets/render.ts 5ms (unchanged)
+src/lib/cheatsheets/scaling.test.ts 4ms (unchanged)
+src/lib/cheatsheets/scaling.ts 2ms (unchanged)
+src/lib/cheatsheets/sdlc.ts 2ms (unchanged)
+src/lib/cheatsheets/security.ts 2ms (unchanged)
+src/lib/cheatsheets/sheet-sources.test.ts 3ms (unchanged)
+src/lib/cheatsheets/sheet-sources.ts 1ms (unchanged)
+src/lib/cheatsheets/solid-principles.ts 2ms (unchanged)
+src/lib/cheatsheets/testing.ts 2ms (unchanged)
+src/lib/cheatsheets/types.ts 3ms (unchanged)
+src/lib/discovery-sheet.test.ts 3ms (unchanged)
+src/lib/discovery-sheet.ts 2ms (unchanged)
+src/lib/glossary.test.ts 2ms (unchanged)
+src/lib/glossary.ts 2ms (unchanged)
+src/lib/highlight.test.ts 3ms (unchanged)
+src/lib/highlight.ts 3ms (unchanged)
+src/lib/performance-sheet.test.ts 2ms (unchanged)
+src/lib/performance-sheet.ts 3ms (unchanged)
+src/lib/references.test.ts 4ms (unchanged)
+src/lib/references.ts 7ms (unchanged)
+src/lib/site.test.ts 2ms (unchanged)
+src/lib/site.ts 1ms (unchanged)
+src/lib/source-citations.test.ts 6ms (unchanged)
+src/lib/stage-03-structure.test.ts 8ms (unchanged)
+src/lib/stage-08-structure.test.ts 2ms (unchanged)
+src/lib/stage-09-structure.test.ts 27ms (unchanged)
+src/lib/stage-15-structure.test.ts 20ms (unchanged)
+src/lib/stage-16-structure.test.ts 7ms (unchanged)
+src/lib/stage-metadata.test.ts 3ms (unchanged)
+src/lib/stages.test.ts 5ms (unchanged)
+src/lib/stages.ts 13ms (unchanged)
+src/lib/term-usage.test.ts 7ms (unchanged)
+src/lib/terms.test.ts 4ms (unchanged)
+src/lib/terms.ts 27ms (unchanged)
+src/lib/tracker-ledger.test.ts 5ms (unchanged)
+src/lib/typography.test.ts 5ms (unchanged)
+src/lib/useLocalStorage.ts 4ms (unchanged)
+src/test/build-freshness.test.ts 3ms (unchanged)
+src/test/build-freshness.ts 7ms (unchanged)
+src/test/doc-source.test.ts 3ms (unchanged)
+src/test/doc-source.ts 3ms (unchanged)
+src/test/harness.test.ts 3ms (unchanged)
+src/test/localstorage-polyfill.ts 3ms (unchanged)
+src/test/setup.ts 1ms (unchanged)
+tsconfig.json 1ms (unchanged)
+vitest.config.ts 1ms (unchanged)
+
+```
+
+#### lint
+
+Command from `web/`: `pnpm lint`. Exit: 0.
+
+```text
+
+> web@0.1.0 lint /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+> eslint --max-warnings 0
+
+
+```
+
+#### typecheck
+
+Command from `web/`: `pnpm typecheck`. Exit: 0.
+
+```text
+
+> web@0.1.0 typecheck /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+> next typegen && tsc --noEmit
+
+Generating route types...
+✓ Types generated successfully
+
+```
+
+#### full-suite
+
+Command from `web/`: `pnpm test --run`. Exit: 0.
+
+```text
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+> vitest run --run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+
+
+ Test Files  205 passed (205)
+      Tests  1489 passed (1489)
+   Start at  13:45:11
+   Duration  73.51s (transform 29.36s, setup 38.05s, import 70.97s, tests 146.02s, environment 190.32s)
+
+
+```
