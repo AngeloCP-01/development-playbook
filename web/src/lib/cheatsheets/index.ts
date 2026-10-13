@@ -28,6 +28,7 @@ export type {
   RowExample,
   Section,
   Source,
+  SourceCitation,
   SourceImage,
 } from './types'
 export { CHEATSHEET_GROUPS, isDrawn } from './types'

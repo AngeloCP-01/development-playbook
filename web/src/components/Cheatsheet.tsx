@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { ArrowUpRight } from 'lucide-react'
 import { isDrawn, type Cheatsheet } from '@/lib/cheatsheets'
 import { getStage } from '@/lib/stages'
+import { sheetSources } from '@/lib/cheatsheets/sheet-sources'
 
 /**
  * One renderer for every sheet, so sheet number twelve costs no new UI.
@@ -17,6 +18,7 @@ import { getStage } from '@/lib/stages'
  */
 export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
   const stage = sheet.stage ? getStage(sheet.stage) : undefined
+  const sources = sheetSources(sheet)
 
   return (
     <div>
@@ -165,30 +167,29 @@ export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
         </figure>
       )}
 
-      {sheet.source && (
+      {sources.length > 0 && (
         <footer className="mt-16 border-t border-line pt-6">
-          <p className="t-label text-subtle">Source</p>
-          <p className="mt-2 text-sm leading-relaxed text-muted">
-            {sheet.source.url ? (
-              // The first source in this registry to carry a url — every
-              // earlier sheet left this branch dead. min-h-11 is needed here
-              // and not on the "belongs to stage" link above because that one
-              // sits alone on its own line; this one shares a line with the
-              // author text after it, which the touch-target audit reads as
-              // "not inline in a sentence" once that text is its own element
-              // rather than a bare text node — inline-flex keeps the target
-              // tall without breaking that shared line.
-              <a
-                href={sheet.source.url}
-                className="inline-flex min-h-11 items-center underline decoration-line-strong underline-offset-4 transition-colors duration-150 hover:text-fg"
-              >
-                {sheet.source.title}
-              </a>
-            ) : (
-              sheet.source.title
-            )}
-            <span> — {sheet.source.author}</span>
+          <p className="t-label text-subtle">
+            {sources.length === 1 ? 'Source' : 'Sources'}
           </p>
+          {sources.map((citation, index) => (
+            <p
+              key={`${index}:${citation.title}`}
+              className="mt-2 text-sm leading-relaxed text-muted"
+            >
+              {citation.url ? (
+                <a
+                  href={citation.url}
+                  className="inline-flex min-h-11 items-center underline decoration-line-strong underline-offset-4 transition-colors duration-150 hover:text-fg"
+                >
+                  {citation.title}
+                </a>
+              ) : (
+                citation.title
+              )}
+              <span> — {citation.author}</span>
+            </p>
+          ))}
         </footer>
       )}
     </div>

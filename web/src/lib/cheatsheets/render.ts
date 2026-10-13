@@ -1,4 +1,5 @@
 import { getStage } from '@/lib/stages'
+import { sheetSources } from './sheet-sources'
 import { CHEATSHEETS, cheatsheetsByGroup } from './index'
 import { CHEATSHEET_GROUPS, isDrawn, type Cheatsheet } from './types'
 
@@ -24,7 +25,6 @@ function renderSheet(sheet: Cheatsheet): string {
 
   if (!isDrawn(sheet)) {
     lines.push('*Not drawn yet.*', '')
-    return lines.join('\n')
   }
 
   for (const section of sheet.sections) {
@@ -51,7 +51,7 @@ function renderSheet(sheet: Cheatsheet): string {
     lines.push('')
   }
 
-  if (sheet.source?.image?.origin === 'original') {
+  if (isDrawn(sheet) && sheet.source?.image?.origin === 'original') {
     lines.push(
       `![${sheet.source.image.alt}](../web/public${sheet.source.image.src})`,
       '',
@@ -60,11 +60,13 @@ function renderSheet(sheet: Cheatsheet): string {
     )
   }
 
-  if (sheet.source) {
-    const title = sheet.source.url
-      ? `[${sheet.source.title}](${sheet.source.url})`
-      : sheet.source.title
-    lines.push(`Source: ${title} — ${sheet.source.author}.`, '')
+  const sources = sheetSources(sheet)
+  if (sources.length > 1) lines.push('Sources:', '')
+  for (const citation of sources) {
+    const title = citation.url
+      ? `[${citation.title}](${citation.url})`
+      : citation.title
+    lines.push(`Source: ${title} — ${citation.author}.`, '')
   }
 
   return lines.join('\n')
