@@ -898,8 +898,8 @@ measured-fix exercise, and treat infrastructure scaling as a separate lookup.
 Preserve the distinction between application-cache invalidation and CDN
 freshness; routing and overload guidance must not become an automatic Stage 09
 fix. Prefer original diagrams if needed; no source image has been selected or
-cleared for publication. Refresh `KICKOFF.md` from this checkpoint before a
-new session uses it.
+cleared for publication. `KICKOFF.md` now carries this checkpoint; recheck its
+project and branch state before a new session uses it.
 
 Deferred: W-3 stages 10, 17 and 18; five language sheets; W-6.4 glossary/stack
 surfacing; Stage 16 document-review follow-ups and optional incident-record

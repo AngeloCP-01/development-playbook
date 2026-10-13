@@ -1,14 +1,15 @@
 # Kickoff — Development Playbook
 
-**Integration handoff, 2026-10-12:** the user approved the Stage 09 feature's
-local no-ff merge into `develop`. This handoff travels with that merge and
-applies to its resulting tree. W-3 becomes **15/18**, W-6 stays **20/25**.
-Stages 10, 17 and 18 remain; no next round has been selected.
+**Next-session handoff, 2026-10-13:** Stage 09's interactive port merged locally
+into `develop` as `7a5576a`. W-3 is **15/18**, W-6 is **20 drawn / 25 registered**.
+The user selected **W-6.3q: Stage 09 caching/scaling lookup companions** next.
+Their sources are gathered; sheet implementation has not started.
 
 Open the next session in `/Users/angelito/personal/Development-Playbook`.
-Read the [integration receipt](docs/superpowers/reports/2026-10-12-stage-09-integration.md)
-and the final review before starting new work. Query the merge SHA and current
-refs; the feature worktree is removed only after merged-tree verification.
+Read task W-6.3q and the current tracker Next up entry, then
+[the Stage 09 source audit](reference/stage-09-performance-sources.md).
+The completed port's local branch and worktree are removed; its evidence is
+preserved. Recheck current refs before creating the next work branch.
 
 Update the *Project state* section before pasting — a stale kickoff is worse than none,
 because it is trusted.
@@ -44,13 +45,13 @@ Before doing anything, read these for context:
   during its own execution — the D-52 fix the plan pre-authorized covered one panel,
   and the real number was four.
 
-### Project state (verified 2026-10-12; recheck before work)
+### Project state (verified 2026-10-13; recheck before work)
 
-After the approved merge, stages 01–09 and 11–16 are interactive on local
+Stages 01–09 and 11–16 are interactive on local
 `develop` (**15/18**); 10, 17 and 18 remain. Stage 08's port merged as `a03e190`. W-6 has **20 of
 25** registered sheets drawn, including Stage 08's `security` sheet, merged
 as `739c8ed`. Stage 09's revised chapter and source audit merged as
-`ad283ce`; its twelve-panel port is included in this approved integration.
+`ad283ce`; its twelve-panel port merged as `7a5576a` on 2026-10-12.
 
 The Stage 09 chapter opens with an order journey and teaches the first
 measurement before any fix. It separates browser checkout latency, payment
@@ -60,29 +61,41 @@ measurements. A cold-reader pass and whole-branch review found and resolved
 timeout-denominator and user-clock gaps. The raw evidence and deferrals are in
 `docs/superpowers/reports/2026-10-08-stage-09-chapter.md`.
 
-W-3.16 now has an approved port spec at
-`docs/superpowers/specs/2026-10-08-stage-09-interactive-port-design.md` and a
-written plan at `docs/superpowers/plans/2026-10-08-stage-09-interactive-port.md`.
-The user approved the plan and selected Subagent-Driven execution on
-2026-10-09. All eight tasks passed independent review. The feature branch
-contains twelve registered panels, a saved/exportable eleven-field record
-and a persisted five-check closing checklist. Final application checks at
-`c8b7349`: **1459 tests across 198 files**, format/lint/typecheck, 50-page
-build, production audit **24/24** and development-console audit **1/1**.
+**W-3.16 is complete.** All eight implementation tasks and verification fixes
+passed independent review; the final whole-branch review returned Ready to merge.
+The merged tree passed **1459 tests across 198 files**, format/lint/typecheck
+and a fresh **50-page build**. The application tree matches reviewed `c8b7349`;
+its pre-merge production audit **24/24**, development-console audit **1/1** and
+574 measured observations remain evidence for that unchanged application.
+Those browser suites were not repeated after merge.
 The [final verification](docs/superpowers/reports/2026-10-09-stage-09-final-verification.md)
-retains gate output, chapter coverage and 574 interacted-state observations.
-The task report retains raw TDD and teeth evidence.
-The [whole-branch review](docs/superpowers/reports/2026-10-12-stage-09-whole-branch-review.md)
-returned Ready to merge. The user selected local integration on 2026-10-12;
-the integration receipt distinguishes reviewed-branch evidence from the
-merged-tree checks that follow.
-Subagent-Driven remains recommended because each component's contracts can
-be reviewed before assembly. Execute one implementation task at a time.
+retains gate output and chapter coverage. The completed
+[execution report](docs/superpowers/reports/2026-10-08-stage-09-interactive-port.md)
+retains raw TDD and teeth evidence. Consult the
+[whole-branch review](docs/superpowers/reports/2026-10-12-stage-09-whole-branch-review.md)
+only if a new scope overlaps a recorded deferral. Raw merged-tree output remains
+in `.superpowers/sdd/2026-10-08-stage-09-interactive-port/merged-verification.md`.
 
-Read the canonical chapter, `web/PATTERNS.md`, `web/DESIGN.md` and
-`web/AGENTS.md` as well as the port spec and plan before writing code. The
-site has no ordering backend, so exercise data remains visibly hypothetical.
-The W-6 caching/scaling sheets remain separate.
+**Next round: W-6.3q.** Start from
+`reference/stage-09-performance-sources.md` and `reference/cheatsheet-sources.md`,
+with `docs/09-performance-optimization.md` as the chapter boundary. Neither
+`caching` nor `scaling` is in the registry, so adding drawn sheets changes both
+the drawn count and the total. Five registered language sheets and W-6.4
+glossary/stack surfacing remain separate.
+
+Recommended approach: define caching first because it directly supports
+Stage 09's measured-fix exercise, then bound scaling as an infrastructure
+lookup. Keep application-cache invalidation distinct from CDN freshness.
+Stage 09's team-scaling section does not prescribe load balancing as a routine
+fix. Prefer original diagrams if needed; no gathered image has been selected
+or cleared for publication.
+
+The sheet boundaries and spec/plan need approval before implementation. Use
+brainstorming first, recheck the gathered first-party sources, and choose the
+execution approach after the plan exists. The earlier Subagent-Driven choice
+applied to the completed port. Read the existing reference renderer/data types,
+`web/PATTERNS.md`, `web/DESIGN.md` and `web/AGENTS.md` before writing web code.
+The site has no order backend; measurements in examples remain hypothetical.
 
 **Start here, in order:**
 
@@ -99,10 +112,10 @@ The W-6 caching/scaling sheets remain separate.
    The reference check must return nothing. The tracker currently has one
    historical struck-through hit in its 2026-09-08 W-3.12 row; verify that
    every hit is struck through and immediately corrected, not a live status.
-4. **Do not redispatch the Stage 09 tasks.** All eight tasks, their fixes,
-   final review and live checks are complete. Consult the integration receipt
-   and recorded merged-tree output for the landing evidence. Choose the next
-   scope with the user rather than starting another port automatically.
+4. **Begin W-6.3q with brainstorming.** Confirm the caching/scaling lookup
+   boundaries from the gathered sources, then write the spec and plan. The
+   Stage 09 port's eight tasks, fixes, final review and live checks are complete;
+   use their reports as evidence rather than redispatching the port plan.
 5. **Keep W-6.4 separate.** Glossary and stack surfacing remains open; ask
    before any future merge into `develop`, and never merge or push to `main`.
 
@@ -112,10 +125,10 @@ The W-6 caching/scaling sheets remain separate.
 
 Full detail lives in `docs/tracker.md` and `docs/tracker-archive.md`; grep them by ID.
 
-- **Stages 01–09 and 11–16 are interactive after this integration.** 03 is 22 steps, 04
+- **Stages 01–09 and 11–16 are interactive on local `develop`.** 03 is 22 steps, 04
   is 15, 05 is 13, 06 is 8, 07 is 6, 11 is 8, 12 is 6, 13 is 8 (platform-aware), 14 is 6,
   15 is 16 (after the D-52 reshape), and 16 is 14; Stage 08 is 10 and Stage 09 is 12.
-  Coverage walks ran on 03–06, 09 and 11–14. After this integration, stages 10, 17 and 18
+  Coverage walks ran on 03–06, 09 and 11–14. Stages 10, 17 and 18
   render a "sheet not drawn" placeholder; routing works for all 18.
 - **The standard review loop has per-task and whole-branch reviews.** The user
   chose one whole-branch review for the Stage 16 port to reduce ceremony;
@@ -156,13 +169,14 @@ git ls-files reference/ | rg -iv "jpeg|jpg|png|webp|gif|\.md$"
 Fetch first if you need to compare against the current remote; otherwise the
 `origin/*` lines above describe the last fetched refs.
 
-**Integration snapshot, prepared 2026-10-12:** target `develop` was
-`c99bf64`; reviewed feature tip was `0842dea`. The subsequent receipt commit
-changes documentation only. This record is carried by the approved no-ff
-merge, so its own SHA and current ahead counts must be queried using the
-commands above. `main` stays `d659d32`; tracked `origin/develop` was `377c734`
-without a fresh fetch. The user previously pushed the feature through
-`adb2030`; this local integration does not authorize another push.
+**Snapshot before the records merge, 2026-10-13:** local `develop` is
+`7a5576a`, 65 commits ahead of tracked `origin/develop` (`377c734`), and
+209 ahead of `main`; `main` (`d659d32`) is 2 ahead of `develop`. No fresh fetch
+was performed. The user authorized merging the records branch
+`docs/2026-10-13-stage-09-w6-handoff`, including this kickoff refresh, into
+local `develop`. Its merge SHA and resulting ahead counts must be queried
+using the commands above after integration. The user previously pushed the
+port feature through `adb2030`; this records merge authorizes no push or deploy.
 
 The planning branch `docs/2026-10-08-stage-09-port-design` remains at `112aa42`.
 The separate handoff branch's scope was reconciled without merging that branch.
@@ -181,7 +195,7 @@ Notes for whoever is preparing this handoff:
 - **Open the session on the right model** (`CLAUDE.md` → *Session model*): Opus for a
   brainstorm/spec/plan session, Sonnet for execution, doc rounds and tracker refreshes.
   The global default is Sonnet at medium effort since 2026-09-10 (Pro budget).
-- **Untracked and deliberately parked**: `reference/10-sql-concepts.md` and
+- **Tracked and deliberately parked**: `reference/10-sql-concepts.md` and
   `reference/rest-api-best-practices.md` — hand-written drafts for `sql-reference` and
   `api-reference`, gathered without an image, not yet registered.
 - Open threads worth carrying forward:
@@ -200,7 +214,7 @@ Notes for whoever is preparing this handoff:
   - **Ten observability captures are tracked in `reference/` with no provenance.** Ask
     for authors and URLs before registering any of them. (The five text sources that fed
     the doc's prose *are* registered, since 2026-09-11.)
-  - **`sql-reference`/`api-reference` still parked**, untracked
+  - **`sql-reference`/`api-reference` still parked**, tracked drafts
     (`reference/10-sql-concepts.md`, `reference/rest-api-best-practices.md`).
   - **The tracker/task split now has two archives.** `docs/tracker-archive.md` and the
     new `docs/task-archive.md` — grep either by ID, don't assume a section is only in
