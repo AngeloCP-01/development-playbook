@@ -1958,3 +1958,103 @@ Command (from `web/`): `pnpm test`
 ```
 
 Exit: 0. All 1481 tests passed across 203 files. Formatting, lint and generated-route typecheck also exited 0.
+
+## Task 2 independent review
+
+### Spec Compliance
+
+- ✅ Spec compliant for the Task 2 slice. All three requested source/test files and the required execution-report update appear in the packaged diff. No missing, extra or misunderstood implementation was found.
+- ✅ Task quality: Approved. Task verdict: review clean; no findings.
+- Review bounds: BASE `78c137fc96eb24e32c186021a8cdf49f6efb6b23`, HEAD `f1bb218217647f1ed0a180c218db4328ed523617`; package `.superpowers/sdd/2026-10-13-stage-09-reference/review-78c137f..f1bb218.diff:1`. The package identifies one commit, four changed files, and 1,046 added lines; 749 lines are required execution evidence, not production complexity.
+
+### Criterion and evidence checklist
+
+| Requirement | Result and evidence |
+| --- | --- |
+| Create the caching data module and both named test files | ✅ Complete added-file hunks for `web/src/lib/cheatsheets/caching.ts:1`, `web/src/lib/cheatsheets/caching.test.ts:1`, and `web/src/components/CachingReference.test.tsx:1`. |
+| Consume Task 1 interfaces | ✅ Type-only `Cheatsheet` import and typed export at `web/src/lib/cheatsheets/caching.ts:1`; unit tests use `sheetSources` at `web/src/lib/cheatsheets/caching.test.ts:3`; DOM tests import the actual `CheatsheetView` at `web/src/components/CachingReference.test.tsx:4`. Shared-interface implementation remains a Task 1 item. |
+| Exact exported identity and ownership | ✅ `caching`, title `Caching`, slug `caching`, group `Architecture`, and stage `09-performance-optimization` at `web/src/lib/cheatsheets/caching.ts:3`. Stage is asserted at `web/src/lib/cheatsheets/caching.test.ts:10`; the real stage-link target is asserted at `web/src/components/CachingReference.test.tsx:20`. |
+| Five agreed sections in authored order | ✅ Data at `web/src/lib/cheatsheets/caching.ts:48`, `:70`, `:103`, `:124`, and `:160`; exact ordered section-title assertion at `web/src/lib/cheatsheets/caching.test.ts:12`. |
+| Choose reusable work using measured user-path evidence | ✅ Reusable public-description candidate and measured slow-path caveat at `web/src/lib/cheatsheets/caching.ts:53`. |
+| Preserve authoritative stock, charge and authorization checks | ✅ Business-boundary caveat at `web/src/lib/cheatsheets/caching.ts:58`; data assertion at `web/src/lib/cheatsheets/caching.test.ts:31`. |
+| Ownership-aware inputs do not grant tenant access; test multiple readers | ✅ Product/locale/tenant inputs, authorization boundary, and two-user/tenant check at `web/src/lib/cheatsheets/caching.ts:63`; assertions at `web/src/lib/cheatsheets/caching.test.ts:32`. |
+| Define TTL and retention; do not promise persistence | ✅ Plain-language definitions at `web/src/lib/cheatsheets/caching.ts:71`; instance-local/ephemeral host caveat at `:96`, asserted at `web/src/lib/cheatsheets/caching.test.ts:73`. |
+| Teach `cacheComponents` without enabling caching here | ✅ Teaching-only explanation at `web/src/lib/cheatsheets/caching.ts:74`; no `next.config.ts` hunk in the complete four-file package. |
+| Explain eligible `use cache` scope and external request-specific inputs | ✅ Function/component/module directive scope and outside-scope cookies/headers advice at `web/src/lib/cheatsheets/caching.ts:79`. |
+| Literal illustrative example, lifetime, tags, safe public read | ✅ Example label and string at `web/src/lib/cheatsheets/caching.ts:84`; literal string contains async function, directive, `cacheLife('minutes')`, product tag, encoded URL input, non-OK response error, and a restricted `{ id, description }` return. Syntax assertions at `web/src/lib/cheatsheets/caching.test.ts:69`; real rendered code assertions at `web/src/components/CachingReference.test.tsx:40`. |
+| Tags and lifetime match tolerated staleness, not authorization | ✅ `web/src/lib/cheatsheets/caching.ts:91`. |
+| Invalidate only after successful writes; do not promise all open browsers refresh | ✅ Invalidation note at `web/src/lib/cheatsheets/caching.ts:104`; successful-write condition also appears in the `updateTag` row at `:109`. |
+| `updateTag` is Server Actions only; next matching read waits for fresh data | ✅ Exact caller/freshness limits at `web/src/lib/cheatsheets/caching.ts:107`; data assertions at `web/src/lib/cheatsheets/caching.test.ts:20`; actual rendered row assertions at `web/src/components/CachingReference.test.tsx:6`. |
+| `revalidateTag(tag, 'max')` supports tolerated stale/background reads, without eager refresh | ✅ `web/src/lib/cheatsheets/caching.ts:112`; stale/background assertion at `web/src/lib/cheatsheets/caching.test.ts:23`. |
+| Route Handler immediate expiry uses `{ expire: 0 }`; avoid deprecated single argument | ✅ `web/src/lib/cheatsheets/caching.ts:117`; unit assertion at `web/src/lib/cheatsheets/caching.test.ts:26`; real-renderer assertion at `web/src/components/CachingReference.test.tsx:16`. |
+| Explain CDN abbreviation and distinguish Cloudflare responses from Next.js entries and this site's hosting | ✅ Section note at `web/src/lib/cheatsheets/caching.ts:125`; provider-boundary assertion at `web/src/lib/cheatsheets/caching.test.ts:35`. |
+| HIT does not prove latest-write freshness; MISS can be normal | ✅ `web/src/lib/cheatsheets/caching.ts:128` and `:133`; unit assertions at `web/src/lib/cheatsheets/caching.test.ts:40`; HIT caveat rendered assertion at `web/src/components/CachingReference.test.tsx:19`. |
+| BYPASS is response-time prevention; DYNAMIC is request-time ineligibility | ✅ Distinct rows at `web/src/lib/cheatsheets/caching.ts:138` and `:143`; assertions at `web/src/lib/cheatsheets/caching.test.ts:46`. |
+| Separate freshness from retention and CDN control from application tags | ✅ `web/src/lib/cheatsheets/caching.ts:148`. |
+| Header inspection uses illustrative safe-read URL and does not infer application behavior | ✅ Literal `curl` row and caveats at `web/src/lib/cheatsheets/caching.ts:153`. |
+| Comparable retest includes observer/events, segment, workload, window and cold/warm cache | ✅ `web/src/lib/cheatsheets/caching.ts:164`; cold/warm assertion at `web/src/lib/cheatsheets/caching.test.ts:53`. |
+| Explain p95 population; preserve sample, timeout/failures, errors, correctness and lab/field distinction | ✅ Definition and retest caveats at `web/src/lib/cheatsheets/caching.ts:165`; assertions at `web/src/lib/cheatsheets/caching.test.ts:55`. |
+| Retest read-after-write freshness, isolation and authorization before keeping change | ✅ `web/src/lib/cheatsheets/caching.ts:169`; multi-reader assertion at `web/src/lib/cheatsheets/caching.test.ts:57`. |
+| All seven exact citations in authored order, retaining primary role | ✅ `use cache`, `cacheLife`, `cacheTag`, `updateTag`, `revalidateTag`, Cloudflare cache responses, Retention vs Freshness, each with its brief-prescribed publisher and URL, at `web/src/lib/cheatsheets/caching.ts:10`. Additional entries have no image fields. Publisher-order assertion at `web/src/lib/cheatsheets/caching.test.ts:60`; real footer count and exact `updateTag`/Cloudflare response targets at `web/src/components/CachingReference.test.tsx:27`. |
+| Real DOM consumes data and literal example rather than merely passing data invariants | ✅ Both DOM tests call `render(<CheatsheetView sheet={caching} />)` at `web/src/components/CachingReference.test.tsx:7` and `:28`, without renderer mocks. They inspect a real definition-list row, visible caveats, stage link, footer links, and `pre code`. |
+| Keep syntax in `code`/`example` and plain-text explanations in `what`/`when` | ✅ API identifiers at `web/src/lib/cheatsheets/caching.ts:74`, `:79`, `:91`, `:107`, `:112`, `:117`, and `:153`; example is string data at `:86`. Explanations contain no JSX or executable imports. |
+| Do not register, regenerate snapshots, widen runtime infrastructure or add dependencies | ✅ The complete package changes only the three owned files and execution report. No registry, generated reference, snapshot, configuration, dependency, chapter, stage port, diagram or image change appears. |
+| Test first, expected missing-implementation RED, GREEN, isolated teeth, restored GREEN | ✅ Raw evidence reviewed below; implementation matches the tested final caller restriction at `web/src/lib/cheatsheets/caching.ts:108`. |
+| Humanizer review preserves factual caveats and definitions | ✅ Recorded at `.superpowers/sdd/2026-10-13-stage-09-reference/task-2-report.md:8` and in the added execution-report hunk; final copy matches the supplied source apart from formatting. The concrete language does not justify dropping caller/provider/authorization limits. Skill invocation itself is outside the diff. |
+| Format, lint, generated-route typecheck, commit, task review | ✅ Raw passing checks at `.superpowers/sdd/2026-10-13-stage-09-reference/task-2-report.md:150`, `:697`, `:711`; package identifies the requested conventional commit at `review-78c137f..f1bb218.diff:4`; this report provides the independent task review. Trailer and branch ancestry require controller verification. |
+| Persist raw execution evidence and deferrals in the canonical report | ✅ Packaged added report hunk starts at `docs/superpowers/reports/2026-10-13-stage-09-reference.md:1214` and contains the RED/GREEN/teeth/restored/check output. Deferrals are explicit in `.superpowers/sdd/2026-10-13-stage-09-reference/task-2-report.md:12`. |
+
+### TDD and verification evidence
+
+- ✅ RED failed for the specified right reason: no caching implementation existed. Both suites report missing imports, not a broken assertion or unrelated runtime error (`.superpowers/sdd/2026-10-13-stage-09-reference/task-2-report.md:27` and `:38`); exit 1, two failed suites and no executed tests at `:59`. This establishes implementation absence, not behavioral sensitivity.
+- ✅ GREEN executed six unit plus two real-renderer tests: 2 files / 8 tests passed, exit 0 (`.superpowers/sdd/2026-10-13-stage-09-reference/task-2-report.md:69`).
+- ✅ Teeth supplies behavioral proof: changing the caller restriction to `Route Handlers allowed:` produces exactly the expected `/Server Actions only/` assertion failure at `web/src/lib/cheatsheets/caching.test.ts:21`, with 1 failed / 5 passed unit tests (`.superpowers/sdd/2026-10-13-stage-09-reference/task-2-report.md:96`, `:102`, and `:122`). This is isolated to the mandated unit command; it does not claim a separate DOM mutation experiment.
+- ✅ Restored GREEN again passes both files / all 8 tests, exit 0 (`.superpowers/sdd/2026-10-13-stage-09-reference/task-2-report.md:131`).
+- ✅ Format exit 0 at `.superpowers/sdd/2026-10-13-stage-09-reference/task-2-report.md:695`, lint exit 0 at `:709`, and `next typegen && tsc --noEmit` exit 0 at `:725`. Full-suite output records 203 files / 1,481 tests passed at `:740`. No unexpected warning or console-noise finding appears in the recorded output; missing-import errors and mutation assertion errors are the required RED evidence.
+- ✅ No tests were rerun in review: the recorded runs answer the behavioral doubts raised by the code. No source, index or ref was mutated.
+
+### Primary-source factual checks
+
+- ✅ Named risk: the plan's supplied API teaching could encode an incorrect caller boundary, cache scope or persistence promise. The official [use cache documentation](https://nextjs.org/docs/app/api-reference/directives/use-cache) supports async cached scopes, Cache Components enablement, outside-scope request APIs and host-dependent memory behavior; [cacheLife](https://nextjs.org/docs/app/api-reference/functions/cacheLife) and [cacheTag](https://nextjs.org/docs/app/api-reference/functions/cacheTag) support the literal function-scoped lifetime/tag example at `web/src/lib/cheatsheets/caching.ts:86`. No factual contradiction found.
+- ✅ The official [updateTag documentation](https://nextjs.org/docs/app/api-reference/functions/updateTag) and [revalidateTag documentation](https://nextjs.org/docs/app/api-reference/functions/revalidateTag) confirm the caller and next-read distinctions at `web/src/lib/cheatsheets/caching.ts:107`, `:112`, and `:117`, including `{ expire: 0 }` and deprecated single-argument advice. No plan-authored error found.
+- ✅ Named risk: provider status labels could confuse request-time eligibility with response-time storage and application freshness. [Cloudflare cache responses](https://developers.cloudflare.com/cache/concepts/cache-responses/) confirms HIT/MISS/BYPASS/DYNAMIC distinctions at `web/src/lib/cheatsheets/caching.ts:128`; [Retention vs Freshness](https://developers.cloudflare.com/cache/concepts/retention-vs-freshness/) supports the separate retention/freshness explanation at `:148`, including policy-dependent stale serving. No factual contradiction found.
+
+### Cannot verify from this diff
+
+- ⚠️ Shared `Cheatsheet`/`sheetSources`/renderer internals, full DOM citation ordering and all seven rendered targets are Task 1 behavior. Authored ordering is directly visible here and the tests exercise real consumption, but this task's DOM assertions do not independently pin the complete footer sequence. Controller should retain Task 1's ordered-source/rendering evidence (`task-2-brief.md:8`; `web/src/components/CachingReference.test.tsx:27`). This is a verification boundary, not a missing Task 2 requirement.
+- ⚠️ Registration, generated `reference/cheatsheets.md`, catalogue filtering, snapshot updates and W-6 22 drawn / 27 registered status belong to Task 4; W-3 15/18 and tracker/KICKOFF synchronization belong to later records work (`global-constraints.md:7`, `:8`; `task-2-report.md:12`).
+- ⚠️ Actual browser contrast, 320–2560px overflow/touch targets, both themes and production/development console checks cannot be inferred from jsdom or the unchanged layout. Controller must perform the combined live-build verification after registration (`global-constraints.md:5`; `task-2-report.md:12`).
+- ⚠️ Develop ancestry, approved spec/plan presence, required commit trailer and current clean tree are not proved by the package's abbreviated commit list. Controller should verify those independently without interpreting this task gate as merge approval (`global-constraints.md:13`, `:14`; `task-2-report.md:752`).
+
+### Strengths
+
+- ✅ Safety-relevant caching advice stays attached to concrete caller/read boundaries and authoritative business checks, rather than reducing the lookup to a hit-rate recipe (`web/src/lib/cheatsheets/caching.ts:58`, `:107`, `:164`).
+- ✅ Static teaching content has one clear 176-line data-module responsibility; both test files remain small (74 and 47 lines). There is no new runtime API execution, state, abstraction or dependency (`web/src/lib/cheatsheets/caching.ts:1`; `web/src/lib/cheatsheets/caching.test.ts:1`; `web/src/components/CachingReference.test.tsx:1`).
+- ✅ DOM tests check the actual renderer and stage/footer/example outputs; the isolated teeth run demonstrates a material factual regression is caught (`web/src/components/CachingReference.test.tsx:6`; `task-2-report.md:102`).
+- ✅ The report explicitly distinguishes initial missing-import RED from behavioral proof and records later-task deferrals (`task-2-report.md:6`, `:12`).
+
+### Issues
+
+#### Critical (Must Fix)
+
+- None found.
+
+#### Important (Should Fix)
+
+- None found, including plan-authored errors.
+
+#### Minor (Nice to Have)
+
+- None found. No pre-existing defect is asserted from unchanged code.
+
+### Assessment
+
+**Spec compliance:** ✅ Spec compliant for Task 2, with the cross-task verification boundaries above.
+
+**Task quality:** Approved. The data matches the approved teaching content, tests exercise both invariants and the actual renderer, and recorded teeth evidence catches the specified caller-scope regression. No blocking or optional fix is required for this slice.
+
+**Review checks:** Complete implementation/test hunks read from the packaged diff once. Tool-output truncation hid the package header and documentation prefix; only those missing package ranges and the separate report evidence were recovered. No changed implementation file was reread, no unchanged source was inspected, no Git command or test was run, and no subagent was spawned. External checks were limited to the seven authored primary citations for the two named factual risks.
+
+**Branch boundary:** Task commit `f1bb218`; reported full suite 1,481/1,481 across 203 files, lint/typecheck/format exit 0. Build and live-browser checks are pending later-task verification. Clean tree, trailer and ancestry remain controller-owned checks. NOT merged, NOT deployed.
+
+Controller resolution: Task 1 reviewed source ordering, helper freshness and real DOM/Markdown contracts remain in force; no shared renderer change in Task 2. Full live seven-link ordering/targets and catalogue counts are explicitly Task 4 checks, not missing Task 2 content. Approved spec/plan exist in this branch, develop ancestry check exited 0, exact coauthor trailer verified with git log, tracked tree and diff check clean. Registration, generated snapshots and combined browser/records evidence remain pending Task 4. Task 2: review clean.
