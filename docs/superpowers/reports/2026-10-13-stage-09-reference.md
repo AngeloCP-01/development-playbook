@@ -1122,3 +1122,90 @@ The DOM mutation removed the link target only when the primary source was absent
 Formatting completed with exit 0; no unrelated tracked file changed. Self-review compared all production edits against the task brief and checked ordered credits, plain React text, optional URLs, singular/plural labels, no empty footer, primary image ownership, and unchanged legacy generated output. No implementation concern found. Independent task review remains controller-owned.
 
 Deferred: new sheet data/registration, generated companion content, live build audits, whole-branch review, merge, push, and deployment belong to later tasks or controller verification.
+
+## Task 1 independent review and controller checks
+
+Reviewer: `/root/reference_review_1`, GPT-6.1 Sol/high (repository mid-tier task-review role). Review range `d6abf9f..13f0cb6`.
+
+# Task 1 review — complete supporting citations
+
+## Spec Compliance
+
+- ✅ Spec compliant for Task 1 at `13f0cb65c8678a8d195a6dd095e5db90212950cd`, against base `d6abf9f81b369cf8ab67771541eed81c6b24ecce`. All eight requested production/test files have corresponding hunks; the ninth changed file is the required canonical execution report. No sheets are registered in this task: `web/src/lib/cheatsheets/index.ts:31` adds only the type re-export.
+- ⚠️ Cannot verify from this task diff: branch ancestry from develop, the approved spec/plan already carried by the branch, commit trailer, and current clean Git state. The package supplies the commit subject and SHAs, but not these facts. Controller should retain its existing Git evidence; this review ran no Git commands.
+- ⚠️ Cannot verify from this task diff: full live-build contrast, responsive behavior, and production/development console checks in both themes. Those remain controller verification after the later content tasks. Existing style classes are retained at `web/src/components/Cheatsheet.tsx:171`, `:178`, and `:183`; that supports layout consistency but is not a browser audit.
+- ⚠️ Cross-task milestone totals (W-3 15/18 and eventual W-6 22/27), generated companion content for the two later sheets, and their authored references are outside Task 1. This package makes no registry, chapter, language-sheet, dependency, lockfile, or Next.js configuration change.
+
+## Strengths
+
+- `web/src/lib/cheatsheets/sheet-sources.ts:4` has one responsibility and supplies both consumers with a fresh, ordered array. It preserves duplicate entries rather than hiding authoring mistakes. `sheet-sources.test.ts:37` exercises the order, duplicate retention, and array independence.
+- `web/src/components/Cheatsheet.tsx:170` handles zero, one, and multiple credits in one place. React renders citation values as text; no citation HTML parsing is introduced. The DOM tests check the rendered interface, not a mocked renderer (`CheatsheetSources.test.tsx:15`, `:37`, `:70`, `:74`).
+- The renderer tests replace registry input while exercising the real Markdown renderer (`render-citations.test.ts:5`, `:11`). Removing the undrawn early return allows attribution to survive without inventing sections or exporting an undrawn original diagram (`render.ts:54`, `:63`).
+- The captured mutations fail precisely the intended guards: the additional-only DOM link and authored duplicate URL. Their restored runs pass, supporting the tests' usefulness rather than relying on a green-only report (`docs/superpowers/reports/2026-10-13-stage-09-reference.md:914`, `:1023`, `:1041`, `:1075`).
+
+## Complete evidence checklist
+
+| Criterion | Evidence | Result |
+|---|---|---|
+| Named text-only citation contract, optional URL | `types.ts:77` defines title, author, and optional URL without an image field; `types.ts:84` retains image ownership on `Source`; `types.ts:97` uses `SourceCitation[]`; `index.ts:31` re-exports it. | ✅ |
+| Primary first, supporting credits in authored order | `sheet-sources.ts:5` spreads primary then supporting entries; `sheet-sources.test.ts:37` expects `[primary, supporting, primary]`. DOM order: `CheatsheetSources.test.tsx:37`; Markdown order and explicit credit strings: `render-citations.test.ts:31`. | ✅ |
+| Copy the array, do not mutate or deduplicate | Fresh array in `sheet-sources.ts:5`; the test pops the result and verifies unchanged supporting input at `sheet-sources.test.ts:43`. Duplicate primary remains in the expected output at `:41`. | ✅ |
+| No invented credit, no empty attribution block | `sheet-sources.test.ts:24` tests absent and empty supporting sources; `Cheatsheet.tsx:170` gates the footer on list length; `CheatsheetSources.test.tsx:70` checks no footer; `render-citations.test.ts:61` checks no singular/plural Markdown block. | ✅ |
+| Legacy primary-only credit | `sheet-sources.test.ts:28` preserves the primary object. Existing DOM test `credits the source when a sheet has one` remains unchanged at `Cheatsheet.test.tsx:80`; existing Markdown sync guard remains at `render.test.ts:14`. | ✅ |
+| Additional-only sheet, including undrawn placeholder | Helper test at `sheet-sources.test.ts:31`; DOM test at `CheatsheetSources.test.tsx:15` verifies the placeholder, singular label, href, and author; Markdown test at `render-citations.test.ts:21` verifies placeholder plus citation. | ✅ |
+| URL-less work retains title and author without a link | `sheet-sources.test.ts:46`; DOM URL-less branch at `Cheatsheet.tsx:188` and test at `CheatsheetSources.test.tsx:37`; Markdown URL-less branch at `render.ts:68` and exact credit assertion at `render-citations.test.ts:50`. | ✅ |
+| Singular/plural attribution | `Cheatsheet.tsx:173` chooses `Source`/`Sources`; DOM tests at `CheatsheetSources.test.tsx:15` and `:37`. Markdown adds plural heading only for multiple entries at `render.ts:64`, with tests at `render-citations.test.ts:21`, `:31`, and `:61`. | ✅ |
+| DOM and Markdown use the same complete credit list | Both import and call `sheetSources` (`Cheatsheet.tsx:6`; `render.ts:2`, `:63`). Separate real-consumer tests cover additional-only, ordered combined, URL-less, and empty cases. | ✅ |
+| Citation text remains React text | JSX values at `Cheatsheet.tsx:185`, `:188`, `:190`; `CheatsheetSources.test.tsx:74` verifies markup-looking title text and absence of `img`/`script` elements. | ✅ |
+| Every authored credit names work and author; duplicate URL guard | `sheet-sources.test.ts:52` trims required fields, checks a per-sheet URL set, and rejects supporting images at `:65`. Registry teeth fails on the incident-management duplicate at canonical report `:1042`, with 1 failed/5 passed at `:1062`. | ✅ |
+| Existing primary image remains intact with extra credits | Primary-only image condition and attributes remain at `Cheatsheet.tsx:124`, `:145`, `:153`, and `:163`. New DOM test at `CheatsheetSources.test.tsx:90` verifies security SVG path, decorative alt, 640×780 dimensions, original label, and supporting credit together. Markdown image still reads only `source.image` at `render.ts:54`. | ✅ |
+| Existing image/Markdown/highlight tests retained | No deletion or modification of legacy test files in the package. Focused GREEN captures 33/33 across six files at canonical report `:896`; existing test names include drawn/undrawn alt behavior (`Cheatsheet.test.tsx:159`, `:170`), security diagram export (`render.test.ts:4`), and generated output sync (`render.test.ts:14`, `generate-highlighted.test.ts:7`). | ✅ |
+| Behavioral RED before implementation | Canonical report `:61` contains raw missing-helper RED, 6 failed/18 passed at `:477`; independent consumer RED at `:483` isolates 6 missing-credit failures, 6 failed/2 passed at `:883`. Report `:59` explicitly distinguishes the helper collection error from behavioral evidence. | ✅ |
+| Isolated DOM teeth and restored GREEN | Missing accessible `Supporting guide` link at canonical report `:915`; only 1 failed/4 passed at `:1010`; restored 5/5 at `:1024`. Mutation and failure rationale recorded at `:1120`. | ✅ |
+| Isolated registry teeth and restored GREEN | Duplicate URL assertion at canonical report `:1042`; only 1 failed/5 passed at `:1062`; restored 6/6 at `:1076`. | ✅ |
+| Lint and generated-route typecheck | Captured lint uses `eslint --max-warnings 0` at canonical report `:1087`; typecheck runs `next typegen && tsc --noEmit` and generates route types successfully at `:1096`. Both sections record exit 0. | ✅ |
+| Full project tests, clean captured verification output | Canonical report `:1113` records 201 files and 1473 tests passed. GREEN, restored GREEN, lint, and typecheck output examined has no warnings or unexplained errors. Expected RED/teeth failures are identified. | ✅ |
+| Formatting and scope | Format completion is recorded at canonical report `:1122`; the package contains only the task's eight requested implementation/test files and canonical report, with no unrelated formatting diff. Raw format output is not included, so the exit claim is report evidence rather than independently captured output. | ✅ within stated evidence limit |
+| Generated content remains single-sourced | `render.ts:6` retains generation instructions; no hand-edited `reference/cheatsheets.md` hunk exists; the existing sync test is included in the captured focused guard run. Registry content is unchanged in this task. | ✅ |
+
+Paths abbreviated in the table refer to `web/src/lib/cheatsheets/` except `Cheatsheet*.tsx`, which refer to `web/src/components/`. Canonical report references refer to `docs/superpowers/reports/2026-10-13-stage-09-reference.md`.
+
+## Issues
+
+### Critical
+
+None found.
+
+### Important
+
+None found. No missing task requirement or plan-authored blocking defect identified.
+
+### Minor
+
+None found.
+
+## Review boundaries and checks
+
+- Read the supplied brief, verbatim constraints, implementer report, and review package. Read the diff once; initial tool output truncated the long execution-evidence addition, so retrieved the relevant raw evidence sections from the canonical report rather than regenerating tests.
+- One changed-source exception: the diff's `Cheatsheet.tsx` image hunk starts at the tail of the image function region. To assess the explicitly requested primary-image preservation, read only `Cheatsheet.tsx:115` through `:170`, covering its image condition and attributes; no other changed source was reread separately.
+- One focused unchanged-code check for the named image/export regression risk: inspected test declarations in the three existing renderer/image/highlight guard files to cite their retained behaviors. No broader codebase crawl.
+- Ran no tests, Git commands, mutations, or agents. Only created this requested review artifact.
+
+## Assessment
+
+**Task quality: Approved.** The change is small, additive, and shared between the two renderers. The captured behavioral RED and isolated restored teeth evidence support the key additional-only and duplicate-URL guards; live-build and branch-level checks remain outside this task review.
+
+**Verdict: review clean.** Task commit `13f0cb6`; captured verification is 1473/1473 tests across 201 files, lint and generated-route typecheck clean. Current tree and branch ancestry were not independently inspected. NOT merged, NOT deployed by this review.
+
+Controller resolution: develop ancestry, required trailer and clean tracked head were verified directly. Both approved artifacts are present. Current totals remain15/18 and20/25 because no sheets were registered. Browser/combined-content verification belongs to Task4 and remains pending; that is outside this task's completed gate. The formatting-output limitation is closed by the following fresh controller run.
+
+```text
+
+> web@0.1.0 format:check /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+```
+
+Exit:0. Task1 review clean, no findings.

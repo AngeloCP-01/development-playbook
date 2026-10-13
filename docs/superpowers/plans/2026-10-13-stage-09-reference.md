@@ -66,7 +66,7 @@ After the task's GREEN and format/lint/typecheck, commit the task using its list
 - Produces: `SourceCitation = { title: string; author: string; url?: string }`, optional `additionalSources?: SourceCitation[]`, and `sheetSources(sheet: Cheatsheet): SourceCitation[]` from `sheet-sources.ts`.
 - The helper copies the array in primary/supporting order; it neither mutates nor deduplicates inputs. Additional references cannot own image plates. The named `SourceCitation` type is re-exported from `index.ts`.
 
-- [ ] **Step 1: Write these new tests.** Keep every existing renderer/image test.
+- [x] **Step 1: Write these new tests.** Keep every existing renderer/image test.
 
 #### Source: `web/src/lib/cheatsheets/sheet-sources.test.ts`
 
@@ -324,7 +324,7 @@ test('supporting citations do not replace the existing primary security diagram'
 })
 ```
 
-- [ ] **Step 2: Run the focused RED.**
+- [x] **Step 2: Run the focused RED.**
 
 ```bash
 pnpm exec vitest run src/lib/cheatsheets/sheet-sources.test.ts src/lib/cheatsheets/render-citations.test.ts src/components/CheatsheetSources.test.tsx src/components/Cheatsheet.test.tsx
@@ -332,7 +332,7 @@ pnpm exec vitest run src/lib/cheatsheets/sheet-sources.test.ts src/lib/cheatshee
 
 Expected: missing `sheet-sources.ts` plus failures because supporting-only credits never render. Existing legacy renderer tests should still pass. Save the unedited output; do not claim that a type-check failure by itself proves rendered behavior.
 
-- [ ] **Step 3: Apply the complete production source below.** In `index.ts`'s existing type re-export list, add `SourceCitation,` immediately after `Source,`; no new sheets are registered in this task.
+- [x] **Step 3: Apply the complete production source below.** In `index.ts`'s existing type re-export list, add `SourceCitation,` immediately after `Source,`; no new sheets are registered in this task.
 
 #### Source: `web/src/lib/cheatsheets/types.ts`
 
@@ -778,15 +778,15 @@ export function renderCheatsheets(): string {
 }
 ```
 
-- [ ] **Step 4: Run the same focused tests for GREEN.** Also run the existing Markdown/security-image and generated-highlight guards; existing registered data has no new supporting credits yet, so their snapshots should remain unchanged.
+- [x] **Step 4: Run the same focused tests for GREEN.** Also run the existing Markdown/security-image and generated-highlight guards; existing registered data has no new supporting credits yet, so their snapshots should remain unchanged.
 
 ```bash
 pnpm exec vitest run src/lib/cheatsheets/render.test.ts src/lib/cheatsheets/generate-highlighted.test.ts
 ```
 
-- [ ] **Step 5: Prove the additional-only DOM guard has teeth.** Temporarily change the new citation anchor's `href={citation.url}` to `href={sheet.source ? citation.url : undefined}` in `Cheatsheet.tsx`. Run `pnpm exec vitest run src/components/CheatsheetSources.test.tsx` without a name filter; expect only the additional-only undrawn-sheet test to fail on its missing link role/target, with the other tests passing. Restore, rerun GREEN and retain raw output. Check the registry guard separately: in `incident-management.ts`, temporarily add `additionalSources: [{ title: 'Incident Response', author: 'Google SRE Workbook', url: 'https://sre.google/workbook/incident-response/' }],` after its primary `source` object. Run the complete `sheet-sources.test.ts` file; only the authored-citation guard must fail with the duplicate-URL assertion. Restore and rerun GREEN.
+- [x] **Step 5: Prove the additional-only DOM guard has teeth.** Temporarily change the new citation anchor's `href={citation.url}` to `href={sheet.source ? citation.url : undefined}` in `Cheatsheet.tsx`. Run `pnpm exec vitest run src/components/CheatsheetSources.test.tsx` without a name filter; expect only the additional-only undrawn-sheet test to fail on its missing link role/target, with the other tests passing. Restore, rerun GREEN and retain raw output. Check the registry guard separately: in `incident-management.ts`, temporarily add `additionalSources: [{ title: 'Incident Response', author: 'Google SRE Workbook', url: 'https://sre.google/workbook/incident-response/' }],` after its primary `source` object. Run the complete `sheet-sources.test.ts` file; only the authored-citation guard must fail with the duplicate-URL assertion. Restore and rerun GREEN.
 
-- [ ] **Step 6: Format, lint, typecheck, commit and obtain the required task review.**
+- [x] **Step 6: Format, lint, typecheck, commit and obtain the required task review.**
 
 ```bash
 pnpm format
