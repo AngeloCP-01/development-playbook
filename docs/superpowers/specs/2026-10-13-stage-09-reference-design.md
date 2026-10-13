@@ -2,11 +2,11 @@
 
 Date: 2026-10-13. Milestone: W-6.3q.
 
-Status: draft for written-spec review. The user approved practical decision
-guides with concrete examples after the scope was presented. This document
-adds the proposed content contract, citation support and verification details;
-those details remain subject to review. No implementation plan or product code
-has been written for this round.
+Status: approved 2026-10-13. After the written spec was presented, the user
+replied "proceed", approving implementation planning. The practical-guide
+scope, content contract, citation support and verification details below are
+the planning baseline. Implementation waits for review of the written plan
+and selection of its execution method.
 
 ## Problem
 
