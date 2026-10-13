@@ -8,7 +8,8 @@ debt was taken on. Scope and planning live in [task.md](task.md).
 interactive on local `develop` (01–09 and 11–16); stages 10, 17 and 18 remain. Twenty of
 twenty-five reference sheets are drawn on local `develop`, including Stage 08's
 `security` sheet. W-6.3q, Stage 09's caching/scaling lookup companions, is in
-design review. Practical-guide breadth is approved; the written spec awaits review.
+plan review. The written spec is approved; the four-task plan awaits review
+and execution-method selection.
 Neither sheet is registered or drawn.
 Re-derive every count here rather than quoting it.
 
@@ -87,6 +88,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-10-13 | W-6.3q (plan) | **The written reference spec is approved, and the four-task implementation plan is ready for review.** Tasks cover shared supporting citations, caching, scaling, then registration/generated artifacts and delivery evidence. | Spec approval `a9fb4e0`; [plan](superpowers/plans/2026-10-13-stage-09-reference.md) `f1f622c`. All 15 proposed TS/TSX source blocks plus two registry/test overlays typechecked in a full-project virtual host and linted with zero errors/warnings. An unsupported role-query option was caught and corrected before the final check. Self-review covered spec requirements, five Review Focus cases, task interfaces, source claims and placeholders. Nine planned test files contain **34 proposed cases; none was executed during planning**. Raw planning inputs/output are retained locally under `.superpowers/planning/2026-10-13-stage-09-reference/`. `web/` is unchanged; W-3 stays **15/18**, W-6 **20/25**. | **Plan review and execution-method selection precede implementation.** RED/GREEN/teeth runs, per-task/final reviews and live UI verification remain due. Images, runtime infrastructure, chapter/port edits, W-6.4, language sheets, merge, push and promotion remain separate. |
 | 2026-10-13 | W-6.3q (spec draft) | **The user approved practical decision guides with concrete examples; the written spec is ready for review.** It proposes five caching sections, four infrastructure-scaling sections, and optional additional citations in the existing renderer. | Spec `810af91` on `docs/2026-10-13-stage-09-reference-design`: [written design](superpowers/specs/2026-10-13-stage-09-reference-design.md). Checked current Next.js, Cloudflare, AWS and Google SRE guidance against the gathered audit; read installed Next.js cache guides. Self-review checked required section order, real code references, local links, status and scope; humanizer pass preserved the plain reference voice. W-3 stays **15/18**, W-6 **20/25**; `web/` is unchanged. | **Written-spec approval, implementation plan, execution choice, TDD, review and live verification remain due.** No sheet registration, new image, merge, push or deployment. W-6.4, language sheets, chapter/port edits and older shared repairs remain separate. |
 | 2026-10-13 | W-6.3q (handoff) | **The user selected W-6 for Stage 09 as the next round.** `docs/task.md` records the caching/scaling companions, source-audit starting point and scope limits. This is a records update; implementation has not started. | [Gathered first-party sources](../reference/stage-09-performance-sources.md), [source ledger](../reference/cheatsheet-sources.md), task W-6.3q and the current Next up entry. The registry still has **20 drawn / 25 registered**; neither `caching` nor `scaling` is registered. W-3 stays **15/18** after merge `7a5576a`. Records checks: tracker-ledger guards **2/2**, counts rederived from the stage/cheatsheet registries, all eight added local links resolve, and `git diff --check` is clean. | **Sheet boundaries, approved spec/plan, TDD, review and live verification are still due.** Deferred: W-3 stages 10/17/18, five language sheets, W-6.4 glossary/stack surfacing, image republication, real order measurements, shared-drill/storage repairs, merge of this records branch, push and production promotion. |
 | 2026-10-12 | W-3.16 (merged-tree) | **Stage 09's reviewed twelve-panel interactive port merged locally into `develop` as `7a5576a`.** W-3 is **15/18**, with 10, 17 and 18 remaining; W-6 stays **20/25**. The local feature branch and worktree were removed after verification; all 458 scratch evidence files were preserved with matching SHA256 hashes. This completes the integration approved in the following row. | Approved no-ff merge `7a5576a` has parents `c99bf64` and `1c781a9`; its complete tree matched the feature tip. Post-merge format, lint, route typegen/TypeScript, **1459/1459 tests across 198 files** and a fresh **50-page build** all exited 0. Raw output is retained locally in `.superpowers/sdd/2026-10-08-stage-09-interactive-port/merged-verification.md`. The application tree matches reviewed `c8b7349`, so pre-merge **24/24 production audit**, **1/1 development-console audit** and **574/574 measured observations** remain applicable; the browser suites were not rerun after merge. [Whole-branch review](superpowers/reports/2026-10-12-stage-09-whole-branch-review.md): Ready to merge, no new findings. [Merge-carried receipt](superpowers/reports/2026-10-12-stage-09-integration.md). | **Not pushed or deployed.** `main` and the older remote feature branch were left unchanged. Deferred: caching/scaling sheets, image publication, real order benchmarks, shared-drill extraction and storage-hook repairs, and production promotion. |
@@ -893,9 +895,13 @@ or deployment occurred.
 [gathered source audit](../reference/stage-09-performance-sources.md) and
 [source ledger](../reference/cheatsheet-sources.md). Practical-guide breadth is
 approved, and the [written spec](superpowers/specs/2026-10-13-stage-09-reference-design.md)
-is committed as `810af91` on its documentation branch. Review that artifact before
-the implementation plan and execution-method choice. Neither sheet is registered
-or drawn, so the reference count has not advanced.
+was approved on 2026-10-13 (`a9fb4e0`). The [four-task plan](superpowers/plans/2026-10-13-stage-09-reference.md)
+is committed as `f1f622c` on the documentation branch. Review the plan and choose
+Subagent-Driven or Native/Inline before implementation. Subagent-Driven is
+recommended because the shared citation change needs a fresh review before the
+two content tasks and final assembly; either method retains the repository's
+per-task and final review gates. Neither sheet is registered or drawn, so the
+reference count has not advanced.
 
 Recommended approach: start with caching, which directly supports Stage 09's
 measured-fix exercise, and treat infrastructure scaling as a separate lookup.

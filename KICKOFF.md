@@ -3,9 +3,10 @@
 **Next-session handoff, 2026-10-13:** Stage 09's interactive port merged locally
 into `develop` as `7a5576a`. W-3 is **15/18**, W-6 is **20 drawn / 25 registered**.
 The user selected **W-6.3q: Stage 09 caching/scaling lookup companions** next.
-Practical-guide breadth is approved; the [written spec](docs/superpowers/specs/2026-10-13-stage-09-reference-design.md)
-is committed as `810af91` and awaits review. No implementation plan or sheet code
-has been written.
+The [written spec](docs/superpowers/specs/2026-10-13-stage-09-reference-design.md)
+is approved (`a9fb4e0`); the [four-task plan](docs/superpowers/plans/2026-10-13-stage-09-reference.md)
+is committed as `f1f622c` and awaits review and execution-method selection.
+No sheet code has been written.
 
 Open the next session in `/Users/angelito/personal/Development-Playbook`.
 Read task W-6.3q and the current tracker Next up entry, then
@@ -92,10 +93,14 @@ Stage 09's team-scaling section does not prescribe load balancing as a routine
 fix. Prefer original diagrams if needed; no gathered image has been selected
 or cleared for publication.
 
-The written spec proposes five caching sections, four infrastructure-scaling
-sections and optional supporting citations in the existing renderer. Review that
-artifact before writing the implementation plan; choose the execution approach
-after the plan exists. Its source checks and self-review are complete. The earlier Subagent-Driven choice
+The approved spec defines five caching sections, four infrastructure-scaling
+sections and supporting citations in the existing renderer. The four-task plan
+contains full source and tests; its proposed overlays typecheck and lint clean,
+but no planned tests have been executed. Review the plan and choose the execution
+approach before starting its tasks. Recommend Subagent-Driven because the shared
+citation change and two content modules deserve independent gates before assembly.
+Native/Inline saves fresh implementer contexts while retaining required per-task
+and final reviews. The earlier Subagent-Driven choice
 applied to the completed port. Read the existing reference renderer/data types,
 `web/PATTERNS.md`, `web/DESIGN.md` and `web/AGENTS.md` before writing web code.
 The site has no order backend; measurements in examples remain hypothetical.
@@ -115,9 +120,10 @@ The site has no order backend; measurements in examples remain hypothetical.
    The reference check must return nothing. The tracker currently has one
    historical struck-through hit in its 2026-09-08 W-3.12 row; verify that
    every hit is struck through and immediately corrected, not a live status.
-4. **Resume W-6.3q at written-spec review.** Practical-guide breadth is already
-   approved. Read `docs/superpowers/specs/2026-10-13-stage-09-reference-design.md`;
-   get its review before writing the plan. The
+4. **Resume W-6.3q at plan review and execution-method selection.** The written
+   spec is approved. Read `docs/superpowers/plans/2026-10-13-stage-09-reference.md`
+   and its linked spec; get plan review and choose the method before implementation.
+   The
    Stage 09 port's eight tasks, fixes, final review and live checks are complete;
    use their reports as evidence rather than redispatching the port plan.
 5. **Keep W-6.4 separate.** Glossary and stack surfacing remains open; ask
@@ -174,8 +180,9 @@ Fetch first if you need to compare against the current remote; otherwise the
 `origin/*` lines above describe the last fetched refs.
 
 **Current design checkout:** `docs/2026-10-13-stage-09-reference-design`, cut
-from local `develop` at `597fe0b`. Spec commit `810af91` is not merged; inspect
-the branch tip for subsequent records commits. The prior task/tracker/kickoff
+from local `develop` at `597fe0b`. Spec `810af91`, its approval `a9fb4e0` and plan
+`f1f622c` are not merged; inspect the branch tip for subsequent records commits.
+The prior task/tracker/kickoff
 handoff merged as `597fe0b`, and its merged tree passed 1459 tests across 198
 files. No push or deployment occurred. Reuse the current design branch for
 review corrections; implementation isolation is chosen after plan approval.
