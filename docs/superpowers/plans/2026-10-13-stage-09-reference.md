@@ -10,6 +10,8 @@
 
 **Spec:** [Approved Stage 09 reference design](../specs/2026-10-13-stage-09-reference-design.md), approved by the user's "proceed" on 2026-10-13.
 
+**Execution:** approved 2026-10-13 by the user's "continue" after plan presentation. Proceed with the recommended Subagent-Driven method and existing isolated-worktree preference. Integration remains a separate decision.
+
 ## Global Constraints
 
 - Next.js cache APIs in examples remain teaching content; `web/next.config.ts` is unchanged.
