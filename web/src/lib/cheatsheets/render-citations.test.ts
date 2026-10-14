@@ -63,3 +63,24 @@ test('no citation means no empty Sources block in generated Markdown', () => {
   expect(renderCheatsheets()).not.toContain('Source:')
   expect(renderCheatsheets()).not.toContain('Sources:')
 })
+
+test('blank snippet lines stay empty so generated Markdown passes whitespace checks without losing code indentation', () => {
+  fixtures.sheets.push({
+    ...base,
+    sections: [
+      {
+        title: 'Example',
+        rows: [
+          {
+            term: 'Read',
+            what: 'Keep the separated statements.',
+            example: [{ label: 'Separated code', code: 'first()\n\nsecond()' }],
+          },
+        ],
+      },
+    ],
+  })
+  const text = renderCheatsheets()
+  expect(text.split('\n').filter((line) => /^ +$/.test(line))).toEqual([])
+  expect(text).toContain('  ```\n  first()\n\n  second()\n  ```')
+})

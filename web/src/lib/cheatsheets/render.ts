@@ -41,7 +41,7 @@ function renderSheet(sheet: Cheatsheet): string {
             `  *${ex.label}*`,
             '',
             '  ```',
-            ...ex.code.split('\n').map((l) => `  ${l}`),
+            ...ex.code.split('\n').map((l) => (l ? `  ${l}` : '')),
             '  ```',
             '',
           )

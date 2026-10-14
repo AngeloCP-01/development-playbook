@@ -470,3 +470,20 @@ unrecorded on most of these; fix before promoting past `develop` (D-63).
 | `observability` | The three pillars of observability | Priya Dharshini | *not recorded* | *no image — text article* | 2026-09-08 | consulted — corroborated, changed nothing |
 | `observability` | Observability with OpenTelemetry: why do we need it | Tenil Sridhar | *not recorded* | *no image — text article* | 2026-09-08 | consulted — fed `## Scaling to a team` |
 | `observability` | Building an observability platform with Prometheus, Grafana and Jenkins | Kumar | *not recorded* | *no image — text article* | 2026-09-08 | consulted — fed the one-pane dashboard reconciliation; otherwise sheet-only |
+
+### Stage 09 lookup companions · W-6.3q
+
+The caching/scaling sheets are original practical lookups, not transcriptions of a gathered graphic. Their TypeScript modules are the source of the generated reference Markdown. The source list is displayed on each sheet through the primary citation and supporting citations. No image plate is selected in this round.
+
+| Sheet / sections | First-party reference | What it supports |
+|---|---|---|
+| caching / boundary, lifetime | [Next.js use cache](https://nextjs.org/docs/app/api-reference/directives/use-cache) | Cache Components prerequisite, async scopes, request-value boundaries and hosting caveats |
+| caching / lifetime | [Next.js cacheLife](https://nextjs.org/docs/app/api-reference/functions/cacheLife), [cacheTag](https://nextjs.org/docs/app/api-reference/functions/cacheTag) | Lifetime profiles and tagged reads |
+| caching / invalidation | [Next.js updateTag](https://nextjs.org/docs/app/api-reference/functions/updateTag), [revalidateTag](https://nextjs.org/docs/app/api-reference/functions/revalidateTag) | Caller scope, immediate expiry, stale-while-revalidate and non-deprecated signatures |
+| caching / CDN evidence | [Cloudflare cache responses](https://developers.cloudflare.com/cache/concepts/cache-responses/), [retention versus freshness](https://developers.cloudflare.com/cache/concepts/retention-vs-freshness/) | Provider-specific response status, retention and freshness |
+| scaling / routing, failure | [AWS ALB attributes](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/edit-target-group-attributes.html), [target-group health checks](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html) | Algorithm conditions, incompatible features, draining and fail-open behavior |
+| scaling / capacity, overload | [Google SRE Handling Overload](https://sre.google/sre-book/handling-overload/) | Workload-dependent capacity, admission, degradation and overload limits |
+
+The comparable-outcome, authorization and uncertain-side-effect checks are this playbook's application discipline, carried from the reviewed Stage 09 chapter and incident guidance. They are not a universal checklist attributed to one provider. Read-only commands use illustrative domains or a caller-supplied permitted target-group ARN. No backend or infrastructure was measured to author these rows.
+
+Deferred: diagrams, image republication, runtime configuration, Stage 09 chapter/port edits, glossary/stack surfacing and the five language sheets. The source date and actual execution/verification evidence are recorded in the round's execution report.
