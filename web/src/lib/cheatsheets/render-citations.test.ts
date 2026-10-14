@@ -84,3 +84,38 @@ test('blank snippet lines stay empty so generated Markdown passes whitespace che
   expect(text.split('\n').filter((line) => /^ +$/.test(line))).toEqual([])
   expect(text).toContain('  ```\n  first()\n\n  second()\n  ```')
 })
+
+test('citation text stays literal across primary/supporting and linked/URL-less credits instead of becoming Markdown or HTML', () => {
+  const title =
+    '<img src=x onerror=alert(1)> *guide* [label](target) `code` \\ &amp;'
+  const author = '<script>alert(1)</script> _editor_ ![plate](image)'
+  const escapedTitle = String.raw`\<img src=x onerror=alert(1)\> \*guide\* \[label\](target) \`code\` \\ \&amp;`
+  const escapedAuthor = String.raw`\<script\>alert(1)\</script\> \_editor\_ \!\[plate\](image)`
+  for (const primaryLinked of [true, false]) {
+    fixtures.sheets.length = 0
+    fixtures.sheets.push({
+      ...base,
+      source: {
+        title,
+        author,
+        ...(primaryLinked
+          ? { url: 'https://example.com/primary?q=one&n=two' }
+          : {}),
+      },
+      additionalSources: [
+        {
+          title,
+          author,
+          ...(!primaryLinked ? { url: 'https://example.com/supporting' } : {}),
+        },
+      ],
+    })
+    const credits = renderCheatsheets()
+      .split('\n')
+      .filter((line) => line.startsWith('Source:'))
+    expect(credits).toEqual([
+      `Source: ${primaryLinked ? `[${escapedTitle}](https://example.com/primary?q=one&n=two)` : escapedTitle} — ${escapedAuthor}.`,
+      `Source: ${!primaryLinked ? `[${escapedTitle}](https://example.com/supporting)` : escapedTitle} — ${escapedAuthor}.`,
+    ])
+  }
+})

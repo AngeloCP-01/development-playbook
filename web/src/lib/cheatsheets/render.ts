@@ -3,6 +3,11 @@ import { sheetSources } from './sheet-sources'
 import { CHEATSHEETS, cheatsheetsByGroup } from './index'
 import { CHEATSHEET_GROUPS, isDrawn, type Cheatsheet } from './types'
 
+/** Escape inline citation syntax while leaving authored URLs to link formatting. */
+function citationText(text: string): string {
+  return text.replace(/[\\`*_\[\]<>!&]/g, '\\$&')
+}
+
 /**
  * Renders reference/cheatsheets.md from the registry. The TS modules are the
  * single source; the markdown is a generated snapshot kept in sync by
@@ -64,9 +69,9 @@ function renderSheet(sheet: Cheatsheet): string {
   if (sources.length > 1) lines.push('Sources:', '')
   for (const citation of sources) {
     const title = citation.url
-      ? `[${citation.title}](${citation.url})`
-      : citation.title
-    lines.push(`Source: ${title} — ${citation.author}.`, '')
+      ? `[${citationText(citation.title)}](${citation.url})`
+      : citationText(citation.title)
+    lines.push(`Source: ${title} — ${citationText(citation.author)}.`, '')
   }
 
   return lines.join('\n')

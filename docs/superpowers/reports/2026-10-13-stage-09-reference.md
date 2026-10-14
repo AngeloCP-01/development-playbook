@@ -5479,3 +5479,482 @@ Exit: 0. Exact raw-log SHA-256: `7087268e95bff8859a397aa3398a4f6efc1309df43ccf6a
 **Branch state:** HEAD `f1de391`; 14 commits off develop; recorded 1494/1494 across 207 files, build 52 pages, production audit 24/24, clean development audit 1/1; controller-verified tracked tree and whitespace check clean. Final whole-branch review pending. NOT merged, NOT pushed, NOT deployed.
 
 Controller completion: both verdicts affirmative, no blocking finding. M1 is PRE-EXISTING ENVIRONMENT color-variable noise in retained Node runner output; final whole-branch reviewer will triage it. Clean dev retry has no such noise; browser/React checks and source measurements pass. Git partitions, ancestry, required trailers and clean whole-branch diff checked by controller. Historical write/reader/visual/source process limitations are stated honestly alongside retained raw hashes and artifacts. Final independent whole-branch review is the next gate, not a missing Task 4 implementation step. Current handoff records are being refreshed after this review; no merge, push or deployment.
+
+## Final whole-branch review at bddf51d
+
+# W-6.3q final whole-branch review
+
+Reviewed 2026-10-14. Base: `597fe0bb4e748e62c380fcd5f16a3e5dd20cd671`. Head: `bddf51db7538b7f8caa02bfa4fd9d31a24f33440`. Branch: `feat/stage-09-reference-companions`.
+
+## Strengths
+
+- The two sheets give readers usable decisions and their limits. Caching separates ownership and authorization, request-specific inputs, invalidation callers, hosting retention and CDN evidence. Scaling keeps workload suitability and ALB incompatibilities alongside the algorithms, then covers fail-open, draining, admission and uncertain side effects (`web/src/lib/cheatsheets/caching.ts:44`; `web/src/lib/cheatsheets/scaling.ts:26`).
+- The citation extension is small. `sheetSources` creates a fresh array in authored order without hiding duplicate entries. Both consumers use it; `source.image` retains sole plate ownership. Tests exercise additional-only and empty sources, URL-less credits, primary images, real sheets and integrated routes (`sheet-sources.ts:4`, `CheatsheetSources.test.tsx:15`, `:37`, `:74`, `:90`, under their respective lib/components directories).
+- Evidence distinguishes missing-implementation RED from behavioral proof. The six isolated mutation runs demonstrate consequential assertions, and restoration is recorded before final gates. The report preserves unsuccessful environmental attempts rather than counting them as passes.
+- Current handoff records consistently distinguish branch W-6 22/27 from develop 20/25 and W-3 15/18. The source ledger distinguishes provider guidance from playbook application discipline. No infrastructure, chapter/port, dependency or framework-configuration change entered the branch.
+
+## Issues
+
+### Critical
+
+None.
+
+### Important (blocking)
+
+None.
+
+### Minor
+
+**M1: PRE-EXISTING ENVIRONMENT, carried from Task 4. Inherited Node color warnings make retained runner output noisy.**
+
+Evidence: `docs/superpowers/reports/2026-10-13-stage-09-reference.md:4909` and `:5087`. Both original browser runners report `NO_COLOR`/`FORCE_COLOR` conflicts, while browser and React assertions pass. The clean `env -u NO_COLOR pnpm test:dev-console` retry at `:5330` has no such warnings. This is not an application console defect and does not invalidate the production audit. Use that ephemeral environment setup for future captures; no production change or repeat of the unchanged suite is needed. Nonblocking.
+
+**M2: PLAN-AUTHORED ERROR inherited from the primary-citation renderer. Supporting citation text is literal in the web view but can become Markdown/HTML syntax in the generated deliverable.**
+
+Evidence: `web/src/lib/cheatsheets/render.ts:65` directly interpolates title and author; `web/src/components/CheatsheetSources.test.tsx:74` checks markup-looking citation text only through React. Plan Review Focus 2 (`docs/superpowers/plans/2026-10-13-stage-09-reference.md:33`) expects markup-looking titles/authors to remain readable text. The approved renderer source contains the same interpolation, so this is not an implementer departure.
+
+A focused read-only invocation of the real transpiled renderer and real helper, with a fixture registry and the existing DOM test's title/author, produced:
+
+```text
+Source: <img src=x onerror=alert(1)> — <script>alert(1)</script>.
+```
+
+CommonMark treats these tags as raw HTML. A sanitizing Markdown host can remove them instead of showing the intended citation text. The web view correctly shows literal text. This is a content-parity edge case, not an exploitable application input path: all registry data is authored, the current ten citations contain no such markup, and the app never consumes generated Markdown. Escape citation title/author for Markdown and add a real-renderer fixture covering markup and Markdown delimiters when addressing it. Keep URL formatting separate. Nonblocking for these published sheets; record an explicit controller disposition rather than silently dropping it.
+
+## Scope and plan checks
+
+I read the complete changed production/test surface, generated additions, source ledgers, handoff changes, approved spec and plan, and report evidence. The 692 KB package is dominated by raw expected/received Markdown and formatting output. I inspected diagnostic regions, commands, counts and mutations without treating repeated dumps as newly authored product content.
+
+The 15 full TS/TSX blocks in the approved plan were compared with their final files. Thirteen match exactly. The only differences in the other two are the authorized empty-snippet-line regression and its one-line renderer fix. Registry additions preserve every previous entry and all five language placeholders. `stage09-reference.test.ts:6` checks both Stage 09 companions, 22 drawn/27 registered and the exact remaining placeholder slugs. Route generation, sitemap and audit discovery derive from `CHEATSHEETS` (`web/src/app/reference/[slug]/page.tsx:6`, `web/src/app/sitemap.ts:37`, `web/e2e/audit-pages.ts:107`).
+
+The helper handles absent, primary-only, supporting-only and combined sources, including URL-less references and duplicate retention. The registry guard rejects duplicate URLs and supporting image properties. React inserts citation title/author as text, uses stable distinct keys for this immutable authored list, and retains 44px link heights. Markdown and DOM credit order agree; M2 records the one text-encoding edge case. The existing drawn/undrawn primary-image behavior is preserved, including the security diagram export guard. Neither supporting citations nor the new sheets create a second plate.
+
+Generated Markdown adds only the counts, index entries and complete companions. The highlight map adds one entry; decoding its generated HTML reproduces the exact code key, with no script/image tag. Both committed-file sync guards remain active in the full suite. The blank-line fix preserves fenced-code indentation while removing spaces-only empty lines.
+
+Source provenance is explicit at `reference/cheatsheet-sources.md:474`, and the original chapter audit remains historical. The source recheck at report `:4411` explains the initial 2026-10-13 check and final 2026-10-14 recheck. D-98 adds the citation contract without rewriting prior decisions. Historical plan/task review statuses remain in dated records; the current Overview, Next up and KICKOFF correctly await this review.
+
+## Independent factual corroboration
+
+On 2026-10-14 I reopened the ten cited first-party documents. The invalidation advice agrees with the current [updateTag](https://nextjs.org/docs/app/api-reference/functions/updateTag) and [revalidateTag](https://nextjs.org/docs/app/api-reference/functions/revalidateTag) contracts: Server Action restriction, tolerated stale reads, immediate-expiry alternative and deferred refresh. The teaching example's prerequisite, request boundaries, lifetime/tag usage and hosting qualification agree with [use cache](https://nextjs.org/docs/app/api-reference/directives/use-cache), [cacheLife](https://nextjs.org/docs/app/api-reference/functions/cacheLife) and [cacheTag](https://nextjs.org/docs/app/api-reference/functions/cacheTag).
+
+The request-time DYNAMIC versus response-time BYPASS distinction agrees with [Cloudflare cache responses](https://developers.cloudflare.com/cache/concepts/cache-responses/). The sheet also separates residence from freshness as described by [Retention vs Freshness](https://developers.cloudflare.com/cache/concepts/retention-vs-freshness/). Its statement that a HIT does not prove latest-write application data is a sound application-level inference.
+
+The algorithm conditions and incompatible features agree with [AWS ALB attributes](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/edit-target-group-attributes.html). The all-unhealthy exception agrees with [ALB health checks](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html). The nearby instruction to inspect thresholds avoids treating that exception as the only circumstance allowing unhealthy-target routing. Bounded admission and retry pressure agree with [Handling Overload](https://sre.google/sre-book/handling-overload/). The sheet makes no workload-independent speed or capacity promise.
+
+## TDD and verification evidence
+
+The RED failures are for the recorded reasons. Task 1 has six missing-credit consumer failures, followed by 33/33 focused GREEN. Tasks 2 and 3 start with missing modules, then each passes eight tests; those collection failures alone are not behavioral proof. Task 4 starts with four missing-registration failures, then 4/4 GREEN, followed by two actual stale-snapshot failures before generation. The blank-line regression separately fails on the unexpected two-space line before its fix.
+
+| Isolated mutation | Observed result before restoration | Restored result |
+| --- | --- | --- |
+| Remove supporting-only link href | 1 failed / 4 passed; accessible link absent | 5/5 |
+| Add duplicate citation URL | 1 failed / 5 passed; duplicate URL assertion | 6/6 |
+| Permit Route Handler use of updateTag | 1 failed / 5 passed; caller restriction | 8/8 focused |
+| Claim ALB blocks all unhealthy traffic | 1 failed / 5 passed; fail-open assertion | 8/8 focused |
+| Move scaling tether to Stage 03 | 1 failed / 1 passed; Stage 09 companion list | 29/29 focused |
+| Restore unconditional blank-line prefix | 1 failed / 3 passed; spaces-only line | 4/4, then 33/33 affected |
+
+Each teeth command runs its whole named file without a test-name filter. Restored source matches the final files; snapshot generation under a mutation is explicitly excluded. Canonical report anchors are `:903`, `:1030`, `:1300`, `:2150`, `:4346`, and `:4726`. I checked diagnostic text and expected/received values in the retained raw logs. All 30 recorded SHA-256 log rows match their retained files. The disclosed terminal-padding normalization does not alter counts, failures or commands. Logs substantiate the recorded runs; a final diff cannot reconstruct historical keystroke order.
+
+Final captured format, lint and generated-route typecheck exit 0; the fresh production build generates 52 pages. Full tests pass 1494/1494 across 207 files. The controller also ran `pnpm test` on reviewed HEAD `bddf51d` during this review: exit 0, the same 1494/207, 22.44 seconds, retained in `controller-finishing-test.log` and `.exit`. I did not duplicate those suites.
+
+Production audit: 24/24. Clean development audit: 1/1. The live measurement JSON independently totals 28 observations and 378 pair measurements, with minimum normal-text contrast 5.255518433120439:1 and zero recorded failures. The script composes ancestor backgrounds and rasterizes browser colors, including modern syntax. Both theme console files are empty; navigation JSON confirms index/tether clicks and sitemap inclusion. Source order/targets and 44px heights are retained per observation. I inspected the narrow caching footer, scaling title/tether and wrapped AWS command screenshots; no clipping or new readability defect was found. The script and captured measurements support the broader matrix without another browser run.
+
+The blind reader's input is limited to the question brief and generated companions. All four answers identify the correct row and caveat. This is evidence for those four lookup tasks, not a general comprehension study.
+
+## Controller rulings
+
+1. **Accepted: commit assembly before final review.** The complete committed range is available for review, while implementation gates precede the implementation commit. Follow-up review records do not authorize integration. This resolves the plan's sequencing dependency without bypassing a gate.
+2. **Accepted: repair blank-line generation test-first and normalize displayed terminal padding.** The generator behavior predates the branch, but the approved snippet exposes it. RED and isolated teeth demonstrate the narrow defect; final sync tests and clean whole-branch whitespace checks confirm the repair. Raw logs and verified hashes preserve exact local provenance. This is correctly labelled PRE-EXISTING GENERATOR / PLAN-AUTHORED missed condition.
+3. **Accepted: retain the production audit across the Markdown-only fix.** I independently searched consumers. `renderCheatsheets` is used by the three Markdown test files; the generator command invokes that test. It has no app runtime import, and the fix changes neither authored UI data nor the DOM renderer. The post-fix build, clean dev audit and manual production matrix cover the final app. My concern that the earlier production run might omit a changed runtime path was disproved. Repeating the full audit would not resolve an outstanding code risk.
+
+## Declined to judge
+
+- Executing a real Next.js cache, catalog backend, Cloudflare configuration or ALB experiment: these sheets are literal teaching data and the approved scope explicitly excludes runtime infrastructure. I judged the advice and caller/provider limits, not an absent backend's performance.
+- A general untrusted-source URL sanitizer or importer: citations are compile-time authored registry content with no user input path. Current URLs are exact HTTPS first-party targets. M2 separately judges the concrete text-parity issue; it is not dismissed under this boundary.
+- Expanding the lookup into exhaustive HTTP/2, WebSocket, provider-algorithm or cache-policy coverage: the bounded guide supplies applicable workload limits and links to full references. No included claim requires that expansion to be accurate.
+- Changing legacy primary-image publication rules between web and Markdown, or revisiting unrelated shared-drill/storage defects: this branch preserves those behaviors and the approved round explicitly defers them. I checked image ownership and existing security export for regressions.
+
+## Assessment
+
+**Ready to merge.** No blocking finding. The published sheets and shared citation path satisfy the approved scope, with nonblocking M1 and M2 above. The controller should record their disposition and refresh final-review handoff status before presenting integration options. Humanizer review kept the report factual and removed filler; it did not alter evidence or findings.
+
+Direct Git checks: HEAD `bddf51db7538b7f8caa02bfa4fd9d31a24f33440`; merge-base/develop `597fe0bb4e748e62c380fcd5f16a3e5dd20cd671`; main unchanged at `d659d32f0c81254e65903be73b88daa726f76c8a`. All 16 commits carry the required trailer. Develop remains 68 commits ahead of tracked origin/develop and 212 ahead of main, with main 2 ahead of develop; no fetch was performed.
+
+**Branch state: 16 commits off develop; 1494/1494 tests across 207 files; 52-page build clean; production 24/24; clean development 1/1; working tree and whole-branch `git diff --check` clean. NOT merged, NOT pushed, NOT deployed.** This review changed only the requested ignored report artifact; no source, index, HEAD or ref mutation, test rerun, or subagent dispatch occurred. The focused M2 renderer invocation was read-only.
+
+Controller disposition: no blocking findings. One consolidated final fix wave addresses M2 after verifying the literal-text mismatch; M1 remains honest environmental history with the clean runner remedy documented. The four declined scopes are accepted under the approved boundaries. All rulings are retained in the ledger and will be disclosed at handoff. Scoped re-review follows the fix; no merge approval is implied.
+
+## Controller finishing test before the final fix
+
+Command from web: `pnpm test` at committed HEAD `bddf51d`.
+
+```text
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+> vitest run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+
+
+ Test Files  207 passed (207)
+      Tests  1494 passed (1494)
+   Start at  08:34:41
+   Duration  22.44s (transform 11.30s, setup 11.53s, import 27.33s, tests 32.60s, environment 56.66s)
+```
+
+Exit: 0; 1494/1494 across207files. The final fix must run its covering tests and update actual counts.
+
+
+# W-6.3q consolidated final-review fix wave
+
+Date: 2026-10-14. FIX_BASE: `bddf51db7538b7f8caa02bfa4fd9d31a24f33440`.
+Workspace: `.worktrees/stage-09-reference`; branch: `feat/stage-09-reference-companions`.
+This is the controller-authorized single final fix wave. Scoped rereview and integration remain pending.
+
+## Findings received, verbatim
+
+**M1: PRE-EXISTING ENVIRONMENT, carried from Task 4. Inherited Node color warnings make retained runner output noisy.**
+
+Evidence: `docs/superpowers/reports/2026-10-13-stage-09-reference.md:4909` and `:5087`. Both original browser runners report `NO_COLOR`/`FORCE_COLOR` conflicts, while browser and React assertions pass. The clean `env -u NO_COLOR pnpm test:dev-console` retry at `:5330` has no such warnings. This is not an application console defect and does not invalidate the production audit. Use that ephemeral environment setup for future captures; no production change or repeat of the unchanged suite is needed. Nonblocking.
+
+**M2: PLAN-AUTHORED ERROR inherited from the primary-citation renderer. Supporting citation text is literal in the web view but can become Markdown/HTML syntax in the generated deliverable.**
+
+Evidence: `web/src/lib/cheatsheets/render.ts:65` directly interpolates title and author; `web/src/components/CheatsheetSources.test.tsx:74` checks markup-looking citation text only through React. Plan Review Focus 2 (`docs/superpowers/plans/2026-10-13-stage-09-reference.md:33`) expects markup-looking titles/authors to remain readable text. The approved renderer source contains the same interpolation, so this is not an implementer departure.
+
+A focused read-only invocation of the real transpiled renderer and real helper, with a fixture registry and the existing DOM test's title/author, produced:
+
+```text
+Source: <img src=x onerror=alert(1)> — <script>alert(1)</script>.
+```
+
+CommonMark treats these tags as raw HTML. A sanitizing Markdown host can remove them instead of showing the intended citation text. The web view correctly shows literal text. This is a content-parity edge case, not an exploitable application input path: all registry data is authored, the current ten citations contain no such markup, and the app never consumes generated Markdown. Escape citation title/author for Markdown and add a real-renderer fixture covering markup and Markdown delimiters when addressing it. Keep URL formatting separate. Nonblocking for these published sheets; record an explicit controller disposition rather than silently dropping it.
+
+
+## Disposition and diagnosis
+
+M1: PRE-EXISTING ENVIRONMENT, nonblocking. Historical production and development logs are retained unchanged. The existing clean development retry demonstrates the remedy; current shell inspection found NO_COLOR present and FORCE_COLOR absent. The browser runner previously supplied FORCE_COLOR to its children. Future captures use `env -u NO_COLOR` for the command only. All new test/build captures use it and contain no color-conflict warnings. No application or global-environment edit was needed. The failed fresh sandbox build is a separate Google Fonts network restriction, retained below with its successful network-enabled retry.
+
+M2: PLAN-AUTHORED ERROR inherited from primary-citation interpolation, fixed. The hypothesis was that direct title/author interpolation lets raw HTML, emphasis, links, image syntax, code spans, backslashes and entities change the intended credit text. The real-renderer fixture failed for the expected reason: expected escaped text, received raw tags and Markdown delimiters. A private citation-text helper now backslash-escapes inline syntax for both primary and supporting titles/authors, with linked and URL-less cases. URL destinations and citation order remain exact. Plain existing credits and generated snapshots pass unchanged. The four combinations run through the real renderer and helper rather than a replacement renderer.
+
+[CommonMark backslash escapes](https://spec.commonmark.org/0.31.2/#backslash-escapes) defines punctuation escaping; [raw HTML](https://spec.commonmark.org/0.31.2/#raw-html) explains the original parity defect. Escaping the text prevents it from becoming inline markup; the URL formatter remains separate.
+
+## TDD and coverage
+
+RED: 1 failed / 4 passed, for the right reason described above. GREEN: 5/5. Teeth: replace only citationText's encoding expression with `return text`, run the entire render-citations file without a name filter, then restore the saved final renderer. Only the new literal-citation guard failed (1 failed / 4 passed). The restored covering run passed 55/55 across nine files, including registry, ordered source, DOM citation, original security-image export, Markdown and highlighted-file snapshot guards. No snapshot generation was needed because existing authored credits produce unchanged bytes. No generation was run under mutation.
+
+Final code verification: format, lint and generated-route typecheck exit 0; full unit/DOM suite 1495/1495 across 207 files. Fresh production build: sandbox attempt exit 1 for the three Google Fonts fetches; network-enabled retry exit 0, 52 pages. Import search confirms renderCheatsheets has only Markdown-generation/test consumers; no runtime UI consumer changed. Existing production audit 24/24, clean development audit 1/1, live matrix 28 observations/378 pairs and blind lookup 4/4 remain the evidence for unchanged runtime UI under the accepted controller ruling. No browser sweep was repeated.
+
+## Scope and concerns
+
+No new concern. Authored guide prose/data, DOM rendering, image ownership/rules, URL handling, dependencies and framework configuration are unchanged. Raw Markdown for future syntax-bearing titles/authors contains escapes to preserve rendered text. This does not introduce a general URL sanitizer, importer or multiline-credit policy.
+
+Deferred: diagrams/image publication, runtime infrastructure, chapter/port changes, W-6.4, five language sheets, real order benchmarks, shared-drill/storage repairs and promotion. Develop stays 20/25, branch 22/27, W-3 15/18. No merge, push, deployment or outside-worktree edit occurred. Humanizer review kept the report/records factual; terminal output and verbatim findings were excluded from rewriting.
+
+## Raw command provenance
+
+Commands ran from `web/`, except the environment presence check from the worktree root. stdout and stderr were redirected together into the retained ignored logs; exit files record the shell result. The network build used the same command with scoped escalation for existing font fetches. Raw logs are exact. Displayed excerpts remove trailing line padding only; no assertions, commands, counts or diagnostic content are changed.
+
+### red
+
+Command: `env -u NO_COLOR pnpm exec vitest run src/lib/cheatsheets/render-citations.test.ts`
+
+Raw: `.superpowers/sdd/2026-10-13-stage-09-reference/final-fix-red.log`; SHA-256: `e57d4d1ac9dbc746b102f82a98fe1b609d941f7ac4c3de3e45fa49eef507dba5`; exit 1.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+
+ ❯ |unit| src/lib/cheatsheets/render-citations.test.ts (5 tests | 1 failed) 6ms
+   × citation text stays literal across primary/supporting and linked/URL-less credits instead of becoming Markdown or HTML 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/lib/cheatsheets/render-citations.test.ts > citation text stays literal across primary/supporting and linked/URL-less credits instead of becoming Markdown or HTML
+AssertionError: expected [ …(2) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "Source: [\\<img src=x onerror=alert(1)\\> \\*guide\\* \\[label\\](target) \\`code\\` \\\\ \\&amp;](https://example.com/primary?q=one&n=two) — \\<script\\>alert(1)\\</script\\> \\_editor\\_ \\!\\[plate\\](image).",
+-   "Source: \\<img src=x onerror=alert(1)\\> \\*guide\\* \\[label\\](target) \\`code\\` \\\\ \\&amp; — \\<script\\>alert(1)\\</script\\> \\_editor\\_ \\!\\[plate\\](image).",
++   "Source: [<img src=x onerror=alert(1)> *guide* [label](target) `code` \\ &amp;](https://example.com/primary?q=one&n=two) — <script>alert(1)</script> _editor_ ![plate](image).",
++   "Source: <img src=x onerror=alert(1)> *guide* [label](target) `code` \\ &amp; — <script>alert(1)</script> _editor_ ![plate](image).",
+  ]
+
+ ❯ src/lib/cheatsheets/render-citations.test.ts:116:21
+    114|       .split('\n')
+    115|       .filter((line) => line.startsWith('Source:'))
+    116|     expect(credits).toEqual([
+       |                     ^
+    117|       `Source: ${primaryLinked ? `[${escapedTitle}](https://example.co…
+    118|       `Source: ${!primaryLinked ? `[${escapedTitle}](https://example.c…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  08:42:08
+   Duration  138ms (transform 37ms, setup 0ms, import 51ms, tests 6ms, environment 0ms)
+
+```
+
+### green
+
+Command: `env -u NO_COLOR pnpm exec vitest run src/lib/cheatsheets/render-citations.test.ts`
+
+Raw: `.superpowers/sdd/2026-10-13-stage-09-reference/final-fix-green.log`; SHA-256: `54d1f8095f4ecd0bed1b91d7385f27d7f5dc11d8fd5f7b9a1b49ca729fe2f5f4`; exit 0.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+
+
+ Test Files  1 passed (1)
+      Tests  5 passed (5)
+   Start at  08:42:19
+   Duration  126ms (transform 34ms, setup 0ms, import 44ms, tests 3ms, environment 0ms)
+
+```
+
+### teeth
+
+Command: `env -u NO_COLOR pnpm exec vitest run src/lib/cheatsheets/render-citations.test.ts`
+
+Raw: `.superpowers/sdd/2026-10-13-stage-09-reference/final-fix-teeth.log`; SHA-256: `73d531944e1de69bd85b9980213311590cbf55a564ecacfc1ce438f36f993158`; exit 1.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+
+ ❯ |unit| src/lib/cheatsheets/render-citations.test.ts (5 tests | 1 failed) 6ms
+   × citation text stays literal across primary/supporting and linked/URL-less credits instead of becoming Markdown or HTML 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/lib/cheatsheets/render-citations.test.ts > citation text stays literal across primary/supporting and linked/URL-less credits instead of becoming Markdown or HTML
+AssertionError: expected [ …(2) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+  [
+-   "Source: [\\<img src=x onerror=alert(1)\\> \\*guide\\* \\[label\\](target) \\`code\\` \\\\ \\&amp;](https://example.com/primary?q=one&n=two) — \\<script\\>alert(1)\\</script\\> \\_editor\\_ \\!\\[plate\\](image).",
+-   "Source: \\<img src=x onerror=alert(1)\\> \\*guide\\* \\[label\\](target) \\`code\\` \\\\ \\&amp; — \\<script\\>alert(1)\\</script\\> \\_editor\\_ \\!\\[plate\\](image).",
++   "Source: [<img src=x onerror=alert(1)> *guide* [label](target) `code` \\ &amp;](https://example.com/primary?q=one&n=two) — <script>alert(1)</script> _editor_ ![plate](image).",
++   "Source: <img src=x onerror=alert(1)> *guide* [label](target) `code` \\ &amp; — <script>alert(1)</script> _editor_ ![plate](image).",
+  ]
+
+ ❯ src/lib/cheatsheets/render-citations.test.ts:116:21
+    114|       .split('\n')
+    115|       .filter((line) => line.startsWith('Source:'))
+    116|     expect(credits).toEqual([
+       |                     ^
+    117|       `Source: ${primaryLinked ? `[${escapedTitle}](https://example.co…
+    118|       `Source: ${!primaryLinked ? `[${escapedTitle}](https://example.c…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 4 passed (5)
+   Start at  08:42:35
+   Duration  136ms (transform 37ms, setup 0ms, import 47ms, tests 6ms, environment 0ms)
+
+```
+
+### covering
+
+Command: `env -u NO_COLOR pnpm exec vitest run src/lib/cheatsheets/render-citations.test.ts src/lib/cheatsheets/render.test.ts src/lib/cheatsheets/generate-highlighted.test.ts src/lib/cheatsheets/sheet-sources.test.ts src/lib/cheatsheets/index.test.ts src/lib/cheatsheets/caching.test.ts src/lib/cheatsheets/scaling.test.ts src/lib/cheatsheets/stage09-reference.test.ts src/components/CheatsheetSources.test.tsx`
+
+Raw: `.superpowers/sdd/2026-10-13-stage-09-reference/final-fix-covering.log`; SHA-256: `d5ead9b6f068e1e8a792e820d5053626baaff584edbd4d3362889a1ab438f2b1`; exit 0.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+
+
+ Test Files  9 passed (9)
+      Tests  55 passed (55)
+   Start at  08:42:37
+   Duration  1.09s (transform 653ms, setup 109ms, import 1.14s, tests 384ms, environment 570ms)
+
+```
+
+### format-check
+
+Command: `env -u NO_COLOR pnpm format:check`
+
+Raw: `.superpowers/sdd/2026-10-13-stage-09-reference/final-fix-format-check.log`; SHA-256: `cedae0229f110824fcf39f6747b6625b27b937427e4429027e6d1358718008cb`; exit 0.
+
+```text
+
+> web@0.1.0 format:check /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+```
+
+### lint
+
+Command: `env -u NO_COLOR pnpm lint`
+
+Raw: `.superpowers/sdd/2026-10-13-stage-09-reference/final-fix-lint.log`; SHA-256: `fdcf227c3ff9d699d40026dfaca8e48e862438b776630e0f9a8af9766d2ebbb3`; exit 0.
+
+```text
+
+> web@0.1.0 lint /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+> eslint --max-warnings 0
+
+```
+
+### typecheck
+
+Command: `env -u NO_COLOR pnpm typecheck`
+
+Raw: `.superpowers/sdd/2026-10-13-stage-09-reference/final-fix-typecheck.log`; SHA-256: `abea0a4a3c61878df1dd9d35c76c87a17a15953fc1988b379cdc7ba004beeeb8`; exit 0.
+
+```text
+
+> web@0.1.0 typecheck /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+> next typegen && tsc --noEmit
+
+Generating route types...
+✓ Types generated successfully
+```
+
+### test
+
+Command: `env -u NO_COLOR pnpm test`
+
+Raw: `.superpowers/sdd/2026-10-13-stage-09-reference/final-fix-test.log`; SHA-256: `c91341df272c8ad43c190de32470fb6c40c4f2656184e2add0e2b1cfe4bea405`; exit 0.
+
+```text
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+> vitest run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+
+
+ Test Files  207 passed (207)
+      Tests  1495 passed (1495)
+   Start at  08:42:46
+   Duration  29.14s (transform 11.96s, setup 13.98s, import 32.04s, tests 48.32s, environment 79.15s)
+
+```
+
+### build
+
+Command: `env -u NO_COLOR pnpm build`
+
+Raw: `.superpowers/sdd/2026-10-13-stage-09-reference/final-fix-build.log`; SHA-256: `eab1a656e2bb3ea34ad334f384d15bb4fcbe38e3c67272bc0bb42942cfaaee7e`; exit 1.
+
+```text
+
+> web@0.1.0 build /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+> next build
+
+▲ Next.js 16.2.10 (Turbopack)
+
+  Creating an optimized production build ...
+Turbopack build encountered 3 warnings:
+[next]/internal/font/google/archivo_d462d458.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap
+
+
+[next]/internal/font/google/jetbrains_mono_f8290d5a.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&display=swap
+
+
+[next]/internal/font/google/newsreader_8524af2f.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Newsreader:wght@200..800&display=swap
+
+
+
+> Build error occurred
+Error: Turbopack build failed with 3 errors:
+[next]/internal/font/google/archivo_d462d458.module.css
+next/font: error:
+Failed to fetch `Archivo` from Google Fonts.
+
+
+[next]/internal/font/google/jetbrains_mono_f8290d5a.module.css
+next/font: error:
+Failed to fetch `JetBrains Mono` from Google Fonts.
+
+
+[next]/internal/font/google/newsreader_8524af2f.module.css
+next/font: error:
+Failed to fetch `Newsreader` from Google Fonts.
+
+
+    at ignore-listed frames
+ ELIFECYCLE  Command failed with exit code 1.
+```
+
+### build-network
+
+Command: `env -u NO_COLOR pnpm build`
+
+Raw: `.superpowers/sdd/2026-10-13-stage-09-reference/final-fix-build-network.log`; SHA-256: `20572357d4b42c8c8c491d65f2022ad78d9e109a56f6226938ff9ffaf321abed`; exit 0.
+
+```text
+
+> web@0.1.0 build /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+> next build
+
+▲ Next.js 16.2.10 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.7s
+  Running TypeScript ...
+  Finished TypeScript in 5.2s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/52) ...
+  Generating static pages using 7 workers (13/52)
+  Generating static pages using 7 workers (26/52)
+  Generating static pages using 7 workers (39/52)
+✓ Generating static pages using 7 workers (52/52) in 372ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /reference
+├ ● /reference/[slug]
+│ ├ /reference/architecture-patterns
+│ ├ /reference/design-patterns
+│ ├ /reference/api-design
+│ └ [+24 more paths]
+├ ○ /robots.txt
+├ ○ /sitemap.xml
+└ ● /stages/[slug]
+  ├ /stages/01-product-discovery
+  ├ /stages/02-planning
+  ├ /stages/03-architecture
+  └ [+15 more paths]
+
+
+○  (Static)  prerendered as static content
+●  (SSG)     prerendered as static HTML (uses generateStaticParams)
+
+```
+
+### Environment presence check
+
+Command: `python3` reading only the presence of NO_COLOR/FORCE_COLOR in os.environ.
+Raw: `.superpowers/sdd/2026-10-13-stage-09-reference/final-fix-environment.log`; SHA-256: `e872f57360a4e3154ab530295f9b7c29d5eb43c561170c5a95dea46bafb304af`.
+
+```text
+NO_COLOR present: True
+FORCE_COLOR present: False
+```
