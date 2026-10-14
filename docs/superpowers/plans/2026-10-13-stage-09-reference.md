@@ -1468,7 +1468,7 @@ git -C .. commit -m 'feat(scaling): add a routing and overload lookup' -m 'Co-Au
 - Produces: both registry entries/routes, 22 drawn of 27 registered, unchanged five language placeholders, generated Markdown/highlight snapshots and delivery evidence.
 - Existing route params, sitemap and audit discovery already derive from `CHEATSHEETS`; no hand-maintained URL list or framework configuration edit is required.
 
-- [ ] **Step 1: Add these integrated tests.** They must fail before registry edits.
+- [x] **Step 1: Add these integrated tests.** They must fail before registry edits.
 
 #### Source: `web/src/lib/cheatsheets/stage09-reference.test.ts`
 
@@ -1541,7 +1541,7 @@ test.each(['caching', 'scaling'])(
 )
 ```
 
-- [ ] **Step 2: Run integrated RED.**
+- [x] **Step 2: Run integrated RED.**
 
 ```bash
 pnpm exec vitest run src/lib/cheatsheets/stage09-reference.test.ts src/components/Stage09Reference.test.tsx
@@ -1549,7 +1549,7 @@ pnpm exec vitest run src/lib/cheatsheets/stage09-reference.test.ts src/component
 
 Expected: Stage 09 lookup returns no sheets, so both registered-render cases and the new drawn-count/Markdown assertions fail. Save the output and identify the missing-registration failure rather than treating it as a renderer defect.
 
-- [ ] **Step 3: Add the following imports and registry entries.** Place the imports beside existing local imports and both values before `...PLANNED` in `CHEATSHEETS`. Keep every old value.
+- [x] **Step 3: Add the following imports and registry entries.** Place the imports beside existing local imports and both values before `...PLANNED` in `CHEATSHEETS`. Keep every old value.
 
 ```ts
 import { caching } from './caching'
@@ -1564,7 +1564,7 @@ import { scaling } from './scaling'
 
 The existing `isDrawn distinguishes a sheet with content from a registered placeholder` guard in `index.test.ts` contains the sorted drawn slug list. Insert `'caching',` between `'aws-deployment',` and `'ci-cd',` and `'scaling',` between `'post-deploy-verification',` and `'sdlc',`. Do not change any other expected slug.
 
-- [ ] **Step 4: Run the integrated test command for GREEN, then expose stale generated artifacts before regenerating.**
+- [x] **Step 4: Run the integrated test command for GREEN, then expose stale generated artifacts before regenerating.**
 
 ```bash
 pnpm exec vitest run src/lib/cheatsheets/render.test.ts src/lib/cheatsheets/generate-highlighted.test.ts
@@ -1580,9 +1580,9 @@ pnpm exec vitest run src/lib/cheatsheets/index.test.ts src/lib/cheatsheets/stage
 
 Expected: all focused guards GREEN. The generated highlighting map grows because the generator gathers every snippet, even when a row currently renders it as plain code; do not hand-edit or omit that snapshot.
 
-- [ ] **Step 5: Prove integrated registration has teeth.** Temporarily replace only the `scaling,` registry value with `{ ...scaling, stage: '03-architecture' },`; run `pnpm exec vitest run src/lib/cheatsheets/stage09-reference.test.ts` without a name filter. Expect only the Stage 09 companion/tether test to fail, while the generated-Markdown content test passes. Restore the entry and rerun the full integrated GREEN command. Never regenerate snapshots while the teeth mutation is present.
+- [x] **Step 5: Prove integrated registration has teeth.** Temporarily replace only the `scaling,` registry value with `{ ...scaling, stage: '03-architecture' },`; run `pnpm exec vitest run src/lib/cheatsheets/stage09-reference.test.ts` without a name filter. Expect only the Stage 09 companion/tether test to fail, while the generated-Markdown content test passes. Restore the entry and rerun the full integrated GREEN command. Never regenerate snapshots while the teeth mutation is present.
 
-- [ ] **Step 6: Append this source mapping to the source ledger.** The audit receives a dated follow-up linking to that new ledger section; keep its 2026-10-08 findings as history. Text sources are consulted; no local image is copied, converted or published.
+- [x] **Step 6: Append this source mapping to the source ledger.** The audit receives a dated follow-up linking to that new ledger section; keep its 2026-10-08 findings as history. Text sources are consulted; no local image is copied, converted or published.
 
 #### Source: `reference/cheatsheet-sources.md (append section)`
 
@@ -1615,9 +1615,9 @@ The caching and infrastructure-scaling lookup companions use the references mapp
 The sheets are original structured lookups. No source image was selected, copied, converted or registered in this round. Their TypeScript modules are the content source; the generated Markdown preserves the same text and citation list.
 ```
 
-- [ ] **Step 7: Recheck first-party references after reading the complete plan.** In the execution report, record the date and specifically confirm `updateTag` caller scope, `revalidateTag` profiles, Cloudflare status distinctions, ALB feature compatibility and all-unhealthy fail-open. Compare the final authored rows against the approved spec. If a factual mismatch emerges, record provenance and repair test-first within approved scope; do not silently widen the chapter or renderer.
+- [x] **Step 7: Recheck first-party references after reading the complete plan.** In the execution report, record the date and specifically confirm `updateTag` caller scope, `revalidateTag` profiles, Cloudflare status distinctions, ALB feature compatibility and all-unhealthy fail-open. Compare the final authored rows against the approved spec. If a factual mismatch emerges, record provenance and repair test-first within approved scope; do not silently widen the chapter or renderer.
 
-- [ ] **Step 8: Run the full verification section below, then commit app/generated/source-ledger changes.** Use these commands from `web/` after the gate and raw report update:
+- [x] **Step 8: Run the full verification section below, then commit app/generated/source-ledger changes.** Use these commands from `web/` after the gate and raw report update:
 
 ```bash
 git -C .. add web/src/lib/cheatsheets/index.ts web/src/lib/cheatsheets/index.test.ts web/src/lib/cheatsheets/stage09-reference.test.ts web/src/components/Stage09Reference.test.tsx reference/cheatsheets.md web/src/lib/cheatsheets/highlighted.generated.ts reference/cheatsheet-sources.md reference/stage-09-performance-sources.md docs/superpowers/reports/2026-10-13-stage-09-reference.md
@@ -1626,7 +1626,7 @@ git -C .. commit -m 'feat(reference): register stage 09 lookup companions' -m 'C
 
 Keep records-only updates in a separate `docs(tracker): record stage 09 reference verification` commit. Both include the required co-author trailer.
 
-- [ ] **Step 9: Record actual evidence and hand off.** The report must contain raw RED/GREEN/teeth fences for Tasks 1–4, command exits, current refs, measured UI results, cold lookup outcomes, review findings and deferrals. Task/tracker/KICKOFF record 22/27 only for the implementation branch until a separately approved merge lands. On develop, keep 20/25 until then. Do not predict future test counts, merge SHAs or deployment status. Append an approved citation-support decision after rederiving the next available D id; preserve prior decision rows. Update W-6.3q checkboxes only when the named work actually completes.
+- [x] **Step 9: Record actual evidence and hand off.** The report must contain raw RED/GREEN/teeth fences for Tasks 1–4, command exits, current refs, measured UI results, cold lookup outcomes, review findings and deferrals. Task/tracker/KICKOFF record 22/27 only for the implementation branch until a separately approved merge lands. On develop, keep 20/25 until then. Do not predict future test counts, merge SHAs or deployment status. Append an approved citation-support decision after rederiving the next available D id; preserve prior decision rows. Update W-6.3q checkboxes only when the named work actually completes.
 
 Append the following dated follow-up to the existing reference-hub design, in the records commit. It documents the new contract without rewriting the original single-source decision.
 
@@ -1642,7 +1642,7 @@ This extends the original attribution contract for lookups that combine first-pa
 
 ## Verification (after all tasks)
 
-- [ ] Run the cheapest-first gate from `web/`, one command at a time, preserving actual stdout/stderr and exit status:
+- [x] Run the cheapest-first gate from `web/`, one command at a time, preserving actual stdout/stderr and exit status:
 
 ```bash
 pnpm format:check
@@ -1656,9 +1656,9 @@ pnpm test:dev-console
 
 The production and development browser runs use different servers/build modes; report them separately. Do not count earlier Stage 09 browser results as evidence for the changed shared renderer. Do not run `pnpm test:prod` as a working-tree check. Build/audits require the repository's existing environment; report any unavailable dependency rather than claiming a pass.
 
-- [ ] Inspect `/reference/caching` and `/reference/scaling` in both themes at 320, 375, 768, 1024, 1440, 1920 and 2560px. Check all distinct text/background pairs for AA, no page overflow and source links at least 44px below lg. Inspect each literal/snippet and the seven-source caching footer. Scroll within code containers if needed; never allow page-wide overflow. Preserve measurements/screenshots with page, width and theme provenance. There is no stage-panel height limit for these sheets.
-- [ ] Verify both routes through the reference index, direct URL, Stage 09 tether, sitemap and generated Markdown. Existing audits derive reference URLs from the registry; confirm they included the new routes.
-- [ ] Perform a cold lookup pass blind to the plan/spec. Ask the reader: which invalidation can this webhook call; does a HIT prove current application data; which ALB algorithm fits uneven in-flight work; do failed probes stop all traffic? Record answer, located section and caveat. Repair real misses test-first and rerun only affected checks before the final gate.
+- [x] Inspect `/reference/caching` and `/reference/scaling` in both themes at 320, 375, 768, 1024, 1440, 1920 and 2560px. Check all distinct text/background pairs for AA, no page overflow and source links at least 44px below lg. Inspect each literal/snippet and the seven-source caching footer. Scroll within code containers if needed; never allow page-wide overflow. Preserve measurements/screenshots with page, width and theme provenance. There is no stage-panel height limit for these sheets.
+- [x] Verify both routes through the reference index, direct URL, Stage 09 tether, sitemap and generated Markdown. Existing audits derive reference URLs from the registry; confirm they included the new routes.
+- [x] Perform a cold lookup pass blind to the plan/spec. Ask the reader: which invalidation can this webhook call; does a HIT prove current application data; which ALB algorithm fits uneven in-flight work; do failed probes stop all traffic? Record answer, located section and caveat. Repair real misses test-first and rerun only affected checks before the final gate.
 - [ ] Obtain the final independent whole-branch review across the complete diff, including shared citation rendering, actual source content, generated snapshots, source ledger and documentation. Review must cite evidence, severities, provenance and branch state. Resolve blocking findings and verify fixes before proposing integration.
 - [ ] Recheck `git diff --check`, tracked state, new registry counts and refs. Present the concrete merge/PR/as-is choices using finishing-a-development-branch, with a plan-specific recommendation. Every merge into develop requires explicit new approval; main promotion belongs to the user.
 
