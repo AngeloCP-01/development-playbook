@@ -5,7 +5,8 @@
 The branch has **22 drawn / 27 registered**; local develop remains **20/25**,
 and W-3 remains **15/18**. Tasks 1–4 are independently approved. Final
 whole-branch review returned Ready to merge at `bddf51d`. Its citation-text
-finding is fixed in `35161b0`, awaiting scoped rereview; integration is separate.
+finding is fixed in `35161b0`; scoped rereview closed M1 and M2 with no new
+breakage. The branch is Ready to merge; integration is a separate decision.
 
 Open the next session in
 `/Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference`.
@@ -86,8 +87,8 @@ are registered and tethered to Stage 09 on the implementation branch only.
 Tasks 1–4 are independently approved. Task 4 has one nonblocking finding,
 M1: inherited Node color warnings; the clean development runner retry removes
 them. Whole-branch review returned Ready to merge at `bddf51d`, with no blocking
-findings. Its M2 citation-text gap is fixed in `35161b0`; scoped rereview remains
-pending. The branch has **22/27**;
+findings. Its M2 citation-text gap is fixed in `35161b0`; scoped rereview
+closed both findings with no new breakage. The branch is Ready to merge and has **22/27**;
 local develop still has **20/25**.
 Five language placeholders and W-6.4 remain separate.
 
@@ -126,10 +127,13 @@ The site has no order backend; examples remain illustrative.
    The reference check must return nothing. The tracker currently has one
    historical struck-through hit in its 2026-09-08 W-3.12 row; verify that
    every hit is struck through and immediately corrected, not a live status.
-4. **Resume W-6.3q at final whole-branch review.** All four task reviews are
-   approved. Read the execution report and plan-scoped review packages, then
-   review the complete branch across application, generated artifacts and records.
-   Resolve blocking findings with fresh evidence before proposing integration.
+4. **Resume W-6.3q at the integration choice.** All four task reviews, the
+   whole-branch review and the final scoped rereview are complete. M1 and M2 are
+   addressed; no finding remains open. Read the execution report's final handoff.
+   Recommended: a local `--no-ff` merge into `develop`, because the branch is
+   reviewed and verified. Ask for a fresh user decision before merging.
+   Raw logs, measurements, screenshots and review packages are archived in the
+   parent repository at `.superpowers/sdd/2026-10-13-stage-09-reference-evidence/`.
    The completed Stage 09 port remains a separate reviewed deliverable.
 5. **Keep W-6.4 separate.** Glossary and stack surfacing remains open; ask
    before any future merge into `develop`, and never merge or push to `main`.

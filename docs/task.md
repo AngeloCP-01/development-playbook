@@ -16,7 +16,7 @@ grep it by id, don't read it whole.
 **Current checkpoint (2026-10-14): Stage 09's caching/scaling companions are
 implemented and verified on `feat/stage-09-reference-companions`. All four tasks
 are approved. Whole-branch review returned Ready to merge at `bddf51d`;
-its citation-text finding is fixed in `35161b0`, awaiting scoped rereview.** Branch W-6 is 22/27;
+its citation-text finding is fixed in `35161b0` and independently reverified.** Branch W-6 is 22/27;
 local develop remains 20/25 and W-3 remains 15/18. Stage 08's corrected chapter and ten-step port merged as
 `a03e190`; its `security` lookup sheet and original diagram followed as
 `739c8ed`. The latter's merged tree passed 1406 tests across 184 files, lint,
@@ -543,7 +543,7 @@ deferrals are in the W-6.3p tracker row, source ledger, and
 `docs/superpowers/reports/2026-10-05-security-reference-sheet.md`.
 
 **W-6.3q — Stage 09 caching/scaling lookup companions ◐ (implementation branch,
-2026-10-14; final fix awaiting scoped rereview)**
+2026-10-14; reviewed and verified, integration pending)**
 
 The user approved the [written spec](superpowers/specs/2026-10-13-stage-09-reference-design.md)
 on 2026-10-13 (`a9fb4e0`) and continued after the
@@ -574,7 +574,8 @@ and isolated teeth each fail only the new guard; restored coverage passes 55/55,
 and the final suite passes **1495/1495 across 207 files**. Format, lint and
 typecheck pass; a fresh network-enabled build generates **52 pages**. Generated
 snapshots remain unchanged. M1 retains the historical warning logs and uses
-`env -u NO_COLOR` for future captures. Scoped rereview remains pending.
+`env -u NO_COLOR` for future captures. The final scoped rereview closed M1
+and M2 with no new breakage; the branch is Ready to merge.
 
 The implementation branch has **22 drawn / 27 registered**. Local `develop`
 remains **20 drawn / 25 registered**; W-3 remains **15/18**. The five language
@@ -588,7 +589,7 @@ placeholders are unchanged. No integration, push or deployment has occurred.
       algorithm choice, capacity limits and overload behavior
 - [x] Write and approve the bounded spec/plan, then implement through TDD and
       per-task review using the existing reference renderer and design system
-- [ ] Verify both themes, responsive layout, accessible content and production/
+- [x] Verify both themes, responsive layout, accessible content and production/
       development consoles; complete whole-branch review before integration
 - [ ] Record actual registry/drawn counts and merge evidence after separately
       approved integration; refresh the next-session handoff before use

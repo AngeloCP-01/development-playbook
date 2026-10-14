@@ -12,7 +12,8 @@ twenty-five reference sheets are drawn on local `develop`, including Stage 08's
 Tasks 1–4 are independently approved. Task 4 has one nonblocking environmental
 finding, M1, for inherited Node color warnings; the clean development retry
 removes them. Whole-branch review returned Ready to merge at `bddf51d`; its M2
-citation-text finding is fixed in `35161b0`, awaiting scoped rereview. Local develop remains
+citation-text finding is fixed in `35161b0`. The scoped rereview closed both findings
+with no new breakage. The branch is Ready to merge. Local develop remains
 **20/25**. No integration, push or deployment has occurred.
 Re-derive every count here rather than quoting it.
 
@@ -91,6 +92,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-10-14 | W-6.3q (final review) | **Ready to merge, with no open finding.** Four task reviews and the whole-branch review are complete; the single final fix wave passed scoped rereview. | Whole-branch range `597fe0b..bddf51d`; citation-text fix `35161b0`, records `4a11c1b`; scoped rereview marks M1 and M2 ADDRESSED with no new breakage. Fresh controller suite at `4a11c1b`: **1495/1495 across 207 files**. Fresh build **52 pages**; retained unchanged-UI production **24/24**, clean development **1/1**, matrix **28 observations / 378 pairs**, blind lookup **4/4**. [Execution report](superpowers/reports/2026-10-13-stage-09-reference.md). | **Integration awaits a fresh user decision.** Branch **22/27**, develop **20/25**, W-3 **15/18**. Raw evidence is archived under the parent repository's `.superpowers/sdd/2026-10-13-stage-09-reference-evidence/`. Deferred: the previously scoped runtime, images, language sheets, W-6.4, chapter/port and unrelated repairs; push and production promotion. |
 | 2026-10-14 | W-6.3q (final fix) | **One consolidated final-review fix wave is committed; scoped rereview remains pending.** Whole-branch review at `bddf51d` returned Ready to merge with no blocking findings. M2 is a plan-authored Markdown citation-text gap, now encoded without changing URLs or credit order. M1 is inherited runner noise; historical logs remain intact and future captures use `env -u NO_COLOR`. | Fix `35161b0`; raw RED and isolated full-file teeth each **1 failed / 4 passed**, only the new guard; GREEN **5/5**, restored covering **55/55 across 9 files**, full **1495/1495 across 207 files**. Format/lint/typecheck exit 0; fresh network-enabled **52-page build**, with sandbox font-fetch failure retained. Snapshot guards pass unchanged. [Execution report](superpowers/reports/2026-10-13-stage-09-reference.md) records exact log hashes and dispositions. | **Scoped rereview and separately approved integration remain due.** Branch W-6 **22/27**, develop **20/25**, W-3 **15/18**. No merge, push or deployment. Deferred: diagrams/images, runtime infrastructure, chapter/port edits, W-6.4, five language sheets, real order benchmarks, shared-drill/storage repairs and promotion. |
 | 2026-10-14 | W-6.3q (per-task review) | **All four implementation tasks have independent approval; final whole-branch review remains pending.** Branch W-6 stays **22/27**, develop **20/25**, W-3 **15/18**. | Task 4 review of `e2aa15f..f1de391`: **Spec compliant / quality Approved**, no Critical or Important findings. M1 is nonblocking inherited Node color noise; the recorded clean development runner retry removes it. [Execution report](superpowers/reports/2026-10-13-stage-09-reference.md) retains verification and review provenance; Task 4 review package remains in the preserved worktree. | **Final whole-branch review and separately approved integration remain due.** No merge, push or deployment; main is unchanged. Deferred: diagrams/images, runtime infrastructure, chapter/port edits, W-6.4, five language sheets, real order benchmarks and shared-drill/storage repairs. |
 | 2026-10-14 | W-6.3q (implementation branch) | **Caching and infrastructure scaling are drawn and registered on `feat/stage-09-reference-companions`, with primary/supporting citations in web and generated Markdown.** Branch W-6 is **22/27**; local develop stays **20/25**, W-3 **15/18**. | Implementation `fa9bb40`; Tasks 1–3 `13f0cb6`, `f1bb218`, `b39d9e0` have independent clean reviews. [Execution report](superpowers/reports/2026-10-13-stage-09-reference.md) retains raw RED/GREEN/isolated teeth for Tasks 1–4, first-party recheck dated 2026-10-14 and controller rulings. Final full suite **1494/1494 across 207 files**, focused **33/33**, format/lint/typecheck exit 0, fresh **52-page build**. Production UI audit **24/24** covers unchanged DOM/data across a Markdown-only repair; separate fresh development-console runs **1/1**, with clean runner retry. Blind lookup **4 passes/0 misses**. Dedicated production matrix **28 observations / 378 pair measurements**, AA minimum **5.2555:1**, no page overflow, source links >=44px below lg, navigation/sitemap/source ordering and isolated consoles passed; visual snippet/footer checks found no defect. New example exposed **PRE-EXISTING GENERATOR** blank-line indentation, a **PLAN-AUTHORED missed condition**; authorized test-first fix and isolated teeth passed. Tracker ledger **2/2**, added local links resolve, diff whitespace check clean. | **Task 4 and final whole-branch review pending; no integration, push or deployment.** Deferred: diagrams/image republication, runtime infrastructure, chapter/port edits, W-6.4, five language sheets, actual order benchmarks, shared-drill/storage repairs and promotion. Every merge remains a separate user decision. |
@@ -891,13 +893,13 @@ of new work, not assumed to survive from the last `git checkout`.
 
 ## Next up
 
-**2026-10-14: W-6.3q final fix is awaiting scoped rereview.** The isolated branch
+**2026-10-14: W-6.3q is reviewed and verified; integration is pending.** The isolated branch
 `feat/stage-09-reference-companions` registers caching and infrastructure scaling,
 with supporting citations, generated Markdown/highlighting and source provenance.
 Its count is **22 drawn / 27 registered**. Local develop `597fe0b` remains
 **20/25**; W-3 remains **15/18**. Main is unchanged at `d659d32`.
 
-**Next checkpoint: scoped rereview of the final fix.** Implementation `fa9bb40` and
+**Next checkpoint: the user's integration choice.** Implementation `fa9bb40` and
 records `f1de391` are committed with their required trailers. Tasks 1–4 are
 independently approved. Task 4 returned Spec compliant / quality Approved,
 with no blocking findings. M1 records inherited Node color noise; the clean
@@ -910,8 +912,9 @@ Whole-branch review at `bddf51d` returned Ready to merge with no blocking issues
 M2 citation-text encoding is fixed in `35161b0`; RED/teeth fail only the new guard,
 restored coverage passes 55/55 and the full suite passes 1495/1495 across 207 files.
 Format/lint/typecheck and a fresh 52-page build pass. M1 retains the original
-warning logs; future captures use `env -u NO_COLOR`. Complete the scoped rereview
-before proposing integration. Every merge requires
+warning logs; future captures use `env -u NO_COLOR`. The scoped rereview closed
+both findings with no new breakage. Recommend a local `--no-ff` merge into develop
+because the branch is reviewed and verified. Every merge requires
 a separate user decision; no merge, push or deployment has occurred.
 
 Deferred: W-3 stages 10, 17 and 18; five language sheets; W-6.4 glossary/stack
