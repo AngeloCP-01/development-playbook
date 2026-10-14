@@ -3,8 +3,8 @@
 **Next-session handoff, 2026-10-14:** W-6.3q is implemented in the isolated
 `.worktrees/stage-09-reference` checkout on `feat/stage-09-reference-companions`.
 The branch has **22 drawn / 27 registered**; local develop remains **20/25**,
-and W-3 remains **15/18**. Tasks 1–3 are independently review clean. Task 4
-and final whole-branch reviews remain pending; integration is a separate decision.
+and W-3 remains **15/18**. Tasks 1–4 are independently approved. Final
+whole-branch review remains pending; integration is a separate decision.
 
 Open the next session in
 `/Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference`.
@@ -82,8 +82,10 @@ in `.superpowers/sdd/2026-10-08-stage-09-interactive-port/merged-verification.md
 **Current round: W-6.3q.** Shared supporting citations, the five-section caching
 lookup and four-section infrastructure-scaling lookup are implemented. Both sheets
 are registered and tethered to Stage 09 on the implementation branch only.
-Tasks 1–3 have independent clean reviews; Task 4 and final whole-branch reviews
-remain pending. The branch has **22/27**; local develop still has **20/25**.
+Tasks 1–4 are independently approved. Task 4 has one nonblocking finding,
+M1: inherited Node color warnings; the clean development runner retry removes
+them. Final whole-branch review remains pending. The branch has **22/27**;
+local develop still has **20/25**.
 Five language placeholders and W-6.4 remain separate.
 
 The full unit/DOM suite passed **1494/1494 across 207 files**, with format, lint
@@ -118,9 +120,9 @@ The site has no order backend; examples remain illustrative.
    The reference check must return nothing. The tracker currently has one
    historical struck-through hit in its 2026-09-08 W-3.12 row; verify that
    every hit is struck through and immediately corrected, not a live status.
-4. **Resume W-6.3q at independent review.** Read the execution report and
-   plan-scoped task/review packages. Complete Task 4 review, then the final
-   whole-branch review across application, generated artifacts and records.
+4. **Resume W-6.3q at final whole-branch review.** All four task reviews are
+   approved. Read the execution report and plan-scoped review packages, then
+   review the complete branch across application, generated artifacts and records.
    Resolve blocking findings with fresh evidence before proposing integration.
    The completed Stage 09 port remains a separate reviewed deliverable.
 5. **Keep W-6.4 separate.** Glossary and stack surfacing remains open; ask

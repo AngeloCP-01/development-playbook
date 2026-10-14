@@ -13,9 +13,10 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current checkpoint (2026-10-13): Stage 09's interactive port merged locally
-into `develop` as `7a5576a`; its W-6 caching/scaling plan is ready for review.**
-W-3 is 15/18 and W-6 is 20/25. Stage 08's corrected chapter and ten-step port merged as
+**Current checkpoint (2026-10-14): Stage 09's caching/scaling companions are
+implemented and verified on `feat/stage-09-reference-companions`. All four tasks
+are approved; final whole-branch review remains pending.** Branch W-6 is 22/27;
+local develop remains 20/25 and W-3 remains 15/18. Stage 08's corrected chapter and ten-step port merged as
 `a03e190`; its `security` lookup sheet and original diagram followed as
 `739c8ed`. The latter's merged tree passed 1406 tests across 184 files, lint,
 typecheck and format. Stage 09's chapter revision and W-6 source research
@@ -541,7 +542,7 @@ deferrals are in the W-6.3p tracker row, source ledger, and
 `docs/superpowers/reports/2026-10-05-security-reference-sheet.md`.
 
 **W-6.3q — Stage 09 caching/scaling lookup companions ◐ (implementation branch,
-2026-10-14; review pending)**
+2026-10-14; final review pending)**
 
 The user approved the [written spec](superpowers/specs/2026-10-13-stage-09-reference-design.md)
 on 2026-10-13 (`a9fb4e0`) and continued after the
@@ -549,7 +550,7 @@ on 2026-10-13 (`a9fb4e0`) and continued after the
 Subagent-Driven execution uses `.worktrees/stage-09-reference` on
 `feat/stage-09-reference-companions`, descended from local `develop` `597fe0b`.
 
-Tasks 1–3 are implemented and independently review clean: supporting citation
+Tasks 1–4 are implemented and independently approved: supporting citation
 rendering (`13f0cb6`), caching (`f1bb218`) and infrastructure scaling (`b39d9e0`).
 Task 4 (`fa9bb40`) registers both sheets, regenerates Markdown/highlighting and
 appends the source ledger. The generator also keeps empty snippet lines empty, a pre-existing
@@ -564,7 +565,9 @@ Production browser checks passed 24/24; development validation passed 1/1.
 The controller's 28-observation matrix checked both sheets across seven widths
 and two themes, with 378 pair measurements, AA minimum 5.2555:1, no overflow,
 source links at least 44px and no visual defect. The fresh blind lookup returned
-4 passes/0 misses. Task 4 and final whole-branch reviews remain pending.
+4 passes/0 misses. Task 4 review found no blocking issue; M1 records inherited
+Node color warnings, removed in the clean development runner retry. Final
+whole-branch review remains pending.
 
 The implementation branch has **22 drawn / 27 registered**. Local `develop`
 remains **20 drawn / 25 registered**; W-3 remains **15/18**. The five language
@@ -576,9 +579,8 @@ placeholders are unchanged. No integration, push or deployment has occurred.
       invalidation from CDN freshness and response status
 - [x] Define scaling guidance around healthy-target routing, workload-dependent
       algorithm choice, capacity limits and overload behavior
-- [ ] Write and approve the bounded spec/plan, then implement through TDD and
+- [x] Write and approve the bounded spec/plan, then implement through TDD and
       per-task review using the existing reference renderer and design system
-      (spec/plan and implementation complete; Task 4 review pending)
 - [ ] Verify both themes, responsive layout, accessible content and production/
       development consoles; complete whole-branch review before integration
 - [ ] Record actual registry/drawn counts and merge evidence after separately

@@ -9,9 +9,10 @@ interactive on local `develop` (01–09 and 11–16); stages 10, 17 and 18 remai
 twenty-five reference sheets are drawn on local `develop`, including Stage 08's
 `security` sheet. W-6.3q is implemented on
 `feat/stage-09-reference-companions` with **22 drawn / 27 registered**.
-Tasks 1–3 are independently review clean; Task 4 and final whole-branch reviews
-remain pending. Local develop remains **20/25**. No integration, push or deployment
-has occurred.
+Tasks 1–4 are independently approved. Task 4 has one nonblocking environmental
+finding, M1, for inherited Node color warnings; the clean development retry
+removes them. Final whole-branch review remains pending. Local develop remains
+**20/25**. No integration, push or deployment has occurred.
 Re-derive every count here rather than quoting it.
 
 **The site is live** at https://acp-dev-playbook.vercel.app and verifies itself with
@@ -89,6 +90,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-10-14 | W-6.3q (per-task review) | **All four implementation tasks have independent approval; final whole-branch review remains pending.** Branch W-6 stays **22/27**, develop **20/25**, W-3 **15/18**. | Task 4 review of `e2aa15f..f1de391`: **Spec compliant / quality Approved**, no Critical or Important findings. M1 is nonblocking inherited Node color noise; the recorded clean development runner retry removes it. [Execution report](superpowers/reports/2026-10-13-stage-09-reference.md) retains verification and review provenance; Task 4 review package remains in the preserved worktree. | **Final whole-branch review and separately approved integration remain due.** No merge, push or deployment; main is unchanged. Deferred: diagrams/images, runtime infrastructure, chapter/port edits, W-6.4, five language sheets, real order benchmarks and shared-drill/storage repairs. |
 | 2026-10-14 | W-6.3q (implementation branch) | **Caching and infrastructure scaling are drawn and registered on `feat/stage-09-reference-companions`, with primary/supporting citations in web and generated Markdown.** Branch W-6 is **22/27**; local develop stays **20/25**, W-3 **15/18**. | Implementation `fa9bb40`; Tasks 1–3 `13f0cb6`, `f1bb218`, `b39d9e0` have independent clean reviews. [Execution report](superpowers/reports/2026-10-13-stage-09-reference.md) retains raw RED/GREEN/isolated teeth for Tasks 1–4, first-party recheck dated 2026-10-14 and controller rulings. Final full suite **1494/1494 across 207 files**, focused **33/33**, format/lint/typecheck exit 0, fresh **52-page build**. Production UI audit **24/24** covers unchanged DOM/data across a Markdown-only repair; separate fresh development-console runs **1/1**, with clean runner retry. Blind lookup **4 passes/0 misses**. Dedicated production matrix **28 observations / 378 pair measurements**, AA minimum **5.2555:1**, no page overflow, source links >=44px below lg, navigation/sitemap/source ordering and isolated consoles passed; visual snippet/footer checks found no defect. New example exposed **PRE-EXISTING GENERATOR** blank-line indentation, a **PLAN-AUTHORED missed condition**; authorized test-first fix and isolated teeth passed. Tracker ledger **2/2**, added local links resolve, diff whitespace check clean. | **Task 4 and final whole-branch review pending; no integration, push or deployment.** Deferred: diagrams/image republication, runtime infrastructure, chapter/port edits, W-6.4, five language sheets, actual order benchmarks, shared-drill/storage repairs and promotion. Every merge remains a separate user decision. |
 | 2026-10-13 | W-6.3q (plan) | **The written reference spec is approved, and the four-task implementation plan is ready for review.** Tasks cover shared supporting citations, caching, scaling, then registration/generated artifacts and delivery evidence. | Spec approval `a9fb4e0`; [plan](superpowers/plans/2026-10-13-stage-09-reference.md) `f1f622c`. All 15 proposed TS/TSX source blocks plus two registry/test overlays typechecked in a full-project virtual host and linted with zero errors/warnings. An unsupported role-query option was caught and corrected before the final check. Self-review covered spec requirements, five Review Focus cases, task interfaces, source claims and placeholders. Nine planned test files contain **34 proposed cases; none was executed during planning**. Raw planning inputs/output are retained locally under `.superpowers/planning/2026-10-13-stage-09-reference/`. `web/` is unchanged; W-3 stays **15/18**, W-6 **20/25**. | **Plan review and execution-method selection precede implementation.** RED/GREEN/teeth runs, per-task/final reviews and live UI verification remain due. Images, runtime infrastructure, chapter/port edits, W-6.4, language sheets, merge, push and promotion remain separate. |
 | 2026-10-13 | W-6.3q (spec draft) | **The user approved practical decision guides with concrete examples; the written spec is ready for review.** It proposes five caching sections, four infrastructure-scaling sections, and optional additional citations in the existing renderer. | Spec `810af91` on `docs/2026-10-13-stage-09-reference-design`: [written design](superpowers/specs/2026-10-13-stage-09-reference-design.md). Checked current Next.js, Cloudflare, AWS and Google SRE guidance against the gathered audit; read installed Next.js cache guides. Self-review checked required section order, real code references, local links, status and scope; humanizer pass preserved the plain reference voice. W-3 stays **15/18**, W-6 **20/25**; `web/` is unchanged. | **Written-spec approval, implementation plan, execution choice, TDD, review and live verification remain due.** No sheet registration, new image, merge, push or deployment. W-6.4, language sheets, chapter/port edits and older shared repairs remain separate. |
@@ -887,15 +889,17 @@ of new work, not assumed to survive from the last `git checkout`.
 
 ## Next up
 
-**2026-10-14: W-6.3q implementation is awaiting review.** The isolated branch
+**2026-10-14: W-6.3q is awaiting final whole-branch review.** The isolated branch
 `feat/stage-09-reference-companions` registers caching and infrastructure scaling,
 with supporting citations, generated Markdown/highlighting and source provenance.
 Its count is **22 drawn / 27 registered**. Local develop `597fe0b` remains
 **20/25**; W-3 remains **15/18**. Main is unchanged at `d659d32`.
 
-**Next checkpoint: Task 4 and final whole-branch review.** Implementation `fa9bb40`
-is committed with its required trailer; separate records follow. Tasks 1–3 are
-independently review clean. The [execution report](superpowers/reports/2026-10-13-stage-09-reference.md)
+**Next checkpoint: final whole-branch review.** Implementation `fa9bb40` and
+records `f1de391` are committed with their required trailers. Tasks 1–4 are
+independently approved. Task 4 returned Spec compliant / quality Approved,
+with no blocking findings. M1 records inherited Node color noise; the clean
+development runner retry removes it. The [execution report](superpowers/reports/2026-10-13-stage-09-reference.md)
 contains raw TDD/teeth and verification evidence. The fresh blind lookup returned
 4 passes/0 misses. The approved [spec](superpowers/specs/2026-10-13-stage-09-reference-design.md)
 and [plan](superpowers/plans/2026-10-13-stage-09-reference.md) remain dated
