@@ -5958,3 +5958,76 @@ Raw: `.superpowers/sdd/2026-10-13-stage-09-reference/final-fix-environment.log`;
 NO_COLOR present: True
 FORCE_COLOR present: False
 ```
+
+## Final scoped re-review and handoff
+
+**M1: PRE-EXISTING ENVIRONMENT, carried from Task 4. Inherited Node color warnings make retained runner output noisy.** — **ADDRESSED by explicit disposition and ephemeral remedy.** `.superpowers/sdd/2026-10-13-stage-09-reference/final-fix-report.md:28` preserves the historical production/development warnings, identifies the clean development retry, and uses `env -u NO_COLOR` for future captures. The fix diff appends to the canonical report without changing the original warning evidence at `docs/superpowers/reports/2026-10-13-stage-09-reference.md:4909`, `:5087`, or the clean retry at `:5330`. Every new test/build command names the ephemeral environment setup; their retained logs contain no color-conflict warning. The environment-presence log only reports variable presence. No application or global-environment change was made or required.
+
+**M2: PLAN-AUTHORED ERROR inherited from the primary-citation renderer. Supporting citation text is literal in the web view but can become Markdown/HTML syntax in the generated deliverable.** — **ADDRESSED.** `web/src/lib/cheatsheets/render.ts:7` escapes backslashes, code/emphasis/link/image delimiters, angle brackets, and entity introducers. Both linked and URL-less titles pass through that helper, as do all authors, at `render.ts:71`. URL destinations are still interpolated separately and exactly; the ordered source loop is unchanged. `web/src/lib/cheatsheets/render-citations.test.ts:88` uses the real renderer and existing real source helper, with only the registry fixture mocked by the existing harness. Its two iterations cover primary-linked/supporting-URL-less and primary-URL-less/supporting-linked credits. Literal expected strings cover HTML tags, Markdown links/images, emphasis, code spans, a backslash and `&amp;`; the query string containing `&` remains unchanged. The exact two-credit array assertion at `:116` also preserves order.
+
+### New Breakage in the Fix Diff
+
+**None.** The production change is confined to citation title/author encoding in the Markdown generator. Authored sheet data, DOM rendering, image ownership/publication, grouping and URL formatting are untouched. Generated files are absent from the fix diff; the recorded covering run includes both committed-file snapshot guards and passes unchanged. No new Critical, Important or Minor issue was found.
+
+**Records check: PASS.** `KICKOFF.md:94`, `docs/task.md:575`, and `docs/tracker.md:94` report the actual final-fix 1495/1495 tests across 207 files and fresh 52-page build. Current handoff sections distinguish the completed whole-branch review at `bddf51d` from the scoped rereview still pending at the reviewed `4a11c1b` records commit. The earlier 1494/207 evidence remains explicitly historical. Branch 22/27, develop 20/25 and W-3 15/18 remain distinct; integration is still a separate decision. The appended fix report explicitly retains production 24/24, clean development 1/1, matrix 28/378 and blind lookup 4/4 as evidence for unchanged runtime UI, without claiming a fresh browser sweep. This agrees with the supplied controller rulings and the fix's actual scope.
+
+### Evidence Checks
+
+**Raw provenance check: PASS.** A read-only Python check hashed exactly the 11 raw logs named in `final-fix-report.md`; all SHA-256 values match. All ten recorded test/build exit codes match their `.exit` files. The environment-presence row has no recorded exit code and was not counted as an exit-code claim. Every displayed block matches its corresponding raw file after the disclosed trailing-line-padding normalization; diagnostic content and counts are intact.
+
+**TDD evidence check: PASS.** The complete-file RED and identity-mutation teeth commands both run `render-citations.test.ts` without a name filter, each producing exactly 1 failed / 4 passed. Both fail for the expected reason: the new literal-credit array receives raw HTML/Markdown instead of escaped citation text. GREEN passes 5/5; restoration is followed by 55/55 across nine covering files. The final full suite passes 1495/1495 across 207 files. Format, lint and generated-route typecheck exit 0. The sandbox font-fetch build failure is retained as exit 1; the network-enabled retry exits 0 and generates 52/52 pages. No snapshot generation is recorded under mutation. These captured runs support the amended code; the final diff cannot reconstruct historical keystroke order.
+
+**Review boundary check: PASS.** Reviewed FIX_BASE `bddf51db7538b7f8caa02bfa4fd9d31a24f33440` through packaged HEAD `4a11c1b`, including the two fix/records commits and complete six-file diff. The initial tool display truncated the middle of the packaged diff, so only the omitted report/records region was recovered with bounded package reads. Production/test hunks were complete in the first display; no changed source file was separately read and no cut-off-function exception was needed. No Git command, broad crawl, network lookup, test rerun, agent dispatch or tracked-tree mutation occurred. Only this requested ignored review artifact was written.
+
+### Out-of-Scope Observations
+
+**None.** General URL ingestion/sanitization, multiline-credit policy, runtime infrastructure and legacy image/shared-state work remain outside this fix's contract; no additional work is requested by this rereview.
+
+### Verdict
+
+**Fix round: All findings addressed, no new Critical/Important breakage.** M1 is dispositioned with retained history and a proven command-local remedy; M2 is repaired with meaningful RED/GREEN/full-file isolated teeth evidence. No finding remains open. The branch is ready for the controller's integration decision; this report grants no merge approval.
+
+**Reported branch state:** 18 commits off develop; 1495/1495 tests across 207 files; fresh 52-page build; retained production 24/24 and clean development 1/1 for unchanged UI; controller-reported tracked tree and whole-branch whitespace checks clean. NOT merged, NOT pushed, NOT deployed. Git/ref state was not independently queried in this scoped rereview.
+
+## Final controller verification
+
+The final scoped re-review closes M1 and M2. No finding remains open. All four task reviews and the complete whole-branch review are complete. The branch is Ready to merge; integration still requires a fresh user decision.
+
+Command from web at committed final-fix/records HEAD `4a11c1b`: `env -u NO_COLOR pnpm test`.
+
+```text
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+> vitest run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+
+
+ Test Files  207 passed (207)
+      Tests  1495 passed (1495)
+   Start at  08:47:18
+   Duration  23.00s (transform 14.31s, setup 10.77s, import 32.12s, tests 32.81s, environment 54.20s)
+```
+
+Exit 0: 1495/1495 across207files,23.00seconds. Later changes only refresh review status and evidence records; no product source or generated artifact changed. The final records guards and local-link/whitespace checks are recorded below.
+
+The humanizer pass retained concrete counts, review provenance and scope boundaries. It removed stale review instructions from the current handoff; historical entries remain intact.
+
+### Controller rulings, in order
+
+- Ruling: Task 4 implementation and records commits precede the final whole-branch review — that review requires the complete committed branch diff, while test/live/cold-lookup verification still precedes the implementation commit — cost if wrong: review-triggered follow-up commits instead of one initial commit.
+- Ruling: Fix empty snippet-line indentation in the Markdown generator test-first, and remove trailing whitespace only from displayed report excerpts while retaining exact raw logs — diff --check reproduced one spaces-only generated line from the generator's unconditional two-space prefix, plus terminal progress padding in the report; the spec requires generated evidence and a clean diff — cost if wrong: changed blank-line formatting in Markdown, or needing the preserved raw logs for byte-exact terminal comparison.
+- Ruling: Retain the production UI audit already in progress, rerun generator/unit checks and rebuild after the Markdown-only fix, then run development and manual checks against that rebuilt app — a focused import search confirms renderCheatsheets is consumed only by Markdown generation/tests, with no app runtime import; authored UI data and shared DOM renderer are unchanged — cost if wrong: missing an undocumented runtime dependency would require repeating the production audit.
+- Ruling: Accept the final review's four scope declines (real infrastructure experiments, a general source URL importer/sanitizer, exhaustive provider coverage, and legacy image/shared-state changes) — the guides are authored compile-time teaching data with no importer, and the approved scope supplies bounded references while deferring runtime and unrelated repairs — cost if wrong: runtime, ingestion, omitted-provider or legacy-behavior work would need a separate scoped round.
+- Ruling: Correct plan-authored Markdown citation encoding to preserve literal titles/authors, including markup and Markdown delimiters, without changing URL formatting — direct interpolation demonstrably loses web/Markdown text parity, contrary to the approved readable-credit contract — cost if wrong: more escape characters in raw Markdown, or changed generated credits needing review.
+
+### Evidence archive
+
+Exact raw logs, measurements, screenshots, task briefs/reports, review packages and the ledger are preserved in the parent repository at `/Users/angelito/personal/Development-Playbook/.superpowers/sdd/2026-10-13-stage-09-reference-evidence/`. Prior execution paths identify their original worktree locations; resolve their relative filenames against this archive after cleanup. The archive manifest records SHA-256 values for every preserved file. Only this completed plan's ignored workspace is removed; the feature worktree and other plans remain.
+
+### Integration handoff
+
+Recommended: a local `--no-ff` merge into `develop`, because implementation, generated artifacts and records have passed task and whole-branch review with the final fix independently reverified. Alternatives are pushing the branch and opening a PR to develop, or keeping it as-is. No option is executed before the user chooses. Branch W-6 is22/27; develop stays20/25 and W-3 stays15/18. Main is unchanged; no push, merge or deployment has occurred.
+
+Final records verification: tracker-ledger guards 2/2 exit0; 27 local link destinations resolve, with fenced and inline code excluded. The initial checker treated the historical inline-code NN-name.md example as a live link; correcting the checker resolved it without a product edit. Working whole-branch whitespace check exited0.
