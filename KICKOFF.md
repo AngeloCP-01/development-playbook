@@ -4,7 +4,8 @@
 `.worktrees/stage-09-reference` checkout on `feat/stage-09-reference-companions`.
 The branch has **22 drawn / 27 registered**; local develop remains **20/25**,
 and W-3 remains **15/18**. Tasks 1–4 are independently approved. Final
-whole-branch review remains pending; integration is a separate decision.
+whole-branch review returned Ready to merge at `bddf51d`. Its citation-text
+finding is fixed in `35161b0`, awaiting scoped rereview; integration is separate.
 
 Open the next session in
 `/Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference`.
@@ -84,12 +85,17 @@ lookup and four-section infrastructure-scaling lookup are implemented. Both shee
 are registered and tethered to Stage 09 on the implementation branch only.
 Tasks 1–4 are independently approved. Task 4 has one nonblocking finding,
 M1: inherited Node color warnings; the clean development runner retry removes
-them. Final whole-branch review remains pending. The branch has **22/27**;
+them. Whole-branch review returned Ready to merge at `bddf51d`, with no blocking
+findings. Its M2 citation-text gap is fixed in `35161b0`; scoped rereview remains
+pending. The branch has **22/27**;
 local develop still has **20/25**.
 Five language placeholders and W-6.4 remain separate.
 
-The full unit/DOM suite passed **1494/1494 across 207 files**, with format, lint
-and typecheck exit 0. A fresh production build generated **52 pages** after
+The final-fix unit/DOM suite passed **1495/1495 across 207 files**, with format,
+lint and typecheck exit 0. Citation RED and isolated teeth each failed only the
+new guard; restored covering tests passed **55/55 across nine files**. Generated
+snapshots are unchanged. All new captures use `env -u NO_COLOR`; historical
+warning logs remain intact. A fresh production build generated **52 pages** after
 real Google Fonts network access was granted; the sandbox-only attempt failed
 fetching fonts and is retained as environmental evidence. The focused integration
 suite passed **33/33** after a test-first Markdown blank-line repair. Its
