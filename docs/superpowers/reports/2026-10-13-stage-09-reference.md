@@ -5400,3 +5400,26 @@ Final pre-commit command: `git diff --check`.
 ```
 
 Exit: 0. Raw `task4-precommit-diff.log` SHA-256: `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`.
+
+### Task 4 commit and records handoff
+
+Application/generated/source evidence committed as `fa9bb402bcfe2ac9623141a018063ddb767c9d42` (`feat(reference): register stage 09 lookup companions`), with the required Codex co-author trailer. Lefthook's staged format and lint checks passed without modifying staged source. The separate records update carries task/tracker/KICKOFF, D-98 and the dated reference-hub supporting-citation follow-up, while preserving historical decisions.
+
+Task 4 and final independent whole-branch reviews remain pending. Branch count is 22/27, develop 20/25, W-3 15/18. Develop/main/remote refs are unchanged from the pre-commit snapshot above. No merge, push or deployment has occurred. Integration checkboxes remain pending.
+
+Final records-only guard: `pnpm exec vitest run src/lib/tracker-ledger.test.ts`.
+
+```text
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage-09-reference/web
+
+
+ Test Files  1 passed (1)
+      Tests  2 passed (2)
+   Start at  08:22:39
+   Duration  120ms (transform 16ms, setup 0ms, import 23ms, tests 4ms, environment 0ms)
+
+
+```
+
+Exit: 0. Exact raw-log SHA-256: `7087268e95bff8859a397aa3398a4f6efc1309df43ccf6ab236fd731353118cb`.
