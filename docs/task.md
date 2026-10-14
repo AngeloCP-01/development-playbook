@@ -13,9 +13,11 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current checkpoint (2026-10-13): Stage 09's interactive port merged locally
-into `develop` as `7a5576a`; its W-6 caching/scaling companions are next.**
-W-3 is 15/18 and W-6 is 20/25. Stage 08's corrected chapter and ten-step port merged as
+**Current checkpoint (2026-10-14): Stage 09's caching/scaling companions are
+implemented and verified on `feat/stage-09-reference-companions`. All four tasks
+are approved. Whole-branch review returned Ready to merge at `bddf51d`;
+its citation-text finding is fixed in `35161b0` and independently reverified.** Branch W-6 is 22/27;
+local develop remains 20/25 and W-3 remains 15/18. Stage 08's corrected chapter and ten-step port merged as
 `a03e190`; its `security` lookup sheet and original diagram followed as
 `739c8ed`. The latter's merged tree passed 1406 tests across 184 files, lint,
 typecheck and format. Stage 09's chapter revision and W-6 source research
@@ -540,38 +542,62 @@ the feature branch was deleted. Evidence and
 deferrals are in the W-6.3p tracker row, source ledger, and
 `docs/superpowers/reports/2026-10-05-security-reference-sheet.md`.
 
-**W-6.3q — Stage 09 caching/scaling lookup companions ☐ (selected next,
-2026-10-13)**
+**W-6.3q — Stage 09 caching/scaling lookup companions ◐ (implementation branch,
+2026-10-14; reviewed and verified, integration pending)**
 
-Follow the completed Stage 09 port with a bounded reference round under D-88.
-Start from [the gathered source audit](../reference/stage-09-performance-sources.md)
-and [the source ledger](../reference/cheatsheet-sources.md). Neither `caching`
-nor `scaling` is registered or drawn yet; selecting this scope leaves W-6 at
-**20 drawn / 25 registered**.
+The user approved the [written spec](superpowers/specs/2026-10-13-stage-09-reference-design.md)
+on 2026-10-13 (`a9fb4e0`) and continued after the
+[four-task plan](superpowers/plans/2026-10-13-stage-09-reference.md) was presented.
+Subagent-Driven execution uses `.worktrees/stage-09-reference` on
+`feat/stage-09-reference-companions`, descended from local `develop` `597fe0b`.
 
-Recommended approach: define the caching lookup first, since it directly supports
-Stage 09's measured-fix exercise, then bound scaling as a separate infrastructure
-lookup. Stage 09's team-scaling section does not prescribe load balancing as a
-routine performance fix. Prefer original diagrams if a visual helps; the gathered
-research did not select or clear an image for publication.
+Tasks 1–4 are implemented and independently approved: supporting citation
+rendering (`13f0cb6`), caching (`f1bb218`) and infrastructure scaling (`b39d9e0`).
+Task 4 (`fa9bb40`) registers both sheets, regenerates Markdown/highlighting and
+appends the source ledger. The generator also keeps empty snippet lines empty, a pre-existing
+whitespace behavior exposed by the approved caching example. After its test-first
+repair, the affected suite passed 33/33 across six files. The registration run
+retains genuine stale-snapshot RED and isolated full-file tether teeth evidence.
+The full suite
+passed 1494/1494 across 207 files. The
+[execution report](superpowers/reports/2026-10-13-stage-09-reference.md) retains
+raw RED/GREEN/teeth evidence, gate exits, source checks and lookup outcomes.
+Production browser checks passed 24/24; development validation passed 1/1.
+The controller's 28-observation matrix checked both sheets across seven widths
+and two themes, with 378 pair measurements, AA minimum 5.2555:1, no overflow,
+source links at least 44px and no visual defect. The fresh blind lookup returned
+4 passes/0 misses. Task 4 review found no blocking issue; M1 records inherited
+Node color warnings, removed in the clean development runner retry. Whole-branch
+review at `bddf51d` returned Ready to merge with no blocking findings. Its M2
+plan-authored Markdown citation-text gap is fixed test-first in `35161b0`: RED
+and isolated teeth each fail only the new guard; restored coverage passes 55/55,
+and the final suite passes **1495/1495 across 207 files**. Format, lint and
+typecheck pass; a fresh network-enabled build generates **52 pages**. Generated
+snapshots remain unchanged. M1 retains the historical warning logs and uses
+`env -u NO_COLOR` for future captures. The final scoped rereview closed M1
+and M2 with no new breakage; the branch is Ready to merge.
 
-- [ ] Recheck the gathered first-party sources and agree the sheet boundaries
+The implementation branch has **22 drawn / 27 registered**. Local `develop`
+remains **20 drawn / 25 registered**; W-3 remains **15/18**. The five language
+placeholders are unchanged. No integration, push or deployment has occurred.
+
+- [x] Recheck the gathered first-party sources and agree the sheet boundaries
       through brainstorming before writing a spec or implementation plan
-- [ ] Define caching guidance that separates application-cache lifetime and
+- [x] Define caching guidance that separates application-cache lifetime and
       invalidation from CDN freshness and response status
-- [ ] Define scaling guidance around healthy-target routing, workload-dependent
+- [x] Define scaling guidance around healthy-target routing, workload-dependent
       algorithm choice, capacity limits and overload behavior
-- [ ] Write and approve the bounded spec/plan, then implement through TDD and
+- [x] Write and approve the bounded spec/plan, then implement through TDD and
       per-task review using the existing reference renderer and design system
-- [ ] Verify both themes, responsive layout, accessible content and production/
+- [x] Verify both themes, responsive layout, accessible content and production/
       development consoles; complete whole-branch review before integration
 - [ ] Record actual registry/drawn counts and merge evidence after separately
       approved integration; refresh the next-session handoff before use
 
 Deferred: W-3 stages 10, 17 and 18; W-6.4 glossary/stack surfacing; the five
-language sheets; image republication; real order benchmarks; shared-drill/storage
-repairs; push and production promotion. No W-6 implementation starts in this
-records update.
+language sheets; diagrams/image republication; runtime infrastructure; chapter/port
+edits; real order benchmarks; shared-drill/storage repairs; push and production
+promotion. Every merge into develop needs a separate user decision.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 

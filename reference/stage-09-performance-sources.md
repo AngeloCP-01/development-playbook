@@ -82,3 +82,9 @@ balancing as a routine Stage 09 fix.
 this research pass. The `reference/cheatsheet-sources.md` ledger requires title,
 author and exact source URL for a displayed plate; record those at capture time
 and verify image-specific rights before publication.
+
+## W-6.3q lookup follow-up
+
+The caching and infrastructure-scaling lookup companions use the references mapped in [the source ledger](cheatsheet-sources.md), under Stage 09 lookup companions. The original chapter audit above remains a record of the 2026-10-08 research pass. See the round's [execution report](../docs/superpowers/reports/2026-10-13-stage-09-reference.md) for the actual source-check date, source corrections and verification evidence.
+
+The sheets are original structured lookups. No source image was selected, copied, converted or registered in this round. Their TypeScript modules are the content source; the generated Markdown preserves the same text and citation list.

@@ -6,7 +6,7 @@
 Lookup material rather than reading material. A stage teaches a decision; a
 sheet answers what that command was.
 
-Drawn: 20 of 25. A sheet listed as not drawn is
+Drawn: 22 of 27. A sheet listed as not drawn is
 registered on purpose — the gap is the point, so it can be seen and filled.
 
 | Sheet | Group | Stage | Status |
@@ -31,6 +31,8 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | GitHub Actions | Standards | 11 | Drawn |
 | Incident Management | Standards | 16 | Drawn |
 | Security Audit | Standards | 08 | Drawn |
+| Caching | Architecture | 09 | Drawn |
+| Infrastructure Scaling | Architecture | 09 | Drawn |
 | JavaScript | Languages | — | Not drawn |
 | Python | Languages | — | Not drawn |
 | Java | Languages | — | Not drawn |
@@ -185,6 +187,139 @@ Belongs to [03 — Architecture](../docs/03-architecture.md).
 - **Microservices communication** — Services talk to each other the same way clients talk to the API — the design principles above apply internally too.
 
 Source: Master Plan for API Design — Shalini Goyal.
+
+## Caching
+
+Choose reusable work, set a freshness rule, invalidate after writes, and verify the same user outcome.
+
+Belongs to [09 — Performance Optimization](../docs/09-performance-optimization.md).
+
+### Choose the boundary
+
+Cache a result only when its ownership scope and tolerated staleness are defined. These are application decisions, not a command to add a cache everywhere.
+
+- **Reusable result** — A public catalog description can be a candidate for reuse. A faster response is useful only if it still answers the intended user operation. — Use evidence that the repeated work contributes to the measured slow path.
+- **Current business decision** — Validate stock, charge status and authorization against the appropriate authoritative state. A cached description is not permission to sell, charge or disclose. — Before accepting an order, confirming payment or returning protected data.
+- **Key and ownership** — Include every input that changes the result, such as product, locale or tenant. A tenant-specific cache key does not grant access; authorization still belongs at the data boundary. — Test the same identifier as two users or tenants before sharing a cached result.
+
+### Set lifetime and tags
+
+TTL means time to live: a freshness or expiry interval under the chosen cache policy. Retention is how long an entry remains stored; neither term promises persistence on every host.
+
+- `cacheComponents: true` — Enable Cache Components in the example application before using the Next.js use cache directive. This playbook is teaching the API; it does not enable runtime caching here. — Check the installed framework version and hosting behavior.
+- `'use cache'` — Mark an async function, component or module scope for caching. Read cookies, headers and other request-specific values outside that scope, then pass the needed inputs. — Reuse an eligible result, with its input and ownership boundaries already defined.
+
+  *Illustrative public-description read; example domain, not this app*
+
+  ```
+  import { cacheLife, cacheTag } from 'next/cache'
+
+  export async function readDescription(productId: string) {
+    'use cache'
+    cacheLife('minutes')
+    cacheTag(`catalog:${productId}`)
+    const response = await fetch(
+      `https://catalog.example/products/${encodeURIComponent(productId)}`,
+    )
+    if (!response.ok) throw new Error('Catalog read failed')
+    const { id, description } = await response.json()
+    return { id, description }
+  }
+  ```
+
+- `cacheLife / cacheTag` — Choose a lifetime consistent with tolerated staleness and tag the reads a successful write will invalidate. Tags label entries; they are not authorization checks. — Describe the expected read after a write, not only how long the entry might be retained.
+- **Hosting and retention** — Default runtime memory can be instance-local and ephemeral, especially on serverless hosts. Check the configured cache handler before assuming reuse across requests or deployments. — A published lifetime is not evidence that a particular instance still holds the entry.
+
+### Invalidate after a write
+
+The write must succeed before invalidating affected reads. Invalidation changes the next matching data read; it does not automatically refresh every open browser view.
+
+- `updateTag(tag)` — Server Actions only: expire matching entries immediately so the next matching read waits for fresh data. — Use after a successful write when the actor must read their own change. It is not available in Route Handlers.
+- `revalidateTag(tag, 'max')` — Server Actions or Route Handlers: mark tagged data stale; the next visit can receive stale data while revalidation runs in the background. — Use when stale-while-revalidate behavior is acceptable. The call itself does not eagerly refresh every tagged page.
+- `revalidateTag(tag, { expire: 0 })` — From a Route Handler that requires immediate expiry, make the next matching read block for fresh data. — Use when stale content is unacceptable and updateTag is unavailable. Avoid the deprecated single-argument revalidateTag form.
+
+### Read CDN evidence
+
+CDN means content delivery network. CF-Cache-Status describes Cloudflare response caching, not Next.js application-cache entries. These examples do not imply this site uses Cloudflare.
+
+- **HIT** — Cloudflare found the response in its cache. — A hit does not prove the application data reflects the latest write.
+- **MISS** — The request was eligible for Cloudflare caching but the response was absent, so the origin served it. — A first or cold request can miss without a fault.
+- **BYPASS** — Cloudflare considered the request eligible, but the response or policy prevented storing the response. — Inspect the relevant response headers and cache rules before changing the policy.
+- **DYNAMIC** — Cloudflare considered the request ineligible for cache at request time. — Check eligibility rules; do not treat this as a missing Next.js tag.
+- **Freshness and retention** — A freshness interval controls when origin validation is required. An expired entry may still be retained; stale serving depends on the applicable revalidation policy. — Keep CDN headers and application-cache tags as separate controls.
+- `curl -sS -D - -o /dev/null https://catalog.example/products/demo` — Read response headers for an explicitly illustrative URL. Inspect CF-Cache-Status and the applicable Cache-Control headers on a real test endpoint. — Use a safe read endpoint; do not infer application-cache behavior from a CDN header.
+
+### Verify the change
+
+A cache hit is diagnostic evidence, not proof of a better or correct user outcome.
+
+- **Comparable outcome** — Compare the same observer, start/end events, segment, workload, observation window and cold/warm cache state. A p95 is the duration at the 95th percentile of the stated population. — Record the sample, timeout/failure rule, errors and correctness as well as latency; a single lab run is not a field p95.
+- **Freshness and isolation** — After the write, confirm the intended reader sees the expected state. Repeat as another user or tenant and confirm protected data is not disclosed. — Keep the cache change only when the freshness rule, authorization and user target still hold.
+
+Sources:
+
+Source: [use cache](https://nextjs.org/docs/app/api-reference/directives/use-cache) — Next.js.
+
+Source: [cacheLife](https://nextjs.org/docs/app/api-reference/functions/cacheLife) — Next.js.
+
+Source: [cacheTag](https://nextjs.org/docs/app/api-reference/functions/cacheTag) — Next.js.
+
+Source: [updateTag](https://nextjs.org/docs/app/api-reference/functions/updateTag) — Next.js.
+
+Source: [revalidateTag](https://nextjs.org/docs/app/api-reference/functions/revalidateTag) — Next.js.
+
+Source: [Cloudflare cache responses](https://developers.cloudflare.com/cache/concepts/cache-responses/) — Cloudflare.
+
+Source: [Retention vs Freshness (TTL)](https://developers.cloudflare.com/cache/concepts/retention-vs-freshness/) — Cloudflare.
+
+## Infrastructure Scaling
+
+Find the constrained resource, compare routing choices, plan for overload, and prove the user outcome.
+
+Belongs to [09 — Performance Optimization](../docs/09-performance-optimization.md).
+
+### Locate the limit
+
+This is infrastructure scaling. Stage 09's Scaling to a team section describes team practice. Routing and added capacity are candidates to justify with evidence, not routine fixes for every slow request.
+
+- **Constrained resource** — Name the user outcome, workload and limiting resource using measurements. CPU, memory, connections, storage or a shared dependency can constrain different operations. — A utilization chart alone does not define the observer, duration or customer harm.
+- **Vertical capacity** — Increase resources on one instance when evidence shows its resource limit is the constraint. — Check the remaining limit, failure exposure and cost rather than assuming a larger instance is faster.
+- **Horizontal capacity** — Add replicas when the work can be safely distributed and the shared dependencies can support it. — Check state, session and connection assumptions before adding targets.
+- **Routing and dependencies** — A load balancer distributes requests. More application replicas do not establish more capacity in a shared database; reducing expensive work is a different candidate. — Check the dependency that remains shared and identify what the proposed change actually relieves.
+
+### Choose routing
+
+The following are AWS Application Load Balancer (ALB) target-group algorithms. A provider-specific setting is not a universal algorithm list. Sticky sessions can bypass subsequent routing choices.
+
+- **Round robin** — Distribute requests across healthy targets in sequential order under normal routing conditions. — An ALB default suited to similarly costly requests and similarly capable targets; stickiness affects subsequent target selection.
+- **Least outstanding requests** — Choose the target with the fewest in-flight requests. — An ALB option for varying request cost or target capability. It does not support slow start; sticky sessions affect subsequent selection.
+- **Weighted random** — Randomly distribute requests across healthy targets; optional Automatic Target Weights anomaly mitigation can adjust distribution. — ALB weighted random does not support sticky sessions or slow start. Check the intended workload and feature compatibility.
+- `aws elbv2 describe-target-group-attributes --target-group-arn "$TARGET_GROUP_ARN"` — Read target-group attributes without changing routing. TARGET_GROUP_ARN must name your permitted test group; AWS credentials and read permission are required. — Inspect routing, stickiness and health settings before proposing a mutation.
+
+### Check health and overload
+
+Health checks and routing do not create unlimited capacity. Define the operation the probe represents and the behavior when capacity or targets fail.
+
+- **Health checks and fail-open** — ALB normally routes to healthy targets. If all registered targets are unhealthy, it fails open and can route to them regardless of health status. — A failed probe is not proof that all traffic to that target has stopped; inspect health/routing thresholds as well as the reason code.
+- **Draining and failure capacity** — Deregistration allows in-flight work time to finish. Check remaining target and dependency capacity while a target or zone is unavailable. — A connection terminated before draining completes can fail a request; do not equate a removed target with completed customer work.
+- **Admission and degradation** — Keep admitted work and queues bounded. Under overload, use a defined safe degraded response or reject excess work instead of letting backlog grow without a limit. — Degrade only when the user contract permits it; stale payment or authorization state is not a safe shortcut.
+- **Retries and uncertain outcomes** — Retries add work to an overloaded service. Use a bounded retry policy and establish whether a timed-out side effect already succeeded before replay. — A charge or write may have completed before the timeout. Reconcile uncertain outcomes rather than assuming retry means recovery.
+
+### Prove the outcome
+
+There is no universal requests-per-second target or replica count. Example workloads are illustrative; measure the same operation before and after.
+
+- **User latency and errors** — Compare the same start/end observer, segment, workload and collection window. Define the percentile population and keep failures visible. A p95 is the duration at the 95th percentile of that population. — A faster routing or server span does not prove the user operation improved.
+- **Resource and delayed work** — Check the limiting resource, shared dependencies and oldest pending work where applicable. Verify capacity during failure as well as normal traffic. — A healthy homepage or an empty request queue does not prove that downstream work completed.
+- **Correctness and cost** — Retest state/session assumptions and actual customer outcomes. Compare resource cost, record unresolved limits, and keep or revert the change from that evidence. — Adding replicas is not a win if the outcome still misses its target or correctness regresses.
+
+Sources:
+
+Source: [Application Load Balancer target-group attributes](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/edit-target-group-attributes.html) — AWS.
+
+Source: [Application Load Balancer target-group health checks](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html) — AWS.
+
+Source: [Handling Overload](https://sre.google/sre-book/handling-overload/) — Google SRE.
 
 ## SOLID Principles
 
@@ -589,7 +724,7 @@ Belongs to [06 — Testing](../docs/06-testing.md).
 
   ```
   import { expect, test } from 'vitest'
-  
+
   test('adds numbers correctly', () => {
     expect(add(2, 3)).toBe(5)
   })

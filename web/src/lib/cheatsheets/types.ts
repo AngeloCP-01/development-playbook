@@ -73,11 +73,15 @@ export type SourceImage = {
   origin?: 'original'
 }
 
-/** Attribution for a sheet derived from someone else's work. */
-export type Source = {
+/** A credited text reference. Supporting citations never own image plates. */
+export type SourceCitation = {
   title: string
   author: string
   url?: string
+}
+
+/** The primary citation may also own the sheet's one image plate. */
+export type Source = SourceCitation & {
   image?: SourceImage
 }
 
@@ -89,6 +93,8 @@ export type Cheatsheet = {
   stage?: string
   blurb: string
   source?: Source
+  /** Supporting text references in authored order, after the primary source. */
+  additionalSources?: SourceCitation[]
   /** Empty is legal and means "registered, not yet written" (D5). */
   sections: Section[]
 }

@@ -1,5 +1,7 @@
 import { apiDesign } from './api-design'
 import { awsDeployment } from './aws-deployment'
+import { caching } from './caching'
+import { scaling } from './scaling'
 import { codeReview } from './code-review'
 import { architecturePatterns } from './architecture-patterns'
 import { ciCd } from './ci-cd'
@@ -28,6 +30,7 @@ export type {
   RowExample,
   Section,
   Source,
+  SourceCitation,
   SourceImage,
 } from './types'
 export { CHEATSHEET_GROUPS, isDrawn } from './types'
@@ -53,6 +56,8 @@ export const CHEATSHEETS: Cheatsheet[] = [
   githubActions,
   incidentManagement,
   security,
+  caching,
+  scaling,
   ...PLANNED,
 ]
 
