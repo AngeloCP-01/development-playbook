@@ -2803,3 +2803,68 @@ Command from `web/`: `pnpm test --run`. Exit: 0.
 
 
 ```
+
+## Task 3 independent review
+
+### Spec Compliance
+
+- ✅ **Spec compliant for Task 3.** All three authored files and the canonical evidence-report update are present in the packaged `8e2a5c03b8015dc5fc8e54e6ae7ee4195d005114..b39d9e0ed05dc29a7c77a47809bb7b5ad264ff94` diff. No missing, extra or misunderstood task-local requirement was found.
+
+| Requirement | Evidence and assessment |
+| --- | --- |
+| Export the static scaling lookup, without registration | `web/src/lib/cheatsheets/scaling.ts:3` exports `scaling: Cheatsheet`; lines 4–7 supply the required slug, title, group and stage. The complete package changes only this data module, its two tests and the evidence report; registry and generated content remain outside this task. |
+| Four sections; distinguish infrastructure from team practice | `scaling.ts:28`, `:53`, `:78`, `:103` provide the four requested sections; `:29` preserves Stage 09's team-practice distinction. `web/src/lib/cheatsheets/scaling.test.ts:8` guards titles, stage and distinction; `web/src/components/ScalingReference.test.tsx:6` exercises the real renderer and stage href. |
+| Locate the measured constraint; preserve shared-dependency limits | `scaling.ts:33` names workload and resource evidence; `:38`, `:43`, `:44`, `:48` qualify vertical/horizontal capacity and state/session/connection assumptions. The shared-database caveat has a unit assertion at `scaling.test.ts:19` and a DOM assertion at `ScalingReference.test.tsx:15`. |
+| ALB routing conditions, workloads and feature compatibility | `scaling.ts:54` scopes the list to AWS ALB and explains stickiness; `:58`–`:69` preserve normal healthy-target routing, similarly costly requests/capable targets, varying cost/capability, least-outstanding/slow-start incompatibility, and weighted-random/stickiness/slow-start incompatibilities. ATW mitigation remains optional. `scaling.test.ts:27` guards the consequential compatibility prose, and `ScalingReference.test.tsx:12` guards rendered weighted-random limits. |
+| Fail-open, draining and failure capacity | `scaling.ts:83` states the all-unhealthy fail-open condition; `:84` also directs readers to thresholds/reason codes and denies a zero-traffic guarantee. `:88`–`:89` preserve draining and remaining-capacity qualifications. Unit guard at `scaling.test.ts:37`, DOM guard at `ScalingReference.test.tsx:9`, and isolated teeth evidence cover fail-open. |
+| Bounded overload and retries; reconciliation | `scaling.ts:93` bounds admitted work/queues; `:94` preserves payment/authorization safety; `:98`–`:99` require bounded retries and reconciliation before replaying uncertain writes/charges. `scaling.test.ts:45` guards the bounded-work/retry and delayed-work/correctness clauses. |
+| Workload, percentile population and user-outcome caveats | `scaling.ts:104` rejects universal throughput/replica targets; `:108` preserves observer, segment, workload, window, failures and percentile population. `:109` denies that a faster server span proves a faster user operation. `:113`–`:119` retain oldest pending work, failure capacity, correctness, cost and keep/revert evidence. These are present verbatim; the oldest-work/correctness assertions are at `scaling.test.ts:52`. |
+| Three sources with primary-image role preserved | `scaling.ts:10`–`:25` provide AWS attributes, AWS health and Google SRE in the requested order, with no images. `scaling.test.ts:56` asserts publisher order. `ScalingReference.test.tsx:27` asserts three footer links, `:29` pins Google's actual href, and `:33` checks both AWS credits. The focused unchanged-renderer check below verifies that AWS hrefs use the supplied citation URLs. |
+| Literal read-only command; plain-text prose | `scaling.ts:72` keeps the quoted ARN command in `code`, with credentials/read-permission/test-group prerequisites at `:73`. No executable infrastructure logic or mutation command is added. Unit checks at `scaling.test.ts:62` and DOM checks at `ScalingReference.test.tsx:34` cover the displayed describe command and absent mutation command. All explanatory row prose stays in `what`/`when`. |
+| RED, GREEN, isolated teeth and restored GREEN, recorded canonically | `docs/superpowers/reports/2026-10-13-stage-09-reference.md:2080`, `:2133`, `:2150`, `:2191` contain raw runs, commands and exit status. RED is honestly described as missing-import setup failure; teeth changes the fail-open fact and produces exactly one failed unit test with five passing. Restored runs pass both files, 8/8 tests. |
+| Humanizer and required task gates | Canonical report `:2072` records the humanizer pass and retained factual constraints. Raw format/lint/generated-route typecheck gates appear at `:2212`, `:2760`, `:2772`; full-suite output at `:2786` records 205 files and 1,489 passing tests. No warning/error noise is present outside intended RED/teeth failures. |
+| Scope and global constraints | The four-file package contains no dependencies, config, renderer, tokens, diagrams, images, runtime infrastructure, chapter/port changes or language sheets. It retains TypeScript as the source and postpones generated Markdown/snapshots to registration. Existing reference UI is reused by the DOM tests. Canonical report `:2078` explicitly records the deferred integration/browser/records work. |
+
+- ⚠️ **Cannot verify from this diff:** live contrast in both themes, 320–2560px overflow/touch checks, production console and development React diagnostics. These require Task 4's registered production/development builds; DOM evidence is not a substitute.
+- ⚠️ **Cannot verify from this diff:** eventual generated Markdown/snapshots, W-3 15/18 and combined W-6 22 drawn/27 registered, registry/routes, tracker/task/KICKOFF updates. They are expressly deferred to Task 4; the controller must check their combined result.
+- ⚠️ **Cannot independently verify from this diff:** exact commit coauthor trailer, develop ancestry, approved spec/plan presence, current clean tree/index and no push/merge. The package names the task commit, but lacks those Git records. `task-3-report.md:750` claims controller checks; the controller retains ownership of validating them. No Git command was run during review.
+- ⚠️ **Process visibility boundary:** terminal timestamps and narrative provide the requested RED-before-GREEN evidence; a final diff alone cannot independently reconstruct the historical write order or prove an invocation of the humanizer skill. The raw teeth run establishes the consequential assertion's ability to reject the named regression.
+
+### Strengths
+
+- `scaling.ts:43`–`:48`, `:93`–`:99`, `:108`–`:119` connect scaling choices to state, shared limits, bounded work and customer outcomes, avoiding a claim that replicas or healthy probes prove success.
+- `ScalingReference.test.tsx:6` and `:24` render the actual sheet through the real shared component without mocks. These tests would reject a renderer that omitted the critical fail-open/shared-limit/compatibility prose, stage link, citations or command.
+- Canonical report `:2150` preserves the incorrect mutated sentence and exact failing assertion. It disproves a vacuous fail-open guard rather than presenting GREEN alone as TDD evidence.
+- `scaling.ts:3` is a small, single-purpose static module using the existing interface. The task introduces no new abstraction or runtime error-handling path; both test modules remain small and focused.
+
+### Issues
+
+#### Critical (Must Fix)
+
+- None found.
+
+#### Important (Should Fix)
+
+- None found. No blocking implementer error or plan-authored error identified.
+
+#### Minor (Nice to Have)
+
+- None requiring a task-local change. Cross-task checks listed above are verification boundaries, not findings or silently deferred defects.
+
+### Assessment
+
+**Task quality:** Approved — review clean.
+
+**Reasoning:** The complete data module matches the approved teaching content, the real DOM tests cover consequential output, and raw isolated teeth evidence rejects the named safety regression. Task 3 deliberately stops before registration and live verification; approval does not imply the whole branch is ready to merge.
+
+**Focused check — rendered citation destination risk:** The DOM test directly pins only Google's URL, so I checked whether the unchanged renderer could alter or misroute the two AWS links. One focused `rg` check of `web/src/components/Cheatsheet.tsx:21` and `:180`–`:185` shows sources from `sheetSources(sheet)` and `href={citation.url}`. Together with the authored URLs at `scaling.ts:13` and `:19` and three rendered-link evidence, this disproves a task-local destination mismatch. No other unchanged code was inspected.
+
+**Primary-source checks — provider-fact risks:** On 2026-10-13 I checked the authored [AWS target-group attributes](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/edit-target-group-attributes.html), [AWS health checks](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html) and [Google SRE overload chapter](https://sre.google/sre-book/handling-overload/) for routing/compatibility/fail-open and bounded-retry claims. They support those authored qualifications. The attributes page also describes unhealthy-state thresholds, which the sheet asks readers to inspect; the sheet does not claim all-unhealthy is the only possible fail-open trigger. No factual correction found.
+
+**Review checks:** The packaged diff was read once. Tool-output truncation hid part of the documentation's formatter listing; that evidence was recovered from the supplied task report. Complete implementation/test hunks were visible, so no changed source file was reread and no mid-function exception was needed. No duplicate test, Git command, source/index/ref mutation or subagent dispatch occurred. The only written artifact is this requested review report.
+
+**Branch boundary:** Task commit `b39d9e0`; recorded full suite 1,489/1,489 across 205 files, format/lint/typecheck exit 0. Build/browser verification remains pending Task 4. Clean tree, trailer and ancestry remain controller-owned. NOT merged, NOT deployed.
+
+Controller resolution on 2026-10-14: exact commit coauthor trailer verified, approved spec/plan present, develop ancestry check exited 0, and current tracked tree clean. Task 3 made no merge, push or deployment. Recorded RED/teeth evidence and invoked humanizer review satisfy the historical-process evidence boundary; final diff alone is not claimed to reconstruct write order. Registration, counts, generated artifacts and live/records checks belong to Task 4. Task 3: review clean.
+
+Execution ruling: Task 4 implementation and records commits precede final whole-branch review, which requires the complete committed branch diff. Test/live/cold-lookup verification still precedes its implementation commit. If wrong, this costs review-triggered follow-up commits instead of one initial commit.

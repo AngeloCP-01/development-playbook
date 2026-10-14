@@ -1172,7 +1172,7 @@ git -C .. commit -m 'feat(caching): add a freshness and invalidation lookup' -m 
 - Consumes: `Cheatsheet` with `additionalSources?: SourceCitation[]`, `sheetSources(sheet: Cheatsheet): SourceCitation[]`, and `CheatsheetView({ sheet }: { sheet: Cheatsheet })` from Task 1.
 - Produces: `export const scaling: Cheatsheet` with slug `scaling`, group `Architecture`, and stage `09-performance-optimization`. Task 4 will import this value; this task does not register it.
 
-- [ ] **Step 1: Write the tests below before the data module.**
+- [x] **Step 1: Write the tests below before the data module.**
 
 #### Source: `web/src/lib/cheatsheets/scaling.test.ts`
 
@@ -1287,7 +1287,7 @@ test('the scaling sheet credits both publishers and exposes the read-only attrib
 })
 ```
 
-- [ ] **Step 2: Run RED.**
+- [x] **Step 2: Run RED.**
 
 ```bash
 pnpm exec vitest run src/lib/cheatsheets/scaling.test.ts src/components/ScalingReference.test.tsx
@@ -1295,7 +1295,7 @@ pnpm exec vitest run src/lib/cheatsheets/scaling.test.ts src/components/ScalingR
 
 Expected: the missing `scaling.ts` import prevents the new tests running. Save that output as missing implementation, then use the behavioral teeth check after GREEN to disprove a vacuous test.
 
-- [ ] **Step 3: Add this complete authored data module.** Its examples are literal teaching strings, never executed by the app. Keep syntax in `code`/`example` and explanatory prose in `what`/`when`. Do not register this sheet yet.
+- [x] **Step 3: Add this complete authored data module.** Its examples are literal teaching strings, never executed by the app. Keep syntax in `code`/`example` and explanatory prose in `what`/`when`. Do not register this sheet yet.
 
 #### Source: `web/src/lib/cheatsheets/scaling.ts`
 
@@ -1430,13 +1430,13 @@ export const scaling: Cheatsheet = {
 }
 ```
 
-- [ ] **Step 4: Run the same command for GREEN, then perform the named teeth check.**
+- [x] **Step 4: Run the same command for GREEN, then perform the named teeth check.**
 
 Temporarily replace `it fails open and can route to them regardless of health status` in the health row with `it blocks all traffic to unhealthy targets`. Run `pnpm exec vitest run src/lib/cheatsheets/scaling.test.ts`; expect only the failed-health-checks guard to fail, with the other unit tests passing. Restore the data and rerun the full Task 3 command for GREEN. Retain raw output.
 
-- [ ] **Step 5: Apply the humanizer review to authored prose.** Preserve the specified caller/provider limits, the explanatory abbreviation definitions and the meaning pinned by the tests. Do not replace factual caveats with generic encouragement.
+- [x] **Step 5: Apply the humanizer review to authored prose.** Preserve the specified caller/provider limits, the explanatory abbreviation definitions and the meaning pinned by the tests. Do not replace factual caveats with generic encouragement.
 
-- [ ] **Step 6: Format, lint, typecheck, commit and obtain the required task review.**
+- [x] **Step 6: Format, lint, typecheck, commit and obtain the required task review.**
 
 ```bash
 pnpm format
