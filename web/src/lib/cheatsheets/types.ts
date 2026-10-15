@@ -56,25 +56,32 @@ export type Section = {
 }
 
 /**
- * The gathered graphic, served from `web/public/reference/`. Dimensions are
+ * A gathered graphic or original diagram, served from `web/public/reference/`. Dimensions are
  * stored rather than measured so the plate reserves its space before the bytes
  * arrive; without them the page reflows as each sheet loads.
  *
- * `alt` describes the graphic for the case where it is the only content. A drawn
- * sheet does not use it — see the renderer.
+ * `alt` describes the graphic for the case where it is the only content and
+ * for Markdown exports of original diagrams. The web renderer treats a drawn
+ * sheet's image as decorative because its rows are the text equivalent.
  */
 export type SourceImage = {
   src: string
   width: number
   height: number
   alt: string
+  /** A diagram drawn for this playbook rather than a gathered source capture. */
+  origin?: 'original'
 }
 
-/** Attribution for a sheet derived from someone else's work. */
-export type Source = {
+/** A credited text reference. Supporting citations never own image plates. */
+export type SourceCitation = {
   title: string
   author: string
   url?: string
+}
+
+/** The primary citation may also own the sheet's one image plate. */
+export type Source = SourceCitation & {
   image?: SourceImage
 }
 
@@ -86,6 +93,8 @@ export type Cheatsheet = {
   stage?: string
   blurb: string
   source?: Source
+  /** Supporting text references in authored order, after the primary source. */
+  additionalSources?: SourceCitation[]
   /** Empty is legal and means "registered, not yet written" (D5). */
   sections: Section[]
 }

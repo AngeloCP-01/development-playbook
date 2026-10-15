@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { ArrowUpRight } from 'lucide-react'
 import { isDrawn, type Cheatsheet } from '@/lib/cheatsheets'
 import { getStage } from '@/lib/stages'
+import { sheetSources } from '@/lib/cheatsheets/sheet-sources'
 
 /**
  * One renderer for every sheet, so sheet number twelve costs no new UI.
@@ -17,6 +18,7 @@ import { getStage } from '@/lib/stages'
  */
 export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
   const stage = sheet.stage ? getStage(sheet.stage) : undefined
+  const sources = sheetSources(sheet)
 
   return (
     <div>
@@ -121,7 +123,12 @@ export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
 
       {sheet.source?.image && (
         <figure className="mt-14">
-          {/* A plate, because every one of these graphics has a light background
+          {sheet.source.image.origin === 'original' && (
+            <p className="t-ui mb-2 text-[0.8125rem] text-muted md:hidden">
+              Scroll sideways to read the full diagram
+            </p>
+          )}
+          {/* A plate, because these graphics have a light background
               and would punch a hole in the cyanotype unframed. The border and
               padding give it an edge to sit against in both themes.
 
@@ -133,7 +140,7 @@ export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
               next/image rather than a plain tag, despite these already being
               WebP: the win is not re-encoding, it is srcset. These are up to
               1536px tall and a phone has no use for the full file. */}
-          <div className="border border-line-strong bg-sunken p-3 sm:p-4">
+          <div className="overflow-x-auto border border-line-strong bg-sunken p-3 sm:p-4">
             <Image
               src={sheet.source.image.src}
               width={sheet.source.image.width}
@@ -145,39 +152,44 @@ export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
               // is the only content, so it has to describe itself.
               alt={isDrawn(sheet) ? '' : sheet.source.image.alt}
               aria-hidden={isDrawn(sheet) || undefined}
-              className="h-auto w-full"
+              className={
+                sheet.source.image.origin === 'original'
+                  ? 'h-auto w-full min-w-[560px]'
+                  : 'h-auto w-full'
+              }
             />
           </div>
           <figcaption className="t-label mt-3 text-subtle">
-            The gathered original
+            {sheet.source.image.origin === 'original'
+              ? 'Original diagram'
+              : 'The gathered original'}
           </figcaption>
         </figure>
       )}
 
-      {sheet.source && (
+      {sources.length > 0 && (
         <footer className="mt-16 border-t border-line pt-6">
-          <p className="t-label text-subtle">Source</p>
-          <p className="mt-2 text-sm leading-relaxed text-muted">
-            {sheet.source.url ? (
-              // The first source in this registry to carry a url — every
-              // earlier sheet left this branch dead. min-h-11 is needed here
-              // and not on the "belongs to stage" link above because that one
-              // sits alone on its own line; this one shares a line with the
-              // author text after it, which the touch-target audit reads as
-              // "not inline in a sentence" once that text is its own element
-              // rather than a bare text node — inline-flex keeps the target
-              // tall without breaking that shared line.
-              <a
-                href={sheet.source.url}
-                className="inline-flex min-h-11 items-center underline decoration-line-strong underline-offset-4 transition-colors duration-150 hover:text-fg"
-              >
-                {sheet.source.title}
-              </a>
-            ) : (
-              sheet.source.title
-            )}
-            <span> — {sheet.source.author}</span>
+          <p className="t-label text-subtle">
+            {sources.length === 1 ? 'Source' : 'Sources'}
           </p>
+          {sources.map((citation, index) => (
+            <p
+              key={`${index}:${citation.title}`}
+              className="mt-2 text-sm leading-relaxed text-muted"
+            >
+              {citation.url ? (
+                <a
+                  href={citation.url}
+                  className="inline-flex min-h-11 items-center underline decoration-line-strong underline-offset-4 transition-colors duration-150 hover:text-fg"
+                >
+                  {citation.title}
+                </a>
+              ) : (
+                citation.title
+              )}
+              <span> — {citation.author}</span>
+            </p>
+          ))}
         </footer>
       )}
     </div>

@@ -169,3 +169,9 @@ name that survives.
 - Print stylesheet. Also already in the backlog, and a cheatsheet is the single most
   print-worthy page type in the app.
 - Renaming `References.tsx` to something unambiguous.
+
+## W-6.3q supporting citations (design approved 2026-10-13)
+
+The [Stage 09 companion design](2026-10-13-stage-09-reference-design.md) adds optional `additionalSources` containing text-only `SourceCitation` entries. The existing `source` remains the primary citation and sole image-plate owner. The web and generated Markdown consume `sheetSources(sheet)` in primary/supporting order, preserving title, author and optional URL. Existing single-source sheets retain their credit and image behavior. Supporting-only sheets receive a credit without inventing a primary image owner.
+
+This extends the original attribution contract for lookups that combine first-party guidance from several publishers. The original decisions above remain the record of the skeleton round; see the W-6.3q execution report and tracker for implementation and integration evidence.

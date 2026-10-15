@@ -1,0 +1,90 @@
+# Stage 09 performance sources
+
+**Researched:** 2026-10-08. **Scope:** first-party references for revising
+`docs/09-performance-optimization.md` and gathering the future W-6 `caching` and
+`scaling` sheets. The line numbers below refer to the chapter as read on this date;
+they will move when the chapter changes. This is a source and claim audit, not a
+performance measurement of this playbook or another application.
+
+## Chapter claim audit
+
+The chapter says to measure before optimizing but does not show a first measurement.
+[Google's field/lab guidance](https://web.dev/articles/lab-and-field-data-differences)
+explains the distinct jobs: field data locates the user-visible problem, while a
+controlled lab run helps reproduce and diagnose it. [Vercel Speed
+Insights](https://vercel.com/docs/speed-insights/metrics) reports real-user Web
+Vitals; [Vercel Observability](https://vercel.com/docs/observability) exposes
+function performance by route, subject to plan-specific detail. [PostgreSQL
+EXPLAIN](https://www.postgresql.org/docs/current/using-explain.html) provides a
+query-level plan and actual execution measurements with `ANALYZE`. The revision
+needs an explicit first-measurement procedure and a sample baseline record, not
+just a list of tools.
+
+For the proposed order flow, first choose an outcome: placing an order and
+receiving an acknowledgement, seeing it marked paid, or completing a downstream
+action. Record that boundary, route or event, metric and percentile, collection
+window, segment, sample size, test-data shape, deployment version, and cache
+state. Measure the same outcome after the change. A single lab run or `EXPLAIN
+ANALYZE` result diagnoses one case; it is not a production p95 or evidence
+that users improved. These record fields are a proposed comparison discipline
+inferred from the sources above, not a published universal checklist.
+
+The user's proposed path crosses a synchronous request, a payment webhook and
+an `OrderPaid` event. [OpenTelemetry context propagation](https://opentelemetry.io/docs/concepts/context-propagation/)
+explains correlation across services, and its [messaging span
+conventions](https://opentelemetry.io/docs/specs/semconv/messaging/messaging-spans/)
+distinguish publishing from consumer processing. [Stripe's payment-event
+guidance](https://docs.stripe.com/payments/payment-element/migration) uses
+server-side webhooks for business-critical post-payment work. Thus the chapter
+should record request latency, payment-confirmation lag and each consumer's
+processing lag separately; a fast checkout response does not prove fast
+payment or fulfillment. The example is hypothetical and should not prescribe
+those services as the playbook's architecture.
+
+| Chapter lines | Assessment | Evidence and proposed treatment |
+|---|---|---|
+| 39–42, 191 | **Two published thresholds, one omission, two local examples.** [Google's Web Vitals definition](https://web.dev/articles/vitals) sets good LCP at **2.5 seconds or less**, INP at **200 ms or less**, and CLS at **0.1 or less**, evaluated at p75 separately for mobile and desktop. The chapter omits CLS. Neither that source nor [Google SRE's SLO guidance](https://sre.google/workbook/implementing-slos/) establishes universal API p95 <300 ms or database p95 <50 ms targets. | Add CLS; label API/database numbers as example targets that a team should adapt from user needs and measured baselines. Note the inclusive published thresholds rather than changing them into strict `<` cutoffs. |
+| 44–47, 215 | **Good direction, unsupported explanation.** [Google SRE on monitoring](https://sre.google/workbook/monitoring/) explains how p50/p95/p99 expose the slow tail hidden by a mean; its [SLO chapter](https://sre.google/workbook/implementing-slos/) recommends multiple latency grades when needed. The chapter's assertion that slowest users are disproportionately the heaviest or most valuable is an inference, not established by these sources. | Keep the percentile lesson; remove the user-value assertion unless local data supports it. Avoid “never averages”: a mean can still be useful, but cannot describe the tail alone. |
+| 51–52 | **Field preference needs nuance.** [Vercel Speed Insights](https://vercel.com/docs/speed-insights/metrics) gathers real user data. [Google's lab/field comparison](https://web.dev/articles/lab-and-field-data-differences) explains why their results differ; lab conditions can be controlled or throttled and are useful for diagnosing a regression before field data accrues. | Pair field monitoring with repeatable lab diagnosis. “Lab tools run on fast hardware on good networks” is too broad. |
+| 54–58, 99–100 | **Tracing supported; prevalence claims unsupported.** [Sentry's Next.js tracing guide](https://docs.sentry.io/platforms/javascript/guides/nextjs/tracing/) and its [first-party trace example](https://blog.sentry.io/nextjs-export-traces-opentelemetry/) show timed spans, but visibility of a specific query or external call depends on instrumentation. No primary source found for “the database is usually the answer,” “most slow requests,” or “most common serious performance bug.” | Say traces show *instrumented* work and present database/N+1 as hypotheses to test, not prevalence facts. |
+| 60–66 | **The inference from `Seq Scan` is false.** [PostgreSQL's EXPLAIN guide](https://www.postgresql.org/docs/current/using-explain.html) shows a sequential scan can be cheaper for a small table. [Index examination guidance](https://www.postgresql.org/docs/current/indexes-examine.html) calls for realistic data and statistics. [ANALYZE](https://www.postgresql.org/docs/current/sql-analyze.html) samples data, so estimates can differ even after a fresh run. | Teach readers to compare actual and estimated rows, scan time, rows filtered and the query's selectivity. Investigate stale or insufficient statistics as one possible cause of a large gap, rather than diagnosing them from the gap alone. |
+| 72–80, 193, 220–221 | **Example useful; universal rules too strong.** [PostgreSQL multicolumn indexes](https://www.postgresql.org/docs/current/indexes-multicolumn.html) favor conditions on leading columns; [index ordering](https://www.postgresql.org/docs/current/indexes-ordering.html) explains when a B-tree can support `ORDER BY ... LIMIT`. [CREATE INDEX](https://www.postgresql.org/docs/current/sql-createindex.html) says a normal build blocks writes and `CONCURRENTLY` allows them, at the cost of more work and time. The concurrent command cannot run in a transaction block and failure can leave an invalid index. | Keep `(owner_id, created_at DESC)` as a candidate for the shown query, then require a before/after plan and workload check. Replace “every filtered and sorted column” in both places. Mention migration transaction handling and failed-index cleanup; describe an outage as a risk, not a certainty. |
+| 102–113 | **Illustrative timing only.** `Promise.all` permits independent asynchronous operations to overlap. The 300/150 ms comments assume two equal 150 ms operations with no competing bottleneck; they are arithmetic illustrations rather than measured outcomes. | Mark timings as illustrative or remove them. Keep the independence condition. |
+| 115–145 | **Framework API largely correct.** [Next.js `use cache`](https://nextjs.org/docs/app/api-reference/directives/use-cache) confirms Cache Components, `cacheLife`, and `cacheTag`. [`updateTag`](https://nextjs.org/docs/app/api-reference/functions/updateTag) works only in Server Actions and expires matching entries so the next request waits for fresh data. | Keep the example. State the scope of `updateTag` and avoid implying all tag invalidation offers immediate freshness; `revalidateTag` has different behavior. TTL still has a role for expiry and recovery. |
+| 147–154 | **Next.js 16 build instruction is outdated.** [Next.js CLI](https://nextjs.org/docs/app/api-reference/cli/next) says JS bundle size metrics were removed from `next build` in v16. [Package bundling](https://nextjs.org/docs/app/guides/package-bundling) describes analyzers and import tracing; the integrated Turbopack analyzer is marked experimental and available in v16.1+. | Keep `pnpm build` for production correctness; use a version-appropriate analyzer to inspect bundle composition. Check the repo's installed Next.js version before recommending a specific analyzer command. |
+| 156–164 | **Image and Server Component benefits need conditions.** [Next.js Image](https://nextjs.org/docs/app/api-reference/components/image) documents responsive sizing, format selection and default lazy loading; an LCP hero may need eager loading or higher fetch priority. The default optimization API is [unavailable for static export](https://nextjs.org/docs/messages/export-image-api). [Next.js package bundling](https://nextjs.org/docs/app/guides/package-bundling) confirms server/client bundle distinctions. | Explain the hero exception, and avoid claiming that Server Components eliminate every client waterfall or loading state. They can reduce shipped client JavaScript and move fetching server-side. |
+| 172–173, 229–230 | **A value judgment presented as a rule.** The claim that 200 ms is fine for 50 daily users cannot be inferred from traffic alone: a small population can still face a consequential slow workflow. | Let user impact and a documented target decide whether to optimize. |
+
+The Drizzle-style relation query at lines 85–96 should be checked against the
+project's actual ORM/version before publication as executable code. The research
+above supports the N+1 concept, not that this exact pseudo-query runs unchanged.
+
+## W-6 source candidates
+
+The planned sheet slugs are `caching` and `scaling` in
+`reference/cheatsheet-sources.md`. These are sources to consult; none is registered
+as a displayed plate or copied into `web/public/reference/`.
+
+| Sheet | First-party source | Reusable teaching element | Graphic and rights assessment |
+|---|---|---|---|
+| `caching` | [Next.js `use cache`](https://nextjs.org/docs/app/api-reference/directives/use-cache) and [`updateTag`](https://nextjs.org/docs/app/api-reference/functions/updateTag) | Cache boundary → key/lifetime/tag → write → invalidation; distinguish `updateTag` from stale-while-revalidate behavior. | Text source. No Next.js figure selected and no image reuse permission verified. Draw an original flow if this becomes a plate. |
+| `caching` | [Cloudflare cache responses](https://developers.cloudflare.com/cache/concepts/cache-responses/) and [retention versus freshness](https://developers.cloudflare.com/cache/concepts/retention-vs-freshness/) | HIT/MISS/BYPASS and TTL/revalidation decision flow, explicitly labeled as CDN behavior rather than Next.js application cache behavior. | [Cloudflare's documentation repository](https://github.com/cloudflare/cloudflare-docs) states CC BY 4.0 for documentation content except where otherwise noted. Verify the exact asset and exceptions before copying any figure, preserve attribution and license, and avoid copying Cloudflare trademarks. An original diagram is simpler. |
+| `scaling` | [AWS Application Load Balancer algorithms](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/edit-target-group-attributes.html) and [target groups](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html) | Healthy-target routing; compare round robin, least outstanding requests and weighted random using the stated workload conditions. | AWS has [cross-zone load balancing diagrams](https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/how-elastic-load-balancing-works.html). Their reuse license was not verified in this pass: consult only and draw an original example. |
+| `scaling` | [Google SRE, Handling Overload](https://sre.google/sre-book/handling-overload/) | Load balancing distributes work; capacity limits still require overload behavior such as load shedding or degraded responses. | Book text is an authoritative concept source. No image from it was selected or cleared for republication. |
+
+**Inference for sheet scope:** the Stage 09 chapter teaches measurement and targeted
+optimization, with caching as one possible fix. Its `scaling` heading refers to
+team practice, not infrastructure scaling. A `scaling` reference sheet can be
+useful in W-6, but the source material alone does not justify adding load
+balancing as a routine Stage 09 fix.
+
+**Capture status:** no local image was downloaded, converted, or registered in
+this research pass. The `reference/cheatsheet-sources.md` ledger requires title,
+author and exact source URL for a displayed plate; record those at capture time
+and verify image-specific rights before publication.
+
+## W-6.3q lookup follow-up
+
+The caching and infrastructure-scaling lookup companions use the references mapped in [the source ledger](cheatsheet-sources.md), under Stage 09 lookup companions. The original chapter audit above remains a record of the 2026-10-08 research pass. See the round's [execution report](../docs/superpowers/reports/2026-10-13-stage-09-reference.md) for the actual source-check date, source corrections and verification evidence.
+
+The sheets are original structured lookups. No source image was selected, copied, converted or registered in this round. Their TypeScript modules are the content source; the generated Markdown preserves the same text and citation list.

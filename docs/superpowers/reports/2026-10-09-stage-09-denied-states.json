@@ -1,0 +1,2004 @@
+[
+  {
+    "theme": "light",
+    "width": 320,
+    "id": "panel-record",
+    "state": "save-denied",
+    "height": 1787.59375,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(138, 90, 6)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "draft-outcome",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved observer and outcome"
+      },
+      {
+        "id": "draft-scope",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved scope"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "light",
+    "width": 390,
+    "id": "panel-record",
+    "state": "save-denied",
+    "height": 1631.09375,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(138, 90, 6)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "draft-outcome",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved observer and outcome"
+      },
+      {
+        "id": "draft-scope",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved scope"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "light",
+    "width": 768,
+    "id": "panel-record",
+    "state": "save-denied",
+    "height": 1463.890625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(138, 90, 6)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "draft-outcome",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved observer and outcome"
+      },
+      {
+        "id": "draft-scope",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved scope"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "light",
+    "width": 1024,
+    "id": "panel-record",
+    "state": "save-denied",
+    "height": 1463.890625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(138, 90, 6)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "draft-outcome",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved observer and outcome"
+      },
+      {
+        "id": "draft-scope",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved scope"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "light",
+    "width": 1440,
+    "id": "panel-record",
+    "state": "save-denied",
+    "height": 1463.890625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(138, 90, 6)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "draft-outcome",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved observer and outcome"
+      },
+      {
+        "id": "draft-scope",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved scope"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "light",
+    "width": 1920,
+    "id": "panel-record",
+    "state": "save-denied",
+    "height": 1463.890625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(138, 90, 6)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "draft-outcome",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved observer and outcome"
+      },
+      {
+        "id": "draft-scope",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved scope"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "light",
+    "width": 2560,
+    "id": "panel-record",
+    "state": "save-denied",
+    "height": 1463.890625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(138, 90, 6)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "draft-outcome",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved observer and outcome"
+      },
+      {
+        "id": "draft-scope",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved scope"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "light",
+    "width": 320,
+    "id": "panel-record",
+    "state": "copy-denied",
+    "height": 2053.84375,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(138, 90, 6)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "copy-status",
+        "fg": "rgb(70, 88, 110)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Copy is unavailable. Select the Markdown below and copy it manually."
+      },
+      {
+        "id": "manual-markdown",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "# Performance measurement record\n\n## Outcome and observer\n\nUnsaved observer and outcome\n\n## Metric and population\n\nnot recorded\n\n## Scope\n\nUnsaved scope\n\n## Win"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "light",
+    "width": 390,
+    "id": "panel-record",
+    "state": "copy-denied",
+    "height": 1877.34375,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(138, 90, 6)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "copy-status",
+        "fg": "rgb(70, 88, 110)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Copy is unavailable. Select the Markdown below and copy it manually."
+      },
+      {
+        "id": "manual-markdown",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "# Performance measurement record\n\n## Outcome and observer\n\nUnsaved observer and outcome\n\n## Metric and population\n\nnot recorded\n\n## Scope\n\nUnsaved scope\n\n## Win"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "light",
+    "width": 768,
+    "id": "panel-record",
+    "state": "copy-denied",
+    "height": 1690.140625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(138, 90, 6)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "copy-status",
+        "fg": "rgb(70, 88, 110)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Copy is unavailable. Select the Markdown below and copy it manually."
+      },
+      {
+        "id": "manual-markdown",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "# Performance measurement record\n\n## Outcome and observer\n\nUnsaved observer and outcome\n\n## Metric and population\n\nnot recorded\n\n## Scope\n\nUnsaved scope\n\n## Win"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "light",
+    "width": 1024,
+    "id": "panel-record",
+    "state": "copy-denied",
+    "height": 1690.140625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(138, 90, 6)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "copy-status",
+        "fg": "rgb(70, 88, 110)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Copy is unavailable. Select the Markdown below and copy it manually."
+      },
+      {
+        "id": "manual-markdown",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "# Performance measurement record\n\n## Outcome and observer\n\nUnsaved observer and outcome\n\n## Metric and population\n\nnot recorded\n\n## Scope\n\nUnsaved scope\n\n## Win"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "light",
+    "width": 1440,
+    "id": "panel-record",
+    "state": "copy-denied",
+    "height": 1690.140625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(138, 90, 6)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "copy-status",
+        "fg": "rgb(70, 88, 110)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Copy is unavailable. Select the Markdown below and copy it manually."
+      },
+      {
+        "id": "manual-markdown",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "# Performance measurement record\n\n## Outcome and observer\n\nUnsaved observer and outcome\n\n## Metric and population\n\nnot recorded\n\n## Scope\n\nUnsaved scope\n\n## Win"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "light",
+    "width": 1920,
+    "id": "panel-record",
+    "state": "copy-denied",
+    "height": 1690.140625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(138, 90, 6)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "copy-status",
+        "fg": "rgb(70, 88, 110)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Copy is unavailable. Select the Markdown below and copy it manually."
+      },
+      {
+        "id": "manual-markdown",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "# Performance measurement record\n\n## Outcome and observer\n\nUnsaved observer and outcome\n\n## Metric and population\n\nnot recorded\n\n## Scope\n\nUnsaved scope\n\n## Win"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "light",
+    "width": 2560,
+    "id": "panel-record",
+    "state": "copy-denied",
+    "height": 1690.140625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(138, 90, 6)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "copy-status",
+        "fg": "rgb(70, 88, 110)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Copy is unavailable. Select the Markdown below and copy it manually."
+      },
+      {
+        "id": "manual-markdown",
+        "fg": "rgb(16, 36, 62)",
+        "bgs": [
+          "rgb(230, 228, 220)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(250, 249, 245)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(239, 238, 232)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "# Performance measurement record\n\n## Outcome and observer\n\nUnsaved observer and outcome\n\n## Metric and population\n\nnot recorded\n\n## Scope\n\nUnsaved scope\n\n## Win"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "dark",
+    "width": 320,
+    "id": "panel-record",
+    "state": "save-denied",
+    "height": 1787.59375,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(227, 171, 77)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "draft-outcome",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved observer and outcome"
+      },
+      {
+        "id": "draft-scope",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved scope"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "dark",
+    "width": 390,
+    "id": "panel-record",
+    "state": "save-denied",
+    "height": 1631.09375,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(227, 171, 77)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "draft-outcome",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved observer and outcome"
+      },
+      {
+        "id": "draft-scope",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved scope"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "dark",
+    "width": 768,
+    "id": "panel-record",
+    "state": "save-denied",
+    "height": 1463.890625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(227, 171, 77)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "draft-outcome",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved observer and outcome"
+      },
+      {
+        "id": "draft-scope",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved scope"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "dark",
+    "width": 1024,
+    "id": "panel-record",
+    "state": "save-denied",
+    "height": 1463.890625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(227, 171, 77)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "draft-outcome",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved observer and outcome"
+      },
+      {
+        "id": "draft-scope",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved scope"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "dark",
+    "width": 1440,
+    "id": "panel-record",
+    "state": "save-denied",
+    "height": 1463.890625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(227, 171, 77)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "draft-outcome",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved observer and outcome"
+      },
+      {
+        "id": "draft-scope",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved scope"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "dark",
+    "width": 1920,
+    "id": "panel-record",
+    "state": "save-denied",
+    "height": 1463.890625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(227, 171, 77)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "draft-outcome",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved observer and outcome"
+      },
+      {
+        "id": "draft-scope",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved scope"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "dark",
+    "width": 2560,
+    "id": "panel-record",
+    "state": "save-denied",
+    "height": 1463.890625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(227, 171, 77)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "draft-outcome",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved observer and outcome"
+      },
+      {
+        "id": "draft-scope",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "15px",
+        "fontWeight": "400",
+        "sample": "Unsaved scope"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "dark",
+    "width": 320,
+    "id": "panel-record",
+    "state": "copy-denied",
+    "height": 2053.84375,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(227, 171, 77)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "copy-status",
+        "fg": "rgb(173, 192, 212)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Copy is unavailable. Select the Markdown below and copy it manually."
+      },
+      {
+        "id": "manual-markdown",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "# Performance measurement record\n\n## Outcome and observer\n\nUnsaved observer and outcome\n\n## Metric and population\n\nnot recorded\n\n## Scope\n\nUnsaved scope\n\n## Win"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "dark",
+    "width": 390,
+    "id": "panel-record",
+    "state": "copy-denied",
+    "height": 1877.34375,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(227, 171, 77)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "copy-status",
+        "fg": "rgb(173, 192, 212)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Copy is unavailable. Select the Markdown below and copy it manually."
+      },
+      {
+        "id": "manual-markdown",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "# Performance measurement record\n\n## Outcome and observer\n\nUnsaved observer and outcome\n\n## Metric and population\n\nnot recorded\n\n## Scope\n\nUnsaved scope\n\n## Win"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "dark",
+    "width": 768,
+    "id": "panel-record",
+    "state": "copy-denied",
+    "height": 1690.140625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(227, 171, 77)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "copy-status",
+        "fg": "rgb(173, 192, 212)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Copy is unavailable. Select the Markdown below and copy it manually."
+      },
+      {
+        "id": "manual-markdown",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "# Performance measurement record\n\n## Outcome and observer\n\nUnsaved observer and outcome\n\n## Metric and population\n\nnot recorded\n\n## Scope\n\nUnsaved scope\n\n## Win"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "dark",
+    "width": 1024,
+    "id": "panel-record",
+    "state": "copy-denied",
+    "height": 1690.140625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(227, 171, 77)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "copy-status",
+        "fg": "rgb(173, 192, 212)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Copy is unavailable. Select the Markdown below and copy it manually."
+      },
+      {
+        "id": "manual-markdown",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "# Performance measurement record\n\n## Outcome and observer\n\nUnsaved observer and outcome\n\n## Metric and population\n\nnot recorded\n\n## Scope\n\nUnsaved scope\n\n## Win"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "dark",
+    "width": 1440,
+    "id": "panel-record",
+    "state": "copy-denied",
+    "height": 1690.140625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(227, 171, 77)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "copy-status",
+        "fg": "rgb(173, 192, 212)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Copy is unavailable. Select the Markdown below and copy it manually."
+      },
+      {
+        "id": "manual-markdown",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "# Performance measurement record\n\n## Outcome and observer\n\nUnsaved observer and outcome\n\n## Metric and population\n\nnot recorded\n\n## Scope\n\nUnsaved scope\n\n## Win"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "dark",
+    "width": 1920,
+    "id": "panel-record",
+    "state": "copy-denied",
+    "height": 1690.140625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(227, 171, 77)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "copy-status",
+        "fg": "rgb(173, 192, 212)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Copy is unavailable. Select the Markdown below and copy it manually."
+      },
+      {
+        "id": "manual-markdown",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "# Performance measurement record\n\n## Outcome and observer\n\nUnsaved observer and outcome\n\n## Metric and population\n\nnot recorded\n\n## Scope\n\nUnsaved scope\n\n## Win"
+      }
+    ],
+    "smallTargets": []
+  },
+  {
+    "theme": "dark",
+    "width": 2560,
+    "id": "panel-record",
+    "state": "copy-denied",
+    "height": 1690.140625,
+    "overflow": false,
+    "pairs": [
+      {
+        "id": "save-warning",
+        "fg": "rgb(227, 171, 77)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Saving is unavailable. This draft remains editable here; export it before leaving or reloading."
+      },
+      {
+        "id": "copy-status",
+        "fg": "rgb(173, 192, 212)",
+        "bgs": [
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "Copy is unavailable. Select the Markdown below and copy it manually."
+      },
+      {
+        "id": "manual-markdown",
+        "fg": "rgb(233, 239, 246)",
+        "bgs": [
+          "rgb(7, 19, 34)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(16, 38, 64)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgba(0, 0, 0, 0)",
+          "rgb(10, 26, 44)",
+          "rgba(0, 0, 0, 0)"
+        ],
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "sample": "# Performance measurement record\n\n## Outcome and observer\n\nUnsaved observer and outcome\n\n## Metric and population\n\nnot recorded\n\n## Scope\n\nUnsaved scope\n\n## Win"
+      }
+    ],
+    "smallTargets": []
+  }
+]

@@ -108,6 +108,7 @@ test('isDrawn distinguishes a sheet with content from a registered placeholder',
     'api-design',
     'architecture-patterns',
     'aws-deployment',
+    'caching',
     'ci-cd',
     'clean-code',
     'code-review',
@@ -121,7 +122,9 @@ test('isDrawn distinguishes a sheet with content from a registered placeholder',
     'incident-management',
     'playwright',
     'post-deploy-verification',
+    'scaling',
     'sdlc',
+    'security',
     'solid-principles',
     'testing',
   ])
@@ -181,6 +184,37 @@ test('stage 16 exposes its incident lookup sheet as drawn reference material', (
   const sheets = cheatsheetsForStage('16-incident-management')
   expect(sheets.map((sheet) => sheet.slug)).toEqual(['incident-management'])
   expect(sheets.every(isDrawn)).toBe(true)
+})
+
+test('stage 08 exposes a drawn security lookup with the cross-user invoice audit and its original diagram', () => {
+  const sheets = cheatsheetsForStage('08-security-audit')
+  expect(sheets.map((sheet) => sheet.slug)).toEqual(['security'])
+  const sheet = sheets[0]
+  expect(isDrawn(sheet)).toBe(true)
+
+  const rows = sheet.sections.flatMap((section) => section.rows)
+  for (const operation of ['read', 'update', 'delete', 'export']) {
+    expect(
+      rows.some(
+        (row) =>
+          row.term?.toLowerCase().includes(operation) &&
+          /user b|other customer/i.test(`${row.what} ${row.when}`) &&
+          /denied|deny/i.test(`${row.what} ${row.when}`),
+      ),
+      `${operation} must test the other customer's invoice`,
+    ).toBe(true)
+  }
+  expect(rows.some((row) => /anonymous/i.test(`${row.term} ${row.what}`))).toBe(
+    true,
+  )
+  expect(
+    rows.some((row) => /admin without grant/i.test(`${row.term} ${row.what}`)),
+  ).toBe(true)
+  expect(rows.some((row) => /retest/i.test(`${row.term} ${row.what}`))).toBe(
+    true,
+  )
+  expect(sheet.source?.image?.src).toBe('/reference/security-invoice-audit.svg')
+  expect(sheet.source?.image?.origin).toBe('original')
 })
 
 // A sheet transcribed from someone else's graphic must credit them. The site is

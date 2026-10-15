@@ -32,10 +32,15 @@ export function Term({
   useEffect(() => {
     const panel = panelRef.current
     if (!open || !panel) return
-    panel.style.marginLeft = '0px'
-    const rect = panel.getBoundingClientRect()
-    const overhang = rect.right - (window.innerWidth - 16)
-    if (overhang > 0) panel.style.marginLeft = `-${Math.ceil(overhang)}px`
+    const reposition = () => {
+      panel.style.marginLeft = '0px'
+      const rect = panel.getBoundingClientRect()
+      const overhang = rect.right - (window.innerWidth - 16)
+      if (overhang > 0) panel.style.marginLeft = `-${Math.ceil(overhang)}px`
+    }
+    reposition()
+    window.addEventListener('resize', reposition)
+    return () => window.removeEventListener('resize', reposition)
   }, [open])
 
   useEffect(() => {

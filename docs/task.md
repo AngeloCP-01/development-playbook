@@ -13,18 +13,25 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current state (2026-10-02): W-3 is 13/18 and W-6 is 19/24 on local
-`develop`.** Stage 16's repaired chapter, fourteen-step port and bounded
-`incident-management` reference companion are merged. The companion landed as
-no-ff merge `a992d74`; its post-merge gate passed 1389 tests across 181 files,
-lint, typecheck and format. Nothing from that round was pushed or deployed.
+**Current checkpoint (2026-10-14): Stage 09's caching/scaling companions are
+implemented and verified on `feat/stage-09-reference-companions`. All four tasks
+are approved. Whole-branch review returned Ready to merge at `bddf51d`;
+its citation-text finding is fixed in `35161b0` and independently reverified.** Branch W-6 is 22/27;
+local develop remains 20/25 and W-3 remains 15/18. Stage 08's corrected chapter and ten-step port merged as
+`a03e190`; its `security` lookup sheet and original diagram followed as
+`739c8ed`. The latter's merged tree passed 1406 tests across 184 files, lint,
+typecheck and format. Stage 09's chapter revision and W-6 source research
+merged locally as `ad283ce`; the merged tree passed 1416 tests across 185
+files. Stage 09's twelve-panel port passed whole-branch review and the merged-tree
+gate: 1459 tests across 198 files, format, lint, typecheck and a fresh 50-page
+build. Its local feature branch and worktree were removed after verification.
+No push or production promotion occurred.
 
-**Next W-3 candidate: 08 Security Audit, pending the user's choice.** It is the
-first remaining stage by filing number; the archived W-3 order leaves the
-remainder unordered. Begin with a source and executable-example review of
-`08-security-audit.md` before designing its interactive port. Security guidance
-and framework behavior need current verification. Stages 09, 10, 17 and 18
-remain alternatives; W-6.4 glossary/stack surfacing is a separate task.
+Stage 08 was chosen after the Stage 16 round. Its source review preceded the
+port; `docs/superpowers/specs/2026-10-02-stage-08-security-audit-design.md`
+records the scope. Stages 10, 17 and 18 remain. The user selected W-6 for Stage 09
+on 2026-10-13; W-6.3q below records the next scope. W-6.4 glossary/stack surfacing
+is a separate task.
 
 Two deliverables from one body of content.
 
@@ -73,10 +80,10 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(13/18 merged to `develop`; five remain: 08, 09, 10, 17 and 18. Stage 16 landed as `3d2c266`.)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(15/18 merged to local `develop`; three remain: 10, 17 and 18. Stage 09 landed as `7a5576a`.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(nineteen of twenty-four registered sheets drawn on `develop` — `incident-management` merged as `a992d74`. Five language sheets remain: `javascript`, `python`, `java`, `spring-boot`, `express`)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(20 of 25 registered sheets drawn on `develop` — `security` merged as `739c8ed`. Stage 09 caching/scaling companions are next, gathered but unregistered. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
 
 ### Dependency map
 
@@ -132,15 +139,80 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(13/18 merged to `develop`; five remain: 08, 09, 10, 17 and 18. Stage 16 landed as `3d2c266`; see tracker W-3.13 for evidence.)*
+### W-3 — Stages 02–18 interactive ◐ *(15/18 merged to local `develop`; three remain: 10, 17 and 18. Stage 09 merged as `7a5576a`.)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
-**Next candidate, not yet selected:** 08 Security Audit. Review the 270-line
-chapter's claims and runnable snippets against current primary guidance. Repair
-the chapter first, then port the settled content in the same stage round. The
-earlier suggested order in `task-archive.md` lists the remaining stages without
-ranking them; the tracker records why 08 is the current recommendation.
+**Latest completed round:** Stage 09 interactive port. The user approved the eight-task
+plan and selected Subagent-Driven execution on 2026-10-09. All eight tasks are
+implemented and independently reviewed before the approved no-ff merge
+`7a5576a` into local `develop` on 2026-10-12. Stage 09 is registered and ready.
+Final verification fixes passed independent review.
+The gate passed 1459 tests across 198 files, 24 production browser checks
+and the development-console audit. The independent whole-branch review
+returned Ready to merge, with no new findings. The merged tree then passed
+format, lint, typecheck, 1459 tests across 198 files and a fresh 50-page build.
+The browser results apply to the identical application tree; those suites were
+not rerun after merge. The local feature branch and worktree were removed.
+**Next selected round:** W-6.3q, Stage 09 caching/scaling companions.
+
+### W-3.16 — Stage 09 interactive port ☑ *(merged locally into `develop` as `7a5576a`, 2026-10-12)*
+
+Start from the [reviewed chapter](09-performance-optimization.md), its
+[design spec](superpowers/specs/2026-10-08-stage-09-performance-design.md),
+[chapter execution report](superpowers/reports/2026-10-08-stage-09-chapter.md),
+and the [source audit](../reference/stage-09-performance-sources.md). Read
+`web/PATTERNS.md` and `web/DESIGN.md` before choosing interactions. The
+[separate port spec](superpowers/specs/2026-10-08-stage-09-interactive-port-design.md)
+was approved on 2026-10-08. The
+[eight-task plan](superpowers/plans/2026-10-08-stage-09-interactive-port.md)
+was executed with Subagent-Driven development. Its tasks are complete; the
+[execution report](superpowers/reports/2026-10-08-stage-09-interactive-port.md)
+preserves TDD and review evidence. The
+[final verification](superpowers/reports/2026-10-09-stage-09-final-verification.md)
+records the full gate, 574 interacted-state measurements and chapter coverage.
+The [whole-branch review](superpowers/reports/2026-10-12-stage-09-whole-branch-review.md)
+covers all 54 changed files and records the remaining scope limits.
+
+The port should make the reader choose a user-visible outcome, define its
+start/end observer, record a comparable first baseline, distinguish checkout,
+payment and `OrderPaid` consumer clocks, inspect diagnostic evidence, and only
+then choose and retest a fix. Use hypothetical data visibly labelled as such;
+this static site has no order backend or production telemetry. Keep the three
+event consumers as branches unless an explicit business rule makes them serial.
+
+Done for W-3.16 means the Stage 09 content is registered and `ready: true`,
+the doc-to-port coverage is checked, component-derived behavior has render
+tests, and both themes, responsive widths, touch targets and clean-console
+audits pass. These checks are complete, and the user-approved merge landed on
+2026-10-12. The
+[integration receipt](superpowers/reports/2026-10-12-stage-09-integration.md)
+travelled with the no-ff merge. Actual post-merge results are recorded in the
+W-3.16 merged-tree tracker row; raw output remains in
+`.superpowers/sdd/2026-10-08-stage-09-interactive-port/merged-verification.md`.
+
+Deferred: the W-6 `caching` and `scaling` sheets, any third-party image,
+real ordering-system measurements, push and deployment.
+
+### W-3.15 — Stage 09, chapter audit ☑ *(merged locally into `develop` as `ad283ce`)*
+
+The canonical chapter now starts with a baseline record before any candidate
+fix. It separates browser checkout time, provider and webhook delays, visible
+Paid status and the three `OrderPaid` consumers. A worked 20-item cart example
+uses traces to justify batching, then compares the same user outcome after the
+change. Unsupported index, bundle, image and low-traffic rules were corrected
+against [the source audit](../reference/stage-09-performance-sources.md).
+
+The chapter and guard were committed through `758c2cc` on
+`docs/2026-10-08-stage-09-research` and merged as `ad283ce`. The cold reader exposed a missing timeout
+denominator; the whole-branch reviewer found a user-clock versus route-clock
+gap, fixed test-first. Final suite: 1416/1416 across 185 files; format, lint,
+typecheck and the 50-page production build passed. See the W-3.15 tracker row
+and [execution report](superpowers/reports/2026-10-08-stage-09-chapter.md)
+for the RED/GREEN and review evidence.
+
+Deferred: the Stage 09 interactive port and its UI audits, W-6 `caching` and
+`scaling` sheets, image publication, push and deployment.
 
 **Every stage carries an "AI plays" section** (D-34, D-35): where agents help in that
 stage's work and where they mislead, mirroring stage 01's. It is a dedicated stepper step
@@ -180,6 +252,19 @@ Per stage (checklist ticked for **03 Architecture**, feat/stage-03-architecture)
       step and an honest styles comparison — monolith, modular monolith, microservices,
       event-driven, serverless — each stating what would have to be true to pick it. The
       recommendation does not change; it stops being an assertion.
+
+### W-3.14 — Stage 08, chapter audit and interactive port ☑
+
+The corrected chapter now carries an invoice threat model, permission matrix,
+two-user probes and a worked finding with retest. The interactive port has ten
+steps, one permission inspector and a committed IDOR decision. The first
+whole-branch review found missing reset, error and logging controls in the port;
+commit `5a82e43` closed that gap and put primary source links beside the claims.
+The approved no-ff merge `a03e190` brought Stage 08 to `develop`, taking W-3 to
+14/18. The feature branch was deleted after the merged tree passed its gates.
+The RED/GREEN record, gate results and deferrals are in
+`docs/superpowers/reports/2026-10-02-stage-08-security-audit.md` and the W-3.14
+row in `docs/tracker.md`.
 
 ### W-3.13 — Stage 16, document repair and interactive port ☑
 
@@ -435,6 +520,84 @@ No image plate was selected: the NovelVista candidate puts communication after
 diagnosis and resolution before recovery validation, while the other captures need
 provenance or contain placeholder and conflicting material. Evidence in
 `docs/tracker.md`.
+
+**Stage 08 source gathering ☑ (merged locally into `develop` 2026-10-02 as
+`073daa8`).** Three attributed OWASP image captures are in `reference/`; see
+`reference/cheatsheet-sources.md`. The authorization matrix lacks
+object-ownership tests, and the two threat-model diagrams are historical
+examples. At that point no `security` sheet or image plate was registered; the
+two-user IDOR exercise and finding record still needed an original presentation
+informed by the cited OWASP text guidance. That gathering did not advance W-6's
+drawn-sheet count. W-6.3p below is the follow-up.
+
+**W-6.3p — `security`, Stage 08's lookup companion ☑** *(merged locally into
+`develop` 2026-10-05 as `739c8ed`)*. Four sections turn the two-user
+invoice audit into a lookup for boundaries and policy, read/update/delete/export
+probes, enforcement checks, and a retestable finding. An original 640 × 780 SVG
+shows User B's known invoice ID crossing the browser/server boundary and being
+denied by an owner-scoped lookup. The three gathered OWASP images remain source
+captures, not published plates. The sheet adds one entry to the registry, so
+`develop` is **20 drawn of 25 total**. Post-merge tests passed 1406/1406;
+the feature branch was deleted. Evidence and
+deferrals are in the W-6.3p tracker row, source ledger, and
+`docs/superpowers/reports/2026-10-05-security-reference-sheet.md`.
+
+**W-6.3q — Stage 09 caching/scaling lookup companions ◐ (implementation branch,
+2026-10-14; reviewed and verified, integration pending)**
+
+The user approved the [written spec](superpowers/specs/2026-10-13-stage-09-reference-design.md)
+on 2026-10-13 (`a9fb4e0`) and continued after the
+[four-task plan](superpowers/plans/2026-10-13-stage-09-reference.md) was presented.
+Subagent-Driven execution uses `.worktrees/stage-09-reference` on
+`feat/stage-09-reference-companions`, descended from local `develop` `597fe0b`.
+
+Tasks 1–4 are implemented and independently approved: supporting citation
+rendering (`13f0cb6`), caching (`f1bb218`) and infrastructure scaling (`b39d9e0`).
+Task 4 (`fa9bb40`) registers both sheets, regenerates Markdown/highlighting and
+appends the source ledger. The generator also keeps empty snippet lines empty, a pre-existing
+whitespace behavior exposed by the approved caching example. After its test-first
+repair, the affected suite passed 33/33 across six files. The registration run
+retains genuine stale-snapshot RED and isolated full-file tether teeth evidence.
+The full suite
+passed 1494/1494 across 207 files. The
+[execution report](superpowers/reports/2026-10-13-stage-09-reference.md) retains
+raw RED/GREEN/teeth evidence, gate exits, source checks and lookup outcomes.
+Production browser checks passed 24/24; development validation passed 1/1.
+The controller's 28-observation matrix checked both sheets across seven widths
+and two themes, with 378 pair measurements, AA minimum 5.2555:1, no overflow,
+source links at least 44px and no visual defect. The fresh blind lookup returned
+4 passes/0 misses. Task 4 review found no blocking issue; M1 records inherited
+Node color warnings, removed in the clean development runner retry. Whole-branch
+review at `bddf51d` returned Ready to merge with no blocking findings. Its M2
+plan-authored Markdown citation-text gap is fixed test-first in `35161b0`: RED
+and isolated teeth each fail only the new guard; restored coverage passes 55/55,
+and the final suite passes **1495/1495 across 207 files**. Format, lint and
+typecheck pass; a fresh network-enabled build generates **52 pages**. Generated
+snapshots remain unchanged. M1 retains the historical warning logs and uses
+`env -u NO_COLOR` for future captures. The final scoped rereview closed M1
+and M2 with no new breakage; the branch is Ready to merge.
+
+The implementation branch has **22 drawn / 27 registered**. Local `develop`
+remains **20 drawn / 25 registered**; W-3 remains **15/18**. The five language
+placeholders are unchanged. No integration, push or deployment has occurred.
+
+- [x] Recheck the gathered first-party sources and agree the sheet boundaries
+      through brainstorming before writing a spec or implementation plan
+- [x] Define caching guidance that separates application-cache lifetime and
+      invalidation from CDN freshness and response status
+- [x] Define scaling guidance around healthy-target routing, workload-dependent
+      algorithm choice, capacity limits and overload behavior
+- [x] Write and approve the bounded spec/plan, then implement through TDD and
+      per-task review using the existing reference renderer and design system
+- [x] Verify both themes, responsive layout, accessible content and production/
+      development consoles; complete whole-branch review before integration
+- [ ] Record actual registry/drawn counts and merge evidence after separately
+      approved integration; refresh the next-session handoff before use
+
+Deferred: W-3 stages 10, 17 and 18; W-6.4 glossary/stack surfacing; the five
+language sheets; diagrams/image republication; runtime infrastructure; chapter/port
+edits; real order benchmarks; shared-drill/storage repairs; push and production
+promotion. Every merge into develop needs a separate user decision.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 

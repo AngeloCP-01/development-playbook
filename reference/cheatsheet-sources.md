@@ -303,6 +303,40 @@ Deferred: publication and conversion of graphics, remaining image provenance,
 and a worked runbook and completed postmortem. The gathering round itself did
 not change stage readiness.
 
+## Stage 08 gathering round · 2026-10-02
+
+Target: a future `security` sheet tethered to `08-security-audit`. Three OWASP
+images were downloaded as **source captures**, not selected as a publication
+plate. The chapter's central audit is object ownership; none of these images
+shows the two-user, same-object test, so the sheet must teach that in its own
+rows or an original figure.
+
+| Local capture | Creator / source page | Original image | Size | License and assessment |
+|---|---|---|---|---|
+| `stage08-authorization-matrix.png` | OWASP Cheat Sheet Series, [Authorization Testing Automation](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Testing_Automation_Cheat_Sheet.html#rendering-the-authorization-matrix-for-an-audit-review) | [OWASP asset](https://cheatsheetseries.owasp.org/assets/Authorization_Testing_Automation_AutomationRendering.png) | 1480 × 971 | CC BY-SA 4.0, stated on the page. Clear role/endpoint mapping, but its example allows anonymous reads and has no record-ownership dimension. Consult; do not display as Stage 08's complete authorization audit. |
+| `stage08-threat-data-flow-overview.jpg` | OWASP Foundation, [Threat Modeling Process (Historical)](https://community.owasp.org/Threat_Modeling_Process) | [OWASP asset](https://community.owasp.org/assets/images/Data_flow1.jpg) | 749 × 412 | Site footer states CC BY-SA 4.0 unless specified otherwise. College-library users, librarians, web app, database and trust boundaries. Legible at native size; historical example, not current framework guidance. |
+| `stage08-threat-login-flow.jpg` | OWASP Foundation, [Threat Modeling Process (Historical)](https://community.owasp.org/Threat_Modeling_Process) | [OWASP asset](https://community.owasp.org/assets/images/Data_flow2.jpg) | 760 × 469 | Same site license. Drill-down of the library login flow and its trust boundaries. Useful alongside the overview, but too specific to stand alone as the sheet's plate. |
+
+No first-party downloadable two-user IDOR or complete audit-finding infographic
+was found in this pass. [OWASP's IDOR testing procedure](https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/05-Authorization/04-Insecure_Direct_Object_References/)
+and [WSTG reporting guidance](https://wstg.owasp.org/stable/5-Reporting/README/)
+are text sources for those parts. The existing `"OWASP top 10" visual` search
+target above remains useful for orientation, not as the main audit workflow.
+No image was copied into `web/public/reference/` or registered in the live
+cheatsheet. W-6's drawn-sheet count is unchanged.
+
+### Stage 08 sheet follow-up · 2026-10-05
+
+`web/public/reference/security-invoice-audit.svg` is an **original Development
+Playbook diagram**, 640 × 780. It shows User B's known invoice ID crossing the
+browser/server boundary, the server deriving B from the session, the lookup
+scoped to both invoice ID and owner, the denied result, and User A's positive
+control. It was drawn for the `security` sheet; no OWASP image was traced or
+republished. The three captures above remain consulted sources, not display
+plates.
+
+The sheet's test method follows [OWASP WSTG IDOR testing](https://wstg.owasp.org/latest/4-Web_Application_Security_Testing/05-Authorization/04-Insecure_Direct_Object_References/): map object references and try another test user's known object. The permission matrix draws on the [OWASP Authorization Testing Automation Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Testing_Automation_Cheat_Sheet.html), with object ownership added for this invoice case. The finding fields follow [OWASP WSTG reporting guidance](https://wstg.owasp.org/stable/5-Reporting/README/). The Stage 08 chapter supplies the application policy and the surrounding control checks. The diagram is illustrative: no authenticated backend was audited to produce it.
+
 ## Untethered
 
 ### Software Development Life Cycle · `sdlc` · no stage
@@ -436,3 +470,20 @@ unrecorded on most of these; fix before promoting past `develop` (D-63).
 | `observability` | The three pillars of observability | Priya Dharshini | *not recorded* | *no image — text article* | 2026-09-08 | consulted — corroborated, changed nothing |
 | `observability` | Observability with OpenTelemetry: why do we need it | Tenil Sridhar | *not recorded* | *no image — text article* | 2026-09-08 | consulted — fed `## Scaling to a team` |
 | `observability` | Building an observability platform with Prometheus, Grafana and Jenkins | Kumar | *not recorded* | *no image — text article* | 2026-09-08 | consulted — fed the one-pane dashboard reconciliation; otherwise sheet-only |
+
+### Stage 09 lookup companions · W-6.3q
+
+The caching/scaling sheets are original practical lookups, not transcriptions of a gathered graphic. Their TypeScript modules are the source of the generated reference Markdown. The source list is displayed on each sheet through the primary citation and supporting citations. No image plate is selected in this round.
+
+| Sheet / sections | First-party reference | What it supports |
+|---|---|---|
+| caching / boundary, lifetime | [Next.js use cache](https://nextjs.org/docs/app/api-reference/directives/use-cache) | Cache Components prerequisite, async scopes, request-value boundaries and hosting caveats |
+| caching / lifetime | [Next.js cacheLife](https://nextjs.org/docs/app/api-reference/functions/cacheLife), [cacheTag](https://nextjs.org/docs/app/api-reference/functions/cacheTag) | Lifetime profiles and tagged reads |
+| caching / invalidation | [Next.js updateTag](https://nextjs.org/docs/app/api-reference/functions/updateTag), [revalidateTag](https://nextjs.org/docs/app/api-reference/functions/revalidateTag) | Caller scope, immediate expiry, stale-while-revalidate and non-deprecated signatures |
+| caching / CDN evidence | [Cloudflare cache responses](https://developers.cloudflare.com/cache/concepts/cache-responses/), [retention versus freshness](https://developers.cloudflare.com/cache/concepts/retention-vs-freshness/) | Provider-specific response status, retention and freshness |
+| scaling / routing, failure | [AWS ALB attributes](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/edit-target-group-attributes.html), [target-group health checks](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html) | Algorithm conditions, incompatible features, draining and fail-open behavior |
+| scaling / capacity, overload | [Google SRE Handling Overload](https://sre.google/sre-book/handling-overload/) | Workload-dependent capacity, admission, degradation and overload limits |
+
+The comparable-outcome, authorization and uncertain-side-effect checks are this playbook's application discipline, carried from the reviewed Stage 09 chapter and incident guidance. They are not a universal checklist attributed to one provider. Read-only commands use illustrative domains or a caller-supplied permitted target-group ARN. No backend or infrastructure was measured to author these rows.
+
+Deferred: diagrams, image republication, runtime configuration, Stage 09 chapter/port edits, glossary/stack surfacing and the five language sheets. The source date and actual execution/verification evidence are recorded in the round's execution report.

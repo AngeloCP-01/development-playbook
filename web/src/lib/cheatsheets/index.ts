@@ -1,5 +1,7 @@
 import { apiDesign } from './api-design'
 import { awsDeployment } from './aws-deployment'
+import { caching } from './caching'
+import { scaling } from './scaling'
 import { codeReview } from './code-review'
 import { architecturePatterns } from './architecture-patterns'
 import { ciCd } from './ci-cd'
@@ -16,6 +18,7 @@ import { PLANNED } from './planned'
 import { postDeployVerification } from './post-deploy-verification'
 import { playwright } from './playwright'
 import { sdlc } from './sdlc'
+import { security } from './security'
 import { solidPrinciples } from './solid-principles'
 import { testing } from './testing'
 import type { Cheatsheet, CheatsheetGroup } from './types'
@@ -27,6 +30,7 @@ export type {
   RowExample,
   Section,
   Source,
+  SourceCitation,
   SourceImage,
 } from './types'
 export { CHEATSHEET_GROUPS, isDrawn } from './types'
@@ -51,6 +55,9 @@ export const CHEATSHEETS: Cheatsheet[] = [
   ciCd,
   githubActions,
   incidentManagement,
+  security,
+  caching,
+  scaling,
   ...PLANNED,
 ]
 
