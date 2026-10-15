@@ -79,7 +79,9 @@ export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
                         </p>
                       )}
                       {row.example && (
-                        <div className="mt-4 grid min-w-0 gap-3 sm:grid-cols-2">
+                        <div
+                          className={`mt-4 grid min-w-0 gap-3${row.example.length > 1 ? ' sm:grid-cols-2' : ''}`}
+                        >
                           {row.example.map((ex) => (
                             <div key={ex.label} className="min-w-0">
                               <p className="t-label mb-1.5 text-subtle">
