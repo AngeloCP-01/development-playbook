@@ -212,6 +212,31 @@ test('renders a labelled code example when a row has one', () => {
   expect(screen.getByText('Correct')).toBeTruthy()
   expect(screen.getByText(/class UserManager/)).toBeTruthy()
   expect(screen.getByText(/class UserRepository/)).toBeTruthy()
+  expect(
+    screen.getByText('Violation').parentElement?.parentElement?.className,
+  ).toContain('sm:grid-cols-2')
+})
+
+test('a single example uses the description width instead of reserving an empty comparison column', () => {
+  const withSingleExample: Cheatsheet = {
+    ...drawn,
+    sections: [
+      {
+        title: 'Caching',
+        rows: [
+          {
+            term: 'Cache a read',
+            what: 'Reuse the result.',
+            example: [{ label: 'Example read', code: 'readDescription(id)' }],
+          },
+        ],
+      },
+    ],
+  }
+  render(<CheatsheetView sheet={withSingleExample} />)
+  const examples = screen.getByText('Example read').parentElement?.parentElement
+  expect(examples?.className).not.toContain('sm:grid-cols-2')
+  expect(screen.getByText('readDescription(id)')).toBeTruthy()
 })
 
 test('renders no example block for a row that has none, since most rows do not carry code', () => {
