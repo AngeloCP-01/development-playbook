@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current checkpoint (2026-10-20): Stage 10's interactive-port design is proposed and builder-checked.** The [written spec](superpowers/specs/2026-10-20-stage-10-interactive-port-design.md) awaits approval before planning. It is on `feat/stage-10-documentation`, based on completed chapter tip `c092ac7`; the chapter branch is preserved. Chapter verification remains 1512 tests, 52 pages, 24 production checks and one development-console sweep, with clean final reviews. No port product code or registration has changed.
+**Current checkpoint (2026-10-20): Stage 10's port design is approved and its implementation plan is written.** Approval `3165b62` follows the user's “proceed.” The [nine-task plan](superpowers/plans/2026-10-20-stage-10-interactive-port.md) has full source/test slices and a [controller self-review](superpowers/reports/2026-10-20-stage-10-port-plan-review.md); plan review and execution-method selection remain pending. The feature branch includes completed chapter tip `c092ac7`, with that chapter branch preserved. No port application source or registration has changed.
 Stage 09's chapter merged as `ad283ce`, its
 interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. Local `develop` and tracked
@@ -27,7 +27,7 @@ passed **1496 tests across 207 files**, format, lint and generated-route typeche
 Its reviewed tree also passed 24 production browser checks, the development-console
 check and 28 geometry observations. Reports retain the evidence.
 
-**Next checkpoint: approve the written port design, then write its implementation plan.** The fresh [builder check](superpowers/reports/2026-10-20-stage-10-port-design-review.md) returned “nothing important left.” Integration requires its own approval; production promotion remains the user's.
+**Next checkpoint: review the implementation plan and choose subagent-driven or inline execution.** Recommend subagent-driven for its nine separate reviewable boundaries; either approach retains independent per-task reviews. Integration requires its own approval; production promotion remains the user's.
 
 Two deliverables from one body of content.
 
@@ -153,7 +153,7 @@ not rerun after merge. The local feature branch and worktree were removed.
 **Next selected round:** W-3.17, Stage 10 — Documentation. Stage 09's W-6.3q
 references and the subsequent layout repair are merged; their work is complete.
 
-### W-3.17 — Stage 10 Documentation ◐ *(chapter complete; port design proposed 2026-10-20)*
+### W-3.17 — Stage 10 Documentation ◐ *(chapter complete; port plan written 2026-10-20)*
 
 The [approved chapter design](superpowers/specs/2026-10-20-stage-10-documentation-design.md) and [five-task plan](superpowers/plans/2026-10-20-stage-10-documentation.md) were committed before implementation. The user’s “proceed up to implementation” authorized the recommended inline execution, retaining independent reviews and cold readers.
 
@@ -169,7 +169,8 @@ The [corrected chapter](10-documentation.md) now teaches the smallest useful doc
 - [x] Rerun the exact held-out completeness/consultability instruments
 - [x] Complete chapter verification and final whole-branch/fix reviews; integration still requires a fresh decision
 - [x] Write and builder-check the separate [interactive-port spec](superpowers/specs/2026-10-20-stage-10-interactive-port-design.md); no important planning questions remain
-- [ ] Approve the port spec, write/review its implementation plan and select its execution method
+- [x] Approve the port spec (`3165b62`) and write/self-review the [implementation plan](superpowers/plans/2026-10-20-stage-10-interactive-port.md)
+- [ ] Review the plan and select its execution method before implementation
 - [ ] Implement the port through TDD, per-task review and whole-branch review; verify both themes, responsive layout and both console modes
 - [ ] Register the reviewed port, then record separately approved integration and refresh the handoff
 

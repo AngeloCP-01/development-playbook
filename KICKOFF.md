@@ -1,8 +1,9 @@
-# Kickoff: Stage 10 interactive-port design
+# Kickoff: Stage 10 interactive-port implementation plan
 
 Updated 2026-10-20. The chapter round is complete and independently reviewed.
-The user then said “continue”; the separate interactive-port design is now
-written and builder-checked. It awaits the user's approval before planning.
+The user approved the separate port design with “proceed”; approval is recorded
+in `3165b62`. The nine-task implementation plan is written and self-reviewed.
+Plan review and the execution-method decision are the next checkpoint.
 
 ## Workspace and authority
 
@@ -26,21 +27,26 @@ by Turbopack. Checks use local `.next` and ports 3100/3101 sequentially.
 1. User instructions, AGENTS.md and applicable current skills.
 2. [Port design](docs/superpowers/specs/2026-10-20-stage-10-interactive-port-design.md)
    and its [builder check](docs/superpowers/reports/2026-10-20-stage-10-port-design-review.md).
-3. [Corrected chapter](docs/10-documentation.md), `web/PATTERNS.md` and `web/DESIGN.md`.
-4. Chapter [execution report](docs/superpowers/reports/2026-10-20-stage-10-execution.md)
+3. [Implementation plan](docs/superpowers/plans/2026-10-20-stage-10-interactive-port.md)
+   and [self-review](docs/superpowers/reports/2026-10-20-stage-10-port-plan-review.md).
+4. [Corrected chapter](docs/10-documentation.md), `web/PATTERNS.md` and `web/DESIGN.md`.
+5. Chapter [execution report](docs/superpowers/reports/2026-10-20-stage-10-execution.md)
    and [correction rerun](docs/superpowers/reports/2026-10-20-stage-10-correction-rerun.md).
-5. `docs/task.md` W-3.17 and tracker Current phase/Next up; grep other sections by ID.
+6. `docs/task.md` W-3.17 and tracker Current phase/Next up; grep other sections by ID.
    Source provenance is in [research notes](reference/stage-10-source-research.md).
 
 ## Current checkpoint
 
-The proposed port has twelve initial panels and a reusable documentation-change
-plan, copyable README/ADR specimens, explicit storage/copy failure behavior,
-rendered teaching guards and same-case readers. These are design calls, not
-user-approved preferences. Fresh builder check: “nothing important left.”
-No product code, registration or implementation plan was written in this design
-round. Follow the brainstorming approval gate; after approval, writing-plans is
-the next skill. Recommend the execution approach from that plan's actual shape.
+The approved port design has twelve initial panels, copyable README/ADR
+specimens and a saved/exportable documentation-change plan. The [nine-task plan](docs/superpowers/plans/2026-10-20-stage-10-interactive-port.md)
+contains full inline tests/sources and review gates. Read its
+[self-review record](docs/superpowers/reports/2026-10-20-stage-10-port-plan-review.md).
+Embedded sources received static compiler/lint checks; proposed tests were not
+executed and no application source was written. Actual RED/GREEN/teeth belongs
+to execution after plan review. Recommend subagent-driven execution for the
+separate storage, copy, teaching and registration boundaries. Inline remains
+available and retains per-task independent reviews. The earlier chapter's inline
+choice does not choose the method for this new plan.
 
 Chapter evidence is already complete: **1512/1512 across 208 files**, 52-page
 production build, production browser **24/24**, development-console **1/1**, ADR
@@ -56,7 +62,7 @@ Stage numbers are filing codes, and documentation runs continuously.
 
 ## Deferred
 
-Port design approval, implementation planning, TDD implementation, independent
+Plan approval, execution-method selection, TDD implementation, independent
 reviews and UI verification; stage registration; W-6 companion/publication and
 W-6.4; five language sheets; stages 17/18; unrelated shared repairs; integration
 and deployment. Preserve the completed chapter branch while the child feature
