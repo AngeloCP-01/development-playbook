@@ -3,8 +3,9 @@
 Updated 2026-10-20. The user selected Stage 10 — Documentation, with research,
 chapter review/corrections, then a separately designed interactive port.
 Research and the initial cold-reader assessment are complete. The written
-chapter spec is proposed and awaits the user's review. No implementation plan,
-chapter corrections or new regression tests have been written.
+chapter spec is approved. The implementation plan is written and awaits user
+review and execution-method selection. Chapter corrections and new regression
+tests have not been written.
 
 ## Active workspace
 
@@ -12,7 +13,7 @@ chapter corrections or new regression tests have been written.
 - Branch: `docs/2026-10-20-stage-10-chapter`, created from develop `79f9e31`.
 - Source collection: `e30c9a4`, a separate documentation commit preserving the
   earlier gathered research, chapter appendix, source ledger and four images.
-- Query `git log -1 --oneline` for the spec/records tip; do not put a commit's own
+- Query `git log -1 --oneline` for the planning/records tip; do not put a commit's own
   SHA into the handoff it commits.
 - This branch is not merged, pushed or deployed. No merge or push was attempted.
 
@@ -33,10 +34,13 @@ Read:
 
 1. `AGENTS.md`, the user-provided Codex instructions and the current Superpowers
    skills.
-2. [The proposed chapter spec](docs/superpowers/specs/2026-10-20-stage-10-documentation-design.md).
+2. [The approved chapter spec](docs/superpowers/specs/2026-10-20-stage-10-documentation-design.md)
+   and [the implementation plan](docs/superpowers/plans/2026-10-20-stage-10-documentation.md).
 3. [The initial cold-reader findings](docs/superpowers/reports/2026-10-20-stage-10-cold-reader.md),
    including the exact Toolshare scenario and five lookup questions.
 4. [The builder check](docs/superpowers/reports/2026-10-20-stage-10-spec-review.md).
+   The [plan self-review](docs/superpowers/reports/2026-10-20-stage-10-plan-review.md)
+   records in-memory validation of the embedded source; it is not execution evidence.
 5. [The chapter](docs/10-documentation.md), [source notes](reference/stage-10-source-research.md)
    and the Stage 10 gathering/follow-up sections in
    [the source ledger](reference/cheatsheet-sources.md).
@@ -44,13 +48,15 @@ Read:
    D-42, D-47, D-48, D-54, D-68 and D-95. Read
    `docs/learnings/plans-are-unverified-101.md` before writing the plan.
 
-**Await the user's review of the written spec before implementation planning.**
-Once approved, invoke `superpowers:writing-plans`. The plan needs targeted RED
-checks before corrections, source/contract checks, same-scenario reader reruns,
-per-task review and a whole-branch implementation review. Recommend inline or
-subagent-driven execution based on the actual plan, not an older stage's choice.
+**Await user review of the plan and execution-method selection.** Inline is
+recommended: two editing tasks share the same teaching, followed by three
+verification tasks. It retains independent per-task reviews, fresh cold readers
+and final whole-branch review. Subagent-driven execution remains the alternative.
+After the user chooses, invoke `superpowers:executing-plans` for inline or
+`superpowers:subagent-driven-development` for that method. Execute the real RED
+checks before corrections; the plan's in-memory checks do not replace them.
 
-The spec's major proposed choices are a Workshop booking-app worked example,
+The spec's approved choices are a Workshop booking-app worked example,
 append-only ADR supersession notices with reciprocal links, a small documentation
 change/check matrix, and correction of the shared ADR glossary definition.
 The Toolshare cold-reader case stays held out from authored examples.
@@ -70,7 +76,7 @@ The Toolshare cold-reader case stays held out from authored examples.
   checks whether planning is possible, not whether implementation is correct.
 - Targeted baseline verification: **51/51 tests across 4 files** (stage metadata,
   tracker ledger, terms and glossary sync). The full app gate was not run for
-  this spec-only round; do not reuse older build/audit results as fresh evidence.
+  this design/planning round; do not reuse older build/audit results as fresh evidence.
 
 Local develop and tracked origin/develop are `79f9e31` at this check. Local main
 is `d659d32`; tracked origin/main is `bd6c837`. No fetch or deployed check ran,

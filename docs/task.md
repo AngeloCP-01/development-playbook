@@ -13,9 +13,10 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current checkpoint (2026-10-20): Stage 10's chapter spec is proposed and awaits
-user review before implementation planning.** Research and the initial cold-reader
-assessment are complete; chapter corrections and the port have not started.
+**Current checkpoint (2026-10-20): Stage 10's chapter spec is approved; its
+implementation plan awaits user review and execution-method selection.** Research
+and the initial cold-reader assessment are complete; chapter corrections and the
+port have not started.
 Stage 09's chapter merged as `ad283ce`, its
 interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. Local `develop` and tracked
@@ -29,11 +30,11 @@ passed **1496 tests across 207 files**, format, lint and generated-route typeche
 Its reviewed tree also passed 24 production browser checks, the development-console
 check and 28 geometry observations. Reports retain the evidence.
 
-**Next checkpoint: W-3.17 written-spec review.** Read the proposed chapter design
-and baseline findings linked below. Once approved, write the implementation plan,
-correct and recheck the chapter, then separately specify its interactive port.
-The written spec does not approve its implementation. Production promotion
-remains the user's.
+**Next checkpoint: W-3.17 implementation-plan review.** Read the approved design
+and plan linked below. Choose inline (recommended for the two coupled editing
+tasks) or subagent-driven execution; both retain independent reviews. Then correct
+and recheck the chapter before separately specifying its interactive port.
+Production promotion remains the user's.
 
 Two deliverables from one body of content.
 
@@ -159,7 +160,7 @@ not rerun after merge. The local feature branch and worktree were removed.
 **Next selected round:** W-3.17, Stage 10 — Documentation. Stage 09's W-6.3q
 references and the subsequent layout repair are merged; their work is complete.
 
-### W-3.17 — Stage 10 Documentation ☐ *(chapter spec proposed 2026-10-20; user review pending)*
+### W-3.17 — Stage 10 Documentation ☐ *(spec approved; plan review pending 2026-10-20)*
 
 The [chapter design](superpowers/specs/2026-10-20-stage-10-documentation-design.md)
 and [initial cold-reader findings](superpowers/reports/2026-10-20-stage-10-cold-reader.md)
@@ -167,7 +168,14 @@ are written on `docs/2026-10-20-stage-10-chapter` in the isolated worktree.
 The independent builder check found no important unanswered questions. The
 five lookup questions returned 0 hits, 3 partials and 2 misses against the old
 teaching; the report preserves them and the Toolshare scenario for the rerun.
-The written spec awaits user review before the implementation plan is authored.
+The user approved the written spec with “proceed.” The
+[implementation plan](superpowers/plans/2026-10-20-stage-10-documentation.md)
+contains the full proposed chapter/test source and five sequential tasks. Its
+[self-review](superpowers/reports/2026-10-20-stage-10-plan-review.md) records
+in-memory checks of the planned source, not implementation RED/GREEN evidence.
+Inline execution is recommended because only two tasks edit the tightly coupled
+teaching; reviews and fresh cold readers remain independent. User plan review
+and method selection are pending.
 Chapter corrections, new regression guards and the port remain unstarted.
 
 Research preflight: [primary-source notes](../reference/stage-10-source-research.md)
@@ -185,8 +193,9 @@ and Stage 03's recorded G9 boundary: ADR format, status, naming and location
 belong to Stage 10; verify what the current chapter teaches before calling any
 of those a gap.
 
-- [ ] Explore the chapter and existing decisions, agree the review scope through
+- [x] Explore the chapter and existing decisions, agree the review scope through
       brainstorming, and record the chapter-phase spec/plan before corrections
+- [ ] Review the implementation plan and select inline or subagent-driven execution
 - [ ] Run completeness and consultability checks, verify findings against sources,
       correct confirmed gaps, and rerun the same cold-reader scenario
 - [ ] Approve a separate interactive-port spec/plan based on the reviewed chapter;

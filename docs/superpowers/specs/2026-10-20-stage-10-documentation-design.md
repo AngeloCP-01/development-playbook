@@ -1,9 +1,9 @@
 # Stage 10 documentation: chapter review and correction
 
-Date: 2026-10-20. Status: proposed; awaiting the user's written-spec review.
-This document describes the chapter round. It does not approve implementation
-or the later interactive port. The user authorized proceeding from the gathered
-research to chapter review, specification and planning.
+Date: 2026-10-20. Status: approved. The user's “proceed” followed the written-spec
+review request. This approval permits implementation planning; plan review and
+execution-method selection remain separate. The interactive port is outside
+this chapter design.
 
 ## Problem
 

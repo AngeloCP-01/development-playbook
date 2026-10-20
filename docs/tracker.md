@@ -905,6 +905,26 @@ of new work, not assumed to survive from the last `git checkout`.
 
 ## Next up
 
+**2026-10-20 planning checkpoint: the Stage 10 spec is approved; its plan awaits
+review and execution-method selection.** The user's “proceed” followed the
+written-spec review request. The
+[five-task plan](superpowers/plans/2026-10-20-stage-10-documentation.md) includes
+the full proposed chapter/test source, scoped RED checks, generated-glossary
+correction, guard mutations, the exact held-out reader rerun and final gates.
+Author self-review checked source syntax and 14 embedded chapter expectations
+in memory; the same scenario/questions match the baseline verbatim. These are
+plan checks, not implementation or TDD evidence; see the
+[self-review report](superpowers/reports/2026-10-20-stage-10-plan-review.md).
+
+Recommended method: **inline**, because the two editing tasks are tightly coupled
+and the remaining three verify the same teaching. Independent per-task review,
+fresh cold readers and whole-branch review remain required. The user has not
+selected a method. Chapter corrections, real RED/GREEN, correction rerun and
+the port remain unstarted. W-3 stays **15/18**, W-6 **22/27**; no merge, push or
+deployment. Deferred: implementation, port, W-6 publication and integration.
+
+**Historical spec-proposal checkpoint:**
+
 **2026-10-20: Stage 10 chapter design is proposed; written-spec review is next.**
 The user authorized proceeding from research into the chapter round. Two fresh
 readers assessed the unchanged 230-line teaching baseline: completeness found
