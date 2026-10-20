@@ -487,3 +487,86 @@ The caching/scaling sheets are original practical lookups, not transcriptions of
 The comparable-outcome, authorization and uncertain-side-effect checks are this playbook's application discipline, carried from the reviewed Stage 09 chapter and incident guidance. They are not a universal checklist attributed to one provider. Read-only commands use illustrative domains or a caller-supplied permitted target-group ARN. No backend or infrastructure was measured to author these rows.
 
 Deferred: diagrams, image republication, runtime configuration, Stage 09 chapter/port edits, glossary/stack surfacing and the five language sheets. The source date and actual execution/verification evidence are recorded in the round's execution report.
+
+## Stage 10 gathering round · 2026-10-15
+
+Topic: Documentation, tethered to stage 10. The user requested research before
+the chapter review, with images where useful and text sources where a graphic
+adds little. This is a gathering round; `documentation` is a candidate slug,
+not a registered sheet. W-6 remains 22 drawn / 27 registered.
+
+Findings are in [Stage 10 source research](stage-10-source-research.md) and
+[the chapter's research section](../docs/10-documentation.md#research-findings-for-chapter-review).
+
+### Original images
+
+All three PNGs were downloaded from their creators' sites on 2026-10-15 and
+visually inspected. They are unmodified originals, not screenshots or generated
+replacements. The C4 key belongs with the context diagram rather than counting
+as a separate concept plate.
+
+| Local file | Creator / original page | Direct image URL | Dimensions | License / intended use |
+| --- | --- | --- | --- | --- |
+| [stage10-diataxis-map.png](stage10-diataxis-map.png) | Daniele Procida, [Diátaxis](https://diataxis.fr/) | [Original PNG](https://diataxis.fr/_images/diataxis.png) | 1920 × 1080 | CC BY-SA 4.0 in the [source repository license](https://github.com/evildmp/diataxis-documentation-framework/blob/main/LICENSE.rst). Strongest overview candidate: four reader needs across action/cognition and acquisition/application. Embedded in the Markdown chapter with attribution and a text equivalent. Retain attribution and license; identify any later adaptation. |
+| [stage10-c4-system-context.png](stage10-c4-system-context.png) | Simon Brown, [C4 system-context diagram](https://c4model.com/diagrams/system-context) | [Original PNG](https://c4model.com/images/examples/SystemContext.png) | 1710 × 1415 | CC BY 4.0 stated on the creator page and image. Shows a fictional banking system, customer and external systems. Supports scope and relationship labeling; it is not a diagram of this app or a proposed banking stack. Linked from the chapter. |
+| [stage10-c4-system-context-key.png](stage10-c4-system-context-key.png) | Simon Brown, [same C4 page](https://c4model.com/diagrams/system-context) | [Original PNG](https://c4model.com/images/examples/SystemContext-key.png) | 2500 × 500 | CC BY 4.0 on the creator page. Companion legend; retain with the diagram when displaying it. Named labels explain the colors and shapes. |
+
+The Diátaxis map is readable at native size. Its orange labels and the C4
+example's small labels still need contrast and mobile-layout decisions before
+any web publication. Source graphics do not establish this site's WCAG AA
+compliance. The chapter provides the four documentation types in text too.
+
+### Primary text sources
+
+| Source | Author / organization | What it supports |
+| --- | --- | --- |
+| [Diátaxis primer](https://diataxis.fr/start-here/), [compass](https://diataxis.fr/compass/) | Daniele Procida | Choose tutorial, how-to, reference or explanation for the reader's need. |
+| [Documenting Architecture Decisions](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) | Michael Nygard / Cognitect | Small decision records; status and links preserve supersession history. |
+| [MADR 4.0.0 template](https://github.com/adr/madr/blob/4.0.0/template/adr-template.md), [status-field decision](https://adr.github.io/madr/decisions/0008-add-status-field.html) | MADR contributors | Optional metadata, options, consequences and confirmation; an editable specimen is more useful than a screenshot. |
+| [About READMEs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes) | GitHub | Project purpose, getting started, help and maintainers. The playbook's four headings remain its own template. |
+| [Docs as Code](https://www.writethedocs.org/guide/docs-as-code/) | Write the Docs | Version control, review and automated checks for documentation. |
+| [What to look for in a code review](https://google.github.io/eng-practices/review/reviewer/looking-for.html#documentation) | Google Engineering Practices | Why-focused implementation comments differ from API documentation; associated docs need review when behavior changes. |
+| [C4 diagram review checklist](https://c4model.com/diagrams/checklist) | Simon Brown | Scope, key, named elements and labeled relationships. |
+| [Metadata](https://docs.stripe.com/metadata#data), [webhook retries](https://docs.stripe.com/webhooks#automatic-retries) | Stripe | Check the existing comment examples: value limit, live/sandbox retry distinctions; no documented silent truncation or five-attempt diagnosis. |
+| [Prisma ORM v6.16.0 release](https://www.prisma.io/changelog/2025-09-10) | Prisma | Rust-free engine and driver adapters were generally available before the sample ADR's date; evaluate a named configuration. |
+
+The AWS [ADR process diagrams](https://docs.aws.amazon.com/prescriptive-guidance/latest/architectural-decision-records/adr-process.html)
+were also located. They are optional reading, not downloaded plates; the gathered
+Diátaxis and C4 originals already cover the strongest visual needs. An ADR
+lifecycle lookup can use editable text grounded in Nygard and MADR.
+
+Deferred: choosing or registering a W-6 sheet, copying images into `web/public`,
+an interactive redraw, chapter corrections and cold-reader checks, the Stage 10
+port, and publishing or deployment. No provenance-free social captures were added.
+
+### User-supplied follow-up · 2026-10-15
+
+Two further sources were supplied after the initial gathering:
+
+| Source | Attribution / access | Assessment |
+| --- | --- | --- |
+| [Project Management Documentation Library: A Practical Guide](https://www.linkedin.com/pulse/project-management-documentation-library-practical-guide-mushtaq-pwuaf/) | Kirran Mushtaq, published 2026-10-03. Read through the search-indexed article text; direct page retrieval failed. No local article image was supplied. | Supporting context for ownership, versions, access, review and decision history. Its broader governance library spans other stages; do not turn it into Stage 10's mandatory document list. |
+| [9 Free Doc Templates Every Dev Team Needs](doc-templates-dev-team.jpeg) | User-supplied JPEG, 1225 × 1536, visually inspected. The footer says `docuwiz.io`; that is visible branding, not independently verified image authorship. Original post/image URL and graphic reuse license are unconfirmed. | Good W-6 candidate for choosing an artifact by reader task. Nine descriptions are visible; the actual templates were found separately in Docuwiz's repository below. No ADR appears in the nine; retain Stage 10's ADR teaching. Keep the JPEG as a gathering asset, without selecting it for web display. |
+
+The image is independent of the LinkedIn article; do not attribute it to Mushtaq
+without evidence. The missing attachment-path error was transient: the local
+JPEG could be opened during this check. Its existence does not establish a
+reuse license.
+
+Docuwiz's [official article](https://www.docuwiz.io/blog/blog-technical-documentation-templates)
+links its [Documentation Starter Kit](https://github.com/docuwiz-io/documentation-starter-kit),
+where the nine Markdown files were inspected. The repository root and README
+contain no explicit license grant found in this check. The template source is
+verified; permission for image republication remains unconfirmed. Architecture
+and release-note samples contain project-specific claims that need replacing
+with verified facts before use.
+
+A [Docuwiz LinkedIn post](https://www.linkedin.com/posts/docuwiz_docsascode-developerdocumentation-apidocs-activity-7449463623888068608-QZDl)
+corroborates the starter kit. Its linked image was downloaded to temporary
+storage and visually compared: it shows a product UI, not the user's nine-card
+graphic. Do not record that post as the original source of this JPEG.
+
+Use [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
+[GitHub's release guidance](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases)
+to distinguish version history from release communication. The nine-card image
+is a menu of possible artifacts, not a replacement for Diátaxis's reader needs.
