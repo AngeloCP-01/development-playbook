@@ -4,7 +4,7 @@
 debt was taken on. Scope and planning live in [task.md](task.md).
 
 **Last updated:** 2026-10-20
-**Current phase:** Stage 10’s canonical chapter and shared ADR glossary are corrected on `docs/2026-10-20-stage-10-chapter`, with independent task reviews, actual RED/GREEN/teeth evidence and a same-case cold-reader rerun. All five lookup questions are HIT; completeness found no remaining teaching defect in the supplied case. Full build/browser verification passed (1512 tests, 52 pages, 24 production checks and one development-console sweep); the full review and bounded guard-fix review are Ready to merge, with no open findings. The interactive port remains unstarted; W-3 is **15/18**, W-6 **22 drawn / 27 registered**. No stage/sheet registration changed.
+**Current phase:** Stage 10's [interactive-port design](superpowers/specs/2026-10-20-stage-10-interactive-port-design.md) is proposed on `feat/stage-10-documentation`, a child of completed chapter tip `c092ac7`. Fresh builder check: “nothing important left”; written-design approval precedes planning. The chapter branch is preserved with clean reviews and its recorded 1512-test, 52-page, production 24/24 and development 1/1 evidence. No port product code or registration has changed; W-3 is **15/18**, W-6 **22 drawn / 27 registered**. No merge, push or deployment.
 
 The branch starts from local develop `79f9e31`; no merge, push, fetch or deployed-site check ran. Parent research/records/user edits and the existing port-3200 server remain separate. Integration requires a fresh user decision; production promotion remains the user’s.
 
@@ -894,6 +894,10 @@ of new work, not assumed to survive from the last `git checkout`.
 ---
 
 ## Next up
+
+**2026-10-20 port design proposed:** the user said “continue” after the chapter round. The separate [written design](superpowers/specs/2026-10-20-stage-10-interactive-port-design.md) covers twelve initial panels, copyable specimens and a reusable documentation-change plan, with explicit storage/copy failure behavior and chapter coverage. A fresh [builder check](superpowers/reports/2026-10-20-stage-10-port-design-review.md) returned “nothing important left.” These remain proposed design calls; no port implementation plan or product code has been written. Approve the spec before writing-plans. The feature branch starts at `c092ac7`; the completed chapter branch remains intact. Deferred: port planning/implementation/registration, W-6 publication, unrelated repairs, integration and deployment. W-3 stays **15/18**, W-6 **22/27**; no merge/push.
+
+**Historical chapter-closing checkpoint:**
 
 **2026-10-20 implementation complete:** chapter and guard corrections are verified and reviewed, Ready to merge. The user authorized inline execution through implementation. See [execution evidence](superpowers/reports/2026-10-20-stage-10-execution.md) and the [same-case rerun](superpowers/reports/2026-10-20-stage-10-correction-rerun.md). The corrected chapter and ADR glossary are committed; raw failures, successful runs and restoration diffs are retained. Five lookup answers are directly discoverable; no Toolshare teaching gap remains.
 

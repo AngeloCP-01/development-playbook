@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current checkpoint (2026-10-20): Stage 10 chapter corrections are implemented on the isolated branch.** The user authorized inline execution through implementation. Independent task reviews and the same-case reader rerun are complete; full build/browser verification passed (1512 tests, 52 pages, 24 production checks, one development-console sweep); the full review and bounded guard-fix review are Ready to merge, with no open findings. The interactive port remains separate and unstarted.
+**Current checkpoint (2026-10-20): Stage 10's interactive-port design is proposed and builder-checked.** The [written spec](superpowers/specs/2026-10-20-stage-10-interactive-port-design.md) awaits approval before planning. It is on `feat/stage-10-documentation`, based on completed chapter tip `c092ac7`; the chapter branch is preserved. Chapter verification remains 1512 tests, 52 pages, 24 production checks and one development-console sweep, with clean final reviews. No port product code or registration has changed.
 Stage 09's chapter merged as `ad283ce`, its
 interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. Local `develop` and tracked
@@ -27,7 +27,7 @@ passed **1496 tests across 207 files**, format, lint and generated-route typeche
 Its reviewed tree also passed 24 production browser checks, the development-console
 check and 28 geometry observations. Reports retain the evidence.
 
-**Next checkpoint: a separate Stage 10 interactive-port design.** Use the execution report below for actual evidence. Integration requires its own approval. Then specify the interactive port from the corrected chapter. Production promotion remains the user’s.
+**Next checkpoint: approve the written port design, then write its implementation plan.** The fresh [builder check](superpowers/reports/2026-10-20-stage-10-port-design-review.md) returned “nothing important left.” Integration requires its own approval; production promotion remains the user's.
 
 Two deliverables from one body of content.
 
@@ -153,7 +153,7 @@ not rerun after merge. The local feature branch and worktree were removed.
 **Next selected round:** W-3.17, Stage 10 — Documentation. Stage 09's W-6.3q
 references and the subsequent layout repair are merged; their work is complete.
 
-### W-3.17 — Stage 10 Documentation ◐ *(chapter implemented, verified and reviewed; port pending 2026-10-20)*
+### W-3.17 — Stage 10 Documentation ◐ *(chapter complete; port design proposed 2026-10-20)*
 
 The [approved chapter design](superpowers/specs/2026-10-20-stage-10-documentation-design.md) and [five-task plan](superpowers/plans/2026-10-20-stage-10-documentation.md) were committed before implementation. The user’s “proceed up to implementation” authorized the recommended inline execution, retaining independent reviews and cold readers.
 
@@ -168,7 +168,8 @@ The [corrected chapter](10-documentation.md) now teaches the smallest useful doc
 - [x] Correct confirmed findings through RED/GREEN, independent reviews and sensitivity checks
 - [x] Rerun the exact held-out completeness/consultability instruments
 - [x] Complete chapter verification and final whole-branch/fix reviews; integration still requires a fresh decision
-- [ ] Approve a separate interactive-port spec/plan and select its execution method
+- [x] Write and builder-check the separate [interactive-port spec](superpowers/specs/2026-10-20-stage-10-interactive-port-design.md); no important planning questions remain
+- [ ] Approve the port spec, write/review its implementation plan and select its execution method
 - [ ] Implement the port through TDD, per-task review and whole-branch review; verify both themes, responsive layout and both console modes
 - [ ] Register the reviewed port, then record separately approved integration and refresh the handoff
 
