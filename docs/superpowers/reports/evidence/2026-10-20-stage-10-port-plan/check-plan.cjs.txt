@@ -1,0 +1,26 @@
+const fs = require('fs')
+const path = require('path')
+const root = '/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter'
+const web = path.join(root, 'web')
+const ts = require(path.join(web, 'node_modules/typescript'))
+const input = JSON.parse(fs.readFileSync('/private/tmp/stage10-port-plan-2026-10-20/sources.json', 'utf8'))
+const virtual = new Map(Object.entries(input).map(([name, source]) => [path.join(root, name), source]))
+const configFile = ts.readConfigFile(path.join(web, 'tsconfig.json'), ts.sys.readFile)
+const config = ts.parseJsonConfigFileContent(configFile.config, ts.sys, web)
+config.options.incremental = false
+const host = ts.createCompilerHost(config.options)
+const exists = host.fileExists.bind(host), read = host.readFile.bind(host), dir = host.directoryExists.bind(host)
+host.fileExists = name => virtual.has(name) || exists(name)
+host.readFile = name => virtual.get(name) ?? read(name)
+host.directoryExists = name => name === path.join(web, 'src/features/documentation') || dir(name)
+host.getSourceFile = (name, languageVersion) => {
+ const source = host.readFile(name)
+ return source === undefined ? undefined : ts.createSourceFile(name, source, languageVersion, true)
+}
+const program = ts.createProgram([...virtual.keys()], config.options, host)
+const errors = ts.getPreEmitDiagnostics(program)
+const format = { getCanonicalFileName: f => f, getCurrentDirectory: () => web, getNewLine: () => '\n' }
+fs.writeFileSync('/private/tmp/stage10-port-plan-2026-10-20/typescript.log', ts.formatDiagnosticsWithColorAndContext(errors,format))
+process.stdout.write(ts.formatDiagnosticsWithColorAndContext(errors,format))
+console.log(`${virtual.size} planned virtual sources; ${errors.length} TypeScript diagnostics. No production source written or test executed.`)
+process.exitCode = errors.length ? 1 : 0
