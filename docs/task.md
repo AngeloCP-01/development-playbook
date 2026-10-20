@@ -13,25 +13,27 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current checkpoint (2026-10-14): Stage 09's caching/scaling companions are
-implemented and verified on `feat/stage-09-reference-companions`. All four tasks
-are approved. Whole-branch review returned Ready to merge at `bddf51d`;
-its citation-text finding is fixed in `35161b0` and independently reverified.** Branch W-6 is 22/27;
-local develop remains 20/25 and W-3 remains 15/18. Stage 08's corrected chapter and ten-step port merged as
-`a03e190`; its `security` lookup sheet and original diagram followed as
-`739c8ed`. The latter's merged tree passed 1406 tests across 184 files, lint,
-typecheck and format. Stage 09's chapter revision and W-6 source research
-merged locally as `ad283ce`; the merged tree passed 1416 tests across 185
-files. Stage 09's twelve-panel port passed whole-branch review and the merged-tree
-gate: 1459 tests across 198 files, format, lint, typecheck and a fresh 50-page
-build. Its local feature branch and worktree were removed after verification.
-No push or production promotion occurred.
+**Current checkpoint (2026-10-20): Stage 10's chapter spec is proposed and awaits
+user review before implementation planning.** Research and the initial cold-reader
+assessment are complete; chapter corrections and the port have not started.
+Stage 09's chapter merged as `ad283ce`, its
+interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
+The single-example width repair followed as `79f9e31`. Local `develop` and tracked
+`origin/develop` are both at that last merge before this records refresh.
 
-Stage 08 was chosen after the Stage 16 round. Its source review preceded the
-port; `docs/superpowers/specs/2026-10-02-stage-08-security-audit-design.md`
-records the scope. Stages 10, 17 and 18 remain. The user selected W-6 for Stage 09
-on 2026-10-13; W-6.3q below records the next scope. W-6.4 glossary/stack surfacing
-is a separate task.
+W-3 remains **15/18**: stages 01–09 and 11–16 are interactive; 10, 17 and 18
+remain. W-6 is **22 drawn / 27 registered**. Five language placeholders and
+W-6.4 glossary/stack surfacing remain open. The reference merge passed
+1495 tests across 207 files and a 52-page build; the width repair's merged tree
+passed **1496 tests across 207 files**, format, lint and generated-route typecheck.
+Its reviewed tree also passed 24 production browser checks, the development-console
+check and 28 geometry observations. Reports retain the evidence.
+
+**Next checkpoint: W-3.17 written-spec review.** Read the proposed chapter design
+and baseline findings linked below. Once approved, write the implementation plan,
+correct and recheck the chapter, then separately specify its interactive port.
+The written spec does not approve its implementation. Production promotion
+remains the user's.
 
 Two deliverables from one body of content.
 
@@ -83,7 +85,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-3** | Stages 02–18 interactive | ◐ *(15/18 merged to local `develop`; three remain: 10, 17 and 18. Stage 09 landed as `7a5576a`.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(20 of 25 registered sheets drawn on `develop` — `security` merged as `739c8ed`. Stage 09 caching/scaling companions are next, gathered but unregistered. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(22 of 27 registered sheets drawn on `develop`; Stage 09 caching/scaling merged as `9de6c99`. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
 
 ### Dependency map
 
@@ -154,7 +156,50 @@ returned Ready to merge, with no new findings. The merged tree then passed
 format, lint, typecheck, 1459 tests across 198 files and a fresh 50-page build.
 The browser results apply to the identical application tree; those suites were
 not rerun after merge. The local feature branch and worktree were removed.
-**Next selected round:** W-6.3q, Stage 09 caching/scaling companions.
+**Next selected round:** W-3.17, Stage 10 — Documentation. Stage 09's W-6.3q
+references and the subsequent layout repair are merged; their work is complete.
+
+### W-3.17 — Stage 10 Documentation ☐ *(chapter spec proposed 2026-10-20; user review pending)*
+
+The [chapter design](superpowers/specs/2026-10-20-stage-10-documentation-design.md)
+and [initial cold-reader findings](superpowers/reports/2026-10-20-stage-10-cold-reader.md)
+are written on `docs/2026-10-20-stage-10-chapter` in the isolated worktree.
+The independent builder check found no important unanswered questions. The
+five lookup questions returned 0 hits, 3 partials and 2 misses against the old
+teaching; the report preserves them and the Toolshare scenario for the rerun.
+The written spec awaits user review before the implementation plan is authored.
+Chapter corrections, new regression guards and the port remain unstarted.
+
+Research preflight: [primary-source notes](../reference/stage-10-source-research.md)
+and [three original diagrams with provenance](../reference/cheatsheet-sources.md#stage-10-gathering-round--2026-10-15)
+are preserved in source-collection commit `e30c9a4`, alongside the user's
+nine-template capture. The chapter has a dated findings section;
+existing worked examples are queued for correction, not rewritten. This does
+not complete any chapter-review or port checkbox below, or register a W-6 sheet.
+
+Begin with [the canonical chapter](10-documentation.md), the current task scope
+and tracker Next up. Recommended approach: review the chapter before porting it,
+so confirmed content gaps are corrected once. Use D-54's cold-reader pass before
+building UI, and reuse the same scenario for the correction recheck. Read D-39
+and Stage 03's recorded G9 boundary: ADR format, status, naming and location
+belong to Stage 10; verify what the current chapter teaches before calling any
+of those a gap.
+
+- [ ] Explore the chapter and existing decisions, agree the review scope through
+      brainstorming, and record the chapter-phase spec/plan before corrections
+- [ ] Run completeness and consultability checks, verify findings against sources,
+      correct confirmed gaps, and rerun the same cold-reader scenario
+- [ ] Approve a separate interactive-port spec/plan based on the reviewed chapter;
+      select the execution method for that actual plan
+- [ ] Implement through TDD, per-task review, coverage checking and whole-branch
+      review; verify both themes, responsive layout and both console modes
+- [ ] Register the stage only with its reviewed port, then record separately
+      approved integration and refresh the handoff
+
+Stage 10 stays `ready: false`; W-3 stays **15/18** until the port is delivered.
+Deferred: stages 17/18, W-6.4, the five language sheets, unrelated shared repairs,
+new reference companions, and production promotion. Stage numbers remain filing
+codes; documentation is continuous work, not a phase after optimization.
 
 ### W-3.16 — Stage 09 interactive port ☑ *(merged locally into `develop` as `7a5576a`, 2026-10-12)*
 
@@ -542,62 +587,43 @@ the feature branch was deleted. Evidence and
 deferrals are in the W-6.3p tracker row, source ledger, and
 `docs/superpowers/reports/2026-10-05-security-reference-sheet.md`.
 
-**W-6.3q — Stage 09 caching/scaling lookup companions ◐ (implementation branch,
-2026-10-14; reviewed and verified, integration pending)**
+**W-6.3q — Stage 09 caching/scaling lookup companions ☑** *(merged locally
+into `develop` as `9de6c99`, 2026-10-14)*
 
-The user approved the [written spec](superpowers/specs/2026-10-13-stage-09-reference-design.md)
-on 2026-10-13 (`a9fb4e0`) and continued after the
-[four-task plan](superpowers/plans/2026-10-13-stage-09-reference.md) was presented.
-Subagent-Driven execution uses `.worktrees/stage-09-reference` on
-`feat/stage-09-reference-companions`, descended from local `develop` `597fe0b`.
+The approved [spec](superpowers/specs/2026-10-13-stage-09-reference-design.md)
+and [four-task plan](superpowers/plans/2026-10-13-stage-09-reference.md) delivered
+shared supporting citations, a five-section caching guide and a four-section
+infrastructure-scaling guide. All four task reviews, the whole-branch review
+and the final scoped rereview are complete. M1's runner noise and M2's
+Markdown citation-text gap were addressed. The
+[execution report](superpowers/reports/2026-10-13-stage-09-reference.md)
+retains raw TDD, teeth, source, lookup and review evidence.
 
-Tasks 1–4 are implemented and independently approved: supporting citation
-rendering (`13f0cb6`), caching (`f1bb218`) and infrastructure scaling (`b39d9e0`).
-Task 4 (`fa9bb40`) registers both sheets, regenerates Markdown/highlighting and
-appends the source ledger. The generator also keeps empty snippet lines empty, a pre-existing
-whitespace behavior exposed by the approved caching example. After its test-first
-repair, the affected suite passed 33/33 across six files. The registration run
-retains genuine stale-snapshot RED and isolated full-file tether teeth evidence.
-The full suite
-passed 1494/1494 across 207 files. The
-[execution report](superpowers/reports/2026-10-13-stage-09-reference.md) retains
-raw RED/GREEN/teeth evidence, gate exits, source checks and lookup outcomes.
-Production browser checks passed 24/24; development validation passed 1/1.
-The controller's 28-observation matrix checked both sheets across seven widths
-and two themes, with 378 pair measurements, AA minimum 5.2555:1, no overflow,
-source links at least 44px and no visual defect. The fresh blind lookup returned
-4 passes/0 misses. Task 4 review found no blocking issue; M1 records inherited
-Node color warnings, removed in the clean development runner retry. Whole-branch
-review at `bddf51d` returned Ready to merge with no blocking findings. Its M2
-plan-authored Markdown citation-text gap is fixed test-first in `35161b0`: RED
-and isolated teeth each fail only the new guard; restored coverage passes 55/55,
-and the final suite passes **1495/1495 across 207 files**. Format, lint and
-typecheck pass; a fresh network-enabled build generates **52 pages**. Generated
-snapshots remain unchanged. M1 retains the historical warning logs and uses
-`env -u NO_COLOR` for future captures. The final scoped rereview closed M1
-and M2 with no new breakage; the branch is Ready to merge.
+The approved no-ff merge has parents `597fe0b` and `4e5532f`; its tree matches the
+reviewed tip. Post-merge format, lint, generated-route typecheck, **1495/1495 tests
+across 207 files** and a fresh **52-page build** passed. The feature branch and
+worktree were removed after verification, with all 224 archived evidence files
+preserved. W-6 is **22/27** on develop; W-3 remains **15/18**.
 
-The implementation branch has **22 drawn / 27 registered**. Local `develop`
-remains **20 drawn / 25 registered**; W-3 remains **15/18**. The five language
-placeholders are unchanged. No integration, push or deployment has occurred.
+The later [single-example width repair](superpowers/reports/2026-10-15-reference-example-width.md)
+merged as `79f9e31` on 2026-10-15. Its merged tree passed **1496/1496 across 207
+files**, format, lint and typecheck; the identical reviewed tree passed
+**24/24 production browser checks**, **1/1 development-console check** and
+**28 geometry observations** across both themes and seven widths. Its feature
+branch was deleted. Raw post-merge evidence is in
+`.superpowers/sdd/2026-10-15-reference-example-width/merged-state.json`.
 
-- [x] Recheck the gathered first-party sources and agree the sheet boundaries
-      through brainstorming before writing a spec or implementation plan
-- [x] Define caching guidance that separates application-cache lifetime and
-      invalidation from CDN freshness and response status
-- [x] Define scaling guidance around healthy-target routing, workload-dependent
-      algorithm choice, capacity limits and overload behavior
-- [x] Write and approve the bounded spec/plan, then implement through TDD and
-      per-task review using the existing reference renderer and design system
-- [x] Verify both themes, responsive layout, accessible content and production/
-      development consoles; complete whole-branch review before integration
-- [ ] Record actual registry/drawn counts and merge evidence after separately
-      approved integration; refresh the next-session handoff before use
+- [x] Recheck first-party sources and agree sheet boundaries
+- [x] Implement caching, scaling, supporting citations and generated artifacts
+      through the approved plan, TDD and per-task review
+- [x] Complete whole-branch/scoped reviews and browser verification
+- [x] Record actual registry counts and approved merge evidence; refresh the
+      next-session handoff
 
-Deferred: W-3 stages 10, 17 and 18; W-6.4 glossary/stack surfacing; the five
-language sheets; diagrams/image republication; runtime infrastructure; chapter/port
-edits; real order benchmarks; shared-drill/storage repairs; push and production
-promotion. Every merge into develop needs a separate user decision.
+Deferred from this slice: stages 10/17/18, W-6.4, five language sheets,
+diagrams/image republication, runtime infrastructure, real order benchmarks,
+shared-drill/storage repairs and production promotion. Stage 10 is now selected
+as its own next round. Every future merge remains a separate user decision.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 
