@@ -13,10 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current checkpoint (2026-10-20): Stage 10's chapter spec is approved; its
-implementation plan awaits user review and execution-method selection.** Research
-and the initial cold-reader assessment are complete; chapter corrections and the
-port have not started.
+**Current checkpoint (2026-10-20): Stage 10 chapter corrections are implemented on the isolated branch.** The user authorized inline execution through implementation. Independent task reviews and the same-case reader rerun are complete; full build/browser verification passed (1512 tests, 52 pages, 24 production checks, one development-console sweep); final whole-branch review is pending. The interactive port remains separate and unstarted.
 Stage 09's chapter merged as `ad283ce`, its
 interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. Local `develop` and tracked
@@ -30,11 +27,7 @@ passed **1496 tests across 207 files**, format, lint and generated-route typeche
 Its reviewed tree also passed 24 production browser checks, the development-console
 check and 28 geometry observations. Reports retain the evidence.
 
-**Next checkpoint: W-3.17 implementation-plan review.** Read the approved design
-and plan linked below. Choose inline (recommended for the two coupled editing
-tasks) or subagent-driven execution; both retain independent reviews. Then correct
-and recheck the chapter before separately specifying its interactive port.
-Production promotion remains the user's.
+**Next checkpoint: whole-branch review of the verified chapter.** Use the execution report below for actual evidence. Integration requires its own approval. Then specify the interactive port from the corrected chapter. Production promotion remains the user’s.
 
 Two deliverables from one body of content.
 
@@ -160,55 +153,26 @@ not rerun after merge. The local feature branch and worktree were removed.
 **Next selected round:** W-3.17, Stage 10 — Documentation. Stage 09's W-6.3q
 references and the subsequent layout repair are merged; their work is complete.
 
-### W-3.17 — Stage 10 Documentation ☐ *(spec approved; plan review pending 2026-10-20)*
+### W-3.17 — Stage 10 Documentation ◐ *(chapter implemented and verified; whole-branch review pending 2026-10-20)*
 
-The [chapter design](superpowers/specs/2026-10-20-stage-10-documentation-design.md)
-and [initial cold-reader findings](superpowers/reports/2026-10-20-stage-10-cold-reader.md)
-are written on `docs/2026-10-20-stage-10-chapter` in the isolated worktree.
-The independent builder check found no important unanswered questions. The
-five lookup questions returned 0 hits, 3 partials and 2 misses against the old
-teaching; the report preserves them and the Toolshare scenario for the rerun.
-The user approved the written spec with “proceed.” The
-[implementation plan](superpowers/plans/2026-10-20-stage-10-documentation.md)
-contains the full proposed chapter/test source and five sequential tasks. Its
-[self-review](superpowers/reports/2026-10-20-stage-10-plan-review.md) records
-in-memory checks of the planned source, not implementation RED/GREEN evidence.
-Inline execution is recommended because only two tasks edit the tightly coupled
-teaching; reviews and fresh cold readers remain independent. User plan review
-and method selection are pending.
-Chapter corrections, new regression guards and the port remain unstarted.
+The [approved chapter design](superpowers/specs/2026-10-20-stage-10-documentation-design.md) and [five-task plan](superpowers/plans/2026-10-20-stage-10-documentation.md) were committed before implementation. The user’s “proceed up to implementation” authorized the recommended inline execution, retaining independent reviews and cold readers.
 
-Research preflight: [primary-source notes](../reference/stage-10-source-research.md)
-and [three original diagrams with provenance](../reference/cheatsheet-sources.md#stage-10-gathering-round--2026-10-15)
-are preserved in source-collection commit `e30c9a4`, alongside the user's
-nine-template capture. The chapter has a dated findings section;
-existing worked examples are queued for correction, not rewritten. This does
-not complete any chapter-review or port checkbox below, or register a W-6 sheet.
+The [corrected chapter](10-documentation.md) now teaches the smallest useful document set, runnable-setup evidence, ADR supersession, current architecture/contracts, explicit drift checks/owners and grounded AI review. The shared ADR definition and generated glossary agree. Two Stage 03 inbound anchors were corrected after the full suite exposed a plan-authored dependency omission.
 
-Begin with [the canonical chapter](10-documentation.md), the current task scope
-and tracker Next up. Recommended approach: review the chapter before porting it,
-so confirmed content gaps are corrected once. Use D-54's cold-reader pass before
-building UI, and reuse the same scenario for the correction recheck. Read D-39
-and Stage 03's recorded G9 boundary: ADR format, status, naming and location
-belong to Stage 10; verify what the current chapter teaches before calling any
-of those a gap.
+[Execution evidence](superpowers/reports/2026-10-20-stage-10-execution.md) retains raw RED/GREEN and actual mutation diffs/restorations. The [same-case recheck](superpowers/reports/2026-10-20-stage-10-correction-rerun.md) returned **5 HIT**, compared with **0 HIT / 3 PARTIAL / 2 MISS** at baseline; completeness found no remaining teaching defect in Toolshare. Missing project facts remain explicit. All four completed tasks have independent clean reviews, with the link and report-format findings resolved.
 
-- [x] Explore the chapter and existing decisions, agree the review scope through
-      brainstorming, and record the chapter-phase spec/plan before corrections
-- [ ] Review the implementation plan and select inline or subagent-driven execution
-- [ ] Run completeness and consultability checks, verify findings against sources,
-      correct confirmed gaps, and rerun the same cold-reader scenario
-- [ ] Approve a separate interactive-port spec/plan based on the reviewed chapter;
-      select the execution method for that actual plan
-- [ ] Implement through TDD, per-task review, coverage checking and whole-branch
-      review; verify both themes, responsive layout and both console modes
-- [ ] Register the stage only with its reviewed port, then record separately
-      approved integration and refresh the handoff
+[Primary-source notes](../reference/stage-10-source-research.md) and [image provenance](../reference/cheatsheet-sources.md#stage-10-gathering-round--2026-10-15) remain. Research capture `e30c9a4` preserves three original diagrams and the user JPEG; none is published in the web app. The research appendix is replaced by active teaching and retained provenance.
 
-Stage 10 stays `ready: false`; W-3 stays **15/18** until the port is delivered.
-Deferred: stages 17/18, W-6.4, the five language sheets, unrelated shared repairs,
-new reference companions, and production promotion. Stage numbers remain filing
-codes; documentation is continuous work, not a phase after optimization.
+- [x] Explore scope and commit chapter spec/plan before corrections
+- [x] Review the plan and authorize inline execution through implementation
+- [x] Correct confirmed findings through RED/GREEN, independent reviews and sensitivity checks
+- [x] Rerun the exact held-out completeness/consultability instruments
+- [ ] Complete final whole-branch review; record approved integration separately
+- [ ] Approve a separate interactive-port spec/plan and select its execution method
+- [ ] Implement the port through TDD, per-task review and whole-branch review; verify both themes, responsive layout and both console modes
+- [ ] Register the reviewed port, then record separately approved integration and refresh the handoff
+
+Stage 10 stays `ready: false`; W-3 stays **15/18** until the port is delivered. W-6 stays **22/27**. Deferred: stages 17/18, W-6.4, five language sheets, unrelated repairs, new reference companions and promotion. Stage numbers remain filing codes, not a sequence.
 
 ### W-3.16 — Stage 09 interactive port ☑ *(merged locally into `develop` as `7a5576a`, 2026-10-12)*
 

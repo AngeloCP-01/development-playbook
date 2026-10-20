@@ -3,21 +3,10 @@
 **Purpose:** the log. What actually shipped, what was decided and why, and what
 debt was taken on. Scope and planning live in [task.md](task.md).
 
-**Last updated:** 2026-10-15
-**Current phase:** Stage 10 — Documentation is selected for the next session,
-starting with chapter review/corrections before its interactive port. Neither
-phase has started. W-3 is **15/18** on local `develop` (01–09 and 11–16);
-stages 10, 17 and 18 remain. W-6 is **22 drawn / 27 registered** after the Stage 09
-reference merge `9de6c99`. The single-example width repair merged as `79f9e31`;
-its merged tree passed **1496/1496 tests across 207 files**, format, lint and
-typecheck. Independent review and production/development browser evidence are
-recorded below. Five language sheets and W-6.4 remain open.
+**Last updated:** 2026-10-20
+**Current phase:** Stage 10’s canonical chapter and shared ADR glossary are corrected on `docs/2026-10-20-stage-10-chapter`, with independent task reviews, actual RED/GREEN/teeth evidence and a same-case cold-reader rerun. All five lookup questions are HIT; completeness found no remaining teaching defect in the supplied case. Full build/browser verification passed (1512 tests, 52 pages, 24 production checks and one development-console sweep); final whole-branch review is pending. The interactive port remains unstarted; W-3 is **15/18**, W-6 **22 drawn / 27 registered**. No stage/sheet registration changed.
 
-Before this records branch, local and tracked `origin/develop` both pointed to
-`79f9e31`. Tracked `origin/main` at `873c9d2` includes the reference merge
-`9de6c99`, but not the later width repair. These are locally observed tracking
-refs, not a fresh fetch or a deployed-site check. Re-derive counts and refs before
-starting Stage 10; production promotion remains the user's.
+The branch starts from local develop `79f9e31`; no merge, push, fetch or deployed-site check ran. Parent research/records/user edits and the existing port-3200 server remain separate. Integration requires a fresh user decision; production promotion remains the user’s.
 
 **The site is live** at https://acp-dev-playbook.vercel.app and verifies itself with
 `pnpm test:prod` (W-5, complete 2026-08-11). **`main` is production**: work branches merge to
@@ -100,6 +89,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-10-20 | Stage 10 chapter implementation | Canonical documentation teaching and shared ADR definition corrected on the isolated branch; the interactive port remains separate. | Chapter `5f8d2c2`, glossary `d2a5e4f`, teeth `012f165`, same-case rerun `cf8acf8`: 5 HIT, no remaining case teaching defect. Independent task reviews resolved one plan-authored inbound-link defect and one minor report-format issue. Full gate: 1512/1512 across 208 files, 52 pages, production 24/24, development 1/1; focused ADR matrix 4/4 in both themes. [Execution report](superpowers/reports/2026-10-20-stage-10-execution.md). Final whole-branch review pending. | Interactive port/registration, W-6 companion/publication, stages 17/18, language sheets, unrelated repairs, integration and deployment. W-3 remains 15/18, W-6 22/27; no merge/push. |
 | 2026-10-15 | Stage 10 handoff | **The user selected Stage 10 — Documentation for the next session.** Task W-3.17 and kickoff now start with chapter review/corrections, then a separately specified interactive port. No Stage 10 content or app code changed. | Counts re-derived from the registries: **15/18 interactive**, **22/27 drawn**. `docs/task.md` closes W-6.3q and defines the selected round; `KICKOFF.md` points to the parent repository, current evidence and D-39/D-54. Baseline develop and tracked origin/develop are `79f9e31`; this records branch contains only the three requested Markdown files. Independent review: no blocking findings; M1 wording clarified that the existing chapter awaits review/corrections. Ledger guards **2/2**, **73** local Markdown destinations resolve, whitespace clean; humanizer pass applied. | Stage 10 review, spec/plan and implementation remain unstarted. Deferred: stages 17/18, W-6.4, five language sheets, unrelated repairs and production promotion. Merge of this records branch requires its own approval. |
 | 2026-10-15 | Reference layout repair (merged) | **The approved no-ff merge `79f9e31` integrates the width fix and its evidence into local develop.** Single examples fill their description column; paired examples retain the comparison layout. | Parents `9de6c99` / `c4fb495`; merged tree equals the reviewed tip. Fresh merged-tree format/lint/typecheck and **1496/1496 across 207 files** passed. Retained identical-tree browser evidence: **24/24 production**, **1/1 development**, **28 geometry observations**. Feature branch deleted; user image retained. [Repair report](superpowers/reports/2026-10-15-reference-example-width.md); raw merge checks in `.superpowers/sdd/2026-10-15-reference-example-width/merged-state.json`. Tracked origin/develop now also points to `79f9e31`; no fresh fetch or deployed-site check in this refresh. | Full-row layouts, comparison redesign, content/syntax changes and copy controls. This session performed no push or production promotion. |
 | 2026-10-14 | W-6.3q (merged; recorded 2026-10-15) | **The approved no-ff merge `9de6c99` integrates caching/scaling reference companions and supporting citations.** W-6 becomes **22/27** on develop; W-3 remains **15/18**. | Parents `597fe0b` / `4e5532f`; tree identical to reviewed tip. Fresh merged-tree format/lint/typecheck, **1495/1495 across 207 files** and **52-page build** passed. Branch/worktree removed; all **224** evidence files preserved with verified hashes. [Reference execution report](superpowers/reports/2026-10-13-stage-09-reference.md); raw merge logs and review retained under `.superpowers/sdd/2026-10-13-stage-09-reference-evidence/integration-2026-10-14/`. Tracked origin/main `873c9d2` contains this source merge; deployment was not checked during this refresh. | Runtime infrastructure, diagrams/images, chapter/port changes, real order benchmarks, shared repairs, W-6.4 and five language sheets. Stage 10 proceeds as a separate round. |
@@ -905,23 +895,11 @@ of new work, not assumed to survive from the last `git checkout`.
 
 ## Next up
 
-**2026-10-20 planning checkpoint: the Stage 10 spec is approved; its plan awaits
-review and execution-method selection.** The user's “proceed” followed the
-written-spec review request. The
-[five-task plan](superpowers/plans/2026-10-20-stage-10-documentation.md) includes
-the full proposed chapter/test source, scoped RED checks, generated-glossary
-correction, guard mutations, the exact held-out reader rerun and final gates.
-Author self-review checked source syntax and 14 embedded chapter expectations
-in memory; the same scenario/questions match the baseline verbatim. These are
-plan checks, not implementation or TDD evidence; see the
-[self-review report](superpowers/reports/2026-10-20-stage-10-plan-review.md).
+**2026-10-20 implementation checkpoint:** obtain final whole-branch review of the verified chapter. The user authorized inline execution through implementation. See [execution evidence](superpowers/reports/2026-10-20-stage-10-execution.md) and the [same-case rerun](superpowers/reports/2026-10-20-stage-10-correction-rerun.md). The corrected chapter and ADR glossary are committed; raw failures, successful runs and restoration diffs are retained. Five lookup answers are directly discoverable; no Toolshare teaching gap remains.
 
-Recommended method: **inline**, because the two editing tasks are tightly coupled
-and the remaining three verify the same teaching. Independent per-task review,
-fresh cold readers and whole-branch review remain required. The user has not
-selected a method. Chapter corrections, real RED/GREEN, correction rerun and
-the port remain unstarted. W-3 stays **15/18**, W-6 **22/27**; no merge, push or
-deployment. Deferred: implementation, port, W-6 publication and integration.
+Then design the Stage 10 interactive port separately from the corrected chapter. W-3 stays **15/18**, W-6 **22/27**. No merge, push or deployment. Deferred: port implementation/registration, W-6 publication, stages 17/18, language sheets, unrelated repairs and promotion.
+
+**Historical planning checkpoint:** the spec and full-source plan were approved before execution; the earlier plan self-review checked embedded source in memory and did not count as RED/GREEN evidence.
 
 **Historical spec-proposal checkpoint:**
 
@@ -961,7 +939,7 @@ existing examples. Three original PNGs were downloaded and visually inspected:
 the Diátaxis map and C4's context diagram with its key. Their creator pages,
 direct URLs, dimensions and licenses are in the
 [gathering ledger](../reference/cheatsheet-sources.md#stage-10-gathering-round--2026-10-15).
-The [chapter](10-documentation.md#research-findings-for-chapter-review) records
+The [gathered source notes](../reference/stage-10-source-research.md) record
 findings and explicitly leaves worked-example corrections for the formal round.
 These are working-tree changes, not integrated work. W-3 stays **15/18**;
 W-6 stays **22/27**. Deferred: chapter spec/plan and cold-reader review, corrected

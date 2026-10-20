@@ -214,3 +214,22 @@ project governance. For Stage 10, use those maintenance prompts without requirin
 its charter, procurement, financial and closure documents for every software
 project. The article supplies an author's practical advice, not a mandatory
 documentation standard.
+
+## Accepted chapter use · 2026-10-20
+
+The dated findings above record the gathering assessment. The [corrected chapter](../docs/10-documentation.md) now applies them; [execution evidence](../docs/superpowers/reports/2026-10-20-stage-10-execution.md) and the [same-case reader rerun](../docs/superpowers/reports/2026-10-20-stage-10-correction-rerun.md) record the checks.
+
+| Gathered finding | Accepted use |
+| --- | --- |
+| Diátaxis reader needs; nine-template menu | Task-to-document table and optional artifact menu; no nine-document mandate |
+| Nygard / MADR history and status | Preserved old decision, dated current-status notice, replacement ADR and reciprocal links |
+| GitHub README guidance | Entry outline plus colocated fresh-clone evidence; actual project facts remain required |
+| C4 scope and relationships | Original compact Workshop relationship view, owner and review trigger; no copied banking architecture |
+| Docs as Code / Google review | Change→fact→document→check→owner matrix; why heuristic scoped to implementation comments |
+| Stripe metadata and retry evidence | Documented external-ID rationale; invented truncation/incident/attempt diagnosis removed |
+| Version-sensitive ORM example | Replaced with an explicitly illustrative documentation decision; no universal ORM recommendation |
+| User article, graphic and Docuwiz starter kit | Ownership/maintenance prompts, optional artifact menu and source-grounded AI review; template claims require project evidence |
+
+Primary pages for Diátaxis, Nygard, Stripe metadata and Docuwiz template guidance were reopened on 2026-10-20. They support the attributed distinctions; no live Toolshare/Workshop application or provider incident was measured. The recorded source URLs, authors, image dimensions, licenses and unconfirmed graphic authorship/reuse terms remain as gathered above.
+
+The chapter now teaches the distinctions in text. The research appendix and its embedded plates have been removed from active teaching; all four gathered images remain in `reference/` for later selection. None was copied into `web/public` or selected for web display. W-6 remains 22 drawn / 27 registered; a companion still needs its own design and publication decision. The Stage 10 interactive port is also separate.

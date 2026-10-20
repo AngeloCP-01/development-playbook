@@ -496,7 +496,7 @@ adds little. This is a gathering round; `documentation` is a candidate slug,
 not a registered sheet. W-6 remains 22 drawn / 27 registered.
 
 Findings are in [Stage 10 source research](stage-10-source-research.md) and
-[the chapter's research section](../docs/10-documentation.md#research-findings-for-chapter-review).
+the original chapter appendix preserved in source-collection commit `e30c9a4`.
 
 ### Original images
 
@@ -570,3 +570,9 @@ Use [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and
 [GitHub's release guidance](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases)
 to distinguish version history from release communication. The nine-card image
 is a menu of possible artifacts, not a replacement for Diátaxis's reader needs.
+
+### Stage 10 accepted use · 2026-10-20
+
+The gathering/follow-up sections above describe their dated research state. The chapter correction now uses Diátaxis for reader-task selection, Nygard/MADR for visible supersession, GitHub for the README entry point, C4 for labeled boundaries, and Docs as Code/Google for explicit review checks. Stripe’s unsupported truncation/incident/attempt claims were removed; the ORM specimen was replaced with a labeled documentation decision. User references inform the optional artifact menu, ownership and grounded AI review.
+
+See [accepted source use](stage-10-source-research.md#accepted-chapter-use--2026-10-20), [the corrected chapter](../docs/10-documentation.md) and [execution evidence](../docs/superpowers/reports/2026-10-20-stage-10-execution.md). Original source pages/images, licenses and attribution uncertainty remain recorded above. The chapter’s research appendix is gone; original plates and the user JPEG remain gathering assets only. Earlier “embedded”/“linked” image descriptions record the appendix at the gathering checkpoint, not the corrected chapter or a web publication. No `documentation` sheet is registered; W-6 stays 22/27 and W-3 stays 15/18.
