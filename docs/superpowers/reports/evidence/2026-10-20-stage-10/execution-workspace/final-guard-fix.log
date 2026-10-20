@@ -1,0 +1,82 @@
+final-validator-old-guard-green exit 0 
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  13:08:42
+   Duration  161ms (transform 21ms, setup 0ms, import 29ms, tests 9ms, environment 0ms)
+
+final-validator-red exit 1     225|   }
+    226|   expect(text).toMatch(/alone[\s\S]+owner/i)
+    227|   expect(text).toContain('only if the application actually invokes it')
+       |                ^
+    228|   expect(doc()).not.toContain('the app stops booting when it drifts')
+    229|   expect(doc()).not.toContain('The best documentation cannot drift')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+final-validator-green exit 0 
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  13:08:44
+   Duration  160ms (transform 33ms, setup 0ms, import 44ms, tests 10ms, environment 0ms)
+
+final-old-status-old-guard-green exit 0 
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  13:08:44
+   Duration  124ms (transform 18ms, setup 0ms, import 24ms, tests 9ms, environment 0ms)
+
+final-old-status-red exit 1     186|   expect(previous).toBeDefined()
+    187|   expect(previous).toContain('## Supersession notice (appended)')
+    188|   expect(previous).toMatch(/\d{4}-\d{2}-\d{2} — Current status: Supers…
+       |                    ^
+    189|   expect(text).toMatch(/append[\s\S]+supersession/i)
+    190|   expect(text).toMatch(/preserve[\s\S]+historical/i)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+final-both-guards-green exit 0 
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  13:08:45
+   Duration  145ms (transform 22ms, setup 0ms, import 29ms, tests 13ms, environment 0ms)
+
+final-validator-teeth exit 1     231|   }
+    232|   expect(text).toMatch(/alone[\s\S]+owner/i)
+    233|   expect(text).toContain('only if the application actually invokes it')
+       |                ^
+    234|   expect(doc()).not.toContain('the app stops booting when it drifts')
+    235|   expect(doc()).not.toContain('The best documentation cannot drift')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+final-old-status-teeth exit 1     186|   expect(previous).toBeDefined()
+    187|   expect(previous).toContain('## Supersession notice (appended)')
+    188|   expect(previous).toMatch(/\d{4}-\d{2}-\d{2} — Current status: Supers…
+       |                    ^
+    189|   expect(text).toMatch(/append[\s\S]+supersession/i)
+    190|   expect(text).toMatch(/preserve[\s\S]+historical/i)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+final-restored-green exit 0 
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+
+ Test Files  5 passed (5)
+      Tests  68 passed (68)
+   Start at  13:08:47
+   Duration  232ms (transform 141ms, setup 0ms, import 294ms, tests 72ms, environment 0ms)
+
+Canonical chapter exactly restored; only semantic guards changed

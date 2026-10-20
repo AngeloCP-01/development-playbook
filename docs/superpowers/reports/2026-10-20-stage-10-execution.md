@@ -237,3 +237,19 @@ The user authorized work through implementation. Keep `docs/2026-10-20-stage-10-
 - Final: Ruling: use the available gpt-6.1-sol reviewer for the bounded fix review after gpt-6-astra returned a capacity error — the original whole-branch verdict is complete and retained; only the test-only correction needs a new independent check. Cost: fallback review context/time; no failed follow-up counts as approval.
 
 Closing records addendum: **review clean**, Ready to merge unchanged; no new findings or chapter/web/reference change. The independent reviewer checked both review ranges, closure and the separate port/integration boundary. Earlier 332-target and later 334-target link checks remain distinct evidence checkpoints.
+
+
+## Execution archive and final source check
+
+Closing records were committed as `de221a3`. Task 5’s completion command then ran the full suite again on that committed tree:
+
+```text
+ Test Files  208 passed (208)
+      Tests  1512 passed (1512)
+```
+
+All five tasks now have completed execution-ledger entries. The [scratch archive](evidence/2026-10-20-stage-10/execution-workspace/README.txt) preserves **113 files / 1,484,174 bytes**, including the completed ledger, final full-suite log, both review packages and the later 334-target link check. Every copied byte was verified against its [SHA-256 manifest](evidence/2026-10-20-stage-10/execution-workspace/archive-manifest.json). Scratch Markdown filenames have `.txt` appended; original-context link text and content bytes remain unchanged.
+
+The [final preservation check](evidence/2026-10-20-stage-10/execution-workspace/final-preservation-and-source.json) confirms all 12 original parent-file hashes still match, and the complete chapter, Stage 03, web and reference tree hashes exactly match the reviewed guard-fix tip `4226dec`. The final archive adds evidence only; it makes no new implementation or deployment claim. The branch/worktree remain in place; the plan’s private scratch directory can be removed only after this archive is reviewed and committed.
+
+Independent archive/records check: **review clean**, no new findings. All 113 source files / 1,484,174 bytes match their archive hashes; README and manifest make 115 archived files total. All 12 parent hashes and reviewed implementation tree IDs match. The completed task ledger and final 1512/208 suite output are preserved. Only this plan’s private scratch directory may now be removed after commit; branch, worktree and sibling scratch remain. The archive retains the 334/19/0 link checkpoint; later stdout-only checks are not represented as archived logs.

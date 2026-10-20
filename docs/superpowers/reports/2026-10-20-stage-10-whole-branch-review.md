@@ -71,3 +71,5 @@ Reviewed implementation state: **nine commits after `79f9e31`, clean at `4226dec
 ## Closing records addendum
 
 Independent records-only check of the working delta from `4226dec`: **review clean; Ready to merge unchanged**. Review ranges, original grades/controller disposition, closure, observed counts and unchanged-runtime evidence are accurate. No chapter, web or reference change is present; authored whitespace checks pass. W-3 remains 15/18 and W-6 22/27, with the port separately pending and integration requiring user approval. No new finding. The closing plan step may be committed; this is not a new suite run or integration authorization. The later 334-target scratch link log will be retained with the execution archive, separately from the earlier 332-target log.
+
+Final archive addendum: **review clean**, no new findings. The independent reviewer verified every one of the 113 scratch files against its archive/manifest, all 12 parent hashes, reviewed chapter/web/reference object IDs and the final full-suite output. Packaging adds evidence only. Ready to merge remains unchanged; no integration is authorized.

@@ -1,0 +1,29 @@
+### Task 4: Rerun the held-out readers and close verified findings
+
+**Files:**
+- Create: `docs/superpowers/reports/2026-10-20-stage-10-correction-rerun.md`.
+- Conditional: `docs/10-documentation.md`, `web/src/lib/stage-10-structure.test.ts`, or the glossary files if a verified finding concerns them.
+- Append: `docs/superpowers/reports/2026-10-20-stage-10-execution.md`.
+
+**Interfaces:**
+- Consumes: GREEN chapter and exact baseline instruments in `docs/superpowers/reports/2026-10-20-stage-10-cold-reader.md`.
+- Produces: same-scenario artifact attempt; frozen heading choices and classifications for the same five questions; accepted/rejected findings; independent recheck of any substantive correction wave.
+
+- [ ] **Step 1: Freeze the corrected input.** Record its commit/SHA-256. Create a temporary snapshot and a headings-only file using fence-aware heading extraction. The snapshot contains active teaching only; there should be no research appendix after Task 1. Do not include reports, plan, spec or source notes in either reader's inputs.
+- [ ] **Step 2: Dispatch the completeness reader.** Give a fresh reader the exact Toolshare scenario below and only the corrected snapshot. Require README, replacement ADR/old-record handling, configuration reference/comment and change-checklist attempts. The reader may judge with expertise but must label missing project facts, never silently fill them. Return gaps with severity, ID, heading evidence and successes. No browsing or file edits.
+
+> Toolshare is a neighborhood tool-lending web app. Members reserve tools and volunteers record pickup and return. One maintainer built it; a second volunteer should be able to run it locally, understand the system boundary, and support a release without private instructions. A change replaces direct reminder-email sending with a durable queue after provider timeouts caused uncertain delivery. The old architectural decision to send directly remains in the repository. The same change adds REMINDER_QUEUE_URL, changes a documented retry option from 3 attempts to 5, and adds a new reminder-status response field. Toolshare wants the smallest useful documentation set and must not publish member contact details or real credentials. No framework, actual commands, URL, credentials, tests, deployment platform or measured incident outcomes are supplied.
+
+- [ ] **Step 3: Dispatch the consultability reader.** Give a fresh reader only the extracted headings first. Require it to report frozen selections before opening the snapshot; keep those selections after reading the body. Give these exact questions and classify HIT, PARTIAL, MISFILED or MISS, with observed heading evidence:
+
+1. A second maintainer cannot run the app from a fresh clone. Where do I find what the setup guide must include and how to verify it?
+2. We replaced an earlier architecture decision. What should I write now, and how does a reader discover that the old decision no longer applies?
+3. A user needs the exact allowed values and defaults for a retry option. Should that live in a tutorial, reference page or explanation?
+4. This change adds configuration and a response field. Which documents need updates, who owns them, and what checks detect drift?
+5. An AI assistant drafted documentation claiming a fix was validated. What evidence must I check before publishing it?
+
+- [ ] **Step 4: Disprove as well as confirm findings.** Compare claims with the actual chapter. Distinguish missing scenario facts and other-stage boundaries from omissions/contradictions. Map accepted C1/C2/C3/X1/X2 and S1–S5 baseline findings to their corrected teaching. Keep C4's full commit-writing lesson deferred to Stage 05. Do not demand invented Toolshare commands or queue guarantees as a completion condition.
+- [ ] **Step 5: Fix confirmed defects through a new RED/GREEN slice.** A future finding cannot have prewritten prose now. For each accepted defect, record the requirement and a literal failing assertion scoped to its real teaching home before editing. Run and preserve RED, make the minimum correction, run GREEN and a mutation for the new guard. Request per-fix read-only review. If a finding changes approved scope, bring that decision to the user rather than calling it a small fix.
+- [ ] **Step 6: Recheck the fix wave.** Fresh readers reuse the same scenario/questions against the changed snapshot, still blind to intent documents. Report new findings separately and review the wave's own additions under D-48. Target five sufficient, directly discoverable answers; preserve actual partial/miss results until addressed or explicitly deferred by the user.
+- [ ] **Step 7: Commit evidence.** Save reader reports, per-finding dispositions and raw verification references. Verify all new guards pass and no mutation survives. Commit the report and any reviewed corrections as `docs(documentation): record the stage 10 correction recheck`, separating implementation fixes into their own conventional commits where they carry a distinct reason.
+
