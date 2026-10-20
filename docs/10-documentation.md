@@ -1,347 +1,383 @@
 # 10. Documentation
 
-> Write down what code cannot say: why. Everything else rots.
+> Help the next person use the system, and preserve the reasons behind it.
 
-**When this actually happens:** Continuously. A little with every change, not as a phase
-before launch. Documentation written in a dedicated push at the end is documentation
-written when you have forgotten the reasons.
-
-**Research status, 2026-10-15:** Primary-source findings and gathered diagrams are
-recorded in [Research findings for chapter review](#research-findings-for-chapter-review).
-That section flags claims in the existing examples for correction. The formal
-chapter review and interactive port have not started.
+**When this actually happens:** Continuously. Update the relevant document with
+the change, while the reason and the evidence are available.
 
 ---
 
 ## Entry criteria
 
-None. This runs alongside everything else.
+None. Documentation runs alongside the other work. Start with a reader and a
+question they need answered.
 
 ---
 
 ## The work
 
-### The rule
+### Choose the document for the reader’s task
 
-**Code says what. Documentation says why.**
+Documentation can teach a skill, give instructions, supply exact facts or explain
+a choice. The useful distinction is what the reader needs now.
 
-A comment restating the code is worse than no comment, because it adds a second thing
-that can drift out of date — and it will, silently.
+| Reader needs to… | Form | Example |
+| --- | --- | --- |
+| Learn through a guided exercise | Tutorial | Make a first booking in a safe sample environment |
+| Complete a known task | How-to guide | Roll back a deployment |
+| Look up precise facts | Reference | Find a field’s type, default and allowed values |
+| Understand a concept or choice | Explanation | Understand why a contract is generated |
 
-```ts
-// Bad: says what the code already says
-// Increment the retry count
-retries += 1
+This distinction comes from [Diátaxis](https://diataxis.fr/start-here/). It does
+not require four folders. A README can orient a reader and link to the right page.
 
-// Good: says what the code cannot
-// Stripe's webhook delivery retries for up to 3 days, so we can be
-// patient here. Anything past 5 attempts means our handler is broken,
-// not that Stripe is being slow.
-if (retries > 5) await alertOncall()
-```
+Start with a README, significant decision records and the configuration facts
+the application actually needs. Other artifacts are optional until a reader has
+a use for them:
 
-The second comment survives refactoring because it documents a constraint from outside
-the codebase. The first one is deleted the moment the line changes.
+| Artifact | Reach for it when… |
+| --- | --- |
+| README / getting started | Someone needs a first working setup and a route to more detail |
+| Architecture overview | A reader needs boundaries, responsibilities and relationships |
+| ADR | A significant choice and its alternatives need a lasting explanation |
+| Conventions / contributing guide | Contributors need consistent rules and a way to handle exceptions |
+| Troubleshooting | A known symptom needs checks, likely causes and a safe next action |
+| Changelog | Readers need notable changes organized by version |
+| Release notes | A release needs an audience-focused account of impact and required actions |
 
-### Document decisions, not descriptions
+A changelog is curated version history, not a raw commit dump. Release notes can
+select and explain those changes for a particular audience. A small patch may
+need only one entry. See [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
+and [GitHub releases](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases).
 
-Descriptions of how the system works rot on contact with the next refactor. Records of
-*why you chose something* stay true forever, because the decision was made at a fixed
-point in time under fixed constraints.
+The user-gathered nine-template graphic and its verified starter kit are useful
+menus, not a requirement to produce nine documents. Sources and provenance are
+preserved in the [research notes](../reference/stage-10-source-research.md).
 
-That is what an ADR captures:
+### Keep the README usable
 
-```markdown
-# ADR 004: Drizzle over Prisma
+The README is the entry point. Give it a purpose statement and direct routes to
+running locally, architecture and deployment. Link detailed procedures where a
+short section would hide important conditions.
 
-**Date:** 2026-03-14
-**Status:** Accepted
-
-## Context
-We need typed database access with migrations. Prisma is the default
-choice; Drizzle is the main alternative.
-
-## Decision
-Drizzle.
-
-## Reasoning
-- Migrations are SQL files we read and commit. When something breaks in
-  production we debug SQL, not the ORM's intentions.
-- No separate schema language or generation step in the build.
-- Closer to SQL, so query optimization is direct ([09](09-performance-optimization.md)).
-
-## Consequences
-- More verbose for simple queries than Prisma.
-- Smaller ecosystem; fewer answers when stuck.
-- Team members who know Prisma need a short ramp-up.
-
-## Alternatives considered
-- **Prisma** — better DX, but the generation step and query engine add
-  opacity we did not want at this size.
-- **Raw SQL + Zod** — maximum control, too much boilerplate.
-```
-
-Write it when the decision is made, while the alternatives are still fresh. Never edit an
-accepted ADR — supersede it with a new one. The record of what you believed at the time
-is the value; editing it destroys exactly that.
-
-Number them sequentially in `docs/adr/`. Write one for anything expensive to reverse:
-database choice, auth strategy, hosting, major dependencies, architectural boundaries.
-
-### The README
-
-The most-read and most-neglected document. Four sections:
+Illustrative outline; the bracketed project facts must be supplied and checked:
 
 ```markdown
-# Project Name
-
-One paragraph: what this is and who it is for. Understandable by
-someone with no context, including you at 2am in eight months.
+# Project name
+What this does, who uses it, and the smallest useful outcome.
 
 ## Running locally
-Exact commands. Prerequisites. Env vars — point at `.env.example`.
-Someone should get from clone to running app without asking anyone.
+Supported prerequisites and tool versions: [actual prerequisites].
+Access and safe configuration source: [how a maintainer obtains them].
+Clone, install and startup commands: [commands tested for this revision].
+Expected result and first useful check: [observable result].
 
 ## Architecture
-A short paragraph and, if useful, one diagram. Not exhaustive — enough
-to orient. Link to ADRs for the reasoning.
+Scope, main boundaries and external dependencies: [current view].
+Decision records: [link to the decision log or relevant ADRs].
 
 ## Deploying
-How code reaches production. How to roll back. Where the logs are.
-Who to contact when it is on fire.
+Release and rollback procedures: [links, permissions and compatibility limits].
+Logs and health checks: [where to look].
+Help or responsible maintainer: [contact role or support route].
 ```
 
-That last section is what you will want at 3am, when you are least capable of working it
-out from first principles.
+Verify it from a **fresh clone** without private instructions. Record the
+revision, prerequisites, configuration source, commands and expected result.
+The first point where the reader must ask someone becomes a concrete fix.
+A listed command is not proof that anyone ran it. Stage [04](04-project-setup.md)
+owns project setup; stages [13](13-production-deployment.md),
+[14](14-post-deployment-verification.md) and [16](16-incident-management.md)
+own release, recovery checks and incident response.
 
-### Comments worth writing
+### Record decisions and supersede them visibly
 
-**Non-obvious constraints.**
-```ts
-// Stripe caps metadata values at 500 characters. Longer values are
-// silently truncated, which caused a silent data-loss bug in Feb.
+Write an ADR for a significant decision whose context, alternatives or reversal
+cost matters: a boundary, dependency, interface or deployment choice. One page
+is a useful starting size, not a completeness limit. In this playbook the naming
+convention is `docs/adr/NNN-title.md`, numbered sequentially without reuse.
+
+Use Context, Decision, Reasoning, Consequences and Alternatives. Include a date
+and enough status information for the reader to distinguish a proposal from an
+adopted choice. Proposed records can change during review.
+
+| Status | Meaning |
+| --- | --- |
+| Proposed | A choice is being considered |
+| Rejected | The proposal was declined; preserve the reason |
+| Accepted | The choice was reviewed and adopted |
+| Superseded | A later decision replaced it; link to that record |
+
+**Illustrative worked case: Workshop**, a fictional workshop-booking app. The
+team previously maintained a field list by hand. A change adds a booking-window
+setting and an optional waitlist position. They choose to generate the field
+reference from their contract to avoid a second independently edited list.
+These are teaching inputs, not measured facts about this static playbook.
+
+Earlier record, `docs/adr/004-manual-field-reference.md`:
+
+```markdown
+# ADR 004: maintain the initial field reference by hand
+Date: 2026-09-01
+Status: Accepted
+
+## Context
+The initial contract is small. The team has no reference generator.
+## Decision
+Maintain the initial field reference beside the contract.
+## Consequences
+Every contract change requires a separate reference edit and review.
+
+## Supersession notice (appended)
+2026-10-20 — Current status: Superseded.
+[ADR 005](005-generated-contract-reference.md) replaces this decision.
+The original context, date and reasoning above are preserved.
 ```
 
-**Deliberate deviations from the obvious approach.**
-```ts
-// Deliberately not using a transaction. The webhook can be delivered
-// twice, and the upsert is idempotent; a transaction here caused lock
-// contention under load.
+Replacement, `docs/adr/005-generated-contract-reference.md`:
+
+```markdown
+# ADR 005: generate the factual contract reference
+Date: 2026-10-20
+Status: Accepted
+Supersedes: [ADR 004](004-manual-field-reference.md)
+
+## Context
+New settings and response fields make two edited field lists easy to disagree.
+## Decision
+Generate the factual reference from the versioned contract.
+## Reasoning
+Keep names, types and defaults tied to one source.
+## Consequences
+We must run generation and inspect its result when the contract changes.
+Explanations and examples still need human review.
+## Alternatives
+Keep editing the field list by hand, accepting the duplicate review work.
 ```
 
-**Genuinely tricky logic**, where the reader will otherwise assume it is a mistake.
+Preserve the historical decision text. Append a dated supersession notice to the
+old record, link it to the replacement, and link back from the new one. The old
+acceptance status is historical; the later notice makes its current status clear.
+Update an existing decision index too. A new decision must not rewrite an earlier
+choice to make the team look prescient. This extends the small-record approach in
+[Nygard’s ADR guidance](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)
+with an explicit append-only notice for this playbook’s preservation convention.
+
+### Keep architecture and contract references current
+
+A small maintained view helps a new reader orient. State its scope, name the
+components and external systems, label relationships, and identify an owner and
+review trigger. Link decisions for the reasons behind a boundary. C4’s
+[review checklist](https://c4model.com/diagrams/checklist) helps check readability.
+
+Illustrative Workshop scope: one application and its booking store. No payment
+or email service is implied by this view:
+
+```text
+Attendee -- books or cancels --> Workshop app -- reads/writes --> Booking store
+```
+
+The maintainer reviews this view when a boundary or dependency changes. Stage
+[03](03-architecture.md) teaches how to design the architecture itself.
+
+Reference describes exact facts a reader needs without inspecting every caller.
+Show names, types, allowed values, defaults or absence behavior, the applicable
+version and the authoritative source. A small table can be enough.
+
+Illustrative Workshop reference for the same change:
+
+| Name | Shape | Default or absence | Authoritative source |
+| --- | --- | --- | --- |
+| BOOKING_WINDOW_DAYS | integer 1–365 | 30 when unset | Versioned startup configuration validator |
+| waitlistPosition | positive integer | omitted when not waitlisted | Versioned response contract |
+
+These example values do not configure this playbook. For a real application,
+check the actual validator and response behavior. Document whether omission,
+null and an empty value mean different things; do not assume them equivalent.
+
+Generation can keep the factual table aligned with its source. It does not
+prove that the source is correct or that the explanations cover important
+conditions. Generated API reference and a short explanation can complement
+each other; a reader still needs the contract even when exhaustive hand-written
+API documentation would add duplication.
+
+### Write comments for non-obvious reasons
+
+Implementation comments should explain constraints or intent that the reader
+cannot recover from the code. A function or module’s documentation may also
+describe purpose, use and behavior. Rename unclear code when a good name carries
+the meaning. Google’s [review guidance](https://google.github.io/eng-practices/review/reviewer/looking-for.html#comments)
+makes this distinction.
+
+**Outside constraints.** Stripe documents a 500-character metadata value limit
+and recommends storing larger data externally with an ID in metadata:
+
 ```ts
-// Off-by-one is intentional: the API's date ranges are inclusive on
-// both ends, unlike ours.
+// Keep the larger record in our external store and put only its ID in
+// metadata, whose value limit is 500 characters.
+```
+
+The [provider source](https://docs.stripe.com/metadata#data) supports that limit.
+An application's retry alert threshold needs its own evidence and rationale;
+an attempt count alone cannot establish the cause of a delivery failure.
+
+The following are illustrative comment patterns, not runnable implementations:
+
+**Deliberate deviations.**
+```ts
+// Preserve the entered title for display. Apply normalization only
+// to the separate lookup key.
+```
+
+**Tricky logic.**
+```ts
+// This example's date interval includes both endpoints; account for
+// that when converting it to a half-open range.
 ```
 
 **Known limitations.**
 ```ts
-// Only handles the first 1000 results. Fine today (max observed: 40);
-// revisit if that changes.
+// This illustrative export handles at most 1000 rows. Expose that cap
+// to callers and revisit it before accepting larger exports.
 ```
 
-### Documentation that maintains itself
+### Update and verify documentation with the change
 
-The best documentation cannot drift, because it is executable or enforced:
+For each change, trace the authoritative fact to the documents that describe it.
+When working alone, you are the owner; adding a team does not create ownership
+for the first time. Give each living document a review trigger, such as a
+changed command, configuration schema, contract or boundary.
 
-- **Types.** A well-named type documents shape better than prose, and the compiler keeps
-  it honest.
-- **Tests.** They describe intended behavior and fail when the description stops matching
-  ([06](06-testing.md)).
-- **`.env.example`.** Documents required configuration, and the app stops booting when it
-  drifts ([04](04-project-setup.md)).
-- **Good names.** `retryUntilStripeConfirms` needs no comment. Renaming is often the
-  correct alternative to explaining.
+| Change | Authoritative fact | Affected document | Check | Owner / review trigger |
+| --- | --- | --- | --- | --- |
+| Workshop adds BOOKING_WINDOW_DAYS | Startup validator and its unset/invalid behavior | Configuration reference, `.env.example`, setup guide | Compare the documented 1–365 range and default 30 with validation; test missing/invalid values | Maintainer / validator change |
+| Workshop adds a response field | Response schema and serializer behavior | Generated reference and example response | Run generation; inspect the expected diff and verify optional-field omission | Contract owner / response change |
+| A default or allowed value changes | Implementation and behavioral test | Existing reference and relevant how-to | Find old values and check the new behavior, not only matching strings | Maintainer / option change |
+| A boundary or dependency changes | Current system and decision record | Architecture view, ADR and affected runbook | Trace the affected relationships and replacement links | Area owner / boundary change |
+| Setup or release steps change | Actual commands, access and environment | README and linked procedures | Follow the documented path in a safe environment and record the result | Maintainer / procedure change |
+| A known failure or release changes | Diagnosed behavior and release record | Troubleshooting, changelog or release notes as needed | Verify the check/workaround and publish only supported impact claims | Maintainer / confirmed fix or release |
 
-Prefer these over prose wherever the choice exists.
+`.env.example` lists configuration; a validator enforces accepted values only
+if the application actually invokes it. Safe placeholders and harmless defaults
+are useful examples. Real credentials are not. This static playbook requires no
+environment variables; configuration artifacts here illustrate applications
+that do need them.
 
-### What not to write
+Types check some shapes. Tests check the behavior their assertions cover.
+Generated reference follows its input. Choose an explicit check for the claim
+you need to trust. [Docs as code](https://www.writethedocs.org/guide/docs-as-code/)
+puts documentation through version control, review and automation; it does not
+make accuracy automatic. Stage [06](06-testing.md) owns test design.
 
-- **Comments restating code.** Noise that rots.
-- **Documentation of obvious functions.** A JSDoc block on `getUserById` explaining that
-  it gets a user by ID is pure cost.
-- **Exhaustive API docs by hand.** Generate them, or skip them.
-- **Long architecture documents** describing current structure in detail. They are wrong
-  within a month. Describe boundaries and reasoning; leave details to the code.
-- **Anything you will not maintain.** Wrong documentation is worse than none — people
-  trust it and act on it.
+### Choose what to omit or archive
 
-### Commit messages are documentation
+Skip comments that restate obvious code and duplicated inventories nobody will
+maintain. A short current architecture view and an exact field reference can
+still earn their maintenance cost by answering a real question.
 
-`git log` is the highest-density record of why the codebase looks like this. Treat the
-body as documentation with a permanent home that cannot drift from the change it
-describes. See [05 — Development](05-development.md#commits-and-branches).
+Preserve historical ADRs and release records as history, with discoverable
+replacement or version context. Review current instructions separately: correct
+them, redirect readers to their replacement, or retire obsolete procedures.
+Archiving history is different from leaving a stale setup guide looking current.
+
+### Commit messages preserve change context
+
+A commit records the context of a particular change. Use a body when its reason,
+constraint or rejected alternative will matter later; a clear subject can be
+enough for a small self-explanatory change. Stage
+[05](05-development.md#commits-and-branches) teaches the convention.
+
+History preserves what was written, including mistakes and superseded intent.
+Keep current instructions where readers expect to find them.
+
+### AI in documentation
+
+Give an assistant the source and version in scope: the relevant diff, contract,
+code, verified procedure or approved notes. Use it to map affected documents,
+draft a structure, expose contradictions, suggest lookup headings, or compare
+examples with a schema. Ask it to label missing facts instead of completing them
+from a plausible guess.
+
+Have a named reviewer compare the draft with those sources. Use synthetic
+identifiers and examples; remove real credentials, contact details and private
+payloads before publication. Permissions, limits, defaults, provider behavior,
+incident outcomes and release promises need a traceable source.
+
+Distinguish the evidence levels:
+
+| Action | What the evidence establishes |
+| --- | --- |
+| Read | Someone compared the instructions with an identified source |
+| Compile | A specified example passed the stated compiler/type checks |
+| Execute | A command or procedure ran in an identified environment with an observed result |
+
+For an execution claim, record the command, revision, environment and observed
+result. A successful isolated example does not establish production recovery;
+state its limits. An assistant's claim that a fix was validated needs the same
+evidence as anyone else's. Stage [14](14-post-deployment-verification.md) owns
+production verification.
+
+Docuwiz’s [template guidance](https://www.docuwiz.io/blog/blog-technical-documentation-templates)
+also asks for grounded inputs and human review. Treat template text as structure:
+check its sample infrastructure choices and validation claims before adopting it.
 
 ---
 
 ## Artifacts
 
-- `README.md` — what, run, architecture, deploy
-- `docs/adr/NNN-title.md` — one per significant decision
-- `.env.example` — every key, no values
-- Comments explaining constraints and reasoning, not mechanics
+- `README.md`: purpose, a working setup path and links to architecture/deployment/help.
+- `docs/adr/NNN-title.md`: significant decisions, with discoverable replacement links.
+- Configuration reference and `.env.example` when the application needs configuration.
+- Current architecture or contract reference where the reader needs it.
+- Comments for non-obvious constraints, reasoning and limits.
+- Optional troubleshooting, conventions and release material justified by reader needs.
 
 ---
 
 ## Definition of done
 
-Ongoing, but for each change:
+For each change:
 
-- [ ] Non-obvious decisions have an ADR or a comment explaining why
-- [ ] New env vars are in `.env.example`
-- [ ] README still accurate if setup or deploy changed
-- [ ] No comments that merely restate code
-- [ ] Commit body explains why
+- [ ] Affected documentation is identified from the authoritative facts, including changed options and response contracts.
+- [ ] Significant decisions have a record; historical decisions retain their reasoning and link to replacements.
+- [ ] Current instructions, references and generated outputs match the intended revision and reviewed behavior.
+- [ ] Required configuration is documented; any claimed enforcement is verified against actual validation.
+- [ ] Examples use safe synthetic data and contain no real credentials or private customer details.
+- [ ] Claimed validation names its command/check, revision, environment and observed result.
+- [ ] The change owner reviewed the material; commit context explains a reason when one needs preserving.
 
 Periodically:
 
-- [ ] A fresh clone can be run using only the README
-- [ ] No documentation describes things that no longer exist
+- [ ] A fresh maintainer reaches the expected result from a fresh clone using the README.
+- [ ] Each current document has an owner and a review trigger.
+- [ ] Historical records are labeled and linked; obsolete current procedures are corrected, redirected or retired.
 
 ---
 
 ## Scaling to a team
 
-- **The README becomes onboarding.** Have the next person set up from it and note every
-  point they got stuck. Those notes are the fix list.
-- **ADRs get much more valuable** — they stop the same debate recurring every six months
-  with a new participant.
-- **Add `CONTRIBUTING.md`** for conventions, branch naming, review expectations.
-- **Assign ownership per area.** Unowned documentation rots fastest.
-- **Document the on-call runbook** before you need it ([16](16-incident-management.md)).
+- Let a new maintainer try setup without coaching; their first unresolved step becomes the fix list.
+- Give each area an owner and a review trigger; review docs in the change that affects them.
+- Add contributor conventions when contributors need them, including exceptions and review expectations.
+- Keep decisions accessible to people who did not attend the discussion.
+- Link operational runbooks and handover routes; stage [16](16-incident-management.md) owns incident response.
 
 ---
 
 ## Traps
 
-**Writing docs as a phase before launch.** By then you have forgotten the reasoning, which
-was the only part worth capturing.
+**Writing documentation at the end.** Record the reason and evidence with the change.
 
-**Documenting what instead of why.** The what is in the code, is more accurate there, and
-cannot drift.
+**Applying a why-only rule to every document.** Setup instructions and exact reference facts answer legitimate reader needs.
 
-**Editing accepted ADRs.** Supersede instead. The historical record is the point.
+**Making every template mandatory.** Choose artifacts for real readers and tasks; maintain the smallest set that works.
 
-**Architecture documents that describe structure.** Obsolete in a month. Document
-boundaries and reasoning.
+**Deleting historical decisions while cleaning current instructions.** Preserve the record and expose its replacement. Retire misleading current procedures separately.
 
-**Trusting stale documentation.** Wrong docs cause worse outcomes than missing docs,
-because people act on them confidently. Delete aggressively.
+**Treating generation as proof.** Inspect the source and the expected output diff; check behavior where the claim depends on behavior.
 
-**Skipping the rollback section in the README.** The single line you will most want at
-3am and be least able to reconstruct.
+**Copying a template’s infrastructure or test claims.** Replace sample assertions with project facts and observed evidence.
 
-**Writing prose where a type or a rename would do.** Prose rots; types do not.
+**Publishing realistic private examples.** Use synthetic data and review the result before publication.
 
----
-
-## Research findings for chapter review
-
-Gathered 2026-10-15 for this chapter and its possible W-6 companion. These findings
-are inputs to the chapter review, not a completed cold-reader pass. The worked
-examples above still need the corrections identified below. Full source notes:
-[Stage 10 source research](../reference/stage-10-source-research.md). Image provenance:
-[Stage 10 gathering ledger](../reference/cheatsheet-sources.md#stage-10-gathering-round--2026-10-15).
-
-### Choose the document by the reader's task
-
-The opening rule needs a narrower scope. Explaining *why* matters for decisions
-and implementation comments, but a reader also needs instructions and factual
-reference. [Diátaxis](https://diataxis.fr/start-here/) separates four needs:
-
-| Reader needs to… | Write… | Example for a small app |
-| --- | --- | --- |
-| Learn through a guided exercise | A tutorial | Build and run a first example |
-| Complete a known task | A how-to guide | Roll back a deployment |
-| Look up exact facts | Reference | Required configuration keys and defaults |
-| Understand a choice or concept | Explanation | Why webhook processing must tolerate duplicate deliveries |
-
-These examples apply the framework to this playbook. They do not require four
-new folders or a separate documentation site. A README can orient the reader and
-link to the appropriate document.
-
-![Diátaxis map: tutorials and how-to guides support action; explanation and reference support understanding, divided between learning and working.](../reference/stage10-diataxis-map.png)
-
-Source: Daniele Procida, [Diátaxis](https://diataxis.fr/). Unmodified source image;
-[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), recorded in the
-[source repository license](https://github.com/evildmp/diataxis-documentation-framework/blob/main/LICENSE.rst).
-
-### Preserve an ADR's reasoning and expose its current status
-
-The chapter already supplies an ADR example, naming convention and location;
-those are not missing. What needs clarification is its lifecycle. Michael
-Nygard's [original ADR guidance](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions)
-keeps replaced records and marks them superseded with a link to the replacement.
-[MADR's template](https://github.com/adr/madr/blob/4.0.0/template/adr-template.md)
-also gives records explicit status metadata.
-
-For the chapter revision, distinguish a draft that can change during review from
-an accepted decision whose historical context and reasoning are preserved. A
-later replacement needs a new record and a discoverable supersession link on the
-old one. “Never edit” must not leave a superseded decision looking current.
-The existing `docs/adr/NNN-title.md` location is this playbook's convention, not a
-universal ADR requirement.
-
-### Keep useful architecture views and verify living instructions
-
-A small diagram can document current structure without becoming an exhaustive
-inventory. C4's [system-context guidance](https://c4model.com/diagrams/system-context)
-shows the system, its users and external dependencies. Its
-[review checklist](https://c4model.com/diagrams/checklist) asks for a clear scope,
-named elements, a key and labeled relationships. Stage 03 owns architecture
-design; this chapter should teach how to keep the resulting view useful.
-
-The gathered [banking-system example](../reference/stage10-c4-system-context.png)
-and [its key](../reference/stage10-c4-system-context-key.png) are by Simon Brown,
-[C4 model](https://c4model.com/diagrams/system-context), CC BY 4.0. They illustrate
-documentation scope, not this repository's architecture.
-
-“Documentation that maintains itself” also needs qualification. Generation keeps
-an output aligned with its input; it does not establish that either is complete
-or correct. [Write the Docs' docs-as-code guidance](https://www.writethedocs.org/guide/docs-as-code/)
-puts documentation through version control, review and automated checks. For
-this chapter, propose checks with observable outcomes: run the README setup from
-a clean clone, execute examples against the stated version, and regenerate
-derived files before comparing them. A type check alone cannot prove the setup
-instructions work.
-
-### Recheck the provider claims in worked examples
-
-| Existing claim | Source finding | Correction to make during chapter review |
-| --- | --- | --- |
-| Stripe metadata longer than 500 characters is silently truncated | [Stripe metadata guidance](https://docs.stripe.com/metadata) states a 500-character value limit; it does not substantiate silent truncation. | Remove the unsupported behavior and incident claim. Use the documented limit, or store a larger record elsewhere and put its ID in metadata. |
-| More than five webhook attempts proves the handler is broken | [Stripe webhook delivery guidance](https://docs.stripe.com/webhooks#automatic-retries) describes retries for up to three days in live mode and a different sandbox schedule. It supplies no universal five-attempt diagnosis. | Separate provider delivery behavior from an application's chosen alert threshold. |
-| Prisma's generation step and query engine added opacity for the sample ADR's team | [Prisma's September 2025 release](https://www.prisma.io/changelog/2025-09-10) made its Rust-free engine and driver adapters generally available in v6.16.0; this does not remove client generation. | Treat opacity as the team's judgment, not an inherent defect. Tie the reasoning to a stated version, evaluated configuration and actual project constraints. |
-| An environment example makes the app stop booting when configuration drifts | A sample file is documentation; enforcement needs validation. | Verify the actual startup validation before claiming it exists. Keep secrets out of examples; safe placeholders or defaults can still help readers. |
-
-### W-6 material to carry forward
-
-The Diátaxis map is the strongest candidate for a documentation overview. An ADR
-lifecycle and a short “which document do I need?” lookup would make useful
-companions; the C4 example supports the architecture-documentation boundary.
-These are gathered candidates, not new registered sheets. Prefer editable text
-for ADR templates and command examples rather than screenshots of prose.
-
-The user's [nine-template graphic](../reference/doc-templates-dev-team.jpeg)
-adds a useful artifact menu: onboarding, conceptual and architecture guides,
-how-to instructions, reference, conventions, troubleshooting, changelog and
-release notes. It shows descriptions, not completed templates, and omits ADRs.
-Treat “every team needs” as a prompt to assess reader needs, not a requirement
-to create nine documents. Image provenance and template-source verification are
-recorded separately in the [gathering ledger](../reference/cheatsheet-sources.md#user-supplied-follow-up--2026-10-15).
-Docuwiz's [public starter kit](https://github.com/docuwiz-io/documentation-starter-kit)
-does contain the nine Markdown templates. Review sample infrastructure choices,
-validation claims and release promises before using one; a filled example is
-not evidence about your project. The graphic's original URL and reuse license
-are still unconfirmed.
-
-Kirran Mushtaq's [project documentation library article](https://www.linkedin.com/pulse/project-management-documentation-library-practical-guide-mushtaq-pwuaf/)
-adds ownership, access control, version discipline and regular review. Carry
-those maintenance questions into chapter review; its project-governance
-inventory reaches beyond this stage's developer-documentation scope.
-
-Deferred: the full chapter correction spec/plan, cold-reader completeness and
-consultability checks, corrected worked examples, the AI-in-documentation
-section, the interactive port, W-6 sheet design and registration. W-3 and W-6
-completion counts do not change in this research round.
+**Trusting a successful-looking draft.** Find the evidence behind each operational claim; record what remains unknown.
