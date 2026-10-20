@@ -40,3 +40,22 @@ Full-suite GREEN: Test Files 208 passed (208); Tests 1511 passed (1511)
 ```
 
 [Anchor RED](evidence/2026-10-20-stage-10/task-1-anchor-red.log), [integration GREEN](evidence/2026-10-20-stage-10/task-1-integration-green.log), [first full run](evidence/2026-10-20-stage-10/task-1-full-test.log) and [full-suite GREEN](evidence/2026-10-20-stage-10/task-1-full-green.log) preserve the raw output. Independent addendum: **review clean after 1 fix**; I1 resolved by the two correct replacement anchors, with the promised format/rationale still at the destination.
+
+## Task 2: shared ADR definition
+
+The new semantic assertion failed for the expected reason before changing the term: the definition still said “never edited afterward” and lacked “historical reasoning”. Only `TERMS.adr.full` changed. `pnpm gen:glossary` regenerated exactly the ADR paragraph. Name, short definition and ready Stage 03 destination remain unchanged.
+
+```text
+RED — pnpm exec vitest run src/lib/terms.test.ts -t 'ADR history stays intact'
+AssertionError: expected 'A short record of a single architectu…' to contain 'historical reasoning'
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 skipped (16)
+
+GREEN — pnpm exec vitest run src/lib/terms.test.ts src/lib/glossary.test.ts src/lib/stage-10-structure.test.ts src/lib/stage-metadata.test.ts
+ Test Files  4 passed (4)
+      Tests  65 passed (65)
+```
+
+Full [RED](evidence/2026-10-20-stage-10/task-2-red.log), [generation](evidence/2026-10-20-stage-10/task-2-generate.log) and [GREEN](evidence/2026-10-20-stage-10/task-2-green.log) output is retained. Deferred: term visual redesign and moving the destination to the unready Stage 10 placeholder.
+
+Independent Task 2 verdict: **review clean**, no findings. The reviewer checked the exact definition, chapter lifecycle, unchanged short/name/Stage 03 destination, generator provenance and one-paragraph output diff; independently reran the four files (65 passed). It disproved a conflict between historical Accepted status and the dated current-status notice.

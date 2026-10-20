@@ -11,7 +11,7 @@ drift apart.
 
 **Accessible name** — The name assistive technology reports for an element — usually its visible text or its label. See [06 — Testing](../docs/06-testing.md).
 
-**ADR (Architecture Decision Record)** — A short record of a single architecture decision — the context, the choice, and the consequences — written when the decision is made and never edited afterward. Superseded by a new ADR rather than revised. See [03 — Architecture](../docs/03-architecture.md).
+**ADR (Architecture Decision Record)** — A short record of one architecture decision, including context, choice and consequences. Preserve the historical reasoning; a changed decision gets a new ADR, with a dated supersession notice linking the old and new records. See [03 — Architecture](../docs/03-architecture.md).
 
 **Alert fatigue** — Not a discipline failure; the predictable result of noisy alerts. An alert that has woken you four times without once needing action has taught you to ignore it, and the fifth time is the real one. See [15 — Observability](../docs/15-observability.md).
 
