@@ -172,3 +172,42 @@ The updated records/source-citation guard group also passed **5/5 across two fil
 
 
 Task 5 records/evidence review addendum: **review clean after 2 minor fixes**. M1 corrected joined words in the narrative rulings; M2 replaced stale browser-pending wording with historical framing and made the master checkpoint the remaining whole-branch review. Neither changed teaching or application source. The reviewer independently checked all four screenshots, actual gate outputs, retained runner/build failures, provenance, preservation and the latest link result: **324 destinations / 18 files / 0 failures**. No Critical, Important or Minor finding remains in this slice. The complete branch still awaits its separate fixed-tip review.
+
+
+## Whole-branch review and bounded guard correction
+
+The independent [whole-branch review](2026-10-20-stage-10-whole-branch-review.md) examined all eight commits from `79f9e31` through `9fd17d2`. Initial verdict: **Ready with fixes**. It found two Minor, PLAN-AUTHORED missing positive guards, without a current teaching defect. The controller treated both as blocking acceptance corrections because the plan explicitly promises protection of these central conditions; the reviewer’s original grades remain recorded. This is a test-only correction, not a claim that the correct chapter needed repair.
+
+The first review turn hit a usage limit; a briefly started fallback was interrupted after the clock showed the original reviewer’s reset had passed. The original reviewer resumed and completed the full pass. Incomplete review turns supplied no approval.
+
+The reviewer’s in-memory probes were explicitly **not Vitest**. The controller reproduced each gap with actual Vitest before strengthening its guard:
+
+1. Remove only the invocation prerequisite. All 14 old chapter tests still pass. Add a positive assertion scoped to **Update and verify documentation with the change**, while that mutation is still present. RED fails for the expected missing invocation condition. Restore the already-correct chapter; GREEN passes.
+2. Remove only the old ADR’s dated current-status line. All 14 tests still pass with the earlier ADR guard. Extract the earlier fenced specimen and require its appended notice and dated Superseded status. RED fails for the expected missing notice line. Restore the already-correct chapter; GREEN passes.
+
+Both strengthened guards then underwent separate full-file teeth checks. Each mutation failed **only its intended test**, with the other 13 passing. `finally` restored the saved canonical chapter bytes after every mutation, and `git diff` confirmed no chapter change survived.
+
+```text
+Invocation condition removed, old guard: Tests 14 passed (14)
+Invocation RED: Tests 1 failed | 13 passed (14)
+Invocation GREEN: Tests 14 passed (14)
+Old status line removed, old ADR guard: Tests 14 passed (14)
+Old status RED: Tests 1 failed | 13 passed (14)
+Both corrected guards GREEN: Tests 14 passed (14)
+Invocation teeth: Tests 1 failed | 13 passed (14)
+Old-status teeth: Tests 1 failed | 13 passed (14)
+Restored covering GREEN: Test Files 5 passed (5); Tests 68 passed (68)
+```
+
+[Actual runner](evidence/2026-10-20-stage-10/final-guard-fix.py), [raw sequence](evidence/2026-10-20-stage-10/final-guard-fix.log), [invocation RED](evidence/2026-10-20-stage-10/final-validator-red.log), [old-status RED](evidence/2026-10-20-stage-10/final-old-status-red.log) and [restored GREEN](evidence/2026-10-20-stage-10/final-restored-green.log) preserve the evidence. Actual mutation diffs and separate teeth logs share the `final-` prefix.
+
+Only `stage-10-structure.test.ts` changes under `web/`; canonical chapters, generated glossary, reference assets and all runtime application files remain identical to the reviewed tip. The already-passed 52-page build, 24 production checks, development sweep and four ADR views remain evidence for that same runtime implementation. No teaching fix wave or new executable example was introduced, so no new cold-reader scenario or browser run is claimed for this guard-only correction.
+
+Fresh post-correction format, lint and generated-route typecheck all exit 0. The [full suite](evidence/2026-10-20-stage-10/final-test.log) also exits 0:
+
+```text
+ Test Files  208 passed (208)
+      Tests  1512 passed (1512)
+```
+
+[Command results](evidence/2026-10-20-stage-10/final-check-results.json) retain actual exit codes. Independent scoped fix review remains pending at this commit.

@@ -1,0 +1,30 @@
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+ ❯ |unit| src/lib/stage-10-structure.test.ts (14 tests | 1 failed) 17ms
+   × documentation checks include configuration and response contracts with an owner 7ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  13:08:46
+   Duration  119ms (transform 18ms, setup 0ms, import 24ms, tests 17ms, environment 0ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/lib/stage-10-structure.test.ts > documentation checks include configuration and response contracts with an owner
+AssertionError: expected ' For each change, trace the authorita…' to contain 'only if the application actually invo…'
+
+Expected: "only if the application actually invokes it"
+Received: " For each change, trace the authoritative fact to the documents that describe it. When working alone, you are the owner; adding a team does not create ownership for the first time. Give each living document a review trigger, such as a changed command, configuration schema, contract or boundary. | Change | Authoritative fact | Affected document | Check | Owner / review trigger | | --- | --- | --- | --- | --- | | Workshop adds BOOKING_WINDOW_DAYS | Startup validator and its unset/invalid behavior | Configuration reference, `.env.example`, setup guide | Compare the documented 1–365 range and default 30 with validation; test missing/invalid values | Maintainer / validator change | | Workshop adds a response field | Response schema and serializer behavior | Generated reference and example response | Run generation; inspect the expected diff and verify optional-field omission | Contract owner / response change | | A default or allowed value changes | Implementation and behavioral test | Existing reference and relevant how-to | Find old values and check the new behavior, not only matching strings | Maintainer / option change | | A boundary or dependency changes | Current system and decision record | Architecture view, ADR and affected runbook | Trace the affected relationships and replacement links | Area owner / boundary change | | Setup or release steps change | Actual commands, access and environment | README and linked procedures | Follow the documented path in a safe environment and record the result | Maintainer / procedure change | | A known failure or release changes | Diagnosed behavior and release record | Troubleshooting, changelog or release notes as needed | Verify the check/workaround and publish only supported impact claims | Maintainer / confirmed fix or release | `.env.example` lists configuration; a validator enforces accepted values. Safe placeholders and harmless defaults are useful examples. Real credentials are not. This static playbook requires no environment variables; configuration artifacts here illustrate applications that do need them. Types check some shapes. Tests check the behavior their assertions cover. Generated reference follows its input. Choose an explicit check for the claim you need to trust. [Docs as code](https://www.writethedocs.org/guide/docs-as-code/) puts documentation through version control, review and automation; it does not make accuracy automatic. Stage [06](06-testing.md) owns test design. "
+
+ ❯ src/lib/stage-10-structure.test.ts:233:16
+    231|   }
+    232|   expect(text).toMatch(/alone[\s\S]+owner/i)
+    233|   expect(text).toContain('only if the application actually invokes it')
+       |                ^
+    234|   expect(doc()).not.toContain('the app stops booting when it drifts')
+    235|   expect(doc()).not.toContain('The best documentation cannot drift')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

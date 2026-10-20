@@ -179,7 +179,13 @@ test('replaced ADRs expose current status while preserving their historical reas
   }
   expect(text).toContain('[ADR 005](005-generated-contract-reference.md)')
   expect(text).toContain('[ADR 004](004-manual-field-reference.md)')
-  expect(text).toContain('2026-10-20')
+  const previous = section(
+    doc(),
+    'Record decisions and supersede them visibly',
+  ).match(/```markdown\n(# ADR 004:[\s\S]*?)\n```/)?.[1]
+  expect(previous).toBeDefined()
+  expect(previous).toContain('## Supersession notice (appended)')
+  expect(previous).toMatch(/\d{4}-\d{2}-\d{2} — Current status: Superseded\./)
   expect(text).toMatch(/append[\s\S]+supersession/i)
   expect(text).toMatch(/preserve[\s\S]+historical/i)
   expect(text).toContain('docs/adr/NNN-title.md')
@@ -224,6 +230,7 @@ test('documentation checks include configuration and response contracts with an 
     expect(text).toContain(phrase)
   }
   expect(text).toMatch(/alone[\s\S]+owner/i)
+  expect(text).toContain('only if the application actually invokes it')
   expect(doc()).not.toContain('the app stops booting when it drifts')
   expect(doc()).not.toContain('The best documentation cannot drift')
 })
