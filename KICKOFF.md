@@ -1,6 +1,6 @@
 # Kickoff — Stage 10 chapter implementation
 
-Updated 2026-10-20. The user authorized “proceed up to implementation” after the chapter-plan handoff. The canonical chapter and shared ADR definition are corrected. Independent task reviews and the same-case cold-reader rerun are complete. Full build/browser verification passed: 1512 tests, 52-page build, 24 production checks and one development-console sweep. Final whole-branch review is the current checkpoint. The interactive port needs a separate design.
+Updated 2026-10-20. The user authorized “proceed up to implementation” after the chapter-plan handoff. The canonical chapter and shared ADR definition are corrected. Independent task reviews and the same-case cold-reader rerun are complete. Full build/browser verification passed: 1512 tests, 52-page build, 24 production checks and one development-console sweep. The whole-branch review and bounded guard-fix review are Ready to merge; closing records received an independent clean addendum. The interactive port needs a separate design.
 
 ## Workspace and authority
 
@@ -24,7 +24,9 @@ Turbopack rejected the original dependency symlink. `web/node_modules` is now a 
 
 ## Current checkpoint
 
-The ADR panel passed at 320/1440px in both themes (14.83:1 light, 13.21:1 dark), with zero overflow/console errors. Review the full branch from `79f9e31` at a fixed clean tip. Include the research/source capture commit. Final records get a separate review addendum. Do not infer whole-branch approval from per-task reviews.
+The full eight-commit review at `9fd17d2` found two plan-authored positive-guard gaps. Test-only fix `4226dec` passed actual RED/GREEN/teeth and independent review: both findings closed, **Ready to merge**, no new findings. Fresh full suite: **1512/1512 across 208 files**; format/lint/typecheck pass. The runtime is unchanged, retaining the 52-page build, production 24/24, development 1/1 and ADR matrix 4/4. Read the [whole-branch review](docs/superpowers/reports/2026-10-20-stage-10-whole-branch-review.md) and execution report for exact scope and final records addendum.
+
+Keep the branch and worktree. Integration into develop requires a fresh user decision; main/push remain the user’s. The next substantive work is a separate interactive-port specification based on the corrected chapter. Read `web/PATTERNS.md` and apply the design process before port implementation. Do not rerun or rewrite the completed chapter tasks merely because the scratch workspace was cleaned; commits and archived execution evidence are the record.
 
 The chapter teaches task-based document selection, fresh-clone setup verification, preserved ADR history with visible replacement links, exact contract references, explicit drift checks/owners and source-grounded AI review. Workshop is illustrative; Toolshare remained held out. The shared ADR term retains its ready Stage 03 destination, and reference/glossary.md remains generated.
 

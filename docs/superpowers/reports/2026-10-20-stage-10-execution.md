@@ -211,3 +211,29 @@ Fresh post-correction format, lint and generated-route typecheck all exit 0. The
 ```
 
 [Command results](evidence/2026-10-20-stage-10/final-check-results.json) retain actual exit codes. Independent scoped fix review remains pending at this commit.
+
+
+## Final implementation disposition
+
+The independent bounded review of `9fd17d2..4226dec` marks **M1 and M2 addressed**, with **Ready to merge** and no new findings. The original full review covers `79f9e31..9fd17d2`; this bounded review covers the only subsequent test correction. The capacity-limited follow-up supplies no verdict; the available reviewer’s completed check is retained in the [whole-branch review](2026-10-20-stage-10-whole-branch-review.md).
+
+Final authored source state: chapter, ADR glossary, source captures and all runtime files remain as reviewed; the strengthened tests complete the promised regression coverage. Fresh tests are **1512/1512 across 208 files**; all original build/browser results remain for the identical runtime implementation. The same-case reader result remains **5 HIT**, with no remaining teaching defect. No deferred Minor finding remains.
+
+The user authorized work through implementation. Keep `docs/2026-10-20-stage-10-chapter` and its worktree; no merge/push/deployment is performed. Parent files/server remain preserved. The next substantive task is a separately approved interactive-port design from this corrected chapter. W-3 stays 15/18 and W-6 22/27.
+
+### Later rulings and review boundaries
+
+- Ruling: use a fresh gpt-6.1-sol high reviewer after the gpt-6-astra reviewer stopped at its usage limit without a verdict — this is the most capable available fallback for the required independent whole-branch pass. Cost: fresh review context/time and loss of the unavailable frontier review; the unfinished review is not counted as approval.
+- Ruling: supersede the fallback choice and resume the original gpt-6-astra reviewer after checking the clock — 13:03 Manila is after its stated 13:02 usage reset; the fixed review tip and source are unchanged. The fallback was interrupted before a verdict. Cost: brief duplicated review startup; no incomplete review counts as approval.
+- Final: Ruling: treat review M1/M2 as Important blocking acceptance corrections, while retaining the reviewer’s original Minor grades — current teaching is correct, but the approved Review Focus promises protection of two central corrections that green tests do not enforce. Cost: additional literal-guard maintenance; no current application/chapter defect is claimed.
+- Final: Ruling: Deployment health, remote freshness and integration beyond the reviewed range — keep outside this implementation; no fetch, deployment or merge is authorized. Cost: no production-health assurance.
+- Final: Ruling: Real Workshop/Toolshare execution, queue behavior or recovery — these are fictional teaching cases without runnable implementations; preserve missing-fact labels. Cost: no runtime/recovery proof.
+- Final: Ruling: Future Stage 10 UI, W-6 layout and gathered-image accessibility — defer to the separately scoped port and publication work. Cost: those future surfaces need their own verification.
+- Final: Ruling: Unknown graphic authorship/republication permission — retain the recorded uncertainty and leave images as gathering assets. Cost: future reuse still needs permission evidence.
+- Final: Ruling: General Markdown-parser completeness — the helper remains private to the tested chapter corpus and fixtures. Cost: new syntax needs added fixtures.
+- Final: Ruling: Every possible semantic rewrite escaping a string guard — retain reader checks and honest guard limits, fixing the two explicitly promised conditions. Cost: semantic rewrites require review, not blind reliance on strings.
+- Final: Ruling: Fresh suite execution by the read-only reviewer — accept inspected logs plus controller execution; do not attribute a new build/browser run to the reviewer. Cost: review relies on retained execution evidence.
+- Final: Ruling: Historical reconstruction of parent-file/server observations — keep contemporaneous preservation logs and recheck current hashes/listeners without rewriting history. Cost: past observations rely on their recorded evidence.
+- Final: Ruling: use the available gpt-6.1-sol reviewer for the bounded fix review after gpt-6-astra returned a capacity error — the original whole-branch verdict is complete and retained; only the test-only correction needs a new independent check. Cost: fallback review context/time; no failed follow-up counts as approval.
+
+Closing records addendum: **review clean**, Ready to merge unchanged; no new findings or chapter/web/reference change. The independent reviewer checked both review ranges, closure and the separate port/integration boundary. Earlier 332-target and later 334-target link checks remain distinct evidence checkpoints.

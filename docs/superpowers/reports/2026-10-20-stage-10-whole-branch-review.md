@@ -55,3 +55,19 @@ Historical Accepted status is explicitly superseded by the dated notice. Missing
 Deployment/remote health and integration stay outside this implementation. Fictional application execution and recovery remain unproved. Future port/W-6 accessibility needs its own checks. Graphic authorship/reuse permission remains unknown. The private heading scanner is tested for this corpus, not offered as a general parser. Semantic guards are supplemented by reader assessment. The read-only reviewer relies on retained suite logs rather than claiming fresh execution. Historical preservation observations rely on their contemporaneous logs, with current hashes/listeners rechecked. Each disposition and its cost is recorded in the execution ledger; none silently expands the scope or grants integration authority.
 
 Initial reviewed state: eight commits after develop baseline; clean tree at `9fd17d2`. Not merged, pushed or deployed. Bounded fix review and final records addendum remain required.
+
+## Independent bounded fix review
+
+The gpt-6-astra follow-up returned a capacity error. The available gpt-6.1-sol reviewer independently checked `9fd17d2..4226dec0f026ea0d5a4f28da193f1d652d354bc3`; it did not replace or repeat the completed whole-branch pass.
+
+Verdict: **Ready to merge. M1 and M2 addressed; no new findings.** M1 now requires the invoked-validator condition inside its actual section. M2 extracts ADR 004’s fenced specimen and requires the appended notice and dated current Superseded status; a sibling record or status table cannot supply it.
+
+The reviewer inspected actual mutation diffs, complete RED/teeth logs, the restoration runner and final checks: each real mutation initially passed its earlier guard, each strengthened guard then failed for the right reason (1 failed / 13 passed), separate teeth confirmed both, restored coverage passed 68/68 across five files and the full suite passed 1512/1512 across 208 files. Format/lint/generated-route typecheck exit 0. Saved chapter bytes are restored in `finally`; committed chapter, glossary, assets and runtime files remain unchanged.
+
+It declined a second full branch pass, new browser/build runs, deployment, fictional execution and future port behavior because the bounded correction changes only guards. Controller disposition: the completed original full pass and retained runtime evidence cover unchanged implementation; no new runtime/deployment/port claim follows. The private ADR extractor is suitable for this identified specimen, not a general Markdown parser. Those limits remain recorded.
+
+Reviewed implementation state: **nine commits after `79f9e31`, clean at `4226dec`**. The full review plus bounded fix review are **Ready to merge**. Final records-only changes still receive their scoped addendum. No merge, push or deployment is authorized by the verdict.
+
+## Closing records addendum
+
+Independent records-only check of the working delta from `4226dec`: **review clean; Ready to merge unchanged**. Review ranges, original grades/controller disposition, closure, observed counts and unchanged-runtime evidence are accurate. No chapter, web or reference change is present; authored whitespace checks pass. W-3 remains 15/18 and W-6 22/27, with the port separately pending and integration requiring user approval. No new finding. The closing plan step may be committed; this is not a new suite run or integration authorization. The later 334-target scratch link log will be retained with the execution archive, separately from the earlier 332-target log.
