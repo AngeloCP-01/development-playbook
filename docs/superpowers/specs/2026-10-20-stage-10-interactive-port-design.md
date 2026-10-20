@@ -1,9 +1,10 @@
 # Stage 10 documentation: interactive port
 
-Date: 2026-10-20. Status: proposed; awaiting written-design approval. The user's
-“continue” starts the separate port design after the completed chapter round.
-It does not approve this document or authorize integration. This feature branch
-starts at chapter tip `c092ac7`; the completed chapter branch is preserved.
+Date: 2026-10-20. Status: approved. The user's “proceed” followed the full written
+design handoff and approves implementation planning. The earlier “continue”
+started this separate port design after the chapter round. Integration remains
+a separate decision. This feature branch starts at chapter tip `c092ac7`;
+the completed chapter branch is preserved.
 
 ## Problem
 
@@ -69,7 +70,7 @@ must also carry that verdict.
 
 `web/PATTERNS.md:49` and D-52 govern panel weight: one judgment per panel and at
 most four screens at 1024×768. Step count follows the teaching. The proposed
-twelve panels are a design call, not a user-approved preference or a fixed cap.
+twelve panels are an approved initial design, not a fixed cap.
 If measurement requires a split, record the seam and update the step declaration,
 tests, coverage and records together; retain the teaching and deep links.
 
@@ -97,7 +98,8 @@ repository constraints.
 pack; twelve initial panels; Workshop examples; session-only exercise answers;
 one browser-local plan with eight free-text fields and ten checklist selections.
 An optional preference question about the deliverable was sent during exploration;
-no reply was available when this draft was written. These calls remain reviewable.
+no reply was available when this draft was written. The subsequent written-design
+approval adopts these calls; the bounded D-52 measurement rule still applies.
 
 The builder may choose component/file boundaries, accessible control wording,
 spacing within existing tokens and concise exercise distractors. They may not
