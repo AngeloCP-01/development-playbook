@@ -107,3 +107,7 @@ Comment-only compile check; no executable runtime behavior claimed.
 Deferred: runtime checks for an application that these illustrative specimens do not provide. No application code or dependency was introduced.
 
 Independent Task 3 verdict: **review clean after 1 fix**. Minor M1 (introduced report table separators) was verified and corrected; all seven count separators now render inside their intended cells. The reviewer checked every mutation diff, intended failure, honest selection boundary, restoration hashes/empty source diffs, all eight fences and literal compiler result. No Critical or Important finding remains.
+
+## Task 4: same-case cold-reader rerun
+
+Fresh completeness and lookup readers received only frozen input. Lookup choices were sent before body access and retained. Result: **5 HIT / 0 PARTIAL / 0 MISFILED / 0 MISS**, previously 0/3/0/2. Completeness produced README, replacement ADR/old-record handling, contract/configuration reference, rationale comment and change/release checklist attempts with missing facts explicitly labeled. No confirmed teaching defect remained; no further correction wave or executable example was introduced. [Rerun report](2026-10-20-stage-10-correction-rerun.md) retains artifact attempts and every baseline finding’s disposition; [frozen inputs](evidence/2026-10-20-stage-10/cold-reader/) retain SHA/instruments and pre-body choices. Deferred: separate Stage 10 port and W-6 work.

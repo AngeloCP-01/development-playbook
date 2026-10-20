@@ -1,0 +1,3 @@
+Frozen first-heading selections based ONLY on headings.md and exact questions.txt: Q1 → “Keep the README usable”; Q2 → “Record decisions and supersede them visibly”; Q3 → “Choose the document for the reader’s task”; Q4 → “Update and verify documentation with the change”; Q5 → “AI in documentation”. I have read no chapter/body/other files. Yielding until you release the chapter.
+
+Controller received these before releasing chapter.md.
