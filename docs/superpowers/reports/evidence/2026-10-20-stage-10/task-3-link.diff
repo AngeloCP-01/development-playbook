@@ -1,0 +1,13 @@
+diff --git a/docs/10-documentation.md b/docs/10-documentation.md
+index c886b9f..b9e4bb5 100644
+--- a/docs/10-documentation.md
++++ b/docs/10-documentation.md
+@@ -130,7 +130,7 @@ Every contract change requires a separate reference edit and review.
+ 
+ ## Supersession notice (appended)
+ 2026-10-20 — Current status: Superseded.
+-[ADR 005](005-generated-contract-reference.md) replaces this decision.
++ADR 005 replaces this decision.
+ The original context, date and reasoning above are preserved.
+ ```
+ 

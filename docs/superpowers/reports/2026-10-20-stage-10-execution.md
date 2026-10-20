@@ -59,3 +59,51 @@ GREEN — pnpm exec vitest run src/lib/terms.test.ts src/lib/glossary.test.ts sr
 Full [RED](evidence/2026-10-20-stage-10/task-2-red.log), [generation](evidence/2026-10-20-stage-10/task-2-generate.log) and [GREEN](evidence/2026-10-20-stage-10/task-2-green.log) output is retained. Deferred: term visual redesign and moving the destination to the unready Stage 10 placeholder.
 
 Independent Task 2 verdict: **review clean**, no findings. The reviewer checked the exact definition, chapter lifecycle, unchanged short/name/Stage 03 destination, generator provenance and one-paragraph output diff; independently reran the four files (65 passed). It disproved a conflict between historical Accepted status and the dated current-status notice.
+
+## Task 3: guard sensitivity and printed examples
+
+Baseline source bytes matched committed `d2a5e4f`; status was clean following Task 2. The baseline group passed 65 tests. Each deliberate mutation was applied separately, its actual diff saved, its selected assertion observed failing for the intended reason, and the exact saved bytes restored in `finally`. Each restoration also checked an empty source diff. No mutation survives.
+
+| Mutation / test boundary | Raw test count |
+| --- | --- |
+| appendix | 1 failed \| 13 skipped (14) |
+| enforcement | 1 failed \| 13 skipped (14) |
+| enforcement-full | 1 failed \| 13 passed (14) |
+| link | 1 failed \| 13 skipped (14) |
+| link-full | 1 failed \| 13 passed (14) |
+| term | 1 failed \| 15 skipped (16) |
+| anchor | 1 failed \| 2 skipped (3) |
+
+The appendix mutation retained all original document-choice words but moved the whole section outside active teaching: the guard failed on a missing active heading. The enforcement mutation failed the forbidden startup-guarantee assertion. The link mutation removed only old→new discovery, leaving the backlink intact; the reciprocal-link assertion failed. The term mutation restored only the old definition, not generated output, and failed “historical reasoning”. The additional anchor teeth check reinstated the two old Stage 03 targets and failed the existing anchor resolver.
+
+The enforcement and link full-file runs each failed **only their target test**, with the other 13 passing. The appendix demonstration selected one test; a whole-file run would also reject order and retained research content. The term demonstration selected one semantic test; glossary synchronization would also reject that intentionally inconsistent state. These are selected boundaries, not claims that only one test in the whole suite could fail.
+
+All actual [mutation diffs and raw output](evidence/2026-10-20-stage-10/) are retained by `task-3-` filename. The mutation runner itself is preserved as `task-3-mutations.py` for reproducing the sequence.
+
+```text
+Baseline: Test Files 4 passed (4); Tests 65 passed (65)
+Restored GREEN: Test Files 4 passed (4); Tests 65 passed (65)
+All mutation source bytes restored and targeted group GREEN
+```
+
+### Fence inventory
+
+The eight fences are: one Markdown README outline; two Markdown ADR specimens; one text architecture relationship view; four TypeScript comment examples. Markdown/text specimens are illustrative, not executable setup instructions. TypeScript contains comments only; literal extraction checked every nonblank line and `tsc --noEmit --skipLibCheck --target ES2022 --types node` checked the combined printed blocks. This supplies syntax evidence, no runtime validation claim.
+
+```text
+Fence 1: line 65, markdown: # Project name
+Fence 2: line 119, markdown: # ADR 004: maintain the initial field reference by hand
+Fence 3: line 139, markdown: # ADR 005: generate the factual contract reference
+Fence 4: line 176, text: Attendee -- books or cancels --> Workshop app -- reads/writes --> Booking store
+Fence 5: line 215, ts: // Keep the larger record in our external store and put only its ID in
+Fence 6: line 227, ts: // Preserve the entered title for display. Apply normalization only
+Fence 7: line 233, ts: // This example's date interval includes both endpoints; account for
+Fence 8: line 239, ts: // This illustrative export handles at most 1000 rows. Expose that cap
+Extracted 4 comment-only TypeScript fences to /var/folders/6p/sl8n2nd96kzfxc82ll0plsvh0000gn/T/stage10-fences.sswcq3lk/comments.ts
+tsc exit: 0
+Comment-only compile check; no executable runtime behavior claimed.
+```
+
+Deferred: runtime checks for an application that these illustrative specimens do not provide. No application code or dependency was introduced.
+
+Independent Task 3 verdict: **review clean after 1 fix**. Minor M1 (introduced report table separators) was verified and corrected; all seven count separators now render inside their intended cells. The reviewer checked every mutation diff, intended failure, honest selection boundary, restoration hashes/empty source diffs, all eight fences and literal compiler result. No Critical or Important finding remains.
