@@ -82,7 +82,7 @@ export function DocumentationSession({ children }: { children: ReactNode }) {
     let next = change(record)
     setValue((previous: unknown) => {
       next = change(
-        draft ?? (canRead ? normalizeRecord(previous) : lastReadable.record),
+        draft ?? (readable() ? normalizeRecord(previous) : lastReadable.record),
       )
       return next
     })
