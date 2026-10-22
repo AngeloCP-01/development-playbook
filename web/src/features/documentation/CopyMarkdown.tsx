@@ -37,7 +37,7 @@ export function CopyMarkdown({
         type="button"
         disabled={disabled}
         onClick={() => void copy()}
-        className="min-h-11 border border-line px-4 text-sm disabled:cursor-default disabled:text-subtle"
+        className="t-ui min-h-11 border border-line px-4 text-sm disabled:cursor-default disabled:text-subtle"
       >
         {label}
       </button>

@@ -127,7 +127,10 @@ export function ChecklistPanel() {
               ))}
             </ul>
             <p className="mt-3">
-              <Link href="/stages/16-incident-management" className="t-ui">
+              <Link
+                href="/stages/16-incident-management"
+                className="t-ui inline-flex min-h-11 items-center"
+              >
                 Stage 16 incident response
               </Link>
             </p>

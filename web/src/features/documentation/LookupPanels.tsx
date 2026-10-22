@@ -186,7 +186,10 @@ export function HistoryPanel() {
                   expect them.
                 </p>
                 <p className="mt-3">
-                  <Link href="/stages/05-development#commits">
+                  <Link
+                    href="/stages/05-development#commits"
+                    className="inline-flex min-h-11 items-center"
+                  >
                     Stage 05 commit guidance
                   </Link>
                 </p>

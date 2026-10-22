@@ -49,7 +49,7 @@ export function SelectionTabs({
             aria-selected={i === index}
             tabIndex={i === index ? 0 : -1}
             onClick={() => setSelected(i)}
-            className={`min-h-11 min-w-0 break-words border border-line px-3 py-2 text-left text-sm ${i === index ? 'border-brand bg-brand-tint text-fg' : 'bg-raised text-muted'}`}
+            className={`t-ui min-h-11 min-w-0 break-words border border-line px-3 py-2 text-left text-sm ${i === index ? 'border-brand bg-brand-tint text-fg' : 'bg-raised text-muted'}`}
           >
             {item.label}
           </button>
