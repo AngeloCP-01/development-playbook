@@ -120,6 +120,176 @@ test('failed reads announce the problem and keep subsequent edits across panel r
   )
 })
 
+test('later read denial retains visible fields and checks through remount and editing until the complete draft can be saved', () => {
+  window.localStorage.setItem(
+    RECORD_KEY,
+    JSON.stringify({
+      ...EMPTY_RECORD,
+      change: 'Already visible',
+      evidence: 'Keep this',
+      checked: ['history'],
+    }),
+  )
+  render(<Harness />)
+  expect((screen.getByLabelText('change') as HTMLInputElement).value).toBe(
+    'Already visible',
+  )
+  expect((screen.getByLabelText('evidence') as HTMLInputElement).value).toBe(
+    'Keep this',
+  )
+  expect(
+    JSON.parse(screen.getByLabelText('record').textContent!).checked,
+  ).toEqual(['history'])
+  const denied = vi
+    .spyOn(Storage.prototype, 'getItem')
+    .mockImplementation(() => {
+      throw new Error('denied after load')
+    })
+  act(() =>
+    window.dispatchEvent(new StorageEvent('storage', { key: RECORD_KEY })),
+  )
+  expect((screen.getByLabelText('change') as HTMLInputElement).value).toBe(
+    'Already visible',
+  )
+  fireEvent.click(screen.getByText('Switch panel'))
+  expect((screen.getByLabelText('evidence') as HTMLInputElement).value).toBe(
+    'Keep this',
+  )
+  expect(
+    JSON.parse(screen.getByLabelText('record').textContent!).checked,
+  ).toEqual(['history'])
+  expect(
+    screen.getByRole('status', { name: 'saving warning' }).textContent,
+  ).toContain('Saving is unavailable')
+  edit('evidence', 'Edited while denied')
+  expect((screen.getByLabelText('change') as HTMLInputElement).value).toBe(
+    'Already visible',
+  )
+  expect(
+    JSON.parse(screen.getByLabelText('record').textContent!).checked,
+  ).toEqual(['history'])
+  denied.mockRestore()
+  act(() => {
+    window.localStorage.setItem(
+      RECORD_KEY,
+      JSON.stringify({
+        ...EMPTY_RECORD,
+        change: 'Other tab',
+        evidence: 'External observation',
+        checked: ['privacy'],
+      }),
+    )
+    window.dispatchEvent(new StorageEvent('storage', { key: RECORD_KEY }))
+  })
+  expect((screen.getByLabelText('change') as HTMLInputElement).value).toBe(
+    'Already visible',
+  )
+  expect((screen.getByLabelText('evidence') as HTMLInputElement).value).toBe(
+    'Edited while denied',
+  )
+  expect(
+    JSON.parse(screen.getByLabelText('record').textContent!).checked,
+  ).toEqual(['history'])
+  edit('change', 'Retried complete draft')
+  expect(JSON.parse(window.localStorage.getItem(RECORD_KEY)!)).toMatchObject({
+    change: 'Retried complete draft',
+    evidence: 'Edited while denied',
+    checked: ['history'],
+  })
+  expect(
+    screen.getByRole('status', { name: 'saving warning' }).textContent,
+  ).toBe('')
+  act(() => {
+    window.localStorage.setItem(
+      RECORD_KEY,
+      JSON.stringify({
+        ...EMPTY_RECORD,
+        change: 'Fresh external update',
+        evidence: 'Fresh evidence',
+        checked: ['privacy'],
+      }),
+    )
+    window.dispatchEvent(new StorageEvent('storage', { key: RECORD_KEY }))
+  })
+  expect((screen.getByLabelText('change') as HTMLInputElement).value).toBe(
+    'Fresh external update',
+  )
+  expect((screen.getByLabelText('evidence') as HTMLInputElement).value).toBe(
+    'Fresh evidence',
+  )
+  expect(
+    JSON.parse(screen.getByLabelText('record').textContent!).checked,
+  ).toEqual(['privacy'])
+})
+
+test('read recovery without local edits accepts external changes and retains that refreshed record if reads fail again', () => {
+  window.localStorage.setItem(
+    RECORD_KEY,
+    JSON.stringify({
+      ...EMPTY_RECORD,
+      change: 'First load',
+      evidence: 'Initial evidence',
+      checked: ['history'],
+    }),
+  )
+  render(<Harness />)
+  expect((screen.getByLabelText('change') as HTMLInputElement).value).toBe(
+    'First load',
+  )
+  let denied = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+    throw new Error('denied')
+  })
+  act(() =>
+    window.dispatchEvent(new StorageEvent('storage', { key: RECORD_KEY })),
+  )
+  fireEvent.click(screen.getByText('Switch panel'))
+  expect((screen.getByLabelText('change') as HTMLInputElement).value).toBe(
+    'First load',
+  )
+  denied.mockRestore()
+  act(() => {
+    window.localStorage.setItem(
+      RECORD_KEY,
+      JSON.stringify({
+        ...EMPTY_RECORD,
+        change: 'Recovered external record',
+        evidence: 'Recovered evidence',
+        checked: ['privacy'],
+      }),
+    )
+    window.dispatchEvent(new StorageEvent('storage', { key: RECORD_KEY }))
+  })
+  expect((screen.getByLabelText('change') as HTMLInputElement).value).toBe(
+    'Recovered external record',
+  )
+  expect((screen.getByLabelText('evidence') as HTMLInputElement).value).toBe(
+    'Recovered evidence',
+  )
+  expect(
+    JSON.parse(screen.getByLabelText('record').textContent!).checked,
+  ).toEqual(['privacy'])
+  expect(
+    screen.getByRole('status', { name: 'saving warning' }).textContent,
+  ).toBe('')
+  denied = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+    throw new Error('denied again')
+  })
+  act(() =>
+    window.dispatchEvent(new StorageEvent('storage', { key: RECORD_KEY })),
+  )
+  fireEvent.click(screen.getByText('Switch panel'))
+  expect((screen.getByLabelText('change') as HTMLInputElement).value).toBe(
+    'Recovered external record',
+  )
+  expect((screen.getByLabelText('evidence') as HTMLInputElement).value).toBe(
+    'Recovered evidence',
+  )
+  expect(
+    JSON.parse(screen.getByLabelText('record').textContent!).checked,
+  ).toEqual(['privacy'])
+  denied.mockRestore()
+})
+
 test('a later failed write retains the whole draft ahead of external storage updates', () => {
   render(<Harness />)
   edit('change', 'Saved first')

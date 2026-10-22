@@ -61,7 +61,17 @@ export function DocumentationSession({ children }: { children: ReactNode }) {
   const [draft, setDraft] = useState<DocumentationRecord | null>(null)
   const [failure, setFailure] = useState<'save' | 'clear' | null>(null)
   const [practices, setPractices] = useState<Record<string, PracticeRun>>({})
-  const record = draft ?? normalizeRecord(value)
+  const [lastReadable, setLastReadable] = useState(() => ({
+    value,
+    record: normalizeRecord(value),
+  }))
+  // The shared hook returns its empty default after a denied read. Keep the
+  // last readable snapshot without replacing an edited local draft on recovery.
+  if (canRead && value !== lastReadable.value) {
+    setLastReadable({ value, record: normalizeRecord(value) })
+  }
+  const record =
+    draft ?? (canRead ? normalizeRecord(value) : lastReadable.record)
   const warning =
     failure === 'clear'
       ? 'The visible record is cleared, but the saved copy could return after reload. Clearing storage is unavailable; retry or remove it in browser settings.'
@@ -71,7 +81,9 @@ export function DocumentationSession({ children }: { children: ReactNode }) {
   function update(change: (old: DocumentationRecord) => DocumentationRecord) {
     let next = change(record)
     setValue((previous: unknown) => {
-      next = change(draft ?? normalizeRecord(previous))
+      next = change(
+        draft ?? (canRead ? normalizeRecord(previous) : lastReadable.record),
+      )
       return next
     })
     let saved = false
