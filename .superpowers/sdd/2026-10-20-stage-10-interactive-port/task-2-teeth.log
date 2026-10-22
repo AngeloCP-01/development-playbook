@@ -1,0 +1,40 @@
+$ pnpm test src/features/documentation/record.test.ts src/features/documentation/DocumentationSession.test.tsx
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+> vitest run src/features/documentation/record.test.ts src/features/documentation/DocumentationSession.test.tsx
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+ ❯ |dom| src/features/documentation/DocumentationSession.test.tsx (9 tests | 1 failed) 125ms
+   × a later failed write retains the whole draft ahead of external storage updates 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/documentation/DocumentationSession.test.tsx > a later failed write retains the whole draft ahead of external storage updates
+AssertionError: expected '' to be 'Unsaved observation' // Object.is equality
+
+- Expected
++ Received
+
+- Unsaved observation
+
+ ❯ src/features/documentation/DocumentationSession.test.tsx:133:73
+    131|   edit('evidence', 'Unsaved observation')
+    132|   fireEvent.click(screen.getByText('Switch panel'))
+    133|   expect((screen.getByLabelText('evidence') as HTMLInputElement).value…
+       |                                                                         ^
+    134|     'Unsaved observation',
+    135|   )
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 12 passed (13)
+   Start at  10:12:19
+   Duration  695ms (transform 49ms, setup 70ms, import 81ms, tests 128ms, environment 333ms)
+
+ ELIFECYCLE  Test failed. See above for more details.
+
+EXIT STATUS: 1

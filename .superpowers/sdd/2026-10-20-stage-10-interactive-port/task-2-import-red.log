@@ -1,0 +1,41 @@
+$ pnpm test src/features/documentation/DocumentationSession.test.tsx
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+> vitest run src/features/documentation/DocumentationSession.test.tsx
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+ ❯ |dom| src/features/documentation/DocumentationSession.test.tsx (0 test)
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/documentation/DocumentationSession.test.tsx [ src/features/documentation/DocumentationSession.test.tsx ]
+Error: Failed to resolve import "./DocumentationSession" from "src/features/documentation/DocumentationSession.test.tsx". Does the file exist?
+  Plugin: vite:import-analysis
+  File: /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web/src/features/documentation/DocumentationSession.test.tsx:6:78
+  4  |  import { useState } from "react";
+  5  |  import { afterEach, beforeEach, expect, test, vi } from "vitest";
+  6  |  import { DocumentationSession, EMPTY_PRACTICE, useDocumentationSession } from "./DocumentationSession";
+     |                                                                                 ^
+  7  |  import { EMPTY_RECORD, RECORD_KEY } from "./record";
+  8  |  var _jsxFileName = "/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web/src/features/documen...
+ ❯ TransformPluginContext._formatLog node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30416:39
+ ❯ TransformPluginContext.error node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30413:14
+ ❯ normalizeUrl node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27438:18
+ ❯ node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27506:30
+ ❯ TransformPluginContext.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:27474:4
+ ❯ EnvironmentPluginContainer.transform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:30201:14
+ ❯ loadAndTransform node_modules/.pnpm/vite@8.1.5_@types+node@22.20.1_jiti@2.7.0/node_modules/vite/dist/node/chunks/node.js:20124:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  no tests
+   Start at  10:10:50
+   Duration  720ms (transform 16ms, setup 103ms, import 0ms, tests 0ms, environment 474ms)
+
+ ELIFECYCLE  Test failed. See above for more details.
+
+EXIT STATUS: 1

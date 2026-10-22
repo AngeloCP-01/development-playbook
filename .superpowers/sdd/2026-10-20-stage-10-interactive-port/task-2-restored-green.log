@@ -1,0 +1,16 @@
+$ pnpm test src/features/documentation/record.test.ts src/features/documentation/DocumentationSession.test.tsx
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+> vitest run src/features/documentation/record.test.ts src/features/documentation/DocumentationSession.test.tsx
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+
+ Test Files  2 passed (2)
+      Tests  13 passed (13)
+   Start at  10:12:22
+   Duration  706ms (transform 49ms, setup 70ms, import 80ms, tests 193ms, environment 312ms)
+
+
+EXIT STATUS: 0

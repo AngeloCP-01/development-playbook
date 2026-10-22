@@ -1,0 +1,16 @@
+$ pnpm test
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+> vitest run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+
+ Test Files  210 passed (210)
+      Tests  1525 passed (1525)
+   Start at  10:12:36
+   Duration  35.85s (transform 16.59s, setup 16.37s, import 37.41s, tests 60.92s, environment 100.45s)
+
+
+EXIT STATUS: 0

@@ -1,0 +1,35 @@
+'use client'
+
+import { createContext, useContext, useState, type ReactNode } from 'react'
+import { useLocalStorage } from '@/lib/useLocalStorage'
+import { EMPTY_RECORD, normalizeRecord, RECORD_KEY, type CheckId, type DocumentationRecord, type FieldId } from './record'
+
+export type PracticeRun = { index: number; drafts: Record<string, string>; choices: Record<string, string> }
+export const EMPTY_PRACTICE: PracticeRun = { index: 0, drafts: {}, choices: {} }
+type Session = {
+  record: DocumentationRecord; warning: string; clearFailed: boolean
+  setField: (id: FieldId, text: string) => void; toggleCheck: (id: CheckId) => void; clear: () => void
+  practices: Record<string, PracticeRun>; setPractice: (id: string, update: (old: PracticeRun) => PracticeRun) => void
+}
+const Context = createContext<Session | null>(null)
+
+export function DocumentationSession({ children }: { children: ReactNode }) {
+  const { value, setValue, reset } = useLocalStorage<unknown>(RECORD_KEY, EMPTY_RECORD)
+  const [practices, setPractices] = useState<Record<string, PracticeRun>>({})
+  const record = normalizeRecord(value)
+  function update(change: (old: DocumentationRecord) => DocumentationRecord) {
+    setValue(previous => change(normalizeRecord(previous)))
+  }
+  return <Context.Provider value={{
+    record, warning: '', clearFailed: false, clear: reset,
+    setField: (id, text) => update(old => ({ ...old, [id]: text })),
+    toggleCheck: id => update(old => ({ ...old, checked: old.checked.includes(id) ? old.checked.filter(c => c !== id) : [...old.checked, id] })),
+    practices,
+    setPractice: (id, change) => setPractices(old => ({ ...old, [id]: change(old[id] ?? EMPTY_PRACTICE) })),
+  }}>{children}</Context.Provider>
+}
+export function useDocumentationSession(): Session {
+  const context = useContext(Context)
+  if (!context) throw new Error('Documentation controls require DocumentationSession')
+  return context
+}

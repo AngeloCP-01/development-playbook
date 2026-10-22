@@ -1,0 +1,38 @@
+--- planned formatted probe
++++ corrected probe
+@@ -27,7 +27,7 @@
+         onChange={(e) => s.setField('evidence', e.target.value)}
+       />
+       <output aria-label="record">{JSON.stringify(s.record)}</output>
+-      <p role="status">{s.warning}</p>
++      <p role="status" aria-label="saving warning">{s.warning}</p>
+       <button onClick={() => s.toggleCheck('history')}>Tick history</button>
+       <button onClick={s.clear}>Clear</button>
+       <button
+@@ -104,7 +104,7 @@
+     throw new Error('denied')
+   })
+   render(<Harness />)
+-  expect(screen.getByRole('status').textContent).toContain(
++  expect(screen.getByRole('status', { name: 'saving warning' }).textContent).toContain(
+     'Saving is unavailable',
+   )
+   edit('change', 'Unsaved')
+@@ -149,7 +149,7 @@
+   expect(JSON.parse(window.localStorage.getItem(RECORD_KEY)!).evidence).toBe(
+     'Unsaved observation',
+   )
+-  expect(screen.getByRole('status').textContent).toBe('')
++  expect(screen.getByRole('status', { name: 'saving warning' }).textContent).toBe('')
+ })
+
+ test('a successful same-tab write notifies another mounted subscriber of the same key', () => {
+@@ -221,7 +221,7 @@
+   fireEvent.click(screen.getByText('Switch panel'))
+   expect((screen.getByLabelText('change') as HTMLInputElement).value).toBe('')
+   expect(window.localStorage.getItem(RECORD_KEY)).toContain('Saved')
+-  expect(screen.getByRole('status').textContent).toContain(
++  expect(screen.getByRole('status', { name: 'saving warning' }).textContent).toContain(
+     'could return after reload',
+   )
+ })

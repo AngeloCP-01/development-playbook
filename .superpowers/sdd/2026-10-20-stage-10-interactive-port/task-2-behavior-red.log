@@ -1,0 +1,154 @@
+$ pnpm test src/features/documentation/DocumentationSession.test.tsx
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+> vitest run src/features/documentation/DocumentationSession.test.tsx
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+ ❯ |dom| src/features/documentation/DocumentationSession.test.tsx (9 tests | 4 failed) 147ms
+   × failed reads announce the problem and keep subsequent edits across panel remounts 61ms
+   × a later failed write retains the whole draft ahead of external storage updates 5ms
+   × clear cancellation preserves everything and confirmed clear removes the complete saved record without resetting practice 4ms
+   × a failed clear empties the mounted draft while warning that the saved copy can return 4ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |dom| src/features/documentation/DocumentationSession.test.tsx > failed reads announce the problem and keep subsequent edits across panel remounts
+TestingLibraryElementError: Found multiple elements with the role "status"
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<output[39m
+  [33maria-label[39m=[32m"record"[39m
+[36m>[39m
+  [0m{"change":"","reader":"","documents":"","source":"","check":"","evidence":"","owner":"","trigger":"","checked":[]}[0m
+[36m</output>[39m
+
+Ignored nodes: comments, script, style
+[36m<p[39m
+  [33mrole[39m=[32m"status"[39m
+[36m/>[39m
+
+Ignored nodes: comments, script, style
+[36m<output[39m
+  [33maria-label[39m=[32m"practice"[39m
+[36m>[39m
+  [0m{"index":0,"drafts":{},"choices":{}}[0m
+[36m</output>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<button>[39m
+      [0mSwitch panel[0m
+    [36m</button>[39m
+    [36m<div>[39m
+      [36m<input[39m
+        [33maria-label[39m=[32m"change"[39m
+        [33mvalue[39m=[32m""[39m
+      [36m/>[39m
+      [36m<input[39m
+        [33maria-label[39m=[32m"evidence"[39m
+        [33mvalue[39m=[32m""[39m
+      [36m/>[39m
+      [36m<output[39m
+        [33maria-label[39m=[32m"record"[39m
+      [36m>[39m
+        [0m{"change":"","reader":"","documents":"","source":"","check":"","evidence":"","owner":"","trigger":"","checked":[]}[0m
+      [36m</output>[39m
+      [36m<p[39m
+        [33mrole[39m=[32m"status"[39m
+      [36m/>[39m
+      [36m<button>[39m
+        [0mTick history[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mClear[0m
+      [36m</button>[39m
+      [36m<button>[39m
+        [0mAnswer[0m
+      [36m</button>[39m
+      [36m<output[39m
+        [33maria-label[39m=[32m"practice"[39m
+      [36m>[39m
+        [0m{"index":0,"drafts":{},"choices":{}}[0m
+      [36m</output>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getElementError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:20:35
+ ❯ getMultipleElementsFoundError node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:23:10
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:55:13
+ ❯ node_modules/.pnpm/@testing-library+dom@10.4.1/node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/features/documentation/DocumentationSession.test.tsx:60:17
+     58|   vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { th…
+     59|   render(<Harness />)
+     60|   expect(screen.getByRole('status').textContent).toContain('Saving is …
+       |                 ^
+     61|   edit('change', 'Unsaved'); fireEvent.click(screen.getByText('Switch …
+     62|   expect((screen.getByLabelText('change') as HTMLInputElement).value).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  |dom| src/features/documentation/DocumentationSession.test.tsx > a later failed write retains the whole draft ahead of external storage updates
+AssertionError: expected '' to be 'Unsaved observation' // Object.is equality
+
+- Expected
++ Received
+
+- Unsaved observation
+
+ ❯ src/features/documentation/DocumentationSession.test.tsx:71:73
+     69|   edit('evidence', 'Unsaved observation')
+     70|   fireEvent.click(screen.getByText('Switch panel'))
+     71|   expect((screen.getByLabelText('evidence') as HTMLInputElement).value…
+       |                                                                         ^
+     72|   expect((screen.getByLabelText('change') as HTMLInputElement).value).…
+     73|   denied.mockRestore()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  |dom| src/features/documentation/DocumentationSession.test.tsx > clear cancellation preserves everything and confirmed clear removes the complete saved record without resetting practice
+AssertionError: expected null not to be null
+ ❯ src/features/documentation/DocumentationSession.test.tsx:100:99
+     98|   fireEvent.click(screen.getByText('Tick history')); fireEvent.click(s…
+     99|   const confirm = vi.spyOn(window, 'confirm').mockReturnValue(false)
+    100|   fireEvent.click(screen.getByText('Clear')); expect(window.localStora…
+       |                                                                                                   ^
+    101|   confirm.mockReturnValue(true); fireEvent.click(screen.getByText('Cle…
+    102|   expect(confirm).toHaveBeenLastCalledWith('Clear the whole documentat…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  |dom| src/features/documentation/DocumentationSession.test.tsx > a failed clear empties the mounted draft while warning that the saved copy can return
+AssertionError: expected 'Saved' to be '' // Object.is equality
+
+- Expected
++ Received
+
++ Saved
+
+ ❯ src/features/documentation/DocumentationSession.test.tsx:113:71
+    111|   vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {…
+    112|   fireEvent.click(screen.getByText('Clear')); fireEvent.click(screen.g…
+    113|   expect((screen.getByLabelText('change') as HTMLInputElement).value).…
+       |                                                                       ^
+    114|   expect(window.localStorage.getItem(RECORD_KEY)).toContain('Saved')
+    115|   expect(screen.getByRole('status').textContent).toContain('could retu…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 5 passed (9)
+   Start at  10:11:07
+   Duration  958ms (transform 43ms, setup 119ms, import 64ms, tests 147ms, environment 525ms)
+
+ ELIFECYCLE  Test failed. See above for more details.
+
+EXIT STATUS: 1
