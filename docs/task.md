@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current checkpoint (2026-10-20): Stage 10's port design is approved and its implementation plan is written.** Approval `3165b62` follows the user's “proceed.” The [nine-task plan](superpowers/plans/2026-10-20-stage-10-interactive-port.md) has full source/test slices and a [controller self-review](superpowers/reports/2026-10-20-stage-10-port-plan-review.md); plan review and execution-method selection remain pending. The feature branch includes completed chapter tip `c092ac7`, with that chapter branch preserved. No port application source or registration has changed.
+**Current checkpoint (2026-10-22): Stage 10's port plan is approved for subagent-driven execution.** The user's “proceed” accepts the nine-task [plan](superpowers/plans/2026-10-20-stage-10-interactive-port.md) and recommended method. Fresh baseline: 1512/1512 across 208 files; implementation starts from `1e0109e` on the existing feature worktree. [Execution evidence](superpowers/reports/2026-10-20-stage-10-port-execution.md) and the plan-owned ledger track actual TDD/reviews. No registration or integration has occurred.
 Stage 09's chapter merged as `ad283ce`, its
 interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. Local `develop` and tracked
@@ -27,7 +27,7 @@ passed **1496 tests across 207 files**, format, lint and generated-route typeche
 Its reviewed tree also passed 24 production browser checks, the development-console
 check and 28 geometry observations. Reports retain the evidence.
 
-**Next checkpoint: review the implementation plan and choose subagent-driven or inline execution.** Recommend subagent-driven for its nine separate reviewable boundaries; either approach retains independent per-task reviews. Integration requires its own approval; production promotion remains the user's.
+**Next checkpoint: execute the approved tasks through TDD and independent reviews, then verify the live port and whole branch.** Integration requires its own approval; production promotion remains the user's.
 
 Two deliverables from one body of content.
 
@@ -170,7 +170,7 @@ The [corrected chapter](10-documentation.md) now teaches the smallest useful doc
 - [x] Complete chapter verification and final whole-branch/fix reviews; integration still requires a fresh decision
 - [x] Write and builder-check the separate [interactive-port spec](superpowers/specs/2026-10-20-stage-10-interactive-port-design.md); no important planning questions remain
 - [x] Approve the port spec (`3165b62`) and write/self-review the [implementation plan](superpowers/plans/2026-10-20-stage-10-interactive-port.md)
-- [ ] Review the plan and select its execution method before implementation
+- [x] Review the plan and select subagent-driven execution (user “proceed”, 2026-10-22)
 - [ ] Implement the port through TDD, per-task review and whole-branch review; verify both themes, responsive layout and both console modes
 - [ ] Register the reviewed port, then record separately approved integration and refresh the handoff
 

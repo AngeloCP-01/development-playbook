@@ -1,9 +1,9 @@
 # Kickoff: Stage 10 interactive-port implementation plan
 
-Updated 2026-10-20. The chapter round is complete and independently reviewed.
+Updated 2026-10-22. The chapter round is complete and independently reviewed.
 The user approved the separate port design with “proceed”; approval is recorded
 in `3165b62`. The nine-task implementation plan is written and self-reviewed.
-Plan review and the execution-method decision are the next checkpoint.
+The user approved the plan and recommended subagent-driven execution with “proceed” on 2026-10-22. Implementation is active; use the plan-owned progress ledger below.
 
 ## Workspace and authority
 
@@ -37,16 +37,20 @@ by Turbopack. Checks use local `.next` and ports 3100/3101 sequentially.
 
 ## Current checkpoint
 
+Execution ledger: `.superpowers/sdd/2026-10-20-stage-10-interactive-port/progress.md`.
+Read it before resuming; tasks marked complete must not be redispatched.
+Fresh baseline: 1512/1512 across 208 files. The [port execution report](docs/superpowers/reports/2026-10-20-stage-10-port-execution.md) will retain actual task evidence and reviews.
+
 The approved port design has twelve initial panels, copyable README/ADR
 specimens and a saved/exportable documentation-change plan. The [nine-task plan](docs/superpowers/plans/2026-10-20-stage-10-interactive-port.md)
 contains full inline tests/sources and review gates. Read its
 [self-review record](docs/superpowers/reports/2026-10-20-stage-10-port-plan-review.md).
 Embedded sources received static compiler/lint checks; proposed tests were not
 executed and no application source was written. Actual RED/GREEN/teeth belongs
-to execution after plan review. Recommend subagent-driven execution for the
+to the active execution. The approved subagent-driven method covers the
 separate storage, copy, teaching and registration boundaries. Inline remains
 available and retains per-task independent reviews. The earlier chapter's inline
-choice does not choose the method for this new plan.
+choice applied only to that chapter round.
 
 Chapter evidence is already complete: **1512/1512 across 208 files**, 52-page
 production build, production browser **24/24**, development-console **1/1**, ADR
@@ -62,8 +66,7 @@ Stage numbers are filing codes, and documentation runs continuously.
 
 ## Deferred
 
-Plan approval, execution-method selection, TDD implementation, independent
-reviews and UI verification; stage registration; W-6 companion/publication and
+Remaining TDD implementation, independent reviews and UI verification; stage registration; W-6 companion/publication and
 W-6.4; five language sheets; stages 17/18; unrelated shared repairs; integration
 and deployment. Preserve the completed chapter branch while the child feature
 branch develops the combined reviewable unit.
