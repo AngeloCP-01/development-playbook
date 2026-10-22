@@ -1,3 +1,4 @@
+import { Documentation } from './documentation/Documentation'
 import type { ComponentType } from 'react'
 import { ProductDiscovery } from './discovery/ProductDiscovery'
 import { Planning } from './planning/Planning'
@@ -29,6 +30,7 @@ export const STAGE_CONTENT: Record<string, ComponentType> = {
   '07-code-review': CodeReview,
   '08-security-audit': SecurityAudit,
   '09-performance-optimization': PerformanceOptimization,
+  '10-documentation': Documentation,
   '11-ci-cd': CiCd,
   '12-staging': Staging,
   '13-production-deployment': ProductionDeployment,
