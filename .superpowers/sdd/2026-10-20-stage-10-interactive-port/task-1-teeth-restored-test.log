@@ -1,0 +1,12 @@
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+> vitest run src/features/documentation/record.test.ts
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  10:05:42
+   Duration  116ms (transform 21ms, setup 0ms, import 28ms, tests 3ms, environment 0ms)

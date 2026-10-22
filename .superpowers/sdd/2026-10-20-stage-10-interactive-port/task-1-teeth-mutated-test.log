@@ -1,0 +1,38 @@
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+> vitest run src/features/documentation/record.test.ts
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+ ❯ |unit| src/features/documentation/record.test.ts (4 tests | 1 failed) 6ms
+   × a periodic selection alone is an exportable record and unrecorded fields remain visible 3ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/features/documentation/record.test.ts > a periodic selection alone is an exportable record and unrecorded fields remain visible
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/features/documentation/record.test.ts:24:28
+     22|   expect(hasRecord({ ...EMPTY_RECORD, change: '  ' })).toBe(false)
+     23|   const value = { ...EMPTY_RECORD, checked: ['history' as const] }
+     24|   expect(hasRecord(value)).toBe(true)
+       |                            ^
+     25|   const md = recordMarkdown(value)
+     26|   expect(md).toContain('## Change and scope\n\nnot recorded')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 3 passed (4)
+   Start at  10:05:34
+   Duration  412ms (transform 28ms, setup 0ms, import 38ms, tests 6ms, environment 0ms)
+
+ ELIFECYCLE  Test failed. See above for more details.
