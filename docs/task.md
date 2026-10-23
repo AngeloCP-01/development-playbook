@@ -158,7 +158,13 @@ not rerun after merge. The local feature branch and worktree were removed.
 **Next selected round:** W-3.17, Stage 10 — Documentation. Stage 09's W-6.3q
 references and the subsequent layout repair are merged; their work is complete.
 
-### W-3.17 — Stage 10 Documentation ☐ *(selected 2026-10-15; start in the next session)*
+### W-3.17 — Stage 10 Documentation ☐ *(research gathered 2026-10-15; formal review pending)*
+
+Research preflight: [primary-source notes](../reference/stage-10-source-research.md)
+and [three original diagrams with provenance](../reference/cheatsheet-sources.md#stage-10-gathering-round--2026-10-15)
+are gathered in the working tree. The chapter has a dated findings section;
+existing worked examples are queued for correction, not rewritten. This does
+not complete any chapter-review or port checkbox below, or register a W-6 sheet.
 
 Begin with [the canonical chapter](10-documentation.md), the current task scope
 and tracker Next up. Recommended approach: review the chapter before porting it,

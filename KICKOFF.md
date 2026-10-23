@@ -1,8 +1,11 @@
 # Kickoff — Development Playbook
 
 **Next-session handoff, 2026-10-15: Stage 10 — Documentation.** The user selected
-chapter review/corrections first, followed by the interactive port. Both phases
-are unstarted. Stage 09's references merged as `9de6c99`; the single-example
+chapter review/corrections first, followed by the interactive port. Research
+preflight is gathered in the working tree: [source notes](reference/stage-10-source-research.md),
+three original diagrams with provenance, and a dated findings section in the
+chapter. Formal chapter review/corrections and the port remain unstarted.
+Stage 09's references merged as `9de6c99`; the single-example
 width repair merged as `79f9e31`. W-3 is **15/18**, and W-6 is **22 drawn / 27
 registered**.
 
@@ -11,7 +14,9 @@ The Stage 09 worktree has been removed. Read task **W-3.17**, tracker **Next up*
 and `docs/10-documentation.md`. This refresh is on
 `docs/2026-10-15-stage-10-kickoff`, based on develop `79f9e31`; check whether it
 has been merged before choosing the Stage 10 work branch. No Stage 10 spec,
-plan, chapter correction or port has been written in this refresh.
+plan, chapter correction or port has been written. The research additions are
+uncommitted on this handoff branch; preserve the user's `AGENTS.md` edits and
+untracked `image.png` when arranging the next work branch.
 
 Refresh Project state and Branch state before reusing this paste-buffer.
 
@@ -33,6 +38,10 @@ Read these before starting:
 - `docs/task.md`, **W-3.17**; `docs/tracker.md`, **Next up**. Search older decisions
   by ID across the live files and their archives rather than reading them whole.
 - `docs/10-documentation.md`: canonical prose for this round.
+- `reference/stage-10-source-research.md` and the Stage 10 gathering section in
+  `reference/cheatsheet-sources.md`: primary sources, inspected diagrams and
+  claims queued for correction. The chapter's research appendix records these
+  findings; it does not replace the formal chapter review.
 - **D-39** and **D-54** in `docs/tracker.md`, plus the ADR/G9 boundary in
   `docs/stage-03-status.md`. ADR format belongs to Stage 10; cold-reader review
   belongs before the port. Verify what the chapter already teaches before

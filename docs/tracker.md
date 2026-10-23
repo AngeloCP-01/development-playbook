@@ -905,6 +905,22 @@ of new work, not assumed to survive from the last `git checkout`.
 
 ## Next up
 
+**2026-10-15 research preflight:** The user requested primary-source gathering
+for Stage 10 before its formal chapter review, including visual candidates for
+W-6. [Research notes](../reference/stage-10-source-research.md) cover Diátaxis,
+ADRs, README use, architecture views, drift checks and provider claims in the
+existing examples. Three original PNGs were downloaded and visually inspected:
+the Diátaxis map and C4's context diagram with its key. Their creator pages,
+direct URLs, dimensions and licenses are in the
+[gathering ledger](../reference/cheatsheet-sources.md#stage-10-gathering-round--2026-10-15).
+The [chapter](10-documentation.md#research-findings-for-chapter-review) records
+findings and explicitly leaves worked-example corrections for the formal round.
+These are working-tree changes, not integrated work. W-3 stays **15/18**;
+W-6 stays **22/27**. Deferred: chapter spec/plan and cold-reader review, corrected
+examples, AI section, interactive port, W-6 registration and publication.
+
+**Handoff baseline before research:**
+
 **2026-10-15: Stage 10 — Documentation is selected.** Start in the next session;
 this refresh does not begin the chapter review or port. W-6.3q merged as
 `9de6c99`, and the code-width repair merged as `79f9e31`. W-3 is **15/18** and
