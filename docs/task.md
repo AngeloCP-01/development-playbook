@@ -13,21 +13,22 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current checkpoint (2026-10-23): Stage 10's interactive port is implemented and its full local gate is verified on the feature branch.** Tasks 1–8 have independent reviews; both cold readers are complete (no completeness gap; 4 HIT / 1 MISFILED). Task 9 and final review are active, including the Minor navigation finding R-M1. The [execution report](superpowers/reports/2026-10-20-stage-10-port-execution.md) records 1,558 tests across 218 files with one worker and unchanged limits, 27/27 production checks, 1/1 development-console check and 1,358 expanded UI states. Feature-tree W-3 is **16/18**; develop stays **15/18**, W-6 **22/27**. No integration has occurred.
+**Current checkpoint (2026-10-23): Stage 10's interactive port is implemented and its pre-cue local gate is verified on the feature branch.** Tasks 1–8 have independent reviews; both cold readers are complete (no completeness gap; 4 HIT / 1 MISFILED). Task 9 and the combined whole-branch review are complete through `534b681`, with no Critical or Important finding. The final fix wave addresses the three Minor findings; its implementation checks passed (1,559 tests / 218 files, format, lint, generated-route typecheck, production build, Stage 10 browser spec 3/3, development-console 1/1 and 28 affected reference-panel states). Independent same-question recheck and scoped re-review remain active. No final approval has been given. The [execution report](superpowers/reports/2026-10-20-stage-10-port-execution.md) records the pre-cue source checks: 1,558 tests across 218 files with one worker and unchanged limits, 27/27 production checks, 1/1 development-console check and 1,358 expanded UI states. These results do not verify the added reference-panel cue. Feature-tree W-3 is **16/18**; develop stays **15/18**, W-6 **22/27**. No integration has occurred.
 Stage 09's chapter merged as `ad283ce`, its
 interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. Local `develop` and tracked
 `origin/develop` are both at that last merge before this records refresh.
 
-W-3 remains **15/18**: stages 01–09 and 11–16 are interactive; 10, 17 and 18
-remain. W-6 is **22 drawn / 27 registered**. Five language placeholders and
+On **develop**, W-3 remains **15/18**: stages 01–09 and 11–16 are interactive;
+10, 17 and 18 remain there. The feature tree is **16/18**, with Stage 10 registered.
+W-6 is **22 drawn / 27 registered**. Five language placeholders and
 W-6.4 glossary/stack surfacing remain open. The reference merge passed
 1495 tests across 207 files and a 52-page build; the width repair's merged tree
 passed **1496 tests across 207 files**, format, lint and generated-route typecheck.
 Its reviewed tree also passed 24 production browser checks, the development-console
 check and 28 geometry observations. Reports retain the evidence.
 
-**Next checkpoint: execute the approved tasks through TDD and independent reviews, then verify the live port and whole branch.** Integration requires its own approval; production promotion remains the user's.
+**Next checkpoint: complete the independent same-question recheck and scoped re-review of the verified final fix, then close records and evidence.** Integration requires its own approval; production promotion remains the user's.
 
 Two deliverables from one body of content.
 
