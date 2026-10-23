@@ -52,6 +52,11 @@ export function ReferencePanel() {
     <Section title="State exact facts and current boundaries">
       <Prose>
         <p>
+          Use a reference for exact names, types, allowed values and defaults.
+          Tutorials guide a learning exercise; explanations cover concepts and
+          reasons.
+        </p>
+        <p>
           A useful view names its scope, components, relationships, owner and
           review trigger. Link decisions for reasons;{' '}
           <Link href="/stages/03-architecture">

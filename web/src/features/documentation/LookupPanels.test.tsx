@@ -37,6 +37,18 @@ test('changed inspector data reaches the rendered detail instead of a hard-coded
     'Changed source sentinel',
   )
 })
+test('answers the exact-facts document-form choice without leaving its first panel', () => {
+  render(<ReferencePanel />)
+  expect(
+    screen.getByText(
+      /reference.*exact names, types, allowed values and defaults/i,
+    ),
+  ).toBeTruthy()
+  expect(screen.getByText(/tutorials guide a learning exercise/i)).toBeTruthy()
+  expect(
+    screen.getByText(/explanations cover concepts and reasons/i),
+  ).toBeTruthy()
+})
 test('the reference distinguishes an unset setting from an omitted optional response', () => {
   render(<ReferencePanel />)
   expect(screen.getByText('integer 1–365')).toBeTruthy()
