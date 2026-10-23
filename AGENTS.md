@@ -39,7 +39,7 @@ in a plain editor and on GitHub.
 **`web/`** — a Next.js 16 static site that turns those documents into something you
 consult rather than read. No backend, no database, no env vars.
 
-The web app does **not** read the markdown. The interactive stage *content* is
+The web app does **not** read the markdown. The interactive stage _content_ is
 hand-ported into React components — known duplication, do not "fix" it casually, but do
 not widen it without noting it either.
 
@@ -86,7 +86,7 @@ drafting paper); dark is a cyanotype (pale linework on Prussian blue). Dark is a
 second drawing, not an inverted filter — design both.
 
 **Accent and semantic colour are deliberately separate.** `brand` (annotation orange)
-means *attention* — active states, eyebrows, "you are here". `go` / `danger` / `warn`
+means _attention_ — active states, eyebrows, "you are here". `go` / `danger` / `warn`
 carry meaning. Using `brand` for "this is good" is a bug; it was one, and was fixed.
 
 Type roles are utility classes, not Tailwind font sizes: `t-display` (Archivo pushed
@@ -156,14 +156,8 @@ docs(tracker): record TD-1 stack drift between playbook and app
 refactor(stepper): hoist FlowNode out of render to stop state resets
 ```
 
-A body is used when there is a *why* worth keeping — a constraint, a rejected
+A body is used when there is a _why_ worth keeping — a constraint, a rejected
 alternative, a load-bearing ordering. Skip it when the subject already says everything.
-
-Every commit carries the trailer:
-
-```
-Co-Authored-By: Codex Opus 4.8 (1M context) <noreply@anthropic.com>
-```
 
 **Branches** are `feat/<kebab-topic>` or `fix/<kebab-topic>`, no ticket numbers.
 `docs/<date>-<topic>` branches carry a date in the slug; `feat`/`fix` do not.
@@ -212,20 +206,20 @@ process** — every substantive change runs through them, the same way it does i
 `SmartJobSearchCRM`. Invoke the skill before the work it governs, not after. If a skill
 applies and you skip it, that is a defect in the process, not a shortcut.
 
-The delivery loop *is* a sequence of skills:
+The delivery loop _is_ a sequence of skills:
 
-| Phase | Skill | Non-negotiable |
-|---|---|---|
-| Explore intent, before any code | `superpowers:brainstorming` | Runs before plan mode, before clarifying questions |
-| Turn the spec into steps | `superpowers:writing-plans` | For any multi-step task |
-| Implement | `superpowers:test-driven-development` | **The iron law below** |
-| Run a plan with subagents | `superpowers:subagent-driven-development` | For plans with independent tasks |
-| Fan out independent work | `superpowers:dispatching-parallel-agents` | 2+ tasks with no shared state |
-| Before proposing any fix | `superpowers:systematic-debugging` | Hypothesis before edit, always |
-| Before claiming done | `superpowers:verification-before-completion` | Evidence before assertion |
-| Ask for / receive review | `superpowers:requesting-code-review`, `receiving-code-review` | Verify feedback, don't comply reflexively |
-| Close the branch | `superpowers:finishing-a-development-branch` | The merge / PR decision |
-| Isolate risky work | `superpowers:using-git-worktrees` | Parallel branches that would collide |
+| Phase                           | Skill                                                         | Negotiable                                         |
+| ------------------------------- | ------------------------------------------------------------- | -------------------------------------------------- |
+| Explore intent, before any code | `superpowers:brainstorming`                                   | Runs before plan mode, before clarifying questions |
+| Turn the spec into steps        | `superpowers:writing-plans`                                   | For any multi-step task                            |
+| Implement                       | `superpowers:test-driven-development`                         | **The iron law below**                             |
+| Run a plan with subagents       | `superpowers:subagent-driven-development`                     | For plans with independent tasks                   |
+| Fan out independent work        | `superpowers:dispatching-parallel-agents`                     | 2+ tasks with no shared state                      |
+| Before proposing any fix        | `superpowers:systematic-debugging`                            | Hypothesis before edit, always                     |
+| Before claiming done            | `superpowers:verification-before-completion`                  | Evidence before assertion                          |
+| Ask for / receive review        | `superpowers:requesting-code-review`, `receiving-code-review` | Verify feedback, don't comply reflexively          |
+| Close the branch                | `superpowers:finishing-a-development-branch`                  | The merge / PR decision                            |
+| Isolate risky work              | `superpowers:using-git-worktrees`                             | Parallel branches that would collide               |
 
 ### The iron law
 
@@ -236,7 +230,7 @@ it. From `superpowers:test-driven-development`:
 NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
 ```
 
-Write the test, watch it fail *for the right reason*, write the minimum to pass. If you
+Write the test, watch it fail _for the right reason_, write the minimum to pass. If you
 wrote code before the test, delete it and start over — keeping it "as reference" is the
 rationalization the skill names explicitly. The teeth check (see TDD evidence below) is
 how we prove a test isn't vacuous.
@@ -271,7 +265,7 @@ Scale the ceremony, not the discipline. A single-component fix does not need a s
 still needs a failing test first. A milestone (`W-3`, `W-4`) needs the whole loop.
 
 **Spec sections, in order:** Problem · Goals · Non-goals · Constraints · Architecture ·
-Testing · Verification · Documentation updates · Risks. Non-goals state *why* each was
+Testing · Verification · Documentation updates · Risks. Non-goals state _why_ each was
 dropped. Specs cite real code by `file:line` and record rejected options inline.
 
 **Plans** open with a fixed preamble, then `## Global Constraints`, then
@@ -287,7 +281,7 @@ SVG-spoof XSS, a `Set-Cookie` refresh-token leak, an infinite autosave loop, and
 drag-math defect.
 
 Findings carry a severity and an ID: **Critical**, **Important** (`I1`, `I2`, written
-`(blocking)`), **Minor** (`M1`…). They also carry *provenance*, which matters because it
+`(blocking)`), **Minor** (`M1`…). They also carry _provenance_, which matters because it
 changes who fixes what:
 
 ```
@@ -309,7 +303,7 @@ than missing one.
 ### TDD evidence
 
 A task report pastes **raw terminal output for both the RED and GREEN runs**, and states
-explicitly that the failure was *for the right reason* — "failed for the expected reason
+explicitly that the failure was _for the right reason_ — "failed for the expected reason
 (`trackEvent` never called — 'Number of calls: 0')". A green test alone proves nothing.
 
 When a fix lands, verification includes a **teeth check**: deliberately break the
@@ -321,17 +315,17 @@ Test names encode the rationale, not the mechanic:
 
 ## Project artifacts
 
-| File | Holds |
-|---|---|
-| `AGENTS.md` | How this project works. You are reading it. |
-| `KICKOFF.md` | Paste-buffer for cold-starting a new session with full context. Refresh its *Project state* before use — a stale kickoff is worse than none, because it is trusted. |
-| `docs/task.md` | Scope, milestones (`P-` content, `W-` web app), dependency map |
-| `docs/tracker.md` | What shipped with evidence, numbered decisions, technical debt, bug ledger |
-| `web/DESIGN.md` | The design system. Any new UI matches it. |
-| `web/PATTERNS.md` | Interaction patterns — which UX pattern fits which content. Read before building a stage. |
-| `docs/superpowers/specs/`, `plans/` | Delivery-loop artifacts |
-| `docs/learnings/` | Guides written for future-you when a round teaches something expensive |
-| `reference/stack.md` | The default stack. Versions live here and nowhere else. |
+| File                                | Holds                                                                                                                                                               |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `AGENTS.md`                         | How this project works. You are reading it.                                                                                                                         |
+| `KICKOFF.md`                        | Paste-buffer for cold-starting a new session with full context. Refresh its _Project state_ before use — a stale kickoff is worse than none, because it is trusted. |
+| `docs/task.md`                      | Scope, milestones (`P-` content, `W-` web app), dependency map                                                                                                      |
+| `docs/tracker.md`                   | What shipped with evidence, numbered decisions, technical debt, bug ledger                                                                                          |
+| `web/DESIGN.md`                     | The design system. Any new UI matches it.                                                                                                                           |
+| `web/PATTERNS.md`                   | Interaction patterns — which UX pattern fits which content. Read before building a stage.                                                                           |
+| `docs/superpowers/specs/`, `plans/` | Delivery-loop artifacts                                                                                                                                             |
+| `docs/learnings/`                   | Guides written for future-you when a round teaches something expensive                                                                                              |
+| `reference/stack.md`                | The default stack. Versions live here and nowhere else.                                                                                                             |
 
 ## Recording work
 
@@ -344,7 +338,7 @@ Two conventions worth keeping precisely:
 **Evidence, not adjectives.** A completed entry cites what proves it — commit SHA,
 test count, what a review caught. "Reviewed + merged" alone is not evidence.
 
-**Every slice records what it deliberately did *not* do.** A `Deferred:` list on each
+**Every slice records what it deliberately did _not_ do.** A `Deferred:` list on each
 entry. This is the same discipline as the "What this is NOT" box in stage 01, and it is
 what stops scope creep being invisible.
 
@@ -354,7 +348,7 @@ at the time is the value. Follow-ups are struck through with a date when closed
 
 ### Prose that does not read as AI-written
 
-Documentation is a deliverable here — the stage docs *are* the product — so it cannot
+Documentation is a deliverable here — the stage docs _are_ the product — so it cannot
 read like generated filler. Run **`humanizer:humanizer`** over anything prose-heavy before
 it is considered done: the stage docs, the READMEs, spec and plan bodies, learning
 guides. It flags the tells this project is prone to — em-dash overuse, the rule of three,
@@ -373,11 +367,11 @@ lookups. Match `web/DESIGN.md` when using either.
 
 MCP servers, configured at user level, and what each is actually for here:
 
-| Server | Use |
-|---|---|
-| **context7** | Library docs before writing framework code. Prefer over training memory — this Next.js version postdates it. |
-| **playwright** | Driving the running app for the verification passes above. |
-| **Codex-mem** | "Did I already decide this?" across sessions. |
+| Server         | Use                                                                                                          |
+| -------------- | ------------------------------------------------------------------------------------------------------------ |
+| **context7**   | Library docs before writing framework code. Prefer over training memory — this Next.js version postdates it. |
+| **playwright** | Driving the running app for the verification passes above.                                                   |
+| **Codex-mem**  | "Did I already decide this?" across sessions.                                                                |
 
 ## Resolved contradiction (kept for history)
 
