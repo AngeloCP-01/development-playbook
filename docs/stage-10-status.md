@@ -17,7 +17,7 @@ observations and verification status are recorded below the table when available
 | Entry criteria; Choose the document for the reader’s task; Artifacts | `LookupPanels.tsx`, `LookupInspector.tsx`, `lookups.ts` | `choose` | Four reader needs select a form and Workshop example; seven artifact disclosures explain their cost. Curated changelog and audience-specific releases have separate source links. | `LookupPanels.test.tsx`: every selector reveals its actual row; artifact choices remain optional and release material distinguishes audiences. |
 | Keep the README usable; README artifact | `DocumentPanels.tsx`, `DocumentExample.tsx`, `documents.ts` | `readme` | Inspect/copy the outline with explicit unknown facts; reveal the fresh-clone check and purpose-specific stage links. | `DocumentPanels.test.tsx`: README unknown setup facts remain visible and copying returns the same outline. |
 | Record decisions and supersede them visibly; ADR artifact | `DocumentPanels.tsx`, `DocumentExample.tsx`, `documents.ts` | `decisions` | Select ADR 004, ADR 005 or the blank template; counterpart buttons change the specimen; expand format/status. | `DocumentPanels.test.tsx`: the old rendered ADR keeps its dated current supersession notice and original acceptance; blank template requires project facts. `e2e/documentation.spec.ts`: counterpart controls expose actual old/new regions. |
-| Keep architecture and contract references current; architecture/reference artifacts | `LookupPanels.tsx`, `LookupInspector.tsx`, `lookups.ts` | `reference` | Read the scoped Attendee / Workshop app / Booking store relationship drawing; select setting or response facts. | `LookupPanels.test.tsx`: unset setting and omitted optional response stay distinct; injected row data reaches rendered details. |
+| Keep architecture and contract references current; architecture/reference artifacts | `LookupPanels.tsx`, `LookupInspector.tsx`, `lookups.ts` | `reference` | Read the direct reference/tutorial/explanation distinction and scoped Attendee / Workshop app / Booking store drawing; select setting or response facts. | `LookupPanels.test.tsx`: direct form choice is answered in the first panel; unset setting and omitted optional response stay distinct; injected row data reaches rendered details. Targeted unchanged-Q3 recheck: HIT without navigation (original blind score preserved). |
 | Write comments for non-obvious reasons; comment artifact | `PracticePanels.tsx`, `DecisionDrill.tsx`, `practice.ts` | `comments` | Commit answers for external constraint, deliberate deviation, tricky logic and known limitation; inspect wrong/right rationale, score, navigation and reset. | `DecisionDrill.test.tsx`: every authored case reveals reasoning after a wrong choice; reset clears draft/verdict and scores remain independent. `e2e/documentation.spec.ts`: native keyboard wrong answer retains rationale after leaving the panel. |
 | Update and verify documentation with the change | `LookupPanels.tsx`, `LookupInspector.tsx`, `lookups.ts` | `changes` | Select all six source / affected documents / explicit check / owner-trigger chains; reveal invoked-validator and automation limits. | `LookupPanels.test.tsx`: six change chains require actual enforcement/source checks; all row selectors display their data. |
 | Choose what to omit or archive; Commit messages preserve change context | `LookupPanels.tsx`, `LookupInspector.tsx`, `lookups.ts` | `history` | Select historical record versus current instructions; reveal commit context and Stage 05 `#commits` link. | `LookupPanels.test.tsx`: history distinguishes preservation from current instructions and points to actual commit guidance. |
@@ -34,12 +34,12 @@ integration and deployment remain deferred.
 
 ## Observed browser coverage
 
-The expanded-state audit on 2026-10-22 measured 1,358 states: every panel above at
+The pre-cue expanded-state audit on 2026-10-22 measured 1,358 states: every panel above at
 320,390,768,1024,1440,1920 and 2560px, in both themes. It visited all lookup
 selections, three ADR specimens, every wrong/right practice verdict, every
 disclosure, team notes, filled forms, checked boxes, clipboard success and manual
 fallbacks, and read/write/clear warnings. There were no overflow, contrast,
-touch-target or page-console findings. The 157 distinct measured
+touch-target or page-error findings. A separate 168-state denied-storage supplement attached both console-error and page-error listeners before navigation and found neither; it closes the original matrix's narrower console scope. The 157 distinct measured
 text/background/style pairs had a minimum ratio of 5.06:1. The 784 recorded
 keyboard/disclosure observations had no missing opens, incorrect selections or
 focus-outline findings.
@@ -54,12 +54,8 @@ All nine curated/inline source URLs opened to their expected primary pages. Stag
 click from History's Stage 05 link landed on `#commits` and rendered
 `panel-commits`.
 
-The [execution report](superpowers/reports/2026-10-20-stage-10-port-execution.md)
-records the gate, measurements, findings and archive location. The final gate
-passed: 1,558 tests across 218 files, 27/27 production checks and the separate
-development-console sweep. The [held-out readers](superpowers/reports/2026-10-20-stage-10-port-reader-rerun.md)
-found no completeness gap and returned 4 HIT / 1 MISFILED. R-M1, a Minor
-navigation issue, awaits final review; the direct document-form distinction is in
-the chooser. Independent task/whole-branch review remains pending. This feature
-tree has 16 ready stages out of 18; develop remains 15/18 until an approved merge.
-W-6 remains 22 drawn / 27 registered.
+The [execution report](superpowers/reports/2026-10-20-stage-10-port-execution.md) distinguishes the source versions. Before the final reference cue, the full gate passed 1,558 tests across 218 files, 27/27 production checks and the separate development-console sweep. The final cue has its own verification: **1,559 tests / 218 files**, format/lint/typecheck/build, Stage 10 production **3/3**, development-console **1/1**, and **28 affected-panel states** across both selections, themes and seven widths. Their minimum measured contrast is 5.2555:1; 56 keyboard actions and all target/overflow/console checks pass. The changed reference panel is 1.261576 screens at 1024×768. The old 1,358-state matrix and 27-test audit are pre-cue evidence, not a claimed whole-final-tree rerun.
+
+The [held-out readers](superpowers/reports/2026-10-20-stage-10-port-reader-rerun.md) found no completeness gap and returned **4 HIT / 1 MISFILED**. R-M1 was recoverable reference-panel findability. A short cue now repeats the existing chapter/chooser distinction at that location; the original reader's separate targeted Q3 check returned HIT without navigation. Prior knowledge limits that recheck; the blind result remains unchanged.
+
+The [combined review](superpowers/reports/2026-10-20-stage-10-port-whole-branch-review.md) found no Critical or Important issue and three Minor findings. Their single fix wave is committed. The [scoped fix review](superpowers/reports/2026-10-23-stage-10-port-fix-review.md) marks all three addressed, with no new breakage. The implementation plan is complete; integration remains a separate decision. This feature tree has **16 ready stages out of 18**; develop remains **15/18** until an approved merge. W-6 remains **22 drawn / 27 registered**.

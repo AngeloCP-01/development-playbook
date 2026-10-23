@@ -6,6 +6,8 @@
 
 Nine full third-party page snapshots have a separate local archive, verified before scratch cleanup. The manifest records its location and hashes. Their URL/title/date/navigation results and concise source checks remain in the portable archive; terminal output, application snapshots, reader artifacts, reviews and sensitivity evidence are all included.
 
+The closing archive includes the Task 9 denied-console supplement, completed combined whole-branch review, the single final fix wave, targeted Q3 recheck and clean scoped re-review. The original blind 4 HIT / 1 MISFILED remains alongside the later targeted HIT. Pre-cue broad checks and final affected checks retain their own source identities. [Closure verification](closure-verification.json) records independent member/hash and source-preservation checks.
+
 Paths inside the archive are relative to `.superpowers/sdd/2026-10-20-stage-10-interactive-port/`. Reports keep those original paths so command output and historical citations retain their meaning. Read a member without unpacking the workspace:
 
 ```bash

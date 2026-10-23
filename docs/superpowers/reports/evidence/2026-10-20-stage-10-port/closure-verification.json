@@ -1,0 +1,120 @@
+{
+  "verifiedAt": "2026-10-23T06:13:20.506216+00:00",
+  "archive": "execution-workspace.tar.gz",
+  "archive_sha256": "60b0b2d124556f2f59fc31aa2a05afc0052ff64bf4e0996fb03c6bdf108e777e",
+  "portableMembers": 495,
+  "exactMemberSetBytesHashesAndWorkspaceSources": true,
+  "externalSnapshotMembers": 9,
+  "externalArchive_sha256": "6362314f400a5a01d64921bebccf2604d28248b9149a3e36f8170f6c5d5582c6",
+  "canonicalReviewReportsMatchArchivedBytes": true,
+  "frozenReaderInputsMatchAcceptedHashes": true,
+  "rulings": 11,
+  "applicationFiles": 567,
+  "applicationSourceIdentity": "912cb2864b5b6602ac539b8d7e88aae44de92cbd91c19aa8733d463ea4604c79",
+  "currentApplicationHashesMatch": true,
+  "parentFiles": 12,
+  "parentHashesUnchanged": true,
+  "checks": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "2e3ccc82153edb87f3c6ca4c699ab3b6092c0f81\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-list",
+        "--count",
+        "79f9e31..HEAD"
+      ],
+      "exit_code": 0,
+      "output": "32\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "develop",
+        "origin/develop",
+        "docs/2026-10-20-stage-10-chapter"
+      ],
+      "exit_code": 0,
+      "output": "79f9e315ab8dbb59087a15de436114b9a8d9286a\n79f9e315ab8dbb59087a15de436114b9a8d9286a\nc092ac7b1557bf636f596926c0ad6d376e9c4ef5\n"
+    },
+    {
+      "command": [
+        "lsof",
+        "-nP",
+        "-iTCP:3100",
+        "-sTCP:LISTEN"
+      ],
+      "exit_code": 0,
+      "output": "COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME\nnode    42455 angelito   12u  IPv6 0x69949de24b2da6d3      0t0  TCP *:3100 (LISTEN)\n"
+    },
+    {
+      "command": [
+        "lsof",
+        "-nP",
+        "-iTCP:3200",
+        "-sTCP:LISTEN"
+      ],
+      "exit_code": 0,
+      "output": "COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME\nnode    93201 angelito   17u  IPv6 0xa77f2c2a309a2d27      0t0  TCP *:3200 (LISTEN)\n"
+    }
+  ],
+"finalRecordChecks": [
+  {
+    "command": "python3 docs/superpowers/reports/evidence/2026-10-20-stage-10/check-doc-links.py",
+    "workdir": "/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter",
+    "status": "fulfilled",
+    "value": {
+      "chunk_id": "5744db",
+      "wall_time_seconds": 0.412318041,
+      "exit_code": 0,
+      "original_token_count": 17,
+      "output": "{\n  \"files\": 30,\n  \"local_targets_checked\": 380,\n  \"failures\": []\n}\n"
+    }
+  },
+  {
+    "command": "git diff --check",
+    "workdir": "/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter",
+    "status": "fulfilled",
+    "value": {
+      "chunk_id": "c18953",
+      "wall_time_seconds": 0.365605875,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    }
+  },
+  {
+    "command": "git status --short; git diff --numstat",
+    "workdir": "/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter",
+    "status": "fulfilled",
+    "value": {
+      "chunk_id": "39f921",
+      "wall_time_seconds": 0.358143208,
+      "exit_code": 0,
+      "original_token_count": 286,
+      "output": " M KICKOFF.md\n M docs/stage-10-status.md\n M docs/superpowers/reports/2026-10-20-stage-10-port-execution.md\n M docs/superpowers/reports/2026-10-20-stage-10-port-reader-rerun.md\n M docs/superpowers/reports/evidence/2026-10-20-stage-10-port/README.md\n M docs/superpowers/reports/evidence/2026-10-20-stage-10-port/execution-workspace.tar.gz\n M docs/superpowers/reports/evidence/2026-10-20-stage-10-port/manifest.json\n M docs/task.md\n M docs/tracker.md\n?? docs/superpowers/reports/2026-10-20-stage-10-port-whole-branch-review.md\n?? docs/superpowers/reports/2026-10-23-stage-10-port-fix-review.md\n?? docs/superpowers/reports/evidence/2026-10-20-stage-10-port/closure-verification.json\n32\t94\tKICKOFF.md\n8\t12\tdocs/stage-10-status.md\n39\t12\tdocs/superpowers/reports/2026-10-20-stage-10-port-execution.md\n10\t2\tdocs/superpowers/reports/2026-10-20-stage-10-port-reader-rerun.md\n2\t0\tdocs/superpowers/reports/evidence/2026-10-20-stage-10-port/README.md\n-\t-\tdocs/superpowers/reports/evidence/2026-10-20-stage-10-port/execution-workspace.tar.gz\n524\t4\tdocs/superpowers/reports/evidence/2026-10-20-stage-10-port/manifest.json\n8\t7\tdocs/task.md\n7\t2\tdocs/tracker.md\n"
+    }
+  }
+],
+  "trackerGuardCheck": {
+  "command": "pnpm test src/lib/tracker-ledger.test.ts",
+  "workdir": "/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web",
+  "status": "fulfilled",
+  "value": {
+    "chunk_id": "132b99",
+    "wall_time_seconds": 1.271973958,
+    "exit_code": 0,
+    "original_token_count": 100,
+    "output": "\n> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web\n> vitest run src/lib/tracker-ledger.test.ts\n\n\n RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web\n\n\n Test Files  1 passed (1)\n      Tests  2 passed (2)\n   Start at  14:12:10\n   Duration  273ms (transform 55ms, setup 0ms, import 66ms, tests 16ms, environment 0ms)\n\n"
+  }
+},
+  "limit": "Local source/build evidence only. No integration, remote fetch, push or deployment. Final closing records are controller-authored and outside the scoped code review."
+}

@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current checkpoint (2026-10-23): Stage 10's interactive port is implemented and its pre-cue local gate is verified on the feature branch.** Tasks 1–8 have independent reviews; both cold readers are complete (no completeness gap; 4 HIT / 1 MISFILED). Task 9 and the combined whole-branch review are complete through `534b681`, with no Critical or Important finding. The final fix wave addresses the three Minor findings; its implementation checks passed (1,559 tests / 218 files, format, lint, generated-route typecheck, production build, Stage 10 browser spec 3/3, development-console 1/1 and 28 affected reference-panel states). Independent same-question recheck and scoped re-review remain active. No final approval has been given. The [execution report](superpowers/reports/2026-10-20-stage-10-port-execution.md) records the pre-cue source checks: 1,558 tests across 218 files with one worker and unchanged limits, 27/27 production checks, 1/1 development-console check and 1,358 expanded UI states. These results do not verify the added reference-panel cue. Feature-tree W-3 is **16/18**; develop stays **15/18**, W-6 **22/27**. No integration has occurred.
+**Current checkpoint (2026-10-23): Stage 10's chapter and twelve-panel interactive port are implemented, verified and independently reviewed on the feature branch.** All nine tasks are complete. The combined review found no Critical or Important issue; its three Minor findings are addressed by `bd90a05` / `2e3ccc8` and the [clean scoped re-review](superpowers/reports/2026-10-23-stage-10-port-fix-review.md). Final-source checks: **1,559 tests / 218 files** with one worker and unchanged limits, format/lint/typecheck/build, Stage 10 production **3/3**, development-console **1/1**, and **28 affected-panel states**. The earlier full **27/27** production audit and **1,358-state** matrix remain explicitly pre-cue evidence. [Execution report](superpowers/reports/2026-10-20-stage-10-port-execution.md). Original cold readers: no completeness gap; **4 HIT / 1 MISFILED**. The separate same-question Q3 correction check is HIT without navigation; it does not replace the blind result. Feature-tree W-3 is **16/18**; develop stays **15/18**, W-6 **22/27**. No integration has occurred.
 Stage 09's chapter merged as `ad283ce`, its
 interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. Local `develop` and tracked
@@ -140,7 +140,7 @@ Map of what lands where:
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
-**Latest completed round:** Stage 09 interactive port. The user approved the eight-task
+**Latest merged stage round:** Stage 09 interactive port. The user approved the eight-task
 plan and selected Subagent-Driven execution on 2026-10-09. All eight tasks are
 implemented and independently reviewed before the approved no-ff merge
 `7a5576a` into local `develop` on 2026-10-12. Stage 09 is registered and ready.
@@ -151,10 +151,10 @@ returned Ready to merge, with no new findings. The merged tree then passed
 format, lint, typecheck, 1459 tests across 198 files and a fresh 50-page build.
 The browser results apply to the identical application tree; those suites were
 not rerun after merge. The local feature branch and worktree were removed.
-**Next selected round:** W-3.17, Stage 10 — Documentation. Stage 09's W-6.3q
+**Selected round:** W-3.17, Stage 10 Documentation, now implemented and reviewed on the feature branch. Stage 09's W-6.3q
 references and the subsequent layout repair are merged; their work is complete.
 
-### W-3.17 — Stage 10 Documentation ◐ *(chapter complete; port verified; final reviews active 2026-10-23)*
+### W-3.17 — Stage 10 Documentation ◐ *(chapter and port complete; reviewed; integration pending 2026-10-23)*
 
 The [approved chapter design](superpowers/specs/2026-10-20-stage-10-documentation-design.md) and [five-task plan](superpowers/plans/2026-10-20-stage-10-documentation.md) were committed before implementation. The user’s “proceed up to implementation” authorized the recommended inline execution, retaining independent reviews and cold readers.
 
@@ -172,9 +172,10 @@ The [corrected chapter](10-documentation.md) now teaches the smallest useful doc
 - [x] Write and builder-check the separate [interactive-port spec](superpowers/specs/2026-10-20-stage-10-interactive-port-design.md); no important planning questions remain
 - [x] Approve the port spec (`3165b62`) and write/self-review the [implementation plan](superpowers/plans/2026-10-20-stage-10-interactive-port.md)
 - [x] Review the plan and select subagent-driven execution (user “proceed”, 2026-10-22)
-- [ ] Implement the port through TDD, per-task review and whole-branch review; verify both themes, responsive layout and both console modes
-- [x] Register the task-reviewed port on the feature branch (`7f803bc`); full delivery gates remain active
-- [ ] Record separately approved integration and refresh the final handoff
+- [x] Implement the port through TDD, per-task review and whole-branch review; verify both themes, responsive layout and both console modes
+- [x] Register the port on the feature branch (`7f803bc`); final fixes `bd90a05` / `2e3ccc8` pass the clean scoped review
+- [x] Refresh the final handoff and hash-verify the full execution archive
+- [ ] Record separately approved integration; this remains the user's decision
 
 Develop's Stage 10 stays `ready: false` and W-3 stays **15/18** until an approved integration. The active feature tree has separate registration and verification checkpoints. W-6 stays **22/27**. Deferred: stages 17/18, W-6.4, five language sheets, unrelated repairs, new reference companions and promotion. Stage numbers remain filing codes, not a sequence.
 

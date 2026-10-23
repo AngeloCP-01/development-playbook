@@ -1,6 +1,6 @@
 # Stage 10 port: held-out reader rerun
 
-Status: both independent browser-only assessments are complete. Completeness found no teaching gaps for the case. Lookup returned **4 HIT / 1 MISFILED**, with one Minor navigation finding; final review will triage it.
+Status: both independent browser-only assessments are complete. Completeness found no teaching gaps for the case. Lookup returned **4 HIT / 1 MISFILED**, with one Minor navigation finding. A separate targeted Q3 recheck after the correction returned HIT; the original score remains unchanged.
 
 The case and questions are byte-identical to the accepted [chapter rerun](2026-10-20-stage-10-correction-rerun.md). Workshop remains the authored example; Toolshare is held out of the port's teaching and tests. Readers receive the two input files and the public Stage 10 URL. Their reports distinguish missing project facts from missing teaching.
 
@@ -45,8 +45,16 @@ The reader exercised all eight planning fields, then cleared its synthetic recor
 | Configuration/response updates, owners and drift checks | Trace the change | HIT |
 | Evidence behind AI validation claims | Check the evidence | HIT |
 
-R-M1 (the lookup report's M1), Minor: the explicit document-type distinction is in Choose a document → Look up facts. State exact facts supplies named reference examples, allowed values, defaults, sources and review triggers; the reader still navigated back for the direct comparison. The controller rechecked the public panel and canonical chapter. The teaching exists in both chapter and chooser, so this is a port findability issue, not missing teaching or a missing Toolshare fact. The raw MISFILED score is preserved. Carry R-M1 to final whole-branch triage; no application change has been made for it at this checkpoint.
+R-M1 (the lookup report's M1), Minor: the explicit document-type distinction is in Choose a document → Look up facts. State exact facts supplies named reference examples, allowed values, defaults, sources and review triggers; the reader still navigated back for the direct comparison. The controller rechecked the public panel and canonical chapter. The teaching exists in both chapter and chooser, so this is a port findability issue, not missing teaching or a missing Toolshare fact. The raw MISFILED score is preserved. The whole-branch review confirmed R-M1 as a nonblocking, plan-authored findability issue. The controller included a short reference-panel cue in the final fix wave; the canonical chapter and chooser remain unchanged.
 
 No Critical or Important reader findings remain. Neither reader had an access failure. Their tool-selector retries and the first reader's clear-confirmation retry are retained in their full reports; the controller independently verified the final empty record. No Toolshare commands or outcomes were invented, and the authored Workshop content and frozen instruments were unchanged.
 
 Literal prompts, full outputs, artifacts, navigation and findings are retained in the [execution archive](evidence/2026-10-20-stage-10-port/README.md): `port-reader-completeness-brief.md`, `port-reader-completeness.md`, `port-reader-lookup-brief.md`, `port-reader-lookup-first-choices.md`, `port-reader-lookup.md` and `reader-between-reset.json`.
+
+## Targeted Q3 recheck after the correction
+
+On 2026-10-23 the original lookup reader repeated the unchanged third question at its frozen first-choice location, State exact facts (`#reference`). The final preview served build `2Pb3LZ-1ODrVTInRsi9Dv`. Its opening paragraph now identifies reference as the place for exact names, types, allowed values and defaults, tutorials as learning exercises, and explanation as concepts and reasons. This repeats existing chapter/chooser teaching at the point of lookup.
+
+The reader answered **HIT without leaving the panel**, and reported R-M1 addressed with no new finding. It used visible public UI only and closed its MCP page afterward. It treated Workshop values as illustrative and supplied no invented Toolshare retry contract.
+
+This was a targeted correction check by a reader with prior knowledge. It establishes answer availability at the original location; it does not replace the original **4 HIT / 1 MISFILED**, create a new blind five-question result, or show how a new reader would choose a panel. Full brief and output are preserved as `port-reader-Q3-recheck-brief.md` and `port-reader-Q3-recheck.md` in the execution archive.
