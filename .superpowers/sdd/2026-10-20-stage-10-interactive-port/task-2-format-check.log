@@ -1,9 +1,0 @@
-$ pnpm format:check
-
-> web@0.1.0 format:check /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
-> prettier --check .
-
-Checking formatting...
-All matched files use Prettier code style!
-
-EXIT STATUS: 0

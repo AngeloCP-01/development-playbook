@@ -1,5 +1,0 @@
-$ pnpm exec prettier --write src/features/documentation/DocumentationSession.tsx src/features/documentation/DocumentationSession.test.tsx
-src/features/documentation/DocumentationSession.tsx 54ms (unchanged)
-src/features/documentation/DocumentationSession.test.tsx 28ms
-
-EXIT STATUS: 0

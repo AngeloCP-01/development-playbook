@@ -1,7 +1,0 @@
-$ pnpm lint
-
-> web@0.1.0 lint /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
-> eslint --max-warnings 0
-
-
-EXIT STATUS: 0

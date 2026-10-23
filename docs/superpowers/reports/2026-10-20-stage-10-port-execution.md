@@ -165,7 +165,9 @@ record](evidence/2026-10-20-stage-10-port/README.md). Full external article
 snapshots are hash-verified locally; portable navigation metadata and short notes
 enter the committed archive instead.
 
-Pending delivery steps: independent readers/finding adjudication and final review.
+The [same-case reader report](2026-10-20-stage-10-port-reader-rerun.md) records completed independent assessments: no completeness gap and lookup 4 HIT / 1 MISFILED. R-M1 is a Minor findability issue: the explicit document-form distinction is in the chooser, while the first-choice exact-facts panel demonstrates reference material. Public-panel and chapter checks confirm the teaching exists; final review will triage navigation. Reader access worked, unknown project facts stayed explicit and the synthetic record was cleared between visits.
+
+Pending delivery steps: Task 9 independent review, final whole-branch review and closing archive/records.
 
 Deferred: integration, deployment, W-6 companion/publication, W-6.4, five language
 sheets, stages 17/18 and unrelated repairs remain outside this port. This feature

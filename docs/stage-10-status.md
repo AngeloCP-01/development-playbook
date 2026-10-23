@@ -57,6 +57,9 @@ click from History's Stage 05 link landed on `#commits` and rendered
 The [execution report](superpowers/reports/2026-10-20-stage-10-port-execution.md)
 records the gate, measurements, findings and archive location. The final gate
 passed: 1,558 tests across 218 files, 27/27 production checks and the separate
-development-console sweep. Independent readers/review remain pending. This feature
+development-console sweep. The [held-out readers](superpowers/reports/2026-10-20-stage-10-port-reader-rerun.md)
+found no completeness gap and returned 4 HIT / 1 MISFILED. R-M1, a Minor
+navigation issue, awaits final review; the direct document-form distinction is in
+the chooser. Independent task/whole-branch review remains pending. This feature
 tree has 16 ready stages out of 18; develop remains 15/18 until an approved merge.
 W-6 remains 22 drawn / 27 registered.
