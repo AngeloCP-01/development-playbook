@@ -6,7 +6,7 @@ debt was taken on. Scope and planning live in [task.md](task.md).
 **Last updated:** 2026-10-23
 **Current phase:** Stage 10's chapter and interactive port are merged locally into develop as **7819457** (`--no-ff`), after the user's option-1 approval. The merge tree equals reviewed tip `81935a6`. Fresh merged-tree format/lint/typecheck, **1,559 tests / 218 files** with one worker and unchanged limits, and a **52-page build** pass. All review findings were addressed before integration. [Integration report](superpowers/reports/2026-10-23-stage-10-integration.md). Local develop W-3 is **16/18**; W-6 **22/27**. No push, main promotion or deployed-site check occurred.
 
-The parent checkout remains on its records branch, with all twelve original hashes and its port-3200 server preserved. Tracked origin/develop remains `79f9e31`; no fresh fetch was performed. The chapter branch is preserved. The integration report distinguishes retained identical-source browser evidence from the fresh merged-tree checks.
+The original parent edits are preserved in commits `bfdeb67` and `36c2b82` for the separately approved follow-up merge; its port-3200 server is preserved. The clean parent checkout can return to develop after that merge. Tracked origin/develop remains `79f9e31`; no fresh fetch was performed. The chapter branch is preserved. The integration report distinguishes retained identical-source browser evidence from the fresh merged-tree checks.
 
 **The site is live** at https://acp-dev-playbook.vercel.app and verifies itself with
 `pnpm test:prod` (W-5, complete 2026-08-11). **`main` is production**: work branches merge to
@@ -896,6 +896,8 @@ of new work, not assumed to survive from the last `git checkout`.
 ---
 
 ## Next up
+
+**2026-10-23 remaining edits:** The user also approved committing and merging the original parent-checkout files. `bfdeb67` preserves AGENTS.md and `36c2b82` preserves the eleven research/handoff/image files. All original hashes match those commits. Conflict resolution retains the reviewed chapter and completion records; AGENTS edits and the caching screenshot are included. [Resolution report](superpowers/reports/2026-10-23-stage-10-leftovers.md). No application inputs change; W-3 stays 16/18 and W-6 stays 22/27.
 
 **2026-10-23 local integration complete:** Stage 10's chapter and port landed in develop as `7819457`, after separate approval. Fresh merged-tree verification passed; local W-3 is **16/18**, W-6 **22/27**. Select the next work item separately. Push/main promotion and the deferred Stage 10 W-6 companion are not included.
 

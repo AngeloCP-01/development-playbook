@@ -8,7 +8,9 @@ Local develop now has **16/18** interactive stages (01-16); stages 17 and 18 rem
 
 The merge parents are `79f9e31` and reviewed feature tip `81935a6`. Their merged/feature Git trees match exactly. The temporary feature branch/worktree can be removed after the integration records commit. The chapter branch `docs/2026-10-20-stage-10-chapter` remains at `c092ac7`.
 
-Preserve the parent checkout on `docs/2026-10-15-stage-10-kickoff`, its twelve original modified/untracked file hashes, and its port-3200 server PID 93201. Those files were not changed by integration. Future work can start from local develop in a fresh worktree without disturbing this checkout. The old Stage 10 preview on port 3100 was stopped before merged-tree build operations.
+The original parent-checkout files are preserved in commits `bfdeb67` and `36c2b82`. Its port-3200 server PID 93201 remains separate from verification. After the approved follow-up merge, return the clean parent checkout to develop and retire the merged kickoff branch. Future work can start from local develop in a fresh worktree. The old Stage 10 preview on port 3100 was stopped before merged-tree build operations.
+
+The remaining parent-checkout edits were subsequently committed as `bfdeb67` and `36c2b82` for the user-approved follow-up merge. Their original bytes remain in history. The [remaining-edits report](docs/superpowers/reports/2026-10-23-stage-10-leftovers.md) records why the reviewed chapter and completion records take precedence over old drafts. The earlier dirty-file preservation requirement has been fulfilled by committing those files.
 
 ## Verification and records
 

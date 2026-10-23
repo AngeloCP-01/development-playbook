@@ -1,0 +1,190 @@
+[
+  {
+    "file": "KICKOFF.md",
+    "hunks": [
+      {
+        "developLines": 5,
+        "oldDraftLines": 19,
+        "developOpening": [
+          "Updated 2026-10-23. The corrected Documentation chapter and twelve-panel interactive port are complete, reviewed and merged into local develop as **7819457** (`--no-ff`). The user selected local merge option 1. The approved nine-task implementation plan and local integration are complete; select a new work item separately.",
+          "",
+          "## Current state and authority",
+          ""
+        ],
+        "oldDraftOpening": [
+          "**Next-session handoff, 2026-10-15: Stage 10 \u2014 Documentation.** The user selected",
+          "chapter review/corrections first, followed by the interactive port. Research",
+          "preflight is gathered in the working tree: [source notes](reference/stage-10-source-research.md),",
+          "three original diagrams with provenance, and a dated findings section in the"
+        ]
+      },
+      {
+        "developLines": 17,
+        "oldDraftLines": 209,
+        "developOpening": [
+          "## Verification and records",
+          "",
+          "Read the [integration report](docs/superpowers/reports/2026-10-23-stage-10-integration.md) for the merged-tree evidence and preservation paths. Fresh format, lint, generated-route typecheck, **1,559 tests / 218 files** using `pnpm test --maxWorkers=1`, and a **52-page production build** passed after merge. Existing five-second limits, snapshots and runner configuration are unchanged. The old parallel failure remains unresolved causally; contention is a hypothesis.",
+          ""
+        ],
+        "oldDraftOpening": [
+          "I'm continuing the Development Playbook: eighteen markdown stage documents and a",
+          "Next.js static site that turns them into something you consult rather than read.",
+          "The user selected **Stage 10 \u2014 Documentation**, starting with the canonical",
+          "chapter review and corrections, then its interactive port. The playbook is also"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "docs/10-documentation.md",
+    "hunks": [
+      {
+        "developLines": 3,
+        "oldDraftLines": 113,
+        "developOpening": [
+          "**Publishing realistic private examples.** Use synthetic data and review the result before publication.",
+          "",
+          "**Trusting a successful-looking draft.** Find the evidence behind each operational claim; record what remains unknown."
+        ],
+        "oldDraftOpening": [
+          "**Writing prose where a type or a rename would do.** Prose rots; types do not.",
+          "",
+          "---",
+          ""
+        ]
+      }
+    ]
+  },
+  {
+    "file": "docs/task.md",
+    "hunks": [
+      {
+        "developLines": 9,
+        "oldDraftLines": 20,
+        "developOpening": [
+          "**Current checkpoint (2026-10-23): Stage 10's corrected chapter and twelve-panel interactive port are merged locally into develop as `7819457` (`--no-ff`).** All nine plan tasks and independent reviews are complete; final fixes `bd90a05` / `2e3ccc8` cleared the three Minor findings. Fresh merged-tree format/lint/typecheck, **1,559 tests / 218 files** with one worker and unchanged limits, and a **52-page build** pass. The merge tree equals reviewed feature tip `81935a6`; retained final-source browser **3/3**, development-console **1/1** and **28 affected-panel states** were not rerun after merge. Earlier full **27/27** and **1,358-state** checks remain pre-cue evidence. [Integration report](superpowers/reports/2026-10-23-stage-10-integration.md). Local develop W-3 is **16/18**; W-6 **22/27**. Tracked origin/develop remains `79f9e31`; no push or main promotion occurred.",
+          "Stage 09's chapter merged as `ad283ce`, its",
+          "interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.",
+          "The single-example width repair followed as `79f9e31`. That width repair was the pre-Stage-10 baseline. Tracked `origin/develop` remains"
+        ],
+        "oldDraftOpening": [
+          "**Current checkpoint (2026-10-15): Stage 09 is complete; Stage 10 \u2014 Documentation",
+          "is selected for the next session.** Stage 09's chapter merged as `ad283ce`, its",
+          "interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.",
+          "The single-example width repair followed as `79f9e31`. Local `develop` and tracked"
+        ]
+      },
+      {
+        "developLines": 27,
+        "oldDraftLines": 34,
+        "developOpening": [
+          "**Latest merged stage round:** W-3.17, Stage 10 Documentation, integrated locally as `7819457` after separate approval. Stage 09's W-6.3q",
+          "references and the subsequent layout repair are merged; their work is complete.",
+          "",
+          "### W-3.17 \u2014 Stage 10 Documentation \u2611 *(merged locally into develop as `7819457`, 2026-10-23)*"
+        ],
+        "oldDraftOpening": [
+          "**Next selected round:** W-3.17, Stage 10 \u2014 Documentation. Stage 09's W-6.3q",
+          "references and the subsequent layout repair are merged; their work is complete.",
+          "",
+          "### W-3.17 \u2014 Stage 10 Documentation \u2610 *(research gathered 2026-10-15; formal review pending)*"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "docs/tracker.md",
+    "hunks": [
+      {
+        "developLines": 4,
+        "oldDraftLines": 15,
+        "developOpening": [
+          "**Last updated:** 2026-10-23",
+          "**Current phase:** Stage 10's chapter and interactive port are merged locally into develop as **7819457** (`--no-ff`), after the user's option-1 approval. The merge tree equals reviewed tip `81935a6`. Fresh merged-tree format/lint/typecheck, **1,559 tests / 218 files** with one worker and unchanged limits, and a **52-page build** pass. All review findings were addressed before integration. [Integration report](superpowers/reports/2026-10-23-stage-10-integration.md). Local develop W-3 is **16/18**; W-6 **22/27**. No push, main promotion or deployed-site check occurred.",
+          "",
+          "The parent checkout remains on its records branch, with all twelve original hashes and its port-3200 server preserved. Tracked origin/develop remains `79f9e31`; no fresh fetch was performed. The chapter branch is preserved. The integration report distinguishes retained identical-source browser evidence from the fresh merged-tree checks."
+        ],
+        "oldDraftOpening": [
+          "**Last updated:** 2026-10-15",
+          "**Current phase:** Stage 10 \u2014 Documentation is selected for the next session,",
+          "starting with chapter review/corrections before its interactive port. Neither",
+          "phase has started. W-3 is **15/18** on local `develop` (01\u201309 and 11\u201316);"
+        ]
+      },
+      {
+        "developLines": 3,
+        "oldDraftLines": 0,
+        "developOpening": [
+          "| 2026-10-23 | W-3.17 (merged locally) | Approved no-ff merge **7819457** integrates the corrected chapter and twelve-panel interactive Documentation stage into local develop. W-3 becomes **16/18**. | Parents `79f9e31` / `81935a6`; merged tree equals reviewed feature tree. Fresh merged-tree format/lint/typecheck, **1559/1559 across 218 files**, **52-page build**. Retained same-source browser **3/3**, dev **1/1**, affected matrix **28 states** were not rerun after merge; broad **27/27** / **1358-state** evidence remains pre-cue. [Integration report and raw evidence](superpowers/reports/2026-10-23-stage-10-integration.md). Parent twelve hashes/server preserved; external captures copied and hash-verified before cleanup. | Push/main promotion; W-6 companion/publication and W-6.4; five language sheets; stages 17/18; unrelated repairs. W-6 stays **22/27**. No fetch or deployed-site test. |",
+          "| 2026-10-23 | W-3.17 interactive port (feature complete) | Twelve-panel Documentation stage, lookup inspectors, README/ADR copy, practice reasoning and a shared saved/exportable change record are implemented and registered on the feature branch. | Nine-task plan complete. Registration `7f803bc`; typography/hit-area corrections `f06da40`; final reference cue/regression `bd90a05`, handoff corrections `2e3ccc8`. Meaningful RED/GREEN/teeth evidence retained. Final **1559/218**, format/lint/typecheck/52-page build, Stage 10 production **3/3**, dev **1/1**, affected matrix **28 states**. Earlier full **27/27** audit and **1358-state** matrix are pre-cue. Original readers: no completeness gap; **4 HIT / 1 MISFILED**; separate targeted Q3 **HIT**. Whole-branch review has no Critical/Important finding; all three Minors addressed in the clean scoped review. [Execution and archive](superpowers/reports/2026-10-20-stage-10-port-execution.md); [fix review](superpowers/reports/2026-10-23-stage-10-port-fix-review.md). | Integration/deployment; W-6 companion/publication and W-6.4; five language sheets; stages 17/18; unrelated repairs. Feature W-3 **16/18**, develop **15/18**, W-6 **22/27**. Original blind score and failed parallel logs remain; contention is a hypothesis. |",
+          "| 2026-10-20 | Stage 10 chapter implementation | Canonical documentation teaching and shared ADR definition corrected on the isolated branch; the interactive port remains separate. | Chapter `5f8d2c2`, glossary `d2a5e4f`, teeth `012f165`, same-case rerun `cf8acf8`: 5 HIT, no remaining case teaching defect. Independent task reviews resolved one plan-authored inbound-link defect and one minor report-format issue. Full gate: 1512/1512 across 208 files, 52 pages, production 24/24, development 1/1; focused ADR matrix 4/4 in both themes. [Execution report](superpowers/reports/2026-10-20-stage-10-execution.md). Whole-branch `79f9e31..9fd17d2` found two missing positive guards; fix `4226dec` adds real Vitest RED/GREEN/teeth, fresh full 1512/208 and an independent Ready to merge verdict. No open findings. | Interactive port/registration, W-6 companion/publication, stages 17/18, language sheets, unrelated repairs, integration and deployment. W-3 remains 15/18, W-6 22/27; no merge/push. |"
+        ],
+        "oldDraftOpening": []
+      },
+      {
+        "developLines": 64,
+        "oldDraftLines": 0,
+        "developOpening": [
+          "**2026-10-23 local integration complete:** Stage 10's chapter and port landed in develop as `7819457`, after separate approval. Fresh merged-tree verification passed; local W-3 is **16/18**, W-6 **22/27**. Select the next work item separately. Push/main promotion and the deferred Stage 10 W-6 companion are not included.",
+          "",
+          "**Historical pre-integration checkpoint:**",
+          ""
+        ],
+        "oldDraftOpening": []
+      },
+      {
+        "developLines": 1,
+        "oldDraftLines": 1,
+        "developOpening": [
+          "The [gathered source notes](../reference/stage-10-source-research.md) record"
+        ],
+        "oldDraftOpening": [
+          "The [chapter](10-documentation.md#research-findings-for-chapter-review) records"
+        ]
+      }
+    ]
+  },
+  {
+    "file": "reference/cheatsheet-sources.md",
+    "hunks": [
+      {
+        "developLines": 1,
+        "oldDraftLines": 1,
+        "developOpening": [
+          "the original chapter appendix preserved in source-collection commit `e30c9a4`."
+        ],
+        "oldDraftOpening": [
+          "[the chapter's research section](../docs/10-documentation.md#research-findings-for-chapter-review)."
+        ]
+      },
+      {
+        "developLines": 6,
+        "oldDraftLines": 0,
+        "developOpening": [
+          "",
+          "### Stage 10 accepted use \u00b7 2026-10-20",
+          "",
+          "The gathering/follow-up sections above describe their dated research state. The chapter correction now uses Di\u00e1taxis for reader-task selection, Nygard/MADR for visible supersession, GitHub for the README entry point, C4 for labeled boundaries, and Docs as Code/Google for explicit review checks. Stripe\u2019s unsupported truncation/incident/attempt claims were removed; the ORM specimen was replaced with a labeled documentation decision. User references inform the optional artifact menu, ownership and grounded AI review."
+        ],
+        "oldDraftOpening": []
+      }
+    ]
+  },
+  {
+    "file": "reference/stage-10-source-research.md",
+    "hunks": [
+      {
+        "developLines": 19,
+        "oldDraftLines": 0,
+        "developOpening": [
+          "",
+          "## Accepted chapter use \u00b7 2026-10-20",
+          "",
+          "The dated findings above record the gathering assessment. The [corrected chapter](../docs/10-documentation.md) now applies them; [execution evidence](../docs/superpowers/reports/2026-10-20-stage-10-execution.md) and the [same-case reader rerun](../docs/superpowers/reports/2026-10-20-stage-10-correction-rerun.md) record the checks."
+        ],
+        "oldDraftOpening": []
+      }
+    ]
+  }
+]

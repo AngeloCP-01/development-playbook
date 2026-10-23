@@ -1,0 +1,246 @@
+Review target: candidate no-ff merge into develop207ce0c of source36c2b82. The index contains resolved merge plus documentation/evidence; no commit yet.
+
+ AGENTS.md                                          |  84 +++++----
+ KICKOFF.md                                         |   2 +
+ .../reports/2026-10-23-stage-10-leftovers.md       |  22 +++
+ .../2026-10-23-stage-10-leftovers/conflicts.json   | 190 +++++++++++++++++++++
+ .../merge-attempt.log                              |  13 ++
+ .../original-hashes.json                           |  14 ++
+ .../2026-10-23-stage-10-leftovers/resolutions.json |  32 ++++
+ .../source-preservation.json                       |  10 ++
+ docs/tracker.md                                    |   2 +
+ image.png                                          | Bin 0 -> 224904 bytes
+ 10 files changed, 324 insertions(+), 45 deletions(-)
+
+diff --git a/AGENTS.md b/AGENTS.md
+index 6b128e7..afd17f8 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -39,7 +39,7 @@ in a plain editor and on GitHub.
+ **`web/`** — a Next.js 16 static site that turns those documents into something you
+ consult rather than read. No backend, no database, no env vars.
+ 
+-The web app does **not** read the markdown. The interactive stage *content* is
++The web app does **not** read the markdown. The interactive stage _content_ is
+ hand-ported into React components — known duplication, do not "fix" it casually, but do
+ not widen it without noting it either.
+ 
+@@ -86,7 +86,7 @@ drafting paper); dark is a cyanotype (pale linework on Prussian blue). Dark is a
+ second drawing, not an inverted filter — design both.
+ 
+ **Accent and semantic colour are deliberately separate.** `brand` (annotation orange)
+-means *attention* — active states, eyebrows, "you are here". `go` / `danger` / `warn`
++means _attention_ — active states, eyebrows, "you are here". `go` / `danger` / `warn`
+ carry meaning. Using `brand` for "this is good" is a bug; it was one, and was fixed.
+ 
+ Type roles are utility classes, not Tailwind font sizes: `t-display` (Archivo pushed
+@@ -156,15 +156,9 @@ docs(tracker): record TD-1 stack drift between playbook and app
+ refactor(stepper): hoist FlowNode out of render to stop state resets
+ ```
+ 
+-A body is used when there is a *why* worth keeping — a constraint, a rejected
++A body is used when there is a _why_ worth keeping — a constraint, a rejected
+ alternative, a load-bearing ordering. Skip it when the subject already says everything.
+ 
+-Every commit carries the trailer:
+-
+-```
+-Co-Authored-By: Codex Opus 4.8 (1M context) <noreply@anthropic.com>
+-```
+-
+ **Branches** are `feat/<kebab-topic>` or `fix/<kebab-topic>`, no ticket numbers.
+ `docs/<date>-<topic>` branches carry a date in the slug; `feat`/`fix` do not.
+ 
+@@ -212,20 +206,20 @@ process** — every substantive change runs through them, the same way it does i
+ `SmartJobSearchCRM`. Invoke the skill before the work it governs, not after. If a skill
+ applies and you skip it, that is a defect in the process, not a shortcut.
+ 
+-The delivery loop *is* a sequence of skills:
+-
+-| Phase | Skill | Non-negotiable |
+-|---|---|---|
+-| Explore intent, before any code | `superpowers:brainstorming` | Runs before plan mode, before clarifying questions |
+-| Turn the spec into steps | `superpowers:writing-plans` | For any multi-step task |
+-| Implement | `superpowers:test-driven-development` | **The iron law below** |
+-| Run a plan with subagents | `superpowers:subagent-driven-development` | For plans with independent tasks |
+-| Fan out independent work | `superpowers:dispatching-parallel-agents` | 2+ tasks with no shared state |
+-| Before proposing any fix | `superpowers:systematic-debugging` | Hypothesis before edit, always |
+-| Before claiming done | `superpowers:verification-before-completion` | Evidence before assertion |
+-| Ask for / receive review | `superpowers:requesting-code-review`, `receiving-code-review` | Verify feedback, don't comply reflexively |
+-| Close the branch | `superpowers:finishing-a-development-branch` | The merge / PR decision |
+-| Isolate risky work | `superpowers:using-git-worktrees` | Parallel branches that would collide |
++The delivery loop _is_ a sequence of skills:
++
++| Phase                           | Skill                                                         | Negotiable                                         |
++| ------------------------------- | ------------------------------------------------------------- | -------------------------------------------------- |
++| Explore intent, before any code | `superpowers:brainstorming`                                   | Runs before plan mode, before clarifying questions |
++| Turn the spec into steps        | `superpowers:writing-plans`                                   | For any multi-step task                            |
++| Implement                       | `superpowers:test-driven-development`                         | **The iron law below**                             |
++| Run a plan with subagents       | `superpowers:subagent-driven-development`                     | For plans with independent tasks                   |
++| Fan out independent work        | `superpowers:dispatching-parallel-agents`                     | 2+ tasks with no shared state                      |
++| Before proposing any fix        | `superpowers:systematic-debugging`                            | Hypothesis before edit, always                     |
++| Before claiming done            | `superpowers:verification-before-completion`                  | Evidence before assertion                          |
++| Ask for / receive review        | `superpowers:requesting-code-review`, `receiving-code-review` | Verify feedback, don't comply reflexively          |
++| Close the branch                | `superpowers:finishing-a-development-branch`                  | The merge / PR decision                            |
++| Isolate risky work              | `superpowers:using-git-worktrees`                             | Parallel branches that would collide               |
+ 
+ ### The iron law
+ 
+@@ -236,7 +230,7 @@ it. From `superpowers:test-driven-development`:
+ NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
+ ```
+ 
+-Write the test, watch it fail *for the right reason*, write the minimum to pass. If you
++Write the test, watch it fail _for the right reason_, write the minimum to pass. If you
+ wrote code before the test, delete it and start over — keeping it "as reference" is the
+ rationalization the skill names explicitly. The teeth check (see TDD evidence below) is
+ how we prove a test isn't vacuous.
+@@ -271,7 +265,7 @@ Scale the ceremony, not the discipline. A single-component fix does not need a s
+ still needs a failing test first. A milestone (`W-3`, `W-4`) needs the whole loop.
+ 
+ **Spec sections, in order:** Problem · Goals · Non-goals · Constraints · Architecture ·
+-Testing · Verification · Documentation updates · Risks. Non-goals state *why* each was
++Testing · Verification · Documentation updates · Risks. Non-goals state _why_ each was
+ dropped. Specs cite real code by `file:line` and record rejected options inline.
+ 
+ **Plans** open with a fixed preamble, then `## Global Constraints`, then
+@@ -287,7 +281,7 @@ SVG-spoof XSS, a `Set-Cookie` refresh-token leak, an infinite autosave loop, and
+ drag-math defect.
+ 
+ Findings carry a severity and an ID: **Critical**, **Important** (`I1`, `I2`, written
+-`(blocking)`), **Minor** (`M1`…). They also carry *provenance*, which matters because it
++`(blocking)`), **Minor** (`M1`…). They also carry _provenance_, which matters because it
+ changes who fixes what:
+ 
+ ```
+@@ -309,7 +303,7 @@ than missing one.
+ ### TDD evidence
+ 
+ A task report pastes **raw terminal output for both the RED and GREEN runs**, and states
+-explicitly that the failure was *for the right reason* — "failed for the expected reason
++explicitly that the failure was _for the right reason_ — "failed for the expected reason
+ (`trackEvent` never called — 'Number of calls: 0')". A green test alone proves nothing.
+ 
+ When a fix lands, verification includes a **teeth check**: deliberately break the
+@@ -321,17 +315,17 @@ Test names encode the rationale, not the mechanic:
+ 
+ ## Project artifacts
+ 
+-| File | Holds |
+-|---|---|
+-| `AGENTS.md` | How this project works. You are reading it. |
+-| `KICKOFF.md` | Paste-buffer for cold-starting a new session with full context. Refresh its *Project state* before use — a stale kickoff is worse than none, because it is trusted. |
+-| `docs/task.md` | Scope, milestones (`P-` content, `W-` web app), dependency map |
+-| `docs/tracker.md` | What shipped with evidence, numbered decisions, technical debt, bug ledger |
+-| `web/DESIGN.md` | The design system. Any new UI matches it. |
+-| `web/PATTERNS.md` | Interaction patterns — which UX pattern fits which content. Read before building a stage. |
+-| `docs/superpowers/specs/`, `plans/` | Delivery-loop artifacts |
+-| `docs/learnings/` | Guides written for future-you when a round teaches something expensive |
+-| `reference/stack.md` | The default stack. Versions live here and nowhere else. |
++| File                                | Holds                                                                                                                                                               |
++| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
++| `AGENTS.md`                         | How this project works. You are reading it.                                                                                                                         |
++| `KICKOFF.md`                        | Paste-buffer for cold-starting a new session with full context. Refresh its _Project state_ before use — a stale kickoff is worse than none, because it is trusted. |
++| `docs/task.md`                      | Scope, milestones (`P-` content, `W-` web app), dependency map                                                                                                      |
++| `docs/tracker.md`                   | What shipped with evidence, numbered decisions, technical debt, bug ledger                                                                                          |
++| `web/DESIGN.md`                     | The design system. Any new UI matches it.                                                                                                                           |
++| `web/PATTERNS.md`                   | Interaction patterns — which UX pattern fits which content. Read before building a stage.                                                                           |
++| `docs/superpowers/specs/`, `plans/` | Delivery-loop artifacts                                                                                                                                             |
++| `docs/learnings/`                   | Guides written for future-you when a round teaches something expensive                                                                                              |
++| `reference/stack.md`                | The default stack. Versions live here and nowhere else.                                                                                                             |
+ 
+ ## Recording work
+ 
+@@ -344,7 +338,7 @@ Two conventions worth keeping precisely:
+ **Evidence, not adjectives.** A completed entry cites what proves it — commit SHA,
+ test count, what a review caught. "Reviewed + merged" alone is not evidence.
+ 
+-**Every slice records what it deliberately did *not* do.** A `Deferred:` list on each
++**Every slice records what it deliberately did _not_ do.** A `Deferred:` list on each
+ entry. This is the same discipline as the "What this is NOT" box in stage 01, and it is
+ what stops scope creep being invisible.
+ 
+@@ -354,7 +348,7 @@ at the time is the value. Follow-ups are struck through with a date when closed
+ 
+ ### Prose that does not read as AI-written
+ 
+-Documentation is a deliverable here — the stage docs *are* the product — so it cannot
++Documentation is a deliverable here — the stage docs _are_ the product — so it cannot
+ read like generated filler. Run **`humanizer:humanizer`** over anything prose-heavy before
+ it is considered done: the stage docs, the READMEs, spec and plan bodies, learning
+ guides. It flags the tells this project is prone to — em-dash overuse, the rule of three,
+@@ -373,11 +367,11 @@ lookups. Match `web/DESIGN.md` when using either.
+ 
+ MCP servers, configured at user level, and what each is actually for here:
+ 
+-| Server | Use |
+-|---|---|
+-| **context7** | Library docs before writing framework code. Prefer over training memory — this Next.js version postdates it. |
+-| **playwright** | Driving the running app for the verification passes above. |
+-| **Codex-mem** | "Did I already decide this?" across sessions. |
++| Server         | Use                                                                                                          |
++| -------------- | ------------------------------------------------------------------------------------------------------------ |
++| **context7**   | Library docs before writing framework code. Prefer over training memory — this Next.js version postdates it. |
++| **playwright** | Driving the running app for the verification passes above.                                                   |
++| **Codex-mem**  | "Did I already decide this?" across sessions.                                                                |
+ 
+ ## Resolved contradiction (kept for history)
+ 
+diff --git a/KICKOFF.md b/KICKOFF.md
+index f2a92af..60df5f6 100644
+--- a/KICKOFF.md
++++ b/KICKOFF.md
+@@ -10,6 +10,8 @@ The merge parents are `79f9e31` and reviewed feature tip `81935a6`. Their merged
+ 
+ Preserve the parent checkout on `docs/2026-10-15-stage-10-kickoff`, its twelve original modified/untracked file hashes, and its port-3200 server PID 93201. Those files were not changed by integration. Future work can start from local develop in a fresh worktree without disturbing this checkout. The old Stage 10 preview on port 3100 was stopped before merged-tree build operations.
+ 
++The remaining parent-checkout edits were subsequently committed as `bfdeb67` and `36c2b82` for the user-approved follow-up merge. Their original bytes remain in history. The [remaining-edits report](docs/superpowers/reports/2026-10-23-stage-10-leftovers.md) records why the reviewed chapter and completion records take precedence over old drafts. The parent checkout can return to develop after this merge; the earlier dirty-file preservation requirement has been fulfilled by committing those files.
++
+ ## Verification and records
+ 
+ Read the [integration report](docs/superpowers/reports/2026-10-23-stage-10-integration.md) for the merged-tree evidence and preservation paths. Fresh format, lint, generated-route typecheck, **1,559 tests / 218 files** using `pnpm test --maxWorkers=1`, and a **52-page production build** passed after merge. Existing five-second limits, snapshots and runner configuration are unchanged. The old parallel failure remains unresolved causally; contention is a hypothesis.
+diff --git a/docs/superpowers/reports/2026-10-23-stage-10-leftovers.md b/docs/superpowers/reports/2026-10-23-stage-10-leftovers.md
+new file mode 100644
+index 0000000..0109bf5
+--- /dev/null
++++ b/docs/superpowers/reports/2026-10-23-stage-10-leftovers.md
+@@ -0,0 +1,22 @@
++# Remaining local edits: integration
++
++The user requested committing and merging all twelve remaining local files into develop. Commit `bfdeb67` captures the exact AGENTS.md edits: Markdown formatting, removal of the fixed co-author trailer, and the edited negotiability heading. Commit `36c2b82` captures the eleven remaining research, handoff and image files. Every original file hash matches the corresponding committed blob.
++
++The source branch is `docs/2026-10-15-stage-10-kickoff`; integration starts from develop `207ce0c`. The source drafts describe the earlier research checkpoint. Develop already contains the reviewed chapter, port, accepted-source notes and completion records.
++
++## Conflict resolution
++
++| File | Resolution and reason |
++| --- | --- |
++| KICKOFF.md | Retain develop's completed Stage 10/local-merge handoff; the old draft would restart completed work. |
++| docs/10-documentation.md | Retain the reviewed teaching and traps; the old research appendix remains in history. |
++| docs/task.md | Retain the completed milestone and local 16/18 count. |
++| docs/tracker.md | Retain completion evidence, historical entries and corrected source links. |
++| reference/cheatsheet-sources.md | Retain accepted-source use and the historical appendix pointer; the old anchor no longer exists. |
++| reference/stage-10-source-research.md | Retain the gathered notes plus accepted-chapter-use section. |
++
++All four gathered image assets already match develop byte-for-byte. AGENTS.md and image.png retain their original local bytes. The screenshot documents the earlier narrow caching example; it is a repository artifact and is not published in the app. No new document requirement, stage, reference sheet or application behavior is introduced.
++
++The resulting application matches all 567 inputs from final source identity `912cb2864b5b6602ac539b8d7e88aae44de92cbd91c19aa8733d463ea4604c79`. Relevant checks are the tracker-ledger tests, local Markdown links, authored whitespace and exact-source preservation. The earlier full merged-tree test/build evidence remains applicable to the unchanged application; this follow-up does not claim another full suite or UI audit.
++
++[Evidence](evidence/2026-10-23-stage-10-leftovers/) preserves original hashes, conflicts, explicit resolutions, validation and review. The merge uses --no-ff with a hand-written subject/body. Source commits preserve every draft rather than replacing develop with earlier content. No push or main promotion is included. Local W-3 remains 16/18 and W-6 remains 22/27.
+diff --git a/docs/tracker.md b/docs/tracker.md
+index cb11084..d576c7b 100644
+--- a/docs/tracker.md
++++ b/docs/tracker.md
+@@ -897,6 +897,8 @@ of new work, not assumed to survive from the last `git checkout`.
+ 
+ ## Next up
+ 
++**2026-10-23 remaining edits:** The user also approved committing and merging the original parent-checkout files. `bfdeb67` preserves AGENTS.md and `36c2b82` preserves the eleven research/handoff/image files. All original hashes match those commits. Conflict resolution retains the reviewed chapter and completion records; AGENTS edits and the caching screenshot are included. [Resolution report](superpowers/reports/2026-10-23-stage-10-leftovers.md). No application inputs change; W-3 stays 16/18 and W-6 stays 22/27.
++
+ **2026-10-23 local integration complete:** Stage 10's chapter and port landed in develop as `7819457`, after separate approval. Fresh merged-tree verification passed; local W-3 is **16/18**, W-6 **22/27**. Select the next work item separately. Push/main promotion and the deferred Stage 10 W-6 companion are not included.
+ 
+ **Historical pre-integration checkpoint:**
+diff --git a/image.png b/image.png
+new file mode 100644
+index 0000000..a9c00d1
+Binary files /dev/null and b/image.png differ

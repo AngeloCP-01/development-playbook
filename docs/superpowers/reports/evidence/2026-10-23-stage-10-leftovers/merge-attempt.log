@@ -1,0 +1,13 @@
+Auto-merging KICKOFF.md
+CONFLICT (content): Merge conflict in KICKOFF.md
+Auto-merging docs/10-documentation.md
+CONFLICT (content): Merge conflict in docs/10-documentation.md
+Auto-merging docs/task.md
+CONFLICT (content): Merge conflict in docs/task.md
+Auto-merging docs/tracker.md
+CONFLICT (content): Merge conflict in docs/tracker.md
+Auto-merging reference/cheatsheet-sources.md
+CONFLICT (content): Merge conflict in reference/cheatsheet-sources.md
+Auto-merging reference/stage-10-source-research.md
+CONFLICT (add/add): Merge conflict in reference/stage-10-source-research.md
+Automatic merge failed; fix conflicts and then commit the result.
