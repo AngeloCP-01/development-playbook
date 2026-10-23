@@ -1,0 +1,27 @@
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+ ❯ |unit| src/lib/stage-10-structure.test.ts (14 tests | 1 failed | 13 skipped) 4ms
+   × reader needs choose a small useful set without making every template mandatory 3ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 skipped (14)
+   Start at  08:59:24
+   Duration  111ms (transform 21ms, setup 0ms, import 28ms, tests 4ms, environment 0ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/lib/stage-10-structure.test.ts > reader needs choose a small useful set without making every template mandatory
+AssertionError: missing active teaching heading: Choose the document for the reader’s task: expected -1 to be greater than -1
+ ❯ section src/lib/stage-10-structure.test.ts:45:62
+     43|   const list = headings(active)
+     44|   const index = list.findIndex((heading) => heading.title === title)
+     45|   expect(index, 'missing active teaching heading: ' + title).toBeGreat…
+       |                                                              ^
+     46|   const start = list[index]
+     47|   const next = list
+ ❯ src/lib/stage-10-structure.test.ts:138:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

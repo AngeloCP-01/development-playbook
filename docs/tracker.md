@@ -3,24 +3,21 @@
 **Purpose:** the log. What actually shipped, what was decided and why, and what
 debt was taken on. Scope and planning live in [task.md](task.md).
 
-**Last updated:** 2026-10-15
-**Current phase:** W-3 and W-6 remain open. Fifteen of eighteen stages are
-interactive on local `develop` (01–09 and 11–16); stages 10, 17 and 18 remain. Twenty of
-twenty-five reference sheets are drawn on local `develop`, including Stage 08's
-`security` sheet. W-6.3q is implemented on
-`feat/stage-09-reference-companions` with **22 drawn / 27 registered**.
-Tasks 1–4 are independently approved. Task 4 has one nonblocking environmental
-finding, M1, for inherited Node color warnings; the clean development retry
-removes them. Whole-branch review returned Ready to merge at `bddf51d`; its M2
-citation-text finding is fixed in `35161b0`. The scoped rereview closed both findings
-with no new breakage. The branch is Ready to merge. Local develop remains
-**20/25**. No integration, push or deployment has occurred.
-Re-derive every count here rather than quoting it.
+**Last updated:** 2026-10-23
+**Current phase:** Stage 10's corrected chapter and twelve-panel interactive port are complete and independently reviewed on `feat/stage-10-documentation`. All nine plan tasks are complete. The combined review found no Critical or Important issue; all three Minor findings are addressed by final fixes `bd90a05` / `2e3ccc8` and the [clean scoped re-review](superpowers/reports/2026-10-23-stage-10-port-fix-review.md). Final-source checks: **1,559 tests / 218 files**, format/lint/typecheck/build, Stage 10 production **3/3**, development-console **1/1**, and **28 affected-panel states**. The earlier **27/27** full audit and **1,358-state** matrix remain pre-cue evidence; the [execution report](superpowers/reports/2026-10-20-stage-10-port-execution.md) distinguishes source identities. Original readers: no completeness gap; **4 HIT / 1 MISFILED**. A separate unchanged-Q3 recheck returned HIT without navigation. Feature W-3 is **16/18**; develop **15/18**; W-6 **22/27**. Integration is the next decision; no merge, push or deployment has occurred.
+
+The branch starts from local develop `79f9e31`; no merge, push, fetch or deployed-site check ran. Parent research/records/user edits and the existing port-3200 server remain separate. Integration requires a fresh user decision; production promotion remains the user’s.
 
 **The site is live** at https://acp-dev-playbook.vercel.app and verifies itself with
 `pnpm test:prod` (W-5, complete 2026-08-11). **`main` is production**: work branches merge to
 `develop`, `main` is reachable by pull request only, and every merge is asked about first —
 the flow is written up in `CLAUDE.md`'s Git conventions.
+
+### Historical project notes
+
+The notes below retain earlier checkpoints. Their counts, branch states and
+next-task claims describe those rounds; use Current phase above and Next up
+for the current handoff.
 
 **Stage 03's doc and its port are level, and merged.** `W-3.1` closed **TD-18**,
 **TD-21** and **TD-22**, taking `docs/03-architecture.md` to **14 subsections**; the doc-gaps
@@ -92,6 +89,11 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-10-23 | W-3.17 interactive port (feature complete) | Twelve-panel Documentation stage, lookup inspectors, README/ADR copy, practice reasoning and a shared saved/exportable change record are implemented and registered on the feature branch. | Nine-task plan complete. Registration `7f803bc`; typography/hit-area corrections `f06da40`; final reference cue/regression `bd90a05`, handoff corrections `2e3ccc8`. Meaningful RED/GREEN/teeth evidence retained. Final **1559/218**, format/lint/typecheck/52-page build, Stage 10 production **3/3**, dev **1/1**, affected matrix **28 states**. Earlier full **27/27** audit and **1358-state** matrix are pre-cue. Original readers: no completeness gap; **4 HIT / 1 MISFILED**; separate targeted Q3 **HIT**. Whole-branch review has no Critical/Important finding; all three Minors addressed in the clean scoped review. [Execution and archive](superpowers/reports/2026-10-20-stage-10-port-execution.md); [fix review](superpowers/reports/2026-10-23-stage-10-port-fix-review.md). | Integration/deployment; W-6 companion/publication and W-6.4; five language sheets; stages 17/18; unrelated repairs. Feature W-3 **16/18**, develop **15/18**, W-6 **22/27**. Original blind score and failed parallel logs remain; contention is a hypothesis. |
+| 2026-10-20 | Stage 10 chapter implementation | Canonical documentation teaching and shared ADR definition corrected on the isolated branch; the interactive port remains separate. | Chapter `5f8d2c2`, glossary `d2a5e4f`, teeth `012f165`, same-case rerun `cf8acf8`: 5 HIT, no remaining case teaching defect. Independent task reviews resolved one plan-authored inbound-link defect and one minor report-format issue. Full gate: 1512/1512 across 208 files, 52 pages, production 24/24, development 1/1; focused ADR matrix 4/4 in both themes. [Execution report](superpowers/reports/2026-10-20-stage-10-execution.md). Whole-branch `79f9e31..9fd17d2` found two missing positive guards; fix `4226dec` adds real Vitest RED/GREEN/teeth, fresh full 1512/208 and an independent Ready to merge verdict. No open findings. | Interactive port/registration, W-6 companion/publication, stages 17/18, language sheets, unrelated repairs, integration and deployment. W-3 remains 15/18, W-6 22/27; no merge/push. |
+| 2026-10-15 | Stage 10 handoff | **The user selected Stage 10 — Documentation for the next session.** Task W-3.17 and kickoff now start with chapter review/corrections, then a separately specified interactive port. No Stage 10 content or app code changed. | Counts re-derived from the registries: **15/18 interactive**, **22/27 drawn**. `docs/task.md` closes W-6.3q and defines the selected round; `KICKOFF.md` points to the parent repository, current evidence and D-39/D-54. Baseline develop and tracked origin/develop are `79f9e31`; this records branch contains only the three requested Markdown files. Independent review: no blocking findings; M1 wording clarified that the existing chapter awaits review/corrections. Ledger guards **2/2**, **73** local Markdown destinations resolve, whitespace clean; humanizer pass applied. | Stage 10 review, spec/plan and implementation remain unstarted. Deferred: stages 17/18, W-6.4, five language sheets, unrelated repairs and production promotion. Merge of this records branch requires its own approval. |
+| 2026-10-15 | Reference layout repair (merged) | **The approved no-ff merge `79f9e31` integrates the width fix and its evidence into local develop.** Single examples fill their description column; paired examples retain the comparison layout. | Parents `9de6c99` / `c4fb495`; merged tree equals the reviewed tip. Fresh merged-tree format/lint/typecheck and **1496/1496 across 207 files** passed. Retained identical-tree browser evidence: **24/24 production**, **1/1 development**, **28 geometry observations**. Feature branch deleted; user image retained. [Repair report](superpowers/reports/2026-10-15-reference-example-width.md); raw merge checks in `.superpowers/sdd/2026-10-15-reference-example-width/merged-state.json`. Tracked origin/develop now also points to `79f9e31`; no fresh fetch or deployed-site check in this refresh. | Full-row layouts, comparison redesign, content/syntax changes and copy controls. This session performed no push or production promotion. |
+| 2026-10-14 | W-6.3q (merged; recorded 2026-10-15) | **The approved no-ff merge `9de6c99` integrates caching/scaling reference companions and supporting citations.** W-6 becomes **22/27** on develop; W-3 remains **15/18**. | Parents `597fe0b` / `4e5532f`; tree identical to reviewed tip. Fresh merged-tree format/lint/typecheck, **1495/1495 across 207 files** and **52-page build** passed. Branch/worktree removed; all **224** evidence files preserved with verified hashes. [Reference execution report](superpowers/reports/2026-10-13-stage-09-reference.md); raw merge logs and review retained under `.superpowers/sdd/2026-10-13-stage-09-reference-evidence/integration-2026-10-14/`. Tracked origin/main `873c9d2` contains this source merge; deployment was not checked during this refresh. | Runtime infrastructure, diagrams/images, chapter/port changes, real order benchmarks, shared repairs, W-6.4 and five language sheets. Stage 10 proceeds as a separate round. |
 | 2026-10-15 | Reference layout repair | Single code examples fill the description column; paired examples retain the comparison layout. | Fix `e97c97c` on `fix/reference-example-width`; [repair report](superpowers/reports/2026-10-15-reference-example-width.md). RED and teeth each **1 failed / 16 passed**, restored GREEN **17/17**; full **1496/1496 across 207 files**, format/lint/typecheck exit 0. Independent source and final whole-branch reviews clean. Fresh production build and audit **24/24**; browser geometry **28 observations**, 320–2560px in both themes, no page overflow or console errors; development-console audit **1/1** against the verified existing dev server. | Full-row layout changes, comparison redesign, content/syntax changes and copy controls. Not merged, pushed or deployed. |
 | 2026-10-14 | W-6.3q (final review) | **Ready to merge, with no open finding.** Four task reviews and the whole-branch review are complete; the single final fix wave passed scoped rereview. | Whole-branch range `597fe0b..bddf51d`; citation-text fix `35161b0`, records `4a11c1b`; scoped rereview marks M1 and M2 ADDRESSED with no new breakage. Fresh controller suite at `4a11c1b`: **1495/1495 across 207 files**. Fresh build **52 pages**; retained unchanged-UI production **24/24**, clean development **1/1**, matrix **28 observations / 378 pairs**, blind lookup **4/4**. [Execution report](superpowers/reports/2026-10-13-stage-09-reference.md). | **Integration awaits a fresh user decision.** Branch **22/27**, develop **20/25**, W-3 **15/18**. Raw evidence is archived under the parent repository's `.superpowers/sdd/2026-10-13-stage-09-reference-evidence/`. Deferred: the previously scoped runtime, images, language sheets, W-6.4, chapter/port and unrelated repairs; push and production promotion. |
 | 2026-10-14 | W-6.3q (final fix) | **One consolidated final-review fix wave is committed; scoped rereview remains pending.** Whole-branch review at `bddf51d` returned Ready to merge with no blocking findings. M2 is a plan-authored Markdown citation-text gap, now encoded without changing URLs or credit order. M1 is inherited runner noise; historical logs remain intact and future captures use `env -u NO_COLOR`. | Fix `35161b0`; raw RED and isolated full-file teeth each **1 failed / 4 passed**, only the new guard; GREEN **5/5**, restored covering **55/55 across 9 files**, full **1495/1495 across 207 files**. Format/lint/typecheck exit 0; fresh network-enabled **52-page build**, with sandbox font-fetch failure retained. Snapshot guards pass unchanged. [Execution report](superpowers/reports/2026-10-13-stage-09-reference.md) records exact log hashes and dispositions. | **Scoped rereview and separately approved integration remain due.** Branch W-6 **22/27**, develop **20/25**, W-3 **15/18**. No merge, push or deployment. Deferred: diagrams/images, runtime infrastructure, chapter/port edits, W-6.4, five language sheets, real order benchmarks, shared-drill/storage repairs and promotion. |
@@ -893,6 +895,109 @@ of new work, not assumed to survive from the last `git checkout`.
 ---
 
 ## Next up
+
+**2026-10-23 implementation and review complete; integration decision next:** The chapter and port form one reviewed feature branch. All nine tasks, both original readers, the separate targeted Q3 correction check, Task 9 review, whole-branch review and the one scoped fix review are complete. Closing records and a hash-verified archive preserve the evidence and all eleven controller rulings. No product task remains in this plan. Decide whether to integrate into develop under the separate merge-approval rule; main promotion remains the user's. W-6 publication and the other deferred items remain separate work.
+
+**Historical reader checkpoint:**
+
+**2026-10-23 reader assessments complete; reviews next:** The [held-out rerun](superpowers/reports/2026-10-20-stage-10-port-reader-rerun.md) retains actual artifact drafts and frozen first choices. Completeness found no teaching gap; lookup returned 4 HIT / 1 MISFILED. R-M1 is Minor findability, carried to final review. Complete Task 9 review, whole-branch review and the hash-checked archive before delivering the branch. The application remains identical to the full gate/matrix source. No integration authority has been added.
+
+**Historical verification checkpoint:**
+
+**2026-10-22 port verified; reader/review gates active:** Tasks 1–8 are independently reviewed. The complete gate and expanded-state matrix passed on the corrected feature source; raw parallel failures, the typography test-first redo and exact-source comparisons remain in the [execution report](superpowers/reports/2026-10-20-stage-10-port-execution.md). Finish the two held-out reader assessments, Task 9 review, whole-branch review and evidence archive. Integration remains a separate decision. Feature W-3 is 16/18; develop 15/18; W-6 22/27.
+
+**Historical execution checkpoint:**
+
+**2026-10-22 execution authorized:** the user approved the full port plan and recommended subagent-driven method with “proceed.” Execute all nine tasks without intermediate permission prompts, retaining actual RED/GREEN/teeth and independent task reviews. Fresh baseline is 1512 tests across 208 files. Use [execution evidence](superpowers/reports/2026-10-20-stage-10-port-execution.md) and the plan-owned ledger to resume. Registration, live UI checks, cold readers and whole-branch review precede delivery. Integration remains separate; W-3 is 15/18 and W-6 22/27.
+
+**Historical plan checkpoint:**
+
+**2026-10-20 port plan written:** the user's “proceed” approved the full design; `3165b62` records that decision before planning. The [implementation plan](superpowers/plans/2026-10-20-stage-10-interactive-port.md) has nine tasks, full inline source/tests, explicit RED/GREEN/teeth steps, independent per-task review and final whole-branch verification. [Self-review](superpowers/reports/2026-10-20-stage-10-port-plan-review.md) covers canonical content, state/copy failures and atomic registration, including the Stage 17 negative-placeholder fixture. Static plan validation is not execution evidence. Review the plan and select an execution method; subagent-driven is recommended for the separate storage, copy, teaching and registration tasks. Inline still retains per-task reviews. Deferred: implementation/registration, W-6 publication, unrelated repairs, integration and deployment. W-3 stays **15/18**, W-6 **22/27**; no merge/push.
+
+**Historical port-design checkpoint:**
+
+**2026-10-20 port design proposed:** the user said “continue” after the chapter round. The separate [written design](superpowers/specs/2026-10-20-stage-10-interactive-port-design.md) covers twelve initial panels, copyable specimens and a reusable documentation-change plan, with explicit storage/copy failure behavior and chapter coverage. A fresh [builder check](superpowers/reports/2026-10-20-stage-10-port-design-review.md) returned “nothing important left.” These remain proposed design calls; no port implementation plan or product code has been written. Approve the spec before writing-plans. The feature branch starts at `c092ac7`; the completed chapter branch remains intact. Deferred: port planning/implementation/registration, W-6 publication, unrelated repairs, integration and deployment. W-3 stays **15/18**, W-6 **22/27**; no merge/push.
+
+**Historical chapter-closing checkpoint:**
+
+**2026-10-20 implementation complete:** chapter and guard corrections are verified and reviewed, Ready to merge. The user authorized inline execution through implementation. See [execution evidence](superpowers/reports/2026-10-20-stage-10-execution.md) and the [same-case rerun](superpowers/reports/2026-10-20-stage-10-correction-rerun.md). The corrected chapter and ADR glossary are committed; raw failures, successful runs and restoration diffs are retained. Five lookup answers are directly discoverable; no Toolshare teaching gap remains.
+
+Next, design the Stage 10 interactive port separately from the corrected chapter; integration is a separate user decision. W-3 stays **15/18**, W-6 **22/27**. No merge, push or deployment. Deferred: port implementation/registration, W-6 publication, stages 17/18, language sheets, unrelated repairs and promotion.
+
+**Historical planning checkpoint:** the spec and full-source plan were approved before execution; the earlier plan self-review checked embedded source in memory and did not count as RED/GREEN evidence.
+
+**Historical spec-proposal checkpoint:**
+
+**2026-10-20: Stage 10 chapter design is proposed; written-spec review is next.**
+The user authorized proceeding from research into the chapter round. Two fresh
+readers assessed the unchanged 230-line teaching baseline: completeness found
+configuration-enforcement and current/history contradictions; the five lookup
+questions returned **0 HIT / 3 PARTIAL / 0 MISFILED / 2 MISS**. The
+[findings report](superpowers/reports/2026-10-20-stage-10-cold-reader.md) preserves
+the exact Toolshare scenario and questions, source provenance, accepted gaps and
+rejected expansions. Existing ADR format/location were confirmed present;
+provider-specific claims were not judged by a reader forbidden from sources.
+
+The [proposed chapter spec](superpowers/specs/2026-10-20-stage-10-documentation-design.md)
+includes the shared ADR glossary correction, active-teaching tests that cannot
+pass on the research appendix, same-scenario rechecks and appropriate UI checks
+for the shared glossary. Independent builder check: **nothing important left**.
+Relevant baseline tests: **51/51 across 4 files**; this is not the full app gate.
+Research/source captures are committed separately as `e30c9a4`, on
+`docs/2026-10-20-stage-10-chapter`, cut from develop `79f9e31`. The parent checkout
+and its pre-existing changes are preserved. No merge, push or deployment.
+
+**Next checkpoint:** user reviews the written spec; then author the detailed
+implementation plan and recommend an execution method from its actual shape.
+Deferred: chapter implementation, correction rerun, implementation whole-branch
+review, interactive port, W-6 publication, unrelated repairs and integration.
+W-3 remains **15/18** and W-6 **22/27**. A spec builder check is not a completed
+review of an implementation that has not been written.
+
+**Historical research checkpoint:**
+
+**2026-10-15 research preflight:** The user requested primary-source gathering
+for Stage 10 before its formal chapter review, including visual candidates for
+W-6. [Research notes](../reference/stage-10-source-research.md) cover Diátaxis,
+ADRs, README use, architecture views, drift checks and provider claims in the
+existing examples. Three original PNGs were downloaded and visually inspected:
+the Diátaxis map and C4's context diagram with its key. Their creator pages,
+direct URLs, dimensions and licenses are in the
+[gathering ledger](../reference/cheatsheet-sources.md#stage-10-gathering-round--2026-10-15).
+The [gathered source notes](../reference/stage-10-source-research.md) record
+findings and explicitly leaves worked-example corrections for the formal round.
+These are working-tree changes, not integrated work. W-3 stays **15/18**;
+W-6 stays **22/27**. Deferred: chapter spec/plan and cold-reader review, corrected
+examples, AI section, interactive port, W-6 registration and publication.
+
+**Handoff baseline before research:**
+
+**2026-10-15: Stage 10 — Documentation is selected.** Start in the next session;
+this refresh does not begin the chapter review or port. W-6.3q merged as
+`9de6c99`, and the code-width repair merged as `79f9e31`. W-3 is **15/18** and
+W-6 is **22/27**. Historical integration-pending notes below describe earlier
+checkpoints, not work to resume.
+
+**Next checkpoint: W-3.17 chapter review scope.** Read
+[task W-3.17](task.md),
+[the chapter](10-documentation.md) and `KICKOFF.md`. Use brainstorming to agree
+the review scope, then the repository's chapter-phase spec/plan and cold-reader
+process. **Recommended: chapter first, port second**, because content corrections
+should be established before they are copied into interactive components.
+D-54 requires the cold-reader pass before the port; D-39 reserves ADR format,
+status, naming and location for Stage 10. Check those decisions and the actual
+chapter before proposing changes. Reuse the same scenario when rechecking fixes.
+
+Only after the chapter is reviewed should the port get its own spec/plan and
+execution-method decision. The earlier Subagent-Driven preference remains context;
+recommend a method based on the new plan's actual task shape. Stage 10 remains
+`ready: false`; stage registration and W-3 counts do not advance in this refresh.
+
+Deferred: stages 17/18, five language sheets, W-6.4 glossary/stack surfacing,
+unrelated shared repairs, new reference companions and production promotion.
+The user handles pushes and promotion to main; ask before every merge.
+
+**Historical next-up record, 2026-10-14 (before reference integration):**
 
 **2026-10-14: W-6.3q is reviewed and verified; integration is pending.** The isolated branch
 `feat/stage-09-reference-companions` registers caching and infrastructure scaling,

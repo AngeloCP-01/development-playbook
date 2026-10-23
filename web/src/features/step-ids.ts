@@ -1,3 +1,4 @@
+import { STEP_IDS as DOCUMENTATION } from './documentation/steps'
 import { STEP_IDS as DISCOVERY } from './discovery/steps'
 import { STEP_IDS as PLANNING } from './planning/steps'
 import { STEP_IDS as ARCHITECTURE } from './architecture/steps'
@@ -41,6 +42,7 @@ export const STEP_IDS_BY_SLUG: Record<string, readonly string[]> = {
   '07-code-review': CODE_REVIEW,
   '08-security-audit': SECURITY_AUDIT,
   '09-performance-optimization': PERFORMANCE,
+  '10-documentation': DOCUMENTATION,
   '11-ci-cd': CI_CD,
   '12-staging': STAGING,
   '13-production-deployment': PRODUCTION_DEPLOYMENT,

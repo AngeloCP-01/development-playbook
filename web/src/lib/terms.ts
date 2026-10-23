@@ -223,7 +223,7 @@ export const TERMS: Record<string, Term> = {
     name: 'ADR (Architecture Decision Record)',
     short:
       'A short document capturing one decision: context, choice, consequences.',
-    full: 'A short record of a single architecture decision — the context, the choice, and the consequences — written when the decision is made and never edited afterward. Superseded by a new ADR rather than revised.',
+    full: 'A short record of one architecture decision, including context, choice and consequences. Preserve the historical reasoning; a changed decision gets a new ADR, with a dated supersession notice linking the old and new records.',
     soWhat:
       'The value is the record of what was believed at the time. Months later, "why did we do it this way?" has an answer instead of a reconstruction.',
     see: '03-architecture',

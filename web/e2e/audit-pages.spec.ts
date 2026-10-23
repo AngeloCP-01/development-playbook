@@ -85,9 +85,9 @@ test('refuses to sweep a stage that is ready but renders no steps, since silence
   // `09-performance-optimization`. Porting each stage gave it a full rail,
   // turning a stage that must render nothing into one that renders steps, so
   // the test went red having found no defect and moved rather than being
-  // deleted. It names `10-documentation` because that stage is still unbuilt;
-  // when 10 is ported, move this again rather than deleting it.
-  await expect(readStepIds(page, '10-documentation')).rejects.toThrow(
+  // deleted. It names `17-maintenance` because that stage is still unbuilt;
+  // when 17 is ported, move this again rather than deleting it.
+  await expect(readStepIds(page, '17-maintenance')).rejects.toThrow(
     /renders no steps/,
   )
 })

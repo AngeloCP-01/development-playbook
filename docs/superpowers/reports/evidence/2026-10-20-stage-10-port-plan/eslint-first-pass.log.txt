@@ -1,0 +1,26 @@
+
+/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web/src/features/documentation/DocumentPanels.tsx
+  13:384  error  Do not use an `<a>` element to navigate to `/stages/04-project-setup/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages                 @next/next/no-html-link-for-pages
+  13:448  error  Do not use an `<a>` element to navigate to `/stages/13-production-deployment/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages         @next/next/no-html-link-for-pages
+  13:518  error  Do not use an `<a>` element to navigate to `/stages/14-post-deployment-verification/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+  13:605  error  Do not use an `<a>` element to navigate to `/stages/16-incident-management/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages           @next/next/no-html-link-for-pages
+  32:216  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                               react/no-unescaped-entities
+  32:587  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                               react/no-unescaped-entities
+  32:676  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                               react/no-unescaped-entities
+
+/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web/src/features/documentation/LookupPanels.tsx
+   8:129  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                               react/no-unescaped-entities
+  17:127  error  Do not use an `<a>` element to navigate to `/stages/03-architecture/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+  21:167  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                               react/no-unescaped-entities
+  32:391  error  Do not use an `<a>` element to navigate to `/stages/06-testing/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages       @next/next/no-html-link-for-pages
+  40:386  error  Do not use an `<a>` element to navigate to `/stages/05-development/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages   @next/next/no-html-link-for-pages
+
+/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web/src/features/documentation/PracticePanels.tsx
+   7:414  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                               react/no-unescaped-entities
+   7:514  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`                                                                                                                               react/no-unescaped-entities
+  17:329  error  Do not use an `<a>` element to navigate to `/stages/14-post-deployment-verification/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web/src/features/documentation/RecordPanels.tsx
+  42:141  error  Do not use an `<a>` element to navigate to `/stages/16-incident-management/`. Use `<Link />` from `next/link` instead. See: https://nextjs.org/docs/messages/no-html-link-for-pages  @next/next/no-html-link-for-pages
+
+✖ 16 problems (16 errors, 0 warnings)

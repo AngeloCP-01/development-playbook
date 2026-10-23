@@ -57,6 +57,7 @@ const AI_SECTION_STAGES = [
   '07-code-review',
   '08-security-audit',
   '09-performance-optimization',
+  '10-documentation',
   '11-ci-cd',
   '12-staging',
   '13-production-deployment',

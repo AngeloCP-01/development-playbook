@@ -1,0 +1,81 @@
+{
+  "files": 17,
+  "local_targets_checked": 297,
+  "failures": [
+    {
+      "file": "docs/superpowers/plans/2026-10-20-stage-10-documentation.md",
+      "target": "005-generated-contract-reference.md",
+      "reason": "missing path"
+    },
+    {
+      "file": "docs/superpowers/reports/evidence/2026-10-20-stage-10/cold-reader/chapter.md",
+      "target": "../reference/stage-10-source-research.md",
+      "reason": "missing path"
+    },
+    {
+      "file": "docs/superpowers/reports/evidence/2026-10-20-stage-10/cold-reader/chapter.md",
+      "target": "04-project-setup.md",
+      "reason": "missing path"
+    },
+    {
+      "file": "docs/superpowers/reports/evidence/2026-10-20-stage-10/cold-reader/chapter.md",
+      "target": "13-production-deployment.md",
+      "reason": "missing path"
+    },
+    {
+      "file": "docs/superpowers/reports/evidence/2026-10-20-stage-10/cold-reader/chapter.md",
+      "target": "14-post-deployment-verification.md",
+      "reason": "missing path"
+    },
+    {
+      "file": "docs/superpowers/reports/evidence/2026-10-20-stage-10/cold-reader/chapter.md",
+      "target": "16-incident-management.md",
+      "reason": "missing path"
+    },
+    {
+      "file": "docs/superpowers/reports/evidence/2026-10-20-stage-10/cold-reader/chapter.md",
+      "target": "03-architecture.md",
+      "reason": "missing path"
+    },
+    {
+      "file": "docs/superpowers/reports/evidence/2026-10-20-stage-10/cold-reader/chapter.md",
+      "target": "06-testing.md",
+      "reason": "missing path"
+    },
+    {
+      "file": "docs/superpowers/reports/evidence/2026-10-20-stage-10/cold-reader/chapter.md",
+      "target": "05-development.md#commits-and-branches",
+      "reason": "missing path"
+    },
+    {
+      "file": "docs/superpowers/reports/evidence/2026-10-20-stage-10/cold-reader/chapter.md",
+      "target": "14-post-deployment-verification.md",
+      "reason": "missing path"
+    },
+    {
+      "file": "docs/superpowers/reports/evidence/2026-10-20-stage-10/cold-reader/chapter.md",
+      "target": "16-incident-management.md",
+      "reason": "missing path"
+    },
+    {
+      "file": "docs/tracker.md",
+      "target": "NN-name.md",
+      "reason": "missing path"
+    },
+    {
+      "file": "docs/tracker.md",
+      "target": "05-development.md#commits",
+      "reason": "missing heading"
+    },
+    {
+      "file": "docs/tracker.md",
+      "target": "NN-name.md#anchor",
+      "reason": "missing path"
+    },
+    {
+      "file": "docs/tracker.md",
+      "target": "10-documentation.md#research-findings-for-chapter-review",
+      "reason": "missing heading"
+    }
+  ]
+}

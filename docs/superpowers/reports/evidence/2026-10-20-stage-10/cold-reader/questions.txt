@@ -1,0 +1,5 @@
+1. A second maintainer cannot run the app from a fresh clone. Where do I find what the setup guide must include and how to verify it?
+2. We replaced an earlier architecture decision. What should I write now, and how does a reader discover that the old decision no longer applies?
+3. A user needs the exact allowed values and defaults for a retry option. Should that live in a tutorial, reference page or explanation?
+4. This change adds configuration and a response field. Which documents need updates, who owns them, and what checks detect drift?
+5. An AI assistant drafted documentation claiming a fix was validated. What evidence must I check before publishing it?

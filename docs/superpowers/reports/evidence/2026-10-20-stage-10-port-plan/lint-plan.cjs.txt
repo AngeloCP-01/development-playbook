@@ -1,0 +1,18 @@
+const fs = require('fs')
+const path = require('path')
+const web = '/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web'
+const { ESLint } = require(path.join(web, 'node_modules/eslint'))
+const input = JSON.parse(fs.readFileSync('/private/tmp/stage10-port-plan-2026-10-20/sources.json', 'utf8'))
+;(async () => {
+  const eslint = new ESLint({ cwd: web })
+  const results = []
+  for (const [name, text] of Object.entries(input)) results.push(...await eslint.lintText(text, { filePath: path.join(path.dirname(web), name) }))
+  const errors = results.reduce((n, r) => n + r.errorCount, 0)
+  const warnings = results.reduce((n, r) => n + r.warningCount, 0)
+  const formatter = await eslint.loadFormatter('stylish')
+  const report = formatter.format(results)
+  fs.writeFileSync('/private/tmp/stage10-port-plan-2026-10-20/eslint.log', report)
+  process.stdout.write(report)
+  console.log(Object.keys(input).length + ' planned virtual sources; ' + errors + ' ESLint errors, ' + warnings + ' warnings. No production source written or test executed.')
+  process.exitCode = errors || warnings ? 1 : 0
+})().catch(error => { console.error(error); process.exitCode = 1 })

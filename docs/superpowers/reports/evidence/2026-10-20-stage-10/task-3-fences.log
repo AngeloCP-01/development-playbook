@@ -1,0 +1,11 @@
+Fence 1: line 65, markdown: # Project name
+Fence 2: line 119, markdown: # ADR 004: maintain the initial field reference by hand
+Fence 3: line 139, markdown: # ADR 005: generate the factual contract reference
+Fence 4: line 176, text: Attendee -- books or cancels --> Workshop app -- reads/writes --> Booking store
+Fence 5: line 215, ts: // Keep the larger record in our external store and put only its ID in
+Fence 6: line 227, ts: // Preserve the entered title for display. Apply normalization only
+Fence 7: line 233, ts: // This example's date interval includes both endpoints; account for
+Fence 8: line 239, ts: // This illustrative export handles at most 1000 rows. Expose that cap
+Extracted 4 comment-only TypeScript fences to /var/folders/6p/sl8n2nd96kzfxc82ll0plsvh0000gn/T/stage10-fences.sswcq3lk/comments.ts
+tsc exit: 0
+Comment-only compile check; no executable runtime behavior claimed.

@@ -1,0 +1,38 @@
+{
+  "implementation_review_tip": "4226dec0f026ea0d5a4f28da193f1d652d354bc3",
+  "closing_records_tip": "de221a31462276fd7f62d7faa69dea75d80606fb",
+  "source_trees": {
+    "docs/10-documentation.md": {
+      "reviewed": "c886b9f390a36f210c0e0aa685a52e14eb58a598",
+      "current": "c886b9f390a36f210c0e0aa685a52e14eb58a598"
+    },
+    "docs/03-architecture.md": {
+      "reviewed": "a5267f1fffbb773ad573c26efb565b9f07dd0489",
+      "current": "a5267f1fffbb773ad573c26efb565b9f07dd0489"
+    },
+    "web": {
+      "reviewed": "cf7b852866bb8f0373799440169cc3728432b5ec",
+      "current": "cf7b852866bb8f0373799440169cc3728432b5ec"
+    },
+    "reference": {
+      "reviewed": "6b84eecb5afdbe0d6893e5d90cff927f21ee25f6",
+      "current": "6b84eecb5afdbe0d6893e5d90cff927f21ee25f6"
+    }
+  },
+  "parent_files": {
+    "AGENTS.md": true,
+    "KICKOFF.md": true,
+    "docs/10-documentation.md": true,
+    "docs/task.md": true,
+    "docs/tracker.md": true,
+    "reference/cheatsheet-sources.md": true,
+    "image.png": true,
+    "reference/doc-templates-dev-team.jpeg": true,
+    "reference/stage-10-source-research.md": true,
+    "reference/stage10-c4-system-context-key.png": true,
+    "reference/stage10-c4-system-context.png": true,
+    "reference/stage10-diataxis-map.png": true
+  },
+  "all_parent_hashes_unchanged": true,
+  "branch": "docs/2026-10-20-stage-10-chapter"
+}

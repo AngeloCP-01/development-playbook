@@ -1,0 +1,13 @@
+diff --git a/docs/10-documentation.md b/docs/10-documentation.md
+index c886b9f..a6ee063 100644
+--- a/docs/10-documentation.md
++++ b/docs/10-documentation.md
+@@ -243,6 +243,8 @@ The following are illustrative comment patterns, not runnable implementations:
+ 
+ ### Update and verify documentation with the change
+ 
++A configuration example means the app stops booting when it drifts.
++
+ For each change, trace the authoritative fact to the documents that describe it.
+ When working alone, you are the owner; adding a team does not create ownership
+ for the first time. Give each living document a review trigger, such as a

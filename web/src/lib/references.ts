@@ -15,6 +15,39 @@ export type Reference = {
 }
 
 export const REFERENCES: Record<string, Reference[]> = {
+  '10-documentation': [
+    {
+      title: 'Diátaxis',
+      source: 'Diátaxis',
+      url: 'https://diataxis.fr/start-here/',
+      adds: 'The four reader needs and how to separate guidance that serves incompatible tasks.',
+    },
+    {
+      title: 'About READMEs',
+      source: 'GitHub Docs',
+      url: 'https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes',
+      adds: 'Repository entry-point guidance for purpose, getting started, help and maintainers.',
+    },
+    {
+      title: 'Documenting Architecture Decisions',
+      source: 'Michael Nygard · Cognitect',
+      url: 'https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions',
+      adds: 'The original rationale for small decision records and preserving superseded decisions.',
+    },
+    {
+      title: 'C4 diagram review checklist',
+      source: 'C4 model',
+      url: 'https://c4model.com/diagrams/checklist',
+      adds: 'Specific review questions for scope, notation, elements and labeled relationships.',
+    },
+    {
+      title: 'Docs as code',
+      source: 'Write the Docs',
+      url: 'https://www.writethedocs.org/guide/docs-as-code/',
+      adds: 'How version control, review and automation support a documentation workflow.',
+    },
+  ],
+
   '09-performance-optimization': [
     {
       title: 'Web Vitals',

@@ -116,10 +116,11 @@ export const STAGES: Stage[] = [
     cadence: 'Continuous',
     slug: '10-documentation',
     title: 'Documentation',
-    blurb: 'Write down what code cannot say: why.',
+    blurb:
+      'Help the next person use the system, and preserve the reasons behind it.',
     group: 'Building',
     timing: 'Continuously, a little with every change.',
-    ready: false,
+    ready: true,
   },
   {
     num: '11',

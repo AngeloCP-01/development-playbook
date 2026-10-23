@@ -1,0 +1,22 @@
+[
+  {
+    "command": "pnpm format:check",
+    "exit": 0,
+    "log": "final-format-check.log"
+  },
+  {
+    "command": "pnpm lint",
+    "exit": 0,
+    "log": "final-lint.log"
+  },
+  {
+    "command": "pnpm typecheck",
+    "exit": 0,
+    "log": "final-typecheck.log"
+  },
+  {
+    "command": "pnpm test",
+    "exit": 0,
+    "log": "final-test.log"
+  }
+]

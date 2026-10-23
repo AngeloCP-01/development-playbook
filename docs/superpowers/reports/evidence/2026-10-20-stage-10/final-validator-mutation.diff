@@ -1,0 +1,14 @@
+diff --git a/docs/10-documentation.md b/docs/10-documentation.md
+index c886b9f..a00db1c 100644
+--- a/docs/10-documentation.md
++++ b/docs/10-documentation.md
+@@ -257,8 +257,7 @@ changed command, configuration schema, contract or boundary.
+ | Setup or release steps change | Actual commands, access and environment | README and linked procedures | Follow the documented path in a safe environment and record the result | Maintainer / procedure change |
+ | A known failure or release changes | Diagnosed behavior and release record | Troubleshooting, changelog or release notes as needed | Verify the check/workaround and publish only supported impact claims | Maintainer / confirmed fix or release |
+ 
+-`.env.example` lists configuration; a validator enforces accepted values only
+-if the application actually invokes it. Safe placeholders and harmless defaults
++`.env.example` lists configuration; a validator enforces accepted values. Safe placeholders and harmless defaults
+ are useful examples. Real credentials are not. This static playbook requires no
+ environment variables; configuration artifacts here illustrate applications
+ that do need them.
