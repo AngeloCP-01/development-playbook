@@ -4,7 +4,7 @@
 debt was taken on. Scope and planning live in [task.md](task.md).
 
 **Last updated:** 2026-10-20
-**Current phase:** Stage 10's port plan is approved for subagent-driven execution (2026-10-22). Fresh baseline: 1512/1512 across 208 files. The [execution report](superpowers/reports/2026-10-20-stage-10-port-execution.md) and plan-owned progress ledger track actual task evidence/reviews. Stage 10 remains unregistered while implementation starts; W-3 stays **15/18**, W-6 **22 drawn / 27 registered**. The completed chapter branch is preserved; no merge, push or deployment.
+**Current phase:** Stage 10's interactive port is implemented and registered on the feature branch (`f06da40`; verification records `1feb10a`). Both cold readers are complete: no completeness gap; 4 HIT / 1 MISFILED. Task 9 and whole-branch reviews are active, including Minor navigation finding R-M1. The [execution report](superpowers/reports/2026-10-20-stage-10-port-execution.md) records 1,558 tests across 218 files with one worker and unchanged limits, 27/27 production checks, 1/1 development-console check and 1,358 expanded UI states. Feature-tree W-3 is **16/18**; develop stays **15/18**. W-6 stays **22 drawn / 27 registered**. The chapter branch is preserved; no merge, push or deployment.
 
 The branch starts from local develop `79f9e31`; no merge, push, fetch or deployed-site check ran. Parent research/records/user edits and the existing port-3200 server remain separate. Integration requires a fresh user decision; production promotion remains the user’s.
 
@@ -894,6 +894,14 @@ of new work, not assumed to survive from the last `git checkout`.
 ---
 
 ## Next up
+
+**2026-10-23 reader assessments complete; reviews next:** The [held-out rerun](superpowers/reports/2026-10-20-stage-10-port-reader-rerun.md) retains actual artifact drafts and frozen first choices. Completeness found no teaching gap; lookup returned 4 HIT / 1 MISFILED. R-M1 is Minor findability, carried to final review. Complete Task 9 review, whole-branch review and the hash-checked archive before delivering the branch. The application remains identical to the full gate/matrix source. No integration authority has been added.
+
+**Historical verification checkpoint:**
+
+**2026-10-22 port verified; reader/review gates active:** Tasks 1–8 are independently reviewed. The complete gate and expanded-state matrix passed on the corrected feature source; raw parallel failures, the typography test-first redo and exact-source comparisons remain in the [execution report](superpowers/reports/2026-10-20-stage-10-port-execution.md). Finish the two held-out reader assessments, Task 9 review, whole-branch review and evidence archive. Integration remains a separate decision. Feature W-3 is 16/18; develop 15/18; W-6 22/27.
+
+**Historical execution checkpoint:**
 
 **2026-10-22 execution authorized:** the user approved the full port plan and recommended subagent-driven method with “proceed.” Execute all nine tasks without intermediate permission prompts, retaining actual RED/GREEN/teeth and independent task reviews. Fresh baseline is 1512 tests across 208 files. Use [execution evidence](superpowers/reports/2026-10-20-stage-10-port-execution.md) and the plan-owned ledger to resume. Registration, live UI checks, cold readers and whole-branch review precede delivery. Integration remains separate; W-3 is 15/18 and W-6 22/27.
 
