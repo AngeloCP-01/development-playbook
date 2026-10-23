@@ -1,0 +1,58 @@
+[
+  {
+    "name": "format",
+    "command": [
+      "pnpm",
+      "format:check"
+    ],
+    "cwd": "/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web",
+    "started": "2026-10-23T07:42:19.369188+00:00",
+    "exit_code": 0,
+    "log": "format.log"
+  },
+  {
+    "name": "lint",
+    "command": [
+      "pnpm",
+      "lint"
+    ],
+    "cwd": "/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web",
+    "started": "2026-10-23T07:42:22.833967+00:00",
+    "exit_code": 0,
+    "log": "lint.log"
+  },
+  {
+    "name": "typecheck",
+    "command": [
+      "pnpm",
+      "typecheck"
+    ],
+    "cwd": "/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web",
+    "started": "2026-10-23T07:42:30.548969+00:00",
+    "exit_code": 0,
+    "log": "typecheck.log"
+  },
+  {
+    "name": "test",
+    "command": [
+      "pnpm",
+      "test",
+      "--maxWorkers=1"
+    ],
+    "cwd": "/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web",
+    "started": "2026-10-23T07:42:32.755962+00:00",
+    "exit_code": 0,
+    "log": "test.log"
+  },
+  {
+    "name": "build",
+    "command": [
+      "pnpm",
+      "build"
+    ],
+    "cwd": "/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web",
+    "started": "2026-10-23T07:43:50.395533+00:00",
+    "exit_code": 0,
+    "log": "build.log"
+  }
+]

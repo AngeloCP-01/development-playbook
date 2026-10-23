@@ -1,0 +1,27 @@
+{
+  "userApproval": "Option 1: merge locally into develop, 2026-10-23",
+  "merge": "7819457dc34258479f2df64f27fda81aeff8e2a2",
+  "parents": [
+    "79f9e315ab8dbb59087a15de436114b9a8d9286a",
+    "81935a64f91d986c46e10e4d735a06b1f4fc27fb"
+  ],
+  "mergeTree": "ed2d56d51d1318681139ac737b734a762acdf9d8",
+  "featureTree": "ed2d56d51d1318681139ac737b734a762acdf9d8",
+  "applicationSourceIdentity": "912cb2864b5b6602ac539b8d7e88aae44de92cbd91c19aa8733d463ea4604c79",
+  "applicationFiles": 567,
+  "parentHashesUnchanged": 12,
+  "externalSourcesCurrentLocation": "/Users/angelito/personal/Development-Playbook/.superpowers/sdd/2026-10-20-stage-10-interactive-port-external-sources",
+  "externalSourceCopies": [
+    {
+      "file": "/Users/angelito/personal/Development-Playbook/.superpowers/sdd/2026-10-20-stage-10-interactive-port-external-sources/external-source-snapshots.tar.gz",
+      "bytes": 45989,
+      "sha256": "6362314f400a5a01d64921bebccf2604d28248b9149a3e36f8170f6c5d5582c6"
+    },
+    {
+      "file": "/Users/angelito/personal/Development-Playbook/.superpowers/sdd/2026-10-20-stage-10-interactive-port-external-sources/preservation.json",
+      "bytes": 1889,
+      "sha256": "714e2078b09af0401b9564d92b845374e6de916613a321e1284da0a28c46369f"
+    }
+  ],
+  "pushOrDeployment": false
+}

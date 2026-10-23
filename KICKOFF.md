@@ -1,40 +1,29 @@
-# Kickoff: Stage 10 implementation complete
+# Kickoff: Stage 10 merged locally
 
-Updated 2026-10-23. The corrected Documentation chapter and twelve-panel interactive port are implemented, verified and independently reviewed. The approved nine-task plan is complete. Resume with the integration decision, rather than repeating implementation or reader assessments.
+Updated 2026-10-23. The corrected Documentation chapter and twelve-panel interactive port are complete, reviewed and merged into local develop as **7819457** (`--no-ff`). The user selected local merge option 1. The approved nine-task implementation plan and local integration are complete; select a new work item separately.
 
-## Workspace and authority
+## Current state and authority
 
-- Worktree: `/Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter`
-- Branch: `feat/stage-10-documentation`; query `git log -1 --oneline` for the closing records tip.
-- Develop base: `79f9e31`; local develop and tracked origin/develop remain there.
-- Preserved chapter branch: `docs/2026-10-20-stage-10-chapter` at `c092ac7`.
+Local develop now has **16/18** interactive stages (01-16); stages 17 and 18 remain. W-6 stays **22 drawn / 27 registered**. No push or main promotion was performed. Tracked origin/develop is still `79f9e31`; this is a local ref observation, not a fresh remote fetch. Main is production and promotion remains the user's.
 
-Neither branch is merged, pushed or deployed. AGENTS.md requires separate approval before every merge, including develop. Main promotion remains the user's. Preserve the parent checkout's original twelve file hashes, its branch `docs/2026-10-15-stage-10-kickoff`, and its port-3200 server (PID 93201).
+The merge parents are `79f9e31` and reviewed feature tip `81935a6`. Their merged/feature Git trees match exactly. The temporary feature branch/worktree can be removed after the integration records commit. The chapter branch `docs/2026-10-20-stage-10-chapter` remains at `c092ac7`.
 
-The worktree has its own copied installed dependencies. No dependency, lockfile or runner configuration changed. Stable production preview: `http://localhost:3100/stages/10-documentation#reference`, build `2Pb3LZ-1ODrVTInRsi9Dv`, owned PID 42455. Check ownership/listener before any future build or shutdown. Ports 3100/3101 share `.next` and run sequentially.
+Preserve the parent checkout on `docs/2026-10-15-stage-10-kickoff`, its twelve original modified/untracked file hashes, and its port-3200 server PID 93201. Those files were not changed by integration. Future work can start from local develop in a fresh worktree without disturbing this checkout. The old Stage 10 preview on port 3100 was stopped before merged-tree build operations.
 
-## Completed scope and evidence
+## Verification and records
 
-The [execution report](docs/superpowers/reports/2026-10-20-stage-10-port-execution.md) records all nine tasks and the final source identity. The port has document/fact/change inspectors, copyable README/ADR specimens, comment/evidence practice, eight saved planning fields and ten checklist items. Workshop is illustrative; Toolshare stayed held out. Stage numbers remain filing codes and documentation runs continuously.
+Read the [integration report](docs/superpowers/reports/2026-10-23-stage-10-integration.md) for the merged-tree evidence and preservation paths. Fresh format, lint, generated-route typecheck, **1,559 tests / 218 files** using `pnpm test --maxWorkers=1`, and a **52-page production build** passed after merge. Existing five-second limits, snapshots and runner configuration are unchanged. The old parallel failure remains unresolved causally; contention is a hypothesis.
 
-Final-source checks passed: **1,559 tests / 218 files** using `pnpm test --maxWorkers=1`, format, lint, generated-route typecheck, 52-page build, Stage 10 production **3/3**, development-console **1/1 with zero detected React warnings**, and **28 affected-reference states** across both selections, themes and seven widths.
+The identical application source retains final browser flows **3/3**, affected-reference **28 states** and development-console **1/1 with zero detected React warnings**. These were not rerun after merge. The earlier full production **27/27** and twelve-panel **1,358-state** matrix are pre-cue evidence, with separate source identity. The [execution report](docs/superpowers/reports/2026-10-20-stage-10-port-execution.md) preserves those limits and raw failures.
 
-The earlier full **27/27 production audit** and **1,358-state twelve-panel matrix** belong to the pre-cue source. Only LookupPanels.tsx and its test changed afterward; the final affected checks cover the cue. Source identities/build IDs are distinct in the execution report. The final changed reference panel measures 1.261576 screens at 1024×768; the pre-cue largest expanded panel measured 2.509 screens.
+The [combined review](docs/superpowers/reports/2026-10-20-stage-10-port-whole-branch-review.md) found no Critical/Important issue and three Minor findings. The single fix wave addressed all three; the [scoped review](docs/superpowers/reports/2026-10-23-stage-10-port-fix-review.md) is clean. Original public-UI readers found no completeness gap and returned **4 HIT / 1 MISFILED**. The same reader's separate targeted Q3 check is HIT without navigation; it does not replace the blind result.
 
-The original default parallel test run failed. Contention remains a hypothesis, not an established cause. Unchanged focused/isolated and one-worker passes do not prove a unique cause. Raw failures remain; no time limit, snapshot or runner configuration changed. The typography measurement-only attempt and its genuine test-first redo are also preserved.
+For intent and coverage, use [task W-3.17](docs/task.md), [coverage](docs/stage-10-status.md), the [approved spec](docs/superpowers/specs/2026-10-20-stage-10-interactive-port-design.md) and [plan](docs/superpowers/plans/2026-10-20-stage-10-interactive-port.md). Find W-3.17 by ID. Stage numbers remain filing codes; documentation runs continuously.
 
-The [original public-UI readers](docs/superpowers/reports/2026-10-20-stage-10-port-reader-rerun.md) found no completeness gap and returned **4 HIT / 1 MISFILED**. The reference cue's separate unchanged-Q3 recheck returned HIT at the original panel without navigation. Prior knowledge limits that targeted result; the original blind score remains unchanged. All reader pages/profile are released.
+The [495-member evidence archive](docs/superpowers/reports/evidence/2026-10-20-stage-10-port/README.md) preserves the retired plan workspace, including its ledger, rulings, task/review outputs, raw failures, mutations/restorations and reader evidence. Read `progress.md` with `tar -xOf execution-workspace.tar.gz progress.md` from that archive directory. Do not repeat completed tasks because scratch files are absent.
 
-The [combined whole-branch review](docs/superpowers/reports/2026-10-20-stage-10-port-whole-branch-review.md), range `79f9e31..534b681`, found no Critical or Important issue and three Minor findings. The single fix wave `bd90a05` / `2e3ccc8` addressed all three. The [scoped fix review](docs/superpowers/reports/2026-10-23-stage-10-port-fix-review.md), range `534b681..2e3ccc8`, is clean with no new breakage. These are code-review verdicts, not integration approval.
-
-## Resuming without scratch files
-
-Read `docs/task.md` W-3.17 and tracker Current phase/Next up for the current decision. For behavior/coverage, use [stage coverage](docs/stage-10-status.md) and the execution report. For original intent, use the [approved spec](docs/superpowers/specs/2026-10-20-stage-10-interactive-port-design.md) and [nine-task plan](docs/superpowers/plans/2026-10-20-stage-10-interactive-port.md).
-
-The plan workspace is retired after hash-verified archival. Its ledger, all briefs/reports/reviews, raw failures/successes, mutations/restorations, reader instruments/output, browser evidence and source manifests are in [the evidence archive](docs/superpowers/reports/evidence/2026-10-20-stage-10-port/README.md). Read the ledger with `tar -xOf execution-workspace.tar.gz progress.md` from that directory. The manifest records every member/hash; closure-verification.json records independent integrity checks. Nine full external-page snapshots have a separate verified local archive whose location/hashes are recorded. Do not redispatch completed tasks because the scratch directory is absent.
-
-Feature W-3 is **16/18**; develop remains **15/18** until approved integration. W-6 stays **22 drawn / 27 registered**. Research images and source notes are preserved; no captured image is published by this port.
+The nine full external-page captures have a verified copy in `/Users/angelito/personal/Development-Playbook/.superpowers/sdd/2026-10-20-stage-10-interactive-port-external-sources/`; the integration provenance supersedes the earlier temporary-worktree location. Workshop is illustrative; Toolshare remained held out of teaching/tests. Research images are preserved but unpublished.
 
 ## Deferred
 
-Integration and deployment; W-6 companion/publication and W-6.4; five language sheets; stages 17/18; unrelated repairs. Preserve both feature and chapter branches for the user's integration decision.
+Push/main promotion; Stage 10 W-6 companion/publication and W-6.4; five language sheets; stages 17/18; unrelated repairs. No next implementation task is authorized by this merge approval.

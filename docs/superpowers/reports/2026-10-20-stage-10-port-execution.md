@@ -200,3 +200,9 @@ Deferred: integration, deployment, W-6 companion/publication, W-6.4, five langua
 sheets, stages 17/18 and unrelated repairs remain outside this port. This feature
 tree has 16/18 ready stages; develop remains 15/18 until an approved merge. W-6
 remains 22 drawn / 27 registered.
+
+## Subsequent approved local integration
+
+The user selected option 1 on 2026-10-23. No-ff merge `7819457` integrates reviewed tip `81935a6` into local develop, with identical Git trees. Fresh merged-tree format/lint/typecheck, **1,559 tests / 218 files** and a **52-page build** pass. The [integration report](2026-10-23-stage-10-integration.md) supersedes this report's earlier integration-pending handoff and records preservation/cleanup. Local develop is now **16/18**; W-6 stays **22/27**. No push or main promotion occurred.
+
+The external full-page capture archive now has a verified copy at `/Users/angelito/personal/Development-Playbook/.superpowers/sdd/2026-10-20-stage-10-interactive-port-external-sources/`. Its original hash is unchanged. This supersedes the temporary worktree location in the historical archive manifest, whose bytes remain intact.

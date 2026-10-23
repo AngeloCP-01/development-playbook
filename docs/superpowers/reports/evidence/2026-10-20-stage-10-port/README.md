@@ -18,3 +18,5 @@ tar -xOf execution-workspace.tar.gz progress.md
 Tasks 1 and 2 originally committed evidence under `.superpowers/`. Those commits remain in history; this archive carries their final bytes with the other tasks. The former scratch paths are retired only after the manifest check.
 
 The completed chapter round has its own [evidence archive](../2026-10-20-stage-10/). Application checks here concern the feature tree, rather than the deployed site. Integration, deployment and W-6 publication remain deferred.
+
+The user subsequently approved local integration as merge `7819457`; see the [integration report](../../2026-10-23-stage-10-integration.md). Its provenance records the external captures' new verified parent-repository location before temporary-worktree cleanup. The archived implementation checkpoint and manifest retain their historical bytes. Deployment and W-6 publication remain deferred.

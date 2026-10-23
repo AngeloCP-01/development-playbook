@@ -1,0 +1,6 @@
+{
+  "owned3100": "COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME\nnode    42455 angelito   12u  IPv6 0x69949de24b2da6d3      0t0  TCP *:3100 (LISTEN)\n",
+  "ownedCwd": "COMMAND   PID     USER   FD   TYPE DEVICE SIZE/OFF     NODE NAME\nnode    42455 angelito  cwd    DIR   1,13     1056 52720982 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web\n",
+  "preserved3200": "COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME\nnode    93201 angelito   17u  IPv6 0xa77f2c2a309a2d27      0t0  TCP *:3200 (LISTEN)\n",
+  "action": "SIGTERM only owned worktree PID42455 before .next operations"
+}

@@ -13,22 +13,15 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current checkpoint (2026-10-23): Stage 10's chapter and twelve-panel interactive port are implemented, verified and independently reviewed on the feature branch.** All nine tasks are complete. The combined review found no Critical or Important issue; its three Minor findings are addressed by `bd90a05` / `2e3ccc8` and the [clean scoped re-review](superpowers/reports/2026-10-23-stage-10-port-fix-review.md). Final-source checks: **1,559 tests / 218 files** with one worker and unchanged limits, format/lint/typecheck/build, Stage 10 production **3/3**, development-console **1/1**, and **28 affected-panel states**. The earlier full **27/27** production audit and **1,358-state** matrix remain explicitly pre-cue evidence. [Execution report](superpowers/reports/2026-10-20-stage-10-port-execution.md). Original cold readers: no completeness gap; **4 HIT / 1 MISFILED**. The separate same-question Q3 correction check is HIT without navigation; it does not replace the blind result. Feature-tree W-3 is **16/18**; develop stays **15/18**, W-6 **22/27**. No integration has occurred.
+**Current checkpoint (2026-10-23): Stage 10's corrected chapter and twelve-panel interactive port are merged locally into develop as `7819457` (`--no-ff`).** All nine plan tasks and independent reviews are complete; final fixes `bd90a05` / `2e3ccc8` cleared the three Minor findings. Fresh merged-tree format/lint/typecheck, **1,559 tests / 218 files** with one worker and unchanged limits, and a **52-page build** pass. The merge tree equals reviewed feature tip `81935a6`; retained final-source browser **3/3**, development-console **1/1** and **28 affected-panel states** were not rerun after merge. Earlier full **27/27** and **1,358-state** checks remain pre-cue evidence. [Integration report](superpowers/reports/2026-10-23-stage-10-integration.md). Local develop W-3 is **16/18**; W-6 **22/27**. Tracked origin/develop remains `79f9e31`; no push or main promotion occurred.
 Stage 09's chapter merged as `ad283ce`, its
 interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
-The single-example width repair followed as `79f9e31`. Local `develop` and tracked
-`origin/develop` are both at that last merge before this records refresh.
+The single-example width repair followed as `79f9e31`. That width repair was the pre-Stage-10 baseline. Tracked `origin/develop` remains
+`79f9e31`; the current local develop merge is recorded above.
 
-On **develop**, W-3 remains **15/18**: stages 01–09 and 11–16 are interactive;
-10, 17 and 18 remain there. The feature tree is **16/18**, with Stage 10 registered.
-W-6 is **22 drawn / 27 registered**. Five language placeholders and
-W-6.4 glossary/stack surfacing remain open. The reference merge passed
-1495 tests across 207 files and a 52-page build; the width repair's merged tree
-passed **1496 tests across 207 files**, format, lint and generated-route typecheck.
-Its reviewed tree also passed 24 production browser checks, the development-console
-check and 28 geometry observations. Reports retain the evidence.
+On **local develop**, W-3 is **16/18**: stages 01-16 are interactive; 17 and 18 remain. W-6 is **22 drawn / 27 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next checkpoint: complete the independent same-question recheck and scoped re-review of the verified final fix, then close records and evidence.** Integration requires its own approval; production promotion remains the user's.
+**Next checkpoint: select the next work item separately.** Stage 10 implementation and its approved local integration are complete. Push and main promotion remain separate user decisions. The gathered Stage 10 references are preserved; a W-6 companion has not been designed or published.
 
 Two deliverables from one body of content.
 
@@ -77,7 +70,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(15/18 merged to local `develop`; three remain: 10, 17 and 18. Stage 09 landed as `7a5576a`.)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(16/18 merged to local `develop`; two remain: 17 and 18. Stage 10 landed as `7819457`.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(22 of 27 registered sheets drawn on `develop`; Stage 09 caching/scaling merged as `9de6c99`. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
@@ -136,11 +129,11 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Pass every touched doc through `humanizer:humanizer`
 
-### W-3 — Stages 02–18 interactive ◐ *(15/18 merged to local `develop`; three remain: 10, 17 and 18. Stage 09 merged as `7a5576a`.)*
+### W-3 — Stages 02–18 interactive ◐ *(16/18 merged to local `develop`; two remain: 17 and 18. Stage 10 merged as `7819457`.)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
-**Latest merged stage round:** Stage 09 interactive port. The user approved the eight-task
+**Earlier merged stage round:** Stage 09 interactive port. The user approved the eight-task
 plan and selected Subagent-Driven execution on 2026-10-09. All eight tasks are
 implemented and independently reviewed before the approved no-ff merge
 `7a5576a` into local `develop` on 2026-10-12. Stage 09 is registered and ready.
@@ -151,10 +144,10 @@ returned Ready to merge, with no new findings. The merged tree then passed
 format, lint, typecheck, 1459 tests across 198 files and a fresh 50-page build.
 The browser results apply to the identical application tree; those suites were
 not rerun after merge. The local feature branch and worktree were removed.
-**Selected round:** W-3.17, Stage 10 Documentation, now implemented and reviewed on the feature branch. Stage 09's W-6.3q
+**Latest merged stage round:** W-3.17, Stage 10 Documentation, integrated locally as `7819457` after separate approval. Stage 09's W-6.3q
 references and the subsequent layout repair are merged; their work is complete.
 
-### W-3.17 — Stage 10 Documentation ◐ *(chapter and port complete; reviewed; integration pending 2026-10-23)*
+### W-3.17 — Stage 10 Documentation ☑ *(merged locally into develop as `7819457`, 2026-10-23)*
 
 The [approved chapter design](superpowers/specs/2026-10-20-stage-10-documentation-design.md) and [five-task plan](superpowers/plans/2026-10-20-stage-10-documentation.md) were committed before implementation. The user’s “proceed up to implementation” authorized the recommended inline execution, retaining independent reviews and cold readers.
 
@@ -175,9 +168,9 @@ The [corrected chapter](10-documentation.md) now teaches the smallest useful doc
 - [x] Implement the port through TDD, per-task review and whole-branch review; verify both themes, responsive layout and both console modes
 - [x] Register the port on the feature branch (`7f803bc`); final fixes `bd90a05` / `2e3ccc8` pass the clean scoped review
 - [x] Refresh the final handoff and hash-verify the full execution archive
-- [ ] Record separately approved integration; this remains the user's decision
+- [x] Record separately approved local integration (`7819457`) and fresh merged-tree verification
 
-Develop's Stage 10 stays `ready: false` and W-3 stays **15/18** until an approved integration. The active feature tree has separate registration and verification checkpoints. W-6 stays **22/27**. Deferred: stages 17/18, W-6.4, five language sheets, unrelated repairs, new reference companions and promotion. Stage numbers remain filing codes, not a sequence.
+Local develop now has Stage 10 `ready: true` and W-3 is **16/18**. The merge tree equals the reviewed feature tip; fresh merged-tree verification is recorded in the integration report. W-6 stays **22/27**. Deferred: stages 17/18, W-6.4, five language sheets, unrelated repairs, new reference companions and promotion. Stage numbers remain filing codes, not a sequence.
 
 ### W-3.16 — Stage 09 interactive port ☑ *(merged locally into `develop` as `7a5576a`, 2026-10-12)*
 
