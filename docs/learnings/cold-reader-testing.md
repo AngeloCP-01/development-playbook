@@ -1,5 +1,7 @@
 # Cold-reader testing
 
+Current scope: this is an optional investigation under [D-99](../../AGENTS.md#planning-and-reviews), not an extra mandatory phase for every stage. It may serve the independent final content review for a new page or substantial teaching revision. Historical examples below keep their original evidence.
+
 How to find out whether a teaching document actually works, without shipping it and waiting
 to be told. Learned while finishing stage 02, where it caught two real content defects and
 then settled a scope question that opinion alone could not.
@@ -23,7 +25,7 @@ Then give it a **concrete task the doc is meant to enable** — not "review this
 Pick a scenario that is *not* the doc's own worked example, so it cannot copy — a different
 product, a different domain.
 
-## Two modes, both worth running
+## Two optional modes
 
 **Completeness (beginner persona).** The agent knows nothing about the subject except the
 doc, and tries to do the work. This finds missing prerequisites, undefined terms, and
@@ -90,14 +92,10 @@ problem to a section about diagrams.
 
 ## When to run it
 
-- Before calling any stage doc "done" — the completeness run, always.
-- **Again after any round that substantially rewrites a doc**, with the same scenario as the
-  first run so the results compare. A different scenario produces a fresh unrelated list and
-  tells you nothing about whether you fixed anything.
-- When someone asks "is this ready for audience X?" — the audience-fit run answers it with a
-  concrete list instead of an opinion.
-- It is cheap (one agent, minutes) and it reliably finds things the author cannot see. There
-  is no reason to skip it for a document meant to teach.
+- Use a completeness run when a new page or major teaching revision leaves uncertainty about whether readers can perform the task. It can be the final content review rather than an additional reviewer.
+- Recheck a confirmed teaching gap after its fix when needed. Preserve the original scenario if comparing outcomes; label a different scenario as a new assessment.
+- Use an audience-fit run when a specific audience question needs evidence. Choose the relevant mode; both are not required by default.
+- Small prose edits use source/link checks and self-review. Formal blinded studies and repeated runs need a concrete question that justifies their cost.
 
 What it will not catch: voice drift across sections, whether the document is navigable,
 anything in the fix wave that answers it, and **whether the code in the document actually

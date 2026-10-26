@@ -1,24 +1,25 @@
-# Specs and plans
+# Designs and plans
 
-The delivery loop's artifacts. See `CLAUDE.md` for the full loop and section order.
+Use the [shared development workflow](../../AGENTS.md#development-workflow) to
+decide whether these artifacts are needed. Research and routine page edits can
+work from a short checklist. Consequential or unclear choices need a written
+design; multiple dependent steps need a compact plan.
 
+```text
+specs/YYYY-MM-DD-<slug>-design.md    intent, choices and constraints
+plans/YYYY-MM-DD-<slug>.md           files, steps and acceptance checks
 ```
-specs/YYYY-MM-DD-<slug>-design.md    what we are building and why
-plans/YYYY-MM-DD-<slug>.md           how, as checkbox tasks
-```
 
-**Specs** run: Problem · Goals · Non-goals · Constraints · Architecture · Testing ·
-Verification · Documentation updates · Risks. Non-goals state *why* each was dropped.
-Cite real code by `file:line`, and record rejected options inline rather than deleting
-them — the alternative you rejected is the most useful thing in the document six months
-later.
+A design records the reader/user goal, scope, constraints, important choices,
+risks and verification. Record rejected alternatives when they explain a decision.
+A plan names affected files/interfaces, short steps and tests or acceptance
+criteria. Reference existing code rather than copying full implementation/test
+source into each task. Retain a recovery checklist for multi-session work.
 
-**Plans** open with the agentic-worker preamble, then Global Constraints, then
-`### Task N` blocks (Files / Interfaces / checkbox steps), then a final Verification
-section. Tasks carry full test and implementation source inline so an implementer can
-work from one task slice without the whole plan.
+When needed, commit the design/plan before the implementation it governs, with
+`docs(spec)` or `docs(plan)` scopes. Small changes do not need separate design,
+plan or review artifacts.
 
-Both are committed with `docs(spec):` / `docs(plan):` scopes, before or alongside the
-implementation — so the decision exists in history at the point it was made.
-
-Empty for now. Nothing has run through the full loop in this repo yet.
+Older files remain records of earlier rounds and may contain full-source tasks,
+mandatory task reviews or other superseded process. Their historical content is
+preserved; current work follows D-99 in AGENTS.md.
