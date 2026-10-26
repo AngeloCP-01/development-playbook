@@ -1,6 +1,7 @@
 # AGENTS.md
 
-This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
+Shared project instructions for Codex and Claude Code. This file is canonical;
+`CLAUDE.md` imports it. Choose the workflow by risk, not by milestone label.
 
 ## Commands
 
@@ -26,8 +27,9 @@ says nothing about the working tree and a red one may have nothing to do with lo
 Run it after a promotion to `main`.
 
 `pnpm test:dev-console` is not part of it either, and for the opposite reason: it needs a
-dev server, which the gate deliberately avoids. Run it once per stage round. It is the only
-thing in the repo that can see React's development validation — missing keys, invalid DOM
+dev server, which the gate deliberately avoids. Run it once for a new interactive
+stage or changed interaction/shared React behavior. It sees React's development
+validation — missing keys, invalid DOM
 nesting, `act()` warnings, hydration detail — because a production build has stripped all of
 it (TD-35). It found a real bug on its first run.
 
@@ -99,8 +101,9 @@ get room; prose stays readable without per-component effort. Opt out with
 
 ## Framework gotchas
 
-`web/AGENTS.md` instructs reading `node_modules/next/dist/docs/` before writing code.
-Follow it — this Next.js version has breaking changes from training data. Notably
+Before using or changing Next.js APIs, read the relevant installed guide in
+`node_modules/next/dist/docs/`; see `web/AGENTS.md`. Routine content/style edits
+using established patterns do not need another API-doc read. Notably
 `params` and `searchParams` are Promises; use the generated `PageProps<'/route'>` helper.
 
 **Route types are generated, not written.** `PageProps<'/route'>` and friends live in
@@ -116,26 +119,35 @@ cause a cascading render.
 
 ## Verification expectations
 
-This repo's standard is checking against a live build rather than asserting. Changes
-touching UI are expected to clear:
+Run focused checks while editing. Research/prose-only changes need relevant
+content/link checks, not the app suite or a build. For web-affecting work, run the
+existing final gate once on the completed branch: format, lint, generated-route
+typecheck, tests, production build and production audit. CI runs on pull requests
+and pushes to main, **not local develop merges**. Use a successful PR gate for the
+exact final tree, or run the gate locally before a web merge.
 
-- **Contrast** — every distinct text/background pair, both themes, all steps, WCAG AA
-- **Responsive** — 320→2560px, no horizontal overflow, no sub-44px touch target below `lg`
-- **Console** — zero errors in a clean browser context. Say which build you mean:
-  `pnpm test:e2e` covers a **production** build, where React has stripped its development
-  validation, so that whole family is invisible to it. `pnpm test:dev-console` is the half
-  that sees it, and a green audit is not a claim about missing keys
+Check affected panels and material interaction states in both themes, with
+keyboard access, readable layout, contrast, touch targets and a clean console.
+Use representative narrow, middle and wide widths for focused manual checks.
+The automated audit keeps its broader WCAG AA, 320–2560px, overflow and 44px
+non-inline touch-target coverage. Shared changes may require a wider manual sweep.
 
-These checks live in `web/e2e/audit.spec.ts` and run in CI. Two cautions learned
-the hard way: a checker reporting mass failures is usually the checker (a link audit
-once reported 124 false breaks), and colour parsers must handle `oklab()` — Tailwind
-emits it for alpha backgrounds.
+Run the development-console sweep once for a new interactive stage or changed
+interaction/shared React behavior. Production strips React development
+validation, so the production audit cannot establish missing-key or development
+warning cleanliness. `pnpm test:prod` checks deployment only, after promotion.
 
-A component that derives what it displays from data — a conditional render, a
-module-private helper, an accessible name assembled from parts — also gets a `*.test.tsx`
-render test. `web/PATTERNS.md` states the rule and why. A passing data test plus a
-component that ignores the data is green and wrong, and that combination is what TD-17
-was opened for.
+Rerun what later edits invalidate. A records-only commit or merge with an
+unchanged application diff may reuse identified application checks. State which
+checks are fresh and which are retained, with the tested commit/tree. Do not
+repeat full suites/builds/browser matrices after every task or records update.
+Diagnose failures before fixing them; do not weaken assertions or timeouts just
+to obtain green output. Mass checker failures can be checker defects; color
+parsers must handle Tailwind's `oklab()` output.
+
+A component deriving visible output or accessible names from data needs a
+meaningful `*.test.tsx` render test (see `web/PATTERNS.md`). Data invariants alone
+cannot prove that the component uses the data.
 
 ## Git conventions
 
@@ -189,189 +201,144 @@ Merge feat/observability-p1: backend observability P1 (Sentry + /api/health/deep
 Merge: RAG-grounded résumé tailoring suggestions (RAG part 2)
 ```
 
-Merge commits get bodies too — a bullet summary of the branch plus a pointer to its
-plan. Branches are deleted after merge.
+Merge commits get a short body describing the scope and linking a plan when one
+exists. Branches are deleted after merge.
 
-**Specs, plans and tracker updates are committed separately** with `docs(...)` scopes,
-before or alongside the implementation they describe — so a spec exists in history at
-the point the decision was made.
+When a design or plan is needed, commit it with a `docs(...)` scope before the
+implementation it governs. Related tracker/handoff updates can accompany a slice;
+a separate records commit per task is not required.
 
 Temporary commits meant to be reverted are labelled as such:
 `chore(TEMP): add /api/debug/boom to verify Sentry prod capture (revert after)`.
 
-## Skills are how we develop
+## Development workflow
 
-This is not a "reach for these if useful" list. **The Superpowers skills are the
-process** — every substantive change runs through them, the same way it does in
-`SmartJobSearchCRM`. Invoke the skill before the work it governs, not after. If a skill
-applies and you skip it, that is a defect in the process, not a shortcut.
+Approved 2026-10-26 (D-99). These scoped rules replace the earlier blanket
+spec/plan, TDD, per-task review and evidence requirements. They are standing
+project instructions; the exceptions below do not need approval each time.
 
-The delivery loop _is_ a sequence of skills:
+| Work | Default path |
+| --- | --- |
+| Research or documentation | Short scope checklist → sources → edit → content/link checks |
+| Page using existing patterns | Short acceptance checklist → implement inline → focused checks → final review |
+| Shared behavior or consequential change | Design where needed → compact plan → TDD for behavior → independent review |
 
-| Phase                           | Skill                                                         | Negotiable                                         |
-| ------------------------------- | ------------------------------------------------------------- | -------------------------------------------------- |
-| Explore intent, before any code | `superpowers:brainstorming`                                   | Runs before plan mode, before clarifying questions |
-| Turn the spec into steps        | `superpowers:writing-plans`                                   | For any multi-step task                            |
-| Implement                       | `superpowers:test-driven-development`                         | **The iron law below**                             |
-| Run a plan with subagents       | `superpowers:subagent-driven-development`                     | For plans with independent tasks                   |
-| Fan out independent work        | `superpowers:dispatching-parallel-agents`                     | 2+ tasks with no shared state                      |
-| Before proposing any fix        | `superpowers:systematic-debugging`                            | Hypothesis before edit, always                     |
-| Before claiming done            | `superpowers:verification-before-completion`                  | Evidence before assertion                          |
-| Ask for / receive review        | `superpowers:requesting-code-review`, `receiving-code-review` | Verify feedback, don't comply reflexively          |
-| Close the branch                | `superpowers:finishing-a-development-branch`                  | The merge / PR decision                            |
-| Isolate risky work              | `superpowers:using-git-worktrees`                             | Parallel branches that would collide               |
+Escalate when a routine page gains new behavior or affects other pages. Shared
+hooks/components, routing and hash/history, persistence, clipboard races,
+generators, build/CI changes and security-sensitive examples need the third path.
 
-### The iron law
+### Research and documentation
 
-TDD is not optional here, because the whole project's verification standard depends on
-it. From `superpowers:test-driven-development`:
+Use primary sources for factual claims. Record URL, author/organization, relevant
+version or access date, and the finding supported. For images record the original
+source, license and intended use. Label uncertain attribution, unknown project
+facts and illustrative examples. Keep the chapter and web content consistent.
 
-```
-NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
-```
+Work inline from a short checklist. No separate spec, implementation plan, task
+agents, per-task reviews or app build is required for research/prose alone. Check
+changed links/anchors, applicable existing content guards and finished prose.
+Executable operational examples and security-sensitive guidance still need
+appropriate source/behavior validation, even when they live in Markdown.
 
-Write the test, watch it fail _for the right reason_, write the minimum to pass. If you
-wrote code before the test, delete it and start over — keeping it "as reference" is the
-rationalization the skill names explicitly. The teeth check (see TDD evidence below) is
-how we prove a test isn't vacuous.
+### Planning and reviews
 
-The exceptions are narrow and require asking first: throwaway prototypes, generated
-code, configuration. "Skip TDD just this once" is not one of them.
+For an ordinary page, name the reader task, source material, sections/interactions
+and acceptance checks. Use a compact design if choices remain unresolved. For
+consequential work, write the design before implementation; multiple dependent
+steps get a compact plan. Multi-session work needs a recovery checklist. Existing
+`docs/superpowers/specs/` and `plans/` paths remain available when warranted.
+Plans name files, interfaces, acceptance criteria and tests; they do not duplicate
+full implementation/test source. Ask only about choices that change the outcome.
 
-## Workflow preferences
+Small edits get self-review. A complete new page or substantial teaching revision
+gets one independent final review covering content and the delivered page.
+Consequential changes get independent review of the actual branch diff. Add a
+per-task review only for a distinct risk that cannot usefully wait. Two blinded
+readers, frozen-score studies and separate design/plan reviews are optional
+investigations. Findings state severity, evidence and provenance; challenge
+unsupported findings and resolve blockers before delivery.
 
-**Presenting plan execution options.** When presenting the two plan-execution
-approaches (Subagent-Driven vs. Inline) at the end of the writing-plans workflow,
-always add a short note stating **which approach is recommended for this specific
-plan and why** — grounded in the plan's actual shape (task count, independence, risk,
-need for context isolation), not a generic default. Ported verbatim from
-`SmartJobSearchCRM`, where it was added as its own commit.
+### Tests and regression protection
 
-## Delivery loop
+Use TDD for new behavior and reproduced bugs: observe a meaningful failure,
+implement the minimum, then confirm it passes. Keep relevant race, permission,
+recovery, navigation and accessibility coverage. A generated output or config
+change uses appropriate validation; behavioral generator changes use TDD.
 
-The loop, adapted from the source project — each arrow is a skill from the table above:
+Prose, static content/data, images, examples and styling do not require new
+failing tests before editing. Existing guards still apply. Add meaningful render
+coverage for new conditional/data-driven output; avoid tests that merely restate
+literal copy, CSS classes or element counts. The render-test rule in
+`web/PATTERNS.md` remains in force. Use mutation/teeth checks when test sensitivity
+is uncertain or a consequential regression warrants them, rather than for every
+fix. Record the real failure reason and final result; full raw output need not be
+pasted into every task report.
 
-```
-brainstorm  →  spec  →  plan  →  TDD tasks  →  per-task review  →  final whole-branch review  →  merge  →  verify
-```
+### Skills, agents and context
 
-- **Spec** → `docs/superpowers/specs/YYYY-MM-DD-<slug>-design.md` (`superpowers:brainstorming`)
-- **Plan** → `docs/superpowers/plans/YYYY-MM-DD-<slug>.md` with checkbox steps (`superpowers:writing-plans`)
-- **Execute** → `superpowers:subagent-driven-development`, TDD per task, or inline for small slices
-- **Review** → a final whole-branch pass before merge, not only per-task
-- **Finish** → `superpowers:finishing-a-development-branch`
+Use applicable skills for the selected work, without expanding a small change
+into every delivery phase. Read a skill once per conversation unless it changes.
+Routine work stays inline with one implementer. Delegate only an independent,
+bounded task when separate context improves accuracy or elapsed time. File
+searches do not need subagents. Use a capable model matched to the task; pass an
+explicit model/effort when supported, without a blanket most-expensive-model rule.
 
-Scale the ceremony, not the discipline. A single-component fix does not need a spec; it
-still needs a failing test first. A milestone (`W-3`, `W-4`) needs the whole loop.
-
-**Spec sections, in order:** Problem · Goals · Non-goals · Constraints · Architecture ·
-Testing · Verification · Documentation updates · Risks. Non-goals state _why_ each was
-dropped. Specs cite real code by `file:line` and record rejected options inline.
-
-**Plans** open with a fixed preamble, then `## Global Constraints`, then
-`### Task N` blocks (Files / Interfaces / checkbox steps), then
-`## Verification (after all tasks)`. Tasks carry the full test and implementation source
-inline, so an implementer works from the task slice alone rather than the whole plan.
-
-### Review
-
-Two tiers: a read-only review per task, then a **final whole-branch review** before
-merge. The final one is load-bearing, not ceremony — in the source project it caught an
-SVG-spoof XSS, a `Set-Cookie` refresh-token leak, an infinite autosave loop, and a
-drag-math defect.
-
-Findings carry a severity and an ID: **Critical**, **Important** (`I1`, `I2`, written
-`(blocking)`), **Minor** (`M1`…). They also carry _provenance_, which matters because it
-changes who fixes what:
-
-```
-I2 (blocking) - no test rendered <WebVitals/>
-M3 (PRE-EXISTING, not introduced here; defer to final review)
-Fix (Important, PLAN-AUTHORED ERROR not implementer error)
-DEFERRED (user's call, not blocking): M5 - ...
-```
-
-Verdicts are `review clean` / `review clean after 1 fix` per task, and
-`Ready to merge` / `Ready with fixes` for the branch. A review closes with the branch
-state: `12 commits off main, 296/296 across 53 files, build clean, tree clean. NOT merged, NOT deployed.`
-
-**A reviewer is expected to disprove as well as confirm**, including its own earlier
-claims — real entries read `DISPROVED my suspected SPA bug: ...` and
-`CORRECTED A FACTUAL ERROR IN MY OWN SPEC: ...`. Agreeing with a wrong finding is worse
-than missing one.
-
-### TDD evidence
-
-A task report pastes **raw terminal output for both the RED and GREEN runs**, and states
-explicitly that the failure was _for the right reason_ — "failed for the expected reason
-(`trackEvent` never called — 'Number of calls: 0')". A green test alone proves nothing.
-
-When a fix lands, verification includes a **teeth check**: deliberately break the
-implementation again and confirm the new test — and only that test — fails. This is what
-separates a real regression test from a vacuous one.
-
-Test names encode the rationale, not the mechanic:
-`test('still fires ai_analysis_run when the run fails, since failure volume is a useful signal')`.
+Read relevant code, framework guides and prior decisions on demand. Pass file
+pointers and a bounded diff to reviewers rather than repeating whole plans or
+session histories. When execution options are useful, recommend the approach
+that fits this task instead of asking for a choice at every phase.
 
 ## Project artifacts
 
-| File                                | Holds                                                                                                                                                               |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `AGENTS.md`                         | How this project works. You are reading it.                                                                                                                         |
-| `KICKOFF.md`                        | Paste-buffer for cold-starting a new session with full context. Refresh its _Project state_ before use — a stale kickoff is worse than none, because it is trusted. |
-| `docs/task.md`                      | Scope, milestones (`P-` content, `W-` web app), dependency map                                                                                                      |
-| `docs/tracker.md`                   | What shipped with evidence, numbered decisions, technical debt, bug ledger                                                                                          |
-| `web/DESIGN.md`                     | The design system. Any new UI matches it.                                                                                                                           |
-| `web/PATTERNS.md`                   | Interaction patterns — which UX pattern fits which content. Read before building a stage.                                                                           |
-| `docs/superpowers/specs/`, `plans/` | Delivery-loop artifacts                                                                                                                                             |
-| `docs/learnings/`                   | Guides written for future-you when a round teaches something expensive                                                                                              |
-| `reference/stack.md`                | The default stack. Versions live here and nowhere else.                                                                                                             |
+| File | Purpose |
+| --- | --- |
+| `AGENTS.md` | Shared project policy; `CLAUDE.md` points here |
+| `KICKOFF.md` | Short current-state handoff with pointers; refresh at handoff |
+| `docs/task.md` | Scope, milestones and dependencies |
+| `docs/task-archive.md` | Older completed task detail; search by ID |
+| `docs/tracker.md` | Completed work/evidence, decisions, open debt and bugs |
+| `docs/tracker-archive.md` | Older completed work and closed debt |
+| `web/DESIGN.md`, `web/PATTERNS.md` | Visual system and interaction/test patterns |
+| `docs/superpowers/specs/`, `plans/` | Designs/plans when the work warrants them |
+| `docs/learnings/` | Reusable lessons from expensive findings |
+| `reference/stack.md` | Default stack and its versions |
 
 ## Recording work
 
-`docs/task.md` — scope, milestones, dependency map.
-`docs/tracker.md` — what shipped with evidence, numbered decisions with reasoning,
-technical debt ranked by cost, bug ledger.
+Keep source findings in one research record and completion in one concise tracker
+entry: commit, actual commands/results, important limits and deferred scope.
+Update task milestones when status changes. Refresh a short KICKOFF at handoff;
+link details instead of copying the same history into every file. Additional
+reports are for substantial decisions/investigations, not every editing step.
 
-Two conventions worth keeping precisely:
+Keep relevant failure output and reproduction details for bugs. Successful runs
+need the command, exit status, relevant count and tested commit/tree. Preserve
+research images/provenance. Workspace tarballs, per-file hash manifests and full
+transcript/screenshot collections are optional for a concrete recovery/audit need.
+Historical evidence remains intact.
 
-**Evidence, not adjectives.** A completed entry cites what proves it — commit SHA,
-test count, what a review caught. "Reviewed + merged" alone is not evidence.
+Decisions are appended and superseded, never rewritten. Keep deferred scope
+explicit. Archive closed debt/older completed rows when needed, verbatim with
+stable IDs; decisions stay in the live tracker. Preserve D-96's ledger integrity:
+`tracker-ledger.test.ts` guards duplicates and misplaced open debt. Search the
+tracker/task/archive by ID or section; do not read the full ledgers each session.
 
-**Every slice records what it deliberately did _not_ do.** A `Deferred:` list on each
-entry. This is the same discipline as the "What this is NOT" box in stage 01, and it is
-what stops scope creep being invisible.
-
-Decisions are appended and superseded, never edited — the record of what was believed
-at the time is the value. Follow-ups are struck through with a date when closed
-(`~~rotate the key~~ ✓ done 2026-07-02`) rather than deleted.
-
-### Prose that does not read as AI-written
-
-Documentation is a deliverable here — the stage docs _are_ the product — so it cannot
-read like generated filler. Run **`humanizer:humanizer`** over anything prose-heavy before
-it is considered done: the stage docs, the READMEs, spec and plan bodies, learning
-guides. It flags the tells this project is prone to — em-dash overuse, the rule of three,
-inflated symbolism, vague attributions, negative parallelisms, AI-vocabulary words.
-
-It is a review pass, not an autopilot: apply the fixes that make the writing clearer and
-skip the ones that would flatten a deliberate voice. Skip it for terminal output, code,
-tables, and tracker entries, where the flagged patterns are not the problem.
+Run `humanizer:humanizer` once over substantive new prose as an editing pass.
+Apply useful corrections and keep the intended voice. No separate prose-review
+report is required. Skip this pass for code, terminal output and tracker tables.
 
 ## Tooling
 
-Skills are covered above — they are the process, not tooling. Beyond Superpowers, two
-design skills are in regular use: **`frontend-design`** for visual direction (the only
-project-enabled plugin) and **`ui-ux-pro-max`** for design-system and accessibility rule
-lookups. Match `web/DESIGN.md` when using either.
+Use relevant design skills for visual work: **`frontend-design`** for direction and
+**`ui-ux-pro-max`** for design/accessibility lookups. Match `web/DESIGN.md`.
 
 MCP servers, configured at user level, and what each is actually for here:
 
-| Server         | Use                                                                                                          |
-| -------------- | ------------------------------------------------------------------------------------------------------------ |
-| **context7**   | Library docs before writing framework code. Prefer over training memory — this Next.js version postdates it. |
-| **playwright** | Driving the running app for the verification passes above.                                                   |
-| **Codex-mem**  | "Did I already decide this?" across sessions.                                                                |
+| Server | Use |
+| --- | --- |
+| **context7** | Relevant library docs before framework/API changes |
+| **playwright** | Running-app verification |
+| **Codex-mem** | Prior decisions across sessions |
 
 ## Resolved contradiction (kept for history)
 

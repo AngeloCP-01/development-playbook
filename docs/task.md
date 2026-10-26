@@ -13,6 +13,8 @@ grep it by id, don't read it whole.
 
 ## Overview
 
+**Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. The policy is on `docs/2026-10-26-development-workflow`, awaiting separate integration approval. Existing CI, accessibility and Git safeguards stay.
+
 **Current checkpoint (2026-10-23): Stage 10's corrected chapter and twelve-panel interactive port are merged locally into develop as `7819457` (`--no-ff`).** All nine plan tasks and independent reviews are complete; final fixes `bd90a05` / `2e3ccc8` cleared the three Minor findings. Fresh merged-tree format/lint/typecheck, **1,559 tests / 218 files** with one worker and unchanged limits, and a **52-page build** pass. The merge tree equals reviewed feature tip `81935a6`; retained final-source browser **3/3**, development-console **1/1** and **28 affected-panel states** were not rerun after merge. Earlier full **27/27** and **1,358-state** checks remain pre-cue evidence. [Integration report](superpowers/reports/2026-10-23-stage-10-integration.md). Local develop W-3 is **16/18**; W-6 **22/27**. Tracked origin/develop remains `79f9e31`; no push or main promotion occurred.
 Stage 09's chapter merged as `ad283ce`, its
 interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
@@ -21,7 +23,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **16/18**: stages 01-16 are interactive; 17 and 18 remain. W-6 is **22 drawn / 27 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next checkpoint: select the next work item separately.** Stage 10 implementation and its approved local integration are complete. Push and main promotion remain separate user decisions. The gathered Stage 10 references are preserved; a W-6 companion has not been designed or published.
+**Next checkpoint: finish the workflow-policy handoff, then assess the Stage 10 W-6 companion under D-88.** Compare gathered lookups with the completed stage before designing a separate sheet. The policy update adds no sheet or app code. Push and main promotion remain separate user decisions.
 
 Two deliverables from one body of content.
 
