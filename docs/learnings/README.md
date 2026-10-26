@@ -2,6 +2,12 @@
 
 Teaching guides written for future-you, not for users.
 
+Current process is the [risk-based workflow](../../AGENTS.md#development-workflow),
+approved in D-99. These guides preserve lessons and examples from earlier rounds;
+consult relevant sections when the risk calls for them. Historical task reviews,
+mutation studies and repeated reader runs are methods to select, not mandatory
+phases for every change.
+
 When a round teaches something that cost real time — a gotcha, a wrong assumption, a
 thing the documentation does not say — it goes here as a numbered guide rather than
 being scattered across commit messages and tracker entries.
@@ -32,7 +38,7 @@ Naming: `<topic>-101.md`.
   is the signal to sweep the rest of the plan rather than patch the instance in front of
   you; and a third way a teeth check can lie — `git add -N` stages a new file as an empty
   blob, so a mutation diffs against nothing and proves nothing, until the file is committed
-  first. Read it before building stages 07–18.
+  first. Consult the relevant layout, rendering or coverage section when building a stage.
 - `quality-gates-101.md` — what wiring the gates taught: eslint's warnings-exit-0 trap,
   teeth checks as the method, hooks in a subdirectory repo, and why the committed audit
   suite being stricter than the throwaway scripts was a feature. Extended after stage 02
@@ -80,7 +86,7 @@ Naming: `<topic>-101.md`.
   prose lectures the reader about silent migration bugs — a backfill that corrupted every
   single-word name, and a loop whose own "repeat until zero rows" comment was false. Reading
   checks whether code says what you meant; running checks whether what you meant is true.
-  Read it before calling any stage doc done.
+  Use it when an independent review needs to investigate teaching completeness or audience fit; a formal cold-reader study is optional under D-99.
 - `decisions-need-tests-101.md` — why a recorded convention with no mechanical check decays
   at the speed of the next round. D-42 (cite headings, not line numbers) was written after
   an audit found 14 of 33 citations wrong, and four days later the next round on the same

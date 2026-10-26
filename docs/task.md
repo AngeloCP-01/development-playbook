@@ -100,25 +100,25 @@ P-8 (done) is the source P-6 folds into the stage docs.
 
 ### P-6 — Fold the real working conventions into the stage docs ☐
 
-`CLAUDE.md` now records how this project actually works — conventions ported from
-`SmartJobSearchCRM` and verified against ~500 commits. The stage docs still describe a
-generic version of the same ground. Close the gap so the playbook documents the practice
-rather than an idealised one.
+`AGENTS.md` records current project practice, including the scoped workflow approved
+in D-99. Earlier conventions came from `SmartJobSearchCRM`; adopt the parts that
+fit this research/static-site project. The rows below describe the current target
+for this still-open task, rather than the superseded blanket process.
 
 Map of what lands where:
 
 | Convention | Stage |
 |---|---|
 | Conventional commits, scopes, branch naming, `--no-ff` merges, the TEMP idiom | 05 Development · 07 Code Review |
-| Spec → plan → TDD → per-task review → whole-branch review | 02 Planning · 05 Development |
+| Risk-based workflow: checklist for content/pages; design/compact plan for consequential behavior | 02 Planning · 05 Development |
 | Review severity (`Critical`/`Important`/`Minor`), finding IDs, provenance tags | 07 Code Review |
 | Reviewer must disprove as well as confirm, including its own claims | 07 Code Review |
-| TDD evidence: RED and GREEN output, failure "for the right reason", teeth check | 06 Testing |
+| Behavioral TDD: meaningful RED/GREEN; selective regression-sensitivity checks | 06 Testing |
 | Test names that encode rationale, not mechanic | 06 Testing |
 | TASKS/TRACKER conventions: evidence over adjectives, standing `Deferred` field | 02 Planning · 10 Documentation |
 | Kickoff prompt files for cold-starting a session with full context | 10 Documentation |
 | Which skill/MCP/agent for which job | 01 (done) · extend per stage |
-| Skills as the process: TDD iron law, brainstorm-before-code, systematic-debugging, verification-before-completion | 05 Development · 06 Testing · 07 Code Review |
+| Relevant skills, one implementer by default, escalation for shared/consequential behavior | 05 Development · 06 Testing · 07 Code Review |
 | Learning guides written for future-you (`docs/learnings/`) | 10 Documentation · 18 Continuous Improvement |
 | Run `humanizer:humanizer` over prose before it is done | 10 Documentation |
 
@@ -129,7 +129,7 @@ Map of what lands where:
       tracker conventions + kickoff files → 02/10, skills-per-stage → all.)*
 - [ ] Mirror into the interactive stage as each is built under W-3
 - [ ] Record any convention deliberately *not* adopted, and why
-- [ ] Pass every touched doc through `humanizer:humanizer`
+- [ ] Give substantive new prose one `humanizer:humanizer` pass
 
 ### W-3 — Stages 02–18 interactive ◐ *(16/18 merged to local `develop`; two remain: 17 and 18. Stage 10 merged as `7819457`.)*
 

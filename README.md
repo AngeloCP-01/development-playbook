@@ -123,8 +123,8 @@ The playbook ships in two forms from one body of content:
 
 - **`docs/NN-*.md`** — the eighteen stage documents. Canonical prose, readable here.
 - **`web/`** — an interactive version: a stepper per stage, exercises, numbered
-  figures, and inline definitions for unfamiliar terms. Stage 01 is built; the rest
-  render a placeholder until their turn.
+  figures, and inline definitions for unfamiliar terms. Ready stages render their interactive content; unbuilt stages retain a
+  placeholder. Current scope/status lives in `docs/task.md`.
 
 The project practises what the documents preach, and records itself doing it:
 
@@ -133,10 +133,12 @@ The project practises what the documents preach, and records itself doing it:
 | [`docs/task.md`](docs/task.md) | Scope, milestones, dependency map |
 | [`docs/tracker.md`](docs/tracker.md) | What shipped with evidence, decisions, technical debt, bug ledger |
 | [`docs/tracker-archive.md`](docs/tracker-archive.md) | Closed debt and older completed rows, moved verbatim; grep by ID |
-| [`docs/superpowers/`](docs/superpowers/README.md) | Specs and plans from the delivery loop |
+| [`docs/superpowers/`](docs/superpowers/README.md) | Designs/plans when the work warrants them; historical delivery artifacts |
 | [`docs/learnings/`](docs/learnings/README.md) | Guides written when a round taught something expensive |
 | [`web/DESIGN.md`](web/DESIGN.md) · [`web/PATTERNS.md`](web/PATTERNS.md) | The design system and the interaction-pattern library |
-| [`CLAUDE.md`](CLAUDE.md) | The working conventions: git, delivery loop, review, TDD |
+| [`AGENTS.md`](AGENTS.md) | Shared risk-based workflow, verification and Git safeguards; imported by `CLAUDE.md` |
+
+Current repository work follows [D-99's scoped workflow](AGENTS.md#development-workflow). Research and routine pages use lighter checks; shared behavior retains stronger testing and review. Older plans/reports describe the process used at the time.
 
 When the project and a stage doc disagree, one of them is wrong and the tracker gets a
 debt entry until they agree again. That loop — build, notice the drift, amend the doc —
