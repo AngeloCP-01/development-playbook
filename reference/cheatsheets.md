@@ -6,7 +6,7 @@
 Lookup material rather than reading material. A stage teaches a decision; a
 sheet answers what that command was.
 
-Drawn: 22 of 27. A sheet listed as not drawn is
+Drawn: 23 of 28. A sheet listed as not drawn is
 registered on purpose — the gap is the point, so it can be seen and filled.
 
 | Sheet | Group | Stage | Status |
@@ -20,6 +20,7 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | Git Commands | Git | 04 | Drawn |
 | Git Branching & Conventions | Git | 04 | Drawn |
 | Coding Standards | Standards | 05 | Drawn |
+| Documentation Change Check | Standards | 10 | Drawn |
 | Software Development Life Cycle | Standards | — | Drawn |
 | Testing | Standards | 06 | Drawn |
 | Playwright | Standards | 06 | Drawn |
@@ -683,6 +684,57 @@ From Refactoring.Guru’s taxonomy, condensed to five categories. Not bugs — s
 - **Couplers** — Classes or modules that depend on each other more than their job requires. — Feature envy (a method more interested in another class than its own) or a message chain three calls deep.
 
 Source: [Code Smell](https://refactoring.guru/refactoring/smells) — AIAI LAB, citing Refactoring.Guru.
+
+## Documentation Change Check
+
+Choose the document, record the facts, and check what a change makes stale.
+
+Belongs to [10 — Documentation](../docs/10-documentation.md).
+
+### Choose a form for the reader
+
+Choose for the task; four reader needs do not require four files. Open Stage 10 for worked examples and practice.
+
+- **Tutorial** — A guided learning exercise with a safe starting point and an achievable result. — The reader needs to learn a skill by doing it.
+- **How-to guide** — Steps for a known task, with prerequisites and an observable completion condition. — The reader needs to get work done.
+- **Reference** — Exact names, types, allowed values, defaults and absence behavior for the applicable version. — The reader needs a fact, such as a retry option or response field.
+- **Explanation** — Concepts, reasons and tradeoffs that help the reader understand a choice. — The reader needs context rather than a procedure.
+
+### Adapt the record prompts
+
+These are playbook prompts, not a mandatory document inventory or fixed template. MADR metadata and confirmation are optional; use the detail the decision needs.
+
+- **README entry point** — Purpose and reader; actual prerequisites, safe configuration/access, tested setup commands, expected result and a help route. — Follow the setup from a fresh clone without private instructions; record the first gap.
+- **Decision record** — Significant choice, context, decision, reasons, alternatives, consequences and current status/date. — Include costs and obligations, not only benefits. Link the source or revision the choice applies to.
+- **Factual reference** — Name/type, allowed values, default or absence, applicable version, authoritative source and review trigger. — Distinguish missing, null and empty according to the actual contract.
+- **Change/check record** — Reader/task, changed fact, affected documents, source/revision, check, expected/observed result, owner and review trigger. — Keep this in the change or review record; a separate document is optional.
+
+### Trace the changed fact
+
+Checks and owner/review prompts are this playbook’s application guidance. Generation or a checked box does not establish that a source is correct.
+
+- **Configuration** — Update the configuration reference, safe example and affected setup instructions. Compare missing/invalid/default behavior with the actual validator. — Name the maintainer and validator-change trigger.
+- **Response contract** — Update reference and example responses. Run the applicable generator, inspect the expected diff and verify serializer behavior, including optional-field omission. — Name the contract owner and response-change trigger.
+- **Replaced decision** — Write the replacement ADR. Preserve the old reasoning, expose its current superseded status and date, and link old and new records in both directions. — Follow the old entry point and confirm the replacement is discoverable.
+- **Setup or release procedure** — Update the README and linked procedure when commands, access or environment change. Follow the documented path safely and record its result and limits. — Name the responsible maintainer and procedure-change trigger.
+
+### Publish only supported claims
+
+- **Label the evidence** — Record revision, check, expected and observed result, and limits. Reading is not execution; compiling does not establish runtime behavior or recovery.
+- **Review an AI draft** — Ground it in supplied sources and have a reviewer check facts, versions, examples and privacy. Claim validation only when the corresponding evidence exists.
+- **Use safe examples** — Use synthetic data and safe placeholders. Keep real credentials and private records out; do not invent project commands, provider guarantees or incident outcomes.
+
+Sources:
+
+Source: [Diátaxis primer](https://diataxis.fr/start-here/) — Daniele Procida.
+
+Source: [Documenting Architecture Decisions](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) — Michael Nygard / Cognitect.
+
+Source: [MADR 4.0.0 template](https://github.com/adr/madr/blob/4.0.0/template/adr-template.md) — MADR contributors.
+
+Source: [About READMEs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes) — GitHub.
+
+Source: [What to look for in a code review: Documentation](https://google.github.io/eng-practices/review/reviewer/looking-for.html#documentation) — Google Engineering Practices.
 
 ## Software Development Life Cycle
 
