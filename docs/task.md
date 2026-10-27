@@ -13,19 +13,19 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-10-27): W-6.3r, Stage 10 Documentation reference companion.** The scoped source check is complete and `/reference/documentation` is implemented using the existing renderer. The feature registry is **23 drawn / 28 registered**; develop remains **22/27**. Four sections/fifteen rows aggregate quick lookups while the stage keeps examples and practice. Focused checks pass **27/27**. Final format/lint/typecheck, **1,560 tests / 219 files**, **53-page build** and production **27/27** pass; six affected-page theme/viewport checks and the independent final review are clean. No new state or shared behavior is introduced.
+**Current work (2026-10-27): W-6.3r, Stage 10 Documentation reference companion.** The scoped source check is complete and `/reference/documentation` is implemented using the existing renderer. Local develop is **23 drawn / 28 registered** after approved no-ff merge `8eb294c`. Four sections/fifteen rows aggregate quick lookups while the stage keeps examples and practice. Focused checks pass **27/27**. Final format/lint/typecheck, **1,560 tests / 219 files**, **53-page build** and production **27/27** pass; six affected-page theme/viewport checks and the independent final review are clean. No new state or shared behavior is introduced.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
-**Current checkpoint (2026-10-23): Stage 10's corrected chapter and twelve-panel interactive port are merged locally into develop as `7819457` (`--no-ff`).** All nine plan tasks and independent reviews are complete; final fixes `bd90a05` / `2e3ccc8` cleared the three Minor findings. Fresh merged-tree format/lint/typecheck, **1,559 tests / 218 files** with one worker and unchanged limits, and a **52-page build** pass. The merge tree equals reviewed feature tip `81935a6`; retained final-source browser **3/3**, development-console **1/1** and **28 affected-panel states** were not rerun after merge. Earlier full **27/27** and **1,358-state** checks remain pre-cue evidence. [Integration report](superpowers/reports/2026-10-23-stage-10-integration.md). Local develop W-3 is **16/18**; W-6 **22/27**. Tracked origin/develop remains `79f9e31`; no push or main promotion occurred.
+**Previous checkpoint (2026-10-23): Stage 10's corrected chapter and twelve-panel interactive port are merged locally into develop as `7819457` (`--no-ff`).** All nine plan tasks and independent reviews are complete; final fixes `bd90a05` / `2e3ccc8` cleared the three Minor findings. Fresh merged-tree format/lint/typecheck, **1,559 tests / 218 files** with one worker and unchanged limits, and a **52-page build** pass. The merge tree equals reviewed feature tip `81935a6`; retained final-source browser **3/3**, development-console **1/1** and **28 affected-panel states** were not rerun after merge. Earlier full **27/27** and **1,358-state** checks remain pre-cue evidence. [Integration report](superpowers/reports/2026-10-23-stage-10-integration.md). Local develop W-3 is **16/18**; W-6 **22/27**. Tracked origin/develop remains `79f9e31`; no push or main promotion occurred.
 Stage 09's chapter merged as `ad283ce`, its
 interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. That width repair was the pre-Stage-10 baseline. Tracked `origin/develop` remains
 `79f9e31`; the current local develop merge is recorded above.
 
-On **local develop**, W-3 is **16/18**: stages 01-16 are interactive; 17 and 18 remain. W-6 is **22 drawn / 27 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
+On **local develop**, W-3 is **16/18**: stages 01-16 are interactive; 17 and 18 remain. W-6 is **23 drawn / 28 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next checkpoint: assess the Stage 10 W-6 companion under D-88.** Compare gathered lookups with the completed stage before designing a separate sheet. The policy update adds no sheet or app code. Push and main promotion remain separate user decisions.
+**Next checkpoint: Stage 17 Maintenance.** Stage 10's chapter, interactive port and W-6 companion are complete and integrated locally. Start the next bounded round with scope/source assessment under D-99; no Stage 17 implementation is included in this merge. Push and main promotion remain separate user decisions.
 
 Two deliverables from one body of content.
 
@@ -77,7 +77,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-3** | Stages 02–18 interactive | ◐ *(16/18 merged to local `develop`; two remain: 17 and 18. Stage 10 landed as `7819457`.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(22 of 27 registered sheets drawn on `develop`; Stage 09 caching/scaling merged as `9de6c99`. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(23 of 28 registered sheets drawn on local `develop`; Stage 10 Documentation merged as `8eb294c`. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
 
 ### Dependency map
 
@@ -600,7 +600,7 @@ diagrams/image republication, runtime infrastructure, real order benchmarks,
 shared-drill/storage repairs and production promotion. Stage 10 is now selected
 as its own next round. Every future merge remains a separate user decision.
 
-**W-6.3r — Stage 10 Documentation change-check companion ◐** *(feature complete and reviewed, 2026-10-27; integration pending)*
+**W-6.3r — Stage 10 Documentation change-check companion ☑** *(merged locally into develop as `8eb294c`, 2026-10-27)*
 
 The finished stage teaches the decisions across twelve panels. This bounded
 round adds one all-visible reference card at `/reference/documentation`: choose
@@ -613,11 +613,12 @@ sheet module remains the single source for its generated Markdown.
 - [x] Add the text-only sheet, registration, generated Markdown and render coverage
 - [x] Run the final web gate once, check the affected page in both themes and obtain one final review
 - [x] Record actual counts, verification and deferred work
+- [x] Integrate after separate user approval (`8eb294c`); retain identified unchanged-app checks
 
 No image plate is needed for the four-form lookup. The gathered JPEG's reuse
 permission remains unconfirmed; all source images stay research assets. Deferred:
 new interaction patterns, copy/export controls, shared refactors, other sheets,
-W-6.4, stages 17/18, integration and deployment.
+W-6.4, stages 17/18, push/main promotion and deployment.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 

@@ -595,5 +595,5 @@ The sheet publishes no source image or copied template. The four-form text
 lookup is sufficient here; C4's banking example adds no check-card information,
 and the supplied template JPEG's original authorship/reuse permission remains
 unconfirmed. Existing plates stay gathering assets. No private project facts or
-provider execution results were measured. Feature registry: 23 drawn / 28 total;
-local develop remains 22/27 until approved integration.
+provider execution results were measured. Approved local merge `8eb294c` brings develop to 23 drawn / 28 registered.
+Earlier dated counts above describe their research checkpoints.

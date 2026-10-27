@@ -1,18 +1,17 @@
-# Kickoff: documentation reference companion ready
+# Kickoff: documentation reference companion merged
 
-Updated 2026-10-27. Follow [AGENTS.md](AGENTS.md), the shared D-99 policy. W-6.3r is implemented, verified and independently reviewed; integration is the next decision.
+Updated 2026-10-27. Follow [AGENTS.md](AGENTS.md), the shared D-99 policy. W-6.3r is complete and merged locally into develop as **8eb294c** (`--no-ff`), after separate user approval. The next W-3 candidate is Stage 17 Maintenance; no Stage 17 work is included in this merge.
 
 ## Current state
 
-- Branch/worktree: `feat/stage-10-reference-companion` at `.worktrees/stage10-reference-companion`, based on develop `ae15eaa`. Parent checkout/server are preserved. Query `git log -1 --oneline` for the records tip.
-- Source/checklist `369cdb0`; reviewed/tested application `65ab1d9`. One `/reference/documentation` card, four sections/fifteen rows, five citations, existing renderer/route, no new state or published source image. [Source assessment](reference/stage-10-source-research.md#w6-source-verification-and-assessment--2026-10-27) and [source ledger](reference/cheatsheet-sources.md#stage-10-w-6-companion--2026-10-27). Compact summaries intentionally overlap the chapter; generated Markdown is single-sourced from the sheet.
-- Final format/lint/generated-route typecheck passed; `pnpm test --maxWorkers=1` **1560/219**, build **53 pages**, production audit **27/27**. Six affected-page checks in light/dark at 320/768/1440 passed, including 30 keyboard transitions, sources/stage/back navigation and zero overflow/console errors. Four screenshots inspected; independent final review PASS with no findings.
-- The development-console sweep was not repeated: this is static data with no new React interaction/shared behavior. Application input is unchanged by closing records, so existing final checks remain identified with `65ab1d9`.
-- Stable preview: `http://localhost:3100/reference/documentation`, worktree-owned PID 91310, build `bHVeurjmAg1mErACKpqFN`. Parent port 3200 remains PID 93201. Verify ownership before stopping servers or changing `.next`. The isolated worktree has copied installed dependencies; no install/config change.
-- Feature W-6 **23/28**; develop **22/27**. W-3 **16/18**. No merge/push/main promotion.
+- Merge parents: `ae15eaa` / reviewed feature tip `4a1c209`. The merge tree equals that tip. Source assessment/checklist `369cdb0`; tested application `65ab1d9`. Query `git log -1 --oneline` for the closing records tip.
+- `/reference/documentation`: four sections/fifteen rows, five primary citations, existing renderer/route and generated Markdown. No new runtime state or published source image. [Source assessment](reference/stage-10-source-research.md#w6-source-verification-and-assessment--2026-10-27) and [source ledger](reference/cheatsheet-sources.md#stage-10-w-6-companion--2026-10-27).
+- Local develop W-6 **23/28**; W-3 **16/18**. Five language placeholders, W-6.4 and stages 17/18 remain. No push or main promotion. The chapter branch at `c092ac7` and research provenance are preserved.
 
-## Next decision
+## Verification and cleanup
 
-Read task W-6.3r in [docs/task.md](docs/task.md) and tracker Current phase/Next up. The card adds one-view retrieval; the stage retains worked examples, practice and its saved record. No implementation remains in this slice. Ask before integration. After the reference round, Stage 17 Maintenance is the next W-3 candidate; no Stage 17 work is included here.
+Retained identified app checks: format/lint/generated-route typecheck, `pnpm test --maxWorkers=1` **1560/219**, **53-page build**, production **27/27**, six light/dark × 320/768/1440 page states, 30 keyboard transitions, stage/back navigation and no captured overflow/console errors. Four screenshots were inspected; independent content/page review PASS, no findings. These were not rerun after the unchanged merge. No development-console sweep was required for static data through an unchanged renderer (D-99). Fresh merged-record checks: tracker **2/2**, local Markdown **462 targets / 46 files**, whitespace clean.
 
-Deferred: integration/deployment, new controls/shared refactors, other sheets, W-6.4, languages and stages 17/18. Research images and prior execution archives remain intact.
+The merged reference worktree/branch have been removed, and its verified preview PID 91310 was stopped. Parent dev server PID 93201 remains on port 3200. Check actual ownership/listeners before future server operations. New work starts from local develop on a scoped branch.
+
+Read task W-6.3r and tracker Current phase/Next up for the completed slice. The stage retains examples, practice and the saved record; the card adds all-visible retrieval. Stage 17's scope/research comes next as a separate task. Deferred: push/main promotion, new controls/shared refactors, other sheets, W-6.4/languages and stages 17/18.
