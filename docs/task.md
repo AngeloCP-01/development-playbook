@@ -598,6 +598,25 @@ diagrams/image republication, runtime infrastructure, real order benchmarks,
 shared-drill/storage repairs and production promotion. Stage 10 is now selected
 as its own next round. Every future merge remains a separate user decision.
 
+**W-6.3r — Stage 10 Documentation change-check companion ◐** *(2026-10-27)*
+
+The finished stage teaches the decisions across twelve panels. This bounded
+round adds one all-visible reference card at `/reference/documentation`: choose
+a form, adapt record fields, trace changed facts and qualify publishing claims.
+It uses the existing renderer and citations, with no new state or components.
+The compact summaries are an intentional additional view of the chapter; the
+sheet module remains the single source for its generated Markdown.
+
+- [x] Compare gathered candidates with the stage and recheck primary sources
+- [ ] Add the text-only sheet, registration, generated Markdown and render coverage
+- [ ] Run the final web gate once, check the affected page in both themes and obtain one final review
+- [ ] Record actual counts, verification and deferred work
+
+No image plate is needed for the four-form lookup. The gathered JPEG's reuse
+permission remains unconfirmed; all source images stay research assets. Deferred:
+new interaction patterns, copy/export controls, shared refactors, other sheets,
+W-6.4, stages 17/18, integration and deployment.
+
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 
 The reason `/reference` beat `/cheatsheets` as a section name. Closes the original

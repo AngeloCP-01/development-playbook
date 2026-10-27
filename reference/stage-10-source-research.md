@@ -233,3 +233,40 @@ The dated findings above record the gathering assessment. The [corrected chapter
 Primary pages for Diátaxis, Nygard, Stripe metadata and Docuwiz template guidance were reopened on 2026-10-20. They support the attributed distinctions; no live Toolshare/Workshop application or provider incident was measured. The recorded source URLs, authors, image dimensions, licenses and unconfirmed graphic authorship/reuse terms remain as gathered above.
 
 The chapter now teaches the distinctions in text. The research appendix and its embedded plates have been removed from active teaching; all four gathered images remain in `reference/` for later selection. None was copied into `web/public` or selected for web display. W-6 remains 22 drawn / 27 registered; a companion still needs its own design and publication decision. The Stage 10 interactive port is also separate.
+
+## W6 source verification and assessment · 2026-10-27
+
+All pages below were reopened on 2026-10-27. Undated living guidance is identified
+by organization and access date; MADR is pinned to version 4.0.0.
+
+| Primary source | Verified compact lookup |
+| --- | --- |
+| Daniele Procida, [Diátaxis primer](https://diataxis.fr/start-here/) and [compass](https://diataxis.fr/compass/) | Tutorial supports learning through guided action; how-to supports completing work; reference supplies technical facts; explanation supplies understanding. The compass distinguishes action/cognition and study/work. These classify reader needs, rather than prescribe four files. |
+| Michael Nygard, [Documenting Architecture Decisions](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions), 2011-11-15 | A short record covers a significant decision with title, context, decision, status and consequences. Retain a reversed record, mark supersession and reference its replacement. Include unfavorable and neutral consequences. |
+| MADR project, [template 4.0.0](https://github.com/adr/madr/blob/4.0.0/template/adr-template.md) | Context, considered options and chosen outcome provide compact decision prompts. Metadata, decision drivers, consequences, confirmation and detailed option comparisons are explicitly optional in this template. Confirmation asks how implementation/compliance can be checked. Do not present the full template as a mandatory checklist. |
+| GitHub, [About READMEs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes) | Typical entry information: purpose, usefulness, getting started, help and maintainers/contributors. These are content prompts, not required headings or proof that setup works. |
+| Google Engineering Practices, [documentation review](https://google.github.io/eng-practices/review/reviewer/looking-for.html#documentation) | Changes affecting building, testing, interaction or releases should update associated documentation, including generated reference. Removal/deprecation can require deleting documentation. The comments section separately distinguishes reasoning comments from API purpose/use/behavior documentation. |
+
+A W6 card could put these reminders beside a small
+change → affected fact/document → check → owner lookup. That matrix, fresh-clone
+verification, filenames, review triggers and evidence fields are playbook
+recommendations. Fill them with actual project facts or mark examples as
+illustrative. The sources do not establish this repository's commands, owners,
+architecture or successful checks.
+
+These reminders already overlap the interactive stage's teaching. Aggregation
+would support quick recall; it adds no source-backed requirement for more
+documents. The duplication/publication decision remains separate. No extra
+release taxonomy or image is needed for this compact scope. Existing Diátaxis/C4
+license findings remain above; Docuwiz graphic/template reuse remains unverified.
+No gathered image was published by this assessment. The appended prose received
+the humanizer editing pass.
+
+### Companion decision · 2026-10-27
+
+Build one text-only Documentation change-check card. Its value is retrieval: all
+form choices, record prompts, change checks and publication cautions are visible
+on one reference page, while the stage remains the place for worked examples,
+practice and a saved change plan. The compact summaries deliberately overlap the
+chapter and need review when its teaching changes. Existing Diátaxis/C4 images
+add no missing lookup here; the uncertain-license template JPEG is not published.
