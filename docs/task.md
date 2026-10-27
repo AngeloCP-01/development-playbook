@@ -13,6 +13,8 @@ grep it by id, don't read it whole.
 
 ## Overview
 
+**Current work (2026-10-27): W-6.3r, Stage 10 Documentation reference companion.** The scoped source check is complete and `/reference/documentation` is implemented using the existing renderer. The feature registry is **23 drawn / 28 registered**; develop remains **22/27**. Four sections/fifteen rows aggregate quick lookups while the stage keeps examples and practice. Focused checks pass **27/27**. Final format/lint/typecheck, **1,560 tests / 219 files**, **53-page build** and production **27/27** pass; six affected-page theme/viewport checks and the independent final review are clean. No new state or shared behavior is introduced.
+
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
 **Current checkpoint (2026-10-23): Stage 10's corrected chapter and twelve-panel interactive port are merged locally into develop as `7819457` (`--no-ff`).** All nine plan tasks and independent reviews are complete; final fixes `bd90a05` / `2e3ccc8` cleared the three Minor findings. Fresh merged-tree format/lint/typecheck, **1,559 tests / 218 files** with one worker and unchanged limits, and a **52-page build** pass. The merge tree equals reviewed feature tip `81935a6`; retained final-source browser **3/3**, development-console **1/1** and **28 affected-panel states** were not rerun after merge. Earlier full **27/27** and **1,358-state** checks remain pre-cue evidence. [Integration report](superpowers/reports/2026-10-23-stage-10-integration.md). Local develop W-3 is **16/18**; W-6 **22/27**. Tracked origin/develop remains `79f9e31`; no push or main promotion occurred.
@@ -597,6 +599,25 @@ Deferred from this slice: stages 10/17/18, W-6.4, five language sheets,
 diagrams/image republication, runtime infrastructure, real order benchmarks,
 shared-drill/storage repairs and production promotion. Stage 10 is now selected
 as its own next round. Every future merge remains a separate user decision.
+
+**W-6.3r — Stage 10 Documentation change-check companion ◐** *(feature complete and reviewed, 2026-10-27; integration pending)*
+
+The finished stage teaches the decisions across twelve panels. This bounded
+round adds one all-visible reference card at `/reference/documentation`: choose
+a form, adapt record fields, trace changed facts and qualify publishing claims.
+It uses the existing renderer and citations, with no new state or components.
+The compact summaries are an intentional additional view of the chapter; the
+sheet module remains the single source for its generated Markdown.
+
+- [x] Compare gathered candidates with the stage and recheck primary sources
+- [x] Add the text-only sheet, registration, generated Markdown and render coverage
+- [x] Run the final web gate once, check the affected page in both themes and obtain one final review
+- [x] Record actual counts, verification and deferred work
+
+No image plate is needed for the four-form lookup. The gathered JPEG's reuse
+permission remains unconfirmed; all source images stay research assets. Deferred:
+new interaction patterns, copy/export controls, shared refactors, other sheets,
+W-6.4, stages 17/18, integration and deployment.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 

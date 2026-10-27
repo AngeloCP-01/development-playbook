@@ -576,3 +576,24 @@ is a menu of possible artifacts, not a replacement for Diátaxis's reader needs.
 The gathering/follow-up sections above describe their dated research state. The chapter correction now uses Diátaxis for reader-task selection, Nygard/MADR for visible supersession, GitHub for the README entry point, C4 for labeled boundaries, and Docs as Code/Google for explicit review checks. Stripe’s unsupported truncation/incident/attempt claims were removed; the ORM specimen was replaced with a labeled documentation decision. User references inform the optional artifact menu, ownership and grounded AI review.
 
 See [accepted source use](stage-10-source-research.md#accepted-chapter-use--2026-10-20), [the corrected chapter](../docs/10-documentation.md) and [execution evidence](../docs/superpowers/reports/2026-10-20-stage-10-execution.md). Original source pages/images, licenses and attribution uncertainty remain recorded above. The chapter’s research appendix is gone; original plates and the user JPEG remain gathering assets only. Earlier “embedded”/“linked” image descriptions record the appendix at the gathering checkpoint, not the corrected chapter or a web publication. No `documentation` sheet is registered; W-6 stays 22/27 and W-3 stays 15/18.
+
+### Stage 10 W-6 companion · 2026-10-27
+
+`documentation` is a text-only Documentation Change Check sheet tethered to
+Stage 10. Its four sections put form choice, record prompts, changed-fact checks
+and publication cautions in one view. The stage retains examples, practice and
+the saved change plan. These compact summaries are intentionally hand-authored;
+`reference/cheatsheets.md` is generated from the sheet module.
+
+Primary pages were rechecked on 2026-10-27: Diátaxis (Daniele Procida), Nygard's
+ADR article, MADR 4.0.0, GitHub README guidance and Google documentation review.
+See the [dated source assessment](stage-10-source-research.md#w6-source-verification-and-assessment--2026-10-27)
+for URLs and supported claims. Checks/owners and the fresh-clone exercise are
+playbook recommendations; MADR metadata and confirmation remain optional.
+
+The sheet publishes no source image or copied template. The four-form text
+lookup is sufficient here; C4's banking example adds no check-card information,
+and the supplied template JPEG's original authorship/reuse permission remains
+unconfirmed. Existing plates stay gathering assets. No private project facts or
+provider execution results were measured. Feature registry: 23 drawn / 28 total;
+local develop remains 22/27 until approved integration.

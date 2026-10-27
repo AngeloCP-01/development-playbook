@@ -8,6 +8,7 @@ import { ciCd } from './ci-cd'
 import { cleanCode } from './clean-code'
 import { codingStandards } from './coding-standards'
 import { deploymentEnvironments } from './deployment-environments'
+import { documentation } from './documentation'
 import { designPatterns } from './design-patterns'
 import { gitBranching } from './git-branching'
 import { gitCheatsheet } from './git-cheatsheet'
@@ -45,6 +46,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   gitCommands,
   gitBranching,
   codingStandards,
+  documentation,
   sdlc,
   testing,
   playwright,

@@ -1,20 +1,18 @@
-# Kickoff: lighter workflow active on develop
+# Kickoff: documentation reference companion ready
 
-Updated 2026-10-26. Follow [AGENTS.md](AGENTS.md), the canonical project policy for Codex and Claude Code. D-99 replaces the blanket process with three paths: research/docs, pages using existing patterns, and shared/consequential behavior. Routine work stays inline with a short checklist. Stronger behavioral tests, appropriate final review, source accuracy, accessibility and Git safeguards remain.
+Updated 2026-10-27. Follow [AGENTS.md](AGENTS.md), the shared D-99 policy. W-6.3r is implemented, verified and independently reviewed; integration is the next decision.
 
 ## Current state
 
-- The user separately approved local integration of policy commits `7fc8cf7` and `af9854d` into develop. Query `git log -1 --oneline` for the workflow merge. D-99 is the active policy; the source branch can be retired after the merge.
-- Stage 10's corrected chapter and twelve-panel port merged as `7819457`; remaining local drafts/AGENTS/image edits merged as `978a363`. Both rounds are complete.
-- Local W-3 is **16/18**; W-6 is **22 drawn / 27 registered**. Stages 17/18 remain. No push or main promotion occurred.
-- Preserve the chapter branch `docs/2026-10-20-stage-10-chapter` at `c092ac7`, gathered research and the existing parent dev server. Check listener/cwd ownership before server operations.
+- Branch/worktree: `feat/stage-10-reference-companion` at `.worktrees/stage10-reference-companion`, based on develop `ae15eaa`. Parent checkout/server are preserved. Query `git log -1 --oneline` for the records tip.
+- Source/checklist `369cdb0`; reviewed/tested application `65ab1d9`. One `/reference/documentation` card, four sections/fifteen rows, five citations, existing renderer/route, no new state or published source image. [Source assessment](reference/stage-10-source-research.md#w6-source-verification-and-assessment--2026-10-27) and [source ledger](reference/cheatsheet-sources.md#stage-10-w-6-companion--2026-10-27). Compact summaries intentionally overlap the chapter; generated Markdown is single-sourced from the sheet.
+- Final format/lint/generated-route typecheck passed; `pnpm test --maxWorkers=1` **1560/219**, build **53 pages**, production audit **27/27**. Six affected-page checks in light/dark at 320/768/1440 passed, including 30 keyboard transitions, sources/stage/back navigation and zero overflow/console errors. Four screenshots inspected; independent final review PASS with no findings.
+- The development-console sweep was not repeated: this is static data with no new React interaction/shared behavior. Application input is unchanged by closing records, so existing final checks remain identified with `65ab1d9`.
+- Stable preview: `http://localhost:3100/reference/documentation`, worktree-owned PID 91310, build `bHVeurjmAg1mErACKpqFN`. Parent port 3200 remains PID 93201. Verify ownership before stopping servers or changing `.next`. The isolated worktree has copied installed dependencies; no install/config change.
+- Feature W-6 **23/28**; develop **22/27**. W-3 **16/18**. No merge/push/main promotion.
 
-## Next work
+## Next decision
 
-Next, assess the bounded Stage 10 W-6 companion under D-88. Compare [gathered lookup candidates](reference/stage-10-source-research.md#w-6-candidate-structure) with the finished stage; add a sheet only if it gives useful reference value. Research/provenance already exist. No W-6 design or implementation is included in this workflow update.
+Read task W-6.3r in [docs/task.md](docs/task.md) and tracker Current phase/Next up. The card adds one-view retrieval; the stage retains worked examples, practice and its saved record. No implementation remains in this slice. Ask before integration. After the reference round, Stage 17 Maintenance is the next W-3 candidate; no Stage 17 work is included here.
 
-Read only the needed sections of [task.md](docs/task.md), tracker Current phase/Next up and decisions D-99/D-88. Search by ID; do not load whole ledgers. For chapter/port evidence, use [coverage](docs/stage-10-status.md), [execution](docs/superpowers/reports/2026-10-20-stage-10-port-execution.md), [local integration](docs/superpowers/reports/2026-10-23-stage-10-integration.md) and [remaining-edits resolution](docs/superpowers/reports/2026-10-23-stage-10-leftovers.md). Completed tasks and historical evidence do not need rebuilding.
-
-Full external-page captures are preserved locally at `.superpowers/sdd/2026-10-20-stage-10-interactive-port-external-sources/`. The port's [committed archive](docs/superpowers/reports/evidence/2026-10-20-stage-10-port/README.md) retains the retired execution ledger and raw evidence. Workshop is illustrative; Toolshare remained held out. Images are gathering assets, not published UI.
-
-Deferred: push/main promotion, W-6 publication and W-6.4, five language sheets, stages 17/18 and unrelated repairs.
+Deferred: integration/deployment, new controls/shared refactors, other sheets, W-6.4, languages and stages 17/18. Research images and prior execution archives remain intact.
