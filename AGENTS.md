@@ -280,13 +280,40 @@ Use applicable skills for the selected work, without expanding a small change
 into every delivery phase. Read a skill once per conversation unless it changes.
 Routine work stays inline with one implementer. Delegate only an independent,
 bounded task when separate context improves accuracy or elapsed time. File
-searches do not need subagents. Use a capable model matched to the task; pass an
-explicit model/effort when supported, without a blanket most-expensive-model rule.
+searches do not need subagents. Apply the model/session policy below; pass its
+explicit model and effort when the tool supports them.
 
 Read relevant code, framework guides and prior decisions on demand. Pass file
 pointers and a bounded diff to reviewers rather than repeating whole plans or
 session histories. When execution options are useful, recommend the approach
 that fits this task instead of asking for a choice at every phase.
+
+### Models and session handoffs
+
+Approved 2026-10-29 (D-100), for the current cost budget:
+
+| Role | Model | Reasoning effort |
+| --- | --- | --- |
+| Research, brainstorming, planning, coordination and review | `gpt-6-astra` | `low` |
+| Implementation, test writing, running checks and diagnosing failures | `gpt-6.1-sol` | `high` |
+
+Every next-task recommendation must name the task, recommended model **and**
+effort before work starts. Each implementation task starts in a fresh session,
+with the user selecting the recommended setting. Keep the main research/planning
+session open to coordinate and review those implementation sessions. Use these
+settings until the user changes them; propose an escalation with its reason
+rather than silently increasing effort or changing models. State recommendations
+as recommendations; only claim an active setting when the environment confirms it.
+
+Put a compact handoff in the existing task/KICKOFF records: reader outcome,
+scope, starting branch/commit, source/design pointers, acceptance checks,
+recommended model/effort and the coordinator session to return results to. The
+implementer reports its branch/commit, actual checks, unresolved issues and
+session reference. Before relying on a referenced session, read its thread;
+the coordinator reviews the actual diff and evidence. Identify the reviewed
+commit and keep later changes visible. This session split does not add plans,
+agents or review rounds beyond D-99's risk-based requirements. Integration still
+requires the user's separate approval.
 
 ## Project artifacts
 

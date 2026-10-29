@@ -2,12 +2,14 @@
 
 Updated 2026-10-29. Follow [AGENTS.md](AGENTS.md), the shared D-99 policy.
 The user selected Stage 17. Its research/chapter checkpoint is complete; the
-interactive page is next.
+interactive page is next. D-100 now specifies models and separate task sessions.
 
 ## Current state
 
-- Branch: `docs/2026-10-29-stage-17-research`, based on local develop `4f965e8`.
-  Chapter/source commit **8ee4efc**; use `git log -1 --oneline` for closing records.
+- Current branch: `docs/2026-10-29-model-session-workflow`, starting from chapter
+  handoff `1f66dfd`. The preserved chapter branch is
+  `docs/2026-10-29-stage-17-research`, based on develop `4f965e8`; source commit
+  **8ee4efc**. Use `git log -1 --oneline` for the current workflow records tip.
   No merge, push or production promotion.
 - [Canonical chapter](docs/17-maintenance.md): update triage, debt/refactoring,
   feature retirement, expiry, retention and restore checks, plus a clearly
@@ -22,7 +24,11 @@ interactive page is next.
 
 ## Verification and next work
 
-Fresh chapter checks: **50/50 tests across three files** (stage metadata, cadence
+Workflow records were checked against `1f66dfd`: ledger **2/2**, **107 local
+targets / 4 files**, exit 0; whitespace clean. Self-reviewed under D-99.
+Application inputs are unchanged.
+
+Retained chapter checks: **50/50 tests across three files** (stage metadata, cadence
 and ledger guards), chapter/source formatting, changed Markdown links/anchors and
 whitespace. Closing-record rechecks: ledger **2/2**, **128 local targets / 6 files**,
 exit 0. The 50-test result is retained for unchanged chapter/metadata inputs.
@@ -32,9 +38,25 @@ are complete; review PASS with no actionable findings. Read-only pnpm 10.33.0 he
 checks verified the documented flags. No production operation, app suite/build or
 browser audit was run for this documentation-only slice.
 
-Next: read [web patterns](web/PATTERNS.md) and [design](web/DESIGN.md), then shape
-Stage 17's interactive page from the corrected chapter. Use a short acceptance
-checklist and existing patterns; escalate only for new/shared behavior. The page
+## Next task and session
+
+**Task:** Stage 17 interactive Maintenance page. **Recommended model:**
+`gpt-6.1-sol`, **reasoning:** `high`, in a **new implementation session**.
+The user selects the setting before starting. Keep the existing main
+research/brainstorming session open as coordinator; its recommended setting is
+`gpt-6-astra`, `low`. This update does not change the active session model.
+
+Start a scoped feature branch from the committed tip of the current workflow
+branch, which includes the reviewed chapter and D-100; record the exact starting
+commit. Both documentation branches remain unmerged. Return the implementation
+session reference, branch/commit, actual checks and unresolved issues to this
+coordinator for review before any merge decision. The coordinator reads the
+referenced thread, then checks the actual diff and evidence.
+
+Read [web patterns](web/PATTERNS.md) and [design](web/DESIGN.md), then shape
+Stage 17's interactive page from the corrected chapter. Agree the short acceptance
+checklist with the coordinator before implementation and use existing patterns.
+Escalate only for new/shared behavior. The page
 will need meaningful render coverage, the final app gate, affected states in both
 themes and a development-console sweep. Keep a later W-6 companion assessment
 bounded and decide which lookup rows add value beyond the stage.

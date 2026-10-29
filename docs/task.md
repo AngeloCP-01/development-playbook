@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **16/18**: stages 01-16 are interactive; 17 and 18 remain. W-6 is **23 drawn / 28 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next checkpoint:** Shape Stage 17's interactive page from the corrected chapter using existing patterns. Push, integration and main promotion remain separate user decisions.
+**Next task: Stage 17 interactive Maintenance page — recommended model GPT-6.1 Sol, High reasoning, in a new implementation session.** The main coordinator remains open for research, scope/planning and review using **GPT-6 Astra, Low reasoning** (D-100). Start from the chapter plus current workflow handoff; supply the acceptance scope before implementation. Push, integration and main promotion remain separate user decisions.
 
 Two deliverables from one body of content.
 
@@ -152,6 +152,10 @@ not rerun after merge. The local feature branch and worktree were removed.
 references and the subsequent layout repair are merged; their work is complete.
 
 ### W-3.18 — Stage 17 Maintenance ◐ *(chapter complete; interactive page pending, 2026-10-29)*
+
+**Next-task model/session:** `gpt-6.1-sol`, `high`, fresh implementation session.
+Coordinator: the existing research/planning session, `gpt-6-astra`, `low`.
+Use [KICKOFF.md](../KICKOFF.md) for starting commits and handoff requirements.
 
 Reader task: choose and safely complete the next maintenance action, with evidence,
 an owner and a follow-up date. Maintenance runs continuously; stage 17 is a filing
