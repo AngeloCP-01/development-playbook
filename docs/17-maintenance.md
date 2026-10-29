@@ -1,17 +1,21 @@
 # 17. Maintenance
 
-> Keep the software healthy so that changing it stays cheap. Neglect compounds quietly,
-> and then all at once.
+> Keep the software healthy so that changing it stays affordable.
 
-**When this actually happens:** Continuously, in small amounts. A regular hour beats an
-emergency week, and the emergency week is what you get if you skip the hour.
+**When this actually happens:** Continuously, before and after launch. Use a regular
+review slot and act sooner when a security issue, expiry or service degradation demands
+it. Stage numbers are filing codes; maintenance does not wait for an incident.
 
 ---
 
 ## Entry criteria
 
-- [ ] The application is in production with real users
-- [ ] You intend to keep working on it
+- [ ] You intend to keep operating or changing the software
+- [ ] Someone owns its dependencies, services and recovery arrangements
+- [ ] You can find the checks and production signals needed to assess a change
+
+A static site still has dependencies, domains and deployment tooling. Database and
+credential checks apply only where the application uses them.
 
 ---
 
@@ -19,191 +23,259 @@ emergency week, and the emergency week is what you get if you skip the hour.
 
 ### Why this stage exists
 
-Software rots even when untouched. Dependencies accumulate vulnerabilities, certificates
-expire, APIs get deprecated, data grows past what queries were designed for, and the
-assumptions you built on stop being true.
+Software's surroundings keep changing: libraries lose support, credentials expire,
+providers retire APIs, data grows and users depend on workflows you may no longer notice.
+Maintenance catches these changes while there is still time to choose a response.
 
-The cost of neglect is not linear. Skip updates for a year and you are not behind by a
-year of small changes — you are facing several major version jumps at once, each with
-breaking changes, with no way to isolate which one broke things.
+Keep one small queue. Each item needs the affected system, evidence of the problem,
+impact, owner, next action and review date. Prioritize a reachable vulnerability, an
+approaching deadline or repeated user harm ahead of cosmetic cleanup. Record why a
+known risk is deferred and when that decision expires.
 
-### A weekly rhythm
+### A regular review
 
-Thirty minutes, one regular slot:
+A weekly thirty-minute slot is a **starting suggestion**, not a promise that all work
+will fit. Triage during the slot; schedule larger work separately. Use an event-driven
+path for urgent advisories and incidents rather than waiting for the calendar.
 
-**Dependency updates.** Dependabot has grouped them ([11](11-ci-cd.md)). Dev dependencies
-with green CI merge without much thought. Production minors get a changelog skim. Majors
-get their own session.
+| Look at                                                 | Decide                                                                 | Keep as evidence                                    |
+| ------------------------------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------- |
+| Dependency PRs and security advisories                  | Update, investigate or defer with a deadline                           | Affected version, release notes, checks and owner   |
+| Errors and service trends ([15](15-observability.md))   | Investigate user impact, adjust a signal or document an accepted issue | Time window, baseline, affected workflow and ticket |
+| Domains, certificates, credentials and provider notices | Renew, rotate or verify automation                                     | Owner, due date and successful validation           |
+| Data growth and recovery readiness                      | Investigate growth, review retention or schedule a restore drill       | Growth trend, policy and last drill result          |
+| Repeated work and difficult changes                     | Simplify, automate, retire or leave alone with a reason                | Recurring cost and a small proposed change          |
 
-**Error triage.** Open Sentry. New issues since last week get one of three dispositions:
-fix, ignore deliberately, or file for later. Errors that sit unread for months train you
-to stop looking, and then you stop noticing real ones.
+For errors, a disposition means fix, assign, suppress with a reason, or accept with a
+review date. An empty inbox is less useful than knowing who owns an unresolved problem.
+Compare latency and error trends with traffic and workload; a change in the mix of
+requests can change an aggregate without the same change in every user's experience.
 
-**Metric glance.** Error rate, p95 latency, traffic ([15](15-observability.md)). You are
-looking for slow drift, not spikes — spikes alert; drift does not. Latency creeping from
-200ms to 600ms over three months never triggers an alert and is a real degradation.
+### Dependency updates and major upgrades
 
-**Database health.** Table growth, slow query log, index usage. A table growing faster
-than expected is worth understanding before it becomes a problem.
+Read the changed versions, release notes and lockfile diff before merging. Development
+dependencies also run in builds and CI; a green test suite does not establish that a
+package is trustworthy or that every workflow still works. Apply the review and checks
+that match the package's role, including a build or affected user flow where needed.
 
-### Major version upgrades
+Semantic Versioning describes a publisher's compatibility intent for a public API.
+It cannot prove compatibility with your application. Versions below `1.0.0` have weaker
+stability expectations. See [SemVer 2.0.0](https://semver.org/spec/v2.0.0.html).
 
-One at a time, in their own PR, never bundled.
+Dependabot normally creates individual version-update PRs; grouping requires configured
+rules. Security and version-update grouping have separate scopes. Keep groups small
+enough to understand and revert; see [GitHub's grouping reference](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference#groups--).
+A bot proposes a change; it does not decide that the change is safe to ship.
 
-```bash
-pnpm add next@latest react@latest react-dom@latest
-```
+For an upgrade:
 
-Read the migration guide properly, run codemods where provided, and expect to spend real
-time. Bundling two majors means that when something breaks you cannot tell which one did
-it.
+1. Identify installed and target versions, support status and the official migration guide.
+2. Use a branch. Upgrade one independently testable package or **compatible family** at
+   a time; a framework, its React peer and its matching tooling may need to move together.
+3. Review migration steps and any codemod diff. Commit manifest and lockfile together.
+4. Run the relevant checks and exercise the affected behavior. Record unresolved warnings.
+5. Prepare the deployment check and recovery approach before release. A code rollback
+   alone may not reverse a database migration or an external side effect
+   ([13](13-production-deployment.md)).
 
-Frameworks in particular reward staying reasonably current. Falling three majors behind
-turns a routine upgrade into a project, and unsupported versions stop receiving security
-patches.
+For pnpm 10, [`pnpm update`](https://pnpm.io/10.x/cli/update) normally follows manifest
+ranges; `--latest` ignores those ranges. Choose target versions deliberately instead of
+using `@latest` as a universal migration instruction.
+[`pnpm audit --fix`](https://pnpm.io/10.x/cli/audit) adds dependency overrides. Review and
+test those changes; suppressing a report is not proof of compatibility or risk removal.
+An advisory's urgency also depends on exposure and available mitigation
+([08](08-security-audit.md)).
 
 ### Certificate and credential expiry
 
-The classic 3am outage with no deploy to blame.
+Keep an inventory with the service, owner, expiry or renewal date, renewal mechanism,
+validation step and next reminder. Include domains, TLS certificates, API credentials,
+OAuth secrets and signing keys where used. Choose reminder lead time to allow for
+provider support, approval or a staged rotation; two weeks may be too late.
 
-Keep a list of everything that expires — API keys with rotation policies, OAuth client
-secrets, signing certificates, domain registrations, third-party subscriptions — with
-calendar reminders two weeks ahead.
+Vercel automatically **attempts** renewal for certificates it issues. Correct domain
+configuration is still required, uploaded certificates have different responsibilities,
+and renewing TLS does not renew a domain registration. Verify the status instead of
+assuming automation succeeded. See [Vercel's SSL guidance](https://vercel.com/docs/domains/working-with-ssl).
+Other providers may send warnings; check where those notices go and who reads them.
 
-Vercel handles TLS automatically. Everything else is on you, and none of it warns you
-except by breaking.
+For a credential rotation, identify consumers, distribute the replacement securely,
+verify that they work, then revoke the old credential. Overlap depends on the provider's
+capabilities and the situation; an exposed credential may require immediate revocation.
+Never put credential values in the maintenance queue, screenshots or exported notes.
 
-### Data growth
+### Data growth and retention
 
-What is fast on 10,000 rows may not be on 10 million.
+Check growth rate, slow queries and query plans against the workload
+([09](09-performance-optimization.md)). Before removing data, define what is retained, why, for how
+long, who approves removal and which records must be excluded. Logs, sessions, events
+and customer records need different policies. Keep required audit evidence and account
+for recovery copies; a database cleanup does not erase every backup.
 
-Watch for tables growing faster than expected, queries whose plans have changed as data
-grew, and unbounded tables like logs, sessions, and events that nothing ever deletes from.
+**Illustrative policy, not a runnable job:** expired sessions become eligible for removal
+only after the application's approved grace period. Preview candidate counts, verify
+timestamp meaning and exclusions, test on an isolated dataset, then choose a bounded
+batch size and monitor load. Confirm the result and the job's failure handling before
+scheduling it. No retention duration is established by this example.
 
-Decide retention deliberately:
+In PostgreSQL, deleting rows does not immediately remove their old physical versions.
+Routine vacuuming makes that space reusable; standard vacuum generally does not return
+it to the operating system. Check autovacuum health rather than assuming a successful
+DELETE shrank the database. `VACUUM FULL` takes an exclusive lock and is not the routine
+answer. See [PostgreSQL 18 routine vacuuming](https://www.postgresql.org/docs/18/routine-vacuuming.html).
 
-```sql
--- Runs nightly. Sessions past 90 days serve no purpose.
-DELETE FROM sessions WHERE expires_at < now() - interval '90 days';
-```
+### Choosing debt to repay
 
-Unbounded growth is a slow-motion outage. It costs money for years and then one day the
-query that scans that table times out.
+Technical debt can be deliberate or discovered after the fact. The useful question is
+what cost the design creates now and whether changing it is worth that cost.
+[Martin Fowler's quadrant](https://martinfowler.com/bliki/TechnicalDebtQuadrant.html)
+separates intent from the care taken in the decision.
 
-### Paying down debt
+![Technical debt quadrant: reckless and prudent choices can each be deliberate or inadvertent.](../reference/stage-17-tech-debt-quadrant.png)
 
-Technical debt is not sloppy code — it is deliberate shortcuts taken for speed, and taking
-them is often correct. The failure is never paying them back.
+_Illustration: Martin Fowler, [Technical Debt Quadrant](https://martinfowler.com/bliki/TechnicalDebtQuadrant.html)
+(2009), unchanged. Used under his [illustration reuse policy](https://martinfowler.com/faq.html).
+The quadrant describes how debt arises; it does not rank the repayment queue._
 
-Fix debt **when you are already in the code**. The refactor you do while implementing a
-nearby feature is nearly free; the standalone refactoring project is expensive, risky, and
-gets deprioritized forever.
+Look for repeated fixes, duplicated decisions, slow changes or unclear ownership. A
+recurring bug warrants investigating its cause; it does not by itself prove that the
+whole design needs replacing. Record a concrete cost, the smallest useful change and
+how you will check its effect.
 
-Signals worth acting on:
+**Illustrative debt item:** three recent changes each updated the same validation rule
+in two places. Before the next change, add coverage for the current accepted and rejected
+inputs, move the shared rule behind one interface, and check both callers. The evidence
+is a repeated edit, not simply that someone dislikes the file.
 
-- A file you dread opening
-- A change requiring edits in four unrelated places
-- A bug fixed three times in the same area
-- A comment saying "don't touch this"
-
-That third one is the strongest. A recurring bug means the fix is treating symptoms and
-the design is wrong.
-
-**Do not refactor without tests.** Refactoring means changing structure without changing
-behavior, and without tests you cannot know whether behavior changed
+Nearby refactoring often fits feature work. A larger migration may need planned,
+incremental work with compatibility steps and an owner; it is not automatically wasteful
+because it has its own ticket. [Fowler's refactoring workflows](https://martinfowler.com/articles/workflowsOfRefactoring/)
+include both opportunistic and planned approaches. Keep behavior changes separate enough
+to review, and establish meaningful coverage before altering fragile behavior
 ([06](06-testing.md)).
 
-### Deleting things
+### Retiring features and deleting code
 
-The most underrated maintenance activity. Every line you delete is a line that cannot
-break, cannot be misunderstood, and does not need updating.
+Check runtime usage, callers, scheduled jobs, integrations and support knowledge before
+calling something unused. Missing telemetry is uncertainty, not evidence of zero users;
+rare administrative or recovery paths may matter even when everyday analytics is quiet.
 
-Delete: unused features, dead code paths, stale feature flags
-([13](13-production-deployment.md)), unused dependencies, obsolete documentation
-([10](10-documentation.md)), tests for deleted features.
+For a user-facing retirement, identify affected consumers, communicate the change where
+needed, provide a migration route, and define how to detect a problem. Remove stale flags,
+configuration, dependencies, tests and documentation alongside the feature. Keep tests
+for behavior that still exists. Provider billing and stored data may require separate
+cleanup.
 
-Check usage before assuming a feature is used. Analytics frequently reveal that a feature
-you have been maintaining for two years has three users, none of whom would notice its
-removal.
+Version control can restore tracked code. It cannot restore deleted production data,
+undo a notification or repair a broken external contract. Choose a reversible disable
+step where practical, and treat irreversible effects separately. See the broader
+[deprecation guidance](https://abseil.io/resources/swe-book/html/ch15.html) in Google's
+_Software Engineering at Google_.
 
-Version control means deletion is not destruction. Delete confidently.
+### Practicing recovery
 
-### Backups you have actually restored
+Define acceptable data loss and recovery time for the application, then test against
+those targets ([16](16-incident-management.md)). Neon supports recovery within a project's
+configured **history window**, subject to its plan and settings. Check the actual
+window before relying on a past recovery point; see [Neon's recovery overview](https://neon.com/docs/introduction/branching#restore-and-recover-data).
+Other stores, files, credentials and provider configuration may need their own recovery
+arrangements.
 
-An untested backup is a hypothesis about a backup.
+Run a drill in an isolated environment, with access restricted for any copied production
+data. Keep email, payment, webhook and scheduled-job side effects disabled. Restore a
+chosen point, check expected records and application access, and measure the time through
+validation and reconnection, not just the provider's restore operation. Record the newest
+recoverable data and any gap. Clean up drill resources when finished.
 
-Neon does automated backups and point-in-time recovery. That is not the question. The
-question is whether you have ever restored one.
+Repeat on a schedule suited to the service and after material recovery changes. A
+quarterly drill is a possible starting policy, not a universal requirement. Backups need
+restore validation; see [Google SRE's data integrity guidance](https://sre.google/sre-book/data-integrity/).
 
-Once, deliberately: restore to a scratch branch, verify the data is intact and current
-enough. Note how long it took — that number is your actual recovery time, and it is
-usually longer than assumed.
+### A maintenance record you can use
 
-Do this before you need it, not during
-[16 — Incident Management](16-incident-management.md).
+This is a **fictional example**, not evidence that this repository had an incident or
+performed an upgrade:
+
+| Field             | Example                                                               |
+| ----------------- | --------------------------------------------------------------------- |
+| Signal and impact | Build plugin approaches end of support; releases depend on it         |
+| Evidence          | Vendor notice and installed-version check, linked in the ticket       |
+| Owner and action  | Release owner evaluates the supported replacement in a branch         |
+| Verification      | Build plus representative deployment-preview checks                   |
+| Recovery          | Retain the current deploy and check compatibility before promotion    |
+| Follow-up         | Record the actual result and choose a review date before support ends |
+
+A deferred item needs the same owner and follow-up discipline. Record unknown exposure
+as unknown rather than filling in an assumed answer.
 
 ---
 
 ## Artifacts
 
-- A weekly maintenance slot that actually happens
-- An expiry calendar for certificates, keys, and subscriptions
-- Retention policies on growing tables
-- A verified restore, with the timing recorded
-- A debt list, addressed opportunistically
+Keep records proportionate to the application:
+
+- A maintenance queue with evidence, owners and review dates
+- A dependency upgrade record with checks and a deployment/recovery decision
+- An expiry inventory with verified renewal or rotation arrangements
+- Approved retention policies and monitored cleanup where data is stored
+- A restore-drill result with observed data loss and elapsed recovery time
+- Debt and retirement decisions linked to affected code, consumers and documentation
 
 ---
 
 ## Definition of done
 
-Ongoing. Monthly, confirm:
+Maintenance continues. At each review, confirm:
 
-- [ ] Dependencies updated; no unaddressed high-severity vulnerabilities
-- [ ] Sentry triaged to zero unreviewed issues
-- [ ] No unexplained drift in error rate or latency
-- [ ] No table growing without a retention policy
-- [ ] Nothing expiring in the next 30 days without a reminder
-- [ ] Backup restore verified within the last quarter
-- [ ] Dead code and stale flags removed
+- [ ] New advisories and dependency proposals have an owner and a disposition
+- [ ] Urgent risks and approaching deadlines have actions before the next routine review
+- [ ] Unresolved errors and unexplained service trends have recorded follow-up
+- [ ] Applicable expiry and data-growth checks are current; inapplicable checks are marked
+- [ ] Retention and recovery arrangements match the application's current needs
+- [ ] The latest required restore drill has evidence, with gaps assigned
+- [ ] Completed changes include their checks, observed result and follow-up date
+- [ ] Deferred debt and retirements still have a reason, an owner and a review date
+
+A reviewed queue may still contain work. Do not mark an upgrade or a restore as complete
+because a bot opened a PR or a provider advertises the capability.
 
 ---
 
 ## Scaling to a team
 
-- **Assign ownership.** Unowned maintenance is nobody's maintenance — everyone assumes it
-  is handled.
-- **Rotate the maintenance slot** so it is shared rather than absorbed by whoever cares
-  most.
-- **Budget time explicitly.** Roughly 20% of capacity. Maintenance that competes with
-  feature work loses every sprint, until it stops competing and starts causing incidents.
-- **Track debt visibly** so it is a shared cost rather than one person's frustration.
-- **Document tribal knowledge.** Solo, "I know why that is weird" is fine. With a team it
-  is a bottleneck.
+- **Assign owners and backups.** A rotating reviewer needs someone to take over urgent
+  work and access to the relevant dashboards.
+- **Reserve capacity based on evidence.** Use the queue, deadlines, repeated incidents
+  and recurring manual work to set the budget. Review it when those signals change.
+  A fixed 20% is not a universal standard; even Google's SRE toil limits describe its
+  operating model, not a budget for every team
+  ([Eliminating Toil](https://sre.google/workbook/eliminating-toil/)).
+- **Share operational knowledge.** Keep renewal, upgrade and recovery instructions where
+  the next owner can find them ([10](10-documentation.md)).
+- **Reduce repeated manual work.** Automate a stable task with visible failures and a
+  recovery path; check that the automation actually reduces the recurring effort.
 
 ---
 
 ## Traps
 
-**Batching updates.** A year of deferred updates is not one large task; it is several
-simultaneous breaking changes with no way to bisect.
+**Green CI as automatic approval.** Checks cover what you have encoded. Review package
+role, changed behavior and supply-chain exposure too.
 
-**Refactoring without tests.** You cannot verify behavior is unchanged, so you are not
-refactoring — you are rewriting and hoping.
+**An unlimited cleanup job.** A successful delete can still overload the database,
+violate retention policy or leave physical storage unchanged.
 
-**Standalone refactoring projects.** Expensive, risky, and perpetually deprioritized. Fix
-code you are already touching.
+**A universal maintenance percentage.** Set capacity from actual obligations and cost,
+then review whether it is enough.
 
-**Ignoring Sentry.** Unread errors accumulate until you stop looking entirely, and then a
-real one arrives unnoticed.
+**Refactoring by preference.** Tie structural work to a repeated cost or upcoming change;
+keep a way to verify behavior.
 
-**Unbounded tables.** Sessions, logs, and events grow forever unless something deletes
-them. Slow-motion outage.
+**Deleting on missing analytics.** Check telemetry coverage, rare workflows and external
+consumers before retiring a feature.
 
-**Untested backups.** Discovering your restore is broken during an incident is the worst
-possible time to discover it.
+**Recovery measured only by the provider.** The service is not recovered until its data,
+configuration and application access have been checked.
 
-**Keeping features nobody uses.** Every one costs maintenance, constrains changes, and
-adds surface area. Check the analytics, then delete.
-
-**Treating maintenance as optional.** It is not deferred — it is accrued, with interest,
-and paid eventually as an incident rather than an hour.
+**A queue without follow-up.** Deferral is a decision with an owner and review date;
+otherwise the next review starts from the same uncertainty.

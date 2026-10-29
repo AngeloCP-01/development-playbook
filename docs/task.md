@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-10-27): W-6.3r, Stage 10 Documentation reference companion.** The scoped source check is complete and `/reference/documentation` is implemented using the existing renderer. Local develop is **23 drawn / 28 registered** after approved no-ff merge `8eb294c`. Four sections/fifteen rows aggregate quick lookups while the stage keeps examples and practice. Focused checks pass **27/27**. Final format/lint/typecheck, **1,560 tests / 219 files**, **53-page build** and production **27/27** pass; six affected-page theme/viewport checks and the independent final review are clean. No new state or shared behavior is introduced.
+**Current work (2026-10-29): W-3.18, Stage 17 Maintenance chapter checkpoint.** Primary-source research, the chapter correction and one independent final content review are complete on `docs/2026-10-29-stage-17-research`, based on develop `4f965e8`. The original Fowler quadrant is attributed and its reuse permission recorded. The interactive stage and reference sheet remain follow-ups. Local develop remains **16/18** interactive and **23 drawn / 28 registered** references after Stage 10's approved integration.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **16/18**: stages 01-16 are interactive; 17 and 18 remain. W-6 is **23 drawn / 28 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next checkpoint: Stage 17 Maintenance.** Stage 10's chapter, interactive port and W-6 companion are complete and integrated locally. Start the next bounded round with scope/source assessment under D-99; no Stage 17 implementation is included in this merge. Push and main promotion remain separate user decisions.
+**Next checkpoint:** Shape Stage 17's interactive page from the corrected chapter using existing patterns. Push, integration and main promotion remain separate user decisions.
 
 Two deliverables from one body of content.
 
@@ -150,6 +150,30 @@ The browser results apply to the identical application tree; those suites were
 not rerun after merge. The local feature branch and worktree were removed.
 **Latest merged stage round:** W-3.17, Stage 10 Documentation, integrated locally as `7819457` after separate approval. Stage 09's W-6.3q
 references and the subsequent layout repair are merged; their work is complete.
+
+### W-3.18 — Stage 17 Maintenance ◐ *(chapter complete; interactive page pending, 2026-10-29)*
+
+Reader task: choose and safely complete the next maintenance action, with evidence,
+an owner and a follow-up date. Maintenance runs continuously; stage 17 is a filing
+code, not a prerequisite after incidents.
+
+- [x] Verify primary sources for dependency updates, debt/refactoring, retirement,
+  expiry, retention and recovery; distinguish provider facts from playbook advice.
+- [x] Gather useful visual references with original source and reuse terms; assess
+  later W-6 lookup value without registering a sheet yet.
+- [x] Update `17-maintenance.md`, including one clearly illustrative maintenance
+  record; avoid unverified destructive commands and universal capacity targets.
+- [x] Humanizer editing pass, one independent final content review, relevant
+  chapter/title/ledger guards and changed local links/anchors.
+
+Sources: [Stage 17 research](../reference/stage-17-source-research.md). The chapter
+uses an attributed original image with author permission. Focused guards pass
+**50/50 across three files**, local links/anchors and formatting pass, and the
+independent content review returned PASS with no actionable findings. No
+maintenance operation or app build was run.
+
+Deferred: interactive implementation and browser checks, new reference registration,
+shared behavior, live dependency/database operations, merge, push and deployment.
 
 ### W-3.17 — Stage 10 Documentation ☑ *(merged locally into develop as `7819457`, 2026-10-23)*
 

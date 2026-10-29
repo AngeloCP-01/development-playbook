@@ -597,3 +597,19 @@ and the supplied template JPEG's original authorship/reuse permission remains
 unconfirmed. Existing plates stay gathering assets. No private project facts or
 provider execution results were measured. Approved local merge `8eb294c` brings develop to 23 drawn / 28 registered.
 Earlier dated counts above describe their research checkpoints.
+
+### Stage 17 gathering · 2026-10-29
+
+The [Maintenance source record](stage-17-source-research.md) captures primary
+sources, versioned package-manager meanings, provider limits and possible lookup
+rows for a later W-6 round. The [chapter](../docs/17-maintenance.md) uses the
+unchanged [original debt quadrant](stage-17-tech-debt-quadrant.png), credited to
+Martin Fowler with its original article and his illustration reuse permission.
+This is author permission with attribution, not a named standard license.
+
+Candidate lookup needs: update triage, tool-operation distinctions, debt evidence,
+retirement checks and recurring review prompts. Recovery/expiry/retention rows
+need to earn their space during the later companion assessment. No sheet or
+public web asset is registered in this gathering round; W-6 stays **23/28** and
+W-3 **16/18**. Research does not establish production health or an executed upgrade,
+cleanup, rotation or restore.
