@@ -7,6 +7,21 @@ operational state, implement the interactive stage or register a reference sheet
 The operational supplement below records the provider-specific expiry, retention
 and restore checks used by the chapter.
 
+## Interactive adaptation (2026-10-29)
+
+The Stage 17 page in `web/src/features/maintenance/` hand-ports this reviewed
+chapter into six lookup panels using existing drills and disclosures. This is
+the app's established content duplication; keep chapter and page guidance in
+sync. The queue, retirement proposals and restore reports are fictional exercises,
+not project operational evidence. The record repeats the chapter's fictional
+build-plugin example. Provider claims retain the version and scope recorded below.
+
+The page links Fowler's original quadrant and uses labelled prose paraphrases
+of its four categories. It does not publish or modify the retained source image.
+No new image, reference sheet or live maintenance operation is included. The
+three further-reading entries reuse sources below: Fowler's refactoring workflows,
+Google's deprecation chapter and Google SRE's data-integrity guidance.
+
 ## Scope and source method
 
 - Read the current chapter and check its strongest maintenance claims.

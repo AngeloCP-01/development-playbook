@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-10-29): W-3.18, Stage 17 Maintenance chapter checkpoint.** Primary-source research, the chapter correction and one independent final content review are complete on `docs/2026-10-29-stage-17-research`, based on develop `4f965e8`. The original Fowler quadrant is attributed and its reuse permission recorded. The interactive stage and reference sheet remain follow-ups. Local develop remains **16/18** interactive and **23 drawn / 28 registered** references after Stage 10's approved integration.
+**Current work (2026-10-29): W-3.18, Stage 17 Maintenance page complete on the feature branch.** Implementation **ebcb0ba** on `feat/maintenance-page` adds six interactive panels from the reviewed chapter. The app gate, both-theme browser checks, development-console sweep and independent final review pass. The feature branch is **17/18** interactive; local develop remains **16/18** and **23 drawn / 28 registered** references. Integration and a possible W-6 companion remain separate decisions.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **16/18**: stages 01-16 are interactive; 17 and 18 remain. W-6 is **23 drawn / 28 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task: Stage 17 interactive Maintenance page — recommended model GPT-6.1 Sol, High reasoning, in a new implementation session.** The main coordinator remains open for research, scope/planning and review using **GPT-6 Astra, Low reasoning** (D-100). Start from the chapter plus current workflow handoff; supply the acceptance scope before implementation. Push, integration and main promotion remain separate user decisions.
+**Next task: return Stage 17 to the main coordinator for review and an integration decision — recommended model GPT-6 Astra, Low reasoning** (D-100). Implementation session `01a1850c-d865-7d02-a3c0-23916ced0f66`; see [KICKOFF.md](../KICKOFF.md) for the branch, exact app commit and evidence. The coordinator reads the thread and actual diff before relying on the handoff. Any implementation follow-up uses a fresh **GPT-6.1 Sol / High** session. Push, integration and main promotion remain separate user decisions.
 
 Two deliverables from one body of content.
 
@@ -151,10 +151,11 @@ not rerun after merge. The local feature branch and worktree were removed.
 **Latest merged stage round:** W-3.17, Stage 10 Documentation, integrated locally as `7819457` after separate approval. Stage 09's W-6.3q
 references and the subsequent layout repair are merged; their work is complete.
 
-### W-3.18 — Stage 17 Maintenance ◐ *(chapter complete; interactive page pending, 2026-10-29)*
+### W-3.18 — Stage 17 Maintenance ☑ *(feature complete; integration pending, 2026-10-29)*
 
-**Next-task model/session:** `gpt-6.1-sol`, `high`, fresh implementation session.
-Coordinator: the existing research/planning session, `gpt-6-astra`, `low`.
+**Next-task model/session:** return to the existing coordinator, `gpt-6-astra`,
+`low`, for review and integration decision. Implementation follow-up, if needed:
+`gpt-6.1-sol`, `high`, fresh session.
 Use [KICKOFF.md](../KICKOFF.md) for starting commits and handoff requirements.
 
 Reader task: choose and safely complete the next maintenance action, with evidence,
@@ -173,7 +174,7 @@ Acceptance: meaningful render coverage for scoring, explanations and conditional
 output; rail/ready registration; useful first-use definitions and generated glossary;
 all chapter topics and traps represented. Run the final web gate once, the
 development-console sweep, and focused keyboard/layout/state checks in both themes
-at narrow, middle and wide widths. One independent final content/page review is due.
+at narrow, middle and wide widths. One independent final content/page review is required.
 Recommended implementation setting remains `gpt-6.1-sol`, `high`; the environment
 does not confirm the active model. Integration requires separate approval.
 
@@ -185,15 +186,29 @@ does not confirm the active model. Integration requires separate approval.
   record; avoid unverified destructive commands and universal capacity targets.
 - [x] Humanizer editing pass, one independent final content review, relevant
   chapter/title/ledger guards and changed local links/anchors.
+- [x] Six panels, three scored exercises, review record, all seven traps, five
+  generated glossary definitions and stage/rail registration; nine meaningful render tests.
+- [x] Final application gate, both-theme keyboard/state/layout checks and development-console
+  sweep; independent final content/page review with no actionable findings.
 
 Chapter/source commit **8ee4efc**, based on develop `4f965e8`.
 Sources: [Stage 17 research](../reference/stage-17-source-research.md). The chapter
 uses an attributed original image with author permission. Focused guards pass
 **50/50 across three files**, local links/anchors and formatting pass, and the
-independent content review returned PASS with no actionable findings. No
-maintenance operation or app build was run.
+independent content review returned PASS with no actionable findings. These were
+the chapter-only checks; the later app verification follows.
 
-Deferred: interactive implementation and browser checks, new reference registration,
+App commit **ebcb0ba**, acceptance **c507a7a**, from handoff **23f481e**:
+format/lint/typecheck, **1,570 tests / 220 files**, **53-page build** pass.
+Production audit: **25 passing checks retained plus two passing isolated timeout
+reruns**, unchanged app and limits. Focused browser sweep: **36 combinations**
+(six panels, both themes, 320/768/1440px), expanded/answered states, keyboard,
+definitions and console pass. Development-console **1/1** passes using a temporary
+config against the preserved 3200 server. Independent final review PASS; humanizer
+pass complete. See the tracker completion row for commands and failure context.
+Session: `01a1850c-d865-7d02-a3c0-23916ced0f66`.
+
+Deferred: coordinator integration decision, W-6 companion assessment/registration,
 shared behavior, live dependency/database operations, merge, push and deployment.
 
 ### W-3.17 — Stage 10 Documentation ☑ *(merged locally into develop as `7819457`, 2026-10-23)*
