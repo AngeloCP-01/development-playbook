@@ -1,4 +1,4 @@
-# Kickoff: Stage 17 AI Plays correction ready for coordinator review
+# Kickoff: Stage 17 AI Plays correction reviewed; integration pending
 
 Updated 2026-10-29. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 Coordinator review found a missing D-35 requirement after the original six-panel
@@ -44,18 +44,31 @@ Earlier **ebcb0ba** six-panel checks and review remain historical evidence in
 verify this addition. The existing **3200** dev server is preserved. The owned
 **3100** production preview was stopped after the audit.
 
+## Coordinator review (2026-10-29)
+
+The coordinator read the implementation thread and reviewed **345c972..98688ec**
+against the correction checklist, chapter/page consistency and regression coverage.
+No actionable findings in this scoped correction review; the original six-panel
+implementation was not re-reviewed in full. Fresh checks at **98688ec**:
+`pnpm test src/features/maintenance/Maintenance.test.tsx src/lib/stage-metadata.test.ts src/lib/tracker-ledger.test.ts --maxWorkers=1`,
+**48/48 across three files**, exit 0. Raw full-test/build/production/dev-console
+logs were checked; `git diff --exit-code 28d4410 HEAD -- web docs/17-maintenance.md`
+confirmed identical application/chapter inputs. Retain the identified full gate
+above; no full-suite/build/browser rerun was needed. Later edits here are records only.
+
 ## Next task and session
 
-Return this correction to the main coordinator for thread/diff review.
+**Task:** user integration decision for the corrected Maintenance branch.
+**Recommended model:** `gpt-6-astra`, **reasoning:** `low`, in the main coordinator.
+The AI Plays correction is complete; no further implementation task is identified.
+
 Implementation recommendation was **gpt-6.1-sol / high**. The user explicitly chose
 continuation of session **01a1850c-d865-7d02-a3c0-23916ced0f66** for this correction.
 The runtime does not report the active implementation model.
 
-The next coordinator task uses recommended **gpt-6-astra / low**. Read that
-implementation thread before relying on this handoff, then inspect the actual
-**345c972..HEAD** diff and evidence. Return the branch/commit, actual checks,
-unresolved issues and session reference. The scoped independent review does not
-replace the main coordinator's review.
+The implementation thread and actual correction diff have now been reviewed by
+the coordinator as recorded above. Further application edits require the relevant
+checks and review of their new diff.
 
 Integration into develop needs separate user approval; main is the user's. W-6
 Maintenance companion assessment, Stage 18, five language placeholders and W-6.4
