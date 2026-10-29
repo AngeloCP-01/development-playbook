@@ -161,6 +161,22 @@ Reader task: choose and safely complete the next maintenance action, with eviden
 an owner and a follow-up date. Maintenance runs continuously; stage 17 is a filing
 code, not a prerequisite after incidents.
 
+**Interactive scope approved 2026-10-29:** six panels: triage, updates, expiry,
+data and recovery, debt and retirement, review record. Start branch
+`feat/maintenance-page` from workflow handoff **23f481e**. Use existing `Stepper`,
+`Drill`, `RevealList`, `Figure`, `Term` and team-note patterns; keep state local to
+the existing components. The corrected chapter and its source record govern the
+teaching content. The fictional queue and record must remain labelled; no live
+maintenance operation or new reference sheet is included.
+
+Acceptance: meaningful render coverage for scoring, explanations and conditional
+output; rail/ready registration; useful first-use definitions and generated glossary;
+all chapter topics and traps represented. Run the final web gate once, the
+development-console sweep, and focused keyboard/layout/state checks in both themes
+at narrow, middle and wide widths. One independent final content/page review is due.
+Recommended implementation setting remains `gpt-6.1-sol`, `high`; the environment
+does not confirm the active model. Integration requires separate approval.
+
 - [x] Verify primary sources for dependency updates, debt/refactoring, retirement,
   expiry, retention and recovery; distinguish provider facts from playbook advice.
 - [x] Gather useful visual references with original source and reuse terms; assess
