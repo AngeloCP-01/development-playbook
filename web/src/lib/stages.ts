@@ -188,10 +188,10 @@ export const STAGES: Stage[] = [
     cadence: 'Weekly, small doses',
     slug: '17-maintenance',
     title: 'Maintenance',
-    blurb: 'Keep the software healthy so that changing it stays cheap.',
+    blurb: 'Keep the software healthy so that changing it stays affordable.',
     group: 'Running',
     timing: 'Continuously, in small amounts.',
-    ready: false,
+    ready: true,
   },
   {
     num: '18',

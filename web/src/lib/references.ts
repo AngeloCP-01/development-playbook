@@ -416,6 +416,26 @@ export const REFERENCES: Record<string, Reference[]> = {
       adds: "The event shape `beforeSend` receives and which fields Sentry populates by default, so the scrubber step's three surfaces can be checked against the real payload.",
     },
   ],
+  '17-maintenance': [
+    {
+      title: 'Workflows of Refactoring',
+      source: 'Martin Fowler',
+      url: 'https://martinfowler.com/articles/workflowsOfRefactoring/',
+      adds: 'Distinguishes opportunistic refactoring during feature work from planned and longer-running approaches, with examples for choosing the scope.',
+    },
+    {
+      title: 'Deprecation',
+      source: 'Software Engineering at Google',
+      url: 'https://abseil.io/resources/swe-book/html/ch15.html',
+      adds: 'Team-scale retirement guidance for finding consumers, managing migrations and removing obsolete systems and their dependencies.',
+    },
+    {
+      title: 'Data Integrity: What You Read Is What You Wrote',
+      source: 'Google SRE Book',
+      url: 'https://sre.google/sre-book/data-integrity/',
+      adds: 'Broader data-integrity and recovery practices, including the need to test restoration rather than rely on the existence of backups.',
+    },
+  ],
   '16-incident-management': [
     {
       title: 'Managing Incidents',

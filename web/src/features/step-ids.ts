@@ -14,6 +14,7 @@ import { STEP_IDS as PRODUCTION_DEPLOYMENT } from './production-deployment/steps
 import { STEP_IDS as POST_DEPLOYMENT_VERIFICATION } from './post-deployment-verification/steps'
 import { STEP_IDS as OBSERVABILITY } from './observability/steps'
 import { STEP_IDS as INCIDENT_MANAGEMENT } from './incident-management/steps'
+import { STEP_IDS as MAINTENANCE } from './maintenance/steps'
 
 /**
  * Every built stage's rail, keyed by slug — the *declaration* of what each
@@ -49,4 +50,5 @@ export const STEP_IDS_BY_SLUG: Record<string, readonly string[]> = {
   '14-post-deployment-verification': POST_DEPLOYMENT_VERIFICATION,
   '15-observability': OBSERVABILITY,
   '16-incident-management': INCIDENT_MANAGEMENT,
+  '17-maintenance': MAINTENANCE,
 }
