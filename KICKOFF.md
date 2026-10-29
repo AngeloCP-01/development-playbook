@@ -1,17 +1,45 @@
-# Kickoff: documentation reference companion merged
+# Kickoff: Stage 17 Maintenance chapter ready
 
-Updated 2026-10-27. Follow [AGENTS.md](AGENTS.md), the shared D-99 policy. W-6.3r is complete and merged locally into develop as **8eb294c** (`--no-ff`), after separate user approval. The next W-3 candidate is Stage 17 Maintenance; no Stage 17 work is included in this merge.
+Updated 2026-10-29. Follow [AGENTS.md](AGENTS.md), the shared D-99 policy.
+The user selected Stage 17. Its research/chapter checkpoint is complete; the
+interactive page is next.
 
 ## Current state
 
-- Merge parents: `ae15eaa` / reviewed feature tip `4a1c209`. The merge tree equals that tip. Source assessment/checklist `369cdb0`; tested application `65ab1d9`. Query `git log -1 --oneline` for the closing records tip.
-- `/reference/documentation`: four sections/fifteen rows, five primary citations, existing renderer/route and generated Markdown. No new runtime state or published source image. [Source assessment](reference/stage-10-source-research.md#w6-source-verification-and-assessment--2026-10-27) and [source ledger](reference/cheatsheet-sources.md#stage-10-w-6-companion--2026-10-27).
-- Local develop W-6 **23/28**; W-3 **16/18**. Five language placeholders, W-6.4 and stages 17/18 remain. No push or main promotion. The chapter branch at `c092ac7` and research provenance are preserved.
+- Branch: `docs/2026-10-29-stage-17-research`, based on local develop `4f965e8`.
+  Chapter/source commit **8ee4efc**; use `git log -1 --oneline` for closing records.
+  No merge, push or production promotion.
+- [Canonical chapter](docs/17-maintenance.md): update triage, debt/refactoring,
+  feature retirement, expiry, retention and restore checks, plus a clearly
+  fictional maintenance record. Provider facts are separate from suggested routines.
+- [One source record](reference/stage-17-source-research.md) captures versioned
+  package-manager behavior, primary claims, provider limits, image provenance and
+  possible W-6 lookups. Fowler's original debt quadrant is embedded with author
+  credit, original link and reuse permission; it is unchanged.
+- Application source is unchanged. Stage 17 remains `ready: false`; local develop
+  W-3 is **16/18**, W-6 **23/28**. Stages 17/18, five language placeholders and
+  W-6.4 remain. Stage numbers are filing codes, not a delivery sequence.
 
-## Verification and cleanup
+## Verification and next work
 
-Retained identified app checks: format/lint/generated-route typecheck, `pnpm test --maxWorkers=1` **1560/219**, **53-page build**, production **27/27**, six light/dark × 320/768/1440 page states, 30 keyboard transitions, stage/back navigation and no captured overflow/console errors. Four screenshots were inspected; independent content/page review PASS, no findings. These were not rerun after the unchanged merge. No development-console sweep was required for static data through an unchanged renderer (D-99). Fresh merged-record checks: tracker **2/2**, local Markdown **462 targets / 46 files**, whitespace clean.
+Fresh chapter checks: **50/50 tests across three files** (stage metadata, cadence
+and ledger guards), chapter/source formatting, changed Markdown links/anchors and
+whitespace. Closing-record rechecks: ledger **2/2**, **128 local targets / 6 files**,
+exit 0. The 50-test result is retained for unchanged chapter/metadata inputs.
+The link check caught two abbreviated chapter filenames, fixed before
+its passing run. Humanizer prose pass and one independent final content review
+are complete; review PASS with no actionable findings. Read-only pnpm 10.33.0 help
+checks verified the documented flags. No production operation, app suite/build or
+browser audit was run for this documentation-only slice.
 
-The merged reference worktree/branch have been removed, and its verified preview PID 91310 was stopped. Parent dev server PID 93201 remains on port 3200. Check actual ownership/listeners before future server operations. New work starts from local develop on a scoped branch.
+Next: read [web patterns](web/PATTERNS.md) and [design](web/DESIGN.md), then shape
+Stage 17's interactive page from the corrected chapter. Use a short acceptance
+checklist and existing patterns; escalate only for new/shared behavior. The page
+will need meaningful render coverage, the final app gate, affected states in both
+themes and a development-console sweep. Keep a later W-6 companion assessment
+bounded and decide which lookup rows add value beyond the stage.
 
-Read task W-6.3r and tracker Current phase/Next up for the completed slice. The stage retains examples, practice and the saved record; the card adds all-visible retrieval. Stage 17's scope/research comes next as a separate task. Deferred: push/main promotion, new controls/shared refactors, other sheets, W-6.4/languages and stages 17/18.
+See task **W-3.18** and the tracker **Current phase / Next up**. Integration needs
+separate user approval. Preserve any running parent dev server; verify actual
+listener ownership before server operations. No worktree or server was created
+or stopped in this round.

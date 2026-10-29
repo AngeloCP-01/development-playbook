@@ -166,6 +166,7 @@ code, not a prerequisite after incidents.
 - [x] Humanizer editing pass, one independent final content review, relevant
   chapter/title/ledger guards and changed local links/anchors.
 
+Chapter/source commit **8ee4efc**, based on develop `4f965e8`.
 Sources: [Stage 17 research](../reference/stage-17-source-research.md). The chapter
 uses an attributed original image with author permission. Focused guards pass
 **50/50 across three files**, local links/anchors and formatting pass, and the
