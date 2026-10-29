@@ -1,92 +1,65 @@
-# Kickoff: Technical Debt Review scope approved
+# Kickoff: Technical Debt Review implemented
 
 Updated 2026-10-29. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 
 ## Current state
 
-- Current branch: `docs/2026-10-29-maintenance-reference-assessment`, based on
-  reviewed Maintenance feature tip **dd069e7**. Use `git log -1 --oneline` for the
-  committed assessment tip. The source feature branch `feat/maintenance-page`
-  is preserved. No merge, push or deployment.
-- [Assessment](reference/stage-17-source-research.md#w-6-assessment-technical-debt-review-2026-10-29):
-  approved one **Technical Debt Review** sheet at `/reference/technical-debt`,
-  four sections/fourteen rows using the existing renderer and the attributed,
-  unchanged Fowler quadrant. The user selected this scope with "proceed" after
-  the four-section/fourteen-row proposal. Implementation is authorized but unstarted.
-- The broad Maintenance checklist and dependency-command card are deferred.
-  The existing seven-panel stage keeps teaching examples, exercises and AI Plays;
-  the proposed sheet adds all-visible lookup. The quadrant explains debt categories,
-  not repayment urgency. Its four cases need full equivalent text in the sheet.
-- Stage 17 source/chapter **8ee4efc**; page **ebcb0ba**; AI Plays correction
-  **01b8dc2** and test-only **28d4410**. Coordinator review **dd069e7** records no
-  actionable correction findings. Implementation session:
-  **01a1850c-d865-7d02-a3c0-23916ced0f66**; read it before relying on its contents.
-- Feature W-3 **17/18**, local develop **4f965e8** still **16/18**; references
-  remain **23 drawn / 28 registered**. A future sheet would make **24/29**.
+- Branch: `feat/technical-debt-reference`, starting from scope handoff
+  **0532af2**. Implementation **5ea8cb2** adds `/reference/technical-debt`:
+  four sections/fourteen rows, Standards group, tethered to Stage 17.
+- The existing renderer is unchanged. Fowler’s original **512 × 384 / 46,955-byte**
+  PNG is copied unchanged, with adjacent author credit, original link and change
+  disclosure. Both axes and all four cases have equivalent text. Response and
+  retirement prompts are identified as the playbook’s editorial guidance.
+- Feature references are now **24 drawn / 29 registered**. Feature W-3 stays
+  **17/18**; local develop **4f965e8** stays **16/18**, references **23/28**.
+- The branch includes unmerged Stage 17 and assessment **c5f945c**.
+  `feat/maintenance-page` remains preserved at **dd069e7**. No merge, push or
+  deployment. Integration must account for both Stage 17 and this companion.
 
-## Verification scope
+## Verification and review
 
-This round changes assessment/handoff documentation only. Selected source pages
-and illustration permission were reopened; the source record preserves the
-URLs, authors, dates and supported findings. The 512 × 384 original PNG is
-46,955 bytes. No public image or application source changed; no app suite/build
-or browser sweep is required for this assessment. Content/link and ledger checks
-are recorded in the latest tracker completion row.
+Tested application tree: **5ea8cb2**. Fresh format, lint, generated-route
+typecheck and `pnpm test --maxWorkers=1` pass: **1,576 tests / 221 files**.
+`pnpm test:e2e` rebuilt the final tree; its manifest contains **54 prerendered
+routes**, including the new sheet. Final production audit: **27/27**, exit 0,
+including both-theme contrast, 320–2560px overflow and a clean console.
+Closing handoff changes are records only; these application checks are retained
+for the unchanged **5ea8cb2** application tree. Fresh closing checks: ledger
+**2/2**, local Markdown links **276 targets / 9 files**, whitespace clean.
 
-Retained page evidence: **1573 tests / 220 files**, **53-page build**, production
-**27/27**, dev-console **1/1**, tested **28d4410**; correction coordinator checks
-**48/48** at **98688ec**. These are identified earlier app checks, not fresh
-assessment checks. See task **W-3.18** and tracker completion rows for commands,
-limits and the earlier six-panel omission. The original six-panel implementation
-was not re-reviewed in full by the coordinator.
+Focused production checks cover light/dark at **320, 768 and 1440px**: loaded
+image, readable layout and no overflow. Keyboard access reaches Maintenance and
+all four source links. Independent **Astra Low** content/page review of
+**0532af2..5ea8cb2** found no actionable issue; it also inspected the regenerated
+wide screenshots. Humanizer editing pass complete. Static data through the
+unchanged renderer uses D-99’s development-console exception; no interaction or
+shared React behavior changed.
+
+Earlier count/runner failures and the stalled optimizer process are documented
+in the W-6.3s tracker entry, with the unchanged-limit reruns and freshness-guard
+rebuild. No shared renderer or timeout changes were made.
 
 ## Next task and session
 
-**Task:** implement the approved W-6.3s Technical Debt Review sheet.
-**Recommended model:** `gpt-6.1-sol`, **reasoning:** `high`, in a **new session**
-under D-100. Scope approval is recorded; do not ask for it again. The runtime
-cannot create that user-selected session or confirm the active model setting.
+**Task:** coordinator review of the implementation thread, actual branch diff and
+final evidence, followed by a separate user integration decision.
+**Recommended model:** `gpt-6-astra`, **reasoning:** `low`, in the existing main
+coordination session. This is a recommendation, not a claim about its active
+setting. No further implementation session is required unless review finds work.
 
-Start `feat/technical-debt-reference` from the committed tip of this assessment/
-handoff branch, which contains assessment **c5f945c** and this scope approval.
-Record the exact starting SHA with `git log -1 --oneline`; the branch includes
-the unmerged Stage 17 feature. Use the source record's compact acceptance scope:
-existing registry/renderer, unchanged gathered image and adjacent credit,
-full text equivalent, meaningful render tests, generated Markdown, final web gate,
-focused image/theme/width/keyboard checks and one final independent review.
-Return session reference, branch/commit, actual checks and issues here for review.
+Implementation session: **01a1860d-161c-7b71-972a-dba429ec0499**. Read its thread
+before relying on it. Return **5ea8cb2**, this branch and the W-6.3s tracker
+entry to the main coordinator. The implementation recommendation was
+**gpt-6.1-sol / high**; the runtime did not confirm this session’s active setting.
 
-### Implementation pointers
+Pointers: [task W-6.3s](docs/task.md), [tracker](docs/tracker.md),
+[single source/acceptance record](reference/stage-17-source-research.md#w-6-assessment-technical-debt-review-2026-10-29),
+[sheet data](web/src/lib/cheatsheets/technical-debt.ts),
+[render tests](web/src/components/TechnicalDebtReference.test.tsx).
 
-- Add `web/src/lib/cheatsheets/technical-debt.ts`: Standards group, tether
-  `17-maintenance`. Sections/rows: Recognize the debt (4), Decide from evidence
-  (4), Choose a response (3), Retire with evidence (3). The assessment specifies
-  the content boundary and separates source classification from editorial prompts.
-- Register it in `web/src/lib/cheatsheets/index.ts`; update the explicit drawn
-  slug guard in `index.test.ts`. Reuse `CheatsheetView`; no renderer/API changes.
-- Copy `reference/stage-17-tech-debt-quadrant.png` unchanged into
-  `web/public/reference/stage-17-tech-debt-quadrant.png`; dimensions 512 x 384.
-  Register it as gathered (omit `origin: 'original'`). Keep Fowler's author credit,
-  original-article link and an explicit unchanged-illustration statement in the
-  existing adjacent source area. The four rows and section note must provide both
-  axes and all four cases because the drawn sheet's image is hidden from assistive
-  technology. Inspect narrow rendering; do not upscale/edit the source as a workaround.
-- Add `web/src/components/TechnicalDebtReference.test.tsx`, following
-  `DocumentationReference.test.tsx`, with meaningful visible/accessible output
-  coverage, stage tether, attribution, caveat and the image/text relationship.
-  Regenerate `reference/cheatsheets.md` with `pnpm gen:cheatsheets`.
-- Apply humanizer to new prose; run focused checks and the completed-branch web
-  gate once, then focused image/theme/width/keyboard checks and one independent
-  final content/page review. Static data through unchanged components may retain
-  the D-99 development-console exception; new interaction/shared behavior cannot.
-
-Main coordination/review remains recommended **gpt-6-astra / low**. No broad
-Maintenance sheet, dependency-command card, new controls, AI panel or live
-maintenance actions are included. Update task/tracker/KICKOFF with the real
-implementation commit, results and limits; **24/29** references remains a forecast
-until registration and implementation are complete.
-
-Stage 17 integration needs separate user approval and remains pending. W-6
-implementation does not imply that approval. Main promotion belongs to the user.
-Stage 18, five language placeholders and W-6.4 remain separate. Preserve any
-existing dev server and verify ownership before server operations.
+The broad Maintenance checklist, dependency-command card, new controls/shared
+renderer changes, live operations, Stage 18, five language placeholders and W-6.4
+remain separate. Ask before any merge into develop; main promotion belongs to
+the user. Preserve the existing port-3200 dev server and verify ownership before
+stopping any preview.

@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-10-29): W-6.3s scope approved; implementation next.** The user selected one image-backed **Technical Debt Review** sheet, four sections/fourteen rows, using the unchanged Fowler quadrant and existing renderer. The [assessment](../reference/stage-17-source-research.md#w-6-assessment-technical-debt-review-2026-10-29) and [KICKOFF](../KICKOFF.md) hold the approved boundary and file/check handoff. Stage 17 and its AI Plays correction remain reviewed but unmerged. Feature W-3 **17/18**, local develop **16/18**; references **23 drawn / 28 registered** until implementation.
+**Current work (2026-10-29): W-6.3s verified; coordinator review next.** Commit **5ea8cb2** on `feat/technical-debt-reference` adds the four-section/fourteen-row **Technical Debt Review**, unchanged attributed Fowler quadrant, equivalent text, render tests and generated Markdown. Independent content/page review found no actionable issue. Feature references are **24 drawn / 29 registered**, W-3 **17/18**; local develop remains **23/28**, W-3 **16/18**. Stage 17 and this companion remain unmerged. [KICKOFF](../KICKOFF.md) holds the thread, checks and coordinator handoff.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **16/18**: stages 01-16 are interactive; 17 and 18 remain. W-6 is **23 drawn / 28 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** implement approved W-6.3s in a fresh **GPT-6.1 Sol / High** session (D-100), from the committed scope handoff. Suggested branch `feat/technical-debt-reference`. Scope is approved; main **GPT-6 Astra / Low** coordinator reviews the returned thread/diff/evidence. The assessment branch includes reviewed Stage 17 tip `dd069e7`; integration, push and main promotion need separate user decisions.
+**Next task/model:** coordinator review of session **01a1860d-161c-7b71-972a-dba429ec0499**, actual **0532af2..5ea8cb2** diff and final evidence, recommended **GPT-6 Astra / Low** in the existing main coordination session. Then obtain the user’s separate integration decision. The branch includes Stage 17 at **dd069e7**; no merge, push or main promotion is authorized.
 
 Two deliverables from one body of content.
 
@@ -702,16 +702,18 @@ permission remains unconfirmed; all source images stay research assets. Deferred
 new interaction patterns, copy/export controls, shared refactors, other sheets,
 W-6.4, stages 17/18, push/main promotion and deployment.
 
-**W-6.3s — Stage 17 Technical Debt Review ◐** *(scope approved; implementation unstarted, 2026-10-29)*
+**W-6.3s — Stage 17 Technical Debt Review ☑** *(verified on branch; unmerged, 2026-10-29)*
 
 - [x] Compare gathered candidates with Stage 17 and the reference renderer.
 - [x] Recheck selected primary sources and image reuse permission; record one
   bounded recommendation in the existing source record.
 - [x] User selected the recommended four-section/fourteen-row scope with "proceed".
-- [ ] Implement in a new **Sol High** session from this committed scope handoff.
-- [ ] Register the sheet, preserve the unchanged attributed image, provide its
+- [x] Implement from scope handoff **0532af2** in session
+  **01a1860d-161c-7b71-972a-dba429ec0499**; recommended **Sol High**, active setting
+  unconfirmed. Implementation **5ea8cb2**.
+- [x] Register the sheet, preserve the unchanged attributed image, provide its
   full textual equivalent, render coverage and generated Markdown.
-- [ ] Final web gate, focused image/theme/width/keyboard checks and one final
+- [x] Final web gate, focused image/theme/width/keyboard checks and one final
   independent content/page review; integration needs separate approval.
 
 Approved slug `technical-debt`, Standards group, tether `17-maintenance`.
@@ -721,8 +723,10 @@ is not a priority score. Keep the original credit/link and unchanged-image
 statement in the existing source area. Defer the broad Maintenance checklist,
 package-manager command card, new controls, shared renderer work and live actions.
 See the [assessment and acceptance scope](../reference/stage-17-source-research.md#w-6-assessment-technical-debt-review-2026-10-29).
-Current W-6 is **23/28**; **24/29** is only the forecast after one implemented sheet.
-Assessment/coordinator **Astra Low**; future implementation **Sol High**.
+Feature W-6 is **24/29**; local develop remains **23/28**.
+Implementation, final gate (**1,576/221**, **54 routes**, **27/27**) and independent
+content/page review are complete at **5ea8cb2**. Coordinator thread/diff review and
+separate integration decision remain. Coordinator recommendation **Astra Low**.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 
