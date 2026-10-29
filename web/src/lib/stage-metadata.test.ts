@@ -64,7 +64,16 @@ const AI_SECTION_STAGES = [
   '14-post-deployment-verification',
   '15-observability',
   '16-incident-management',
+  '17-maintenance',
 ]
+
+test('every ready stage is covered by the chapter AI-section guard', () => {
+  expect(
+    STAGES.filter((stage) => stage.ready)
+      .map((stage) => stage.slug)
+      .filter((slug) => !AI_SECTION_STAGES.includes(slug)),
+  ).toEqual([])
+})
 
 test.each(AI_SECTION_STAGES)(
   '%s: the doc carries an AI plays section',

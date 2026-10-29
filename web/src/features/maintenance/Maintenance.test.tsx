@@ -19,13 +19,14 @@ function choose(prompt: RegExp, answer: string) {
   return within(group.closest('li')!)
 }
 
-test('registers a continuous maintenance stage with the six approved lookups', () => {
+test('registers a continuous maintenance stage with six lookups and the required AI Plays step', () => {
   const ids = [
     'triage',
     'updates',
     'expiry',
     'data-recovery',
     'debt-retirement',
+    'ai',
     'review-record',
   ]
   expect([...STEP_IDS]).toEqual(ids)
@@ -44,6 +45,53 @@ test('registers a continuous maintenance stage with the six approved lookups', (
     const panel = openPanel(id)
     expect(panel.getAllByRole('button').length).toBeGreaterThan(0)
   }
+})
+
+test('AI Plays grounds each request in supplied evidence and exposes its human verification', () => {
+  render(<Maintenance />)
+  fireEvent.click(screen.getByRole('tab', { name: /AI Plays/ }))
+  const panel = within(screen.getByRole('tabpanel'))
+  expect(panel.getByRole('heading', { name: 'AI in maintenance' })).toBeTruthy()
+  const migration = panel.getByRole('button', {
+    name: /^Compare versioned migration guidance/,
+  })
+  expect(migration.getAttribute('aria-expanded')).toBe('false')
+  expect(panel.queryByText(/Quote the supplied guide/)).toBeNull()
+  fireEvent.click(migration)
+  expect(migration.getAttribute('aria-expanded')).toBe('true')
+  const migrationBody = within(
+    document.getElementById(migration.getAttribute('aria-controls')!)!,
+  )
+  expect(migrationBody.getByText(/Quote the supplied guide/)).toBeTruthy()
+  expect(
+    migrationBody.getByText(
+      /Review the official guidance and every proposed diff/,
+    ),
+  ).toBeTruthy()
+  fireEvent.click(
+    panel.getByRole('button', {
+      name: /^Summarize dependency and lockfile changes/,
+    }),
+  )
+  expect(
+    panel.getByText(/does not establish vulnerability exposure/),
+  ).toBeTruthy()
+  fireEvent.click(
+    panel.getByRole('button', {
+      name: /^Organize evidenced maintenance findings/,
+    }),
+  )
+  expect(panel.getByText(/Preserve unknown usage as unknown/)).toBeTruthy()
+  fireEvent.click(
+    panel.getByRole('button', { name: /^Draft checks and review records/ }),
+  )
+  expect(
+    panel.getByText(/Separate proposed checks from observed results/),
+  ).toBeTruthy()
+  expect(
+    panel.getByText(/Keep secrets and private payloads out/).closest('ul'),
+  ).toBeNull()
+  expect(panel.getByText(/explicit human review/).closest('ul')).toBeNull()
 })
 
 test('triage scores imminent expiry and keeps the first answer locked', () => {

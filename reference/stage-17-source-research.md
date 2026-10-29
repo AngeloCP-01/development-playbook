@@ -10,7 +10,8 @@ and restore checks used by the chapter.
 ## Interactive adaptation (2026-10-29)
 
 The Stage 17 page in `web/src/features/maintenance/` hand-ports this reviewed
-chapter into six lookup panels using existing drills and disclosures. This is
+chapter into six lookup panels and a dedicated AI Plays step using existing drills
+and disclosures. This is
 the app's established content duplication; keep chapter and page guidance in
 sync. The queue, retirement proposals and restore reports are fictional exercises,
 not project operational evidence. The record repeats the chapter's fictional
@@ -21,6 +22,13 @@ of its four categories. It does not publish or modify the retained source image.
 No new image, reference sheet or live maintenance operation is included. The
 three further-reading entries reuse sources below: Fowler's refactoring workflows,
 Google's deprecation chapter and Google SRE's data-integrity guidance.
+
+The D-35 correction adds `AI in maintenance` to the chapter and the dedicated `ai`
+step. Its four suggested uses work from supplied migration guides, dependency
+diffs, evidenced queue items and check results. These are proposed assistance
+workflows, not provider capability or execution guarantees. The operating limits
+reuse this chapter's version, exposure, usage, retention, credential and recovery
+requirements. No live maintenance action was executed.
 
 ## Scope and source method
 

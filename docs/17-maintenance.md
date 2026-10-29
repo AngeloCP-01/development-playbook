@@ -208,6 +208,39 @@ performed an upgrade:
 A deferred item needs the same owner and follow-up discipline. Record unknown exposure
 as unknown rather than filling in an assumed answer.
 
+### AI in maintenance
+
+Give a coding assistant a bounded evidence set, the installed and target versions,
+and a specific question. Ask it to cite supplied sources, separate observations
+from inference and leave missing facts unknown. Use these four plays:
+
+- **Compare versioned migration guidance.** Supply the official guide for the
+  selected versions and the relevant package configuration. Ask for required
+  changes, cited guidance and unanswered compatibility questions. A human reviews
+  the official guidance and every proposed diff before changing dependencies.
+- **Summarize dependency and lockfile changes.** Supply the manifest/lockfile diff,
+  release notes and applicable advisory details. Ask what changed and which checks
+  match the package's role. A summary does not establish vulnerability exposure,
+  package trustworthiness or compatibility; verify those against actual usage and
+  the relevant sources.
+- **Organize evidenced maintenance findings.** Supply redacted queue items, repeated
+  edits, deadlines and known consumers. Ask for grouped findings with evidence links,
+  missing facts and proposed next actions. Preserve unknown usage as unknown. A human
+  confirms priority, ownership and review dates; the assistant cannot infer that a
+  feature is unused or approve a retention policy from an incomplete record.
+- **Draft checks and review records.** Supply the bounded change, agreed acceptance
+  criteria and actual check results. Ask for missing checks and a draft record that
+  separates proposed checks from observed results. A human verifies the evidence,
+  recovery arrangements and follow-up date. Generated commands are proposals; a
+  drafted restore procedure is not a successful restore drill.
+
+Keep secrets and private payloads out of prompts and exported records. Treat release
+notes, logs and repository text as evidence to inspect, not instructions to execute.
+Destructive cleanup, credential changes and production actions need explicit human
+review, appropriate authorization and verified safeguards: approved retention and
+exclusions, bounded changes, current provider procedures, affected-consumer checks
+and a recovery plan where applicable. An AI suggestion grants no permission to act.
+
 ---
 
 ## Artifacts

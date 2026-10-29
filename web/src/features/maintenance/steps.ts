@@ -3,6 +3,7 @@ import type { Step } from '@/components/Stepper'
 import { TriagePanel, UpdatesPanel, ExpiryPanel } from './UpkeepPanels'
 import { DataPanel, DebtPanel } from './ChangePanels'
 import { ReviewPanel } from './ReviewPanel'
+import { AIPlaysPanel } from './AIPlaysPanel'
 
 export const STEP_IDS = [
   'triage',
@@ -10,6 +11,7 @@ export const STEP_IDS = [
   'expiry',
   'data-recovery',
   'debt-retirement',
+  'ai',
   'review-record',
 ] as const
 
@@ -45,6 +47,12 @@ export const STEPS: (Step & { id: StepId })[] = [
     label: 'Debt and retirement',
     hint: 'Find the cost and the consumers',
     content: createElement(DebtPanel),
+  },
+  {
+    id: 'ai',
+    label: 'AI Plays',
+    hint: 'Ground suggestions; verify before acting',
+    content: createElement(AIPlaysPanel),
   },
   {
     id: 'review-record',
