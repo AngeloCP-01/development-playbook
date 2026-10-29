@@ -283,3 +283,94 @@ support the command notes above. No package installation, audit scan, migration
 or forced fix was attempted. This is documentation research and does not provide
 application test evidence. A humanizer editing pass checked the prose for vague
 claims and overstatement.
+
+## W-6 assessment: Technical Debt Review (2026-10-29)
+
+**Scope:** assessment only, from reviewed Maintenance feature tip `dd069e7`.
+Recommended assessment setting: **GPT-6 Astra / Low**, in the existing coordinator
+session. No sheet, app code or public image is added by this assessment.
+
+**Reader task:** when a design problem returns to the queue, retrieve its debt
+category, the evidence needed for a response and the checks before refactoring,
+deferral or retirement. The finished stage teaches these decisions through
+examples and disclosures. A sheet would expose the prompts together without
+requiring a drill answer or opening several items.
+
+### Candidate comparison
+
+| Candidate                | Value beyond the stage                                                                                                                                       | Recommendation                                                                  |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| Broad Maintenance Review | All-visible reminders for updates, expiry, data, debt and recovery, but repeats much of seven-panel Stage 17 and neighbouring operational sheets             | Defer; avoid a second chapter-shaped checklist in this bounded round            |
+| Dependency command card  | Useful versioned pnpm distinctions, but no matching gathered graphic and a narrower package-manager audience                                                 | Retain sources; assess separately if command lookup becomes a demonstrated need |
+| Technical Debt Review    | Combines the gathered quadrant with compact response/retirement prompts; the stage currently links the graphic and teaches its categories behind disclosures | Recommend one image-backed sheet using the existing renderer                    |
+
+### Proposed sheet boundary
+
+Slug **`technical-debt`**, title **Technical Debt Review**, group **Standards**,
+tether **`17-maintenance`**. Four sections, fourteen short rows:
+
+1. **Recognize the debt** (four rows): reckless/deliberate, prudent/deliberate,
+   reckless/inadvertent, prudent/inadvertent. Use fresh paraphrases that provide
+   a complete textual equivalent of the graphic; explain the two axes.
+2. **Decide from evidence** (four): observed recurring cost; impact/deadline;
+   smallest useful change and likely next touch; owner, evidence and review date.
+3. **Choose a response** (three): nearby refactor; planned incremental change;
+   deliberate deferral with a review trigger. Check current behavior and keep
+   feature changes reviewable; avoid fixed capacity or repayment scores.
+4. **Retire with evidence** (three): discover consumers and telemetry gaps;
+   migration/communication or reversible disable where practical; verify removal
+   and separately account for data, subscriptions and external effects.
+
+These response and record prompts are the playbook's editorial application,
+not a prescribed scoring system from the quadrant's author. A debt category does
+not decide urgency, blame or whether repayment is worthwhile. Use the stage link
+for exercises and fuller operational context. Omit executable commands, invented
+outcomes, another AI panel, expiry/restore recipes and new controls.
+
+### Source and image decision
+
+Reopened on **2026-10-29**: Fowler's
+[Technical Debt Quadrant](https://martinfowler.com/bliki/TechnicalDebtQuadrant.html),
+[illustration reuse FAQ](https://martinfowler.com/faq.html) and
+[Workflows of Refactoring](https://martinfowler.com/articles/workflowsOfRefactoring/fallback.html),
+plus Google's [Deprecation chapter](https://abseil.io/resources/swe-book/html/ch15.html).
+Authors, publication dates and supported findings are recorded in source groups
+6–8 above. The quadrant supports classification, refactoring workflows support
+nearby/planned changes, and deprecation supports discovering dependents before
+removal. The FAQ permits illustrations with attribution, original-article link
+and change disclosure. This is author permission, not a standard named license.
+Versioned pnpm 10 update/audit pages were also reopened; they support the deferred
+command-card candidate, not an extra command section in the recommended sheet.
+
+Use the retained **512 × 384 PNG, 46,955 bytes**, unchanged. A future implementer
+may copy it into `web/public/reference/` and register it as a **gathered** image,
+not `origin: 'original'` (that flag means drawn for this playbook). Make Fowler's
+quadrant the primary citation and image owner; use refactoring/deprecation as
+supporting citations. Keep author credit, original link and an explicit
+"unchanged illustration" statement adjacent to the image via the existing
+caption/source area. Preserve the source asset and permission record here.
+
+The existing renderer hides an illustrated drawn sheet's image from assistive
+technology because its rows are the text equivalent. All four categories and
+both axes must therefore be readable in the rows, with the non-priority caveat.
+Check the 512px original's legibility in both themes and narrow layouts before
+claiming it is useful. The assessment does not establish browser rendering.
+
+### Later implementation acceptance
+
+**Recommended model: GPT-6.1 Sol / High**, new implementation session when the
+user starts that task. Use the existing sheet renderer, registry, citation and
+generated-Markdown path. Add meaningful render coverage for the four categories,
+response guidance, stage link, attribution and image/text-equivalent relationship;
+update applicable registry/count guards and regenerate `reference/cheatsheets.md`.
+Check one independent final content/page review and the final web gate, plus
+focused theme/width/keyboard/image checks. Run development-console checks if
+interaction/shared React behavior changes; a static sheet through unchanged
+components can use D-99's existing exception. No shared renderer work is proposed.
+
+The assessment branch starts from `dd069e7` and preserves the unmerged Stage 17
+page. Integration approval remains separate. Counts stay **23 drawn / 28
+registered** references; the feature contains **17/18** interactive stages while
+local develop remains **16/18**. One implemented sheet would make W-6 **24/29**;
+that is a forecast, not current completion. No implementation is authorized or
+claimed by this assessment.

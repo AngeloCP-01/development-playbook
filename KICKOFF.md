@@ -1,75 +1,60 @@
-# Kickoff: Stage 17 AI Plays correction reviewed; integration pending
+# Kickoff: Stage 17 W-6 assessment ready
 
 Updated 2026-10-29. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
-Coordinator review found a missing D-35 requirement after the original six-panel
-completion. This correction follows the checklist committed as **345c972**.
 
 ## Current state
 
-- Branch `feat/maintenance-page`, correction starting commit **345c972**.
-  App/chapter correction **01b8dc2**; test-only selector correction **28d4410**.
-  Use `git log -1 --oneline` for the latest records tip.
-- [Chapter](docs/17-maintenance.md) now has `### AI in maintenance`. The page has
-  the six original lookups plus the dedicated seventh **AI Plays** step at `#ai`,
-  before the closing review record. Existing panel hashes are unchanged.
-- Four plays compare versioned migration guidance, summarize dependency/lockfile
-  changes, organize evidenced findings and draft checks/records. Each separates
-  supplied input, the request and human verification. Privacy, evidence and
-  operational authorization limits stay visible outside the disclosures.
-- The [single source record](reference/stage-17-source-research.md) documents this
-  hand-port. No live maintenance action or new provider guarantee is included.
-- Feature branch **17/18** interactive; local develop **4f965e8** remains **16/18**,
-  W-6 **23/28**. No merge, push or production promotion.
+- Current branch: `docs/2026-10-29-maintenance-reference-assessment`, based on
+  reviewed Maintenance feature tip **dd069e7**. Use `git log -1 --oneline` for the
+  committed assessment tip. The source feature branch `feat/maintenance-page`
+  is preserved. No merge, push or deployment.
+- [Assessment](reference/stage-17-source-research.md#w-6-assessment-technical-debt-review-2026-10-29):
+  recommend one **Technical Debt Review** sheet at proposed `/reference/technical-debt`,
+  four sections/fourteen rows using the existing renderer and the attributed,
+  unchanged Fowler quadrant. The proposal is not an implemented or approved sheet.
+- The broad Maintenance checklist and dependency-command card are deferred.
+  The existing seven-panel stage keeps teaching examples, exercises and AI Plays;
+  the proposed sheet adds all-visible lookup. The quadrant explains debt categories,
+  not repayment urgency. Its four cases need full equivalent text in the sheet.
+- Stage 17 source/chapter **8ee4efc**; page **ebcb0ba**; AI Plays correction
+  **01b8dc2** and test-only **28d4410**. Coordinator review **dd069e7** records no
+  actionable correction findings. Implementation session:
+  **01a1850c-d865-7d02-a3c0-23916ced0f66**; read it before relying on its contents.
+- Feature W-3 **17/18**, local develop **4f965e8** still **16/18**; references
+  remain **23 drawn / 28 registered**. A future sheet would make **24/29**.
 
-## Verification
+## Verification scope
 
-On **28d4410** (app unchanged from **01b8dc2**): format/lint, generated-route
-typecheck, **1,573 tests / 220 files** and **53-page build** pass. The guard first
-failed on missing ready-stage coverage, then the chapter heading; rail/render tests
-failed on the missing AI step before the fix. A later render selector matched both
-a play and the visible limits; scoping it to the opened play fixed the test.
+This round changes assessment/handoff documentation only. Selected source pages
+and illustration permission were reopened; the source record preserves the
+URLs, authors, dates and supported findings. The 512 × 384 original PNG is
+46,955 bytes. No public image or application source changed; no app suite/build
+or browser sweep is required for this assessment. Content/link and ledger checks
+are recorded in the latest tracker completion row.
 
-Six production AI-panel cases cover light/dark at 320/768/1440px, all four plays
-opened/closed with Enter, Supply/Ask/Verify output, zero overflow and clean console.
-Arrow navigation reaches the closing record; Back/reload restores `#ai`.
-Humanizer pass and scoped independent content/page review PASS with no findings.
-The full production audit passes **27/27** in one run with one worker and unchanged
-assertions/timeouts. Development-console **1/1** passes with no React warnings;
-the temporary config reuses the verified existing 3200 server. Commands and limits
-are in the latest tracker completion row. These are fresh correction checks;
-later records-only edits retain them for the unchanged application tree.
-
-Earlier **ebcb0ba** six-panel checks and review remain historical evidence in
-[tracker](docs/tracker.md); they did not establish D-35 completeness. They do not
-verify this addition. The existing **3200** dev server is preserved. The owned
-**3100** production preview was stopped after the audit.
-
-## Coordinator review (2026-10-29)
-
-The coordinator read the implementation thread and reviewed **345c972..98688ec**
-against the correction checklist, chapter/page consistency and regression coverage.
-No actionable findings in this scoped correction review; the original six-panel
-implementation was not re-reviewed in full. Fresh checks at **98688ec**:
-`pnpm test src/features/maintenance/Maintenance.test.tsx src/lib/stage-metadata.test.ts src/lib/tracker-ledger.test.ts --maxWorkers=1`,
-**48/48 across three files**, exit 0. Raw full-test/build/production/dev-console
-logs were checked; `git diff --exit-code 28d4410 HEAD -- web docs/17-maintenance.md`
-confirmed identical application/chapter inputs. Retain the identified full gate
-above; no full-suite/build/browser rerun was needed. Later edits here are records only.
+Retained page evidence: **1573 tests / 220 files**, **53-page build**, production
+**27/27**, dev-console **1/1**, tested **28d4410**; correction coordinator checks
+**48/48** at **98688ec**. These are identified earlier app checks, not fresh
+assessment checks. See task **W-3.18** and tracker completion rows for commands,
+limits and the earlier six-panel omission. The original six-panel implementation
+was not re-reviewed in full by the coordinator.
 
 ## Next task and session
 
-**Task:** user integration decision for the corrected Maintenance branch.
-**Recommended model:** `gpt-6-astra`, **reasoning:** `low`, in the main coordinator.
-The AI Plays correction is complete; no further implementation task is identified.
+**Task:** decide the recommended W-6.3s scope. **Recommended model:**
+`gpt-6-astra`, **reasoning:** `low`, in this main coordinator session. The user
+requested assessment only; implementation remains unstarted.
 
-Implementation recommendation was **gpt-6.1-sol / high**. The user explicitly chose
-continuation of session **01a1850c-d865-7d02-a3c0-23916ced0f66** for this correction.
-The runtime does not report the active implementation model.
+If the user starts implementation: **gpt-6.1-sol / high**, new session, a scoped
+feature branch from the committed assessment tip (or a verified integrated
+baseline). Record the exact starting commit; the assessment branch includes the
+unmerged Stage 17 feature. Use the source record's compact acceptance scope:
+existing registry/renderer, unchanged gathered image and adjacent credit,
+full text equivalent, meaningful render tests, generated Markdown, final web gate,
+focused image/theme/width/keyboard checks and one final independent review.
+Return session reference, branch/commit, actual checks and issues here for review.
 
-The implementation thread and actual correction diff have now been reviewed by
-the coordinator as recorded above. Further application edits require the relevant
-checks and review of their new diff.
-
-Integration into develop needs separate user approval; main is the user's. W-6
-Maintenance companion assessment, Stage 18, five language placeholders and W-6.4
-remain separate tasks. See task **W-3.18** and tracker **Current phase / Next up**.
+Stage 17 integration needs separate user approval and remains pending. W-6
+implementation does not imply that approval. Main promotion belongs to the user.
+Stage 18, five language placeholders and W-6.4 remain separate. Preserve any
+existing dev server and verify ownership before server operations.
