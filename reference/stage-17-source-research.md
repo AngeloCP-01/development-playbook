@@ -253,6 +253,16 @@ permits illustration reuse with author credit, a link to the original article
 and disclosure of changes. This is author permission, not a named standard
 license. Keep the credit adjacent to the image and state that it is unchanged.
 
+**W-6.3s implementation use (2026-10-29):** the same PNG is copied unchanged to
+`web/public/reference/stage-17-tech-debt-quadrant.png` for the Technical Debt
+Review sheet. Byte comparison with the retained asset passes. The existing
+source footer credits Fowler, links the original article and discloses the
+unchanged illustration; a supporting link exposes the reuse policy. The four
+category rows and section note supply both axes and all four cases in text.
+The quadrant, FAQ, refactoring workflows and Google deprecation chapter were
+reopened on this date; the findings in sections 6–8 still support the sheet.
+Response and retirement prompts remain the playbook’s editorial application.
+
 ## Possible W-6 companion
 
 A compact lookup could help the reader choose the next action without repeating

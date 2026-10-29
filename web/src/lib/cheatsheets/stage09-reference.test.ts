@@ -10,8 +10,8 @@ test('stage 09 exposes both drawn companion sheets without consuming the five la
     'scaling',
   ])
   expect(sheets.every(isDrawn)).toBe(true)
-  expect(CHEATSHEETS.filter(isDrawn)).toHaveLength(23)
-  expect(CHEATSHEETS).toHaveLength(28)
+  expect(CHEATSHEETS.filter(isDrawn)).toHaveLength(24)
+  expect(CHEATSHEETS).toHaveLength(29)
   expect(
     CHEATSHEETS.filter((sheet) => !isDrawn(sheet))
       .map((sheet) => sheet.slug)

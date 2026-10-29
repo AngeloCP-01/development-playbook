@@ -127,6 +127,7 @@ test('isDrawn distinguishes a sheet with content from a registered placeholder',
     'sdlc',
     'security',
     'solid-principles',
+    'technical-debt',
     'testing',
   ])
 })
