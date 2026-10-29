@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-10-29): W-3.18, Stage 17 Maintenance page complete on the feature branch.** Implementation **ebcb0ba** on `feat/maintenance-page` adds six interactive panels from the reviewed chapter. The app gate, both-theme browser checks, development-console sweep and independent final review pass. The feature branch is **17/18** interactive; local develop remains **16/18** and **23 drawn / 28 registered** references. Integration and a possible W-6 companion remain separate decisions.
+**Current work (2026-10-29): W-3.18, Stage 17 AI Plays correction verified.** Coordinator review found that the earlier six-panel completion missed D-35. Correction **01b8dc2** adds the chapter subsection and dedicated seventh step; test-only **28d4410** scopes an evidence assertion. The final app gate and scoped correction review pass. The feature branch remains **17/18** interactive; local develop **16/18**, references **23 drawn / 28 registered**. Main coordinator review, integration and a possible W-6 companion remain separate decisions.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -151,18 +151,19 @@ not rerun after merge. The local feature branch and worktree were removed.
 **Latest merged stage round:** W-3.17, Stage 10 Documentation, integrated locally as `7819457` after separate approval. Stage 09's W-6.3q
 references and the subsequent layout repair are merged; their work is complete.
 
-### W-3.18 — Stage 17 Maintenance ☑ *(feature complete; integration pending, 2026-10-29)*
+### W-3.18 — Stage 17 Maintenance ☑ *(AI Plays correction verified; coordinator review pending, 2026-10-29)*
 
 **Next-task model/session:** return to the existing coordinator, `gpt-6-astra`,
-`low`, for review and integration decision. Implementation follow-up, if needed:
-`gpt-6.1-sol`, `high`, fresh session.
+`low`, for review and integration decision. Implementation recommendation:
+`gpt-6.1-sol`, `high`. For this correction the user explicitly selected continuation
+of session `01a1850c-d865-7d02-a3c0-23916ced0f66`.
 Use [KICKOFF.md](../KICKOFF.md) for starting commits and handoff requirements.
 
 Reader task: choose and safely complete the next maintenance action, with evidence,
 an owner and a follow-up date. Maintenance runs continuously; stage 17 is a filing
 code, not a prerequisite after incidents.
 
-**Interactive scope approved 2026-10-29:** six panels: triage, updates, expiry,
+**Original interactive scope approved 2026-10-29:** six panels: triage, updates, expiry,
 data and recovery, debt and retirement, review record. Start branch
 `feat/maintenance-page` from workflow handoff **23f481e**. Use existing `Stepper`,
 `Drill`, `RevealList`, `Figure`, `Term` and team-note patterns; keep state local to
@@ -190,6 +191,25 @@ does not confirm the active model. Integration requires separate approval.
   generated glossary definitions and stage/rail registration; nine meaningful render tests.
 - [x] Final application gate, both-theme keyboard/state/layout checks and development-console
   sweep; independent final content/page review with no actionable findings.
+
+**D-35 correction:** the six-panel completion above is an earlier checkpoint,
+not evidence that the required AI Plays section existed. Coordinator handoff
+**345c972** confirmed the gap and governs this correction.
+
+- [x] Add `### AI in maintenance` and the seventh `#ai` step, with four grounded
+  assistance plays and visible evidence, privacy and authorization limits.
+- [x] Demonstrate failing chapter/rail/render checks before fixing the omission;
+  extend the chapter guard to Stage 17 and require coverage of every ready stage.
+- [x] Humanizer pass, focused **64/64**, full **1,573/1,573 across 220 files**,
+  format/lint/typecheck and **53-page build**; six affected theme/width cases.
+- [x] Final production audit **27/27** in one run, development-console **1/1**,
+  and scoped correction review PASS. Handoff ready for main coordinator review
+  of **345c972..HEAD**, the actual evidence and this implementation session.
+
+Correction checks apply to **28d4410** (app unchanged from **01b8dc2**).
+Earlier **ebcb0ba** results below remain historical; the correction's completion
+row in the tracker supersedes the earlier feature-complete claim. Main coordinator
+review and separate merge approval remain outstanding.
 
 Chapter/source commit **8ee4efc**, based on develop `4f965e8`.
 Sources: [Stage 17 research](../reference/stage-17-source-research.md). The chapter
