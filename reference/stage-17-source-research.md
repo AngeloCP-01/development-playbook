@@ -286,6 +286,12 @@ claims and overstatement.
 
 ## W-6 assessment: Technical Debt Review (2026-10-29)
 
+**Later scope selection (2026-10-29):** the user approved this recommendation with
+"proceed" after the four-section/fourteen-row scope was presented. Implementation
+is authorized in a fresh Sol High session under D-100; the assessment itself
+contains no implemented sheet. Use the committed KICKOFF handoff for exact files,
+starting branch and acceptance checks. This selection does not approve integration.
+
 **Scope:** assessment only, from reviewed Maintenance feature tip `dd069e7`.
 Recommended assessment setting: **GPT-6 Astra / Low**, in the existing coordinator
 session. No sheet, app code or public image is added by this assessment.

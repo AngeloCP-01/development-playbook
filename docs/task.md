@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-10-29): W-6.3s, Stage 17 reference assessment complete.** Recommend one image-backed **Technical Debt Review** sheet, four sections/fourteen rows, using the gathered Fowler quadrant and existing renderer. This is a proposed scope, not an implemented sheet. See the [assessment](../reference/stage-17-source-research.md#w-6-assessment-technical-debt-review-2026-10-29). Stage 17's interactive page and AI Plays correction are reviewed on the unmerged feature branch. Feature W-3 **17/18**, local develop **16/18**; references remain **23 drawn / 28 registered**.
+**Current work (2026-10-29): W-6.3s scope approved; implementation next.** The user selected one image-backed **Technical Debt Review** sheet, four sections/fourteen rows, using the unchanged Fowler quadrant and existing renderer. The [assessment](../reference/stage-17-source-research.md#w-6-assessment-technical-debt-review-2026-10-29) and [KICKOFF](../KICKOFF.md) hold the approved boundary and file/check handoff. Stage 17 and its AI Plays correction remain reviewed but unmerged. Feature W-3 **17/18**, local develop **16/18**; references **23 drawn / 28 registered** until implementation.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **16/18**: stages 01-16 are interactive; 17 and 18 remain. W-6 is **23 drawn / 28 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** decide the proposed W-6.3s scope in the main coordinator, **GPT-6 Astra / Low**. If the user starts implementation, recommend **GPT-6.1 Sol / High** in a new session. The current assessment branch includes reviewed Stage 17 tip `dd069e7`; both remain unmerged. Stage integration, reference implementation, push and main promotion are separate decisions.
+**Next task/model:** implement approved W-6.3s in a fresh **GPT-6.1 Sol / High** session (D-100), from the committed scope handoff. Suggested branch `feat/technical-debt-reference`. Scope is approved; main **GPT-6 Astra / Low** coordinator reviews the returned thread/diff/evidence. The assessment branch includes reviewed Stage 17 tip `dd069e7`; integration, push and main promotion need separate user decisions.
 
 Two deliverables from one body of content.
 
@@ -702,18 +702,19 @@ permission remains unconfirmed; all source images stay research assets. Deferred
 new interaction patterns, copy/export controls, shared refactors, other sheets,
 W-6.4, stages 17/18, push/main promotion and deployment.
 
-**W-6.3s — Stage 17 Technical Debt Review ◐** *(assessment complete; implementation unstarted, 2026-10-29)*
+**W-6.3s — Stage 17 Technical Debt Review ◐** *(scope approved; implementation unstarted, 2026-10-29)*
 
 - [x] Compare gathered candidates with Stage 17 and the reference renderer.
 - [x] Recheck selected primary sources and image reuse permission; record one
   bounded recommendation in the existing source record.
-- [ ] User selects scope; implement in a new **Sol High** session when requested.
+- [x] User selected the recommended four-section/fourteen-row scope with "proceed".
+- [ ] Implement in a new **Sol High** session from this committed scope handoff.
 - [ ] Register the sheet, preserve the unchanged attributed image, provide its
   full textual equivalent, render coverage and generated Markdown.
 - [ ] Final web gate, focused image/theme/width/keyboard checks and one final
   independent content/page review; integration needs separate approval.
 
-Recommended slug `technical-debt`, Standards group, tether `17-maintenance`.
+Approved slug `technical-debt`, Standards group, tether `17-maintenance`.
 Four sections/fourteen rows: four debt categories, four evidence prompts, three
 response choices and three retirement checks. The quadrant classifies debt; it
 is not a priority score. Keep the original credit/link and unchanged-image
