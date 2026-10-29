@@ -68,13 +68,15 @@ test('AI Plays grounds each request in supplied evidence and exposes its human v
       /Review the official guidance and every proposed diff/,
     ),
   ).toBeTruthy()
-  fireEvent.click(
-    panel.getByRole('button', {
-      name: /^Summarize dependency and lockfile changes/,
-    }),
+  const dependency = panel.getByRole('button', {
+    name: /^Summarize dependency and lockfile changes/,
+  })
+  fireEvent.click(dependency)
+  const dependencyBody = within(
+    document.getElementById(dependency.getAttribute('aria-controls')!)!,
   )
   expect(
-    panel.getByText(/does not establish vulnerability exposure/),
+    dependencyBody.getByText(/does not establish vulnerability exposure/),
   ).toBeTruthy()
   fireEvent.click(
     panel.getByRole('button', {
