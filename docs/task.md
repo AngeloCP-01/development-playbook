@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-10-30): Stage 17 and W-6.3s integrated locally.** User-approved no-ff merge **6b78fcf** brings the Maintenance chapter, seven-panel page, AI Plays correction, Technical Debt Review companion and D-100 workflow into develop. Merge parents **4f965e8 / f86541c**; merge tree equals the reviewed feature tip, with application inputs identical to tested **5ea8cb2**. Local develop is **17/18** interactive and **24 drawn / 29 registered** references. No push or main promotion. [KICKOFF](../KICKOFF.md) holds the next handoff.
+**Current work (2026-10-30): Stage 18 research/chapter checkpoint complete on `docs/2026-10-30-stage-18-research`.** Chapter and source record are committed as **30006f6**, based on local develop **621cbdc**. Primary-source assessment, three link-only visual references, outcome-review example and D-35 chapter AI plays are ready for the page handoff. Local develop remains **17/18** interactive and **24/29** references. No integration or deployment occurred. [KICKOFF](../KICKOFF.md) holds the implementation handoff.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **17/18**: stages 01–17 are interactive; Stage 18 remains. W-6 is **24 drawn / 29 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** Stage 18 Continuous Improvement research and chapter assessment, **GPT-6 Astra / Low**, in a new research session. Gather primary sources and useful image references for the chapter and later W-6; audit AI Plays coverage from the start. Later interactive implementation uses a new **GPT-6.1 Sol / High** session. This merge does not start Stage 18, authorize a push or promote main.
+**Next task/model:** Stage 18 Continuous Improvement interactive page, **GPT-6.1 Sol / High**, in a fresh implementation session selected by the user. Start from the committed research branch tip so the chapter and port integrate together (D-51). Use W-3.19's acceptance checklist below. Return results to coordinator session `01a18acc-3b54-7202-92f3-404cc94fd0ad`; integration remains a separate user decision.
 
 Two deliverables from one body of content.
 
@@ -152,22 +152,70 @@ not rerun after merge. The local feature branch and worktree were removed.
 Debt Review, integrated locally as **6b78fcf** after separate user approval.
 Retained final app checks apply to identical tested **5ea8cb2** inputs.
 
-### W-3.19 — Stage 18 Continuous Improvement ☐ *(next research/chapter round)*
+### W-3.19 — Stage 18 Continuous Improvement ◐ *(research/chapter complete; page pending)*
 
-**Recommended model:** `gpt-6-astra`, **effort:** `low`, new research session.
+**Research checkpoint:** **30006f6**, branch `docs/2026-10-30-stage-18-research`,
+starting develop **621cbdcff63dd23f5bcff5b650c1eb4484511492**.
 Reader task: distinguish product outcomes from delivery/process signals and
 choose the next improvement from evidence. Stage numbers remain filing codes.
 
-- [ ] Assess the existing chapter against primary sources; label illustrative
+- [x] Assess the existing chapter against primary sources; label illustrative
   examples and unknown project facts.
-- [ ] Gather useful visual references with source/permission records and assess
-  possible later W-6 value in one research record.
-- [ ] Include the required `AI in continuous improvement` chapter coverage and
-  later dedicated AI Plays step in the page acceptance scope (D-35).
-- [ ] Apply D-99 prose/content checks and refresh the model-aware handoff.
+- [x] Gather useful visual references with source/permission records and assess
+  possible later W-6 value in one research record (three link-only candidates).
+- [x] Include `AI in continuous improvement` and require the later AI Plays step.
+- [x] Apply D-99 prose/content checks and refresh the model-aware handoff.
 
-This handoff does not begin the research or implementation. Later page work uses
-**Sol High**, a new implementation session and existing patterns where suitable.
+Sources and original-claim assessment live in
+[one research record](../reference/stage-18-source-research.md). The
+[revised chapter](18-continuous-improvement.md) separates observations from
+interpretations, adds a PDSA-based record and inconclusive worked result, and
+replaces universal fix/delete/automation rules with contextual decisions.
+Independent final content review found no actionable issues. Fresh checkpoint
+checks: metadata/citations/ledger **41/41**, changed local links **11/11** and
+whitespace, all exit 0. No app behavior changed; no app gate or browser claim.
+
+**Next implementation: recommended `gpt-6.1-sol`, effort `high`, fresh session.**
+Use the committed research branch tip as the starting tree; record its exact SHA
+with `git log -1`. Create `feat/continuous-improvement` from that tree. Keep the
+chapter stable during the port and integrate both together under D-51. Return to
+coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad** with branch/commit, actual
+checks, unresolved issues and the implementation session reference.
+
+**Page scope and acceptance checklist:**
+
+- [ ] Read `web/PATTERNS.md` and `web/DESIGN.md`; use existing interactions.
+  Start with six content judgments: distinguish measures; investigate a signal;
+  choose the next action; plan/study a change; improve delivery conditions;
+  update guidance or pause feature work. Split only where panel weight needs it.
+- [ ] Teach through classification/reveal, observation inspectors, bounded
+  decision exercises and an annotated improvement record. Carry the fictional
+  invoice example through its inconclusive result. Keep denominators, minority
+  needs, alternate explanations and harm checks visible.
+- [ ] Add a dedicated AI Plays step with the four chapter plays, supplied inputs,
+  source/count checks and limits. No synthetic feedback presented as user evidence.
+- [ ] Port artifacts, done checks, team notes, traps and source links. Preserve
+  recurring cadence and product-versus-delivery distinctions. Follow existing
+  front-matter conventions; this adds the established chapter/page duplication.
+- [ ] Build under `web/src/features/continuous-improvement/`, register in
+  `web/src/features/stage-content.ts`, then set ready in `web/src/lib/stages.ts`.
+  Extend the chapter AI guard in `web/src/lib/stage-metadata.test.ts` to Stage 18;
+  the chapter heading already exists but is not yet on that explicit list.
+- [ ] Add meaningful render coverage for data-derived output and exercises;
+  reuse existing hash, disclosure and keyboard behavior. New shared behavior
+  requires D-99's stronger path and behavior TDD; static content does not.
+- [ ] Run the completed web gate once: format, lint, generated-route typecheck,
+  unit/DOM tests, production build and audit. Run dev-console once. Check affected
+  panels/material states in both themes at narrow/middle/wide widths, keyboard,
+  hash/Back/reload, contrast, touch targets, overflow and console.
+- [ ] Obtain one independent final content/page review of the actual final diff.
+  Report reviewed commit and evidence; keep later changes visible.
+
+Deferred: W-6 companion selection/implementation and image publication, shared
+refactors, real analytics/research collection, integration, push and promotion.
+No external artwork is cleared for publication. W-3 remains **17/18** until the
+page lands; W-6 remains **24/29**. Ask separately before merging into develop;
+main promotion belongs to the user.
 
 ### W-3.18 — Stage 17 Maintenance ☑ *(merged locally into develop as `6b78fcf`, 2026-10-30)*
 

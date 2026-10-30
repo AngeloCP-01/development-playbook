@@ -1,54 +1,69 @@
-# Kickoff: Stage 17 and Technical Debt Review merged
+# Kickoff: Stage 18 research ready for the interactive page
 
 Updated 2026-10-30. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 
 ## Current state
 
-- Local `develop`: approved no-ff merge **6b78fcf**, parents **4f965e8 / f86541c**.
-  Includes Stage 17's chapter, seven-panel page and AI Plays correction, the
-  Technical Debt Review companion, and D-100 model/session workflow.
-  Use `git log -1 --oneline` for the closing records tip.
-- W-3 **17/18**: stages 01–17 interactive; Stage 18 remains. W-6 **24 drawn /
-  29 registered**; five language placeholders and W-6.4 remain.
-- [Maintenance](docs/17-maintenance.md) and
-  [Technical Debt Review](web/src/lib/cheatsheets/technical-debt.ts) share the
-  [source/provenance record](reference/stage-17-source-research.md). The original
-  attributed quadrant is published unchanged with equivalent text.
-- Five merged local work branches were safely deleted after ancestor/worktree
-  checks. All commits remain in the merge. No server was stopped, no push or
-  deployment was made, and `main` was not changed.
+- Branch: `docs/2026-10-30-stage-18-research`, from local develop
+  **621cbdcff63dd23f5bcff5b650c1eb4484511492**.
+- Chapter and research checkpoint: **30006f6**. Use `git log -1 --oneline`
+  for the closing records tip.
+- [Continuous Improvement](docs/18-continuous-improvement.md) now separates
+  product outcomes from delivery signals, treats feedback as evidence to
+  investigate, and teaches an owned improvement cycle with outcome review.
+  Its fictional invoice example ends inconclusively. Four chapter AI plays
+  require source checks and explicit limits.
+- [One research record](reference/stage-18-source-research.md) holds primary
+  findings, the original claim assessment and three link-only visual references.
+  External artwork has no publication clearance; the HEART paper's PDF notice
+  restricts redistribution. W-6's possible Improvement Review remains a candidate.
+- Local develop remains **17/18** interactive and **24/29** references. Stage 18's
+  page is still a placeholder. No merge, push or promotion occurred.
 
 ## Verification
 
-The merge tree equals reviewed feature tip **f86541c**; application and generated
-sheet inputs equal tested **5ea8cb2**. Retain its format/lint/generated-route
-checks, **1576 tests / 221 files**, **54 prerendered routes**, production **27/27**
-and focused theme/width/image/keyboard checks. No full app gate rerun for the
-unchanged merge. Stage 17's identified dev-console result is retained; the static
-reference addition used D-99's exception for the unchanged renderer.
+For **30006f6**'s chapter/source tree: metadata, source-citation and tracker-ledger
+checks **41/41 across 3 files**, changed local links **11 targets / 2 files**, and
+whitespace checks pass, exit 0. Humanizer pass and independent Astra Low final
+content review found no actionable issues. Review covered the actual chapter
+change against **621cbdc** and the new source record; no page review is claimed.
 
-Independent page/content reviews and coordinator reviews found no actionable
-findings in their recorded scope. Coordinator fresh checks were **48/48** for
-the AI correction and **31/31** for W-6. These do not claim a new full coordinator
-review of the original six panels. The optimizer-stall history and successful
-fresh-process captures remain recorded in tracker W-6.3s. Closing records use
-fresh ledger/local-link/whitespace checks; see the merge completion row.
+The app is unchanged. No app suite, build, browser or development-console run was
+needed for this prose checkpoint. Fresh closing-record checks on the handoff tree: ledger **2/2**,
+`python3 /private/tmp/stage18-check-doc-links.py` **125 local targets / 5 files**,
+and `git diff --check`, all exit 0. The **41/41** result is retained for unchanged
+chapter/source inputs; no full app gate was rerun.
 
 ## Next task and session
 
-**Task:** Stage 18 — Continuous Improvement research and chapter assessment.
-**Recommended model:** `gpt-6-astra`, **reasoning:** `low`, new research session.
-This main coordination session remains available for scope and review.
+**Task:** Stage 18 Continuous Improvement interactive page.
+**Recommended model:** `gpt-6.1-sol`, **reasoning:** `high`, fresh implementation
+session with the user selecting that setting. This recommendation does not
+confirm the active setting.
 
-Start a scoped documentation branch from the committed local develop tip; record
-that exact starting commit. Read [the existing chapter](docs/18-continuous-improvement.md)
-and task **W-3.19**, then use D-99's short checklist: assess primary claims, gather
-useful images with original source/permission records for the chapter and later
-W-6, distinguish product outcomes from delivery/process signals, label unknowns,
-and address the required `AI in continuous improvement` coverage from the start.
-Keep findings in one research record; do content/link checks rather than an app
-build for prose-only work. Stage numbers remain filing codes, not a sequence.
+**Reader outcome:** distinguish product outcomes from delivery/process signals,
+choose an improvement from evidence and decide what to do after reviewing it.
 
-Later page implementation uses **gpt-6.1-sol / high**, in a new session, with an
-explicit acceptance handoff and existing patterns where suitable. No Stage 18
-research, implementation, push or main promotion is included in this merge.
+**Starting tree:** the committed tip of this research branch. Record the exact
+SHA, then create `feat/continuous-improvement` from it. Do not start from develop
+without bringing the research checkpoint. Keep chapter and port together for
+integration (D-51).
+
+**Scope/acceptance:** [W-3.19](docs/task.md) holds the compact checklist. Read
+[patterns](web/PATTERNS.md) and [design](web/DESIGN.md). Start with six content
+judgments plus a dedicated AI Plays step using existing interactions. Port the
+chapter's examples, uncertainty, minority needs, artifacts, team notes, traps and
+sources. Add meaningful data-driven render coverage and Stage 18 to the explicit
+chapter AI guard. Complete the final web gate, dev-console sweep, focused
+both-theme/width/keyboard/history checks and one independent content/page review.
+Shared behavior changes require D-99's stronger path.
+
+**Return results to coordinator session:**
+`01a18acc-3b54-7202-92f3-404cc94fd0ad` (this research/coordination session).
+Return branch/commit, actual checks with limits, unresolved issues and the
+implementation session reference. The coordinator reads that thread and reviews
+the actual diff before relying on the result.
+
+Deferred: W-6 companion and image publication, unrelated shared refactors, real
+product research/telemetry, integration, push and promotion. Ask separately before
+merging into develop. Main promotion belongs to the user.
