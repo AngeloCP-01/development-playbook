@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-10-30): W-6.3s coordinator review complete; integration pending.** Commit **5ea8cb2** on `feat/technical-debt-reference` adds the four-section/fourteen-row **Technical Debt Review**, unchanged attributed Fowler quadrant, equivalent text, render tests and generated Markdown. Independent content/page review and coordinator review of **0532af2..e358608** found no actionable issue; fresh focused checks pass **31/31**. Feature references are **24 drawn / 29 registered**, W-3 **17/18**; local develop remains **23/28**, W-3 **16/18**. Stage 17 and this companion remain unmerged. [KICKOFF](../KICKOFF.md) holds the thread, checks and coordinator handoff.
+**Current work (2026-10-30): Stage 17 and W-6.3s integrated locally.** User-approved no-ff merge **6b78fcf** brings the Maintenance chapter, seven-panel page, AI Plays correction, Technical Debt Review companion and D-100 workflow into develop. Merge parents **4f965e8 / f86541c**; merge tree equals the reviewed feature tip, with application inputs identical to tested **5ea8cb2**. Local develop is **17/18** interactive and **24 drawn / 29 registered** references. No push or main promotion. [KICKOFF](../KICKOFF.md) holds the next handoff.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -23,9 +23,9 @@ interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. That width repair was the pre-Stage-10 baseline. Tracked `origin/develop` remains
 `79f9e31`; the current local develop merge is recorded above.
 
-On **local develop**, W-3 is **16/18**: stages 01-16 are interactive; 17 and 18 remain. W-6 is **23 drawn / 28 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
+On **local develop**, W-3 is **17/18**: stages 01–17 are interactive; Stage 18 remains. W-6 is **24 drawn / 29 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** user integration decision, recommended **GPT-6 Astra / Low** in the existing coordinator. W-6 implementation session **01a1860d-161c-7b71-972a-dba429ec0499** and actual **0532af2..e358608** diff have been reviewed; see [KICKOFF.md](../KICKOFF.md). The feature contains unmerged Stage 17 and the companion. No merge, push or main promotion is authorized by this review.
+**Next task/model:** Stage 18 Continuous Improvement research and chapter assessment, **GPT-6 Astra / Low**, in a new research session. Gather primary sources and useful image references for the chapter and later W-6; audit AI Plays coverage from the start. Later interactive implementation uses a new **GPT-6.1 Sol / High** session. This merge does not start Stage 18, authorize a push or promote main.
 
 Two deliverables from one body of content.
 
@@ -74,10 +74,10 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(16/18 merged to local `develop`; two remain: 17 and 18. Stage 10 landed as `7819457`.)* |
+| **W-3** | Stages 02–18 interactive | ◐ *(17/18 merged to local `develop`; Stage 18 remains. Stage 17 landed as `6b78fcf`.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(23 of 28 registered sheets drawn on local `develop`; Stage 10 Documentation merged as `8eb294c`. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(24 of 29 registered sheets drawn on local `develop`; Technical Debt Review merged as `6b78fcf`. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
 
 ### Dependency map
 
@@ -133,7 +133,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Give substantive new prose one `humanizer:humanizer` pass
 
-### W-3 — Stages 02–18 interactive ◐ *(16/18 merged to local `develop`; two remain: 17 and 18. Stage 10 merged as `7819457`.)*
+### W-3 — Stages 02–18 interactive ◐ *(17/18 merged to local `develop`; Stage 18 remains. Stage 17 merged as `6b78fcf`.)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -148,13 +148,32 @@ returned Ready to merge, with no new findings. The merged tree then passed
 format, lint, typecheck, 1459 tests across 198 files and a fresh 50-page build.
 The browser results apply to the identical application tree; those suites were
 not rerun after merge. The local feature branch and worktree were removed.
-**Latest merged stage round:** W-3.17, Stage 10 Documentation, integrated locally as `7819457` after separate approval. Stage 09's W-6.3q
-references and the subsequent layout repair are merged; their work is complete.
+**Latest merged stage round:** W-3.18, Stage 17 Maintenance and W-6.3s Technical
+Debt Review, integrated locally as **6b78fcf** after separate user approval.
+Retained final app checks apply to identical tested **5ea8cb2** inputs.
 
-### W-3.18 — Stage 17 Maintenance ☑ *(AI Plays correction reviewed; integration pending, 2026-10-29)*
+### W-3.19 — Stage 18 Continuous Improvement ☐ *(next research/chapter round)*
 
-**Next-task model/session:** return to the existing coordinator, `gpt-6-astra`,
-`low`, for the integration decision; correction review is complete. Implementation recommendation:
+**Recommended model:** `gpt-6-astra`, **effort:** `low`, new research session.
+Reader task: distinguish product outcomes from delivery/process signals and
+choose the next improvement from evidence. Stage numbers remain filing codes.
+
+- [ ] Assess the existing chapter against primary sources; label illustrative
+  examples and unknown project facts.
+- [ ] Gather useful visual references with source/permission records and assess
+  possible later W-6 value in one research record.
+- [ ] Include the required `AI in continuous improvement` chapter coverage and
+  later dedicated AI Plays step in the page acceptance scope (D-35).
+- [ ] Apply D-99 prose/content checks and refresh the model-aware handoff.
+
+This handoff does not begin the research or implementation. Later page work uses
+**Sol High**, a new implementation session and existing patterns where suitable.
+
+### W-3.18 — Stage 17 Maintenance ☑ *(merged locally into develop as `6b78fcf`, 2026-10-30)*
+
+**Integration:** user-approved no-ff merge **6b78fcf**, with W-6.3s and D-100.
+The merge tree equals **f86541c**; application inputs equal tested **5ea8cb2**.
+Earlier implementation recommendation:
 `gpt-6.1-sol`, `high`. For this correction the user explicitly selected continuation
 of session `01a1850c-d865-7d02-a3c0-23916ced0f66`.
 Use [KICKOFF.md](../KICKOFF.md) for starting commits and handoff requirements.
@@ -211,7 +230,7 @@ Earlier **ebcb0ba** results below remain historical; the correction's completion
 row in the tracker supersedes the earlier feature-complete claim. Main coordinator
 review completed at **98688ec** with no actionable findings and fresh **48/48**
 focused checks. The review covered the correction; separate merge approval
-remains outstanding.
+was granted for merge **6b78fcf**.
 
 Chapter/source commit **8ee4efc**, based on develop `4f965e8`.
 Sources: [Stage 17 research](../reference/stage-17-source-research.md). The chapter
@@ -230,8 +249,8 @@ config against the preserved 3200 server. Independent final review PASS; humaniz
 pass complete. See the tracker completion row for commands and failure context.
 Session: `01a1850c-d865-7d02-a3c0-23916ced0f66`.
 
-Deferred: coordinator integration decision, W-6 companion assessment/registration,
-shared behavior, live dependency/database operations, merge, push and deployment.
+Stage 17 and its W-6 companion are integrated as **6b78fcf**. Deferred: unrelated
+shared behavior, live dependency/database operations, push and production promotion.
 
 ### W-3.17 — Stage 10 Documentation ☑ *(merged locally into develop as `7819457`, 2026-10-23)*
 
@@ -702,7 +721,7 @@ permission remains unconfirmed; all source images stay research assets. Deferred
 new interaction patterns, copy/export controls, shared refactors, other sheets,
 W-6.4, stages 17/18, push/main promotion and deployment.
 
-**W-6.3s — Stage 17 Technical Debt Review ☑** *(coordinator reviewed; unmerged, 2026-10-30)*
+**W-6.3s — Stage 17 Technical Debt Review ☑** *(merged locally as `6b78fcf`, 2026-10-30)*
 
 - [x] Compare gathered candidates with Stage 17 and the reference renderer.
 - [x] Recheck selected primary sources and image reuse permission; record one
@@ -715,6 +734,8 @@ W-6.4, stages 17/18, push/main promotion and deployment.
   full textual equivalent, render coverage and generated Markdown.
 - [x] Final web gate, focused image/theme/width/keyboard checks and one final
   independent content/page review; integration needs separate approval.
+- [x] User-approved no-ff integration into develop as **6b78fcf**; retain the
+  identified final gate for unchanged application inputs.
 
 Approved slug `technical-debt`, Standards group, tether `17-maintenance`.
 Four sections/fourteen rows: four debt categories, four evidence prompts, three
@@ -723,11 +744,12 @@ is not a priority score. Keep the original credit/link and unchanged-image
 statement in the existing source area. Defer the broad Maintenance checklist,
 package-manager command card, new controls, shared renderer work and live actions.
 See the [assessment and acceptance scope](../reference/stage-17-source-research.md#w-6-assessment-technical-debt-review-2026-10-29).
-Feature W-6 is **24/29**; local develop remains **23/28**.
+Local develop W-6 is **24/29** after approved merge **6b78fcf**.
 Implementation, final gate (**1,576/221**, **54 routes**, **27/27**) and independent
 content/page review are complete at **5ea8cb2**. Coordinator reviewed
 **0532af2..e358608**, no actionable findings; fresh **31/31** focused checks.
-Separate integration approval remains. Coordinator recommendation **Astra Low**.
+The user approved integration as **6b78fcf**; app checks are retained for the
+identical tree. Push and main promotion remain separate.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 
