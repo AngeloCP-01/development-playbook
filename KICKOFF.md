@@ -1,17 +1,82 @@
-# Kickoff: documentation reference companion merged
+# Kickoff: Technical Debt Review reviewed; integration pending
 
-Updated 2026-10-27. Follow [AGENTS.md](AGENTS.md), the shared D-99 policy. W-6.3r is complete and merged locally into develop as **8eb294c** (`--no-ff`), after separate user approval. The next W-3 candidate is Stage 17 Maintenance; no Stage 17 work is included in this merge.
+Updated 2026-10-30. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 
 ## Current state
 
-- Merge parents: `ae15eaa` / reviewed feature tip `4a1c209`. The merge tree equals that tip. Source assessment/checklist `369cdb0`; tested application `65ab1d9`. Query `git log -1 --oneline` for the closing records tip.
-- `/reference/documentation`: four sections/fifteen rows, five primary citations, existing renderer/route and generated Markdown. No new runtime state or published source image. [Source assessment](reference/stage-10-source-research.md#w6-source-verification-and-assessment--2026-10-27) and [source ledger](reference/cheatsheet-sources.md#stage-10-w-6-companion--2026-10-27).
-- Local develop W-6 **23/28**; W-3 **16/18**. Five language placeholders, W-6.4 and stages 17/18 remain. No push or main promotion. The chapter branch at `c092ac7` and research provenance are preserved.
+- Branch: `feat/technical-debt-reference`, starting from scope handoff
+  **0532af2**. Implementation **5ea8cb2** adds `/reference/technical-debt`:
+  four sections/fourteen rows, Standards group, tethered to Stage 17.
+- The existing renderer is unchanged. Fowler’s original **512 × 384 / 46,955-byte**
+  PNG is copied unchanged, with adjacent author credit, original link and change
+  disclosure. Both axes and all four cases have equivalent text. Response and
+  retirement prompts are identified as the playbook’s editorial guidance.
+- Feature references are now **24 drawn / 29 registered**. Feature W-3 stays
+  **17/18**; local develop **4f965e8** stays **16/18**, references **23/28**.
+- The branch includes unmerged Stage 17 and assessment **c5f945c**.
+  `feat/maintenance-page` remains preserved at **dd069e7**. No merge, push or
+  deployment. Integration must account for both Stage 17 and this companion.
 
-## Verification and cleanup
+## Verification and review
 
-Retained identified app checks: format/lint/generated-route typecheck, `pnpm test --maxWorkers=1` **1560/219**, **53-page build**, production **27/27**, six light/dark × 320/768/1440 page states, 30 keyboard transitions, stage/back navigation and no captured overflow/console errors. Four screenshots were inspected; independent content/page review PASS, no findings. These were not rerun after the unchanged merge. No development-console sweep was required for static data through an unchanged renderer (D-99). Fresh merged-record checks: tracker **2/2**, local Markdown **462 targets / 46 files**, whitespace clean.
+Tested application tree: **5ea8cb2**. Fresh format, lint, generated-route
+typecheck and `pnpm test --maxWorkers=1` pass: **1,576 tests / 221 files**.
+`pnpm test:e2e` rebuilt the final tree; its manifest contains **54 prerendered
+routes**, including the new sheet. Final production audit: **27/27**, exit 0,
+including both-theme contrast, 320–2560px overflow and a clean console.
+Closing handoff changes are records only; these application checks are retained
+for the unchanged **5ea8cb2** application tree. Fresh closing checks: ledger
+**2/2**, local Markdown links **276 targets / 9 files**, whitespace clean.
 
-The merged reference worktree/branch have been removed, and its verified preview PID 91310 was stopped. Parent dev server PID 93201 remains on port 3200. Check actual ownership/listeners before future server operations. New work starts from local develop on a scoped branch.
+Focused production checks cover light/dark at **320, 768 and 1440px**: loaded
+image, readable layout and no overflow. Keyboard access reaches Maintenance and
+all four source links. Independent **Astra Low** content/page review of
+**0532af2..5ea8cb2** found no actionable issue; it also inspected the regenerated
+wide screenshots. Humanizer editing pass complete. Static data through the
+unchanged renderer uses D-99’s development-console exception; no interaction or
+shared React behavior changed.
 
-Read task W-6.3r and tracker Current phase/Next up for the completed slice. The stage retains examples, practice and the saved record; the card adds all-visible retrieval. Stage 17's scope/research comes next as a separate task. Deferred: push/main promotion, new controls/shared refactors, other sheets, W-6.4/languages and stages 17/18.
+Earlier count/runner failures and the stalled optimizer process are documented
+in the W-6.3s tracker entry, with the unchanged-limit reruns and freshness-guard
+rebuild. No shared renderer or timeout changes were made.
+
+## Coordinator review (2026-10-30)
+
+Read implementation session **01a1860d-161c-7b71-972a-dba429ec0499** and reviewed
+**0532af2..e358608** against the accepted assessment. No actionable findings in
+this W-6 scope. Fresh at **e358608**: render/registry/generated-Markdown/ledger
+checks **31/31 across five files**, exit 0; original/public PNG byte comparison
+and whitespace pass. Application and generated-sheet inputs equal **5ea8cb2**.
+Raw logs confirm **1576/221** and production **27/27**; the build manifest has
+**54 routes** including this sheet. Those full checks are retained, not rerun.
+
+Inspected narrow image/credit and regenerated light/dark wide screenshots. An
+older reviewer wide capture shows the earlier blank image; the newer
+`technical-debt-{light,dark}-1440.png` captures show it loaded. The documented
+optimizer-stall cause remains unestablished. The small original has complete
+readable equivalent text. This review does not broaden the prior Stage 17
+correction review into a full re-review of the original six panels.
+
+## Next task and session
+
+**Task:** user integration decision for the reviewed Stage 17 and Technical Debt
+Review branch. Coordinator review of this W-6 implementation is complete.
+**Recommended model:** `gpt-6-astra`, **reasoning:** `low`, in the existing main
+coordination session. This is a recommendation, not a claim about its active
+setting. No further implementation session is required unless review finds work.
+
+Implementation session: **01a1860d-161c-7b71-972a-dba429ec0499** has been read by
+the coordinator. Reviewed application **5ea8cb2**, closing records **e358608**;
+this review adds records only. The implementation recommendation was
+**gpt-6.1-sol / high**; the runtime did not confirm this session’s active setting.
+
+Pointers: [task W-6.3s](docs/task.md), [tracker](docs/tracker.md),
+[single source/acceptance record](reference/stage-17-source-research.md#w-6-assessment-technical-debt-review-2026-10-29),
+[sheet data](web/src/lib/cheatsheets/technical-debt.ts),
+[render tests](web/src/components/TechnicalDebtReference.test.tsx).
+
+The broad Maintenance checklist, dependency-command card, new controls/shared
+renderer changes, live operations, Stage 18, five language placeholders and W-6.4
+remain separate. Ask before any merge into develop; main promotion belongs to
+the user. Preserve the existing port-3200 dev server and verify ownership before
+stopping any preview.

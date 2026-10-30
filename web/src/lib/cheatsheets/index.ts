@@ -22,6 +22,7 @@ import { sdlc } from './sdlc'
 import { security } from './security'
 import { solidPrinciples } from './solid-principles'
 import { testing } from './testing'
+import { technicalDebt } from './technical-debt'
 import type { Cheatsheet, CheatsheetGroup } from './types'
 
 export type {
@@ -47,6 +48,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   gitBranching,
   codingStandards,
   documentation,
+  technicalDebt,
   sdlc,
   testing,
   playwright,

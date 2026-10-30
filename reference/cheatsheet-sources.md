@@ -597,3 +597,34 @@ and the supplied template JPEG's original authorship/reuse permission remains
 unconfirmed. Existing plates stay gathering assets. No private project facts or
 provider execution results were measured. Approved local merge `8eb294c` brings develop to 23 drawn / 28 registered.
 Earlier dated counts above describe their research checkpoints.
+
+### Stage 17 gathering · 2026-10-29
+
+The [Maintenance source record](stage-17-source-research.md) captures primary
+sources, versioned package-manager meanings, provider limits and possible lookup
+rows for a later W-6 round. The [chapter](../docs/17-maintenance.md) uses the
+unchanged [original debt quadrant](stage-17-tech-debt-quadrant.png), credited to
+Martin Fowler with its original article and his illustration reuse permission.
+This is author permission with attribution, not a named standard license.
+
+Candidate lookup needs: update triage, tool-operation distinctions, debt evidence,
+retirement checks and recurring review prompts. Recovery/expiry/retention rows
+need to earn their space during the later companion assessment. No sheet or
+public web asset is registered in this gathering round; W-6 stays **23/28** and
+W-3 **16/18**. Research does not establish production health or an executed upgrade,
+cleanup, rotation or restore.
+
+
+### Stage 17 W-6 assessment · 2026-10-29
+
+The [bounded assessment](stage-17-source-research.md#w-6-assessment-technical-debt-review-2026-10-29)
+recommends one **Technical Debt Review** sheet, using the original Fowler quadrant
+with attribution, original link and an unchanged-image statement. Selected primary
+pages and illustration permission were reopened on 2026-10-29. Source authors,
+dates, supported claims and asset dimensions remain in the single research record.
+
+The proposed four-section/fourteen-row sheet combines category lookup with
+response and retirement checks. It is an intentional summary of chapter content;
+the stage retains its examples, drills and AI Plays. The broad Maintenance card
+and dependency-command card are deferred. No source image is copied into public
+assets and no sheet is registered by this assessment. W-6 remains **23/28**.

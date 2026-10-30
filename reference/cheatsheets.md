@@ -6,7 +6,7 @@
 Lookup material rather than reading material. A stage teaches a decision; a
 sheet answers what that command was.
 
-Drawn: 23 of 28. A sheet listed as not drawn is
+Drawn: 24 of 29. A sheet listed as not drawn is
 registered on purpose — the gap is the point, so it can be seen and filled.
 
 | Sheet | Group | Stage | Status |
@@ -21,6 +21,7 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | Git Branching & Conventions | Git | 04 | Drawn |
 | Coding Standards | Standards | 05 | Drawn |
 | Documentation Change Check | Standards | 10 | Drawn |
+| Technical Debt Review | Standards | 17 | Drawn |
 | Software Development Life Cycle | Standards | — | Drawn |
 | Testing | Standards | 06 | Drawn |
 | Playwright | Standards | 06 | Drawn |
@@ -735,6 +736,56 @@ Source: [MADR 4.0.0 template](https://github.com/adr/madr/blob/4.0.0/template/ad
 Source: [About READMEs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes) — GitHub.
 
 Source: [What to look for in a code review: Documentation](https://google.github.io/eng-practices/review/reviewer/looking-for.html#documentation) — Google Engineering Practices.
+
+## Technical Debt Review
+
+Recognize a design cost, choose a response from evidence, and check what retirement affects.
+
+Belongs to [17 — Maintenance](../docs/17-maintenance.md).
+
+### Recognize the debt
+
+Fowler’s two axes describe care in the decision (reckless or prudent) and awareness of taking on debt (deliberate or inadvertent). The four cases below paraphrase the gathered illustration. A category does not determine repayment urgency, blame or whether a change is worthwhile.
+
+- **Reckless / deliberate** — The team knowingly skips design work without weighing the future cost.
+- **Prudent / deliberate** — The team weighs the consequences and accepts a design compromise to gain an earlier release.
+- **Reckless / inadvertent** — The team lacks design knowledge and creates a costly structure without recognizing the debt.
+- **Prudent / inadvertent** — A capable team learns through building and later sees a better design than it could see at the start.
+
+### Decide from evidence
+
+These review prompts are the playbook’s application guidance, not a scoring system prescribed by Fowler. Open Stage 17 for exercises and fuller operational context.
+
+- **Observed recurring cost** — Link repeated edits, defects or delayed changes to the affected behavior and investigate the cause. — Repeated bugs alone do not establish that the design needs replacing.
+- **Impact and deadline** — Record who is affected, the cost or risk of waiting, and any real deadline. Keep unknown exposure explicit.
+- **Smallest useful change** — Identify a bounded improvement, its likely next touch and the future work it could make cheaper. Compare the expected benefit with the effort.
+- **Owner and review date** — Name an owner, link the evidence, and set a review date and a trigger for reconsidering the decision.
+
+### Choose a response
+
+Establish checks for current behavior before restructuring fragile code, then rerun them after each small change. Keep feature changes separate enough to review; tests provide evidence within their coverage.
+
+- **Nearby refactor** — Improve the area you are already changing when the cleanup helps that task. Keep the structural change small and check affected callers.
+- **Planned incremental change** — Give a larger restructuring an owner, compatibility steps and checkpoints. Make small changes while keeping the system usable.
+- **Deliberate deferral** — Record why carrying the cost is acceptable for now, the owner and the review trigger. A rarely touched area may not repay the effort to change it.
+
+### Retire with evidence
+
+Retirement changes behavior. These playbook checks apply the deprecation guidance to a removal decision.
+
+- **Discover consumers** — Check callers, jobs, integrations, runtime usage and support knowledge. Check telemetry coverage and the relevant usage cycle before treating low counts as evidence of disuse. — Missing telemetry leaves usage unknown; rare recovery or administrative paths may still matter.
+- **Migration and communication** — Identify affected owners, communicate the change and provide a migration route where needed. Prefer a reversible disable step where practical, with a way to detect trouble and recover.
+- **Verify removal and effects** — Check remaining behavior and remove stale flags, configuration, dependencies, tests and docs. Account separately for stored data, subscriptions and external effects. — Version control can restore tracked code; it cannot restore deleted production data or undo notifications, billing or broken external contracts.
+
+Sources:
+
+Source: [Technical Debt Quadrant](https://martinfowler.com/bliki/TechnicalDebtQuadrant.html) — Martin Fowler (2009); unchanged illustration.
+
+Source: [Workflows of Refactoring](https://martinfowler.com/articles/workflowsOfRefactoring/fallback.html) — Martin Fowler.
+
+Source: [Software Engineering at Google: Deprecation](https://abseil.io/resources/swe-book/html/ch15.html) — Hyrum Wright / Google; edited by Tom Manshreck.
+
+Source: [Illustration reuse policy](https://martinfowler.com/faq.html) — Martin Fowler.
 
 ## Software Development Life Cycle
 

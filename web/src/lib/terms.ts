@@ -18,6 +18,47 @@ export type Term = {
 }
 
 export const TERMS: Record<string, Term> = {
+  semver: {
+    name: 'Semantic Versioning',
+    short: 'A versioning convention for changes to a declared public API.',
+    full: 'For releases after 1.0.0, a patch declares a compatible fix, a minor release a compatible addition and a major release an incompatible public-API change. Versions below 1.0.0 have weaker stability expectations.',
+    soWhat:
+      'A publisher’s version label guides review; it cannot prove compatibility with your application.',
+    see: '17-maintenance',
+  },
+  'technical-debt': {
+    name: 'Technical debt',
+    short: 'A design choice or limitation that makes later work more costly.',
+    full: 'Debt may be accepted deliberately or discovered through experience. Record the concrete recurring cost, the smallest useful change and how to verify its effect before choosing repayment work.',
+    soWhat:
+      'Repeated edits or slow changes provide evidence; disliking a file does not establish a repayment priority.',
+    see: '17-maintenance',
+  },
+  'credential-rotation': {
+    name: 'Credential rotation',
+    short: 'Replacing an access credential and retiring the previous one.',
+    full: 'For a planned change, identify consumers, distribute the replacement securely, verify they work and revoke the old credential. Provider capabilities determine whether overlap is possible; exposure may require immediate revocation.',
+    soWhat:
+      'Issuing a new secret alone does not establish that consumers switched or that old access ended.',
+    see: '17-maintenance',
+  },
+  'retention-policy': {
+    name: 'Retention policy',
+    short: 'An approved rule for what data is kept, why and for how long.',
+    full: 'Names the data, duration, approval authority and exclusions before removal. Different records need different policies, and recovery copies must be accounted for separately.',
+    soWhat:
+      'A cleanup job implements a policy; it does not decide which records you are allowed to remove.',
+    see: '17-maintenance',
+  },
+  'restore-drill': {
+    name: 'Restore drill',
+    short:
+      'An isolated rehearsal of restoring and validating a service’s data.',
+    full: 'Tests a chosen recovery point against agreed data-loss and recovery-time targets. Restrict copied-data access, disable outbound side effects, validate records and application access, and measure through reconnection.',
+    soWhat:
+      'A provider’s successful restore operation is only one part of proving the application can recover.',
+    see: '17-maintenance',
+  },
   lcp: {
     name: 'LCP (Largest Contentful Paint)',
     see: '09-performance-optimization',

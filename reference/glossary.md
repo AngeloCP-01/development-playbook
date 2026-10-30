@@ -59,6 +59,8 @@ drift apart.
 
 **CQRS (Command Query Responsibility Segregation)** — Splitting the write path and the read path so each can be shaped for its own job — writes validated against one model, reads served from another built for the queries the screens make. Often paired with event sourcing, though neither requires the other. See [03 — Architecture](../docs/03-architecture.md).
 
+**Credential rotation** — For a planned change, identify consumers, distribute the replacement securely, verify they work and revoke the old credential. Provider capabilities determine whether overlap is possible; exposure may require immediate revocation. See [17 — Maintenance](../docs/17-maintenance.md).
+
 **Database branching** — An isolated database branch (e.g. via Neon) that starts as a copy of the production schema and data. Changes in the branch do not touch the parent. Created automatically per preview deployment and cleaned up when the Git branch is deleted. See [12 — Staging](../docs/12-staging.md).
 
 **Database constraint** — NOT NULL, UNIQUE, CHECK, and foreign keys with their delete behaviour. Declared in the schema, so the database refuses to store a row that breaks them. See [03 — Architecture](../docs/03-architecture.md).
@@ -199,6 +201,10 @@ drift apart.
 
 **Request id** — A per-request identifier — the incoming `x-request-id` if there is one, else a fresh UUID — stored in `AsyncLocalStorage` and attached to every log line by the logger's `mixin`, and to the error report with `Sentry.setTag`. Not distributed tracing: it is one field, and it costs nothing. See [15 — Observability](../docs/15-observability.md).
 
+**Restore drill** — Tests a chosen recovery point against agreed data-loss and recovery-time targets. Restrict copied-data access, disable outbound side effects, validate records and application access, and measure through reconnection. See [17 — Maintenance](../docs/17-maintenance.md).
+
+**Retention policy** — Names the data, duration, approval authority and exclusions before removal. Different records need different policies, and recovery copies must be accounted for separately. See [17 — Maintenance](../docs/17-maintenance.md).
+
 **Rollback** — Returning production to the last known-good state. On Vercel it is promoting a prior deployment, which takes seconds — but it is not automatic for database migrations, which is why migrations get careful, separate treatment. See [13 — Production Deployment](../docs/13-production-deployment.md).
 
 **Rolling deployment** — A deployment strategy where new tasks start alongside old tasks, pass health checks, and then old tasks drain. On ECS, governed by minimumHealthyPercent and maximumPercent. See [13 — Production Deployment](../docs/13-production-deployment.md).
@@ -210,6 +216,8 @@ drift apart.
 **Saturation** — The fourth golden signal: how full the resource with a hard limit is. Database connections, function concurrency, storage. Unlike CPU, a saturated resource with a hard ceiling does not recover on its own, so it is worth alerting on before it becomes a symptom. See [15 — Observability](../docs/15-observability.md).
 
 **Self-review** — Deliberately breaking the state that makes reviewing your own code useless — you are still holding the intent, so you read what you meant rather than what you wrote. Three techniques: create distance, read the diff not the code, and explain it out loud. See [07 — Code Review](../docs/07-code-review.md).
+
+**Semantic Versioning** — For releases after 1.0.0, a patch declares a compatible fix, a minor release a compatible addition and a major release an incompatible public-API change. Versions below 1.0.0 have weaker stability expectations. See [17 — Maintenance](../docs/17-maintenance.md).
 
 **Server Action** — A function whose file or body opens with the ‘use server’ directive. Next.js turns it into a public HTTP endpoint behind the scenes, wires it to a form’s action or a plain click handler, and lets the calling code write it as though it were an ordinary async function. See [05 — Development](../docs/05-development.md).
 
@@ -242,6 +250,8 @@ drift apart.
 **System design** — The activity between knowing what a product must do and writing the code that does it: choose the qualities the system has to have, model the data, pick a deployment shape, draw what depends on what, and settle the interfaces and access rules. The phrase is most often heard as the name of an interview format, which follows roughly that sequence. See [03 — Architecture](../docs/03-architecture.md).
 
 **TAM (Total Addressable Market)** — Total Addressable Market — every person or business who could conceivably buy this, if you had no competitors and perfect reach. Usually paired with SAM (the slice you could realistically serve) and SOM (the slice you could realistically win).
+
+**Technical debt** — Debt may be accepted deliberately or discovered through experience. Record the concrete recurring cost, the smallest useful change and how to verify its effect before choosing repayment work. See [17 — Maintenance](../docs/17-maintenance.md).
 
 **Teeth check** — Deliberately breaking the implementation a test covers to confirm the test actually fails, then restoring the code. See [06 — Testing](../docs/06-testing.md).
 

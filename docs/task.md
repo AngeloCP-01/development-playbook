@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-10-27): W-6.3r, Stage 10 Documentation reference companion.** The scoped source check is complete and `/reference/documentation` is implemented using the existing renderer. Local develop is **23 drawn / 28 registered** after approved no-ff merge `8eb294c`. Four sections/fifteen rows aggregate quick lookups while the stage keeps examples and practice. Focused checks pass **27/27**. Final format/lint/typecheck, **1,560 tests / 219 files**, **53-page build** and production **27/27** pass; six affected-page theme/viewport checks and the independent final review are clean. No new state or shared behavior is introduced.
+**Current work (2026-10-30): W-6.3s coordinator review complete; integration pending.** Commit **5ea8cb2** on `feat/technical-debt-reference` adds the four-section/fourteen-row **Technical Debt Review**, unchanged attributed Fowler quadrant, equivalent text, render tests and generated Markdown. Independent content/page review and coordinator review of **0532af2..e358608** found no actionable issue; fresh focused checks pass **31/31**. Feature references are **24 drawn / 29 registered**, W-3 **17/18**; local develop remains **23/28**, W-3 **16/18**. Stage 17 and this companion remain unmerged. [KICKOFF](../KICKOFF.md) holds the thread, checks and coordinator handoff.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **16/18**: stages 01-16 are interactive; 17 and 18 remain. W-6 is **23 drawn / 28 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next checkpoint: Stage 17 Maintenance.** Stage 10's chapter, interactive port and W-6 companion are complete and integrated locally. Start the next bounded round with scope/source assessment under D-99; no Stage 17 implementation is included in this merge. Push and main promotion remain separate user decisions.
+**Next task/model:** user integration decision, recommended **GPT-6 Astra / Low** in the existing coordinator. W-6 implementation session **01a1860d-161c-7b71-972a-dba429ec0499** and actual **0532af2..e358608** diff have been reviewed; see [KICKOFF.md](../KICKOFF.md). The feature contains unmerged Stage 17 and the companion. No merge, push or main promotion is authorized by this review.
 
 Two deliverables from one body of content.
 
@@ -150,6 +150,88 @@ The browser results apply to the identical application tree; those suites were
 not rerun after merge. The local feature branch and worktree were removed.
 **Latest merged stage round:** W-3.17, Stage 10 Documentation, integrated locally as `7819457` after separate approval. Stage 09's W-6.3q
 references and the subsequent layout repair are merged; their work is complete.
+
+### W-3.18 — Stage 17 Maintenance ☑ *(AI Plays correction reviewed; integration pending, 2026-10-29)*
+
+**Next-task model/session:** return to the existing coordinator, `gpt-6-astra`,
+`low`, for the integration decision; correction review is complete. Implementation recommendation:
+`gpt-6.1-sol`, `high`. For this correction the user explicitly selected continuation
+of session `01a1850c-d865-7d02-a3c0-23916ced0f66`.
+Use [KICKOFF.md](../KICKOFF.md) for starting commits and handoff requirements.
+
+Reader task: choose and safely complete the next maintenance action, with evidence,
+an owner and a follow-up date. Maintenance runs continuously; stage 17 is a filing
+code, not a prerequisite after incidents.
+
+**Original interactive scope approved 2026-10-29:** six panels: triage, updates, expiry,
+data and recovery, debt and retirement, review record. Start branch
+`feat/maintenance-page` from workflow handoff **23f481e**. Use existing `Stepper`,
+`Drill`, `RevealList`, `Figure`, `Term` and team-note patterns; keep state local to
+the existing components. The corrected chapter and its source record govern the
+teaching content. The fictional queue and record must remain labelled; no live
+maintenance operation or new reference sheet is included.
+
+Acceptance: meaningful render coverage for scoring, explanations and conditional
+output; rail/ready registration; useful first-use definitions and generated glossary;
+all chapter topics and traps represented. Run the final web gate once, the
+development-console sweep, and focused keyboard/layout/state checks in both themes
+at narrow, middle and wide widths. One independent final content/page review is required.
+Recommended implementation setting remains `gpt-6.1-sol`, `high`; the environment
+does not confirm the active model. Integration requires separate approval.
+
+- [x] Verify primary sources for dependency updates, debt/refactoring, retirement,
+  expiry, retention and recovery; distinguish provider facts from playbook advice.
+- [x] Gather useful visual references with original source and reuse terms; assess
+  later W-6 lookup value without registering a sheet yet.
+- [x] Update `17-maintenance.md`, including one clearly illustrative maintenance
+  record; avoid unverified destructive commands and universal capacity targets.
+- [x] Humanizer editing pass, one independent final content review, relevant
+  chapter/title/ledger guards and changed local links/anchors.
+- [x] Six panels, three scored exercises, review record, all seven traps, five
+  generated glossary definitions and stage/rail registration; nine meaningful render tests.
+- [x] Final application gate, both-theme keyboard/state/layout checks and development-console
+  sweep; independent final content/page review with no actionable findings.
+
+**D-35 correction:** the six-panel completion above is an earlier checkpoint,
+not evidence that the required AI Plays section existed. Coordinator handoff
+**345c972** confirmed the gap and governs this correction.
+
+- [x] Add `### AI in maintenance` and the seventh `#ai` step, with four grounded
+  assistance plays and visible evidence, privacy and authorization limits.
+- [x] Demonstrate failing chapter/rail/render checks before fixing the omission;
+  extend the chapter guard to Stage 17 and require coverage of every ready stage.
+- [x] Humanizer pass, focused **64/64**, full **1,573/1,573 across 220 files**,
+  format/lint/typecheck and **53-page build**; six affected theme/width cases.
+- [x] Final production audit **27/27** in one run, development-console **1/1**,
+  and scoped correction review PASS. Handoff ready for main coordinator review
+  of **345c972..HEAD**, the actual evidence and this implementation session.
+
+Correction checks apply to **28d4410** (app unchanged from **01b8dc2**).
+Earlier **ebcb0ba** results below remain historical; the correction's completion
+row in the tracker supersedes the earlier feature-complete claim. Main coordinator
+review completed at **98688ec** with no actionable findings and fresh **48/48**
+focused checks. The review covered the correction; separate merge approval
+remains outstanding.
+
+Chapter/source commit **8ee4efc**, based on develop `4f965e8`.
+Sources: [Stage 17 research](../reference/stage-17-source-research.md). The chapter
+uses an attributed original image with author permission. Focused guards pass
+**50/50 across three files**, local links/anchors and formatting pass, and the
+independent content review returned PASS with no actionable findings. These were
+the chapter-only checks; the later app verification follows.
+
+App commit **ebcb0ba**, acceptance **c507a7a**, from handoff **23f481e**:
+format/lint/typecheck, **1,570 tests / 220 files**, **53-page build** pass.
+Production audit: **25 passing checks retained plus two passing isolated timeout
+reruns**, unchanged app and limits. Focused browser sweep: **36 combinations**
+(six panels, both themes, 320/768/1440px), expanded/answered states, keyboard,
+definitions and console pass. Development-console **1/1** passes using a temporary
+config against the preserved 3200 server. Independent final review PASS; humanizer
+pass complete. See the tracker completion row for commands and failure context.
+Session: `01a1850c-d865-7d02-a3c0-23916ced0f66`.
+
+Deferred: coordinator integration decision, W-6 companion assessment/registration,
+shared behavior, live dependency/database operations, merge, push and deployment.
 
 ### W-3.17 — Stage 10 Documentation ☑ *(merged locally into develop as `7819457`, 2026-10-23)*
 
@@ -619,6 +701,33 @@ No image plate is needed for the four-form lookup. The gathered JPEG's reuse
 permission remains unconfirmed; all source images stay research assets. Deferred:
 new interaction patterns, copy/export controls, shared refactors, other sheets,
 W-6.4, stages 17/18, push/main promotion and deployment.
+
+**W-6.3s — Stage 17 Technical Debt Review ☑** *(coordinator reviewed; unmerged, 2026-10-30)*
+
+- [x] Compare gathered candidates with Stage 17 and the reference renderer.
+- [x] Recheck selected primary sources and image reuse permission; record one
+  bounded recommendation in the existing source record.
+- [x] User selected the recommended four-section/fourteen-row scope with "proceed".
+- [x] Implement from scope handoff **0532af2** in session
+  **01a1860d-161c-7b71-972a-dba429ec0499**; recommended **Sol High**, active setting
+  unconfirmed. Implementation **5ea8cb2**.
+- [x] Register the sheet, preserve the unchanged attributed image, provide its
+  full textual equivalent, render coverage and generated Markdown.
+- [x] Final web gate, focused image/theme/width/keyboard checks and one final
+  independent content/page review; integration needs separate approval.
+
+Approved slug `technical-debt`, Standards group, tether `17-maintenance`.
+Four sections/fourteen rows: four debt categories, four evidence prompts, three
+response choices and three retirement checks. The quadrant classifies debt; it
+is not a priority score. Keep the original credit/link and unchanged-image
+statement in the existing source area. Defer the broad Maintenance checklist,
+package-manager command card, new controls, shared renderer work and live actions.
+See the [assessment and acceptance scope](../reference/stage-17-source-research.md#w-6-assessment-technical-debt-review-2026-10-29).
+Feature W-6 is **24/29**; local develop remains **23/28**.
+Implementation, final gate (**1,576/221**, **54 routes**, **27/27**) and independent
+content/page review are complete at **5ea8cb2**. Coordinator reviewed
+**0532af2..e358608**, no actionable findings; fresh **31/31** focused checks.
+Separate integration approval remains. Coordinator recommendation **Astra Low**.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☐**
 
