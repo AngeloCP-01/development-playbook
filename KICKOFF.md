@@ -1,4 +1,4 @@
-# Kickoff: Stage 18 Improvement Review scope proposed
+# Kickoff: Stage 18 Improvement Review approved for implementation
 
 Updated 2026-11-04. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 
@@ -7,15 +7,15 @@ Updated 2026-11-04. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 - Assessment branch: `docs/2026-11-04-stage-18-reference-assessment`, from local
   develop **ff6ce06ee082fea743be122dc976e666dec45cb8**.
 - Assessment checkpoint: **a30f5e5**. Use `git log -1 --oneline` for the closing
-  records tip. The user requested the assessment here; implementation scope is
-  proposed and has not yet been selected.
-- Recommendation: one text-only **Improvement Review** sheet, slug
+  records tip. The user selected the four-section/fourteen-row scope with
+  "proceed" on 2026-11-04. Implementation is authorized in a fresh session.
+- Approved scope: one text-only **Improvement Review** sheet, slug
   `improvement-review`, Standards group, tether `18-continuous-improvement`.
   Four sections/fourteen short rows: frame the problem (3), plan the change (4),
   study the result (3), decide and follow up (4).
 - [One source record](reference/stage-18-source-research.md#w-6-assessment-improvement-review-2026-11-04)
   holds candidate comparison, source rechecks, section meanings and acceptance.
-  [W-6.3t](docs/task.md) tracks the proposed slice. The sheet would gather existing
+  [W-6.3t](docs/task.md) tracks the approved slice. The sheet would gather existing
   teaching into all-visible prompts; lookup benefit is anticipated, not measured.
 - No image plate is selected. No sheet, app code, chapter edits or generated
   outputs are included. Existing visual candidates retain their reuse limits.
@@ -35,20 +35,20 @@ Fresh closing-record checks: `pnpm test src/lib/tracker-ledger.test.ts
 --maxWorkers=1` **2/2**, `python3 /private/tmp/stage18-w6-check-links.py`
 **119 local targets / 4 Markdown files**, and `git diff --check`, all exit 0.
 Application inputs are unchanged. No app suite, build or browser audit was needed
-for this research-only task; no layout or
-usability claim is made. Prior application verification remains in the tracker's
+for this research-only task; no layout or usability claim is made. Prior application verification remains in the tracker's
 Stage 18 page/merge rows and the pre-assessment KICKOFF at **ff6ce06**.
 
 ## Next task and session
 
-**Next:** select or revise the proposed scope. Recommended coordination setting:
-**GPT-6 Astra / Low**, this session.
+**Next:** implement the approved Improvement Review sheet in a fresh session.
+**Recommended model/effort:** **GPT-6.1 Sol / High**, selected by the user under
+D-100. This recommendation does not confirm an active model setting. This
+research session stays open for coordination and review.
 
-**If selected:** implement the Improvement Review sheet in a fresh user-selected
-**GPT-6.1 Sol / High** session. This recommendation does not confirm an active
-model setting. Start from this assessment branch's committed tip, record the
-exact SHA, and create `feat/improvement-review-reference`. No separate full spec
-or plan is needed for this existing-pattern static page under D-99.
+Start from this assessment branch's committed tip, record the exact SHA, and
+create `feat/improvement-review-reference`. No separate full spec or plan is
+needed for this existing-pattern static page under D-99. The scope approval does
+not approve integration into develop.
 
 Reader task, sections, exclusions and acceptance are in the
 [assessment](reference/stage-18-source-research.md#w-6-assessment-improvement-review-2026-11-04).

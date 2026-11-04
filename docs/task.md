@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-04): Stage 18 W-6 companion assessment complete as `a30f5e5`.** Branch `docs/2026-11-04-stage-18-reference-assessment` starts from local develop **ff6ce06**. Recommend one text-only Improvement Review card with four sections/fourteen rows using the existing renderer; scope is proposed, not yet user-selected or implemented. [One research record](../reference/stage-18-source-research.md#w-6-assessment-improvement-review-2026-11-04) holds the comparison, source rechecks and acceptance. Local develop remains **18/18** interactive and **24/29** references. [KICKOFF](../KICKOFF.md) holds the next-session handoff. No merge, push or promotion occurred in this assessment.
+**Current work (2026-11-04): Stage 18 W-6 companion assessment complete as `a30f5e5`.** Branch `docs/2026-11-04-stage-18-reference-assessment` starts from local develop **ff6ce06**. Recommend one text-only Improvement Review card with four sections/fourteen rows using the existing renderer; the user selected this scope with "proceed" on 2026-11-04; implementation awaits its fresh session. [One research record](../reference/stage-18-source-research.md#w-6-assessment-improvement-review-2026-11-04) holds the comparison, source rechecks and acceptance. Local develop remains **18/18** interactive and **24/29** references. [KICKOFF](../KICKOFF.md) holds the next-session handoff. No merge, push or promotion occurred in this assessment.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **24 drawn / 29 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** Select the proposed Improvement Review scope from W-6.3t. Recommended selection/coordination setting: **GPT-6 Astra / Low**. If selected, implement the static companion in a fresh user-selected **GPT-6.1 Sol / High** session from the committed assessment branch tip; return to coordinator `01a18acc-3b54-7202-92f3-404cc94fd0ad`.
+**Next task/model:** Implement W-6.3t Improvement Review using the user-approved four-section/fourteen-row scope. Recommended model **GPT-6.1 Sol / High**, fresh user-selected implementation session under D-100. Start from the committed assessment branch tip; return results to coordinator `01a18acc-3b54-7202-92f3-404cc94fd0ad`.
 
 Two deliverables from one body of content.
 
@@ -816,13 +816,13 @@ content/page review are complete at **5ea8cb2**. Coordinator reviewed
 The user approved integration as **6b78fcf**; app checks are retained for the
 identical tree. Push and main promotion remain separate.
 
-**W-6.3t — Stage 18 Improvement Review ◐** *(assessment complete; scope proposed)*
+**W-6.3t — Stage 18 Improvement Review ◐** *(scope approved; implementation pending)*
 
 - [x] Compare the finished stage and neighbouring sheets with the candidate.
 - [x] Recheck primary sources and existing visual reuse limits; record one
   bounded recommendation in the existing Stage 18 research record.
 - [x] Prepare implementation acceptance and model/session handoff.
-- [ ] User selects or revises the proposed scope.
+- [x] User selected the recommended scope with "proceed" on 2026-11-04.
 - [ ] Implement the static sheet, stage tether, citations, generated Markdown
   and meaningful render coverage in a fresh user-selected Sol High session.
 - [ ] Complete the final web gate, focused both-theme/width/keyboard checks and
@@ -831,7 +831,7 @@ identical tree. Push and main promotion remain separate.
   obtain separate user approval before integration into develop.
 
 Assessment **a30f5e5**, branch `docs/2026-11-04-stage-18-reference-assessment`, from
-local develop **ff6ce06ee082fea743be122dc976e666dec45cb8**. Proposed slug
+local develop **ff6ce06ee082fea743be122dc976e666dec45cb8**. Approved slug
 `improvement-review`, title **Improvement Review**, Standards group, tether
 `18-continuous-improvement`. Four sections/fourteen rows: frame the problem (3),
 plan the change (4), study the result (3), decide and follow up (4). Before/after
@@ -847,7 +847,7 @@ overlap must stay consistent. No image plate, new controls, full DORA/SPACE card
 AI panel, chapter rewrite or shared renderer changes are proposed.
 
 Recommended implementation: **GPT-6.1 Sol / High**, fresh user-selected session
-after scope selection, from this assessment branch's committed tip; create
+after the recorded scope approval, from this assessment branch's committed tip; create
 `feat/improvement-review-reference` and record the exact starting SHA. Return to
 coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**. Current references remain
 **24/29**; one completed new sheet would yield **25/30**, a forecast only.

@@ -307,6 +307,12 @@ instrumentation quality and improvement outcomes remain unknown.
 The user authorized the assessment here. The recommendation below is a proposed
 scope; it does not claim user approval of implementation or integration.
 
+**Later scope selection (2026-11-04):** the user approved the recommended
+four-section/fourteen-row scope with "proceed" after the assessment was delivered.
+Implementation is authorized in a fresh user-selected **GPT-6.1 Sol / High**
+session under D-100. Use the committed KICKOFF for the starting tree and return
+instructions. This selection does not approve integration into develop.
+
 ### Reader task and retrieval gap
 
 Before trying a product or process change, retrieve the evidence, prediction,
