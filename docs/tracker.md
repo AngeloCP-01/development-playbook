@@ -4,7 +4,7 @@
 debt was taken on. Scope and planning live in [task.md](task.md).
 
 **Last updated:** 2026-11-04
-**Current phase:** W-6.4 scope approved with "proceed" after handoff **a0f40f5**: native glossary/stack pages, canonical structured stack source with generated Markdown, and TD-47's Node 22 runtime prerequisite. Assessment **8f722f7** and the approved compact plan are on `docs/2026-11-04-reference-hub-assessment`, from develop **097fdd0**. Next is a fresh user-selected **GPT-6.1 Sol / High** implementation session. Current sheets **25/30**, stages **18/18**. Runtime repair, app changes, verification and review remain pending; integration, push and promotion require their separate decisions.
+**Current phase:** W-6.4 implemented on `feat/reference-glossary-stack` at application tip **9231dc9**, from approved handoff **131c303**. Native glossary/stack pages, a canonical stack source/generated Markdown, shared discovery/SEO/audit and TD-47 are complete. Final build **57 routes**, production audit **29/29**, retained full unit/DOM **1,609/228**, dev-console **1/1** and independent final review pass with the scoped limits in KICKOFF. Counts remain **25/30** sheets and **18/18** stages. Coordinator acceptance and separate integration approval remain; no merge/push/promotion.
 
 Correction closing records after **28d4410**: `pnpm test src/lib/tracker-ledger.test.ts --maxWorkers=1`
 **2/2**, `python3 /private/tmp/stage17-check-doc-links.py` **248 local targets / 8 files**,
@@ -101,6 +101,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-11-04 | W-6.4 (implemented; integration pending) | **9231dc9**, `feat/reference-glossary-stack`, from approved **131c303**: native glossary/stack pages; canonical stack source and generated Markdown; hub/Sidebar/sitemap/audit inclusion; aligned Stage 04 support/version guidance; TD-47 closed on the feature branch. Preserve four stack groups/22 choices/five deviation cases, **25/30** sheets and **18/18** stages. | Node **22.23.4**. On **1ee672e**: `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test --maxWorkers=1` **1,609/228**, exit 0. Retain for **9231dc9**'s single minimum-width class, with fresh affected-file format/lint, glossary render **3/3**, `pnpm build` **57 routes**, `pnpm test:e2e --workers=2` **29/29**, exit 0. `pnpm test:dev-console` **1/1** on an isolated **1ee672e** copy (only glossary minimum width differs; temporary Turbopack root resolves linked dependencies), exit 0. Focused **30** theme/width/path states, both-theme keyboard/fragment/Back/reload/drawer and collapsed-index access pass; production console clean, short term targets now **44×44px**. Independent **Astra Low** final content/page/branch review of **9231dc9** and six rendered captures has no blocker. Lost original Stage 06 link and nonexistent source-record wording fixed; link regression RED **3/11** → GREEN **11/11**. A new test-only TS2532 and ambiguous hub query were diagnosed/corrected. Humanizer pass complete. Closing records checks are in KICKOFF. | Coordinator must read implementation thread **01a1a51d-8cb1-7983-8e51-1c3e48ecf142** and actual **131c303...9231dc9** diff. User explicitly waived D-100's fresh-session rule for this implementation; active model unconfirmed, standing policy unchanged. Separate integration approval, push and main promotion. Future unusual source-URL delimiter hardening remains a minor; canonical URLs are unaffected. No CI/deployed runtime verification, dependency upgrade, search, term-popover work, language sheets or live infrastructure. |
 | 2026-11-04 | W-6.4 (scope selected) | User approved both native pages, canonical `stack.ts` with generated stack Markdown and TD-47's Node 22 prerequisite with "proceed". The existing five-step compact plan is approved; KICKOFF carries the fresh **GPT-6.1 Sol / High** implementation handoff. | Selection follows assessment **8f722f7** and handoff **a0f40f5**. Fresh records checks are in KICKOFF. Only the four handoff/source records changed; application inputs remain identical to **a0f40f5**. Self-review and humanizer pass applied. | Fresh user-selected implementation session, runtime repair, generator/pages/discovery and full verification/review; separate integration approval, push and promotion. Counts remain **25/30** sheets and **18/18** stages. Search, term popovers, language sheets, dependency upgrades and infrastructure remain excluded. |
 | 2026-11-04 | W-6.4 (assessment checkpoint) | **8f722f7**, branch `docs/2026-11-04-reference-hub-assessment`, from develop **097fdd0**: confirm native glossary/stack gap, compare source strategies, propose two static pages with structured stack source/generated Markdown and a five-step consequential-change plan. [One source/design record](../reference/w6-4-source-research.md) holds primary findings and limits. Record TD-47's local support mismatch. | Read-only checks: local Node **22.19.0**, installed jsdom **30.0.1** engines `^22.22.2 or ^24.15.0 or >=26.0.0`, project `.nvmrc` **22** / package **22.x**; CI consumes that nvmrc. Local Next **16.2.10**, TS **5.9.3**, Vitest **4.1.10** observed. No runtime test or CI execution claimed. Installed Next page/sitemap guides read; primary-source rechecks and humanizer/self-review completed. Source local links **4/4**, whitespace exit 0. Closing-record ledger/link results in KICKOFF. No app suite/build needed for assessment-only changes. | User scope/source-authority selection; runtime repair, structured stack/generator, routes/shared navigation/SEO/audit and their tests/reviews; separate integration, push and main promotion. Counts unchanged **25/30**, **18/18**. Five languages, search, term popovers, dependency upgrades and live infrastructure excluded. |
 | 2026-11-04 | W-6.3t (merged locally) | User-approved no-ff merge **2cc7d5d**, parents **ff6ce06 / 0e801ca**, integrates Improvement Review, its assessment history, citations, generated Markdown and render/registry coverage. Local develop references **25 drawn / 30 registered**, all **18/18** stages interactive. | `git diff --exit-code 0e801ca 2cc7d5d` and app/generated Markdown diff from **04e3623** are empty. Retain identified format/lint/typecheck, **1,590 tests / 223 files**, **55-route build**, production audit **25/27 + targeted 2/2**, focused browser checks, independent review and coordinator acceptance with recorded limits. No full gate rerun for the identical merged tree. Fresh closing-record checks are in KICKOFF. | W-6.4 assessment and five language placeholders; broader stage/framework cards, image publication, new controls/shared work, real telemetry/research, push and main promotion. No deployment occurred. |
@@ -306,32 +307,6 @@ others.
 already exists and provenance is already required at capture time, so "unregistered file
 in reference/" is precisely the condition that should block. The history rewrite that
 undid this instance is D-97.
-
-### TD-47 — Node 22 policy admits patches below jsdom's engine floor · **Medium**
-
-Found during W-6.4 assessment on 2026-11-04. `node --version` in this shell is
-**v22.19.0**. Installed `web/node_modules/jsdom/package.json` is **30.0.1** and
-requires **`^22.22.2 || ^24.15.0 || >=26.0.0`**. `web/.nvmrc` contains `22`,
-`web/package.json` permits `22.x`, and CI reads that nvmrc. The project contract
-therefore admits a Node 22 patch outside the installed DOM dependency's support
-range. The current local shell demonstrates that mismatch.
-
-This is a declared-support gap, not a reproduced application failure or proof
-that CI uses an unsupported runtime. Existing passing checks remain historical
-results; they do not widen jsdom's engine range. No runtime/package upgrade or
-configuration change was made during assessment.
-
-**Where it lives:** `web/.nvmrc`, `web/package.json`, CI runtime selection and the
-major-only expectations in `web/src/app/deploy-config.test.ts`. The primary
-release and local inspection evidence are in the
-[W-6.4 source record](../reference/w6-4-source-research.md#local-runtime-observation-td-47).
-
-**What closes it:** choose and use a supported Node 22 patch, make its support
-floor explicit across local/CI/package metadata, and add a meaningful regression
-check for the supported/aligned contract. Run relevant final checks on the actual
-supported runtime and record it. Keep the chosen major unless separately changed;
-this does not authorize a dependency upgrade. The user approved the repair as
-W-6.4's first implementation step on 2026-11-04; it remains open until verified.
 
 ### TD-9 — Figure numbers are manual · **Low**
 
@@ -958,7 +933,7 @@ of new work, not assumed to survive from the last `git checkout`.
 
 ## Next up
 
-**Recommended next task/model:** Implement approved W-6.4, including the stack source migration and TD-47 runtime prerequisite, in a fresh user-selected **GPT-6.1 Sol / High** session. Use the existing five-step compact plan and committed handoff tip; return results to coordinator `01a18acc-3b54-7202-92f3-404cc94fd0ad`. Scope selection is complete. See [KICKOFF](../KICKOFF.md) and [W-6.4](task.md).
+**Recommended next task/model:** Coordinator review and integration decision for W-6.4; recommended **GPT-6 Astra / Low**. Read implementation thread **01a1a51d-8cb1-7983-8e51-1c3e48ecf142** and actual **131c303...9231dc9** diff in coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**. Scope, implementation and independent final review are complete; integration still needs separate user approval. See [KICKOFF](../KICKOFF.md) and [W-6.4](task.md).
 
 **2026-10-30 integration complete:** user-approved merge **6b78fcf** includes Stage 17, Technical Debt Review, source/assessment records and D-100. Its tree equals reviewed feature **f86541c**, application identical to tested **5ea8cb2**. Develop W-3 **17/18**, references **24/29**. Five merged local work branches were deleted; no push or main promotion. The full final gate is retained for unchanged inputs; review scope is recorded in completion rows. New Stage 18 work has not started. Languages and W-6.4 remain separate.
 
