@@ -16,6 +16,7 @@ import { PostDeploymentVerification } from './post-deployment-verification/PostD
 import { Observability } from './observability/Observability'
 import { IncidentManagement } from './incident-management/IncidentManagement'
 import { Maintenance } from './maintenance/Maintenance'
+import { ContinuousImprovement } from './continuous-improvement/ContinuousImprovement'
 
 /**
  * Stage slug → interactive page body. A stage missing from this map renders the
@@ -39,4 +40,5 @@ export const STAGE_CONTENT: Record<string, ComponentType> = {
   '15-observability': Observability,
   '16-incident-management': IncidentManagement,
   '17-maintenance': Maintenance,
+  '18-continuous-improvement': ContinuousImprovement,
 }

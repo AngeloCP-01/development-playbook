@@ -74,20 +74,17 @@ test('appends the reference index and every registered sheet, so a sheet added l
 test('refuses to sweep a stage that is ready but renders no steps, since silence there is the failure TD-12 describes', async ({
   page,
 }) => {
-  // Any stage that is `ready: false` and absent from `STAGE_CONTENT` renders
-  // the "sheet not drawn" placeholder with no rail, which is the shape of the
-  // bug: a stage flipped live before its content exists. `readStepIds` is
-  // exported separately from `auditPages` so this can exercise the guard
-  // against one stage without flipping a real `ready` flag.
-  //
-  // This used to name `04-project-setup`, then `05-development`, then
-  // `06-testing`, then `07-code-review`, then `08-security-audit`, then
-  // `09-performance-optimization`. Porting each stage gave it a full rail,
-  // turning a stage that must render nothing into one that renders steps, so
-  // the test went red having found no defect and moved rather than being
-  // deleted. It names `18-continuous-improvement`, the last unbuilt stage;
-  // when 18 is ported, use a controlled empty-rail fixture for this guard.
-  await expect(readStepIds(page, '18-continuous-improvement')).rejects.toThrow(
+  // All eighteen stages now have rails. Keep the missing-content condition
+  // controlled so completing another page cannot silently remove the guard.
+  // The real readStepIds still navigates and inspects the DOM; only this
+  // fixture's HTML is supplied by the test.
+  await page.route('**/stages/empty-rail-fixture', (route) =>
+    route.fulfill({
+      contentType: 'text/html',
+      body: '<!doctype html><html><head><title>Empty stage fixture</title></head><body><main><h1>Sheet not drawn</h1></main></body></html>',
+    }),
+  )
+  await expect(readStepIds(page, 'empty-rail-fixture')).rejects.toThrow(
     /renders no steps/,
   )
 })

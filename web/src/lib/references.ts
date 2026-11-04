@@ -15,6 +15,38 @@ export type Reference = {
 }
 
 export const REFERENCES: Record<string, Reference[]> = {
+  '18-continuous-improvement': [
+    {
+      title: 'PDSA Cycle',
+      source: 'The W. Edwards Deming Institute',
+      url: 'https://deming.org/explore/pdsa/',
+      adds: 'The distinction between studying a prediction and checking task completion, with the learning cycle behind this stage’s adapted record.',
+    },
+    {
+      title: 'Measuring the User Experience on a Large Scale',
+      source: 'Rodden, Hutchinson and Fu · Google · CHI 2010',
+      url: 'https://research.google/pubs/measuring-the-user-experience-on-a-large-scale-user-centered-metrics-for-web-applications/',
+      adds: 'The HEART framework and Goals-Signals-Metrics approach for choosing user-centered measures beyond activity counts.',
+    },
+    {
+      title: 'DORA’s software delivery performance metrics',
+      source: 'DORA · Google',
+      url: 'https://dora.dev/guides/dora-metrics/',
+      adds: 'Definitions and interpretation of the five delivery measures, including recovery scope and deployment rework.',
+    },
+    {
+      title: 'Patterns of Trustworthy Experimentation: During-Experiment Stage',
+      source: 'Microsoft Experimentation Platform · 2021',
+      url: 'https://www.microsoft.com/en-us/research/articles/patterns-of-trustworthy-experimentation-during-experiment-stage/',
+      adds: 'Data-quality checks, guardrails and early-peeking risks when a randomized comparison is appropriate.',
+    },
+    {
+      title: 'The SPACE of Developer Productivity',
+      source: 'Forsgren and colleagues · Microsoft Research · 2021',
+      url: 'https://www.microsoft.com/en-us/research/publication/the-space-of-developer-productivity-theres-more-to-it-than-you-think/',
+      adds: 'Several perspectives on developer productivity and why individual activity counts cannot stand in for useful outcomes.',
+    },
+  ],
   '10-documentation': [
     {
       title: 'Diátaxis',

@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-10-30): Stage 17 and W-6.3s integrated locally.** User-approved no-ff merge **6b78fcf** brings the Maintenance chapter, seven-panel page, AI Plays correction, Technical Debt Review companion and D-100 workflow into develop. Merge parents **4f965e8 / f86541c**; merge tree equals the reviewed feature tip, with application inputs identical to tested **5ea8cb2**. Local develop is **17/18** interactive and **24 drawn / 29 registered** references. No push or main promotion. [KICKOFF](../KICKOFF.md) holds the next handoff.
+**Current work (2026-11-04): Stage 18 interactive page implemented on `feat/continuous-improvement`.** Application commit **679470f**, based on research handoff **141c1e2**, adds six content judgments and AI Plays. The chapter/source checkpoint **30006f6** remains included. Unit, focused browser and independent content/page review checks pass; production audit coverage is complete after the empty-rail fixture repair. Local develop remains **17/18** interactive and **24/29** references; the feature branch has **18/18**. [KICKOFF](../KICKOFF.md) holds the return handoff. No integration or deployment occurred.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **17/18**: stages 01–17 are interactive; Stage 18 remains. W-6 is **24 drawn / 29 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** Stage 18 Continuous Improvement research and chapter assessment, **GPT-6 Astra / Low**, in a new research session. Gather primary sources and useful image references for the chapter and later W-6; audit AI Plays coverage from the start. Later interactive implementation uses a new **GPT-6.1 Sol / High** session. This merge does not start Stage 18, authorize a push or promote main.
+**Next task/model:** user decision on no-ff integration of `feat/continuous-improvement` into local `develop`; recommended coordinator setting **GPT-6 Astra / Low**. Coordinator review of **141c1e2...90ba12d** found no blocking standards or scope issues and accepted the identified verification evidence. Integration still requires separate user approval.
 
 Two deliverables from one body of content.
 
@@ -152,22 +152,83 @@ not rerun after merge. The local feature branch and worktree were removed.
 Debt Review, integrated locally as **6b78fcf** after separate user approval.
 Retained final app checks apply to identical tested **5ea8cb2** inputs.
 
-### W-3.19 — Stage 18 Continuous Improvement ☐ *(next research/chapter round)*
+### W-3.19 — Stage 18 Continuous Improvement ◐ *(page complete; integration pending)*
 
-**Recommended model:** `gpt-6-astra`, **effort:** `low`, new research session.
+**Research checkpoint:** **30006f6**, branch `docs/2026-10-30-stage-18-research`,
+starting develop **621cbdcff63dd23f5bcff5b650c1eb4484511492**.
 Reader task: distinguish product outcomes from delivery/process signals and
 choose the next improvement from evidence. Stage numbers remain filing codes.
 
-- [ ] Assess the existing chapter against primary sources; label illustrative
+- [x] Assess the existing chapter against primary sources; label illustrative
   examples and unknown project facts.
-- [ ] Gather useful visual references with source/permission records and assess
-  possible later W-6 value in one research record.
-- [ ] Include the required `AI in continuous improvement` chapter coverage and
-  later dedicated AI Plays step in the page acceptance scope (D-35).
-- [ ] Apply D-99 prose/content checks and refresh the model-aware handoff.
+- [x] Gather useful visual references with source/permission records and assess
+  possible later W-6 value in one research record (three link-only candidates).
+- [x] Include `AI in continuous improvement` and require the later AI Plays step.
+- [x] Apply D-99 prose/content checks and refresh the model-aware handoff.
 
-This handoff does not begin the research or implementation. Later page work uses
-**Sol High**, a new implementation session and existing patterns where suitable.
+Sources and original-claim assessment live in
+[one research record](../reference/stage-18-source-research.md). The
+[revised chapter](18-continuous-improvement.md) separates observations from
+interpretations, adds a PDSA-based record and inconclusive worked result, and
+replaces universal fix/delete/automation rules with contextual decisions.
+Independent final content review found no actionable issues. Fresh checkpoint
+checks: metadata/citations/ledger **41/41**, changed local links **11/11** and
+whitespace, all exit 0. No app behavior changed; no app gate or browser claim.
+
+**Implementation:** **679470f** on `feat/continuous-improvement`, from research
+handoff **141c1e293d045f77798d55286f510694d067a94e**. The chapter stayed stable;
+chapter and page remain together for integration under D-51. **dc62d9f** replaces
+the audit's obsolete Stage 18 placeholder assumption with a controlled empty-rail
+fixture, retaining the real navigation/DOM check and rejection assertion.
+Recommended implementation setting was `gpt-6.1-sol`, effort `high`; this does not
+assert an environment-confirmed active model.
+Return to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad** with the branch,
+commits, checks and implementation session **01a18acc-4d44-72f0-9e32-92b73a0b7a9f**.
+
+**Page scope and acceptance checklist:**
+
+- [x] Read `web/PATTERNS.md` and `web/DESIGN.md`; use existing interactions.
+  Start with six content judgments: distinguish measures; investigate a signal;
+  choose the next action; plan/study a change; improve delivery conditions;
+  update guidance or pause feature work. Split only where panel weight needs it.
+- [x] Teach through classification/reveal, observation inspectors, bounded
+  decision exercises and an annotated improvement record. Carry the fictional
+  invoice example through its inconclusive result. Keep denominators, minority
+  needs, alternate explanations and harm checks visible.
+- [x] Add a dedicated AI Plays step with the four chapter plays, supplied inputs,
+  source/count checks and limits. No synthetic feedback presented as user evidence.
+- [x] Port artifacts, done checks, team notes, traps and source links. Preserve
+  recurring cadence and product-versus-delivery distinctions. Follow existing
+  front-matter conventions; this adds the established chapter/page duplication.
+- [x] Build under `web/src/features/continuous-improvement/`, register in
+  `web/src/features/stage-content.ts`, then set ready in `web/src/lib/stages.ts`.
+  Extend the chapter AI guard in `web/src/lib/stage-metadata.test.ts` to Stage 18;
+  the chapter heading already exists and is now covered by that explicit list.
+- [x] Add meaningful render coverage for data-derived output and exercises;
+  reuse existing hash, disclosure and keyboard behavior. New shared behavior
+  requires D-99's stronger path and behavior TDD; static content does not.
+- [x] Run the completed web gate once: format, lint, generated-route typecheck,
+  unit/DOM tests, production build and audit. Run dev-console once. Check affected
+  panels/material states in both themes at narrow/middle/wide widths, keyboard,
+  hash/Back/reload, contrast, touch targets, overflow and console.
+- [x] Obtain one independent final content/page review of the actual final diff.
+  Report reviewed commit and evidence; keep later changes visible.
+
+**Final verification:** application **679470f** passed format/lint/typecheck,
+**1,586 tests / 222 files**, a **54-route** production build and focused both-theme
+browser checks. The full audit run passed **26/27**; its sole failure was the
+obsolete assumption that Stage 18 had no rail. After **dc62d9f**, the corrected
+audit-page suite passed **3/3** against the same build; the other 26 results are
+retained for unchanged inputs. Development-console **1/1** used an identical
+source copy with an isolated dev lock. Independent Astra Low content and live-page
+review found no actionable issues. [Tracker](tracker.md) records commands and
+limits; [KICKOFF](../KICKOFF.md) carries the coordinator return handoff.
+
+Deferred: W-6 companion selection/implementation and image publication, shared
+refactors, real analytics/research collection, integration, push and promotion.
+No external artwork is cleared for publication. W-3 remains **17/18** until the
+page lands; W-6 remains **24/29**. Ask separately before merging into develop;
+main promotion belongs to the user.
 
 ### W-3.18 — Stage 17 Maintenance ☑ *(merged locally into develop as `6b78fcf`, 2026-10-30)*
 
