@@ -67,6 +67,8 @@ drift apart.
 
 **Definition of done** — A specific, checkable statement of what "done" means for a piece of work — a state you can hold the running product up against and confirm, yes or no. Every stage doc has one.
 
+**Denominator** — For 18 saved drafts out of 30 eligible attempts, 18 is the numerator and 30 is the denominator. State who qualifies, the date window and how retries are counted so the rate can be interpreted. See [18 — Continuous Improvement](../docs/18-continuous-improvement.md).
+
 **Deployment alarm** — A CloudWatch alarm attached to an ECS deployment configuration. ECS polls these alarms during the bake period after new tasks go healthy. Key metrics: HTTPCode_ELB_5XX_Count, TargetResponseTime, CPUUtilization, MemoryUtilization. See [14 — Post-Deployment Verification](../docs/14-post-deployment-verification.md).
 
 **Deployment circuit breaker** — An ECS feature that monitors new tasks during a rolling deployment. If they repeatedly fail to reach a healthy state, ECS stops the deployment and rolls back to the last successful revision. Without it, a bad image loops through start-crash-restart indefinitely. See [13 — Production Deployment](../docs/13-production-deployment.md).
@@ -170,6 +172,8 @@ drift apart.
 **Pessimistic locking** — `SELECT … FOR UPDATE` inside a transaction takes a row lock, and any other transaction wanting that row blocks until yours commits or rolls back. See [03 — Architecture](../docs/03-architecture.md).
 
 **Phantom dependency** — A package your code imports but never listed in package.json. It resolves only because some other dependency happened to pull it into a flat node_modules, and it breaks mysteriously when that package updates or drops it. See [04 — Project Setup](../docs/04-project-setup.md).
+
+**Plan-Do-Study-Act (PDSA)** — Plan a change with a prediction, try it, study the evidence against that prediction, then act on what you learned. The Deming Institute describes Study as learning about the underlying theory, rather than merely checking whether a task was completed. See [18 — Continuous Improvement](../docs/18-continuous-improvement.md).
 
 **pnpm** — Same registry and same package.json as npm, but packages live in one content-addressable store on your machine and get hard-linked into each project. Its node_modules layout is strict: only dependencies you actually declared are importable. See [04 — Project Setup](../docs/04-project-setup.md).
 

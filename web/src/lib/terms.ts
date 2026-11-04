@@ -936,6 +936,23 @@ export const TERMS: Record<string, Term> = {
       'A deploy without a baseline is a deploy you cannot verify. You will either panic at nothing or ignore something real.',
     see: '14-post-deployment-verification',
   },
+  denominator: {
+    name: 'Denominator',
+    short: 'The eligible opportunities counted underneath a rate.',
+    full: 'For 18 saved drafts out of 30 eligible attempts, 18 is the numerator and 30 is the denominator. State who qualifies, the date window and how retries are counted so the rate can be interpreted.',
+    soWhat:
+      'A changing population or missing attempts can make a rate look better without improving the task.',
+    see: '18-continuous-improvement',
+  },
+  pdsa: {
+    name: 'Plan-Do-Study-Act (PDSA)',
+    short:
+      'A learning cycle: predict, try a change, study the result and adjust.',
+    full: 'Plan a change with a prediction, try it, study the evidence against that prediction, then act on what you learned. The Deming Institute describes Study as learning about the underlying theory, rather than merely checking whether a task was completed.',
+    soWhat:
+      'A completed action still needs a result review; an inconclusive result can guide the next investigation.',
+    see: '18-continuous-improvement',
+  },
   'bake-time': {
     name: 'Bake time',
     short:

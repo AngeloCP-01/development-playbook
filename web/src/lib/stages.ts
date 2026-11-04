@@ -201,7 +201,7 @@ export const STAGES: Stage[] = [
     blurb: 'Decide what to build next using evidence rather than enthusiasm.',
     group: 'Running',
     timing: 'Continuously, with a deliberate look every few weeks.',
-    ready: false,
+    ready: true,
   },
 ]
 

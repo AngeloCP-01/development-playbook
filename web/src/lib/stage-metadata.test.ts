@@ -65,6 +65,7 @@ const AI_SECTION_STAGES = [
   '15-observability',
   '16-incident-management',
   '17-maintenance',
+  '18-continuous-improvement',
 ]
 
 test('every ready stage is covered by the chapter AI-section guard', () => {
