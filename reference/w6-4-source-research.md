@@ -322,3 +322,16 @@ Start from the committed handoff tip of `docs/2026-11-04-reference-hub-assessmen
 record its exact SHA and create `feat/reference-glossary-stack`. KICKOFF carries
 the return instructions. Runtime repair, implementation and verification remain
 pending; integration needs separate approval.
+
+## Execution notes: 2026-11-04
+
+The user selected "Implement here; override D-100 for this task". Implementation
+continues inline from **131c303** on `feat/reference-glossary-stack`; the active
+model/effort is unconfirmed. This exception does not change the standing policy.
+
+**Runtime source:** Vercel, [supported Node.js versions](https://vercel.com/docs/functions/runtimes/node-js/node-js-versions),
+accessed 2026-11-04. Vercel documents valid semver ranges and selects a supported
+major; minor/patch releases are managed by the host and can differ between build
+and function runtime. Use `^22.22.2` for the dependency-compatible Node 22 contract
+and `.nvmrc` **22.23.4** for the installed local/CI selection. This does not establish
+the hosted patch version or prove a CI/deployment execution.
