@@ -436,3 +436,16 @@ and the meaningful render-test rule still apply. Integration requires the user's
 separate approval and uses a no-ff merge into develop; main promotion stays with
 the user. This assessment runs only content/link and ledger checks, not an app
 build or browser audit, and cannot establish the future page's layout or usability.
+
+### W-6.3t implementation source check (2026-11-04)
+
+Reopened the four selected text sources during implementation: the Deming
+Institute's PDSA page, Google HEART paper record, Microsoft During-Experiment
+Stage article and GOV.UK analysis guidance. Titles and attribution match the
+records above; the independent reviewer also reopened all four. Their support
+remains prediction/study/adjustment, goal-led measurement, data-quality and harm
+checks, and the observation/interpretation distinction, respectively. The field
+grouping and response choices are playbook adaptations. No image was used or
+new claim about project telemetry or improvement outcomes introduced. The sheet
+intentionally repeats concise chapter teaching; its data module generates the
+Markdown lookup and should be checked against the chapter when either changes.

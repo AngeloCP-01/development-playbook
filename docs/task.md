@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-04): Stage 18 W-6 companion assessment complete as `a30f5e5`.** Branch `docs/2026-11-04-stage-18-reference-assessment` starts from local develop **ff6ce06**. Recommend one text-only Improvement Review card with four sections/fourteen rows using the existing renderer; the user selected this scope with "proceed" on 2026-11-04; implementation awaits its fresh session. [One research record](../reference/stage-18-source-research.md#w-6-assessment-improvement-review-2026-11-04) holds the comparison, source rechecks and acceptance. Local develop remains **18/18** interactive and **24/29** references. [KICKOFF](../KICKOFF.md) holds the next-session handoff. No merge, push or promotion occurred in this assessment.
+**Current work (2026-11-04): W-6.3t Improvement Review verified; coordinator review pending.** Branch `feat/improvement-review-reference` starts from **41c0f2f73fbe0de44b256b4155743e50ada3f178**. Sheet **8b83bfd** adds four sections/fourteen rows, four text citations, the Stage 18 tether, generated Markdown and three actual-sheet render tests; guard correction **04e3623** updates global reference totals. Feature references are **25/30**; local develop stays **24/29**, with **18/18** stages interactive. [One source record](../reference/stage-18-source-research.md#w-6-assessment-improvement-review-2026-11-04) holds the approved boundary and source checks. [KICKOFF](../KICKOFF.md) carries the coordinator handoff. No merge, push or promotion.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **24 drawn / 29 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** Implement W-6.3t Improvement Review using the user-approved four-section/fourteen-row scope. Recommended model **GPT-6.1 Sol / High**, fresh user-selected implementation session under D-100. Start from the committed assessment branch tip; return results to coordinator `01a18acc-3b54-7202-92f3-404cc94fd0ad`.
+**Next task/model:** Coordinator review of the W-6.3t branch and evidence, recommended **GPT-6 Astra / Low**, in existing session `01a18acc-3b54-7202-92f3-404cc94fd0ad`. Implementation session: `01a1a431-2038-7931-b6c7-f7d7e1fa352c`. Separate user approval is required before integration into develop.
 
 Two deliverables from one body of content.
 
@@ -816,19 +816,21 @@ content/page review are complete at **5ea8cb2**. Coordinator reviewed
 The user approved integration as **6b78fcf**; app checks are retained for the
 identical tree. Push and main promotion remain separate.
 
-**W-6.3t — Stage 18 Improvement Review ◐** *(scope approved; implementation pending)*
+**W-6.3t — Stage 18 Improvement Review ◐** *(implemented and verified; coordinator review/integration pending)*
 
 - [x] Compare the finished stage and neighbouring sheets with the candidate.
 - [x] Recheck primary sources and existing visual reuse limits; record one
   bounded recommendation in the existing Stage 18 research record.
 - [x] Prepare implementation acceptance and model/session handoff.
 - [x] User selected the recommended scope with "proceed" on 2026-11-04.
-- [ ] Implement the static sheet, stage tether, citations, generated Markdown
-  and meaningful render coverage in a fresh user-selected Sol High session.
-- [ ] Complete the final web gate, focused both-theme/width/keyboard checks and
+- [x] Implement the static sheet, stage tether, citations, generated Markdown
+  and meaningful render coverage in the fresh implementation session
+  (recommended Sol High; active setting not independently confirmed).
+- [x] Complete the final web gate, focused both-theme/width/keyboard checks and
   one independent final content/page review.
-- [ ] Return branch/commit, checks and session reference for coordinator review;
-  obtain separate user approval before integration into develop.
+- [x] Record branch/commit, actual checks and session reference in KICKOFF for
+  coordinator review; direct posting to another Codex session is unavailable.
+- [ ] Obtain separate user approval before integration into develop.
 
 Assessment **a30f5e5**, branch `docs/2026-11-04-stage-18-reference-assessment`, from
 local develop **ff6ce06ee082fea743be122dc976e666dec45cb8**. Approved slug
@@ -849,8 +851,9 @@ AI panel, chapter rewrite or shared renderer changes are proposed.
 Recommended implementation: **GPT-6.1 Sol / High**, fresh user-selected session
 after the recorded scope approval, from this assessment branch's committed tip; create
 `feat/improvement-review-reference` and record the exact starting SHA. Return to
-coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**. Current references remain
-**24/29**; one completed new sheet would yield **25/30**, a forecast only.
+coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**. Implementation **8b83bfd**
+and guard correction **04e3623** yield **25/30** on the feature branch; local
+develop remains **24/29**. Implementation session: **01a1a431-2038-7931-b6c7-f7d7e1fa352c**.
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
 
