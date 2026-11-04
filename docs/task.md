@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-04): W-6.4 assessment complete as `8f722f7`; scope proposed.** Branch `docs/2026-11-04-reference-hub-assessment` starts from develop **097fdd0**. The glossary/stack app gap remains. Recommend two native static lookup pages and a single structured stack source with generated Markdown, using the existing glossary source unchanged. Source checks found a local Node/jsdom support mismatch, recorded as **TD-47**, to repair before implementation checks. [One research/design record](../reference/w6-4-source-research.md) holds findings, alternatives and compact plan. Local develop remains **25/30** sheets and **18/18** stages. No application/runtime/configuration change, merge, push or promotion.
+**Current work (2026-11-04): W-6.4 scope approved; implementation handoff ready.** The user selected the native glossary/stack pages, structured stack source with generated Markdown and TD-47 runtime prerequisite with "proceed", following handoff **a0f40f5**. Branch `docs/2026-11-04-reference-hub-assessment` starts from develop **097fdd0**; assessment **8f722f7** and [one research/design record](../reference/w6-4-source-research.md) hold findings, alternatives and the approved compact plan. Next is a fresh user-selected **GPT-6.1 Sol / High** implementation session. Local develop remains **25/30** sheets and **18/18** stages. Application/runtime/configuration changes, merge, push and promotion remain pending.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **25 drawn / 30 registered**, through **2cc7d5d**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** Select W-6.4's proposed native glossary/stack pages, stack source migration and TD-47 runtime prerequisite; recommended coordination **GPT-6 Astra / Low**. If selected, execute the recorded compact plan in a fresh user-selected **GPT-6.1 Sol / High** session and return results to coordinator `01a18acc-3b54-7202-92f3-404cc94fd0ad`.
+**Next task/model:** Implement approved W-6.4, including the stack source migration and TD-47 runtime prerequisite, in a fresh user-selected **GPT-6.1 Sol / High** session. Start from this assessment branch's committed handoff tip, create `feat/reference-glossary-stack` and return results to coordinator `01a18acc-3b54-7202-92f3-404cc94fd0ad`. Scope approval is recorded; no repeat selection is needed.
 
 Two deliverables from one body of content.
 
@@ -861,7 +861,7 @@ now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
 
-**W-6.4 — Glossary and stack surfaced in the hub ◐** *(assessment complete; design/scope proposed)*
+**W-6.4 — Glossary and stack surfaced in the hub ◐** *(scope approved; implementation pending)*
 
 The original app-reader gap remains: the hub, Sidebar, sitemap and audit list only
 sheets; inline terms do not offer a full glossary lookup. Assessment **8f722f7**
@@ -872,7 +872,8 @@ on `docs/2026-11-04-reference-hub-assessment` starts from develop
 - [x] Recheck high-impact stack claims against primary sources and compare
   source strategies; record the local runtime support mismatch as TD-47.
 - [x] Record a proposed compact design/plan, acceptance and model/session handoff.
-- [ ] User selects or revises the native-page/source-migration scope.
+- [x] User selected the native pages, stack source migration and TD-47 runtime
+  prerequisite with "proceed" on 2026-11-04, following handoff **a0f40f5**.
 - [ ] Use a supported runtime and repair the explicit Node 22 patch contract
   (TD-47), with meaningful support/alignment checks.
 - [ ] Implement the approved data/generator, pages and shared discovery/coverage
@@ -882,16 +883,16 @@ on `docs/2026-11-04-reference-hub-assessment` starts from develop
 - [ ] Return session/branch/commit/evidence for coordinator review; obtain separate
   user approval before integration into develop.
 
-Proposed routes `/reference/glossary` and `/reference/stack` are reference
+Approved routes `/reference/glossary` and `/reference/stack` are reference
 resources, not cheatsheets or stages: counts remain **25/30** sheets and **18/18**
 stages. Glossary consumes `terms.ts` directly, renders full definitions in name
 order with stable key fragments and optional stage links, and leaves its Markdown
 generator and inline popover unchanged. No search/filter state is proposed.
 
-The stack would move to canonical `web/src/lib/stack.ts`, consumed by its page
+The stack will move to canonical `web/src/lib/stack.ts`, consumed by its page
 and a new pure Markdown generator. `reference/stack.md` remains at its existing
-path as a generated snapshot. This proposed authority change requires selection;
-no previous decision is claimed to have approved it. Preserve its four groups,
+path as a generated snapshot. The user explicitly approved this authority change
+in the scope selection above. Preserve its four groups,
 22 choices, deviation/upkeep guidance and links, with the recorded factual
 corrections and narrow matching Stage 04 prose alignment. Keep chosen product
 families and distinguish starter defaults from this static app's installed tools.

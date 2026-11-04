@@ -307,3 +307,18 @@ mismatch inform the proposed work; they are not implementation results.
 Self-review and the humanizer prose pass checked the assessment against the
 existing sources, local observations and D-99 boundaries. The glossary and stack
 source migrations, runtime repair and routing behavior have not been implemented.
+
+## Scope selected: 2026-11-04
+
+Following assessment **8f722f7** and handoff **a0f40f5**, the user approved the
+recommended scope with "proceed": both native reference pages, canonical
+`web/src/lib/stack.ts` with generated `reference/stack.md`, and TD-47's Node 22
+support-contract repair first. This selection supersedes the pending-approval
+statements in the assessment above. The five-step compact plan, acceptance
+checks and exclusions are approved unchanged.
+
+Implement in a fresh user-selected **GPT-6.1 Sol / High** session under D-100.
+Start from the committed handoff tip of `docs/2026-11-04-reference-hub-assessment`,
+record its exact SHA and create `feat/reference-glossary-stack`. KICKOFF carries
+the return instructions. Runtime repair, implementation and verification remain
+pending; integration needs separate approval.
