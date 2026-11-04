@@ -1,94 +1,73 @@
-# Kickoff: Stage 18 interactive page
+# Kickoff: Stage 18 Improvement Review scope proposed
 
 Updated 2026-11-04. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 
 ## Current state
 
-- User-approved no-ff merge **c9e5d07** is on local `develop`, parents
-  **621cbdc / 254797d**. Use `git log -1 --oneline` for the closing records tip.
-- Merge tree equals reviewed feature tip **254797d**. Application/generated
-  glossary inputs equal tested **679470f**; audit repair is **dc62d9f**.
-- All **18/18** stages are interactive on local develop. Stage 18 includes six
-  content judgments plus AI Plays; the fictional invoice review stays inconclusive.
-- [Chapter](docs/18-continuous-improvement.md) and page integrated together;
-  [one source record](reference/stage-18-source-research.md) holds provenance and
-  the port's definition/link rechecks. No external artwork copied.
-- References remain **24 drawn / 29 registered**. Five language placeholders,
-  W-6.4 and assessment of a Stage 18 companion remain open.
-- The merged feature and research branches were deleted after ancestor/worktree
-  checks. Their commits remain in develop. No push or promotion occurred; main
-  is unchanged.
+- Assessment branch: `docs/2026-11-04-stage-18-reference-assessment`, from local
+  develop **ff6ce06ee082fea743be122dc976e666dec45cb8**.
+- Assessment checkpoint: **a30f5e5**. Use `git log -1 --oneline` for the closing
+  records tip. The user requested the assessment here; implementation scope is
+  proposed and has not yet been selected.
+- Recommendation: one text-only **Improvement Review** sheet, slug
+  `improvement-review`, Standards group, tether `18-continuous-improvement`.
+  Four sections/fourteen short rows: frame the problem (3), plan the change (4),
+  study the result (3), decide and follow up (4).
+- [One source record](reference/stage-18-source-research.md#w-6-assessment-improvement-review-2026-11-04)
+  holds candidate comparison, source rechecks, section meanings and acceptance.
+  [W-6.3t](docs/task.md) tracks the proposed slice. The sheet would gather existing
+  teaching into all-visible prompts; lookup benefit is anticipated, not measured.
+- No image plate is selected. No sheet, app code, chapter edits or generated
+  outputs are included. Existing visual candidates retain their reuse limits.
+- Local develop remains **18/18** interactive and **24 drawn / 29 registered**
+  references after Stage 18 merge **c9e5d07**. One new drawn sheet would yield
+  **25/30**, a forecast only. No merge, push or promotion in this assessment.
 
 ## Verification
 
-Fresh for **679470f**: format, lint, generated-route typecheck,
-**1,586 tests / 222 files**, production build (**54 prerendered routes**), focused
-browser checks and independent content/page review. The full production run passed **26/27** (exit 1): its only failure was the old
-empty-stage test resolving the seven real step IDs instead of rejecting.
-The repaired audit-page suite then passed **3/3** (exit 0) against the same build;
-retain the other 26 audit results for unchanged application inputs. Contrast in
-both themes, 320–2560px overflow, touch targets, disclosure coverage, console,
-hashes and panel height all pass. No full audit or build was repeated after the
-test-only repair.
+Assessment **a30f5e5**: seven primary-source pages rechecked across the researcher
+and coordinator; no contradiction with the bounded chapter claims. Research-file
+local links **1/1** and whitespace pass, exit 0. Self-review and humanizer pass
+applied. The sources support the principles; record fields and decisions are
+playbook adaptations. No user data, measurement results or artwork were invented.
 
-Focused production checks: **42** panel/theme/width combinations (375/768/1440px),
-**252** disclosure activations, **42** exercise answers, **12** definition checks
-and **6** hash/keyboard/Back/reload checks; no overflow or console/page errors.
-Default panel maximum **2.44 screens at 1024×768**. Both-theme screenshots inspected.
-Independent Astra Low review covered all seven panels at the same three widths,
-expanded disclosures and answered exercises, plus keyboard/history behavior;
-no actionable findings. It also reviewed the later audit-fixture diff.
-
-Development-console sweep: **1/1**, unchanged test against an identical source
-copy under ignored `.next/`, with Turbopack and an isolated lock on port 3101.
-The normal command first failed because of sandbox port permissions, then the
-pre-existing port-3200 dev lock. That server and the project config were left
-untouched; only the fixture's Turbopack root and test server path differed.
-The source copy matched `web/src` via `diff -qr`.
-
-Fresh after **dc62d9f**'s test-only edit: generated-route typecheck, focused ESLint
-and Prettier checks, and audit-page tests **3/3** against the same production
-build. Application and generated glossary inputs remain identical to **679470f**.
-Humanizer pass applied to page prose; all five outward links opened with HTTP 200
-and expected titles in a real browser. See the tracker completion row for final
-commands, evidence and limits. Pre-merge coordinator closing records: ledger **2/2**, **237 local targets /
-5 Markdown files**, whitespace clean. Fresh merge closing-record checks are
-recorded below. Application checks above are retained for unchanged
-**679470f** inputs. No deployed-site test was run.
+Fresh closing-record checks: `pnpm test src/lib/tracker-ledger.test.ts
+--maxWorkers=1` **2/2**, `python3 /private/tmp/stage18-w6-check-links.py`
+**119 local targets / 4 Markdown files**, and `git diff --check`, all exit 0.
+Application inputs are unchanged. No app suite, build or browser audit was needed
+for this research-only task; no layout or
+usability claim is made. Prior application verification remains in the tracker's
+Stage 18 page/merge rows and the pre-assessment KICKOFF at **ff6ce06**.
 
 ## Next task and session
 
-**Task:** Stage 18 W-6 companion assessment.
-**Recommended model:** `gpt-6-astra`, **reasoning:** `low`, research session.
-This recommendation does not confirm an active setting.
+**Next:** select or revise the proposed scope. Recommended coordination setting:
+**GPT-6 Astra / Low**, this session.
 
-Start a scoped documentation branch from the committed local develop tip and
-record that SHA. Use the completed [stage](docs/18-continuous-improvement.md),
-[source findings and visual limits](reference/stage-18-source-research.md), and
-W-6 in [task.md](docs/task.md). Assess whether an Improvement Review lookup offers
-value beyond the seven-panel stage. Record a justified select/defer decision and
-compact scope if useful. Keep findings in the existing source record; no sheet
-or image publication is preselected. Research-only work uses D-99 content/link
-checks. Later implementation, if selected, uses a fresh user-selected
-**GPT-6.1 Sol / High** session with an explicit acceptance handoff.
+**If selected:** implement the Improvement Review sheet in a fresh user-selected
+**GPT-6.1 Sol / High** session. This recommendation does not confirm an active
+model setting. Start from this assessment branch's committed tip, record the
+exact SHA, and create `feat/improvement-review-reference`. No separate full spec
+or plan is needed for this existing-pattern static page under D-99.
 
-Coordinator: `01a18acc-3b54-7202-92f3-404cc94fd0ad`.
-Implementation evidence: `01a18acc-4d44-72f0-9e32-92b73a0b7a9f`; its thread and
-actual diff were checked before integration. Independent final review covered
-application **679470f** and the later fixture repair; coordinator acceptance
-covered **141c1e2...90ba12d** and records-only **254797d**.
+Reader task, sections, exclusions and acceptance are in the
+[assessment](reference/stage-18-source-research.md#w-6-assessment-improvement-review-2026-11-04).
+Add the data module and registry entry, four citations and Stage 18 tether;
+regenerate Markdown; add meaningful actual-sheet render coverage. Keep product
+outcomes separate from delivery signals. Inconclusive describes evidence and does
+not dictate the action. No new controls or shared renderer behavior are proposed.
 
-Deferred: companion implementation/image publication, language sheets, W-6.4,
-unrelated shared refactors, actual product research/telemetry, push and promotion.
-External image reuse limits still apply. Future merges require separate user
-approval; main promotion belongs to the user.
+Run the final web gate once and focused sheet/stage-discovery checks in both
+themes at narrow/middle/wide widths, including keyboard, overflow, touch targets,
+source links and console. Obtain one independent final content/page review.
+An unchanged static renderer uses D-99's dev-console exception; changed
+interaction/shared React behavior requires the sweep and stronger behavior path.
 
-## Merge closing checks
+**Return to coordinator:** `01a18acc-3b54-7202-92f3-404cc94fd0ad`.
+Return branch/commit, actual checks, limits/unresolved issues and implementation
+session ID. The coordinator reads that thread and reviews the actual diff.
 
-Merge/tree equality checks passed. Fresh closing-record checks on the final
-records tree: `pnpm test src/lib/tracker-ledger.test.ts --maxWorkers=1` **2/2**,
-`python3 /private/tmp/stage18-merge-check-links.py` **117 local targets / 3 files**,
-and `git diff --check`, all exit 0. The link checker initially read inline code
-examples as links; excluding inline code resolved those checker false positives.
-No source links or assertions were weakened. Application checks above are
-retained for identical **679470f** inputs; no full app rerun after merge.
+Deferred: broad stage summary, full DORA/SPACE cards, another AI panel, new
+controls/shared refactors, image publication, language sheets, W-6.4, actual
+product research/telemetry, push and promotion. Integration into develop needs
+separate user approval; main promotion belongs to the user.
