@@ -1,94 +1,113 @@
-# Kickoff: Stage 18 interactive page
+# Kickoff: W-6.3t Improvement Review accepted for integration
 
 Updated 2026-11-04. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 
-## Current state
+## Branch and scope
 
-- User-approved no-ff merge **c9e5d07** is on local `develop`, parents
-  **621cbdc / 254797d**. Use `git log -1 --oneline` for the closing records tip.
-- Merge tree equals reviewed feature tip **254797d**. Application/generated
-  glossary inputs equal tested **679470f**; audit repair is **dc62d9f**.
-- All **18/18** stages are interactive on local develop. Stage 18 includes six
-  content judgments plus AI Plays; the fictional invoice review stays inconclusive.
-- [Chapter](docs/18-continuous-improvement.md) and page integrated together;
-  [one source record](reference/stage-18-source-research.md) holds provenance and
-  the port's definition/link rechecks. No external artwork copied.
-- References remain **24 drawn / 29 registered**. Five language placeholders,
-  W-6.4 and assessment of a Stage 18 companion remain open.
-- The merged feature and research branches were deleted after ancestor/worktree
-  checks. Their commits remain in develop. No push or promotion occurred; main
-  is unchanged.
+- Branch: `feat/improvement-review-reference`, from exact assessment tip
+  **41c0f2f73fbe0de44b256b4155743e50ada3f178**.
+- Application: **8b83bfd**. Registry guard correction: **04e3623**.
+  Use `git log -1 --oneline` for the closing records tip.
+- Reader outcome: retrieve before-change and follow-up prompts together.
+  Four sections/fourteen rows, Standards group, Stage 18 tether, four text
+  citations, generated Markdown and three actual-sheet render tests.
+- Feature references: **25 drawn / 30 registered**. Local develop remains
+  **24/29**, with **18/18** stages interactive. No merge, push or deployment.
+- [Approved boundary and source record](reference/stage-18-source-research.md#w-6-assessment-improvement-review-2026-11-04).
+  [Sheet data](web/src/lib/cheatsheets/improvement-review.ts) generates the
+  [Markdown lookup](reference/cheatsheets.md#improvement-review).
+  This intentionally adds a concise view of chapter teaching; keep them consistent.
 
 ## Verification
 
-Fresh for **679470f**: format, lint, generated-route typecheck,
-**1,586 tests / 222 files**, production build (**54 prerendered routes**), focused
-browser checks and independent content/page review. The full production run passed **26/27** (exit 1): its only failure was the old
-empty-stage test resolving the seven real step IDs instead of rejecting.
-The repaired audit-page suite then passed **3/3** (exit 0) against the same build;
-retain the other 26 audit results for unchanged application inputs. Contrast in
-both themes, 320–2560px overflow, touch targets, disclosure coverage, console,
-hashes and panel height all pass. No full audit or build was repeated after the
-test-only repair.
+Final application/test inputs are **04e3623**; later changes are records only.
+Format, lint and generated-route typecheck pass (exit 0); the later guard-only
+change also passed focused Prettier/ESLint and the commit hook. Production build
+passes **55/55 routes**, exit 0. Highlighted output remains unchanged and its
+snapshot passes. Stable-host `pnpm test --maxWorkers=2` passes
+**1,590 tests / 223 files** in **65.88s**, exit 0.
+`pnpm test:e2e --workers=2` finished **25/27**, exit 1 solely for two checks
+that exceeded 120s while loading unchanged Stage 03 across the clock gap.
+Retain those 25 successes, including both-theme WCAG AA, touch targets,
+disclosures, console, history and panel height. Targeted rerun below passed
+**2/2** in **47.5s**, exit 0, on the same build with unchanged limits:
 
-Focused production checks: **42** panel/theme/width combinations (375/768/1440px),
-**252** disclosure activations, **42** exercise answers, **12** definition checks
-and **6** hash/keyboard/Back/reload checks; no overflow or console/page errors.
-Default panel maximum **2.44 screens at 1024×768**. Both-theme screenshots inspected.
-Independent Astra Low review covered all seven panels at the same three widths,
-expanded disclosures and answered exercises, plus keyboard/history behavior;
-no actionable findings. It also reviewed the later audit-fixture diff.
+`pnpm exec playwright test e2e/audit-pages.spec.ts e2e/audit.spec.ts
+--grep 'the sweep reaches every step|no horizontal overflow at 320px'
+--workers=2 --output=/private/tmp/w63t-audit-retry-results`
 
-Development-console sweep: **1/1**, unchanged test against an identical source
-copy under ignored `.next/`, with Turbopack and an isolated lock on port 3101.
-The normal command first failed because of sandbox port permissions, then the
-pre-existing port-3200 dev lock. That server and the project config were left
-untouched; only the fixture's Turbopack root and test server path differed.
-The source copy matched `web/src` via `diff -qr`.
+All **27** audit checks are therefore covered by successful results; a single
+uninterrupted **27/27** run is not claimed.
 
-Fresh after **dc62d9f**'s test-only edit: generated-route typecheck, focused ESLint
-and Prettier checks, and audit-page tests **3/3** against the same production
-build. Application and generated glossary inputs remain identical to **679470f**.
-Humanizer pass applied to page prose; all five outward links opened with HTTP 200
-and expected titles in a real browser. See the tracker completion row for final
-commands, evidence and limits. Pre-merge coordinator closing records: ledger **2/2**, **237 local targets /
-5 Markdown files**, whitespace clean. Fresh merge closing-record checks are
-recorded below. Application checks above are retained for unchanged
-**679470f** inputs. No deployed-site test was run.
+Focused production checks pass **18 path/theme/width states**: reference index,
+sheet and Stage 18 at **320/768/1440 × 900**, both themes. Checked Standards
+listing, **25 of 30**, all four section headings, Tab/Enter navigation and Back,
+no horizontal overflow, all five sheet links at least **44px** high, and zero
+console warnings/errors or page errors. All four citation links are reachable
+by Tab in authored order in both themes. Source pages reopened successfully.
+Generated Markdown checked as a lookup. Humanizer pass applied to new prose.
 
-## Next task and session
+Independent **GPT-6 Astra / Low** content/page review passes with no actionable
+findings: **41c0f2f..8b83bfd**, the test-only **04e3623** correction, chapter,
+approved assessment, four reopened sources and all six production screenshots.
+Reviewer `/root/review_improvement_reference` independently inspected the
+screenshots; keyboard, measured targets/contrast, console and automated suite
+results are implementer evidence. Narrow title wrapping is cosmetic in the
+unchanged renderer. No measured retrieval benefit is claimed.
 
-**Task:** Stage 18 W-6 companion assessment.
-**Recommended model:** `gpt-6-astra`, **reasoning:** `low`, research session.
-This recommendation does not confirm an active setting.
+Verification history: unrestricted Vitest first exposed the stale **24/29**
+global guard (fixed in **04e3623**) and two 5-second highlighting timeouts.
+One-worker full run: **1,589/1,590**, Documentation traps/source test timed out
+at **5.866s**; isolated Documentation/highlighting rerun **6/6**, exit 0.
+Two-worker run crossed an approximately fifteen-minute clock gap: Observability
+`act panels > seven steps, in order` timed out at **889.829s**;
+**1,589/1,590** otherwise passed. Isolated Observability rerun **8/8** in
+**1.42s**, exit 0. Two initial audit checks crossed the same gap. No assertions,
+configs or timeout limits were weakened. Stable-host full suite passes as
+recorded above; the two audit retries also pass.
 
-Start a scoped documentation branch from the committed local develop tip and
-record that SHA. Use the completed [stage](docs/18-continuous-improvement.md),
-[source findings and visual limits](reference/stage-18-source-research.md), and
-W-6 in [task.md](docs/task.md). Assess whether an Improvement Review lookup offers
-value beyond the seven-panel stage. Record a justified select/defer decision and
-compact scope if useful. Keep findings in the existing source record; no sheet
-or image publication is preselected. Research-only work uses D-99 content/link
-checks. Later implementation, if selected, uses a fresh user-selected
-**GPT-6.1 Sol / High** session with an explicit acceptance handoff.
+Raw logs for this session: `/private/tmp/w63t-unit.log`,
+`/private/tmp/w63t-unit-serial.log`, `/private/tmp/w63t-unit-final.log`,
+`/private/tmp/w63t-unit-stable.log`, `/private/tmp/w63t-build.log`,
+`/private/tmp/w63t-audit.log`, `/private/tmp/w63t-audit-retry.log`. Screenshots:
+`/private/tmp/w63t-{light,dark}-{320,768,1440}.png`.
 
-Coordinator: `01a18acc-3b54-7202-92f3-404cc94fd0ad`.
-Implementation evidence: `01a18acc-4d44-72f0-9e32-92b73a0b7a9f`; its thread and
-actual diff were checked before integration. Independent final review covered
-application **679470f** and the later fixture repair; coordinator acceptance
-covered **141c1e2...90ba12d** and records-only **254797d**.
+Unchanged static components use D-99's dev-console exception. No deployed-site
+test was run; this branch has not been promoted. The chapter, stage, controls,
+shared renderer and artwork are unchanged.
 
-Deferred: companion implementation/image publication, language sheets, W-6.4,
-unrelated shared refactors, actual product research/telemetry, push and promotion.
-External image reuse limits still apply. Future merges require separate user
-approval; main promotion belongs to the user.
+Implementation closing-record checks: `pnpm test src/lib/tracker-ledger.test.ts
+--maxWorkers=1` **2/2**, `python3 /private/tmp/w63t-check-links.py`
+**145 local targets / 5 Markdown files**, and `git diff --check`, exit 0.
+Application verification and independent review are retained for identical inputs:
+`git diff --exit-code 04e3623 -- web reference/cheatsheets.md` is empty.
 
-## Merge closing checks
+## Return to coordinator
 
-Merge/tree equality checks passed. Fresh closing-record checks on the final
-records tree: `pnpm test src/lib/tracker-ledger.test.ts --maxWorkers=1` **2/2**,
-`python3 /private/tmp/stage18-merge-check-links.py` **117 local targets / 3 files**,
-and `git diff --check`, all exit 0. The link checker initially read inline code
-examples as links; excluding inline code resolved those checker false positives.
-No source links or assertions were weakened. Application checks above are
-retained for identical **679470f** inputs; no full app rerun after merge.
+Coordinator: **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
+Implementation session: **01a1a431-2038-7931-b6c7-f7d7e1fa352c**.
+Recommended next task/model/effort: user decision on no-ff integration into
+local develop, with **GPT-6 Astra / Low** for coordination. Coordinator read the
+implementation thread and the actual diff **41c0f2f...75f028c**. These are setting
+recommendations; the active implementation setting was not independently
+confirmed.
+
+Coordinator acceptance: no blocking standards or scope findings in
+**41c0f2f...75f028c**. The approved fields, inference limits, four citations,
+stage tether, generated lookup and render coverage are present. Raw stable-unit,
+build, audit and retry logs confirm the reported results. Coordinator also
+inspected retained light-320 and dark-1440 screenshots; the narrow title wrap is
+cosmetic in the unchanged renderer. No fresh browser sweep is claimed.
+Application/generated Markdown still match **04e3623**. Retain the identified
+app checks and independent review with their recorded limits.
+
+Fresh coordinator closing-record checks: tracker ledger **2/2**,
+`python3 /private/tmp/w63t-check-links.py` **145 local targets / 5 Markdown
+files**, and `git diff --check`, all exit 0. These records-only changes retain
+application checks for unchanged **04e3623** inputs. Integration still requires
+separate user approval and a no-ff merge into develop. Main promotion belongs
+to the user.
+
+Deferred: broad stage summary, DORA/SPACE cards, another AI panel, new controls
+or shared refactors, image publication, language sheets, W-6.4, actual product
+research/telemetry, push and promotion.

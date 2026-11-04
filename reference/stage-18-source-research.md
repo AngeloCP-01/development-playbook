@@ -252,3 +252,200 @@ The five outward references (Deming, Google HEART, DORA, Microsoft experimentati
 and SPACE) all opened with HTTP 200 and the expected page title in a real browser.
 These link checks establish availability on this date; they do not change the
 image-reuse limits or establish this project's telemetry or outcomes.
+
+## W-6 source recheck (2026-11-04)
+
+Reopened the six primary pages linked below on **2026-11-04**. All returned
+readable content. No contradiction with the chapter's bounded claims was found.
+
+- **[PDSA Cycle](https://deming.org/explore/pdsa/), The W. Edwards Deming Institute,
+  live page without a fixed version:** supports stating a theory and prediction,
+  studying actual results, and adjusting the theory or method. This supports a
+  hypothesis/result/decision lookup. It does not prescribe the proposed fields,
+  review cadence or decision vocabulary.
+- **[HEART paper record](https://research.google/pubs/measuring-the-user-experience-on-a-large-scale-user-centered-metrics-for-web-applications/),
+  Kerry Rodden, Hilary Hutchinson and Xin Fu, Google, ACM CHI 2010**, and
+  **[Rodden's HEART introduction](https://kerryrodden.com/heart), live page:**
+  support choosing user-centered metrics through Goals-Signals-Metrics. These
+  pages establish the framework, not a required baseline/cohort/denominator
+  template. Google's download link currently points to an external host; the
+  abstract and author's page were sufficient for this check. No PDF was fetched.
+- **[During-Experiment Stage](https://www.microsoft.com/en-us/research/articles/patterns-of-trustworthy-experimentation-during-experiment-stage/),
+  Widad Machmouchi, Somit Gupta and Ruhan Zhang, Microsoft Experimentation
+  Platform, 25 January 2021:** supports separate data-quality and guardrail
+  measures, monitoring harm, checking population segments and accounting for
+  repeated looks at results. Its context is controlled A/B experiments. It does
+  not make an ordinary before/after comparison causal or supply a universal
+  sample size, stopping threshold or review duration.
+
+**Editorial recommendation:** A concise original Improvement Review could group
+problem/evidence, hypothesis/alternatives, baseline/cohort/denominator,
+guardrails/owner/review, and observed result/limits/decision. Explicit population,
+window and counts make a comparison inspectable; ownership and a review date make
+follow-up actionable. These are this playbook's choices, consistent with the
+chapter, rather than fields collectively prescribed by the sources. Include an
+inconclusive outcome and keep completion of an action separate from evidence that
+it helped. This recommendation does not select or implement the companion.
+
+**Scope recommendation:** Keep the full DORA taxonomy and SPACE framework in the
+chapter and linked sources. [Nathen Harvey's DORA guide](https://dora.dev/guides/dora-metrics/)
+still describes five delivery measures interpreted in application/service context.
+[Forsgren and colleagues' SPACE publication page](https://www.microsoft.com/en-us/research/publication/the-space-of-developer-productivity-theres-more-to-it-than-you-think/),
+ACM Queue 19(1), February 2021, still rejects a single productivity metric or
+dimension. A brief product/delivery distinction and warning against individual
+activity scores fit the review lookup; reproducing either framework would widen
+its task into metric selection.
+
+The three existing visual candidates remain link-only. No artwork was downloaded,
+and this recheck establishes no additional reproduction rights. Project traffic,
+instrumentation quality and improvement outcomes remain unknown.
+
+## W-6 assessment: Improvement Review (2026-11-04)
+
+**Assessment branch:** `docs/2026-11-04-stage-18-reference-assessment`, from local
+`develop` **ff6ce06**. Recommended research setting: **GPT-6 Astra / Low**.
+The user authorized the assessment here. The recommendation below is a proposed
+scope; it does not claim user approval of implementation or integration.
+
+**Later scope selection (2026-11-04):** the user approved the recommended
+four-section/fourteen-row scope with "proceed" after the assessment was delivered.
+Implementation is authorized in a fresh user-selected **GPT-6.1 Sol / High**
+session under D-100. Use the committed KICKOFF for the starting tree and return
+instructions. This selection does not approve integration into develop.
+
+### Reader task and retrieval gap
+
+Before trying a product or process change, retrieve the evidence, prediction,
+measurement and harm checks to record. At the follow-up, retrieve the checks that
+support a decision, including an inconclusive result.
+
+The completed stage teaches this through the record disclosures and result drill
+in `LearningPanels.tsx`'s `CyclePanel`, then the checklist, guidance and traps in
+`ReviewPanel`. Those interactions support practice. A companion can expose the
+prompts together for someone writing or checking their own improvement record.
+This is an anticipated retrieval benefit from inspecting the content and renderer;
+no reader study or measured lookup-time improvement is claimed.
+
+Existing sheets cover related work but serve different moments. Technical Debt
+Review evaluates a design cost and possible refactoring or retirement. Incident
+Management coordinates response and follow-up. Documentation Change Check traces
+facts into documents and checks publication claims. None organizes the complete
+prediction-to-outcome review for both ordinary product and process changes.
+Overlap in evidence, ownership and review prompts is deliberate and should stay
+consistent when the chapter changes.
+
+### Candidate comparison and recommendation
+
+| Candidate | Value and overlap | Assessment decision |
+| --- | --- | --- |
+| Link only to Stage 18 | Lowest maintenance cost; the cycle and review panels already contain the material, but the prompts remain distributed behind disclosures and an exercise | Valid fallback if the companion proves too broad; not the preferred retrieval view |
+| Broad Continuous Improvement summary | Would repeat signal interpretation, prioritization, delivery frameworks, AI plays and traps across the whole stage | Defer; keep the stage as the teaching surface |
+| DORA/SPACE metrics card | Would widen the task into selecting and interpreting measurement frameworks; the delivery panel already collects these distinctions | Defer; retain the existing primary-source links |
+| Improvement Review | Brings the before-change and after-change prompts together in the existing all-visible reference renderer | Recommend selecting one bounded text-only sheet |
+
+The recommended title is **Improvement Review**, slug **`improvement-review`**,
+group **Standards**, stage tether **`18-continuous-improvement`**. No registration
+is added during this assessment. Current counts remain **24 drawn / 29
+registered**; implementing one new drawn sheet would make them **25/30**. All
+**18/18** stages remain interactive.
+
+### Proposed four-section boundary
+
+Four sections with fourteen short rows, using the existing `Cheatsheet` data
+shape. Labels and grouping below are the assessor's recommendation. The
+implementer may tighten wording while preserving these meanings.
+
+| Section | Rows | Meaning to preserve |
+| --- | --- | --- |
+| Frame the problem (3) | Intended task and outcome type; observations and sources; alternatives and unknowns | Distinguish product outcomes from delivery/process signals. Keep observation separate from interpretation, retain source IDs and contrary cases, and consider serious minority needs. |
+| Plan the change (4) | Hypothesis and bounded action; baseline and expected result; guardrails and recovery; owner and review | Record population, date window, event meanings, numerator/denominator and comparison method where applicable. Set desired change, harm/stop conditions, owner and actual review date before acting. Adapt fields to the measure; a delivery-time measure need not be a completion rate. |
+| Study the result (3) | Actual outcome; data quality and comparability; harm and tradeoffs | Compare actual evidence with the prediction. Inspect missing events, changed audiences, concurrent changes, contrary cases and guardrails. Action completion and a better-looking rate do not establish useful or causal improvement. |
+| Decide and follow up (4) | Keep; adapt; revert; investigate further | Record reasons, remaining uncertainty, the owner and next check. An inconclusive finding is an evidence status and may accompany a temporary keep or another action; it must not force a positive conclusion. Stop or contain harm when required rather than waiting for a routine review. |
+
+The section notes should make clear that this is an adaptable playbook record,
+not a mandatory template prescribed by Deming, HEART or Microsoft. No fixed
+cadence, universal sample size, automatic score or priority ranking is proposed.
+Use the existing stage link for worked examples and exercises. Keep the invoice
+case, five DORA definitions, SPACE explanation and four AI plays in the chapter
+and stage. A compact source-check reminder may cover AI-assisted analysis without
+adding another AI section. Synthetic feedback is not evidence from users.
+
+This adds another concise view of canonical teaching, an intentional maintenance
+cost. The sheet module would be the single source for its generated Markdown;
+check it against the chapter when either changes. The assessment does not propose
+changing the chapter, stage or shared renderer.
+
+### Sources and image decision
+
+The W-6 recheck above supports the proposed boundary: PDSA supports prediction,
+study and adjustment; HEART supports selecting measures from goals; Microsoft's
+experiment guidance supports checking data quality, harm and inference limits.
+The field grouping and four response choices remain editorial applications.
+
+Also reopened **2026-11-04**:
+[GOV.UK's Analyse a research session](https://www.gov.uk/service-manual/user-research/analyse-a-research-session),
+User research community, live guidance. Its separation of observations, findings
+and actions supports the evidence/interpretation distinction. The page was
+readable; it does not prescribe the proposed fourteen-row record.
+
+Use four text citations through the existing source footer: Deming Institute's
+PDSA page as primary, with the Google HEART paper record, Microsoft
+During-Experiment Stage and GOV.UK analysis guidance as supporting sources.
+Authors, versions and supported claims are recorded above. Keep provider-specific
+thresholds and Microsoft's illustrative experiment duration out of the card.
+
+**No image plate is selected.** The existing DORA, HEART and Microsoft visual
+references remain link-only under their recorded reuse limits. An original
+PDSA wheel would repeat the section structure without adding a missing lookup.
+No artwork was downloaded, copied or cleared for publication in this assessment.
+
+### Later implementation acceptance and handoff
+
+**Recommended implementation model:** `gpt-6.1-sol`, **effort:** `high`, fresh
+user-selected session under D-100. After the scope is selected, start from this
+assessment branch's committed tip and record its exact SHA. Create
+`feat/improvement-review-reference`; preserve the assessment in the same history.
+Return to coordinator session **01a18acc-3b54-7202-92f3-404cc94fd0ad** with the
+branch/commit, actual checks, unresolved issues and implementation session ID.
+
+Use the established static-sheet path:
+
+- Add `web/src/lib/cheatsheets/improvement-review.ts` and register it in
+  `web/src/lib/cheatsheets/index.ts`. Use the metadata, section boundary and four
+  citations above. No `source.image`, new controls or shared behavior changes.
+- Extend applicable registry/tether guards in `index.test.ts`. Add meaningful
+  render coverage beside `Cheatsheet.tsx` for the actual sheet's baseline and
+  outcome checks, inconclusive/decision distinction, stage link and citations.
+  Data invariants or literal row counts alone do not show that the page uses them.
+- Regenerate `reference/cheatsheets.md` with `pnpm gen:cheatsheets`; never hand-edit
+  it. Check the existing generated-highlight snapshot and regenerate only if the
+  real output changes. No code examples or syntax-highlighting changes are planned.
+- Apply the humanizer pass to new prose. Run the existing final web gate once:
+  format, lint, generated-route typecheck, tests, production build and audit.
+  Check the affected sheet and Stage 18 reference discovery in both themes at
+  narrow/middle/wide widths, keyboard access, overflow, readable rows, touch
+  targets, source links and clean console. Check generated Markdown as a lookup.
+- Obtain one independent final content/page review of the actual branch diff.
+  A static sheet through unchanged components uses D-99's exception from another
+  development-console sweep; changed interactions/shared React behavior require it.
+  If implementation needs new shared behavior, stop treating it as a data-only page
+  and apply the stronger D-99 path with design and behavior TDD.
+
+No new failing test is required before static content/data edits. Existing guards
+and the meaningful render-test rule still apply. Integration requires the user's
+separate approval and uses a no-ff merge into develop; main promotion stays with
+the user. This assessment runs only content/link and ledger checks, not an app
+build or browser audit, and cannot establish the future page's layout or usability.
+
+### W-6.3t implementation source check (2026-11-04)
+
+Reopened the four selected text sources during implementation: the Deming
+Institute's PDSA page, Google HEART paper record, Microsoft During-Experiment
+Stage article and GOV.UK analysis guidance. Titles and attribution match the
+records above; the independent reviewer also reopened all four. Their support
+remains prediction/study/adjustment, goal-led measurement, data-quality and harm
+checks, and the observation/interpretation distinction, respectively. The field
+grouping and response choices are playbook adaptations. No image was used or
+new claim about project telemetry or improvement outcomes introduced. The sheet
+intentionally repeats concise chapter teaching; its data module generates the
+Markdown lookup and should be checked against the chapter when either changes.

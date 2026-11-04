@@ -120,6 +120,7 @@ test('isDrawn distinguishes a sheet with content from a registered placeholder',
     'git-cheatsheet',
     'git-commands',
     'github-actions',
+    'improvement-review',
     'incident-management',
     'playwright',
     'post-deploy-verification',
@@ -186,6 +187,14 @@ test('stage 16 exposes its incident lookup sheet as drawn reference material', (
   const sheets = cheatsheetsForStage('16-incident-management')
   expect(sheets.map((sheet) => sheet.slug)).toEqual(['incident-management'])
   expect(sheets.every(isDrawn)).toBe(true)
+})
+
+test('stage 18 exposes its drawn improvement review in Standards', () => {
+  const sheets = cheatsheetsForStage('18-continuous-improvement')
+  expect(sheets.map((sheet) => sheet.slug)).toEqual(['improvement-review'])
+  expect(sheets.every(isDrawn)).toBe(true)
+  expect(cheatsheetsByGroup('Standards')).toContain(sheets[0])
+  expect(cheatsheetBySlug('improvement-review')).toBe(sheets[0])
 })
 
 test('stage 08 exposes a drawn security lookup with the cross-user invoice audit and its original diagram', () => {
