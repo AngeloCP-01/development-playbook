@@ -1,4 +1,4 @@
-# Kickoff: W-6.3t Improvement Review coordinator handoff
+# Kickoff: W-6.3t Improvement Review accepted for integration
 
 Updated 2026-11-04. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 
@@ -76,7 +76,7 @@ Unchanged static components use D-99's dev-console exception. No deployed-site
 test was run; this branch has not been promoted. The chapter, stage, controls,
 shared renderer and artwork are unchanged.
 
-Fresh closing-record checks: `pnpm test src/lib/tracker-ledger.test.ts
+Implementation closing-record checks: `pnpm test src/lib/tracker-ledger.test.ts
 --maxWorkers=1` **2/2**, `python3 /private/tmp/w63t-check-links.py`
 **145 local targets / 5 Markdown files**, and `git diff --check`, exit 0.
 Application verification and independent review are retained for identical inputs:
@@ -86,15 +86,27 @@ Application verification and independent review are retained for identical input
 
 Coordinator: **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
 Implementation session: **01a1a431-2038-7931-b6c7-f7d7e1fa352c**.
-Recommended next task/model/effort: coordinator branch/evidence review using
-**GPT-6 Astra / Low**, in that existing session. Read this implementation thread
-and the actual diff from **41c0f2f** through the closing tip. These are setting
+Recommended next task/model/effort: user decision on no-ff integration into
+local develop, with **GPT-6 Astra / Low** for coordination. Coordinator read the
+implementation thread and the actual diff **41c0f2f...75f028c**. These are setting
 recommendations; the active implementation setting was not independently
 confirmed.
 
-Handoff is recorded here for the coordinator; available tools cannot post into
-an unrelated Codex session. Integration still requires separate user approval
-and a no-ff merge into develop. Main promotion belongs to the user.
+Coordinator acceptance: no blocking standards or scope findings in
+**41c0f2f...75f028c**. The approved fields, inference limits, four citations,
+stage tether, generated lookup and render coverage are present. Raw stable-unit,
+build, audit and retry logs confirm the reported results. Coordinator also
+inspected retained light-320 and dark-1440 screenshots; the narrow title wrap is
+cosmetic in the unchanged renderer. No fresh browser sweep is claimed.
+Application/generated Markdown still match **04e3623**. Retain the identified
+app checks and independent review with their recorded limits.
+
+Fresh coordinator closing-record checks: tracker ledger **2/2**,
+`python3 /private/tmp/w63t-check-links.py` **145 local targets / 5 Markdown
+files**, and `git diff --check`, all exit 0. These records-only changes retain
+application checks for unchanged **04e3623** inputs. Integration still requires
+separate user approval and a no-ff merge into develop. Main promotion belongs
+to the user.
 
 Deferred: broad stage summary, DORA/SPACE cards, another AI panel, new controls
 or shared refactors, image publication, language sheets, W-6.4, actual product
