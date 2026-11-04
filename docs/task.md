@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **17/18**: stages 01–17 are interactive; Stage 18 remains. W-6 is **24 drawn / 29 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** coordinator review of the completed Stage 18 branch and evidence, **GPT-6 Astra / Low**, in coordinator session `01a18acc-3b54-7202-92f3-404cc94fd0ad`. The implementation session is `01a18acc-4d44-72f0-9e32-92b73a0b7a9f`. Read that thread before relying on its result. Integration remains a separate user decision.
+**Next task/model:** user decision on no-ff integration of `feat/continuous-improvement` into local `develop`; recommended coordinator setting **GPT-6 Astra / Low**. Coordinator review of **141c1e2...90ba12d** found no blocking standards or scope issues and accepted the identified verification evidence. Integration still requires separate user approval.
 
 Two deliverables from one body of content.
 

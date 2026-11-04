@@ -49,14 +49,14 @@ and Prettier checks, and audit-page tests **3/3** against the same production
 build. Application and generated glossary inputs remain identical to **679470f**.
 Humanizer pass applied to page prose; all five outward links opened with HTTP 200
 and expected titles in a real browser. See the tracker completion row for final
-commands, evidence and limits. Fresh closing records: ledger/source-citation checks
-**5/5 across 2 files**, **237 local targets / 5 Markdown files** and
+commands, evidence and limits. Fresh coordinator closing records: ledger checks
+**2/2**, **237 local targets / 5 Markdown files** and
 `git diff --check` pass, exit 0. Application checks above are retained for unchanged
 **679470f** inputs. No deployed-site test was run.
 
 ## Return handoff
 
-**Next task:** coordinator review of Stage 18's completed branch and evidence.
+**Next task:** user decision on no-ff integration into local develop.
 **Recommended model/effort:** `gpt-6-astra`, `low`.
 **Coordinator session:** `01a18acc-3b54-7202-92f3-404cc94fd0ad`.
 **Implementation session:** `01a18acc-4d44-72f0-9e32-92b73a0b7a9f`.
@@ -67,7 +67,11 @@ not confirm that active model, so no actual-setting claim is made.
 
 Reader outcome and acceptance live in [W-3.19](docs/task.md). The known chapter/page
 duplication is extended using existing patterns; no shared behavior changed.
-Remaining scope: coordinator acceptance and the user's integration decision.
+Coordinator acceptance: reviewed **141c1e2...90ba12d**, including the actual
+application, audit-fixture and records diffs and the recorded command output.
+No blocking standards or scope findings. Application inputs still match
+**679470f**; retained verification and its stated limits are accepted.
+Remaining scope: the user's separate integration decision.
 Ask separately before merging into develop. Main promotion belongs to the user.
 
 Deferred: W-6 companion selection and image publication, unrelated shared
