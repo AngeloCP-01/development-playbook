@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-04): Stage 18 interactive page implemented on `feat/continuous-improvement`.** Application commit **679470f**, based on research handoff **141c1e2**, adds six content judgments and AI Plays. The chapter/source checkpoint **30006f6** remains included. Unit, focused browser and independent content/page review checks pass; production audit coverage is complete after the empty-rail fixture repair. Local develop remains **17/18** interactive and **24/29** references; the feature branch has **18/18**. [KICKOFF](../KICKOFF.md) holds the return handoff. No integration or deployment occurred.
+**Current work (2026-11-04): all eighteen stages are interactive on local develop.** User-approved no-ff merge **c9e5d07** integrates the Stage 18 chapter, source research, seven-panel page and empty-rail audit fixture. Parents **621cbdc / 254797d**; the merge tree equals the reviewed feature tip, application inputs identical to tested **679470f**. W-3 is **18/18**; references remain **24/29**. Identified application checks are retained for unchanged inputs. [KICKOFF](../KICKOFF.md) holds the next handoff. No push or promotion occurred.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -23,9 +23,9 @@ interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. That width repair was the pre-Stage-10 baseline. Tracked `origin/develop` remains
 `79f9e31`; the current local develop merge is recorded above.
 
-On **local develop**, W-3 is **17/18**: stages 01–17 are interactive; Stage 18 remains. W-6 is **24 drawn / 29 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
+On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **24 drawn / 29 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** user decision on no-ff integration of `feat/continuous-improvement` into local `develop`; recommended coordinator setting **GPT-6 Astra / Low**. Coordinator review of **141c1e2...90ba12d** found no blocking standards or scope issues and accepted the identified verification evidence. Integration still requires separate user approval.
+**Next task/model:** Stage 18 W-6 companion assessment, recommended **GPT-6 Astra / Low**, in a research session. Assess whether an Improvement Review lookup adds value beyond the completed page, using the existing source record; select scope before implementation.
 
 Two deliverables from one body of content.
 
@@ -74,7 +74,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(17/18 merged to local `develop`; Stage 18 remains. Stage 17 landed as `6b78fcf`.)* |
+| **W-3** | Stages 02–18 interactive | ☑ *(18/18 merged to local `develop`; Stage 18 landed as `c9e5d07`.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
 | **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(24 of 29 registered sheets drawn on local `develop`; Technical Debt Review merged as `6b78fcf`. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
@@ -133,7 +133,7 @@ Map of what lands where:
 - [ ] Record any convention deliberately *not* adopted, and why
 - [ ] Give substantive new prose one `humanizer:humanizer` pass
 
-### W-3 — Stages 02–18 interactive ◐ *(17/18 merged to local `develop`; Stage 18 remains. Stage 17 merged as `6b78fcf`.)*
+### W-3 — Stages 02–18 interactive ☑ *(18/18 merged to local `develop`; Stage 18 merged as `c9e5d07`.)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
@@ -148,11 +148,16 @@ returned Ready to merge, with no new findings. The merged tree then passed
 format, lint, typecheck, 1459 tests across 198 files and a fresh 50-page build.
 The browser results apply to the identical application tree; those suites were
 not rerun after merge. The local feature branch and worktree were removed.
-**Latest merged stage round:** W-3.18, Stage 17 Maintenance and W-6.3s Technical
-Debt Review, integrated locally as **6b78fcf** after separate user approval.
-Retained final app checks apply to identical tested **5ea8cb2** inputs.
+**Latest merged stage round:** W-3.19, Stage 18 Continuous Improvement,
+integrated locally as **c9e5d07** after separate user approval. All eighteen
+stages are interactive; retained app checks apply to tested **679470f** inputs.
 
-### W-3.19 — Stage 18 Continuous Improvement ◐ *(page complete; integration pending)*
+### W-3.19 — Stage 18 Continuous Improvement ☑ *(merged locally as `c9e5d07`)*
+
+**Integration:** user-approved no-ff merge **c9e5d07**, parents **621cbdc / 254797d**.
+Merge tree equals reviewed **254797d**; application inputs equal tested **679470f**.
+All eighteen stages are now interactive on local develop. Retain the checks below
+for identical application inputs; closing-record checks are in KICKOFF.
 
 **Research checkpoint:** **30006f6**, branch `docs/2026-10-30-stage-18-research`,
 starting develop **621cbdcff63dd23f5bcff5b650c1eb4484511492**.
@@ -177,7 +182,7 @@ whitespace, all exit 0. No app behavior changed; no app gate or browser claim.
 
 **Implementation:** **679470f** on `feat/continuous-improvement`, from research
 handoff **141c1e293d045f77798d55286f510694d067a94e**. The chapter stayed stable;
-chapter and page remain together for integration under D-51. **dc62d9f** replaces
+chapter and page were integrated together under D-51. **dc62d9f** replaces
 the audit's obsolete Stage 18 placeholder assumption with a controlled empty-rail
 fixture, retaining the real navigation/DOM check and rejection assertion.
 Recommended implementation setting was `gpt-6.1-sol`, effort `high`; this does not
@@ -225,10 +230,9 @@ review found no actionable issues. [Tracker](tracker.md) records commands and
 limits; [KICKOFF](../KICKOFF.md) carries the coordinator return handoff.
 
 Deferred: W-6 companion selection/implementation and image publication, shared
-refactors, real analytics/research collection, integration, push and promotion.
-No external artwork is cleared for publication. W-3 remains **17/18** until the
-page lands; W-6 remains **24/29**. Ask separately before merging into develop;
-main promotion belongs to the user.
+refactors, real analytics/research collection, push and promotion.
+No external artwork is cleared for publication. W-3 is **18/18** on local develop;
+W-6 remains **24/29**. Main promotion belongs to the user.
 
 ### W-3.18 — Stage 17 Maintenance ☑ *(merged locally into develop as `6b78fcf`, 2026-10-30)*
 

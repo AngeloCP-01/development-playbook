@@ -4,18 +4,20 @@ Updated 2026-11-04. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 
 ## Current state
 
-- Branch: `feat/continuous-improvement`, from research handoff
-  **141c1e293d045f77798d55286f510694d067a94e** (develop base **621cbdc**).
-- Application: **679470fdc62a34bec05b68c43ff406064a34271d**. Six content judgments
-  plus AI Plays at `/stages/18-continuous-improvement`. The invoice review stays
-  inconclusive; product outcomes and delivery signals stay separate.
-- Audit-fixture repair: **dc62d9f**. All stages now have rails, so a controlled
-  empty-page fixture replaces the obsolete assumption that Stage 18 is empty.
-- The [chapter](docs/18-continuous-improvement.md) stays at research checkpoint
-  **30006f6**; [one source record](reference/stage-18-source-research.md) holds
-  provenance and the port's link/definition rechecks. No external artwork copied.
-- Feature branch: **18/18** interactive. Local develop: **17/18**. References:
-  **24/29**. No merge, push or promotion occurred.
+- User-approved no-ff merge **c9e5d07** is on local `develop`, parents
+  **621cbdc / 254797d**. Use `git log -1 --oneline` for the closing records tip.
+- Merge tree equals reviewed feature tip **254797d**. Application/generated
+  glossary inputs equal tested **679470f**; audit repair is **dc62d9f**.
+- All **18/18** stages are interactive on local develop. Stage 18 includes six
+  content judgments plus AI Plays; the fictional invoice review stays inconclusive.
+- [Chapter](docs/18-continuous-improvement.md) and page integrated together;
+  [one source record](reference/stage-18-source-research.md) holds provenance and
+  the port's definition/link rechecks. No external artwork copied.
+- References remain **24 drawn / 29 registered**. Five language placeholders,
+  W-6.4 and assessment of a Stage 18 companion remain open.
+- The merged feature and research branches were deleted after ancestor/worktree
+  checks. Their commits remain in develop. No push or promotion occurred; main
+  is unchanged.
 
 ## Verification
 
@@ -49,31 +51,44 @@ and Prettier checks, and audit-page tests **3/3** against the same production
 build. Application and generated glossary inputs remain identical to **679470f**.
 Humanizer pass applied to page prose; all five outward links opened with HTTP 200
 and expected titles in a real browser. See the tracker completion row for final
-commands, evidence and limits. Fresh coordinator closing records: ledger checks
-**2/2**, **237 local targets / 5 Markdown files** and
-`git diff --check` pass, exit 0. Application checks above are retained for unchanged
+commands, evidence and limits. Pre-merge coordinator closing records: ledger **2/2**, **237 local targets /
+5 Markdown files**, whitespace clean. Fresh merge closing-record checks are
+recorded below. Application checks above are retained for unchanged
 **679470f** inputs. No deployed-site test was run.
 
-## Return handoff
+## Next task and session
 
-**Next task:** user decision on no-ff integration into local develop.
-**Recommended model/effort:** `gpt-6-astra`, `low`.
-**Coordinator session:** `01a18acc-3b54-7202-92f3-404cc94fd0ad`.
-**Implementation session:** `01a18acc-4d44-72f0-9e32-92b73a0b7a9f`.
-Read the implementation thread before relying on its result; inspect the actual
-branch diff and later records-only changes. Use `git log -1` for the closing tip.
-The implementation recommendation was `gpt-6.1-sol`, `high`; the environment did
-not confirm that active model, so no actual-setting claim is made.
+**Task:** Stage 18 W-6 companion assessment.
+**Recommended model:** `gpt-6-astra`, **reasoning:** `low`, research session.
+This recommendation does not confirm an active setting.
 
-Reader outcome and acceptance live in [W-3.19](docs/task.md). The known chapter/page
-duplication is extended using existing patterns; no shared behavior changed.
-Coordinator acceptance: reviewed **141c1e2...90ba12d**, including the actual
-application, audit-fixture and records diffs and the recorded command output.
-No blocking standards or scope findings. Application inputs still match
-**679470f**; retained verification and its stated limits are accepted.
-Remaining scope: the user's separate integration decision.
-Ask separately before merging into develop. Main promotion belongs to the user.
+Start a scoped documentation branch from the committed local develop tip and
+record that SHA. Use the completed [stage](docs/18-continuous-improvement.md),
+[source findings and visual limits](reference/stage-18-source-research.md), and
+W-6 in [task.md](docs/task.md). Assess whether an Improvement Review lookup offers
+value beyond the seven-panel stage. Record a justified select/defer decision and
+compact scope if useful. Keep findings in the existing source record; no sheet
+or image publication is preselected. Research-only work uses D-99 content/link
+checks. Later implementation, if selected, uses a fresh user-selected
+**GPT-6.1 Sol / High** session with an explicit acceptance handoff.
 
-Deferred: W-6 companion selection and image publication, unrelated shared
-refactors, real product research/telemetry, push and promotion. External image
-reuse limits in the research record still apply.
+Coordinator: `01a18acc-3b54-7202-92f3-404cc94fd0ad`.
+Implementation evidence: `01a18acc-4d44-72f0-9e32-92b73a0b7a9f`; its thread and
+actual diff were checked before integration. Independent final review covered
+application **679470f** and the later fixture repair; coordinator acceptance
+covered **141c1e2...90ba12d** and records-only **254797d**.
+
+Deferred: companion implementation/image publication, language sheets, W-6.4,
+unrelated shared refactors, actual product research/telemetry, push and promotion.
+External image reuse limits still apply. Future merges require separate user
+approval; main promotion belongs to the user.
+
+## Merge closing checks
+
+Merge/tree equality checks passed. Fresh closing-record checks on the final
+records tree: `pnpm test src/lib/tracker-ledger.test.ts --maxWorkers=1` **2/2**,
+`python3 /private/tmp/stage18-merge-check-links.py` **117 local targets / 3 files**,
+and `git diff --check`, all exit 0. The link checker initially read inline code
+examples as links; excluding inline code resolved those checker false positives.
+No source links or assertions were weakened. Application checks above are
+retained for identical **679470f** inputs; no full app rerun after merge.
