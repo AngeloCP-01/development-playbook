@@ -15,6 +15,7 @@ import { gitCheatsheet } from './git-cheatsheet'
 import { gitCommands } from './git-commands'
 import { githubActions } from './github-actions'
 import { incidentManagement } from './incident-management'
+import { improvementReview } from './improvement-review'
 import { PLANNED } from './planned'
 import { postDeployVerification } from './post-deploy-verification'
 import { playwright } from './playwright'
@@ -49,6 +50,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   codingStandards,
   documentation,
   technicalDebt,
+  improvementReview,
   sdlc,
   testing,
   playwright,

@@ -6,7 +6,7 @@
 Lookup material rather than reading material. A stage teaches a decision; a
 sheet answers what that command was.
 
-Drawn: 24 of 29. A sheet listed as not drawn is
+Drawn: 25 of 30. A sheet listed as not drawn is
 registered on purpose — the gap is the point, so it can be seen and filled.
 
 | Sheet | Group | Stage | Status |
@@ -22,6 +22,7 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | Coding Standards | Standards | 05 | Drawn |
 | Documentation Change Check | Standards | 10 | Drawn |
 | Technical Debt Review | Standards | 17 | Drawn |
+| Improvement Review | Standards | 18 | Drawn |
 | Software Development Life Cycle | Standards | — | Drawn |
 | Testing | Standards | 06 | Drawn |
 | Playwright | Standards | 06 | Drawn |
@@ -786,6 +787,56 @@ Source: [Workflows of Refactoring](https://martinfowler.com/articles/workflowsOf
 Source: [Software Engineering at Google: Deprecation](https://abseil.io/resources/swe-book/html/ch15.html) — Hyrum Wright / Google; edited by Tom Manshreck.
 
 Source: [Illustration reuse policy](https://martinfowler.com/faq.html) — Martin Fowler.
+
+## Improvement Review
+
+Record a prediction, compare the evidence, and decide what to keep, adapt, revert or investigate.
+
+Belongs to [18 — Continuous Improvement](../docs/18-continuous-improvement.md).
+
+### Frame the problem
+
+These prompts adapt the sources for this playbook. Adjust the record to the change; the sources do not prescribe these fields or a fixed review cadence. Open Stage 18 for worked examples and exercises.
+
+- **Task and outcome type** — Name the affected task and audience. Separate product outcomes, such as task success, from delivery/process signals, such as delivery time. — Faster delivery does not prove user benefit. Individual activity counts do not measure productivity.
+- **Observations and sources** — Record what people did or said, with source links or IDs. Keep interpretation separate and retain contrary cases and serious minority needs. — Check AI-assisted analysis against original sources. Synthetic feedback is not evidence from users.
+- **Alternatives and unknowns** — Compare a small repair, a new capability, further research and doing nothing. Record gaps, likely effort, maintenance cost and reversibility.
+
+### Plan the change
+
+Write the prediction and review method before acting. Fit the measure to the task; a delivery-time measure need not be a completion rate.
+
+- **Hypothesis and bounded action** — State why a small change might help, who will encounter it and the effort or exposure limit.
+- **Baseline and expected result** — Record the population, date window, event meanings, numerator/denominator where applicable, comparison method and desired change. — Distinguish users, sessions and repeated attempts. A target is a decision aid, not a universal sample size or significance threshold.
+- **Guardrails and recovery** — Define what must remain acceptable, harm/stop conditions, how to detect them and how to contain harm or roll back. — Route active incidents and urgent security issues immediately; do not wait for the routine review.
+- **Owner and review** — Name the action owner and decision maker. Set an actual review date, measurement method and who monitors guardrails before then.
+
+### Study the result
+
+Record the evidence and its limits even when the action is complete. A better-looking rate or a before/after change alone does not establish useful or causal improvement.
+
+- **Actual outcome** — Compare observed results with the prediction using the recorded population, window and measure. Link counts, observations and contrary cases; state what remains inconclusive.
+- **Data quality and comparability** — Check missing events, retries, changed definitions or audiences, seasonality and concurrent changes before interpreting movement. — For randomized experiments, check assignment and telemetry quality and account for repeated looks; a convenient early result cannot choose the winner.
+- **Harm and tradeoffs** — Inspect guardrails, affected groups and unintended costs. Record whether the benefit justifies the tradeoffs and contain harm when stop conditions are met.
+
+### Decide and follow up
+
+For any decision, record reasons, remaining uncertainty, an owner and the next check. Inconclusive is an evidence status: it may accompany a temporary keep or another action without implying success.
+
+- **Keep** — Retain the change when the evidence and tradeoffs justify it. If keeping it temporarily with inconclusive evidence, explain why and what would trigger reconsideration.
+- **Adapt** — Revise the hypothesis or bounded action in light of the result. Write a new prediction and review method before trying the revision.
+- **Revert** — Reverse or disable the change when harm or unacceptable tradeoffs warrant it. Verify recovery and check for effects that rollback cannot undo.
+- **Investigate further** — Name the uncertainty and the observation or data-quality check that could resolve it. Limit further exposure and set the next review; do not force a positive conclusion.
+
+Sources:
+
+Source: [PDSA Cycle](https://deming.org/explore/pdsa/) — The W. Edwards Deming Institute.
+
+Source: [Measuring the User Experience on a Large Scale: User-Centered Metrics for Web Applications](https://research.google/pubs/measuring-the-user-experience-on-a-large-scale-user-centered-metrics-for-web-applications/) — Kerry Rodden, Hilary Hutchinson and Xin Fu / Google; CHI 2010.
+
+Source: [Patterns of Trustworthy Experimentation: During-Experiment Stage](https://www.microsoft.com/en-us/research/articles/patterns-of-trustworthy-experimentation-during-experiment-stage/) — Widad Machmouchi, Somit Gupta and Ruhan Zhang / Microsoft; 2021.
+
+Source: [Analyse a research session](https://www.gov.uk/service-manual/user-research/analyse-a-research-session) — User research community / GOV.UK.
 
 ## Software Development Life Cycle
 
