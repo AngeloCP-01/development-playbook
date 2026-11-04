@@ -57,12 +57,16 @@ test('robots points crawlers at the sitemap, since an unlinked sitemap is one no
 // Same bidirectional shape as the stage guard above it. Forwards catches a new
 // sheet that never reaches the sitemap; backwards catches a sitemap entry for a
 // sheet that has been renamed, which is a soft 404 nobody sees.
-test('every cheatsheet appears in the sitemap, and every sheet URL in the sitemap is a real sheet', () => {
+test('every reference URL is a real native resource or registered sheet, and none are omitted', () => {
   const urls = sitemap().map((entry) => entry.url)
   const sheetUrls = urls.filter((u) => u.includes('/reference/'))
 
   expect(sheetUrls.sort()).toEqual(
-    CHEATSHEETS.map((s) => `${SITE_URL}/reference/${s.slug}`).sort(),
+    [
+      `${SITE_URL}/reference/glossary`,
+      `${SITE_URL}/reference/stack`,
+      ...CHEATSHEETS.map((s) => `${SITE_URL}/reference/${s.slug}`),
+    ].sort(),
   )
 })
 

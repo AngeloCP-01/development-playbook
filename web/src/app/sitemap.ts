@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { SITE_URL } from '@/lib/site'
 import { STAGES } from '@/lib/stages'
+import { REFERENCE_RESOURCES } from '@/lib/reference-resources'
 import { CHEATSHEETS } from '@/lib/cheatsheets'
 
 /**
@@ -34,6 +35,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     },
+    ...REFERENCE_RESOURCES.map((resource) => ({
+      url: `${SITE_URL}${resource.href}`,
+      lastModified,
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    })),
     ...CHEATSHEETS.map((sheet) => ({
       url: `${SITE_URL}/reference/${sheet.slug}`,
       lastModified,

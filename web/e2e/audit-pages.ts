@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test'
 import { STAGES } from '../src/lib/stages'
+import { REFERENCE_RESOURCES } from '../src/lib/reference-resources'
 import { CHEATSHEETS } from '../src/lib/cheatsheets'
 
 /**
@@ -104,6 +105,7 @@ export async function auditPages(page: Page): Promise<string[]> {
   // stage steps above, this needs no page load — the registry is a plain array,
   // so the only cost is the sweep itself.
   paths.push('/reference')
+  paths.push(...REFERENCE_RESOURCES.map((resource) => resource.href))
   paths.push(...CHEATSHEETS.map((sheet) => `/reference/${sheet.slug}`))
 
   cached = paths

@@ -1,3 +1,4 @@
+import { REFERENCE_RESOURCES } from '../reference-resources'
 import { expect, test } from 'vitest'
 import { STAGES } from '@/lib/stages'
 import {
@@ -265,4 +266,13 @@ test('every registered source image carries alt text, since on an undrawn sheet 
     if (!image) continue
     expect(image.alt.trim().length, sheet.slug).toBeGreaterThan(0)
   }
+})
+
+test('native resource paths cannot collide with sheet routes', () => {
+  const sheetPaths = CHEATSHEETS.map((sheet) => `/reference/${sheet.slug}`)
+  for (const resource of REFERENCE_RESOURCES)
+    expect(sheetPaths).not.toContain(resource.href)
+  expect(
+    new Set(REFERENCE_RESOURCES.map((resource) => resource.href)).size,
+  ).toBe(REFERENCE_RESOURCES.length)
 })
