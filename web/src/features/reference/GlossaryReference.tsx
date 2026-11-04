@@ -41,7 +41,7 @@ export function GlossaryReference({
               <dt className="t-head break-words text-lg text-fg">
                 <a
                   href={`#${id}`}
-                  className="inline-flex min-h-11 items-center underline decoration-line-strong underline-offset-4 hover:text-brand"
+                  className="inline-flex min-h-11 min-w-11 items-center underline decoration-line-strong underline-offset-4 hover:text-brand"
                 >
                   {term.name}
                 </a>
