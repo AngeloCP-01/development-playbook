@@ -19,6 +19,7 @@ const fixture: StackDocument = {
           version: '2.x',
           rationale: 'Use <plain> text.\nKeep *literal* markers.',
           note: 'Check support.',
+          see: '06-testing',
           sources: [
             {
               label: 'Tool docs',
@@ -60,6 +61,7 @@ test('publishes the source meaning, explicit source links and chapter links in p
   expect(markdown).toContain('[Tool docs](https://example.com/docs)')
   expect(markdown).toContain('2026-11-04')
   expect(markdown).toContain('../docs/03-architecture.md')
+  expect(markdown).toContain('../docs/06-testing.md')
 })
 
 test('keeps plain content literal and table rows intact while omitting absent optional values', () => {
@@ -74,11 +76,11 @@ test('keeps plain content literal and table rows intact while omitting absent op
 
 test('omits a missing or unknown optional chapter instead of inventing a Markdown link', () => {
   expect(renderStack({ ...fixture, deviationStage: undefined })).not.toContain(
-    '../docs/',
+    '../docs/03-architecture.md',
   )
   expect(
     renderStack({ ...fixture, deviationStage: 'not-a-stage' }),
-  ).not.toContain('../docs/')
+  ).not.toContain('../docs/03-architecture.md')
 })
 
 test('reference/stack.md is generated from the canonical source', async () => {
@@ -86,14 +88,32 @@ test('reference/stack.md is generated from the canonical source', async () => {
 })
 
 test('stack fragment IDs remain unique and sources are explicit HTTPS links', () => {
-  const ids = STACK.groups.flatMap((group) => [
+  const document: StackDocument = STACK
+  const ids = document.groups.flatMap((group) => [
     group.id,
     ...group.choices.map((choice) => choice.id),
   ])
   expect(new Set(ids).size).toBe(ids.length)
   for (const id of ids) expect(id).toMatch(/^[a-z][a-z0-9-]*$/)
-  for (const group of STACK.groups)
+  for (const group of document.groups)
     for (const choice of group.choices)
-      for (const source of 'sources' in choice ? choice.sources : [])
+      for (const source of choice.sources ?? [])
         expect(new URL(source.href).protocol).toBe('https:')
 })
+
+test.each([undefined, 'missing-stage'])(
+  'omits a missing or unknown choice stage reference (%s)',
+  (see) => {
+    const markdown = renderStack({
+      ...fixture,
+      deviationStage: undefined,
+      groups: [
+        {
+          ...fixture.groups[0],
+          choices: [{ ...fixture.groups[0].choices[0], see }],
+        },
+      ],
+    })
+    expect(markdown).not.toContain('../docs/')
+  },
+)

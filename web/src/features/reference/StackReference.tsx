@@ -55,55 +55,66 @@ export function StackReference({
             {group.title}
           </h2>
           <div className="border-b border-line">
-            {group.choices.map((choice) => (
-              <section
-                key={choice.id}
-                id={choice.id}
-                tabIndex={-1}
-                className="scroll-mt-24 border-t border-line py-6 sm:grid sm:grid-cols-[minmax(8rem,0.3fr)_minmax(0,1fr)] sm:gap-6"
-              >
-                <h3 className="t-ui text-sm font-semibold text-subtle">
-                  {choice.concern}
-                </h3>
-                <div className="min-w-0">
-                  <p className="t-head mt-3 break-words text-lg text-fg sm:mt-0">
-                    {choice.tool}
-                  </p>
-                  {choice.version && (
-                    <p className="t-data mt-2 text-sm text-subtle">
-                      {choice.version}
+            {group.choices.map((choice) => {
+              const stage = choice.see ? getStage(choice.see) : undefined
+              return (
+                <section
+                  key={choice.id}
+                  id={choice.id}
+                  tabIndex={-1}
+                  className="scroll-mt-24 border-t border-line py-6 sm:grid sm:grid-cols-[minmax(8rem,0.3fr)_minmax(0,1fr)] sm:gap-6"
+                >
+                  <h3 className="t-ui text-sm font-semibold text-subtle">
+                    {choice.concern}
+                  </h3>
+                  <div className="min-w-0">
+                    <p className="t-head mt-3 break-words text-lg text-fg sm:mt-0">
+                      {choice.tool}
                     </p>
-                  )}
-                  <p className="mt-4 leading-relaxed text-muted">
-                    {choice.rationale}
-                  </p>
-                  {choice.note && (
-                    <p className="mt-3 leading-relaxed text-muted">
-                      {choice.note}
+                    {choice.version && (
+                      <p className="t-data mt-2 text-sm text-subtle">
+                        {choice.version}
+                      </p>
+                    )}
+                    <p className="mt-4 leading-relaxed text-muted">
+                      {choice.rationale}
                     </p>
-                  )}
-                  {choice.sources && choice.sources.length > 0 && (
-                    <ul className="mt-3 space-y-1">
-                      {choice.sources.map((source) => (
-                        <li key={source.href}>
-                          <a
-                            href={source.href}
-                            className="t-ui inline-flex min-h-11 items-center text-sm text-blueprint underline underline-offset-4"
-                          >
-                            {source.label}
-                          </a>
-                          {source.reviewed && (
-                            <span className="t-data block text-xs text-subtle">
-                              Reviewed {source.reviewed}
-                            </span>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </section>
-            ))}
+                    {choice.note && (
+                      <p className="mt-3 leading-relaxed text-muted">
+                        {choice.note}
+                      </p>
+                    )}
+                    {stage && (
+                      <Link
+                        href={`/stages/${stage.slug}`}
+                        className="t-ui mt-3 inline-flex min-h-11 items-center text-sm text-blueprint underline underline-offset-4"
+                      >
+                        See {stage.num} · {stage.title}
+                      </Link>
+                    )}
+                    {choice.sources && choice.sources.length > 0 && (
+                      <ul className="mt-3 space-y-1">
+                        {choice.sources.map((source) => (
+                          <li key={source.href}>
+                            <a
+                              href={source.href}
+                              className="t-ui inline-flex min-h-11 items-center text-sm text-blueprint underline underline-offset-4"
+                            >
+                              {source.label}
+                            </a>
+                            {source.reviewed && (
+                              <span className="t-data block text-xs text-subtle">
+                                Reviewed {source.reviewed}
+                              </span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </section>
+              )
+            })}
           </div>
         </section>
       ))}

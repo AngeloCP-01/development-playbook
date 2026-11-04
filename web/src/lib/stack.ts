@@ -7,6 +7,7 @@ export type StackChoice = {
   version?: string
   rationale: string
   note?: string
+  see?: string
   sources?: readonly StackSource[]
 }
 export type StackGroup = {
@@ -37,7 +38,7 @@ export const STACK = {
     'Check the package registry for release availability, then verify framework, lint, test and host compatibility. A registry version lookup alone does not validate a stack.',
   ],
   reviewNote:
-    'Source review: 2026-11-04, limited to the claims and links identified below. This is not a full dependency or provider audit. Review undated selections before adopting them; the linked source record states the limits.',
+    'Source review: 2026-11-04, limited to the claims and links identified below. This is not a full dependency or provider audit. Review undated selections before adopting them.',
   groups: [
     {
       id: 'core',
@@ -247,6 +248,7 @@ export const STACK = {
         },
         {
           id: 'component-tests',
+          see: '06-testing',
           concern: 'Component tests',
           tool: 'Testing Library + jsdom',
           rationale:
@@ -384,6 +386,6 @@ export const STACK = {
   deviationStage: '03-architecture',
   upkeep: [
     'Recheck the stack when starting a project and whenever a dependency or provider changes a relevant support contract. Version advice ages faster than the stage concepts.',
-    'Edit web/src/lib/stack.ts and run pnpm gen:stack from web/ to regenerate reference/stack.md. Keep shared default version guidance here and align any affected operational examples in the chapter and interactive stage.',
+    'Keep shared default version guidance in this reference. When a default changes, align affected operational examples in both the chapter and interactive stage.',
   ],
 } satisfies StackDocument

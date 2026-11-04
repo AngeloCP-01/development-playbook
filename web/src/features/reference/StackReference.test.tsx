@@ -20,6 +20,7 @@ const fixture: StackDocument = {
           version: '2.x',
           rationale: 'The whole reason.',
           note: 'A material caveat.',
+          see: '06-testing',
           sources: [
             {
               label: 'Compiler docs',
@@ -65,6 +66,9 @@ test('shows complete choice rationale, support caveats and sources with stable f
     'Review on change.',
   ])
     expect(screen.getByText(text)).toBeTruthy()
+  expect(
+    screen.getByRole('link', { name: /06.*Testing/ }).getAttribute('href'),
+  ).toBe('/stages/06-testing')
   const choice = container.querySelector('#compiler') as HTMLElement
   expect(
     within(choice)
@@ -84,18 +88,23 @@ test('shows complete choice rationale, support caveats and sources with stable f
   expect(container.querySelector('x')).toBeNull()
 })
 
-test('omits absent or unknown optional stage links', () => {
-  const { container, rerender } = render(
-    <StackReference document={{ ...fixture, deviationStage: undefined }} />,
-  )
-  expect(container.querySelector('a[href^="/stages/"]')).toBeNull()
-  rerender(
-    <StackReference
-      document={{ ...fixture, deviationStage: 'missing-stage' }}
-    />,
-  )
-  expect(container.querySelector('a[href^="/stages/"]')).toBeNull()
-})
+test.each([undefined, 'missing-stage'])(
+  'omits absent or unknown optional stage links (%s)',
+  (see) => {
+    const document = {
+      ...fixture,
+      deviationStage: see,
+      groups: [
+        {
+          ...fixture.groups[0],
+          choices: [{ ...fixture.groups[0].choices[0], see }],
+        },
+      ],
+    }
+    const { container } = render(<StackReference document={document} />)
+    expect(container.querySelector('a[href^="/stages/"]')).toBeNull()
+  },
+)
 
 test('the actual page renders each canonical choice and all deviation/upkeep guidance', () => {
   const { container } = render(<StackReference />)
@@ -110,6 +119,9 @@ test('the actual page renders each canonical choice and all deviation/upkeep gui
     expect(screen.getByText(deviation.detail)).toBeTruthy()
   for (const paragraph of STACK.upkeep)
     expect(screen.getByText(paragraph)).toBeTruthy()
+  expect(
+    screen.getByRole('link', { name: /06.*Testing/ }).getAttribute('href'),
+  ).toBe('/stages/06-testing')
   const ids = [...container.querySelectorAll('[id]')].map(
     (element) => element.id,
   )

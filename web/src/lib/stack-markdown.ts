@@ -37,6 +37,11 @@ export function renderStack(document: StackDocument = STACK): string {
       const details = [choice.rationale, choice.note]
         .filter((value): value is string => Boolean(value))
         .map(text)
+      const stage = choice.see ? getStage(choice.see) : undefined
+      if (stage)
+        details.push(
+          `See [${stage.num} — ${text(stage.title)}](../docs/${stage.slug}.md).`,
+        )
       for (const source of choice.sources ?? []) {
         const href = source.href.replace(/\(/g, '%28').replace(/\)/g, '%29')
         details.push(

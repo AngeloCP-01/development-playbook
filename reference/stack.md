@@ -13,7 +13,7 @@ Version families below are reviewed starting points, not a promise that every la
 
 Check the package registry for release availability, then verify framework, lint, test and host compatibility. A registry version lookup alone does not validate a stack.
 
-Source review: 2026-11-04, limited to the claims and links identified below. This is not a full dependency or provider audit. Review undated selections before adopting them; the linked source record states the limits.
+Source review: 2026-11-04, limited to the claims and links identified below. This is not a full dependency or provider audit. Review undated selections before adopting them.
 
 ## Core
 
@@ -44,7 +44,7 @@ Source review: 2026-11-04, limited to the claims and links identified below. Thi
 | End-to-end tests | Playwright | 1.61+ within the reviewed major | Run browser checks against a production build; use a separate development-console sweep for React development warnings. |
 | Linting | ESLint (eslint-config-next) | 9.x | Next maintains the config, and the react-hooks rules have caught real bugs here. Gate with --max-warnings 0 so warnings fail the check. |
 | Formatting | Prettier | 3.x | Pair with eslint-config-prettier to prevent formatting rules from competing. |
-| Component tests | Testing Library + jsdom | RTL 16.x / jsdom 30.x | Use meaningful render tests for components whose data or conditions determine what the reader sees, including accessible names. jsdom 30 requires Node ^22.22.2, ^24.15.0 or &gt;=26.0.0. A major-only Node 22 declaration is insufficient. [jsdom 30 release](https://github.com/jsdom/jsdom/releases/tag/v30.0.0) (reviewed 2026-11-04). |
+| Component tests | Testing Library + jsdom | RTL 16.x / jsdom 30.x | Use meaningful render tests for components whose data or conditions determine what the reader sees, including accessible names. jsdom 30 requires Node ^22.22.2, ^24.15.0 or &gt;=26.0.0. A major-only Node 22 declaration is insufficient. See [06 — Testing](../docs/06-testing.md). [jsdom 30 release](https://github.com/jsdom/jsdom/releases/tag/v30.0.0) (reviewed 2026-11-04). |
 | Git hooks | Lefthook | 2.x | A single binary with hooks configured in YAML. |
 
 ## Operations
@@ -73,4 +73,4 @@ See [03 — Architecture](../docs/03-architecture.md).
 
 Recheck the stack when starting a project and whenever a dependency or provider changes a relevant support contract. Version advice ages faster than the stage concepts.
 
-Edit web/src/lib/stack.ts and run pnpm gen:stack from web/ to regenerate reference/stack.md. Keep shared default version guidance here and align any affected operational examples in the chapter and interactive stage.
+Keep shared default version guidance in this reference. When a default changes, align affected operational examples in both the chapter and interactive stage.
