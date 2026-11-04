@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-04): W-6.3t Improvement Review verified; coordinator review accepted.** Branch `feat/improvement-review-reference` starts from **41c0f2f73fbe0de44b256b4155743e50ada3f178**. Sheet **8b83bfd** adds four sections/fourteen rows, four text citations, the Stage 18 tether, generated Markdown and three actual-sheet render tests; guard correction **04e3623** updates global reference totals. Feature references are **25/30**; local develop stays **24/29**, with **18/18** stages interactive. [One source record](../reference/stage-18-source-research.md#w-6-assessment-improvement-review-2026-11-04) holds the approved boundary and source checks. [KICKOFF](../KICKOFF.md) carries the coordinator handoff. No merge, push or promotion.
+**Current work (2026-11-04): W-6.3t Improvement Review merged locally into develop.** User-approved no-ff merge **2cc7d5d**, parents **ff6ce06 / 0e801ca**, integrates the approved text-only Stage 18 companion, generated Markdown and render coverage. Merge tree equals reviewed feature tip **0e801ca**; application inputs equal tested **04e3623**. Local develop is **25/30** references and **18/18** interactive stages. Identified checks are retained for unchanged inputs. [KICKOFF](../KICKOFF.md) holds the next handoff. No push or promotion.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -23,9 +23,9 @@ interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. That width repair was the pre-Stage-10 baseline. Tracked `origin/develop` remains
 `79f9e31`; the current local develop merge is recorded above.
 
-On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **24 drawn / 29 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
+On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **25 drawn / 30 registered**, through **2cc7d5d**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** User decision on no-ff integration of `feat/improvement-review-reference` into local `develop`; recommended coordinator setting **GPT-6 Astra / Low**. Coordinator review of **41c0f2f...75f028c** found no blocking standards or scope issues and accepted the recorded verification with its stated limits. Integration requires separate user approval.
+**Next task/model:** W-6.4 glossary and stack surfacing assessment, recommended **GPT-6 Astra / Low**. Inspect the existing reference hub, canonical glossary data and stack document, then define the reader tasks and smallest useful scope. Five language placeholders remain separate; no new implementation is started by this merge.
 
 Two deliverables from one body of content.
 
@@ -77,7 +77,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-3** | Stages 02–18 interactive | ☑ *(18/18 merged to local `develop`; Stage 18 landed as `c9e5d07`.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(24 of 29 registered sheets drawn on local `develop`; Technical Debt Review merged as `6b78fcf`. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(25 of 30 registered sheets drawn on local `develop`; Improvement Review merged as `2cc7d5d`. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
 
 ### Dependency map
 
@@ -816,7 +816,7 @@ content/page review are complete at **5ea8cb2**. Coordinator reviewed
 The user approved integration as **6b78fcf**; app checks are retained for the
 identical tree. Push and main promotion remain separate.
 
-**W-6.3t — Stage 18 Improvement Review ◐** *(coordinator accepted; integration pending)*
+**W-6.3t — Stage 18 Improvement Review ☑** *(merged locally as `2cc7d5d`)*
 
 - [x] Compare the finished stage and neighbouring sheets with the candidate.
 - [x] Recheck primary sources and existing visual reuse limits; record one
@@ -832,7 +832,9 @@ identical tree. Push and main promotion remain separate.
   coordinator review; direct posting to another Codex session is unavailable.
 - [x] Coordinator reviewed **41c0f2f...75f028c**, including actual code/data,
   generated Markdown, render tests and raw results; no blocking findings.
-- [ ] Obtain separate user approval before integration into develop.
+- [x] User approved no-ff integration into develop as **2cc7d5d**, parents
+  **ff6ce06 / 0e801ca**. Merge tree equals the reviewed feature tip; retain the
+  identified verification for unchanged **04e3623** application inputs.
 
 Assessment **a30f5e5**, branch `docs/2026-11-04-stage-18-reference-assessment`, from
 local develop **ff6ce06ee082fea743be122dc976e666dec45cb8**. Approved slug
@@ -854,8 +856,8 @@ Recommended implementation: **GPT-6.1 Sol / High**, fresh user-selected session
 after the recorded scope approval, from this assessment branch's committed tip; create
 `feat/improvement-review-reference` and record the exact starting SHA. Return to
 coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**. Implementation **8b83bfd**
-and guard correction **04e3623** yield **25/30** on the feature branch; local
-develop remains **24/29**. Implementation session: **01a1a431-2038-7931-b6c7-f7d7e1fa352c**.
+and guard correction **04e3623** are integrated as **2cc7d5d**; local develop
+now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-f7d7e1fa352c**.
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
 
