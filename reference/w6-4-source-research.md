@@ -335,3 +335,30 @@ major; minor/patch releases are managed by the host and can differ between build
 and function runtime. Use `^22.22.2` for the dependency-compatible Node 22 contract
 and `.nvmrc` **22.23.4** for the installed local/CI selection. This does not establish
 the hosted patch version or prove a CI/deployment execution.
+
+### Remaining provider claims checked for the port
+
+Accessed 2026-11-04. These checks support the bounded text in the stack source,
+not an installation, plan purchase or live-service result:
+
+- Neon, [Vercel-managed integration](https://neon.com/docs/guides/vercel-managed-integration):
+  preview branching must be enabled and produces copy-on-write branches. Replace
+  the unconditional promise of a database per preview with that condition.
+- Drizzle team, [migration workflows](https://orm.drizzle.team/docs/migrations):
+  generating and applying SQL migrations are explicit workflow choices.
+- Colin McDonnell/Zod, [introduction](https://zod.dev/): schemas support input
+  validation and TypeScript inference. No upgrade or universal tool compatibility
+  is claimed by retaining the chosen Zod 4 family.
+- Vercel, [Blob](https://vercel.com/docs/vercel-blob): object storage for files;
+  adding it only for a product need remains the playbook's recommendation.
+- Sentry, [Next.js source maps](https://blog.sentry.io/setting-up-next-js-source-maps-sentry/):
+  matching uploaded source maps enable readable production stack traces. The
+  direct docs fetch returned an unsupported Markdown content-type; the official
+  Sentry article supplies this bounded check.
+- Better Stack, [monitoring introduction](https://betterstack.com/docs/uptime/monitoring-start/):
+  external synthetic checks and HTTP monitoring. Checking a real product path
+  rather than only health remains the playbook's recommendation.
+
+Microsoft's TypeScript 7.0 announcement was reopened and the original release/API
+qualification retained. Other high-impact checks remain in the assessment above;
+undated choices are retained defaults, not newly certified provider promises.
