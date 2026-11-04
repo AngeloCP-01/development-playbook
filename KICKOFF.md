@@ -1,69 +1,75 @@
-# Kickoff: Stage 18 research ready for the interactive page
+# Kickoff: Stage 18 interactive page
 
-Updated 2026-10-30. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
+Updated 2026-11-04. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 
 ## Current state
 
-- Branch: `docs/2026-10-30-stage-18-research`, from local develop
-  **621cbdcff63dd23f5bcff5b650c1eb4484511492**.
-- Chapter and research checkpoint: **30006f6**. Use `git log -1 --oneline`
-  for the closing records tip.
-- [Continuous Improvement](docs/18-continuous-improvement.md) now separates
-  product outcomes from delivery signals, treats feedback as evidence to
-  investigate, and teaches an owned improvement cycle with outcome review.
-  Its fictional invoice example ends inconclusively. Four chapter AI plays
-  require source checks and explicit limits.
-- [One research record](reference/stage-18-source-research.md) holds primary
-  findings, the original claim assessment and three link-only visual references.
-  External artwork has no publication clearance; the HEART paper's PDF notice
-  restricts redistribution. W-6's possible Improvement Review remains a candidate.
-- Local develop remains **17/18** interactive and **24/29** references. Stage 18's
-  page is still a placeholder. No merge, push or promotion occurred.
+- Branch: `feat/continuous-improvement`, from research handoff
+  **141c1e293d045f77798d55286f510694d067a94e** (develop base **621cbdc**).
+- Application: **679470fdc62a34bec05b68c43ff406064a34271d**. Six content judgments
+  plus AI Plays at `/stages/18-continuous-improvement`. The invoice review stays
+  inconclusive; product outcomes and delivery signals stay separate.
+- Audit-fixture repair: **dc62d9f**. All stages now have rails, so a controlled
+  empty-page fixture replaces the obsolete assumption that Stage 18 is empty.
+- The [chapter](docs/18-continuous-improvement.md) stays at research checkpoint
+  **30006f6**; [one source record](reference/stage-18-source-research.md) holds
+  provenance and the port's link/definition rechecks. No external artwork copied.
+- Feature branch: **18/18** interactive. Local develop: **17/18**. References:
+  **24/29**. No merge, push or promotion occurred.
 
 ## Verification
 
-For **30006f6**'s chapter/source tree: metadata, source-citation and tracker-ledger
-checks **41/41 across 3 files**, changed local links **11 targets / 2 files**, and
-whitespace checks pass, exit 0. Humanizer pass and independent Astra Low final
-content review found no actionable issues. Review covered the actual chapter
-change against **621cbdc** and the new source record; no page review is claimed.
+Fresh for **679470f**: format, lint, generated-route typecheck,
+**1,586 tests / 222 files**, production build (**54 prerendered routes**), focused
+browser checks and independent content/page review. The full production run passed **26/27** (exit 1): its only failure was the old
+empty-stage test resolving the seven real step IDs instead of rejecting.
+The repaired audit-page suite then passed **3/3** (exit 0) against the same build;
+retain the other 26 audit results for unchanged application inputs. Contrast in
+both themes, 320–2560px overflow, touch targets, disclosure coverage, console,
+hashes and panel height all pass. No full audit or build was repeated after the
+test-only repair.
 
-The app is unchanged. No app suite, build, browser or development-console run was
-needed for this prose checkpoint. Fresh closing-record checks on the handoff tree: ledger **2/2**,
-`python3 /private/tmp/stage18-check-doc-links.py` **125 local targets / 5 files**,
-and `git diff --check`, all exit 0. The **41/41** result is retained for unchanged
-chapter/source inputs; no full app gate was rerun.
+Focused production checks: **42** panel/theme/width combinations (375/768/1440px),
+**252** disclosure activations, **42** exercise answers, **12** definition checks
+and **6** hash/keyboard/Back/reload checks; no overflow or console/page errors.
+Default panel maximum **2.44 screens at 1024×768**. Both-theme screenshots inspected.
+Independent Astra Low review covered all seven panels at the same three widths,
+expanded disclosures and answered exercises, plus keyboard/history behavior;
+no actionable findings. It also reviewed the later audit-fixture diff.
 
-## Next task and session
+Development-console sweep: **1/1**, unchanged test against an identical source
+copy under ignored `.next/`, with Turbopack and an isolated lock on port 3101.
+The normal command first failed because of sandbox port permissions, then the
+pre-existing port-3200 dev lock. That server and the project config were left
+untouched; only the fixture's Turbopack root and test server path differed.
+The source copy matched `web/src` via `diff -qr`.
 
-**Task:** Stage 18 Continuous Improvement interactive page.
-**Recommended model:** `gpt-6.1-sol`, **reasoning:** `high`, fresh implementation
-session with the user selecting that setting. This recommendation does not
-confirm the active setting.
+Fresh after **dc62d9f**'s test-only edit: generated-route typecheck, focused ESLint
+and Prettier checks, and audit-page tests **3/3** against the same production
+build. Application and generated glossary inputs remain identical to **679470f**.
+Humanizer pass applied to page prose; all five outward links opened with HTTP 200
+and expected titles in a real browser. See the tracker completion row for final
+commands, evidence and limits. Fresh closing records: ledger/source-citation checks
+**5/5 across 2 files**, **237 local targets / 5 Markdown files** and
+`git diff --check` pass, exit 0. Application checks above are retained for unchanged
+**679470f** inputs. No deployed-site test was run.
 
-**Reader outcome:** distinguish product outcomes from delivery/process signals,
-choose an improvement from evidence and decide what to do after reviewing it.
+## Return handoff
 
-**Starting tree:** the committed tip of this research branch. Record the exact
-SHA, then create `feat/continuous-improvement` from it. Do not start from develop
-without bringing the research checkpoint. Keep chapter and port together for
-integration (D-51).
+**Next task:** coordinator review of Stage 18's completed branch and evidence.
+**Recommended model/effort:** `gpt-6-astra`, `low`.
+**Coordinator session:** `01a18acc-3b54-7202-92f3-404cc94fd0ad`.
+**Implementation session:** `01a18acc-4d44-72f0-9e32-92b73a0b7a9f`.
+Read the implementation thread before relying on its result; inspect the actual
+branch diff and later records-only changes. Use `git log -1` for the closing tip.
+The implementation recommendation was `gpt-6.1-sol`, `high`; the environment did
+not confirm that active model, so no actual-setting claim is made.
 
-**Scope/acceptance:** [W-3.19](docs/task.md) holds the compact checklist. Read
-[patterns](web/PATTERNS.md) and [design](web/DESIGN.md). Start with six content
-judgments plus a dedicated AI Plays step using existing interactions. Port the
-chapter's examples, uncertainty, minority needs, artifacts, team notes, traps and
-sources. Add meaningful data-driven render coverage and Stage 18 to the explicit
-chapter AI guard. Complete the final web gate, dev-console sweep, focused
-both-theme/width/keyboard/history checks and one independent content/page review.
-Shared behavior changes require D-99's stronger path.
+Reader outcome and acceptance live in [W-3.19](docs/task.md). The known chapter/page
+duplication is extended using existing patterns; no shared behavior changed.
+Remaining scope: coordinator acceptance and the user's integration decision.
+Ask separately before merging into develop. Main promotion belongs to the user.
 
-**Return results to coordinator session:**
-`01a18acc-3b54-7202-92f3-404cc94fd0ad` (this research/coordination session).
-Return branch/commit, actual checks with limits, unresolved issues and the
-implementation session reference. The coordinator reads that thread and reviews
-the actual diff before relying on the result.
-
-Deferred: W-6 companion and image publication, unrelated shared refactors, real
-product research/telemetry, integration, push and promotion. Ask separately before
-merging into develop. Main promotion belongs to the user.
+Deferred: W-6 companion selection and image publication, unrelated shared
+refactors, real product research/telemetry, push and promotion. External image
+reuse limits in the research record still apply.

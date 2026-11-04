@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-10-30): Stage 18 research/chapter checkpoint complete on `docs/2026-10-30-stage-18-research`.** Chapter and source record are committed as **30006f6**, based on local develop **621cbdc**. Primary-source assessment, three link-only visual references, outcome-review example and D-35 chapter AI plays are ready for the page handoff. Local develop remains **17/18** interactive and **24/29** references. No integration or deployment occurred. [KICKOFF](../KICKOFF.md) holds the implementation handoff.
+**Current work (2026-11-04): Stage 18 interactive page implemented on `feat/continuous-improvement`.** Application commit **679470f**, based on research handoff **141c1e2**, adds six content judgments and AI Plays. The chapter/source checkpoint **30006f6** remains included. Unit, focused browser and independent content/page review checks pass; production audit coverage is complete after the empty-rail fixture repair. Local develop remains **17/18** interactive and **24/29** references; the feature branch has **18/18**. [KICKOFF](../KICKOFF.md) holds the return handoff. No integration or deployment occurred.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **17/18**: stages 01–17 are interactive; Stage 18 remains. W-6 is **24 drawn / 29 registered**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** Stage 18 Continuous Improvement interactive page, **GPT-6.1 Sol / High**, in a fresh implementation session selected by the user. Start from the committed research branch tip so the chapter and port integrate together (D-51). Use W-3.19's acceptance checklist below. Return results to coordinator session `01a18acc-3b54-7202-92f3-404cc94fd0ad`; integration remains a separate user decision.
+**Next task/model:** coordinator review of the completed Stage 18 branch and evidence, **GPT-6 Astra / Low**, in coordinator session `01a18acc-3b54-7202-92f3-404cc94fd0ad`. The implementation session is `01a18acc-4d44-72f0-9e32-92b73a0b7a9f`. Read that thread before relying on its result. Integration remains a separate user decision.
 
 Two deliverables from one body of content.
 
@@ -152,7 +152,7 @@ not rerun after merge. The local feature branch and worktree were removed.
 Debt Review, integrated locally as **6b78fcf** after separate user approval.
 Retained final app checks apply to identical tested **5ea8cb2** inputs.
 
-### W-3.19 — Stage 18 Continuous Improvement ◐ *(research/chapter complete; page pending)*
+### W-3.19 — Stage 18 Continuous Improvement ◐ *(page complete; integration pending)*
 
 **Research checkpoint:** **30006f6**, branch `docs/2026-10-30-stage-18-research`,
 starting develop **621cbdcff63dd23f5bcff5b650c1eb4484511492**.
@@ -175,41 +175,54 @@ Independent final content review found no actionable issues. Fresh checkpoint
 checks: metadata/citations/ledger **41/41**, changed local links **11/11** and
 whitespace, all exit 0. No app behavior changed; no app gate or browser claim.
 
-**Next implementation: recommended `gpt-6.1-sol`, effort `high`, fresh session.**
-Use the committed research branch tip as the starting tree; record its exact SHA
-with `git log -1`. Create `feat/continuous-improvement` from that tree. Keep the
-chapter stable during the port and integrate both together under D-51. Return to
-coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad** with branch/commit, actual
-checks, unresolved issues and the implementation session reference.
+**Implementation:** **679470f** on `feat/continuous-improvement`, from research
+handoff **141c1e293d045f77798d55286f510694d067a94e**. The chapter stayed stable;
+chapter and page remain together for integration under D-51. **dc62d9f** replaces
+the audit's obsolete Stage 18 placeholder assumption with a controlled empty-rail
+fixture, retaining the real navigation/DOM check and rejection assertion.
+Recommended implementation setting was `gpt-6.1-sol`, effort `high`; this does not
+assert an environment-confirmed active model.
+Return to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad** with the branch,
+commits, checks and implementation session **01a18acc-4d44-72f0-9e32-92b73a0b7a9f**.
 
 **Page scope and acceptance checklist:**
 
-- [ ] Read `web/PATTERNS.md` and `web/DESIGN.md`; use existing interactions.
+- [x] Read `web/PATTERNS.md` and `web/DESIGN.md`; use existing interactions.
   Start with six content judgments: distinguish measures; investigate a signal;
   choose the next action; plan/study a change; improve delivery conditions;
   update guidance or pause feature work. Split only where panel weight needs it.
-- [ ] Teach through classification/reveal, observation inspectors, bounded
+- [x] Teach through classification/reveal, observation inspectors, bounded
   decision exercises and an annotated improvement record. Carry the fictional
   invoice example through its inconclusive result. Keep denominators, minority
   needs, alternate explanations and harm checks visible.
-- [ ] Add a dedicated AI Plays step with the four chapter plays, supplied inputs,
+- [x] Add a dedicated AI Plays step with the four chapter plays, supplied inputs,
   source/count checks and limits. No synthetic feedback presented as user evidence.
-- [ ] Port artifacts, done checks, team notes, traps and source links. Preserve
+- [x] Port artifacts, done checks, team notes, traps and source links. Preserve
   recurring cadence and product-versus-delivery distinctions. Follow existing
   front-matter conventions; this adds the established chapter/page duplication.
-- [ ] Build under `web/src/features/continuous-improvement/`, register in
+- [x] Build under `web/src/features/continuous-improvement/`, register in
   `web/src/features/stage-content.ts`, then set ready in `web/src/lib/stages.ts`.
   Extend the chapter AI guard in `web/src/lib/stage-metadata.test.ts` to Stage 18;
-  the chapter heading already exists but is not yet on that explicit list.
-- [ ] Add meaningful render coverage for data-derived output and exercises;
+  the chapter heading already exists and is now covered by that explicit list.
+- [x] Add meaningful render coverage for data-derived output and exercises;
   reuse existing hash, disclosure and keyboard behavior. New shared behavior
   requires D-99's stronger path and behavior TDD; static content does not.
-- [ ] Run the completed web gate once: format, lint, generated-route typecheck,
+- [x] Run the completed web gate once: format, lint, generated-route typecheck,
   unit/DOM tests, production build and audit. Run dev-console once. Check affected
   panels/material states in both themes at narrow/middle/wide widths, keyboard,
   hash/Back/reload, contrast, touch targets, overflow and console.
-- [ ] Obtain one independent final content/page review of the actual final diff.
+- [x] Obtain one independent final content/page review of the actual final diff.
   Report reviewed commit and evidence; keep later changes visible.
+
+**Final verification:** application **679470f** passed format/lint/typecheck,
+**1,586 tests / 222 files**, a **54-route** production build and focused both-theme
+browser checks. The full audit run passed **26/27**; its sole failure was the
+obsolete assumption that Stage 18 had no rail. After **dc62d9f**, the corrected
+audit-page suite passed **3/3** against the same build; the other 26 results are
+retained for unchanged inputs. Development-console **1/1** used an identical
+source copy with an isolated dev lock. Independent Astra Low content and live-page
+review found no actionable issues. [Tracker](tracker.md) records commands and
+limits; [KICKOFF](../KICKOFF.md) carries the coordinator return handoff.
 
 Deferred: W-6 companion selection/implementation and image publication, shared
 refactors, real analytics/research collection, integration, push and promotion.

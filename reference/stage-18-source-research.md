@@ -238,3 +238,17 @@ No app suite is relevant to this research-only file. A humanizer editing pass
 removed overstatement and kept uncertain attribution visible. The record does
 not establish this project's user population, telemetry quality, delivery
 performance or whether a proposed improvement works.
+
+## Interactive-port source checks (2026-11-04)
+
+The page uses the chapter's teaching adaptations and examples; no external
+artwork is reproduced. DORA's guide was re-read to check the five short metric
+definitions added to the delivery inspector, including recovery after a failed
+deployment requiring intervention. Its author remains Nathen Harvey; the page
+reports a last-updated date of 5 January 2026. The definitions support the same
+product-versus-delivery distinction recorded above.
+
+The five outward references (Deming, Google HEART, DORA, Microsoft experimentation
+and SPACE) all opened with HTTP 200 and the expected page title in a real browser.
+These link checks establish availability on this date; they do not change the
+image-reuse limits or establish this project's telemetry or outcomes.
