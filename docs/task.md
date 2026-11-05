@@ -13,15 +13,16 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-05): JavaScript verified; coordinator review pending.**
-`feat/javascript-study-sheet` starts at **8ff159f**; application commit
-**0dcfe2d** adds nine topics/four groups, four activities and optional shared
-activity/Markdown support. The branch has **26/30** sheets and **18/18** stages.
-The [source/design record](../reference/javascript-source-research.md) retains
-published strict-CommonJS evidence (**4 activities / 20 assertions**, Node
-**22.23.4**). Independent content/branch/page review found no actionable defects.
-Production/development checks are complete; the tracker records the timeout/retry
-and isolated-dev limits. No merge, push or promotion.
+**Current work (2026-11-05): expand JavaScript before integration (D-102).**
+The user found the implemented sheet too short and selected **6–8 focused
+sections with worked examples and 1–2 activities per section**. The
+[expansion design](../reference/javascript-source-research.md#sectioned-expansion-selected-2026-11-05)
+and [compact plan](superpowers/plans/2026-11-05-javascript-study-expansion.md)
+recommend seven sections/nine activities using stage-style navigation within
+`/reference/javascript`. Implementation starts in a fresh **GPT-6.1 Sol / High**
+session from the documentation tip descended from **bd72e70**. Original app
+**0dcfe2d** remains historical verified evidence; the expansion has no app checks
+yet. Feature branch **26/30** sheets, **18/18** stages. No merge, push or promotion.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -873,7 +874,7 @@ now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
 
-**W-6.3u — Language and framework study sheets ◐** *(JavaScript implemented on feature branch; four sheets remain)*
+**W-6.3u — Language and framework study sheets ◐** *(JavaScript expansion selected; four sheets remain)*
 
 **User direction, 2026-11-05 (D-101):** for JavaScript, Python, Java, Spring Boot
 and Express & Node, focus on fundamentals, important topics and concepts that
@@ -938,7 +939,13 @@ redesign the completed native Default Stack page or retroactively change the
 existing sheets. Keep the eighteen-stage filing model. Integration still needs
 separate approval; main promotion belongs to the user.
 
-**W-6.3u.1 — JavaScript study sheet ◐** *(implemented and verified; integration pending)*
+**W-6.3u.1 — JavaScript study sheet ◐** *(initial implementation verified; expansion required before integration)*
+
+**Later user direction (D-102):** the original delivery below is too short for
+the intended study task. The user selected 6–8 focused sections with worked
+examples and 1–2 activities per section. The original evidence remains attached
+to its tree; W-6.3u.1a is the current delivery target. Do not merge the shorter
+version as a prerequisite.
 
 Checkpoint **cd724c4** on `docs/2026-11-05-javascript-reference-assessment`, based
 on D-101 brief **6f1f67e6dadefe890d9869100ebdbfff4525d386**. Research/model
@@ -994,6 +1001,28 @@ Return the completed branch/diff and actual checks to coordinator
 D-100's fresh-session policy applies. Other four sheets, algorithm catalogues,
 DOM/Node I/O puzzles, modules/generators/workers, new controls beyond disclosure,
 diagrams/upgrades, push and promotion are deferred.
+
+**W-6.3u.1a — Sectioned JavaScript expansion ◐** *(scope selected; implementation pending)*
+
+- [x] Inspect original feature **bd72e70** / application **0dcfe2d** and read
+  implementation session **01a1a908-ddb6-7f91-bb4d-7834839b62e8** before using
+  its handoff. Identify compressed rows and end-only practice as the depth gap.
+- [x] Record the selected 6–8-section range and recommend seven sections/nine
+  activities, with primary sources, worked examples and local practice in the
+  [existing source record](../reference/javascript-source-research.md#sectioned-expansion-selected-2026-11-05).
+- [x] Prepare the [compact implementation plan](superpowers/plans/2026-11-05-javascript-study-expansion.md)
+  for optional study metadata, reusable section composition, local Markdown
+  ordering and rendered reference-hash audit discovery.
+- [ ] Implement in a fresh **GPT-6.1 Sol / High** session on
+  `feat/javascript-study-sections`, from the committed documentation tip.
+- [ ] Validate actual expanded examples, all section/theme/keyboard states,
+  unchanged ordinary sheets, final gate/dev-console and independent final review.
+- [ ] Return branch/commit, actual checks, unresolved scope and session reference
+  to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**; separate integration
+  approval follows coordinator review.
+
+No nineteenth stage, comprehensive course, runner/grading/persistence, broad
+redesign of other references, or work on the remaining four sheets is selected.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☑** *(merged locally as `b8515a0`)*
 

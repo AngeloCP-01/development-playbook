@@ -3,6 +3,10 @@
 Date: 2026-11-05. Scope: W-6.3u / D-101, JavaScript only. Starting branch:
 `docs/2026-11-05-javascript-reference-assessment`, based on `6f1f67e`.
 
+**Current target:** the user-selected [sectioned expansion](#sectioned-expansion-selected-2026-11-05)
+supersedes the original nine-topic/four-activity scope below. Earlier findings
+and checks are preserved with their original context.
+
 ## Research boundary
 
 The reader should explain a small program, repair a mistake and justify a choice.
@@ -308,6 +312,10 @@ scope approval does not authorize integration into develop.
 
 ## Implementation evidence (2026-11-05)
 
+The later [sectioned expansion](#sectioned-expansion-selected-2026-11-05)
+supersedes the delivery target below. These results remain evidence for the
+original application tree, not for the expansion.
+
 Implemented W-6.3u.1 on `feat/javascript-study-sheet`, from exact base
 **8ff159f5820caa18966e7358bea8dac5cc56fc69**. Application commit
 **0dcfe2da558e13f5d4b2c194bd6a023809043697** delivers the selected nine
@@ -352,3 +360,117 @@ actionable findings. The same reviewer independently inspected desktop/dark and
 narrow/light final layouts after the scoped prose-measure override. Final gate
 results and the review's provenance/limits are recorded once in
 [the tracker](../docs/tracker.md); KICKOFF carries the coordinator handoff.
+
+## Sectioned expansion selected (2026-11-05)
+
+**Reader outcome:** explain a fundamental JavaScript mechanism, trace a small
+program and repair a related mistake without needing a full tutorial course.
+After seeing the implementation, the user found it too short and asked for
+sections like a stage. They selected **6–8 focused sections, worked examples
+and 1–2 activities per section**. This supersedes the earlier nine-topic/four-
+activity delivery target. The original verification remains historical evidence;
+integration still requires separate approval.
+
+Inspection of **bd72e70031d13d7e47dcfa9e083d6c396bbc18dc**, application
+**0dcfe2d**, confirms the depth problem: nine compressed lookup rows in four
+groups, followed by all four activities. Those rows contain useful caveats, but
+few worked examples. Dividing the existing copy into tabs would leave the same
+teaching gap. The expansion must add explanations and examples as well as navigation.
+
+### Teaching structure
+
+The recommended structure within the selected range is **seven sections and
+nine activities**. Section IDs below are stable URL hashes; activities remain
+small original exercises with a visible prompt and independently hidden solution.
+
+| Section / hash | Teaching and worked example | Practice |
+| --- | --- | --- |
+| Values / `values` | Primitive values, object identity, `null`/`undefined`, truthiness, explicit conversion and equality. Trace `0`, empty text and absent input through defaults; distinguish equality from validation. | Repair a default that discards valid `0`/`false`/empty text. |
+| Scope and closures / `scope` | `let`/`const` versus function-scoped `var`, initialization and TDZ, shadowing and retained lexical bindings. Contrast two factory calls with two calls to the same returned function. | Predict a shadowing/TDZ trace; retain and explain the independent-counter activity. |
+| Functions and this / `functions` | Declarations/expressions, parameters/returns, callbacks, ordinary call-site receivers and lexical arrow `this`. Compare a method call, a detached call and a bound callback. | Repair a detached receiver; explain a wrapper alternative and why binding an arrow does not replace its receiver. |
+| Objects and prototypes / `objects` | Property access, identity, shallow copying, prototype lookup and class methods versus instance fields. Trace an own field, inherited method and nested copy. | Retain the fresh-input nested-copy repair; explain which untouched references may stay shared. |
+| Arrays / `arrays` | Choose `map`, `filter`, `find`, `some`/`every`, `reduce` or iteration by desired result; distinguish copying from mutation. Work a numeric total and numeric sort. | Transform/filter a small collection, including empty input; repair a numeric sort that mutates its input. |
+| Promises and errors / `async` | Returned promises, chaining, `await`, error propagation, sequential versus concurrent work and `Promise.all` ordering/no cancellation. Trace completion and failure through a caller. | Retain the async-`forEach` repair with deterministic completion/rejection fixtures and a concurrency follow-up. |
+| Scheduling / `scheduling` | Current synchronous work, microtask enqueue order and timer callbacks. Annotate the existing trace by queue and explain its host/context limits. | Retain the bounded scheduling prediction and explain how moving an enqueue changes the trace. |
+
+Each section needs a reader outcome, a plain-language mechanism, at least one
+worked example with expected behavior and an explanation, a nearby common
+mistake, a representative interview explanation prompt, and its local activity.
+Use two or three teaching units where possible; a table of terse definitions
+alone does not satisfy the outcome. Introduce unfamiliar terms before using
+them in the explanation. Do not add paragraphs merely to meet a word count.
+
+### Additional primary-source findings
+
+MDN contributor documentation, accessed **2026-11-05**. These references support
+behavior, not interview-frequency claims; the seven-section organization and
+exercise choices are editorial recommendations. Existing MDN/TC39/WHATWG/Node
+sources above continue to govern the retained material.
+
+| Source | Finding supported and boundary |
+| --- | --- |
+| [MDN: data types and data structures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Data_structures) | Primitives are immutable; objects can be mutable and functions are callable objects. `typeof null` is a historical exception. Distinguish assignment of a value/reference from mutation; avoid saying JavaScript passes objects by reference. |
+| [MDN: nullish coalescing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) | `??` falls back for `null`/`undefined`; `||` falls back for falsy input. Both short-circuit. `??` preserves `NaN` and is not input validation; mixed logical expressions need parentheses. |
+| [MDN: this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this) | Ordinary receivers follow the call site; arrows capture enclosing `this`. Object literals do not establish a receiver scope. Use explicit functions/methods rather than host-dependent top-level `this`. |
+| [MDN: bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) | `bind` creates a function without calling or modifying the original. It cannot replace an arrow's lexical receiver. Constructor-specific binding behavior is outside the selected example. |
+| [MDN: Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) | Methods have different result shapes; copying is shallow. `sort` mutates, while `toSorted` returns a new array. A callback can still mutate shared objects. |
+| [MDN: reduce](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) | The returned accumulator feeds the next call. An explicit initial accumulator handles empty input; an empty array without one throws. A loop or specialized method may be clearer, and repeated copying can increase cost. |
+
+### Presentation and content contract
+
+Keep `/reference/javascript`, Languages membership and **18/18** stages. Use
+the existing whiteprint/cyanotype design, type roles, `Stepper` and solution
+disclosures. The section rail supports direct selection, URL hashes, back/
+forward and keyboard navigation. Visited checks mean visited, not mastery.
+Reference sections are independently useful; no stage number or AI-plays panel
+is required. Keep sources outside the changing panel.
+
+Retain `Cheatsheet.sections`, `Row.example` and `Cheatsheet.activities` as the
+single content source. Add optional `Section.study` metadata with
+`{ id, label, hint, activityIds: string[] }`. Every section on a study sheet
+has this metadata; ordinary sheets have none. Each activity ID resolves to
+one existing activity, assigned to exactly one section. IDs are unique, stable
+and safe as hashes. Guard missing/duplicate/unassigned references and partial
+study metadata in registry tests. Do not maintain a second lesson-content array.
+
+A focused server composer builds `Step[]` from these sections and renders
+teaching units vertically, including their labelled examples, followed by the
+section's activities. `CheatsheetView` selects it when study metadata exists;
+ordinary sheets keep their current rendering. Give `Stepper` an optional
+`ariaLabel` prop, default **Stage steps**, and pass **JavaScript sections** here.
+Keep its navigation/history behavior unchanged. Reuse `SheetActivities` and
+avoid rendering the global activities again at the page bottom.
+
+Generated Markdown follows the same section order and places each activity
+under its section, including solution, reason and follow-up. Non-study output
+must stay byte-identical. Update the pure-lookup descriptions in type/generator
+comments and the generated introduction to acknowledge selective study sheets.
+This is a scoped shared presentation extension, not a new content backend.
+
+Measure every default panel against the existing **four screens at 1024×768**
+guideline. Put supporting elaboration behind disclosure if necessary; retain
+the mechanism, example and visible activity prompt. Open solutions must remain
+readable without horizontal page overflow. Check both themes, narrow/middle/
+wide widths and keyboard focus. The audit currently discovers only stage hashes
+and reference base URLs: it must discover the rendered reference section rail,
+assert nonempty IDs and visit every panel. A base-page-only pass is insufficient.
+
+### Implementation boundary and handoff
+
+Follow the [compact expansion plan](../docs/superpowers/plans/2026-11-05-javascript-study-expansion.md).
+Use a fresh **GPT-6.1 Sol / High** session under D-100, starting a new feature
+branch from the committed documentation tip descended from **bd72e70**. Preserve
+the original feature history; do not integrate the shorter version first.
+Coordinator review returns to **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
+
+Retain the Node **22.23.4**, strict CommonJS example baseline. Extend the
+published checker to load the actual added examples/activities, including valid
+falsy inputs, TDZ, bound/arrow receivers, empty collections and nonmutating
+numeric sorting. Historical **4/20** assertions do not validate new snippets.
+Keep async fixtures deterministic and scheduling in its isolated callback.
+
+Deferred: the other four sheets, a comprehensive syntax/API course, algorithm
+catalogues, DOM/Node I/O puzzles, modules/generators/workers, scoring, persistence,
+browser code execution, images/dependencies, integration, push and production
+promotion. Future sheets can reuse this presentation after their own scope
+assessment; this decision does not silently expand all five at once.
