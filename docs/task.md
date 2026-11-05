@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-05): W-6.4 merged locally into develop.** User-approved no-ff merge **b8515a0**, parents **097fdd0 / 14ca2da**, integrates native glossary/stack resources, stack single-sourcing/generated Markdown, shared discovery/SEO/audit, aligned Stage 04 guidance and TD-47's supported Node contract. Merge tree equals reviewed feature tip **14ca2da**; application inputs equal verified **9231dc9**. Current counts **25/30** sheets and **18/18** stages; W-6.4 is complete, five language placeholders remain. [KICKOFF](../KICKOFF.md) holds the next handoff. No push or promotion.
+**Current work (2026-11-05): language/framework sheet direction recorded.** The user wants the five remaining sheets to focus on fundamentals, important concepts and interview-relevant practice, with activities inside each. Keep them shorter and more selective than a general tutorial site. This is a scoped extension of the pure-lookup format for JavaScript, Python, Java, Spring Boot and Express & Node (D-101); the activity format still needs design. Branch `docs/2026-11-05-language-sheet-brief` starts from develop **ede8e1f**. Local application remains the verified W-6.4 merge **b8515a0**, **25/30** sheets and **18/18** stages. No app change, merge, push or promotion.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **25 drawn / 30 registered**, through **2cc7d5d**. W-6.4 is integrated as **b8515a0**; five language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** JavaScript reference-sheet source and scope assessment, recommended **GPT-6 Astra / Low**. Start with the existing JavaScript placeholder (array methods, async semantics and event loop), choose a bounded lookup task and verify primary sources before implementation. Python, Java, Spring Boot and Express remain separate; no new sheet work is started by this merge.
+**Next task/model:** JavaScript study-sheet source/scope assessment under D-101, recommended **GPT-6 Astra / Low** in research or the existing coordinator session. Preserve the brief in this branch, curate fundamentals and representative interview prompts, and assess a small shared activity contract alongside the first sheet. Later behavior/data implementation uses a fresh user-selected **GPT-6.1 Sol / High** session.
 
 Two deliverables from one body of content.
 
@@ -860,6 +860,72 @@ and guard correction **04e3623** are integrated as **2cc7d5d**; local develop
 now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-f7d7e1fa352c**.
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
+
+**W-6.3u — Language and framework study sheets ◐** *(content direction accepted; JavaScript assessment next)*
+
+**User direction, 2026-11-05 (D-101):** for JavaScript, Python, Java, Spring Boot
+and Express & Node, focus on fundamentals, important topics and concepts that
+support technical interviews. Add activities inside each sheet. Keep the coverage
+selective and substantially shorter than a general tutorial site.
+
+**Reader outcome:** recall a concept, explain how it behaves or why a choice fits,
+and apply it to a small piece of code. Each sheet should support both review and
+practice; the goal is not a comprehensive course or an API inventory.
+
+**Common content brief:**
+
+- Select foundational concepts with practical and interview relevance. Explain
+  the mechanism and consequence concisely; include a small example or useful
+  contrast where it helps. Put common mistakes close to the concept they affect.
+- Add representative interview prompts that ask the reader to explain, predict,
+  debug or choose between approaches. Avoid claiming universal employer coverage
+  or frequency rankings without suitable evidence. Label illustrative prompts.
+- Put short activities inside each sheet, with a prompt, expected result or
+  reference solution, reasoning and a useful mistake/variation. Readers should
+  be able to attempt an activity before revealing its explanation.
+- Mix reasoning and small coding tasks where they fit the topic. Proposed
+  starting budget: **6–10 selected topics and 3–4 activities per sheet**, to be
+  adjusted after source/scope assessment. These numbers and formats are the
+  coordinator's recommendation, not additional user-specified requirements.
+- State the language/framework version and relevant execution context. Verify
+  executable examples and reference solutions in that context; browser and Node
+  behavior must be distinguished where it changes the answer. Do not replace
+  missing checks with invented output or tool results.
+- Use original concise teaching grounded in primary documentation. Keep one
+  structured content source for web and generated Markdown, including activity
+  prompts, solutions and reasoning. The Markdown must remain useful for study.
+
+**Delivery and acceptance:**
+
+- [x] Record the user's content/practice direction and its scoped extension of
+  the earlier pure-lookup contract (D-101).
+- [ ] Assess JavaScript first: bounded topic list, primary sources, interview
+  relevance, activities and executable-example checks. Keep findings in one
+  research record; no broad five-language course is selected by this brief.
+- [ ] Design the smallest optional activity representation and rendering needed
+  for the first sheet, using existing disclosure/exercise patterns when suitable.
+  Current `CheatsheetView` supports static rows/examples, not activities; shared
+  type/renderer/generator changes require D-99 design, compact plan, behavior
+  TDD and independent final review of the actual diff.
+- [ ] Implement the first sheet and reusable activity support only after scope
+  selection, then assess/deliver the remaining sheets as bounded slices.
+- [ ] Verify meaningful attempt/reveal/reset behavior where selected, accessible
+  controls/feedback, actual rendered data and generated prompts/solutions. Keep
+  earlier static sheets, glossary/stack resources, registry counts and audit
+  coverage correct. Run the appropriate final gate and development-console sweep
+  for changed shared React behavior, plus affected theme/width/keyboard checks.
+
+No widget, scoring model, browser code runner, persistent progress, runtime
+provisioning or exact topic list is selected here. Prefer a small activity format
+before adding controls that need another behavior contract. Research/coordination
+uses **GPT-6 Astra / Low**; implementation uses a fresh user-selected
+**GPT-6.1 Sol / High** session under D-100. The earlier inline override applied to
+W-6.4 only. Coordinator remains **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
+
+This brief applies to the five pending language/framework sheets; it does not
+redesign the completed native Default Stack page or retroactively change the
+existing sheets. Keep the eighteen-stage filing model. Integration still needs
+separate approval; main promotion belongs to the user.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☑** *(merged locally as `b8515a0`)*
 

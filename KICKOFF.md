@@ -1,8 +1,12 @@
-# Kickoff: W-6.4 merged; JavaScript reference assessment next
+# Kickoff: language/framework sheet brief; JavaScript assessment next
 
 Updated 2026-11-05. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 
 ## Current state
+
+- Records branch `docs/2026-11-05-language-sheet-brief`, from develop
+  **ede8e1f98f979c57f3327d89a15623c60b245afc**. User's language/framework
+  content direction is recorded as D-101; no application inputs changed.
 
 - Local `develop`: user-approved no-ff merge **b8515a0**, parents
   **097fdd0 / 14ca2da**. Merge tree equals reviewed feature tip **14ca2da**;
@@ -98,28 +102,60 @@ The merged feature and assessment branches were deleted after ancestor/worktree
 checks. Their commits remain in develop. No server was stopped, no push or
 deployment occurred, and main is unchanged.
 
+## Language/framework sheet direction
+
+The user wants the five pending sheets (JavaScript, Python, Java, Spring Boot,
+Express & Node) to cover fundamentals, important concepts and interview-relevant
+material, with activities inside each. Keep the result selective and shorter
+than a general tutorial site. [W-6.3u](docs/task.md) and D-101 in the
+[tracker](docs/tracker.md) hold the brief and scope.
+
+A proposed starting budget is 6–10 selected topics and 3–4 short activities per
+sheet. Blend concise explanation/examples with representative explain/predict/
+debug/choose prompts and small coding tasks; let readers attempt before revealing
+a solution and its reasoning. These counts/formats are coordinator recommendations,
+not user-prescribed limits. No activity widget or exact topic list is selected.
+
+Current sheet data and renderer handle static rows/examples. Activities extend
+that contract; assess a small optional representation, web interaction and useful
+generated-Markdown prompts/solutions. Use existing patterns when they fit and
+D-99's design/compact plan, TDD for behavior and independent final branch review.
+Do not redesign completed sheets or the native Default Stack page.
+
 ## Next task and session
 
-**Task:** JavaScript reference-sheet source and scope assessment.
+**Task:** JavaScript study-sheet source and scope assessment under D-101.
 **Recommended model:** `gpt-6-astra`, **reasoning:** `low`, research session or the
 existing coordinator. This recommendation does not confirm an active setting.
 
-Start a scoped documentation branch from the committed local develop tip and
-record its exact SHA. Inspect the JavaScript entry in
-[planned sheets](web/src/lib/cheatsheets/planned.ts), existing reference content,
-[W-6](docs/task.md), and relevant gathered-source provenance before choosing a
-bounded lookup. The placeholder names array methods, async semantics and the
-event loop; assess the useful slice rather than drafting a whole language course.
-Check primary language/platform sources and distinguish browser and Node behavior
-when that changes an example. Label examples and verify executable claims where
-needed. Record original-source/license limits for any useful image.
+Start the JavaScript research branch from this brief branch's committed tip so
+D-101 and the task brief remain in its history; record the exact SHA. Inspect the
+JavaScript entry in [planned sheets](web/src/lib/cheatsheets/planned.ts), existing
+reference content, [W-6.3u](docs/task.md) and gathered-source provenance. Choose a
+bounded fundamental/interview topic list and activities rather than a whole
+language course. Verify primary language/platform sources; treat interview prompts
+as representative unless frequency claims have evidence. State version/context
+and check runnable examples, including browser/Node differences when relevant.
+Record provenance and license limits for any useful graphic.
 
-Keep findings in one research record and use D-99 content/link checks. Do not
-implement or register a sheet during assessment. Retain the chosen single-source
-sheet data/generated-Markdown pattern, eighteen-stage model and existing runtime
-contract. Python, Java, Spring Boot and Express are separate sheets.
+Keep findings in one research record with the topic/activity selection, examples,
+source limitations and proposed shared activity contract. This assessment may
+recommend the smallest reusable support needed for JavaScript; the other four
+sheets remain separate delivery slices. No sheet implementation, browser code
+runner, persistent score or runtime provisioning is preselected.
 
-If a bounded scope is selected, later implementation uses a fresh user-selected
-**GPT-6.1 Sol / High** session with an explicit acceptance handoff. Coordinator
-remains **01a18acc-3b54-7202-92f3-404cc94fd0ad**. Future merges need separate
-approval; main promotion belongs to the user.
+Use D-99 content/link checks for research-only work. After scope/design selection,
+implementation uses a fresh user-selected **GPT-6.1 Sol / High** session with an
+explicit acceptance handoff. The W-6.4 inline override does not carry forward.
+Coordinator remains **01a18acc-3b54-7202-92f3-404cc94fd0ad**; future no-ff merges
+require separate approval, and main promotion belongs to the user.
+
+## Brief closing checks
+
+Fresh checks on Node **22.23.4**: tracker ledger **2/2** via
+`pnpm test src/lib/tracker-ledger.test.ts --maxWorkers=1`,
+`python3 /private/tmp/language-sheet-brief-links.py` **125 local targets /
+3 Markdown files**, and `git diff --check`, all exit 0. Self-review and the
+humanizer editing pass applied to the new prose. This branch changes records
+only; application checks remain attached to the W-6.4 application/merge trees
+above. No app suite, build or browser rerun was needed.
