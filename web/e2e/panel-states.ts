@@ -8,16 +8,12 @@ import type { Page } from '@playwright/test'
  * two of its three auth panels had never been contrast-checked (TD-26). Both
  * carry `aria-controls`, which is what lets one key identify either.
  *
- * Scoped to `[role=tabpanel]` for the reason the old helper was: `Stepper` puts
- * `aria-controls` on all the rail tabs, and an unscoped selector walks the rail
- * and unmounts the panel it was about to measure. The scope was re-checked
- * rather than inherited — the only `role="tabpanel"` in the app comes from
- * `Stepper.tsx` and `AuthPaths.tsx`, and the reference sheets render no
- * disclosures, so those twelve URLs sweeping nothing is correct rather than a
- * further hole.
+ * Expanded buttons are scoped to main content, which includes study-sheet
+ * solutions outside stage panels. Selected tabs stay scoped to tabpanels:
+ * selecting Stepper's rail tabs would unmount the content being measured.
  */
 const DISCLOSURE =
-  '[role=tabpanel] button[aria-expanded], [role=tabpanel] [role=tab][aria-selected]'
+  'main button[aria-expanded], [role=tabpanel] [role=tab][aria-selected]'
 
 type Snapshot = { all: string[]; open: string[] }
 

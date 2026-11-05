@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { SheetActivities } from './SheetActivities'
 import Image from 'next/image'
 import { ArrowUpRight } from 'lucide-react'
 import { isDrawn, type Cheatsheet } from '@/lib/cheatsheets'
@@ -121,6 +122,14 @@ export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
             been gathered yet.
           </p>
         </div>
+      )}
+
+      {isDrawn(sheet) && !!sheet.activities?.length && (
+        <SheetActivities
+          key={sheet.slug}
+          slug={sheet.slug}
+          activities={sheet.activities}
+        />
       )}
 
       {sheet.source?.image && (

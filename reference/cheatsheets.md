@@ -6,7 +6,7 @@
 Lookup material rather than reading material. A stage teaches a decision; a
 sheet answers what that command was.
 
-Drawn: 25 of 30. A sheet listed as not drawn is
+Drawn: 26 of 30. A sheet listed as not drawn is
 registered on purpose — the gap is the point, so it can be seen and filled.
 
 | Sheet | Group | Stage | Status |
@@ -36,7 +36,7 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | Security Audit | Standards | 08 | Drawn |
 | Caching | Architecture | 09 | Drawn |
 | Infrastructure Scaling | Architecture | 09 | Drawn |
-| JavaScript | Languages | — | Not drawn |
+| JavaScript | Languages | — | Drawn |
 | Python | Languages | — | Not drawn |
 | Java | Languages | — | Not drawn |
 | Spring Boot | Languages | — | Not drawn |
@@ -1313,9 +1313,221 @@ Source: [Insecure Direct Object References testing](https://wstg.owasp.org/lates
 
 ## JavaScript
 
-Array methods, async semantics, and the event loop.
+Explain bindings, object identity and async completion, then practise with four small programs. Representative interview practice, not a frequency ranking.
 
-*Not drawn yet.*
+### Values and bindings
+
+Explain it: what is shared when a const binding refers to an object? Examples use Node 22.23.4, strict CommonJS (.cjs with "use strict"). Browser globals and module evaluation can differ.
+
+- **Values, equality and coercion** — 0 === "0" is false; 0 == "0" is true after conversion. Prefer explicit Number("0") when conversion is intended. Two separate objects with the same fields are not strictly equal; two references to one object are. — NaN === NaN is false; use Number.isNaN to check it. Object.is treats NaN as equal to itself and distinguishes +0 from -0, so it is not a drop-in improvement over ===.
+- **Lexical scope and the temporal dead zone** — let and const belong to their enclosing block. An inner declaration shadows the outer binding throughout that block, including before initialization, when reading it throws ReferenceError. An undeclared name has no binding; typeof can report "undefined" for it, but throws for a binding in its temporal dead zone. — const prevents reassignment of the binding. It does not freeze object properties or the objects nested inside them.
+
+### Functions and objects
+
+Explain it: which binding or object does the function reach at the moment you call it?
+
+- **Closures** — A returned function retains access to the lexical bindings where it was created. It observes later changes to those bindings; it does not capture a frozen snapshot. Separate factory invocations can own independent state. — Use a small factory when callers need private state. Trace each factory invocation separately before tracing its returned functions.
+- **Ordinary-function this and arrows** — For an ordinary method, obj.read() supplies obj as this. Assigning that method to detached and calling detached() supplies undefined in strict mode; reading this.value then throws TypeError. bind(obj) can preserve that receiver. — An arrow uses the surrounding this binding. An arrow created inside an ordinary method can retain that method call’s receiver. Putting an arrow in an object literal does not bind it to that object. Avoid top-level this guesses: script, module and host contexts differ.
+- **Object identity and shallow copying** — Object spread makes a new outer object by copying own enumerable properties. Nested objects still have the same identity. Copy each object along the changed path when an update must preserve the original. — These examples use plain data objects. Spread does not copy a source object’s prototype or non-enumerable properties, and is not a general deep clone.
+- **Prototypes and classes** — Property lookup checks an object’s own properties, then follows its prototype chain until a match or null. An own property shadows an inherited one. Ordinary class instance methods live on the class prototype and are shared by instances. — class syntax uses JavaScript’s prototype mechanism. Distinguish an instance’s own fields from inherited methods rather than assuming each constructor call copies every method.
+
+### Working with collections
+
+Explain it: do you need every transformed value, matching values, one value, or a yes/no answer?
+
+- **Array operations and mutation** — Use map for a transformed array, filter for all matches, find for the first matching value (or undefined), and some for a boolean. sort mutates its array; toSorted returns a sorted copy. Supply (a, b) => a - b for ascending numbers instead of the default string ordering. — A new array can still hold the original objects. map/filter callbacks can mutate those objects too. Choose by the result needed, and check both array identity and nested identity when avoiding mutation.
+
+### Asynchronous work
+
+Explain it: who can observe completion and failure, and what has actually finished before the next statement?
+
+- **Promises, await and error handling** — Return or await asynchronous work so its caller can observe completion and rejection. A try/catch around an awaited promise catches its rejection. forEach discards callback results and does not join callback promises; awaiting forEach does not wait for saves. — Use for...of with await when each operation must finish before the next starts. For independent operations, await Promise.all(items.map(save)) joins their promises and preserves input order in its results. Rejection does not cancel the other operations.
+- **Synchronous execution and queued callbacks** — Current synchronous code finishes before the queued promise reaction and queueMicrotask callback in the trace below. Those microtasks run in registration order, followed by the timer callback. A zero-delay timer cannot interrupt the current code and does not promise an exact delay. — The trace is one isolated Node callback. Browser tasks/microtask checkpoints and Node event-loop phases are host models, not interchangeable names. It predicts no browser paint, I/O race, nextTick/setImmediate order or ES-module evaluation order.
+
+### Practice
+
+#### Closure factory
+
+Implement makeCounter so each factory call starts at zero and returns a function that increments before returning\. Predict the three logged values, then explain which invocation owns each count binding\.
+
+Context: Node 22\.23\.4, strict CommonJS\. The starter intentionally leaves the factory body for you to write\. Run the reference as a \.cjs file with "use strict" at the top\.
+
+Starter: complete the factory
+
+```
+function makeCounter() {
+  // Return an incrementing counter.
+}
+const first = makeCounter();
+const second = makeCounter();
+console.log(first(), first(), second());
+```
+
+Solution: Closure factory
+
+The reference logs 1, 2, 1\. Further calls through first and second return 3 and 2\.
+
+Reference solution
+
+```
+function makeCounter() {
+  let count = 0;
+  return () => ++count;
+}
+const first = makeCounter();
+const second = makeCounter();
+console.log(first(), first(), second());
+```
+
+Why it works
+
+Each makeCounter call creates its own count binding\. The function returned as first keeps access to the first binding and changes it on each call\. second retains the other binding\. Both functions access live bindings\.
+
+Follow-up
+
+Move count outside makeCounter\. Predict the same calls when both returned functions now share one binding\.
+
+#### Nested\-copy repair
+
+The spread copy below unexpectedly changes original\. Explain why, then repair the update so original stays light and the updated settings object is distinct\. Start the repair from fresh input\.
+
+Context: Node 22\.23\.4, strict CommonJS\. Each block starts with a fresh plain object\. Add "use strict" at the top of its \.cjs file\.
+
+Bug: one level copied
+
+```
+const original = { name: 'Ada', settings: { theme: 'light' } };
+const copy = { ...original };
+copy.settings.theme = 'dark';
+console.log(original.settings.theme);
+console.log(copy.settings === original.settings);
+```
+
+Solution: Nested\-copy repair
+
+The bug logs dark and true\. The repaired block logs light, dark and false\. Running a repair after the bug without fresh input would not undo the earlier mutation\.
+
+Repair: copy the changed path
+
+```
+const original = { name: 'Ada', settings: { theme: 'light' } };
+const updated = {
+  ...original,
+  settings: { ...original.settings, theme: 'dark' },
+};
+console.log(original.settings.theme, updated.settings.theme);
+console.log(updated.settings === original.settings);
+```
+
+Why it works
+
+The first spread creates a different outer object but copies the settings reference\. The repair creates a new settings object before changing theme, leaving the fresh original untouched\. Only the changed path needs copying here\.
+
+Follow-up
+
+Add an untouched sibling object named profile\. It can deliberately stay shared; explain why that does not make the settings repair fail\.
+
+#### Async iteration repair
+
+save returns a promise\. Repair saveAll so saves finish one at a time in input order, complete is reported only after the last save, and a rejection reaches the awaited caller\. What happens to item 3 if saving item 2 fails?
+
+Context: Node 22\.23\.4, strict CommonJS\. Function definitions below take items and an injected save\(item\); no top\-level await is needed\. To try them, call report\(items, save\) from your async harness\. Saves in the completion check are deliberately held pending\.
+
+Bug: completion before saves finish
+
+```
+async function saveAll(items, save) {
+  await items.forEach(async (item) => {
+    await save(item);
+  });
+  return 'complete';
+}
+```
+
+Solution: Async iteration repair
+
+The bug can return complete while saves are pending\. The repair finishes saving 1 before starting 2\. If save 2 rejects, saveAll rejects with that error and item 3 never starts; report catches the error from its awaited call\.
+
+Repair and awaited caller
+
+```
+async function saveAll(items, save) {
+  for (const item of items) {
+    await save(item);
+  }
+  return 'complete';
+}
+
+async function report(items, save) {
+  try {
+    console.log(await saveAll(items, save));
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+```
+
+Why it works
+
+forEach returns undefined and discards the promises returned by its async callbacks\. Awaiting that return value cannot join them\. The for\.\.\.of repair awaits each save and propagates failure\. With successful saves the caller logs complete only after all saves finish\.
+
+Follow-up
+
+If saves are independent and may start together, await Promise\.all\(items\.map\(save\)\) can join them instead\. It rejects when an input rejects, but does not cancel saves already started\. Choose this only when sequential completion is not required\.
+
+#### Scheduling trace
+
+Predict the five log lines and explain why the zero\-delay timer cannot run between the two synchronous lines\. Account for both the promise reaction and queueMicrotask registration\.
+
+Context: Node 22\.23\.4, strict CommonJS\. Execute these statements together inside one fresh timer callback, with no unrelated work\. This isolates the trace from earlier async continuations; it is an order check, not a timer\-duration check\.
+
+Predict this isolated trace
+
+```
+console.log('sync 1');
+Promise.resolve().then(() => console.log('promise'));
+queueMicrotask(() => console.log('microtask'));
+setTimeout(() => console.log('timer'), 0);
+console.log('sync 2');
+```
+
+Solution: Scheduling trace
+
+sync 1, sync 2, promise, microtask, timer\.
+
+Why it works
+
+The current synchronous statements finish first\. The fulfilled promise queues its reaction before queueMicrotask queues the next callback, so those run in that order before the timer\. A timer delay is a threshold, not an appointment\. This trace establishes no browser rendering, Node I/O\-phase race, nextTick/setImmediate or ES\-module ordering claim\.
+
+Follow-up
+
+Move the sync 2 line before Promise\.resolve\. It is still synchronous and still precedes both microtasks\. Explain why the queue order is unchanged\.
+
+Sources:
+
+Source: [JavaScript Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide) — MDN contributors.
+
+Source: [Equality comparisons and sameness](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Equality_comparisons_and_sameness) — MDN contributors.
+
+Source: [let: scope and temporal dead zone](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let) — MDN contributors.
+
+Source: [Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures) — MDN contributors.
+
+Source: [this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this) — MDN contributors.
+
+Source: [Spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax) — MDN contributors.
+
+Source: [Inheritance and the prototype chain](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Inheritance_and_the_prototype_chain) — MDN contributors.
+
+Source: [Array: choosing methods and avoiding mutation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) — MDN contributors.
+
+Source: [forEach: callback results and promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) — MDN contributors.
+
+Source: [Using promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) — MDN contributors.
+
+Source: [Event loops (browser host)](https://html.spec.whatwg.org/multipage/webappapis.html#event-loops) — WHATWG HTML Living Standard.
+
+Source: [The Node.js event loop](https://nodejs.org/learn/asynchronous-work/event-loop-timers-and-nexttick) — Node.js project.
 
 ## Python
 

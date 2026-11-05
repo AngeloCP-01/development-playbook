@@ -123,6 +123,7 @@ test('isDrawn distinguishes a sheet with content from a registered placeholder',
     'github-actions',
     'improvement-review',
     'incident-management',
+    'javascript',
     'playwright',
     'post-deploy-verification',
     'scaling',
@@ -275,4 +276,28 @@ test('native resource paths cannot collide with sheet routes', () => {
   expect(
     new Set(REFERENCE_RESOURCES.map((resource) => resource.href)).size,
   ).toBe(REFERENCE_RESOURCES.length)
+})
+
+test('activities have stable unique IDs and belong to drawn sheets with ordinary sections', () => {
+  for (const sheet of CHEATSHEETS) {
+    if (!sheet.activities?.length) continue
+    expect(isDrawn(sheet), sheet.slug).toBe(true)
+    const ids = sheet.activities.map((activity) => activity.id)
+    expect(new Set(ids).size, sheet.slug).toBe(ids.length)
+    for (const activity of sheet.activities) {
+      expect(activity.id, sheet.slug).toMatch(/^[a-z][a-z0-9-]*$/)
+      for (const field of [
+        'title',
+        'prompt',
+        'context',
+        'answer',
+        'explanation',
+      ] as const) {
+        expect(
+          activity[field].trim().length,
+          `${sheet.slug}/${activity.id}/${field}`,
+        ).toBeGreaterThan(0)
+      }
+    }
+  }
 })

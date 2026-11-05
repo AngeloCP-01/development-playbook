@@ -3,20 +3,20 @@ import { cheatsheetsForStage, CHEATSHEETS, isDrawn } from './index'
 import { renderCheatsheets } from './render'
 import { sheetSources } from './sheet-sources'
 
-test('stage 09 exposes both drawn companion sheets without consuming the five language placeholders', () => {
+test('stage 09 retains both drawn companion sheets alongside the language sheets', () => {
   const sheets = cheatsheetsForStage('09-performance-optimization')
   expect(sheets.map((sheet) => sheet.slug).sort()).toEqual([
     'caching',
     'scaling',
   ])
   expect(sheets.every(isDrawn)).toBe(true)
-  expect(CHEATSHEETS.filter(isDrawn)).toHaveLength(25)
+  expect(CHEATSHEETS.filter(isDrawn)).toHaveLength(26)
   expect(CHEATSHEETS).toHaveLength(30)
   expect(
     CHEATSHEETS.filter((sheet) => !isDrawn(sheet))
       .map((sheet) => sheet.slug)
       .sort(),
-  ).toEqual(['express', 'java', 'javascript', 'python', 'spring-boot'])
+  ).toEqual(['express', 'java', 'python', 'spring-boot'])
 })
 test('generated Markdown includes each companion, its load-bearing caveats and every supporting source', () => {
   const markdown = renderCheatsheets()

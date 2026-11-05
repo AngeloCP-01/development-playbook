@@ -85,6 +85,21 @@ export type Source = SourceCitation & {
   image?: SourceImage
 }
 
+/** Original practice content shared by the page and generated Markdown.
+ * Code is literal text; activities never execute in the reader's browser. */
+export type SheetActivity = {
+  /** Stable and unique within the owning sheet. */
+  id: string
+  title: string
+  prompt: string
+  context: string
+  starter?: Pick<RowExample, 'label' | 'code'>
+  answer: string
+  solution?: Pick<RowExample, 'label' | 'code'>
+  explanation: string
+  followUp?: string
+}
+
 export type Cheatsheet = {
   slug: string
   title: string
@@ -96,6 +111,8 @@ export type Cheatsheet = {
   /** Supporting text references in authored order, after the primary source. */
   additionalSources?: SourceCitation[]
   /** Empty is legal and means "registered, not yet written" (D5). */
+  /** Optional practice for drawn sheets; ordinary sections remain required. */
+  activities?: SheetActivity[]
   sections: Section[]
 }
 

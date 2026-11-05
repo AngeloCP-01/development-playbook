@@ -1,11 +1,28 @@
 import { getStage } from '@/lib/stages'
 import { sheetSources } from './sheet-sources'
 import { CHEATSHEETS, cheatsheetsByGroup } from './index'
-import { CHEATSHEET_GROUPS, isDrawn, type Cheatsheet } from './types'
+import {
+  CHEATSHEET_GROUPS,
+  isDrawn,
+  type Cheatsheet,
+  type SheetActivity,
+} from './types'
 
 /** Escape inline citation syntax while leaving authored URLs to link formatting. */
 function citationText(text: string): string {
   return text.replace(/[\\`*_\[\]<>!&]/g, '\\$&')
+}
+
+/** Activity prose is plain text, not authored Markdown or HTML. */
+function activityText(text: string): string {
+  return text.replace(/[\\`*_{}\[\]<>()!&#+\-.|~]/g, '\\$&')
+}
+
+function activityCode(example: SheetActivity['starter']): string[] {
+  if (!example) return []
+  const runs = example.code.match(/`+/g) ?? []
+  const fence = '`'.repeat(Math.max(3, ...runs.map((run) => run.length + 1)))
+  return [activityText(example.label), '', fence, example.code, fence, '']
 }
 
 /**
@@ -54,6 +71,32 @@ function renderSheet(sheet: Cheatsheet): string {
       }
     }
     lines.push('')
+  }
+
+  if (isDrawn(sheet) && sheet.activities?.length) {
+    lines.push('### Practice', '')
+    for (const activity of sheet.activities) {
+      lines.push(
+        `#### ${activityText(activity.title)}`,
+        '',
+        activityText(activity.prompt),
+        '',
+        `Context: ${activityText(activity.context)}`,
+        '',
+        ...activityCode(activity.starter),
+        `Solution: ${activityText(activity.title)}`,
+        '',
+        activityText(activity.answer),
+        '',
+        ...activityCode(activity.solution),
+        'Why it works',
+        '',
+        activityText(activity.explanation),
+        '',
+      )
+      if (activity.followUp)
+        lines.push('Follow-up', '', activityText(activity.followUp), '')
+    }
   }
 
   if (isDrawn(sheet) && sheet.source?.image?.origin === 'original') {
