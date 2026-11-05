@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-05): language/framework sheet direction recorded.** The user wants the five remaining sheets to focus on fundamentals, important concepts and interview-relevant practice, with activities inside each. Keep them shorter and more selective than a general tutorial site. This is a scoped extension of the pure-lookup format for JavaScript, Python, Java, Spring Boot and Express & Node (D-101); the activity format still needs design. Branch `docs/2026-11-05-language-sheet-brief` starts from develop **ede8e1f**. Local application remains the verified W-6.4 merge **b8515a0**, **25/30** sheets and **18/18** stages. No app change, merge, push or promotion.
+**Current work (2026-11-05): JavaScript assessment complete as `cd724c4`; implementation scope proposed.** Branch `docs/2026-11-05-javascript-reference-assessment` starts from brief **6f1f67e**. Recommend nine fundamentals in four groups and four original activities, with a small optional shared solution-disclosure contract. [One source/design record](../reference/javascript-source-research.md) holds primary findings, example evidence, proposed design and compact plan; a standalone checker passes **4 activities / 15 assertions** on Node **22.23.4**. No app sheet/renderer/generator changed. Counts stay **25/30** sheets and **18/18** stages; no merge, push or promotion.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **25 drawn / 30 registered**, through **2cc7d5d**. W-6.4 is integrated as **b8515a0**; five language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** JavaScript study-sheet source/scope assessment under D-101, recommended **GPT-6 Astra / Low** in research or the existing coordinator session. Preserve the brief in this branch, curate fundamentals and representative interview prompts, and assess a small shared activity contract alongside the first sheet. Later behavior/data implementation uses a fresh user-selected **GPT-6.1 Sol / High** session.
+**Next task/model:** Select the proposed JavaScript nine-topic/four-activity scope and small shared disclosure contract; recommended coordination **GPT-6 Astra / Low**. If selected, implement the recorded compact plan in a fresh user-selected **GPT-6.1 Sol / High** session from the committed assessment tip, returning to coordinator `01a18acc-3b54-7202-92f3-404cc94fd0ad`.
 
 Two deliverables from one body of content.
 
@@ -861,7 +861,7 @@ now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
 
-**W-6.3u — Language and framework study sheets ◐** *(content direction accepted; JavaScript assessment next)*
+**W-6.3u — Language and framework study sheets ◐** *(JavaScript assessment complete; first delivery scope proposed)*
 
 **User direction, 2026-11-05 (D-101):** for JavaScript, Python, Java, Spring Boot
 and Express & Node, focus on fundamentals, important topics and concepts that
@@ -899,10 +899,10 @@ practice; the goal is not a comprehensive course or an API inventory.
 
 - [x] Record the user's content/practice direction and its scoped extension of
   the earlier pure-lookup contract (D-101).
-- [ ] Assess JavaScript first: bounded topic list, primary sources, interview
+- [x] Assess JavaScript first: bounded topic list, primary sources, interview
   relevance, activities and executable-example checks. Keep findings in one
   research record; no broad five-language course is selected by this brief.
-- [ ] Design the smallest optional activity representation and rendering needed
+- [x] Propose the smallest optional activity representation and rendering needed
   for the first sheet, using existing disclosure/exercise patterns when suitable.
   Current `CheatsheetView` supports static rows/examples, not activities; shared
   type/renderer/generator changes require D-99 design, compact plan, behavior
@@ -926,6 +926,60 @@ This brief applies to the five pending language/framework sheets; it does not
 redesign the completed native Default Stack page or retroactively change the
 existing sheets. Keep the eighteen-stage filing model. Integration still needs
 separate approval; main promotion belongs to the user.
+
+**W-6.3u.1 — JavaScript study sheet ◐** *(assessment complete; scope/design proposed)*
+
+Checkpoint **cd724c4** on `docs/2026-11-05-javascript-reference-assessment`, based
+on D-101 brief **6f1f67e6dadefe890d9869100ebdbfff4525d386**. Research/model
+recommendation **GPT-6 Astra / Low**. The user authorized assessment with
+"proceed"; the topic/activity and shared behavior proposal still needs selection.
+
+- [x] Check primary language/platform and employer-preparation sources; keep
+  interview relevance distinct from unsupported frequency rankings.
+- [x] Propose nine topics/four groups and four original activities.
+- [x] Preserve a reproducible checker: **4 activities / 15 assertions**, Node
+  **22.23.4**, strict CommonJS, exit 0; declare fixture and scheduling limits.
+- [x] Record the small optional activity contract, interaction and Markdown
+  design, compact plan, acceptance and model/session handoff.
+- [ ] User selects or revises the proposed JavaScript/shared activity scope.
+- [ ] Implement in fresh user-selected **GPT-6.1 Sol / High** session with behavior
+  TDD for shared contract/render/generator changes and actual-sheet render checks.
+- [ ] Verify published examples, generated content, final web gate/dev-console,
+  affected closed/open/re-collapsed states in both themes and an independent
+  final content/page/branch review; return results for coordinator review.
+- [ ] Obtain separate user approval before no-ff integration into develop.
+
+The [source/design/compact plan](../reference/javascript-source-research.md#proposed-scope-selection-and-compact-design)
+proposes Values and bindings (equality/coercion, lexical scope/TDZ), Functions
+and objects (closures, this/arrows, shallow copying, prototypes/classes), Arrays
+(method choice and mutation), and Async work (promises/errors, scheduling).
+Activities: closure counter, nested-copy repair, async iteration repair and a
+bounded sync/promise/queueMicrotask/timer trace. Nine topics remain concise
+lookups; this is not a complete course or claimed interview-frequency ranking.
+
+Proposed `Cheatsheet.activities?` stores stable IDs, prompt/context, optional
+labelled code, answer/solution, explanation and optional follow-up in one source.
+Compose prompt-visible/answer-hidden cards with existing disclosure behavior;
+no score, runner, persistence or new highlighting pipeline. Extend generated
+Markdown with the same prompts/solutions, leaving no-activity sheets unchanged.
+The plan names type/generator, composer, JavaScript module, example/artifact
+validation and final shared-behavior verification. This is D-99 consequential
+work; static copy/data still uses its normal exception.
+
+Keep slug `javascript`, Languages group and no stage tether. Remove only its
+placeholder during implementation; forecast **26/30** drawn with four placeholders
+remaining, while current counts stay **25/30** and **18/18**. Primary/explanatory
+sources and image limits are retained in the record; no image is selected.
+Runnable example evidence covers only its actual checked snippets and fixtures.
+Verify any edited or new published example in the stated context.
+
+After selection, start `feat/javascript-study-sheet` from this assessment
+branch's committed tip and record the exact SHA. Return branch/commit, actual
+runtime/checks, issues/limits and implementation session ID to coordinator
+**01a18acc-3b54-7202-92f3-404cc94fd0ad**. D-100's fresh-session policy applies;
+the prior W-6.4 inline exception does not carry forward. Other four sheets,
+algorithm catalogues, DOM/Node I/O puzzles, modules/generators/workers, new
+controls beyond disclosure, diagrams/upgrades, push and promotion are deferred.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☑** *(merged locally as `b8515a0`)*
 
