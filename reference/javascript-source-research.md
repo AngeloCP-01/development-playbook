@@ -288,3 +288,19 @@ No sheet data, renderer, generator or app behavior has changed in this assessmen
 Self-review and the humanizer editing pass apply to this new research/design prose;
 source findings and example evidence do not establish future reader benefit or
 browser behavior.
+
+
+## Scope selected (2026-11-05)
+
+Following assessment **cd724c4** and handoff **eddec43**, the user selected the
+recommendation with "lets go with that": nine topics/four groups, four checked
+activities and the small optional shared solution-disclosure/Markdown contract.
+The proposed compact design, five-step plan and acceptance checks above are
+approved unchanged. This supersedes the earlier pending-selection status, without
+claiming an implementation or browser result.
+
+Implementation is authorized in a fresh user-selected **GPT-6.1 Sol / High**
+session under D-100, starting from this assessment branch's committed tip. Record
+that exact SHA and create `feat/javascript-study-sheet`. KICKOFF carries return
+instructions. The earlier W-6.4 inline exception does not carry forward, and
+scope approval does not authorize integration into develop.

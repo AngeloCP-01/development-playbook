@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-05): JavaScript assessment complete as `cd724c4`; implementation scope proposed.** Branch `docs/2026-11-05-javascript-reference-assessment` starts from brief **6f1f67e**. Recommend nine fundamentals in four groups and four original activities, with a small optional shared solution-disclosure contract. [One source/design record](../reference/javascript-source-research.md) holds primary findings, example evidence, proposed design and compact plan; a standalone checker passes **4 activities / 15 assertions** on Node **22.23.4**. No app sheet/renderer/generator changed. Counts stay **25/30** sheets and **18/18** stages; no merge, push or promotion.
+**Current work (2026-11-05): JavaScript scope approved; implementation pending.** Branch `docs/2026-11-05-javascript-reference-assessment` starts from brief **6f1f67e**. Recommend nine fundamentals in four groups and four original activities, with a small optional shared solution-disclosure contract. [One source/design record](../reference/javascript-source-research.md) holds primary findings, example evidence, proposed design and compact plan; a standalone checker passes **4 activities / 15 assertions** on Node **22.23.4**. The user selected this scope with "lets go with that" on 2026-11-05; implementation awaits its fresh session. No app sheet/renderer/generator changed. Counts stay **25/30** sheets and **18/18** stages; no merge, push or promotion.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **25 drawn / 30 registered**, through **2cc7d5d**. W-6.4 is integrated as **b8515a0**; five language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** Select the proposed JavaScript nine-topic/four-activity scope and small shared disclosure contract; recommended coordination **GPT-6 Astra / Low**. If selected, implement the recorded compact plan in a fresh user-selected **GPT-6.1 Sol / High** session from the committed assessment tip, returning to coordinator `01a18acc-3b54-7202-92f3-404cc94fd0ad`.
+**Next task/model:** Implement W-6.3u.1 JavaScript using the user-approved nine-topic/four-activity scope and small optional shared disclosure/Markdown contract. Recommended **GPT-6.1 Sol / High**, fresh user-selected implementation session under D-100, from this assessment branch's committed tip. Return results to coordinator `01a18acc-3b54-7202-92f3-404cc94fd0ad`.
 
 Two deliverables from one body of content.
 
@@ -861,7 +861,7 @@ now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
 
-**W-6.3u — Language and framework study sheets ◐** *(JavaScript assessment complete; first delivery scope proposed)*
+**W-6.3u — Language and framework study sheets ◐** *(JavaScript scope approved; first implementation pending)*
 
 **User direction, 2026-11-05 (D-101):** for JavaScript, Python, Java, Spring Boot
 and Express & Node, focus on fundamentals, important topics and concepts that
@@ -927,12 +927,13 @@ redesign the completed native Default Stack page or retroactively change the
 existing sheets. Keep the eighteen-stage filing model. Integration still needs
 separate approval; main promotion belongs to the user.
 
-**W-6.3u.1 — JavaScript study sheet ◐** *(assessment complete; scope/design proposed)*
+**W-6.3u.1 — JavaScript study sheet ◐** *(scope/design approved; implementation pending)*
 
 Checkpoint **cd724c4** on `docs/2026-11-05-javascript-reference-assessment`, based
 on D-101 brief **6f1f67e6dadefe890d9869100ebdbfff4525d386**. Research/model
 recommendation **GPT-6 Astra / Low**. The user authorized assessment with
-"proceed"; the topic/activity and shared behavior proposal still needs selection.
+"proceed", then selected the nine-topic/four-activity/shared behavior scope
+with "lets go with that" on 2026-11-05.
 
 - [x] Check primary language/platform and employer-preparation sources; keep
   interview relevance distinct from unsupported frequency rankings.
@@ -941,7 +942,7 @@ recommendation **GPT-6 Astra / Low**. The user authorized assessment with
   **22.23.4**, strict CommonJS, exit 0; declare fixture and scheduling limits.
 - [x] Record the small optional activity contract, interaction and Markdown
   design, compact plan, acceptance and model/session handoff.
-- [ ] User selects or revises the proposed JavaScript/shared activity scope.
+- [x] User selected the JavaScript/shared activity scope with "lets go with that".
 - [ ] Implement in fresh user-selected **GPT-6.1 Sol / High** session with behavior
   TDD for shared contract/render/generator changes and actual-sheet render checks.
 - [ ] Verify published examples, generated content, final web gate/dev-console,
@@ -973,7 +974,7 @@ sources and image limits are retained in the record; no image is selected.
 Runnable example evidence covers only its actual checked snippets and fixtures.
 Verify any edited or new published example in the stated context.
 
-After selection, start `feat/javascript-study-sheet` from this assessment
+After the recorded approval, start `feat/javascript-study-sheet` from this assessment
 branch's committed tip and record the exact SHA. Return branch/commit, actual
 runtime/checks, issues/limits and implementation session ID to coordinator
 **01a18acc-3b54-7202-92f3-404cc94fd0ad**. D-100's fresh-session policy applies;

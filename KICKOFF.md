@@ -1,4 +1,4 @@
-# Kickoff: JavaScript fundamentals/practice scope proposed
+# Kickoff: JavaScript fundamentals/practice approved for implementation
 
 Updated 2026-11-05. Follow [AGENTS.md](AGENTS.md), D-99, D-100 and D-101.
 
@@ -7,9 +7,9 @@ Updated 2026-11-05. Follow [AGENTS.md](AGENTS.md), D-99, D-100 and D-101.
 - Branch `docs/2026-11-05-javascript-reference-assessment`, from brief
   **6f1f67e6dadefe890d9869100ebdbfff4525d386**. Assessment/example checkpoint
   **cd724c4**; use `git log -1 --oneline` for the closing records tip.
-- The user authorized assessment here. Proposed first delivery: JavaScript,
-  nine selected topics in four groups, four activities and small optional
-  shared activity support. This exact scope/design is not yet user-selected.
+- The user selected the JavaScript nine-topic/four-activity scope and small
+  optional shared activity support with "lets go with that" on 2026-11-05.
+  Implementation is authorized in a fresh session; integration is not approved.
 - [One research/design record](reference/javascript-source-research.md)
   contains primary sources, topic boundaries, original activity briefs, actual
   executable evidence, compact design/plan and acceptance. [W-6.3u.1](docs/task.md)
@@ -52,13 +52,12 @@ app/merge trees in the tracker and pre-assessment KICKOFF history.
 
 ## Next task and session
 
-**Next:** select or revise the proposed JavaScript topics/activities and optional
-shared disclosure/Markdown contract. Recommended coordination **GPT-6 Astra / Low**.
-
-**If selected:** fresh user-selected **GPT-6.1 Sol / High** implementation session
-under D-100. Start from this assessment branch's committed tip, record the exact
-SHA and create `feat/javascript-study-sheet`. The old W-6.4 inline exception does
-not carry forward; recommended settings are not an active-model claim.
+**Next:** implement the approved JavaScript study sheet and optional shared
+activity support. **Recommended model/effort:** **GPT-6.1 Sol / High**, fresh
+user-selected implementation session under D-100. Start from this assessment
+branch's committed tip, record the exact SHA and create `feat/javascript-study-sheet`.
+The old W-6.4 inline exception does not carry forward. These are recommended
+settings, not an active-model claim; this session stays open for coordination.
 
 Use the [compact design/plan](reference/javascript-source-research.md#proposed-scope-selection-and-compact-design).
 Five steps: optional type/generator contract, practice-card composer, JavaScript
