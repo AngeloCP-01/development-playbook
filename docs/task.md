@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-05): W-6.4 coordinator review accepted; integration pending.** Branch `feat/reference-glossary-stack` starts from approved handoff **131c303**, application tip **9231dc9**. Native glossary/stack pages, stack single-sourcing/generated Markdown, shared discovery/SEO/audit and TD-47 are complete. [One source/design record](../reference/w6-4-source-research.md) preserves the approved scope and source limits; [KICKOFF](../KICKOFF.md) holds actual verification and return instructions. Feature and local develop counts stay **25/30** sheets and **18/18** stages. No merge, push or promotion.
+**Current work (2026-11-05): W-6.4 merged locally into develop.** User-approved no-ff merge **b8515a0**, parents **097fdd0 / 14ca2da**, integrates native glossary/stack resources, stack single-sourcing/generated Markdown, shared discovery/SEO/audit, aligned Stage 04 guidance and TD-47's supported Node contract. Merge tree equals reviewed feature tip **14ca2da**; application inputs equal verified **9231dc9**. Current counts **25/30** sheets and **18/18** stages; W-6.4 is complete, five language placeholders remain. [KICKOFF](../KICKOFF.md) holds the next handoff. No push or promotion.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -23,9 +23,9 @@ interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. That width repair was the pre-Stage-10 baseline. Tracked `origin/develop` remains
 `79f9e31`; the current local develop merge is recorded above.
 
-On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **25 drawn / 30 registered**, through **2cc7d5d**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
+On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **25 drawn / 30 registered**, through **2cc7d5d**. W-6.4 is integrated as **b8515a0**; five language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** User decision on no-ff integration of `feat/reference-glossary-stack` into local `develop`; recommended coordinator setting **GPT-6 Astra / Low**. Coordinator reviewed **131c303...52e703e**, found no actionable standards or scope issues, and accepted the identified fresh/retained verification with its recorded limits. Integration requires separate user approval.
+**Next task/model:** JavaScript reference-sheet source and scope assessment, recommended **GPT-6 Astra / Low**. Start with the existing JavaScript placeholder (array methods, async semantics and event loop), choose a bounded lookup task and verify primary sources before implementation. Python, Java, Spring Boot and Express remain separate; no new sheet work is started by this merge.
 
 Two deliverables from one body of content.
 
@@ -77,7 +77,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-3** | Stages 02–18 interactive | ☑ *(18/18 merged to local `develop`; Stage 18 landed as `c9e5d07`.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(25 of 30 registered sheets drawn on local `develop`; Improvement Review merged as `2cc7d5d`. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(25 of 30 registered sheets drawn; native glossary/stack integrated as `b8515a0`. Five language placeholders remain.)* |
 
 ### Dependency map
 
@@ -861,11 +861,11 @@ now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
 
-**W-6.4 — Glossary and stack surfaced in the hub ◐** *(coordinator accepted; integration pending)*
+**W-6.4 — Glossary and stack surfaced in the hub ☑** *(merged locally as `b8515a0`)*
 
 Assessment **8f722f7** found that the hub, Sidebar, sitemap and audit listed only
 sheets, while inline terms offered no full glossary lookup. That gap is closed
-on the feature branch. Assessment branch
+on local develop as **b8515a0**. Assessment branch
 `docs/2026-11-04-reference-hub-assessment` started from develop
 **097fdd0f6aea2c4f18ffb7dcd712607915c64590**.
 
@@ -885,7 +885,9 @@ on the feature branch. Assessment branch
   KICKOFF for coordinator review.
 - [x] Coordinator reviewed **131c303...52e703e**, read the implementation thread,
   checked raw results and scoped independent standards/scope findings; no blockers.
-- [ ] Obtain separate user approval before integration into develop.
+- [x] User approved no-ff integration into develop as **b8515a0**, parents
+  **097fdd0 / 14ca2da**. Merge tree equals the reviewed tip; retain the identified
+  fresh/retained checks for unchanged **9231dc9** application inputs.
 
 Approved routes `/reference/glossary` and `/reference/stack` are reference
 resources, not cheatsheets or stages: counts remain **25/30** sheets and **18/18**

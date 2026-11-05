@@ -1,11 +1,13 @@
-# Kickoff: W-6.4 coordinator accepted; integration pending
+# Kickoff: W-6.4 merged; JavaScript reference assessment next
 
 Updated 2026-11-05. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 
 ## Current state
 
-- Branch `feat/reference-glossary-stack`, from approved handoff **131c303**.
-  Application tip **9231dc9**; use `git log -1 --oneline` for the closing records tip.
+- Local `develop`: user-approved no-ff merge **b8515a0**, parents
+  **097fdd0 / 14ca2da**. Merge tree equals reviewed feature tip **14ca2da**;
+  application inputs equal verified **9231dc9**. Use `git log -1 --oneline`
+  for the closing records tip. Approved implementation handoff was **131c303**.
 - Native `/reference/glossary` and `/reference/stack` appear in the hub,
   Reference navigation, sitemap and production audit. Glossary consumes unchanged
   `terms.ts`; stack page and generated `reference/stack.md` consume canonical
@@ -13,9 +15,10 @@ Updated 2026-11-05. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 - Stack preserves four groups/22 choices/five deviation cases and upkeep guidance,
   with researched corrections, narrow Stage 04 alignment and the original Testing
   chapter link. Counts stay **25/30** sheets and **18/18** stages.
-- **TD-47 closed on the feature branch:** `.nvmrc` **22.23.4**, package Node
+- **TD-47 closed on local develop:** `.nvmrc` **22.23.4**, package Node
   **^22.22.2**, support/alignment guard. [Archived assessment and closure](docs/tracker-archive.md).
-- No merge, push or deployment. Local develop stays at **097fdd0**.
+- W-6.4 is complete on local develop. Five language placeholders remain.
+  No push or deployment; main is unchanged.
 
 [One source/design record](reference/w6-4-source-research.md) preserves findings,
 the approved plan and source limits. User selected "Implement here; override
@@ -53,14 +56,12 @@ Implementation closing-record checks: ledger **2/2**, local links/anchors **141 
 across 8 files**, and whitespace check, all exit 0. App inputs remain unchanged
 from **9231dc9**; the identified app verification is retained.
 
-## Next task and return
+## Review and integration
 
-**Next task:** user decision on no-ff integration into local develop.
-**Recommended coordination setting:** **GPT-6 Astra / Low**.
-Return to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**. Read implementation
+Coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad** reviewed implementation
 thread **01a1a51d-8cb1-7983-8e51-1c3e48ecf142** and actual
-**131c303...9231dc9** diff before relying on this handoff. [W-6.4](docs/task.md)
-tracks integration. Coordinator has now read the thread and reviewed actual
+**131c303...9231dc9** diff. [W-6.4](docs/task.md)
+records the completed integration. Coordinator read the thread and reviewed actual
 **131c303...52e703e**, including the final records changes. No actionable standards
 or scope findings. Independent read-only checks of these two axes also returned
 no findings; they did not rerun suites/browser verification. Coordinator checked
@@ -72,13 +73,53 @@ still match **9231dc9**. Retain the application verification above; there was no
 full coordinator rerun or new browser matrix. Node **22.23.4** binary is installed
 and was checked directly for the closing-record command environment.
 
-Fresh coordinator closing-record checks on Node **22.23.4**: tracker ledger
+Pre-merge coordinator closing-record checks on Node **22.23.4**: tracker ledger
 **2/2**, `python3 /private/tmp/w64-coordinator-links.py` **141 local targets /
 8 Markdown files**, and `git diff --check`, all exit 0. These records-only changes
 retain the identified application verification for **9231dc9** inputs. Every
-no-ff merge into develop needs separate user approval; main promotion belongs
-to the user.
+no-ff merge into develop needs separate user approval. The user subsequently
+approved integration as **b8515a0**; its tree equals **14ca2da**. Main promotion
+belongs to the user.
 
 Deferred: unusual source-URL delimiter hardening (minor, current URLs unaffected),
 five language sheets, search, stage-to-sheet backlinks, term popovers, dependency
 upgrades, artwork, live infrastructure, push and main promotion.
+
+
+## Merge closing checks and cleanup
+
+Merge/tree equality and unchanged application-input checks pass. Fresh closing
+records checks on Node **22.23.4**: tracker ledger **2/2**,
+`python3 /private/tmp/w64-coordinator-links.py` **142 local targets / 8 Markdown
+files**, and `git diff --check`, all exit 0. The full application gate is retained
+for the identical merge tree; no full suite/build/browser matrix was repeated.
+
+The merged feature and assessment branches were deleted after ancestor/worktree
+checks. Their commits remain in develop. No server was stopped, no push or
+deployment occurred, and main is unchanged.
+
+## Next task and session
+
+**Task:** JavaScript reference-sheet source and scope assessment.
+**Recommended model:** `gpt-6-astra`, **reasoning:** `low`, research session or the
+existing coordinator. This recommendation does not confirm an active setting.
+
+Start a scoped documentation branch from the committed local develop tip and
+record its exact SHA. Inspect the JavaScript entry in
+[planned sheets](web/src/lib/cheatsheets/planned.ts), existing reference content,
+[W-6](docs/task.md), and relevant gathered-source provenance before choosing a
+bounded lookup. The placeholder names array methods, async semantics and the
+event loop; assess the useful slice rather than drafting a whole language course.
+Check primary language/platform sources and distinguish browser and Node behavior
+when that changes an example. Label examples and verify executable claims where
+needed. Record original-source/license limits for any useful image.
+
+Keep findings in one research record and use D-99 content/link checks. Do not
+implement or register a sheet during assessment. Retain the chosen single-source
+sheet data/generated-Markdown pattern, eighteen-stage model and existing runtime
+contract. Python, Java, Spring Boot and Express are separate sheets.
+
+If a bounded scope is selected, later implementation uses a fresh user-selected
+**GPT-6.1 Sol / High** session with an explicit acceptance handoff. Coordinator
+remains **01a18acc-3b54-7202-92f3-404cc94fd0ad**. Future merges need separate
+approval; main promotion belongs to the user.
