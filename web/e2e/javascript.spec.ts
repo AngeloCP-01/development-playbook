@@ -221,37 +221,37 @@ for (const theme of ['light', 'dark'])
       }
       expect(errors).toEqual([])
     })
-
-    test('a solution focused near the top clears the sticky study rail', async ({
-      page,
-    }) => {
-      await page.setViewportSize({ width: 320, height: 900 })
-      await page.goto('/reference/javascript#async', {
-        waitUntil: 'networkidle',
-      })
-      await expect(page.getByRole('tab', { name: /Promises/ })).toHaveAttribute(
-        'aria-selected',
-        'true',
-      )
-      const control = page.getByRole('button', {
-        name: 'Solution: Async iteration repair',
-        exact: true,
-      })
-      await page.getByRole('tab', { name: /Promises/ }).focus()
-      await control.evaluate((el) =>
-        window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top),
-      )
-      await control.focus()
-      await expect
-        .poll(() =>
-          control.evaluate((el) => {
-            const rect = el.getBoundingClientRect()
-            const rail = document
-              .querySelector('[aria-label="JavaScript sections"]')!
-              .getBoundingClientRect()
-            return rect.top >= rail.bottom && rect.bottom <= innerHeight
-          }),
-        )
-        .toBe(true)
-    })
   }
+
+test('a solution focused near the top clears the sticky study rail', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 900 })
+  await page.goto('/reference/javascript#async', {
+    waitUntil: 'networkidle',
+  })
+  await expect(page.getByRole('tab', { name: /Promises/ })).toHaveAttribute(
+    'aria-selected',
+    'true',
+  )
+  const control = page.getByRole('button', {
+    name: 'Solution: Async iteration repair',
+    exact: true,
+  })
+  await page.getByRole('tab', { name: /Promises/ }).focus()
+  await control.evaluate((el) =>
+    window.scrollTo(0, window.scrollY + el.getBoundingClientRect().top),
+  )
+  await control.focus()
+  await expect
+    .poll(() =>
+      control.evaluate((el) => {
+        const rect = el.getBoundingClientRect()
+        const rail = document
+          .querySelector('[aria-label="JavaScript sections"]')!
+          .getBoundingClientRect()
+        return rect.top >= rail.bottom && rect.bottom <= innerHeight
+      }),
+    )
+    .toBe(true)
+})

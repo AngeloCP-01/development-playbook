@@ -1319,7 +1319,7 @@ Study JavaScript mechanisms through seven focused sections, worked examples and 
 
 Keep valid input while distinguishing values, identity and conversion. All examples use Node 22.23.4, strict CommonJS (.cjs with "use strict"). Explain it: when should zero count as a supplied value?
 
-- **Values and references** — A primitive, such as a number, boolean or string, is an immutable value. An object can be mutated. Assigning an object value to another binding gives both bindings access to the same object; making a new object creates a different identity even if its fields look equal. — Common mistake: treating equal-looking objects as equal references. JavaScript passes argument values; an object argument is not a new copy of its contents.
+- **Values and references** — A primitive, such as a number, boolean or string, is an immutable value. An object can be mutated. Assigning an object value to another binding gives both bindings access to the same object; making a new object creates a different identity even if its fields look equal. Strict equality (===) compares without type conversion: 0 and the string "0" have different types, so they are not strictly equal. Loose equality (==) applies defined conversions; in this example the string becomes a number, producing true. Number("0") makes that conversion explicit. — Common mistake: treating equal-looking objects as equal references. JavaScript passes argument values; an object argument is not a new copy of its contents.
 
   *Trace identity and conversion*
 
