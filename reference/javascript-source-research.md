@@ -474,3 +474,35 @@ catalogues, DOM/Node I/O puzzles, modules/generators/workers, scoring, persisten
 browser code execution, images/dependencies, integration, push and production
 promotion. Future sheets can reuse this presentation after their own scope
 assessment; this decision does not silently expand all five at once.
+
+### Expansion implementation evidence (2026-11-05)
+
+W-6.3u.1a starts at exact design commit
+**17c480821240eb74261b5c18fb7864d6c377ca40** on
+`feat/javascript-study-sections`. Application checkpoint **be5cf77** implements
+seven focused sections, nine local activities and eleven worked examples.
+`studySections()` validates the shared web/Markdown traversal; the browser audit
+reads every rendered reference rail hash and rejects an empty rail. The stage
+Stepper label and navigation behavior retain their defaults.
+
+The same published checker now reads the expanded data and passes **52 assertions**
+on actual **Node v22.23.4**, strict CommonJS. It covers all nine activities and
+all eleven worked examples, including valid falsy defaults, TDZ, bound/arrow
+receivers, empty collections, a numeric copying sort, controlled async completion
+and rejection, and isolated scheduling callbacks. Expected traces remain bounded
+to that context. The earlier **4/20** result validates only the original sheet.
+The additional primary-source findings above were checked again during this
+implementation; no external image or new dependency was introduced.
+
+All **29 other generated sheet bodies** remain byte-identical to **17c4808**;
+the introduction now acknowledges study references. Highlighted output was
+regenerated for the eleven added row examples. Initial checkpoint panel heights
+at 1024×768 ranged **1,438–2,412px**, below the unchanged four-screen limit.
+The initial keyboard matrix exposed a sticky-rail focus offset; measured scroll-margin
+correction stays scoped to study solution buttons. Independent review of
+**be5cf77** found duplicate browser-test registration and an implicit equality
+mechanism; **3d4b140** moves the test outside the matrix loop and explicitly
+explains strict comparison, numeric coercion and conversion. This explanation
+was required teaching within the selected scope, not deferred polish. The final
+**40/40** production audit includes the unchanged panel-weight limit. Final
+verification and review details are retained in the tracker.

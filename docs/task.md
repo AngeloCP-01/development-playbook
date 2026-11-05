@@ -13,16 +13,16 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-05): expand JavaScript before integration (D-102).**
-The user found the implemented sheet too short and selected **6–8 focused
-sections with worked examples and 1–2 activities per section**. The
-[expansion design](../reference/javascript-source-research.md#sectioned-expansion-selected-2026-11-05)
+**Current work (2026-11-05): JavaScript expansion verified; coordinator review pending.**
+W-6.3u.1a now has seven study sections, nine local activities and eleven worked
+examples on `feat/javascript-study-sections`, from **17c4808**. Reviewed checkpoint
+**be5cf77**; corrections **3d4b140** fix audit registration and explain equality.
+The [source/design record](../reference/javascript-source-research.md#sectioned-expansion-selected-2026-11-05)
 and [compact plan](superpowers/plans/2026-11-05-javascript-study-expansion.md)
-recommend seven sections/nine activities using stage-style navigation within
-`/reference/javascript`. Implementation starts in a fresh **GPT-6.1 Sol / High**
-session from the documentation tip descended from **bd72e70**. Original app
-**0dcfe2d** remains historical verified evidence; the expansion has no app checks
-yet. Feature branch **26/30** sheets, **18/18** stages. No merge, push or promotion.
+retain selected scope. Full unit/DOM **1,635/233** and expanded published checker
+**52 assertions** pass; final build **57 pages**, production **40/40**, dev-console
+**1/1** and expanded-body development checks **36 toggles / zero warnings**. Counts remain
+**26/30** sheets and **18/18** stages; no merge, push or promotion.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -34,7 +34,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **25 drawn / 30 registered**, through **2cc7d5d**. W-6.4 is integrated as **b8515a0**; five language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** coordinator review of W-6.3u.1's final branch and evidence,
+**Next task/model:** coordinator review of W-6.3u.1a's expanded branch and evidence,
 recommended **GPT-6 Astra / Low** in coordinator session
 `01a18acc-3b54-7202-92f3-404cc94fd0ad`. Integration into develop requires
 separate user approval. Remaining language sheets need their own assessment
@@ -1002,7 +1002,7 @@ D-100's fresh-session policy applies. Other four sheets, algorithm catalogues,
 DOM/Node I/O puzzles, modules/generators/workers, new controls beyond disclosure,
 diagrams/upgrades, push and promotion are deferred.
 
-**W-6.3u.1a — Sectioned JavaScript expansion ◐** *(scope selected; implementation pending)*
+**W-6.3u.1a — Sectioned JavaScript expansion ◐** *(verified; coordinator review and integration pending)*
 
 - [x] Inspect original feature **bd72e70** / application **0dcfe2d** and read
   implementation session **01a1a908-ddb6-7f91-bb4d-7834839b62e8** before using
@@ -1013,13 +1013,19 @@ diagrams/upgrades, push and promotion are deferred.
 - [x] Prepare the [compact implementation plan](superpowers/plans/2026-11-05-javascript-study-expansion.md)
   for optional study metadata, reusable section composition, local Markdown
   ordering and rendered reference-hash audit discovery.
-- [ ] Implement in a fresh **GPT-6.1 Sol / High** session on
-  `feat/javascript-study-sections`, from the committed documentation tip.
-- [ ] Validate actual expanded examples, all section/theme/keyboard states,
+- [x] Implement on `feat/javascript-study-sections`, from exact **17c4808**;
+  application **be5cf77**, reviewed corrections **3d4b140**. The user asked
+  "continue" after this thread's fresh-session notice, so work continued here.
+  This task-specific continuation does not change D-100 for future work;
+  recommended implementation setting remains **GPT-6.1 Sol / High**.
+- [x] Validate actual expanded examples, all section/theme/keyboard states,
   unchanged ordinary sheets, final gate/dev-console and independent final review.
-- [ ] Return branch/commit, actual checks, unresolved scope and session reference
-  to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**; separate integration
-  approval follows coordinator review.
+  Exact commits, retained/fresh checks and limits are in [KICKOFF](../KICKOFF.md).
+- [x] Prepare branch/commit, actual checks, deferred scope and session reference
+  for coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad** in KICKOFF and the
+  implementation response.
+- [ ] Coordinator reviews the delivered diff/evidence; separate user integration
+  approval follows that review.
 
 No nineteenth stage, comprehensive course, runner/grading/persistence, broad
 redesign of other references, or work on the remaining four sheets is selected.

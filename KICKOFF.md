@@ -1,75 +1,64 @@
-# Kickoff: expand JavaScript into focused study sections
+# Kickoff: JavaScript study expansion ready for coordinator review
 
-Updated 2026-11-05. Follow [AGENTS.md](AGENTS.md), D-99, D-100, D-101 and D-102.
+Updated 2026-11-05. Follow [AGENTS.md](AGENTS.md), D-99–D-102.
 
-## Reader outcome and selected scope
+## Delivered scope
 
-The user found the implemented JavaScript sheet too short and selected
-**6–8 focused sections with worked examples and 1–2 activities per section**.
-Teach mechanisms, trace examples and repair mistakes through stage-style
-sections inside `/reference/javascript`.
-
-The [design and source record](reference/javascript-source-research.md#sectioned-expansion-selected-2026-11-05)
-recommends seven sections/nine activities: values; scope/closures;
+`/reference/javascript` now has seven navigable study sections, eleven worked
+examples and nine local activities: values/equality; scope/closures;
 functions/this; objects/prototypes; arrays; promises/errors; scheduling.
-Each section includes an outcome, explanation, worked example, common mistake,
-representative interview prompt and local activity. Keep the coverage selective.
+Prompts remain visible while solutions open independently. Shared checked
+metadata drives section order and local practice in both web and Markdown.
+All 29 other generated sheet bodies remain byte-identical to the design base.
 
-## Starting point and implementation
+Read the [source/design record](reference/javascript-source-research.md#sectioned-expansion-selected-2026-11-05),
+[compact plan](docs/superpowers/plans/2026-11-05-javascript-study-expansion.md)
+and [completion evidence](docs/tracker.md#completed).
 
-- Current documentation branch: `docs/2026-11-05-javascript-study-expansion`,
-  based on **bd72e70031d13d7e47dcfa9e083d6c396bbc18dc**. Record its exact committed
-  tip with `git rev-parse HEAD` before starting implementation.
-- Original application: **0dcfe2da558e13f5d4b2c194bd6a023809043697**, originally
-  from **8ff159f5820caa18966e7358bea8dac5cc56fc69**. Preserve its feature history;
-  expand it before integration. Feature branch **26/30** sheets, **18/18** stages;
-  local develop **25/30** sheets.
-- **Next task:** implement W-6.3u.1a in a **fresh user-selected GPT-6.1 Sol / High
-  session**, creating `feat/javascript-study-sections` from the documentation tip.
-  This is the D-100 handoff, not an inline implementation exception.
-- Read the [compact plan](docs/superpowers/plans/2026-11-05-javascript-study-expansion.md),
-  [PATTERNS](web/PATTERNS.md), [DESIGN](web/DESIGN.md) and relevant installed
-  framework guides before changing APIs. Use the executing-plans skill.
+## Branch, review and session
 
-## Acceptance and recovery checklist
+- Branch: `feat/javascript-study-sections`, exact base
+  **17c480821240eb74261b5c18fb7864d6c377ca40**.
+- Expansion **be5cf7720f19aad1c01aefbee420c5afb5f53123**;
+  final application **3d4b140ae8517134c9fe4fb6916dbe33bfd35952**.
+  Later delivery records do not change application inputs.
+- Independent **GPT-6 Astra / Low** review covered **8ff159f..be5cf77**,
+  emphasizing the expansion after **bd72e70**, including delivered page states.
+  Two findings are fixed in **3d4b140**: duplicate browser-test registration and
+  missing explicit equality-coercion explanation. Collection now reaches all
+  40 cases; final actual-sheet/generator tests pass **3/3**. No unresolved findings.
+- Implementation session: **01a1a908-ddb6-7f91-bb4d-7834839b62e8**. The user
+  requested "continue" after the fresh-session notice; work continued here.
+  This does not change D-100 for future tasks. Recommended implementation model
+  remains **GPT-6.1 Sol / High**; no active-model setting is claimed.
 
-- [ ] Add optional section study metadata; reuse Stepper with a reference-specific
-  accessible label and the existing activity disclosures. Keep one content source.
-- [ ] Author seven substantive sections and nine activities. Preserve the four
-  existing activities with their async/host caveats; put practice in its section.
-- [ ] Generate the same local section/activity ordering in Markdown. All 29 other
-  sheet bodies remain unchanged; the shared introduction may acknowledge study sheets.
-- [ ] Audit every rendered section hash, not just the base reference URL. Check
-  direct links/history, keyboard use, both themes, representative widths, open
-  solutions, clean console and default panel weight at 1024×768.
-- [ ] Extend actual-published-example validation on Node **22.23.4** in strict
-  CommonJS; keep deterministic error/completion fixtures and scheduling bounds.
-- [ ] Run behavior TDD, focused checks, the final app gate/dev-console once and
-  one independent final content/branch/page review. Report exact commits/results.
+## Verification
 
-Use `env PATH="/Users/angelito/.nvm/versions/node/v22.23.4/bin:$PATH" pnpm …`
-from `web/`; default-shell Node **22.19** remains unsupported. Do not stop the
-user's existing :3200 dev server to clear a build/dev lock. If interrupted,
-record the last completed task, failing command and remaining checks here.
+Supported **Node 22.23.4**, pinned **pnpm 10.33.0** via a temporary Corepack shim.
+Retained checkpoint checks: format/lint/generated-route typecheck exit 0;
+full unit/DOM **1,635 tests / 233 files**. After the bounded review fixes,
+fresh actual-sheet/generator **3/3**, production build **57 pages**, complete
+production audit **40/40** (`--fully-parallel --workers=2`, unchanged timeouts)
+and exact published-example checker **52 assertions**, all exit 0.
 
-## Evidence and return
+Fresh `pnpm test:dev-console` **1/1**, exit 0 (**3.7m**), ran sequentially
+after production in an isolated copy with identical `src`/`public`; only explicit
+Turbopack root and testDir configuration differ. It leaves the user’s :3200
+server untouched. Additional development checks opened/re-collapsed all local
+solutions: **36 keyboard toggles / two themes / zero warnings or errors**.
 
-Original **0dcfe2d** evidence remains in the [tracker](docs/tracker.md) and
-[source record](reference/javascript-source-research.md#implementation-evidence-2026-11-05):
-1,624 tests/232 files, 57-page build, 37 production cases with an isolated
-timeout retry, dev-console 1/1 and published checker 4 activities/20 assertions.
-These checks do not validate the expansion. Implementation session
-**01a1a908-ddb6-7f91-bb4d-7834839b62e8** was read before using its handoff.
+Closing records: ledger **2/2**, local links/anchors **140 targets / 5 files**,
+`git diff --check`, and final example checker **52 assertions**, all exit 0. Application checks above are retained
+for unchanged inputs after this records update. Earlier failed attempts and
+reproductions are summarized in the tracker; no assertions/timeouts were weakened.
 
-Fresh handoff checks on the documentation tree descended from **bd72e70**:
-`pnpm test src/lib/tracker-ledger.test.ts --maxWorkers=1` **2/2**, local
-links/anchors **140 targets / 5 files**, and `git diff --check`, all exit 0.
-Self-review/humanizer pass applied. No web/generated/example inputs changed;
-the original application evidence is retained, with no app suite/build rerun.
+## Return and next action
 
-Return branch/commit, actual checks, unresolved issues and the implementation
-session reference to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**,
-recommended **GPT-6 Astra / Low**. The coordinator reads that session and reviews
-the actual diff. Separate user approval is required for a no-ff merge into
-develop. No merge, push or promotion has occurred. Other four sheets, a complete
-course, browser execution, scoring, persistence and new dependencies are deferred.
+Return this branch/diff and evidence to coordinator session
+**01a18acc-3b54-7202-92f3-404cc94fd0ad**. Recommended next task/model:
+**coordinator review of W-6.3u.1a, GPT-6 Astra / Low**. Read the implementation
+thread before relying on its handoff; review the actual diff and identified
+commits. This file and the implementation response are the return package.
+Separate user approval is required before a no-ff merge into develop. No merge,
+push or production promotion occurred. Four other sheets, a complete course,
+runner/grading/persistence, dependencies and diagrams remain deferred.
