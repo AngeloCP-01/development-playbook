@@ -1,6 +1,6 @@
 /**
- * A cheatsheet is lookup material, not a stage. Stages teach a decision; a sheet
- * answers "what was that command again" in one screen.
+ * Sheets provide lookup material or focused study sections. They remain
+ * references, without a stage number or lifecycle cadence.
  *
  * Sheets are structured data rather than components so the markdown in
  * reference/ can be generated from them, the same arrangement terms.ts has with
@@ -53,6 +53,8 @@ export type Section = {
   title: string
   note?: string
   rows: Row[]
+  /** All sections on a study sheet opt in; activity IDs are assigned once. */
+  study?: { id: string; label: string; hint: string; activityIds: string[] }
 }
 
 /**

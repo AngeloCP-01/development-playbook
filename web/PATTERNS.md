@@ -480,3 +480,27 @@ Three shapes that qualify:
 What does not need one: a component that renders a prop as text, a layout wrapper, a
 component whose whole behaviour is already covered by the audit suite driving the real
 page.
+
+
+### Focused study references — `StudySheet`
+
+A study reference keeps one canonical sheet module and annotates every section
+with `study: { id, label, hint, activityIds }`. Ordinary sheets omit this metadata.
+`studySections()` validates stable, safe, unique hashes and assigns each activity
+exactly once; missing, duplicated or unassigned references and partial metadata
+fail generation/build rather than silently dropping content.
+
+`StudySheet` turns that checked order into server-built `Step` content. Pass a
+reference-specific Stepper label, such as `JavaScript sections`; stages retain
+`Stage steps`. Each panel has an outcome/explanation prompt, vertical teaching
+units with worked examples and nearby mistakes, then local `SheetActivities`.
+Keep sources outside the panels. Preserve visible prompts and initially hidden
+answers. Switching panels remounts the local controls; visited checks track visits.
+Generated Markdown emits the same teaching and local activities in the same order.
+
+Render tests must exercise worked code, local prompts, reveal/re-collapse and
+state isolation across section changes. Browser checks compare rendered rail IDs
+with declared content, visit every hash, test direct links/history and keyboard
+navigation, and confirm the audit opens every local solution. Default panels use
+the existing four-screen budget at 1024×768. Verify both themes, narrow layouts,
+code scrolling and focus below the sticky rail, including open solutions.

@@ -8,10 +8,16 @@ import {
   cheatsheetsForStage,
 } from './index'
 import { CHEATSHEET_GROUPS, isDrawn } from './types'
+import { studySections } from './study-sections'
 
 test('every slug is unique, since two sheets on one route is a silent overwrite', () => {
   const slugs = CHEATSHEETS.map((s) => s.slug)
   expect(new Set(slugs).size).toBe(slugs.length)
+})
+
+test('study sheets have complete metadata, unique hashes and exactly one owner for every activity', () => {
+  for (const sheet of CHEATSHEETS)
+    expect(() => studySections(sheet), sheet.slug).not.toThrow()
 })
 
 // The tether is the whole point of the section living beside the stages rather

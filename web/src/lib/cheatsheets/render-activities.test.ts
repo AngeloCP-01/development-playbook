@@ -67,3 +67,95 @@ test('absent and empty activities retain the exact old Markdown; undrawn sheets 
   fixtures.sheets[0] = { ...base, sections: [], activities: [activity] }
   expect(renderCheatsheets()).not.toContain('Practice')
 })
+
+const study = () => ({
+  ...base,
+  sections: [
+    {
+      ...base.sections[0],
+      title: 'First topic',
+      study: {
+        id: 'first',
+        label: 'First',
+        hint: 'Read first',
+        activityIds: ['counter'],
+      },
+    },
+    {
+      title: 'Second topic',
+      rows: [{ term: 'Second', what: 'Later teaching.' }],
+      study: {
+        id: 'second',
+        label: 'Second',
+        hint: 'Read second',
+        activityIds: ['copy'],
+      },
+    },
+  ],
+  activities: [
+    activity,
+    { ...activity, id: 'copy', title: 'Copy task', prompt: 'Copy prompt' },
+  ],
+})
+
+test('study Markdown places each activity after its own teaching, without a duplicated global practice block', () => {
+  fixtures.sheets.push(study())
+  const text = renderCheatsheets()
+  expect(text.indexOf('Predict')).toBeLessThan(text.indexOf('### Second topic'))
+  expect(text.indexOf('### Second topic')).toBeLessThan(
+    text.indexOf('Copy prompt'),
+  )
+  expect(text.match(/#### Counter/g)).toHaveLength(1)
+})
+
+for (const [name, mutate] of [
+  [
+    'missing activity',
+    (sheet: ReturnType<typeof study>) => {
+      sheet.sections[0].study.activityIds = ['missing']
+    },
+  ],
+  [
+    'duplicate assignment',
+    (sheet: ReturnType<typeof study>) => {
+      sheet.sections[1].study.activityIds = ['counter', 'copy']
+    },
+  ],
+  [
+    'unassigned activity',
+    (sheet: ReturnType<typeof study>) => {
+      sheet.sections[0].study.activityIds = []
+    },
+  ],
+  [
+    'unsafe hash',
+    (sheet: ReturnType<typeof study>) => {
+      sheet.sections[0].study.id = 'bad#hash'
+    },
+  ],
+  [
+    'duplicate hash',
+    (sheet: ReturnType<typeof study>) => {
+      sheet.sections[1].study.id = 'first'
+    },
+  ],
+  [
+    'partial metadata',
+    (sheet: ReturnType<typeof study>) => {
+      delete (sheet.sections[0] as { study?: unknown }).study
+    },
+  ],
+  [
+    'duplicate activity IDs',
+    (sheet: ReturnType<typeof study>) => {
+      sheet.activities[1].id = 'counter'
+    },
+  ],
+] as const) {
+  test(`study guard rejects ${name} rather than silently losing content`, () => {
+    const sheet = study()
+    mutate(sheet)
+    fixtures.sheets.push(sheet)
+    expect(() => renderCheatsheets()).toThrow(/study/i)
+  })
+}

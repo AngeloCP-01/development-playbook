@@ -1,5 +1,6 @@
 import { getStage } from '@/lib/stages'
 import { sheetSources } from './sheet-sources'
+import { studySections } from './study-sections'
 import { CHEATSHEETS, cheatsheetsByGroup } from './index'
 import {
   CHEATSHEET_GROUPS,
@@ -25,17 +26,49 @@ function activityCode(example: SheetActivity['starter']): string[] {
   return [activityText(example.label), '', fence, example.code, fence, '']
 }
 
+function renderActivities(
+  activities: SheetActivity[],
+  local = false,
+): string[] {
+  if (!activities.length) return []
+  const lines: string[] = [local ? '#### Practice' : '### Practice', '']
+  for (const activity of activities) {
+    lines.push(
+      `${local ? '#####' : '####'} ${activityText(activity.title)}`,
+      '',
+      activityText(activity.prompt),
+      '',
+      `Context: ${activityText(activity.context)}`,
+      '',
+      ...activityCode(activity.starter),
+      `Solution: ${activityText(activity.title)}`,
+      '',
+      activityText(activity.answer),
+      '',
+      ...activityCode(activity.solution),
+      'Why it works',
+      '',
+      activityText(activity.explanation),
+      '',
+    )
+    if (activity.followUp)
+      lines.push('Follow-up', '', activityText(activity.followUp), '')
+  }
+  return lines
+}
+
 /**
  * Renders reference/cheatsheets.md from the registry. The TS modules are the
  * single source; the markdown is a generated snapshot kept in sync by
  * render.test.ts and regenerated with `pnpm gen:cheatsheets`. Do not hand-edit
  * the markdown.
  *
- * One combined file rather than one per sheet: ten of the eleven are empty, and
- * ten stub files would be noise. Split when that ratio inverts.
+ * A combined portable reference includes both ordinary lookup and local study
+ * practice, in the same authored order as the web page.
  */
 function renderSheet(sheet: Cheatsheet): string {
   const stage = sheet.stage ? getStage(sheet.stage) : undefined
+  const study = studySections(sheet)
   const lines: string[] = [`## ${sheet.title}`, '', sheet.blurb, '']
 
   if (stage) {
@@ -49,7 +82,13 @@ function renderSheet(sheet: Cheatsheet): string {
     lines.push('*Not drawn yet.*', '')
   }
 
-  for (const section of sheet.sections) {
+  const sections =
+    study ??
+    sheet.sections.map((section) => ({
+      ...section,
+      activities: [] as SheetActivity[],
+    }))
+  for (const section of sections) {
     lines.push(`### ${section.title}`, '')
     if (section.note) lines.push(section.note, '')
     for (const row of section.rows) {
@@ -71,33 +110,11 @@ function renderSheet(sheet: Cheatsheet): string {
       }
     }
     lines.push('')
+    if (study) lines.push(...renderActivities(section.activities, true))
   }
 
-  if (isDrawn(sheet) && sheet.activities?.length) {
-    lines.push('### Practice', '')
-    for (const activity of sheet.activities) {
-      lines.push(
-        `#### ${activityText(activity.title)}`,
-        '',
-        activityText(activity.prompt),
-        '',
-        `Context: ${activityText(activity.context)}`,
-        '',
-        ...activityCode(activity.starter),
-        `Solution: ${activityText(activity.title)}`,
-        '',
-        activityText(activity.answer),
-        '',
-        ...activityCode(activity.solution),
-        'Why it works',
-        '',
-        activityText(activity.explanation),
-        '',
-      )
-      if (activity.followUp)
-        lines.push('Follow-up', '', activityText(activity.followUp), '')
-    }
-  }
+  if (!study && isDrawn(sheet))
+    lines.push(...renderActivities(sheet.activities ?? []))
 
   if (isDrawn(sheet) && sheet.source?.image?.origin === 'original') {
     lines.push(
@@ -129,8 +146,8 @@ export function renderCheatsheets(): string {
     '<!-- Generated from web/src/lib/cheatsheets/. Do not edit by hand.',
     '     Edit the sheet there and run `pnpm gen:cheatsheets` (from web/) to regenerate. -->',
     '',
-    'Lookup material rather than reading material. A stage teaches a decision; a',
-    'sheet answers what that command was.',
+    'Look up a command or study a focused topic. Study sheets include worked',
+    'examples and local practice; stages teach lifecycle decisions.',
     '',
     `Drawn: ${drawn} of ${CHEATSHEETS.length}. A sheet listed as not drawn is`,
     'registered on purpose — the gap is the point, so it can be seen and filled.',

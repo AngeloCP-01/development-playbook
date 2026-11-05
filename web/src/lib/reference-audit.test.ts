@@ -9,11 +9,15 @@ test('the production sweep includes both native resources as well as existing re
   const page = {
     goto: vi.fn().mockResolvedValue(null),
     $$eval: vi.fn().mockResolvedValue(['fixture-step']),
+    getByRole: () => ({
+      locator: () => ({ evaluateAll: async () => ['fixture-section'] }),
+    }),
   } as unknown as Page
   const paths = await auditPages(page)
   expect(paths).toContain('/reference/glossary')
   expect(paths).toContain('/reference/stack')
   expect(paths).toContain('/reference/architecture-patterns')
   expect(paths).toContain('/reference/python')
+  expect(paths).toContain('/reference/javascript#fixture-section')
   expect(new Set(paths).size).toBe(paths.length)
 })

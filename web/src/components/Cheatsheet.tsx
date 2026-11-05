@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { SheetActivities } from './SheetActivities'
+import { StudySheet } from './StudySheet'
+import { studySections } from '@/lib/cheatsheets/study-sections'
 import Image from 'next/image'
 import { ArrowUpRight } from 'lucide-react'
 import { isDrawn, type Cheatsheet } from '@/lib/cheatsheets'
@@ -20,6 +22,7 @@ import { sheetSources } from '@/lib/cheatsheets/sheet-sources'
 export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
   const stage = sheet.stage ? getStage(sheet.stage) : undefined
   const sources = sheetSources(sheet)
+  const study = studySections(sheet)
 
   return (
     <div>
@@ -42,7 +45,9 @@ export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
         </p>
       )}
 
-      {isDrawn(sheet) ? (
+      {study ? (
+        <StudySheet sheet={sheet} />
+      ) : isDrawn(sheet) ? (
         <div className="space-y-12">
           {sheet.sections.map((section) => (
             <section key={section.title}>
@@ -124,7 +129,7 @@ export function CheatsheetView({ sheet }: { sheet: Cheatsheet }) {
         </div>
       )}
 
-      {isDrawn(sheet) && !!sheet.activities?.length && (
+      {!study && isDrawn(sheet) && !!sheet.activities?.length && (
         <SheetActivities
           key={sheet.slug}
           slug={sheet.slug}
