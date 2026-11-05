@@ -45,10 +45,12 @@ The web app does **not** read the markdown. The interactive stage _content_ is
 hand-ported into React components — known duplication, do not "fix" it casually, but do
 not widen it without noting it either.
 
-Two pieces that used to be hand-ported are now single-sourced (D-36): the **glossary**
-lives in `web/src/lib/terms.ts` and `reference/glossary.md` is generated from it (run
-`pnpm gen:glossary`; never hand-edit the markdown), and stage **titles** are guarded by a
-sync test against `stages.ts`. A term or a stage title now lives in exactly one place.
+The **glossary** lives in `web/src/lib/terms.ts`; `reference/glossary.md` is
+generated from it (`pnpm gen:glossary`). The **stack** lives in
+`web/src/lib/stack.ts`; `reference/stack.md` is generated from it (`pnpm gen:stack`).
+The native reference pages consume these same sources. Edit the TypeScript source
+and regenerate; never hand-edit either generated Markdown document. Stage
+**titles** are guarded by a sync test against `stages.ts` (D-36).
 
 ## The claim the structure rests on
 

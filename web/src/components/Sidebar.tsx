@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { REFERENCE_RESOURCES } from '@/lib/reference-resources'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { PanelLeftClose, PanelLeftOpen, Menu, X } from 'lucide-react'
@@ -232,6 +233,60 @@ export function Sidebar() {
             aria-label="Reference index"
             className="shrink-0 overflow-x-hidden border-t border-line-strong"
           >
+            <div className="border-b border-line">
+              <div
+                id="ref-resources"
+                className={[
+                  't-label px-3 pb-1 pt-4 text-subtle',
+                  collapsed ? 'lg:px-0 lg:text-center' : '',
+                ].join(' ')}
+              >
+                <span className={collapsed ? 'lg:hidden' : ''}>Resources</span>
+                <span
+                  className={collapsed ? 'hidden lg:inline' : 'hidden'}
+                  aria-hidden
+                >
+                  ·
+                </span>
+              </div>
+              <ul aria-labelledby="ref-resources">
+                {REFERENCE_RESOURCES.map((resource) => {
+                  const active = pathname === resource.href
+                  return (
+                    <li key={resource.slug}>
+                      <Link
+                        href={resource.href}
+                        onClick={() => setDrawerOpen(false)}
+                        aria-label={resource.title}
+                        aria-current={active ? 'page' : undefined}
+                        title={collapsed ? resource.title : undefined}
+                        className={[
+                          'group flex min-h-11 items-center gap-3 px-3 text-sm transition-colors duration-150 lg:min-h-0 lg:py-1.5',
+                          collapsed ? 'lg:justify-center lg:px-0' : '',
+                          active
+                            ? 'border-l-2 border-brand bg-sunken pl-[10px] font-medium text-fg'
+                            : 'border-l-2 border-transparent text-muted hover:bg-sunken hover:text-fg',
+                        ].join(' ')}
+                      >
+                        <span
+                          className={[
+                            't-ui min-w-0 flex-1 truncate',
+                            collapsed ? 'lg:hidden' : '',
+                          ].join(' ')}
+                        >
+                          {resource.title}
+                        </span>
+                        {collapsed && (
+                          <span className="t-data hidden lg:inline" aria-hidden>
+                            {resource.slug === 'glossary' ? 'G' : 'S'}
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
             {CHEATSHEET_GROUPS.map((group) => {
               const labelId = `ref-${group.toLowerCase()}`
               return (

@@ -59,7 +59,7 @@ test('the sweep reaches every step every built stage declares, since a selector 
   expect([...swept].sort()).toEqual([...declared].sort())
 })
 
-test('appends the reference index and every registered sheet, so a sheet added later cannot slip out of the sweep', async ({
+test('appends the reference index, native resources and every registered sheet, so a sheet added later cannot slip out of the sweep', async ({
   page,
 }) => {
   const derived = await auditPages(page)
@@ -67,6 +67,8 @@ test('appends the reference index and every registered sheet, so a sheet added l
 
   expect(referencePages).toEqual([
     '/reference',
+    '/reference/glossary',
+    '/reference/stack',
     ...CHEATSHEETS.map((sheet) => `/reference/${sheet.slug}`),
   ])
 })
@@ -88,3 +90,26 @@ test('refuses to sweep a stage that is ready but renders no steps, since silence
     /renders no steps/,
   )
 })
+
+for (const [path, title] of [
+  ['/reference/glossary', 'Glossary'],
+  ['/reference/stack', 'The Default Stack'],
+]) {
+  test(`native resource ${path} is swept and actually built`, async ({
+    page,
+  }) => {
+    expect(await auditPages(page)).toContain(path)
+    const response = await page.goto(path)
+    expect(response?.status()).toBe(200)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
+    await expect(
+      page.getByText('Sheet not drawn', { exact: true }),
+    ).toHaveCount(0)
+    const ids = await page
+      .locator('main [id]')
+      .evaluateAll((elements) => elements.map((element) => element.id))
+    expect(new Set(ids).size).toBe(ids.length)
+    const sitemap = await page.request.get('/sitemap.xml')
+    expect(await sitemap.text()).toContain(path)
+  })
+}

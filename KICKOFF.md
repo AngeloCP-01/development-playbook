@@ -1,149 +1,84 @@
-# Kickoff: Improvement Review merged; W-6.4 assessment next
+# Kickoff: W-6.4 coordinator accepted; integration pending
 
-Updated 2026-11-04. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
+Updated 2026-11-05. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 
 ## Current state
 
-- User-approved no-ff merge **2cc7d5d** is on local `develop`, parents
-  **ff6ce06 / 0e801ca**. Use `git log -1 --oneline` for the closing records tip.
-- Merge tree equals reviewed feature tip **0e801ca**. Application/generated
-  Markdown inputs equal tested **04e3623**. Scope/source checkpoint **a30f5e5**,
-  application **8b83bfd**, registry guard correction **04e3623**.
-- Local references are **25 drawn / 30 registered**; all **18/18** stages are
-  interactive. Five language placeholders and W-6.4 remain.
-- [Improvement Review data](web/src/lib/cheatsheets/improvement-review.ts)
-  generates the [Markdown lookup](reference/cheatsheets.md#improvement-review).
-  Four sections/fourteen rows, Stage 18 tether, four text sources and actual-sheet
-  render coverage. This intentionally adds a concise view of chapter teaching.
-- [Approved boundary and source record](reference/stage-18-source-research.md#w-6-assessment-improvement-review-2026-11-04).
-  No push or deployment; main is unchanged.
+- Branch `feat/reference-glossary-stack`, from approved handoff **131c303**.
+  Application tip **9231dc9**; use `git log -1 --oneline` for the closing records tip.
+- Native `/reference/glossary` and `/reference/stack` appear in the hub,
+  Reference navigation, sitemap and production audit. Glossary consumes unchanged
+  `terms.ts`; stack page and generated `reference/stack.md` consume canonical
+  `web/src/lib/stack.ts` (`pnpm gen:stack`).
+- Stack preserves four groups/22 choices/five deviation cases and upkeep guidance,
+  with researched corrections, narrow Stage 04 alignment and the original Testing
+  chapter link. Counts stay **25/30** sheets and **18/18** stages.
+- **TD-47 closed on the feature branch:** `.nvmrc` **22.23.4**, package Node
+  **^22.22.2**, support/alignment guard. [Archived assessment and closure](docs/tracker-archive.md).
+- No merge, push or deployment. Local develop stays at **097fdd0**.
 
-## Verification
+[One source/design record](reference/w6-4-source-research.md) preserves findings,
+the approved plan and source limits. User selected "Implement here; override
+D-100 for this task". Implementation thread:
+**01a1a51d-8cb1-7983-8e51-1c3e48ecf142**; active model/effort unconfirmed.
+Standing D-100 policy remains unchanged.
 
-Final application/test inputs are **04e3623**; later changes are records only.
-Format, lint and generated-route typecheck pass (exit 0); the later guard-only
-change also passed focused Prettier/ESLint and the commit hook. Production build
-passes **55/55 routes**, exit 0. Highlighted output remains unchanged and its
-snapshot passes. Stable-host `pnpm test --maxWorkers=2` passes
-**1,590 tests / 223 files** in **65.88s**, exit 0.
-`pnpm test:e2e --workers=2` finished **25/27**, exit 1 solely for two checks
-that exceeded 120s while loading unchanged Stage 03 across the clock gap.
-Retain those 25 successes, including both-theme WCAG AA, touch targets,
-disclosures, console, history and panel height. Targeted rerun below passed
-**2/2** in **47.5s**, exit 0, on the same build with unchanged limits:
+## Verification and review
 
-`pnpm exec playwright test e2e/audit-pages.spec.ts e2e/audit.spec.ts
---grep 'the sweep reaches every step|no horizontal overflow at 320px'
---workers=2 --output=/private/tmp/w63t-audit-retry-results`
+The reported verification commands used installed Node **22.23.4**.
+[The W-6.4 completion row](docs/tracker.md) holds commands, results, failure
+reasons and deferred scope. Raw logs:
+`/private/tmp/w64-*.log`.
 
-All **27** audit checks are therefore covered by successful results; a single
-uninterrupted **27/27** run is not claimed.
+- **Fresh on 9231dc9:** production build **57 routes**, production audit **29/29**;
+  affected-file format/lint and glossary render **3/3** for the final `min-w-11`
+  touch-target correction. npm/Zod now measure **44×44px** at 320px.
+- **Retained from 1ee672e:** full format/lint/generated-route typecheck and
+  **1,609 tests / 228 files**, all exit 0. The sole later app change is that class.
+- **Development console 1/1**, exit 0, on an isolated **1ee672e** source copy on
+  port 3101. Only glossary minimum width differs from final source; React
+  behavior/structure and audit tests are identical. Temporary Turbopack root
+  resolves linked dependencies; original config/port-3200 server untouched.
+- Focused **30 states**: both themes at **320/768/1440px**, hub/both resources and
+  representative stage/sheet, no overflow or console errors; native links meet
+  **44×44px**. Keyboard, fragment focus/reload/Back, Stage 06 link/Back, drawer
+  closing/current navigation and collapsed desktop resource access pass.
+- One independent **Astra Low** content/page/branch review covers **9231dc9** and
+  six rendered captures: no blockers. Both findings fixed; humanizer pass done.
 
-Focused production checks pass **18 path/theme/width states**: reference index,
-sheet and Stage 18 at **320/768/1440 × 900**, both themes. Checked Standards
-listing, **25 of 30**, all four section headings, Tab/Enter navigation and Back,
-no horizontal overflow, all five sheet links at least **44px** high, and zero
-console warnings/errors or page errors. All four citation links are reachable
-by Tab in authored order in both themes. Source pages reopened successfully.
-Generated Markdown checked as a lookup. Humanizer pass applied to new prose.
+CI execution, hosted patches, a full provider audit and reader benefit remain
+unverified. Undated choices retain their source-review limits.
 
-Independent **GPT-6 Astra / Low** content/page review passes with no actionable
-findings: **41c0f2f..8b83bfd**, the test-only **04e3623** correction, chapter,
-approved assessment, four reopened sources and all six production screenshots.
-Reviewer `/root/review_improvement_reference` independently inspected the
-screenshots; keyboard, measured targets/contrast, console and automated suite
-results are implementer evidence. Narrow title wrapping is cosmetic in the
-unchanged renderer. No measured retrieval benefit is claimed.
+Implementation closing-record checks: ledger **2/2**, local links/anchors **141 targets
+across 8 files**, and whitespace check, all exit 0. App inputs remain unchanged
+from **9231dc9**; the identified app verification is retained.
 
-Verification history: unrestricted Vitest first exposed the stale **24/29**
-global guard (fixed in **04e3623**) and two 5-second highlighting timeouts.
-One-worker full run: **1,589/1,590**, Documentation traps/source test timed out
-at **5.866s**; isolated Documentation/highlighting rerun **6/6**, exit 0.
-Two-worker run crossed an approximately fifteen-minute clock gap: Observability
-`act panels > seven steps, in order` timed out at **889.829s**;
-**1,589/1,590** otherwise passed. Isolated Observability rerun **8/8** in
-**1.42s**, exit 0. Two initial audit checks crossed the same gap. No assertions,
-configs or timeout limits were weakened. Stable-host full suite passes as
-recorded above; the two audit retries also pass.
+## Next task and return
 
-Raw logs for this session: `/private/tmp/w63t-unit.log`,
-`/private/tmp/w63t-unit-serial.log`, `/private/tmp/w63t-unit-final.log`,
-`/private/tmp/w63t-unit-stable.log`, `/private/tmp/w63t-build.log`,
-`/private/tmp/w63t-audit.log`, `/private/tmp/w63t-audit-retry.log`. Screenshots:
-`/private/tmp/w63t-{light,dark}-{320,768,1440}.png`.
+**Next task:** user decision on no-ff integration into local develop.
+**Recommended coordination setting:** **GPT-6 Astra / Low**.
+Return to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**. Read implementation
+thread **01a1a51d-8cb1-7983-8e51-1c3e48ecf142** and actual
+**131c303...9231dc9** diff before relying on this handoff. [W-6.4](docs/task.md)
+tracks integration. Coordinator has now read the thread and reviewed actual
+**131c303...52e703e**, including the final records changes. No actionable standards
+or scope findings. Independent read-only checks of these two axes also returned
+no findings; they did not rerun suites/browser verification. Coordinator checked
+raw test/type/build/audit/dev-console logs and the meaningful runtime/generator
+RED evidence, plus retained light-hub-768 and dark-stack-1440 captures.
 
-Unchanged static components use D-99's dev-console exception. No deployed-site
-test was run; this branch has not been promoted. The chapter, stage, controls,
-shared renderer and artwork are unchanged.
+Application inputs, generated stack Markdown, Stage 04 guidance and source policy
+still match **9231dc9**. Retain the application verification above; there was no
+full coordinator rerun or new browser matrix. Node **22.23.4** binary is installed
+and was checked directly for the closing-record command environment.
 
-Implementation closing-record checks: `pnpm test src/lib/tracker-ledger.test.ts
---maxWorkers=1` **2/2**, `python3 /private/tmp/w63t-check-links.py`
-**145 local targets / 5 Markdown files**, and `git diff --check`, exit 0.
-Application verification and independent review are retained for identical inputs:
-`git diff --exit-code 04e3623 -- web reference/cheatsheets.md` is empty.
+Fresh coordinator closing-record checks on Node **22.23.4**: tracker ledger
+**2/2**, `python3 /private/tmp/w64-coordinator-links.py` **141 local targets /
+8 Markdown files**, and `git diff --check`, all exit 0. These records-only changes
+retain the identified application verification for **9231dc9** inputs. Every
+no-ff merge into develop needs separate user approval; main promotion belongs
+to the user.
 
-## Review and integration
-
-Coordinator: **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
-Implementation session: **01a1a431-2038-7931-b6c7-f7d7e1fa352c**.
-Coordinator read the implementation thread and the actual diff
-**41c0f2f...75f028c**, then recorded acceptance in **0e801ca**. These are setting
-recommendations; the active implementation setting was not independently
-confirmed.
-
-Coordinator acceptance: no blocking standards or scope findings in
-**41c0f2f...75f028c**. The approved fields, inference limits, four citations,
-stage tether, generated lookup and render coverage are present. Raw stable-unit,
-build, audit and retry logs confirm the reported results. Coordinator also
-inspected retained light-320 and dark-1440 screenshots; the narrow title wrap is
-cosmetic in the unchanged renderer. No fresh browser sweep is claimed.
-Application/generated Markdown still match **04e3623**. Retain the identified
-app checks and independent review with their recorded limits.
-
-Pre-merge coordinator closing-record checks: tracker ledger **2/2**,
-`python3 /private/tmp/w63t-check-links.py` **145 local targets / 5 Markdown
-files**, and `git diff --check`, all exit 0. These records-only changes retain
-application checks for unchanged **04e3623** inputs. The user subsequently
-approved integration as **2cc7d5d**, whose tree equals **0e801ca**. Main promotion
-belongs to the user.
-
-Deferred: broad stage summary, DORA/SPACE cards, another AI panel, new controls
-or shared refactors, image publication, language sheets, W-6.4, actual product
-research/telemetry, push and promotion.
-
-
-## Merge closing checks and cleanup
-
-Merge-tree equality and unchanged application-input checks pass. Fresh closing
-records checks: `pnpm test src/lib/tracker-ledger.test.ts --maxWorkers=1` **2/2**,
-`python3 /private/tmp/w63t-check-links.py` **148 local targets / 5 Markdown
-files**, and `git diff --check`, all exit 0. No full application suite or build
-was repeated for the identical merged application tree.
-
-The merged feature and assessment branches were deleted after ancestor/worktree
-checks. Their commits remain in develop. No server was stopped, and no push or
-promotion occurred.
-
-## Next task and session
-
-**Task:** W-6.4 glossary and stack surfacing assessment.
-**Recommended model:** `gpt-6-astra`, **reasoning:** `low`, research/scoping session.
-This recommendation does not confirm an active model setting.
-
-Start a scoped documentation branch from the committed local develop tip and
-record the exact SHA. Read W-6.4 in [task.md](docs/task.md), the existing reference
-hub and stage entry points, [canonical glossary data](web/src/lib/terms.ts),
-[generated glossary](reference/glossary.md) and [stack document](reference/stack.md).
-Identify the lookup tasks and the smallest useful way to expose the glossary and
-stack in the hub. Check current routes and entry points before assuming the old
-record's gap remains unchanged. Preserve the glossary's single source; its
-Markdown is generated. Keep the five language sheets outside this scope.
-
-Do not implement routing, navigation, generators or shared behavior during the
-assessment. If selected scope needs them, apply D-99's stronger design/compact
-plan and behavior TDD path, with a fresh user-selected **GPT-6.1 Sol / High**
-implementation session and explicit acceptance handoff. Read relevant installed
-framework guides before changing APIs.
-
-Coordinator remains **01a18acc-3b54-7202-92f3-404cc94fd0ad**. Future merges need
-separate user approval; main promotion belongs to the user.
+Deferred: unusual source-URL delimiter hardening (minor, current URLs unaffected),
+five language sheets, search, stage-to-sheet backlinks, term popovers, dependency
+upgrades, artwork, live infrastructure, push and main promotion.

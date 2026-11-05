@@ -17,7 +17,8 @@
     "prepare": "lefthook install || true",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "test:dev-console": "playwright test --config=playwright.dev.ts"
+    "test:dev-console": "playwright test --config=playwright.dev.ts",
+    "gen:stack": "vitest run src/lib/stack-markdown.test.ts --update"
   },
   "dependencies": {
     "lucide-react": "^1.25.0",
@@ -46,6 +47,6 @@
   },
   "packageManager": "pnpm@10.33.0",
   "engines": {
-    "node": "22.x"
+    "node": "^22.22.2"
   }
 }

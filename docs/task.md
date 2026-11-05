@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-04): W-6.3t Improvement Review merged locally into develop.** User-approved no-ff merge **2cc7d5d**, parents **ff6ce06 / 0e801ca**, integrates the approved text-only Stage 18 companion, generated Markdown and render coverage. Merge tree equals reviewed feature tip **0e801ca**; application inputs equal tested **04e3623**. Local develop is **25/30** references and **18/18** interactive stages. Identified checks are retained for unchanged inputs. [KICKOFF](../KICKOFF.md) holds the next handoff. No push or promotion.
+**Current work (2026-11-05): W-6.4 coordinator review accepted; integration pending.** Branch `feat/reference-glossary-stack` starts from approved handoff **131c303**, application tip **9231dc9**. Native glossary/stack pages, stack single-sourcing/generated Markdown, shared discovery/SEO/audit and TD-47 are complete. [One source/design record](../reference/w6-4-source-research.md) preserves the approved scope and source limits; [KICKOFF](../KICKOFF.md) holds actual verification and return instructions. Feature and local develop counts stay **25/30** sheets and **18/18** stages. No merge, push or promotion.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **25 drawn / 30 registered**, through **2cc7d5d**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** W-6.4 glossary and stack surfacing assessment, recommended **GPT-6 Astra / Low**. Inspect the existing reference hub, canonical glossary data and stack document, then define the reader tasks and smallest useful scope. Five language placeholders remain separate; no new implementation is started by this merge.
+**Next task/model:** User decision on no-ff integration of `feat/reference-glossary-stack` into local `develop`; recommended coordinator setting **GPT-6 Astra / Low**. Coordinator reviewed **131c303...52e703e**, found no actionable standards or scope issues, and accepted the identified fresh/retained verification with its recorded limits. Integration requires separate user approval.
 
 Two deliverables from one body of content.
 
@@ -861,10 +861,67 @@ now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
 
-**W-6.4 — Glossary and stack surfaced in the hub ☐**
+**W-6.4 — Glossary and stack surfaced in the hub ◐** *(coordinator accepted; integration pending)*
 
-The reason `/reference` beat `/cheatsheets` as a section name. Closes the original
-gap rather than adding a parallel one.
+Assessment **8f722f7** found that the hub, Sidebar, sitemap and audit listed only
+sheets, while inline terms offered no full glossary lookup. That gap is closed
+on the feature branch. Assessment branch
+`docs/2026-11-04-reference-hub-assessment` started from develop
+**097fdd0f6aea2c4f18ffb7dcd712607915c64590**.
+
+- [x] Inspect current routes, discovery, glossary authority and stack content.
+- [x] Recheck high-impact stack claims against primary sources and compare
+  source strategies; record the local runtime support mismatch as TD-47.
+- [x] Record a proposed compact design/plan, acceptance and model/session handoff.
+- [x] User selected the native pages, stack source migration and TD-47 runtime
+  prerequisite with "proceed" on 2026-11-04, following handoff **a0f40f5**.
+- [x] Use a supported runtime and repair the explicit Node 22 patch contract
+  (TD-47), with meaningful support/alignment checks.
+- [x] Implement the approved data/generator, pages and shared discovery/coverage
+  using D-99's consequential-change path and behavior TDD.
+- [x] Complete the final web gate, dev-console sweep, affected theme/width/keyboard
+  checks and one independent final content/page/branch review.
+- [x] Record implementation session, branch/commit and actual verification in
+  KICKOFF for coordinator review.
+- [x] Coordinator reviewed **131c303...52e703e**, read the implementation thread,
+  checked raw results and scoped independent standards/scope findings; no blockers.
+- [ ] Obtain separate user approval before integration into develop.
+
+Approved routes `/reference/glossary` and `/reference/stack` are reference
+resources, not cheatsheets or stages: counts remain **25/30** sheets and **18/18**
+stages. Glossary consumes `terms.ts` directly, renders full definitions in name
+order with stable key fragments and optional stage links, and leaves its Markdown
+generator and inline popover unchanged. No search/filter state is proposed.
+
+The stack now lives in canonical `web/src/lib/stack.ts`, consumed by its page
+and a new pure Markdown generator. `reference/stack.md` remains at its existing
+path as a generated snapshot. The user explicitly approved this authority change
+in the scope selection above. Preserve its four groups,
+22 choices, deviation/upkeep guidance and links, with the recorded factual
+corrections and narrow matching Stage 04 prose alignment. Keep chosen product
+families and distinguish starter defaults from this static app's installed tools.
+
+The [source/design/compact plan](../reference/w6-4-source-research.md#w-64-assessment-and-proposed-compact-design)
+names interfaces, files, tests, source limits and five dependent steps: runtime,
+stack generation, pages, shared discovery/SEO/audit, final verification. New routing,
+Sidebar behavior and generator contracts require TDD; static copy/data uses the
+normal exception. Read installed framework guides before API changes. No MDX
+pipeline, duplicate hand-port, broader framework abstraction or dependency upgrade.
+
+Implementation **da18fd7 / 191e947 / 7b4967a / 567991e**, review corrections
+**1ee672e**, touch-target correction **9231dc9**. Final build **57 routes** and
+production audit **29/29** pass on **9231dc9**. Full format/lint/typecheck and
+**1,609 tests / 228 files** pass on **1ee672e**; retain them for the one-class
+minimum-width correction, with fresh affected-file lint/format and glossary
+render **3/3**, final build and browser verification. Development-console **1/1**
+passes on an isolated **1ee672e** source copy; only minimum width differs from
+final React output. Independent final **Astra Low** review of **9231dc9** and six
+rendered captures has no blocker. [KICKOFF](../KICKOFF.md) records limits and
+commands. Implementation session **01a1a51d-8cb1-7983-8e51-1c3e48ecf142**;
+the user explicitly selected implementation here as a D-100 exception.
+
+Five language sheets, broader search, stage-to-sheet backlinks, term-popover
+changes, real infrastructure, push and main promotion remain separate.
 
 **Deferred beyond W-6:** the figure registry and the six architecture diagrams;
 stage→sheet backlinks, since the tether is one-directional today; search; and
