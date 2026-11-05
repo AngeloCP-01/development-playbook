@@ -1,6 +1,6 @@
-# Kickoff: W-6.4 implemented; integration pending
+# Kickoff: W-6.4 coordinator accepted; integration pending
 
-Updated 2026-11-04. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
+Updated 2026-11-05. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
 
 ## Current state
 
@@ -49,18 +49,35 @@ reasons and deferred scope. Raw logs:
 CI execution, hosted patches, a full provider audit and reader benefit remain
 unverified. Undated choices retain their source-review limits.
 
-Fresh closing-record checks: ledger **2/2**, local links/anchors **141 targets
+Implementation closing-record checks: ledger **2/2**, local links/anchors **141 targets
 across 8 files**, and whitespace check, all exit 0. App inputs remain unchanged
 from **9231dc9**; the identified app verification is retained.
 
 ## Next task and return
 
-**Coordinator review and integration decision: recommended GPT-6 Astra / Low.**
+**Next task:** user decision on no-ff integration into local develop.
+**Recommended coordination setting:** **GPT-6 Astra / Low**.
 Return to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**. Read implementation
 thread **01a1a51d-8cb1-7983-8e51-1c3e48ecf142** and actual
 **131c303...9231dc9** diff before relying on this handoff. [W-6.4](docs/task.md)
-tracks integration. Every no-ff merge into develop needs separate user approval;
-main promotion belongs to the user.
+tracks integration. Coordinator has now read the thread and reviewed actual
+**131c303...52e703e**, including the final records changes. No actionable standards
+or scope findings. Independent read-only checks of these two axes also returned
+no findings; they did not rerun suites/browser verification. Coordinator checked
+raw test/type/build/audit/dev-console logs and the meaningful runtime/generator
+RED evidence, plus retained light-hub-768 and dark-stack-1440 captures.
+
+Application inputs, generated stack Markdown, Stage 04 guidance and source policy
+still match **9231dc9**. Retain the application verification above; there was no
+full coordinator rerun or new browser matrix. Node **22.23.4** binary is installed
+and was checked directly for the closing-record command environment.
+
+Fresh coordinator closing-record checks on Node **22.23.4**: tracker ledger
+**2/2**, `python3 /private/tmp/w64-coordinator-links.py` **141 local targets /
+8 Markdown files**, and `git diff --check`, all exit 0. These records-only changes
+retain the identified application verification for **9231dc9** inputs. Every
+no-ff merge into develop needs separate user approval; main promotion belongs
+to the user.
 
 Deferred: unusual source-URL delimiter hardening (minor, current URLs unaffected),
 five language sheets, search, stage-to-sheet backlinks, term popovers, dependency

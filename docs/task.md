@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-04): W-6.4 implemented and reviewed; integration pending.** Branch `feat/reference-glossary-stack` starts from approved handoff **131c303**, application tip **9231dc9**. Native glossary/stack pages, stack single-sourcing/generated Markdown, shared discovery/SEO/audit and TD-47 are complete. [One source/design record](../reference/w6-4-source-research.md) preserves the approved scope and source limits; [KICKOFF](../KICKOFF.md) holds actual verification and return instructions. Feature and local develop counts stay **25/30** sheets and **18/18** stages. No merge, push or promotion.
+**Current work (2026-11-05): W-6.4 coordinator review accepted; integration pending.** Branch `feat/reference-glossary-stack` starts from approved handoff **131c303**, application tip **9231dc9**. Native glossary/stack pages, stack single-sourcing/generated Markdown, shared discovery/SEO/audit and TD-47 are complete. [One source/design record](../reference/w6-4-source-research.md) preserves the approved scope and source limits; [KICKOFF](../KICKOFF.md) holds actual verification and return instructions. Feature and local develop counts stay **25/30** sheets and **18/18** stages. No merge, push or promotion.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +25,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **25 drawn / 30 registered**, through **2cc7d5d**. Five language placeholders and W-6.4 glossary/stack surfacing remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** Coordinator review and integration decision for W-6.4; recommended **GPT-6 Astra / Low** in coordinator `01a18acc-3b54-7202-92f3-404cc94fd0ad`. Read implementation thread `01a1a51d-8cb1-7983-8e51-1c3e48ecf142` and the actual **131c303...9231dc9** diff. Implementation was authorized inline as an explicit D-100 exception for this task; standing session/model policy remains. Integration requires separate user approval.
+**Next task/model:** User decision on no-ff integration of `feat/reference-glossary-stack` into local `develop`; recommended coordinator setting **GPT-6 Astra / Low**. Coordinator reviewed **131c303...52e703e**, found no actionable standards or scope issues, and accepted the identified fresh/retained verification with its recorded limits. Integration requires separate user approval.
 
 Two deliverables from one body of content.
 
@@ -861,7 +861,7 @@ now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
 
-**W-6.4 — Glossary and stack surfaced in the hub ◐** *(implemented and reviewed; integration pending)*
+**W-6.4 — Glossary and stack surfaced in the hub ◐** *(coordinator accepted; integration pending)*
 
 Assessment **8f722f7** found that the hub, Sidebar, sitemap and audit listed only
 sheets, while inline terms offered no full glossary lookup. That gap is closed
@@ -883,6 +883,8 @@ on the feature branch. Assessment branch
   checks and one independent final content/page/branch review.
 - [x] Record implementation session, branch/commit and actual verification in
   KICKOFF for coordinator review.
+- [x] Coordinator reviewed **131c303...52e703e**, read the implementation thread,
+  checked raw results and scoped independent standards/scope findings; no blockers.
 - [ ] Obtain separate user approval before integration into develop.
 
 Approved routes `/reference/glossary` and `/reference/stack` are reference
