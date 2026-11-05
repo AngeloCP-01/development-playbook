@@ -1,87 +1,56 @@
-# Kickoff: JavaScript fundamentals/practice approved for implementation
+# Kickoff: JavaScript ready for coordinator review
 
 Updated 2026-11-05. Follow [AGENTS.md](AGENTS.md), D-99, D-100 and D-101.
 
 ## Current state
 
-- Branch `docs/2026-11-05-javascript-reference-assessment`, from brief
-  **6f1f67e6dadefe890d9869100ebdbfff4525d386**. Assessment/example checkpoint
-  **cd724c4**; use `git log -1 --oneline` for the closing records tip.
-- The user selected the JavaScript nine-topic/four-activity scope and small
-  optional shared activity support with "lets go with that" on 2026-11-05.
-  Implementation is authorized in a fresh session; integration is not approved.
-- [One research/design record](reference/javascript-source-research.md)
-  contains primary sources, topic boundaries, original activity briefs, actual
-  executable evidence, compact design/plan and acceptance. [W-6.3u.1](docs/task.md)
-  tracks the first slice; D-101 governs all five language/framework sheets.
-- Topics: values/equality and scope/TDZ; closures, this/arrows, object copying
-  and prototypes/classes; array method choice/mutation; promises/errors and
-  bounded scheduling. Representative interview practice, not a frequency ranking.
-- Activities: closure counter, nested-copy repair, async iteration repair,
-  sync/promise/queueMicrotask/timer trace. Prompts/code stay visible; solutions
-  and reasoning can be revealed independently using the existing pattern.
-- No app sheet, type, renderer or generator changed. No image selected. Current
-  counts remain **25/30** sheets and **18/18** stages. JavaScript implementation
-  would make **26/30**, a forecast only. No merge, push or promotion.
+- Branch **`feat/javascript-study-sheet`**, exact base
+  **8ff159f5820caa18966e7358bea8dac5cc56fc69**. Reviewed application commit
+  **0dcfe2da558e13f5d4b2c194bd6a023809043697**. Use `git log -1 --oneline`
+  for the closing records/checker tip; later changes leave web inputs unchanged.
+- JavaScript: nine topics/four groups, four activities, optional shared
+  activity data/composer/Markdown. Visible prompts/context/code, independent
+  hidden/open/re-collapsed solutions, no saved progress or execution controls.
+  Feature branch **26/30** sheets, **18/18** stages; local develop **25/30** sheets.
+- [Source/design/examples](reference/javascript-source-research.md),
+  [task](docs/task.md) and [tracker completion/evidence](docs/tracker.md) hold
+  the details. No merge, push or promotion.
 
-## Verification
+## Evidence and limits
 
-[Preserved research checker](reference/examples/javascript-study-checks.cjs):
-`/Users/angelito/.nvm/versions/node/v22.23.4/bin/node --unhandled-rejections=strict
-reference/examples/javascript-study-checks.cjs`, from repo root, actual Node
-**v22.23.4**, **4 activities / 15 assertions**, exit 0. JSON on stdout retains
-snippets, observed values and context limits. Independent checker validation and
-coordinator execution agree. Deterministic deferred promises verify completion
-and rejection; the trace is one isolated scheduling context, with no duration
-threshold or browser/ESM/I/O ordering claim. Edited/new examples need fresh checks.
+Node **v22.23.4**. Format/lint/typecheck, **1,624 tests / 232 files** and a
+**57-page build** pass. The final style-only change retains whole-suite/typecheck
+checks and has fresh focused render **4/4**, format/lint and build evidence.
+All **29 other generated sheet bodies** are unchanged; highlighting is unchanged.
+The [published checker](reference/examples/javascript-published-checks.cjs)
+passes **4 activities / 20 assertions** in strict CommonJS, without
+browser/ESM/I/O or timer-duration claims.
 
-Source-record local links **1/1**, whitespace clean, exit 0. Source findings use
-ECMAScript/MDN/WHATWG/Node and bounded employer preparation guidance. The Node 22
-API URL fetch failed; a live Node 26 API page supports context only, while actual
-Node 22 execution supplies this example's evidence. Self-review/humanizer pass
-applied. UI/UX search supported visible/unobscured focus; it did not produce a
-verified disclosure-specific match, so the repo pattern governs that behavior.
+Production audit: **36 passed**, one 120s navigation timeout during concurrent
+cold dev compilation; unchanged 320px test passed alone in **44.7s**, **1/1**.
+All **37 cases** have passing evidence on the same app tree. JavaScript's eight
+cases cover audit discovery, navigation and both themes at three widths.
+Dev-console **1/1** passes in `.playwright-mcp/w631-dev` on **3101**: identical
+src/public, explicit Turbopack root/testDir only. The user's existing **3200**
+server caused the original lock collision and was left untouched. Additional
+dev solution toggles: **16 / two themes / zero warnings or errors**.
 
-Fresh closing-record checks on Node **22.23.4**: tracker ledger **2/2** via
-`pnpm test src/lib/tracker-ledger.test.ts --maxWorkers=1`,
-`python3 /private/tmp/javascript-assessment-links.py` **125 local targets /
-4 Markdown files**, and `git diff --check`, all exit 0. This is research and
-example validation, not product implementation; no app suite/build/browser run
-or measured study benefit is claimed. Previous application evidence remains attached to W-6.4's actual
-app/merge trees in the tracker and pre-assessment KICKOFF history.
+Independent **GPT-6 Astra / Low** review of **0dcfe2d**, the published checker
+and final live desktop/dark+narrow/light layouts found **no actionable defects**
+(`/root/javascript_final_review`). No assertions/timeouts were weakened.
+The tracker retains failure/correction details; source findings remain in one record.
 
-## Next task and session
+Closing records checks: tracker-ledger **2/2**, local links **129 targets /
+4 files**, and whitespace checks pass, exit 0. Application checks are retained
+for unchanged web inputs.
 
-**Next:** implement the approved JavaScript study sheet and optional shared
-activity support. **Recommended model/effort:** **GPT-6.1 Sol / High**, fresh
-user-selected implementation session under D-100. Start from this assessment
-branch's committed tip, record the exact SHA and create `feat/javascript-study-sheet`.
-The old W-6.4 inline exception does not carry forward. These are recommended
-settings, not an active-model claim; this session stays open for coordination.
+## Return to coordinator
 
-Use the [compact design/plan](reference/javascript-source-research.md#proposed-scope-selection-and-compact-design).
-Five steps: optional type/generator contract, practice-card composer, JavaScript
-module/placeholder migration, published-example/artifact checks, final shared
-behavior verification. Use TDD for behavior and meaningful data-driven render
-coverage; static copy/data retains the established exception. No separate full
-spec/plan or per-task reviews are required beyond D-99's scoped needs.
+**Next:** review branch/diff and evidence in coordinator session
+**01a18acc-3b54-7202-92f3-404cc94fd0ad**. **Recommended: GPT-6 Astra / Low**.
+Implementation session **01a1a908-ddb6-7f91-bb4d-7834839b62e8**; read that thread
+before relying on its results. This runtime cannot post directly into that
+existing thread; these records and the final response are the return package.
 
-Reuse existing styling/disclosure patterns and preserve no-activity sheet output.
-Keep prompts/context/code visible before revealing answer/solution/reasoning.
-Generated Markdown includes those same fields, code/blank lines and optional
-values correctly. Do not introduce a runner, grading, persistence, copy/export
-controls, new diagrams or unrelated shared-component refactors.
-
-Verify final published examples on supported Node, including rejection and
-scheduling limits. Run the final web gate once and dev-console for shared React
-changes. Check all four activities closed/open/re-collapsed and multiple-open in
-both themes at narrow/middle/wide widths, keyboard/focus, code/page overflow,
-contrast, touch targets, console and route/history. Confirm the audit opens the
-solutions; sample prior static sheets and native-resource navigation. Obtain one
-independent final content/page/branch review of actual final inputs.
-
-**Return to coordinator:** `01a18acc-3b54-7202-92f3-404cc94fd0ad`, with branch/commit,
-actual runtime/commands/results, limits/issues and implementation session ID.
-Coordinator reads that thread and actual diff. Separate approval is required for
-no-ff integration into develop; main promotion belongs to the user. Python, Java,
-Spring Boot and Express & Node remain separate slices.
+Separate user approval is required for a no-ff merge into develop. Main promotion
+belongs to the user. Python, Java, Spring Boot and Express & Node remain separate.

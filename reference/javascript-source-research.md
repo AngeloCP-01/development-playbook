@@ -304,3 +304,51 @@ session under D-100, starting from this assessment branch's committed tip. Recor
 that exact SHA and create `feat/javascript-study-sheet`. KICKOFF carries return
 instructions. The earlier W-6.4 inline exception does not carry forward, and
 scope approval does not authorize integration into develop.
+
+
+## Implementation evidence (2026-11-05)
+
+Implemented W-6.3u.1 on `feat/javascript-study-sheet`, from exact base
+**8ff159f5820caa18966e7358bea8dac5cc56fc69**. Application commit
+**0dcfe2da558e13f5d4b2c194bd6a023809043697** delivers the selected nine
+lookups/four groups and four activities at the existing JavaScript route.
+The branch has **26/30** drawn sheets and **18/18** stages; local develop
+and production have not been changed by this implementation session.
+
+`SheetActivity` stores prompt/context, optional labelled starter and solution,
+answer, explanation and optional follow-up. `SheetActivities` reuses `RevealList`;
+prompts stay visible while solutions open independently. Generated Markdown
+consumes the same fields, escapes literal prose and sizes code fences around
+embedded backticks. All **29 non-JavaScript sheet bodies** remain byte-identical
+to the base Markdown; the highlighted snapshot is unchanged.
+
+The [published-example checker](examples/javascript-published-checks.cjs) loads
+those actual fields using Node's TypeScript stripping and evaluates their exact
+code in strict CommonJS. Run from the repository root:
+
+```sh
+/Users/angelito/.nvm/versions/node/v22.23.4/bin/node --unhandled-rejections=strict reference/examples/javascript-published-checks.cjs
+```
+
+Actual runtime **v22.23.4**, **4 activities / 20 assertions**, exit 0.
+Unlike the earlier assessment's nested-copy example, the published repair starts
+with fresh light input and produces light/dark with distinct settings identities.
+The checker covers pending saves, sequential completion, original rejection
+identity, the awaited caller's catch and the bounded scheduling trace. It retains
+no copied snippet strings. Its injected save fixtures and isolated timer callback
+establish no browser, ES-module, I/O ordering or elapsed-time guarantee. The
+assessment's original **4/15** evidence remains historical and unchanged.
+
+Behavior TDD observed missing generated Practice output and missing page
+controls before implementation. Registry/ordinary-sheet guards and actual-sheet
+render checks cover the finished data. Inspection also found that the audit's
+selector only opened disclosures in stage panels. A browser regression returned
+zero solution IDs before the selector repair and all four afterward. Expanded
+buttons now use main-content scope; selected tabs retain panel scope so the
+stage rail cannot unmount the content under audit.
+
+Independent final review covered **0dcfe2d** and the published checker, with no
+actionable findings. The same reviewer independently inspected desktop/dark and
+narrow/light final layouts after the scoped prose-measure override. Final gate
+results and the review's provenance/limits are recorded once in
+[the tracker](../docs/tracker.md); KICKOFF carries the coordinator handoff.
