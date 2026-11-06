@@ -95,3 +95,55 @@ test('worked code is an explicit keyboard tab stop that can receive focus', () =
   block.focus()
   expect(document.activeElement).toBe(block)
 })
+
+test('nested teaching is independently disclosed, has ordered headings and resets answers when closed or navigated away', () => {
+  const nested = structuredClone(sheet)
+  const first = nested.sections[0]
+  delete first.study!.activityIds
+  first.rows[0].study = {
+    id: 'binding',
+    summary: 'Trace retained access.',
+    activityIds: ['one'],
+  }
+  first.rows.push({
+    term: 'Second disclosure',
+    what: 'Other teaching.',
+    study: { id: 'other', summary: 'Compare bindings.', activityIds: [] },
+  })
+  window.history.replaceState(null, '', '/reference/lesson')
+  render(<CheatsheetView sheet={nested} />)
+  expect(screen.getByText('Trace retained access.')).toBeTruthy()
+  expect(screen.queryByText('A function accesses its binding.')).toBeNull()
+  expect(screen.queryByRole('button', { name: 'Solution: Counter' })).toBeNull()
+  const binding = screen.getByRole('button', { name: /Retained state/ })
+  expect(binding.closest('h3')).toBeTruthy()
+  expect(binding.getAttribute('aria-controls')).toBe(
+    'sheet-lesson-section-first-subsection-binding',
+  )
+  binding.focus()
+  fireEvent.click(binding)
+  expect(document.activeElement).toBe(binding)
+  expect(screen.getByText('A function accesses its binding.')).toBeTruthy()
+  expect(
+    screen.getByRole('heading', { name: 'Practice', level: 4 }),
+  ).toBeTruthy()
+  const answer = screen.getByRole('button', { name: 'Solution: Counter' })
+  expect(answer.closest('h5')).toBeTruthy()
+  expect(screen.queryByText('First answer.')).toBeNull()
+  fireEvent.click(answer)
+  fireEvent.click(screen.getByRole('button', { name: /Second disclosure/ }))
+  expect(screen.getByText('Other teaching.')).toBeTruthy()
+  expect(screen.getByText('First answer.')).toBeTruthy()
+  fireEvent.click(binding)
+  expect(screen.queryByText('First answer.')).toBeNull()
+  fireEvent.click(binding)
+  expect(
+    screen
+      .getByRole('button', { name: 'Solution: Counter' })
+      .getAttribute('aria-expanded'),
+  ).toBe('false')
+  fireEvent.click(screen.getByRole('tab', { name: /Second/ }))
+  fireEvent.click(screen.getByRole('tab', { name: /First/ }))
+  expect(screen.queryByText('A function accesses its binding.')).toBeNull()
+  expect(screen.queryByText('Other teaching.')).toBeNull()
+})

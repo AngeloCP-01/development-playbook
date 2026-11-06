@@ -23,18 +23,22 @@ function ActivityCode({
 export function SheetActivities({
   slug,
   activities,
+  headingLevel = 2,
 }: {
   slug: string
   activities: SheetActivity[]
+  headingLevel?: 2 | 4
 }) {
+  const Heading = headingLevel === 4 ? 'h4' : 'h2'
   if (!activities.length) return null
   return (
     <section className="mt-12">
-      <h2 className="t-head text-lg">Practice</h2>
+      <Heading className="t-head text-lg">Practice</Heading>
       <div className="mt-5 space-y-6 [&_li]:max-w-none!">
         {activities.map((activity) => (
           <RevealList
             key={activity.id}
+            headingLevel={headingLevel === 4 ? 5 : 3}
             idPrefix={`sheet-${slug}-activity`}
             header={
               <div className="space-y-3 p-5">
