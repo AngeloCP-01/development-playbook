@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-06): JavaScript keyboard-scroll correction verified; coordinator confirmation pending.**
+**Current work (2026-11-06): JavaScript correction accepted; separate merge approval pending.**
 On `feat/javascript-study-sections`, correction **322c873** starts at
 **b3b790e**. `StudySheet` and `SheetActivities` scrolling code now has explicit
 keyboard tab stops. Two render regressions failed before the fix; focused render
@@ -24,8 +24,10 @@ See KICKOFF for exact commands, the worker-start failure/retry and isolated-dev 
 
 Coordinator's review of **73414a8** / application **3d4b140** found this one P2;
 content/spec had no findings. The user explicitly requested "proceed here" after
-the D-100 notice; that instruction applies to this correction only. Return the
-bounded correction and checks for coordinator confirmation before integration.
+the D-100 notice; that instruction applies to this correction only. The bounded
+correction was reviewed at **0aa3764**, application **322c873**. The P2
+is resolved; Standards and Spec recheck found no new findings. Fresh coordinator
+render checks **6/6** and both-theme keyboard-scroll browser checks **2/2** pass.
 [KICKOFF](../KICKOFF.md) identifies the application commit and fresh evidence.
 Selected content remains seven sections, eleven worked examples and nine local
 activities; **26/30** feature sheets and **18/18** stages. No merge, push or promotion.
@@ -1039,8 +1041,9 @@ diagrams/upgrades, push and promotion are deferred.
   "proceed here" authorizes this task in the existing implementation thread.
 - [x] Prepare the verified correction diff/checks and session reference in
   KICKOFF and the implementation response for coordinator confirmation.
-- [ ] Coordinator confirms correction **322c873**; obtain separate user approval
-  before integration into develop.
+- [x] Coordinator confirmed **0aa3764** / correction **322c873**, no new findings;
+  fresh render **6/6** and both-theme keyboard-scroll browser **2/2** pass.
+- [ ] Obtain separate user approval before no-ff integration into develop.
 
 No nineteenth stage, comprehensive course, runner/grading/persistence, broad
 redesign of other references, or work on the remaining four sheets is selected.

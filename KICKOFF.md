@@ -1,6 +1,27 @@
-# Kickoff: JavaScript keyboard-scroll correction
+# Kickoff: JavaScript ready for merge approval
 
 Updated 2026-11-06. Follow [AGENTS.md](AGENTS.md), D-99–D-102.
+
+## Coordinator acceptance
+
+Reviewed **0aa37644dd4310c10ec7a0ec6283e2a220dc36f8**, application
+**322c8733bb8553afd57c3fd32125105ac44f603a**, against **b3b790e**.
+The prior P2 keyboard-scroll finding is resolved. Standards and Spec recheck
+found no new findings; the earlier seven-section content review remains applicable.
+
+Fresh coordinator checks on the unchanged correction app tree:
+
+- `pnpm test src/components/StudySheet.test.tsx src/components/SheetActivities.test.tsx --maxWorkers=1`: **6/6**.
+- `pnpm test:e2e e2e/javascript.spec.ts --grep 'overflowing study code supports visible keyboard focus' --workers=1`:
+  **2/2**, **5.7s**, both themes at 320px. Cases tab into worked-example,
+  starter and revealed-solution code, observe visible unobscured focus and
+  ArrowRight scrolling, then re-collapse with the keyboard without page overflow.
+- Implementation thread and raw gate logs were read. The full correction-tree
+  checks below are retained; no broad suite/build rerun was needed for review.
+
+Closing-record checks on the tree descended from **0aa3764**: ledger **2/2**,
+local links/anchors **141 targets / 5 files** and `git diff --check`, all exit 0.
+Only records change after the reviewed application. No merge, push or promotion.
 
 ## Correction and branch
 
@@ -46,14 +67,15 @@ Closing records: ledger **2/2**, local links/anchors **141 targets / 5 files**,
 `git diff --check`, all exit 0. Identified application checks are retained
 after the records-only update; no assertions/timeouts were weakened.
 
-## Coordinator return
+## Integration handoff
 
-Recommended next task/model: **review the bounded keyboard-scroll correction,
-GPT-6 Astra / Low**, coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
-Read this implementation thread and review the actual correction commit/diff.
-The fix and regression coverage are ready for coordinator confirmation; the prior content/spec review found no findings. This file and the implementation
-response are the return package. Separate user approval is required before a
-no-ff merge into develop. No merge, push or promotion occurred.
+Coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad** has read the implementation
+thread and reviewed the actual correction commit/diff and evidence.
+Coordinator confirmation is complete. **Next: separate user approval for a
+no-ff merge into develop**, recommended **GPT-6 Astra / Low** for integration
+coordination. Recheck branch cleanliness and confirm the application tree still
+matches **322c873** before integrating; retain identified checks for records-only
+changes. Main promotion belongs to the user. No merge, push or promotion occurred.
 
 Scope remains seven sections, eleven worked examples and nine local activities,
 **26/30** sheets and **18/18** stages. Content/generated files are unchanged by
