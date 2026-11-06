@@ -3,9 +3,10 @@
 Date: 2026-11-05. Scope: W-6.3u / D-101, JavaScript only. Starting branch:
 `docs/2026-11-05-javascript-reference-assessment`, based on `6f1f67e`.
 
-**Current target:** [all six additions with subsections](#all-six-additions-and-subsections-selected-2026-11-06),
-selected after the coverage reassessment. Earlier findings, selections and checks
-retain their original context; the new delivery is not implemented yet.
+**Current work:** the [Promise mini-lesson prototype](#promise-mini-lesson-source-check-2026-11-06)
+tests teaching depth after the user found the accepted page lacking. The
+all-six-additions implementation remains accepted against its previous scope;
+this prototype is not a published-page change or a whole-page rollout.
 
 ## Research boundary
 
@@ -894,3 +895,87 @@ establish no timer-duration, browser-rendering, ESM-scheduling or I/O-order rule
 The generation-only fix in **4ff8f8e** leaves these authored fields and the
 committed highlighted map unchanged. Completion checks, final review and
 integration status live in the tracker and KICKOFF; this record owns the source mapping and example evidence.
+
+## Promise mini-lesson source check (2026-11-06)
+
+All nine sources below are MDN Web Docs contributor documentation, accessed
+**2026-11-06**. These are primary documentation claims about behavior. The
+teaching progression below is an editorial recommendation, not evidence about
+interview frequency.
+
+| Source | Finding supported |
+| --- | --- |
+| [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) | States are pending, fulfilled and rejected; settled means fulfilled or rejected. Resolved means the outcome is locked in, possibly to a still-pending promise. Do not use resolved as a synonym for fulfilled. |
+| [Promise constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise) | The executor runs synchronously; its return value is ignored. A synchronous executor throw rejects unless resolution already occurred. A callback adapter must call resolve or reject when the callback supplies its result. |
+| [then](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then) | Each call returns a new promise. Handlers run asynchronously. A returned ordinary value fulfills that promise; a returned promise determines its eventual outcome; a throw rejects it. A missing return supplies undefined. |
+| [await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await) | Await suspends its containing async function, without blocking the main thread, even for an already-fulfilled promise. Rejection throws at the await expression, where surrounding try/catch can handle it. Merely calling a promise-returning function inside try does not catch a later rejection. |
+| [finally](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally) | The callback receives no outcome argument. The returned promise normally preserves the original value or reason. It waits for returned cleanup promises; a cleanup throw or rejection replaces the outcome with that failure. An ordinary returned value is ignored. |
+| [Promise.all](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all) | Fulfillment values retain input order. The aggregate rejects when an input rejection reaches it, without waiting for every input to settle. Calling the operations initiates their work; all joins their promises. |
+| [Promise.allSettled](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled) | The aggregate fulfills with outcome records in input order after every input settles. Fulfilled records carry value; rejected records carry reason. The empty-input case fulfills with an empty array. |
+| [Using promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) | Wrap callback APIs at their boundary. Throws in later callbacks escape the original synchronous execution; route reported callback errors to reject. Promises have no built-in cancellation protocol: all failing does not stop underlying work. |
+| [queueMicrotask](https://developer.mozilla.org/en-US/docs/Web/API/Window/queueMicrotask) | Queues a callback for a microtask checkpoint after current synchronous execution. It is a host scheduling API, not a network operation or a delay guarantee. |
+
+**Editorial teaching recommendation.** Keep one in-memory lookup through the
+callback, Promise adapter and async/await versions. State that the fixture always
+calls its error-first callback once, asynchronously, using queueMicrotask; missing
+records are deterministic failures. This is an illustrative contract, not a claim
+about all callback APIs. Explicitly label it as simulated work with no network.
+
+Show the caller continuing before the callback, then the adapter's immediate
+promise return, then how returning the chain keeps completion observable. Pass
+callback errors to reject; if adapter code can throw inside that later callback,
+catch there and reject. Prefer transformations in then, where throws already
+reject the derived promise. Do not suggest that new Promise makes synchronous
+work asynchronous, that async/await changes the underlying operation, or that
+callbacks disappear: then still accepts them.
+
+Keep Promise.finally distinct from the existing synchronous finally block: its
+ordinary return value does not replace success. A catch that returns normally
+recovers, including with undefined; rethrow when recovery is not intended.
+
+### Teaching prototype and evidence
+
+User selected the pilot approach with "yes lets do that" and later "continue".
+D-104 scopes this to one readable Promises/errors mini-lesson before choosing a
+broader teaching revision. The [learner-facing prototype](../docs/superpowers/specs/2026-11-06-javascript-promises-mini-lesson.md)
+starts from one in-memory profile lookup, follows callbacks → Promise adapter →
+chain → async/await, and traces both success and rejection through cleanup to
+the caller. It supplies a state model, call/return tables, explained output,
+interview model answers/weak answers/follow-ups and the two existing transfer
+activities with a concrete held-first-save fixture and case matrix.
+
+This defines a proposed quality bar: a reader should be able to reconstruct the
+operation and justify a new choice. Topic, example and test counts do not prove
+that outcome. The current Row body is a single paragraph followed by examples;
+porting the narrative faithfully will need a separately selected small teaching
+representation/presentation change. Preserve the published TypeScript/generated
+Markdown authority; the prototype is a frozen design artifact, not a second
+maintained lesson source.
+
+Independent editorial reader `/root/promises_lesson_reader_review`, recommended
+and run as **GPT-6 Astra / Low**, found three material gaps in the first draft:
+executor argument ownership, the rejection path through then/finally, and
+aggregation/transfer tasks assessed before their prerequisites were taught.
+The revised draft adds the missing causal explanation and rejection table,
+teaches allSettled with a profile-report example before interview questions,
+and supplies an actionable save fixture. The reader confirmed those findings
+resolved; its optional completion-condition clarification was also applied.
+This is an editorial review, not a learner study or evidence that the user has
+accepted the depth.
+
+The [prototype checker](examples/javascript-promises-lesson-checks.cjs) reads
+the draft's literal marked code blocks and the existing published transfer
+activity, without another implementation copy. Node **22.23.4**,
+`node --unhandled-rejections=strict reference/examples/javascript-promises-lesson-checks.cjs`:
+**9 literal examples / 51 assertions**, exit 0. It checks exact callback/caller
+output, immediate pending return, distinct chained values, both implementations,
+lookup/transformation rejection, once-only cleanup, cleanup-failure override,
+partial reporting and the broken/repaired transfer fixture. No network, sleeps,
+browser or broad scheduling claims. A completion guard rejects an unfinished
+check run rather than treating an unresolved promise as success.
+
+The queueMicrotask reference above documents a browser host API; this fixture's
+Node **22.23.4** behavior is established by the actual strict-CJS checks, not by
+claiming that MDN's Window page specifies Node. Primary claims and original
+illustrative code are distinct. Humanizer/self-review applied. No app/generated
+inputs changed; page integration and any wider rewrite remain unselected.

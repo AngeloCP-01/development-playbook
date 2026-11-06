@@ -13,7 +13,16 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-06): JavaScript subsections accepted; separate merge approval pending.**
+**Current work (2026-11-06): Promises teaching prototype ready for reader feedback (D-104).**
+After the accepted expansion still felt lacking, the user selected one complete
+mini-lesson as a teaching-depth prototype. The [Promises learner draft](superpowers/specs/2026-11-06-javascript-promises-mini-lesson.md)
+uses one profile lookup across callbacks, promises and async/await, with causal
+walkthroughs, failure/cleanup traces, model interview answers and transfer practice.
+Source checking, executable-example validation and an independent editorial
+reader pass are complete. The user's response to its depth is pending; no page
+port or whole-page rollout has been selected. See W-6.3u.1d and KICKOFF.
+
+**Previously accepted application:**
 Application **4ff8f8e** on `feat/javascript-fundamentals-subsections` implements
 all six additions in eight main sections, with 25 topic subsections and 14 local
 activities. The seven existing hashes and original four activities remain intact.
@@ -1117,6 +1126,35 @@ selection is recorded in W-6.3u.1c below.
 
 No new stage, browser execution, scoring/persistence, dependencies, broad
 framework/algorithm catalogue or work on the other four sheets is selected.
+
+**W-6.3u.1d — Promises mini-lesson teaching prototype ☑** *(draft complete; reader depth feedback pending)*
+
+- [x] User selected one representative mini-lesson as the quality prototype
+  after finding the broader page lacking; use Promises/errors and one connected
+  story. D-104 scopes this separately from the accepted implementation review.
+- [x] Write the [learner-facing draft](superpowers/specs/2026-11-06-javascript-promises-mini-lesson.md):
+  prerequisite/outcome, callback problem, promise mental model, supplied executor
+  functions, chains and await, both failure paths, cleanup, aggregation,
+  model answers/follow-ups and actionable transfer tasks.
+- [x] Record nine primary-source findings and prototype evidence in the
+  [existing source record](../reference/javascript-source-research.md#promise-mini-lesson-source-check-2026-11-06).
+  The [checker](../reference/examples/javascript-promises-lesson-checks.cjs)
+  reads literal draft examples and the existing transfer activity; Node
+  **22.23.4**, strict CJS, **9 examples / 51 assertions**, exit 0.
+- [x] Complete one independent editorial reader pass focused on reconstructing
+  producer-to-caller behavior, rather than topic counts. Three material gaps
+  were corrected and confirmed resolved; self-review/humanizer pass applied.
+- [ ] Read the prototype with the user and decide whether it is the intended
+  depth/teaching standard. Recommended coordinator setting **GPT-6 Astra / Low**.
+- [ ] If the prototype fits, select a bounded page pilot and the smallest
+  single-source teaching representation/presentation change. Shared behavior
+  needs a compact plan and a fresh **GPT-6.1 Sol / High** implementation session
+  under D-99/D-100. A whole-page rewrite is not automatically selected.
+
+Docs branch `docs/2026-11-06-promises-mini-lesson` starts from **e991ab5**;
+accepted app **4ff8f8e** is unchanged. This draft is an editorial prototype, not
+a second maintained published lesson. Existing content authority, original
+activities, main hashes and accessibility contracts remain.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☑** *(merged locally as `b8515a0`)*
 
