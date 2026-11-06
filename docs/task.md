@@ -13,14 +13,14 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-06): Promises teaching prototype ready for reader feedback (D-104).**
-After the accepted expansion still felt lacking, the user selected one complete
-mini-lesson as a teaching-depth prototype. The [Promises learner draft](superpowers/specs/2026-11-06-javascript-promises-mini-lesson.md)
-uses one profile lookup across callbacks, promises and async/await, with causal
-walkthroughs, failure/cleanup traces, model interview answers and transfer practice.
-Source checking, executable-example validation and an independent editorial
-reader pass are complete. The user's response to its depth is pending; no page
-port or whole-page rollout has been selected. See W-6.3u.1d and KICKOFF.
+**Current work (2026-11-06): runtime-neutral Promises page pilot selected (D-105).**
+The user selected implementation of the [learner prototype](superpowers/specs/2026-11-06-javascript-promises-mini-lesson.md)
+for on-page evaluation and requested JavaScript teaching without Node-version
+coupling. The [pilot plan](superpowers/plans/2026-11-06-javascript-promises-pilot.md)
+ports the lesson to #async, adds ordered teaching blocks/visible introduction,
+and removes Node/CJS setup copy across the JavaScript sheet while retaining
+truthful strict-mode/module/host assumptions. D-100 session choice is pending;
+no app inputs have changed. See W-6.3u.1e and KICKOFF.
 
 **Previously accepted application:**
 Application **4ff8f8e** on `feat/javascript-fundamentals-subsections` implements
@@ -1144,17 +1144,39 @@ framework/algorithm catalogue or work on the other four sheets is selected.
 - [x] Complete one independent editorial reader pass focused on reconstructing
   producer-to-caller behavior, rather than topic counts. Three material gaps
   were corrected and confirmed resolved; self-review/humanizer pass applied.
-- [ ] Read the prototype with the user and decide whether it is the intended
-  depth/teaching standard. Recommended coordinator setting **GPT-6 Astra / Low**.
-- [ ] If the prototype fits, select a bounded page pilot and the smallest
-  single-source teaching representation/presentation change. Shared behavior
-  needs a compact plan and a fresh **GPT-6.1 Sol / High** implementation session
-  under D-99/D-100. A whole-page rewrite is not automatically selected.
+- [x] User selected the draft for a bounded page pilot, preferring to judge the
+  result on the page. That does not claim final acceptance of teaching depth;
+  the implementation/evaluation scope is W-6.3u.1e / D-105 below.
+- [x] Prepare the pilot's single-source teaching/presentation plan. Shared
+  behavior uses D-99's stronger path; D-100 workflow choice is pending. A
+  whole-page rewrite is not automatically selected.
 
 Docs branch `docs/2026-11-06-promises-mini-lesson` starts from **e991ab5**;
 accepted app **4ff8f8e** is unchanged. This draft is an editorial prototype, not
 a second maintained published lesson. Existing content authority, original
 activities, main hashes and accessibility contracts remain.
+
+**W-6.3u.1e — Runtime-neutral Promises page pilot ◐** *(selected; implementation session pending)*
+
+- [x] User selected the prototype for on-page evaluation and requested no
+  Node-version coupling in JavaScript teaching (D-105).
+- [x] Prepare the [compact implementation plan](superpowers/plans/2026-11-06-javascript-promises-pilot.md)
+  for ordered teaching blocks, a visible opening, generator parity, runtime-neutral
+  examples/copy, actual browser example checks and a reviewable preview.
+- [ ] Resolve the pending D-100 workflow choice; default is a fresh user-selected
+  **GPT-6.1 Sol / High** session. Start from the committed plan tip descended
+  from **8b6156f**, creating `feat/javascript-promises-lesson`.
+- [ ] Implement #async and context cleanup with behavior TDD; preserve the other
+  seven sections, original exercise implementations, activity IDs and main hashes.
+- [ ] Verify actual published code in the command-line runtime and browser,
+  generated parity, visible introduction, all topic states, keyboard/table/code
+  access and final gate/dev-console. Leave a running preview for the user.
+- [ ] Obtain independent final teaching/content/branch/page review and return
+  actual branch/commit/checks/session to coordinator
+  **01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended **GPT-6 Astra / Low**.
+
+Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
+new topics/runner/scoring/persistence, merge/push/promotion remain outside scope.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☑** *(merged locally as `b8515a0`)*
 

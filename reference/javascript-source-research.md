@@ -3,10 +3,10 @@
 Date: 2026-11-05. Scope: W-6.3u / D-101, JavaScript only. Starting branch:
 `docs/2026-11-05-javascript-reference-assessment`, based on `6f1f67e`.
 
-**Current work:** the [Promise mini-lesson prototype](#promise-mini-lesson-source-check-2026-11-06)
-tests teaching depth after the user found the accepted page lacking. The
-all-six-additions implementation remains accepted against its previous scope;
-this prototype is not a published-page change or a whole-page rollout.
+**Current work:** [implement the runtime-neutral Promise pilot](#runtime-neutral-promise-pilot-selected-2026-11-06).
+The user selected the prototype for on-page evaluation and requested JavaScript
+teaching without Node-version coupling. Earlier implementation/prototype evidence
+retains its original context; the page port has not started yet.
 
 ## Research boundary
 
@@ -979,3 +979,40 @@ Node **22.23.4** behavior is established by the actual strict-CJS checks, not by
 claiming that MDN's Window page specifies Node. Primary claims and original
 illustrative code are distinct. Humanizer/self-review applied. No app/generated
 inputs changed; page integration and any wider rewrite remain unselected.
+
+## Runtime-neutral Promise pilot selected (2026-11-06)
+
+The user asked to implement the prototype so it can be evaluated on the page,
+and requested JavaScript teaching without Node-version coupling. D-105 scopes
+that instruction. Port the connected lesson at the existing `#async` section;
+keep the other seven sections' teaching intact while cleaning Node/CJS setup
+wording throughout the JavaScript sheet.
+
+Use a visible opening problem and learning outcomes, then an ordered mixture of
+explanations, code, walkthrough/state tables and interview answers. Add a narrow
+typed teaching-block representation rather than flattening the draft into one
+paragraph. Preserve one TypeScript/portable-Markdown content source, existing
+hashes, the fourteen activity IDs and original four exercise implementations.
+Context copy may change to meet the new runtime-neutral instruction.
+
+Use modern ECMAScript for reader examples, with explicit strict-script or module
+context where behavior depends on it. A standard-Promise-based simulated callback
+provider can establish the story's contract without a Node-only API; put its
+implementation after the contract, rather than requiring a beginner to understand
+its internals first. Keep scheduling's host assumptions honest. Module files use
+totals.js/main.js as ECMAScript modules, without a `node main.mjs` instruction.
+Actual verification records still identify the tested runtime; removing that
+evidence would not make the examples more portable.
+
+The [compact pilot plan](../docs/superpowers/plans/2026-11-06-javascript-promises-pilot.md)
+defines the rich-block renderer/generator tests, published-example checks and
+browser proof. It calls for a real preview link, a visible opening, readable
+tables/code and the existing navigation/heading/focus contracts. Ordinary sheets
+and all other 29 generated sheet bodies remain unchanged. No broad teaching
+rollout, new runner, scoring, persistence or dependencies are selected.
+
+Starting research/design tip **8b6156f**, accepted app **4ff8f8e**. The default
+implementation setting is a fresh user-selected **GPT-6.1 Sol / High** session
+under D-100. A workflow clarification about a one-task same-session exception
+is pending; it is not inferred from elapsed time or scope approval. No application
+code has changed during plan preparation.

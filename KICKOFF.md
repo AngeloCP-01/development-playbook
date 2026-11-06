@@ -1,67 +1,64 @@
-# Kickoff: read the Promises mini-lesson teaching prototype
+# Kickoff: implement the runtime-neutral Promises pilot
 
-Updated 2026-11-06. Follow [AGENTS.md](AGENTS.md), D-99–D-104.
+Updated 2026-11-06. Follow [AGENTS.md](AGENTS.md), D-99–D-105.
 
-## Current outcome
+## Selected outcome
 
-The user selected one complete mini-lesson as a prototype after the expanded
-reference still felt lacking. The [learner draft](docs/superpowers/specs/2026-11-06-javascript-promises-mini-lesson.md)
-is ready for feedback on teaching depth. It follows one simulated profile lookup
-through callbacks, a Promise adapter, chaining and async/await, including both
-outcomes, cleanup, batch reports, model interview answers and transfer practice.
+The user requested implementation of the [Promises prototype](docs/superpowers/specs/2026-11-06-javascript-promises-mini-lesson.md)
+so it can be evaluated on the page, and asked for JavaScript teaching without
+Node-version coupling. The [compact pilot plan](docs/superpowers/plans/2026-11-06-javascript-promises-pilot.md)
+is the implementation handoff; [source notes](reference/javascript-source-research.md#runtime-neutral-promise-pilot-selected-2026-11-06)
+record the selected scope and runtime distinction.
 
-**Next task: read the prototype with the user and decide whether it is the
-intended teaching standard. Recommended: GPT-6 Astra / Low**, coordinator
-**01a18acc-3b54-7202-92f3-404cc94fd0ad**. The document is a readable lesson,
-not another topic list or an approved page-wide migration plan.
+Port the connected story at `/reference/javascript#async` with a visible opening,
+ordered prose/code/tables/interview answers and existing transfer exercises.
+Use a narrow typed teaching-block renderer/generator extension. The draft is a
+proposal; live TypeScript data and generated Markdown remain authoritative.
 
-## Branch and authority
+Clean Node-version/CommonJS/.cjs setup wording across the JavaScript sheet.
+Use modern JavaScript, retaining strict-script/module context and truthful host
+scheduling boundaries. Module examples use totals.js/main.js as ECMAScript
+modules. Actual runtime/version evidence stays in developer checks and records.
 
-- Branch `docs/2026-11-06-promises-mini-lesson`, starting at exact
-  **e991ab52cd61aec3362cbc3e0e3b22708c554bd7**. Record the final committed tip
-  with `git rev-parse HEAD` before continuing.
-- App **4ff8f8e50cd86943a046a0fef241a38a5ddd5305** is unchanged and remains
-  accepted against its earlier selected scope. Feature counts remain eight
-  sections, 25 subsections, 14 activities, **26/30** sheets and **18/18** stages;
-  local develop **25/30**. No merge, push or promotion.
-- The lesson is a frozen editorial prototype, not a second maintained published
-  content source. Future page content still belongs in TypeScript and generated
-  Markdown. Its length is not a quota for every topic.
-- [Source findings and example evidence](reference/javascript-source-research.md#promise-mini-lesson-source-check-2026-11-06)
-  remain in the existing research record; the [task checklist](docs/task.md#overview)
-  tracks W-6.3u.1d and [tracker](docs/tracker.md) records completion/limits.
+## Implementation session choice
 
-## Actual evidence and limits
+A D-100 workflow clarification is pending: fresh implementation session or an
+explicit one-task exception to continue here. No exception is inferred from
+elapsed time, and application code has not been edited. The default remains a
+fresh user-selected **GPT-6.1 Sol / High** session. The pending question does not
+change the approved implementation scope.
 
-Nine MDN primary sources were checked. An independent Astra Low editorial reader
-found three material gaps: executor argument ownership, rejection propagation,
-and transfer assessed before aggregation/test setup was taught. All were revised
-and confirmed resolved; the optional allSettled completion clarification was
-applied. This is editorial review, not a learner study or user acceptance of depth.
+- Plan branch: `docs/2026-11-06-promises-pilot-plan`, from **8b6156f**.
+  Record its exact committed tip before implementation and create
+  `feat/javascript-promises-lesson`.
+- Existing accepted app: **4ff8f8e**. Counts remain eight main sections,
+  25 subsections, 14 activities, **26/30** sheets and **18/18** stages.
+- Keep all main hashes, activity IDs and original four exercise implementations.
+  Other seven sections receive context cleanup, not a teaching rewrite; the
+  other 29 generated sheet bodies stay unchanged.
+- Return to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended
+  **GPT-6 Astra / Low**. No merge, push or promotion is authorized.
 
-`node --unhandled-rejections=strict reference/examples/javascript-promises-lesson-checks.cjs`
-passes on Node **22.23.4**: **9 literal examples / 51 assertions**. It reads the
-actual draft blocks and existing transfer code, checking exact output, pending
-return, derived values, failure/cleanup paths, partial reporting and the broken/
-repaired save fixture. No network/browser/published-page claim. A completion
-guard prevents silent success from an unfinished Promise check.
+## Acceptance and recovery checklist
 
-Fresh closing checks on the prototype tree descended from **e991ab5**:
-tracker-ledger **2/2**, local links/anchors **188 targets / 8 files** and
-`git diff --check`, all exit 0. Self-review/humanizer pass complete.
-No app/generated inputs changed, so no app suite/build/browser rerun. Retain
-identified **4ff8f8e** application evidence in the tracker; it does not validate
-an unimplemented page port.
+- [ ] Resolve the D-100 session choice and record the actual starting SHA/session.
+- [ ] Observe missing rich-render/Markdown behavior failures, then implement
+  ordered blocks, semantic tables, literal code and interview structure.
+- [ ] Publish the prototype as runtime-neutral live data, with an optional
+  standard-JavaScript fixture explained after its contract.
+- [ ] Extend checks against actual published code and real module files; prove
+  the Promise examples in an actual browser as well as the recorded test runtime.
+- [ ] Verify the visible opening, every new topic, nested answers/history reset,
+  table/code keyboard scrolling, headings/focus and four-screen panel limits in
+  both themes at representative 320/768/1440px widths.
+- [ ] Run final web gate/dev-console and one independent final content/branch/page
+  review focused on teaching quality. Leave a running preview/link for the user.
 
-## After reader feedback
+If interrupted, record completed tasks, branch/commit, failing command and
+remaining checks here. The [task ledger](docs/task.md#overview) tracks W-6.3u.1e;
+[tracker](docs/tracker.md) holds historical accepted-app evidence. No new app
+checks are claimed by this documentation-only plan.
 
-If the draft fits, select a bounded async-section page pilot and design the
-smallest structured teaching/presentation extension. Show useful opening
-explanation/outcomes before collapsed detail, while retaining #async, original
-activities, accessibility and single-source output. The current paragraph-only
-Row body cannot faithfully represent the entire narrative sequence.
-
-Shared behavior then needs a compact plan and a fresh user-selected
-**GPT-6.1 Sol / High** implementation session under D-99/D-100. No page port,
-whole-page rewrite, new topics, runner/scoring/persistence or merge is selected
-by completing this prototype. Integration still needs separate user approval.
+Closing plan-tree checks descended from **8b6156f**: tracker-ledger **2/2**,
+local links/anchors **195 targets / 9 files** and `git diff --check`, all exit 0.
+No app/generated/example inputs changed; no app suite/build/browser rerun.
