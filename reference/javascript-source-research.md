@@ -3,10 +3,9 @@
 Date: 2026-11-05. Scope: W-6.3u / D-101, JavaScript only. Starting branch:
 `docs/2026-11-05-javascript-reference-assessment`, based on `6f1f67e`.
 
-**Current work:** [fundamentals and interview-content reassessment](#fundamentals-and-interview-content-reassessment-2026-11-06),
-requested after the user read the accepted implementation. Recommendations are
-pending selection. The latest selected delivery is the [sectioned expansion](#sectioned-expansion-selected-2026-11-05);
-earlier findings and checks retain their original context.
+**Current target:** [all six additions with subsections](#all-six-additions-and-subsections-selected-2026-11-06),
+selected after the coverage reassessment. Earlier findings, selections and checks
+retain their original context; the new delivery is not implemented yet.
 
 ## Research boundary
 
@@ -685,3 +684,172 @@ next slice needs a compact acceptance checklist/design before a fresh
 **GPT-6.1 Sol / High** implementation session; research and planning remain
 **GPT-6 Astra / Low** in coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
 No merge or deployment authorization is inferred from the research request.
+
+## All six additions and subsections selected (2026-11-06)
+
+The user selected **all six recommended areas**, including introductory modules,
+then requested **sections with subsections** when asked how to accommodate the
+added depth. This supersedes the phased recommendation and module deferral for
+this delivery. D-103 records the selection. The eight-section structure and
+interfaces below are implementation choices within that direction; the user did
+not specify the field names or an exact activity count.
+
+**Reader outcome:** use JavaScript fundamentals to write, debug, test and explain
+small programs, including collection choices, error ownership and file boundaries.
+Retain the existing mechanisms and make room for the missing foundations. Keep
+the original four closure/copy/async/scheduling exercises. Existing hash links,
+the reference route and the eighteen-stage filing model remain valid.
+
+### Main sections and subsections
+
+Use **eight main sections**, preserving the seven existing hash IDs and adding
+`modules`. Main navigation stays in Stepper; each topic below becomes an
+independently expandable subsection with a short visible summary. Opening a
+subsection exposes its explanation, labelled examples, common mistake, explanation
+checkpoints and associated practice. Solutions remain a second, independent reveal.
+
+| Main section / hash | Subsection coverage | Activities, 1–2 per main section |
+| --- | --- | --- |
+| Fundamentals / `values` | Types/identity/equality/defaults; decisions, operators and loops; string processing | Retain `valid-default`; add `normalize-labels`, using iteration/conditions and string methods. |
+| Scope and closures / `scope` | Block/function scope and TDZ; declaration availability versus a const-held function; live lexical bindings | Retain `tdz-trace` and `closure-counter`. |
+| Functions and this / `functions` | Arguments, returns, defaults/rest; callbacks and ordinary receivers; lexical arrows and binding | Retain `receiver-repair`; add `rest-total`. |
+| Objects and data / `objects` | Property access, destructuring and optional access; identity/path copying; prototypes and class instances | Retain `nested-copy`; add `read-settings`. |
+| Collections and problem solving / `arrays` | Array result shapes/mutation/sorting; Map/Set and counting/key choice; a small problem-solving approach; tests and complexity assumptions | Retain `numeric-sort`; add `first-unique-label`. Preserve the old `collection-result` transformation as a worked example rather than a third activity. |
+| Promises and errors / `async` | Synchronous validation/recovery/cleanup; returned promises and await/catch; sequential/concurrent work and retained partial outcomes | Retain `async-iteration`; add `partial-results`. |
+| Scheduling / `scheduling` | Synchronous execution and queued callbacks; microtasks/timers and host boundaries | Retain `scheduling-trace`. |
+| Modules / `modules` | Named/default import/export and local scope; running a two-file ESM example | Add `module-boundary`, repairing the importing file against a supplied module. |
+
+The proposed **14 activities** result from these tasks; they are not a requirement
+to pad the teaching. Subsections without their own activity use explained worked
+examples or a follow-up connected to the local task. Each subsection carries one
+coherent learning task. Keep both short construction tasks and the existing
+prediction/repair work, with explicit input contracts, expected outputs, tests
+and reasoning. Add a time/space discussion where it helps assess the algorithm.
+
+### Exercise and execution contracts
+
+All ordinary examples retain **Node 22.23.4, strict CommonJS**. Modules use the
+explicitly labelled **Node 22.23.4 ESM / `.mjs`** context, supported by source F7.
+The page must state each context at the relevant example. No browser code runner,
+scoring, saved progress or new runtime dependencies are selected.
+
+- `normalize-labels`: a string containing simple comma-delimited labels becomes
+  trimmed lowercase nonempty labels, preserving order and duplicates.
+  `' JS, css , JS, '` becomes `['js', 'css', 'js']`; `''` and `' , '` become `[]`.
+  Inputs are strings; quoted CSV syntax and Unicode normalization are outside
+  the contract. Show `firstEligibleAge` as a separate worked loop/early-return
+  example with the inclusive boundary and empty-input case from the research.
+- `rest-total`: numeric rest arguments return their sum, with no arguments
+  producing `0`; cover zero and negatives. Explain that defaults apply to
+  undefined, and distinguish rest collection from spreading arguments. Do not
+  introduce coercive acceptance of arbitrary values.
+- `read-settings`: optional settings/pageSize yields `20` when the value is
+  nullish and preserves `0`. Show destructuring defaults separately so a supplied
+  null is not silently described as equivalent to undefined. Known input is an
+  absent setting or a plain object; validation is a separate decision.
+- `first-unique-label`: case-sensitive string-array input, unchanged by the
+  function. `['js', 'css', 'js', 'html']` returns `'css'`; empty/all-repeated input
+  returns `null`. Require a plan, implementation, edge tests and comparison with
+  repeated scanning. Discuss two passes, auxiliary storage and the stated Map
+  access assumption. Map/Set worked examples also cover first-seen order and
+  why distinct objects with equal fields require a deduplication key policy.
+- `partial-results`: supplied promises include fulfillment and rejection;
+  return all outcome records in input order and handle empty input. Contrast
+  with an all-success contract and preserve the non-cancellation explanation.
+  A worked validation/cleanup example must run cleanup once on success and on
+  failure, propagate an unexpected error, and avoid returning from finally.
+- `module-boundary`: a supplied `totals.mjs` exports named `currency = 'USD'`
+  and default `total(values)`. The starter `main.mjs` mistakenly imports total
+  as a named export; the repair imports the default and currency correctly.
+  Output for `[2, 3]` and `[]` is `USD 5 0`. Explain local module scope and the
+  difference between default and named imports; omit loader/cycle puzzles.
+
+Module files use existing labelled `Row.example` blocks. The activity's starter
+and solution are **main.mjs only**, and its context explicitly points to the
+supplied totals.mjs example. This gives readers two actual files without adding
+a multi-file activity schema or maintaining another copy of the module source.
+The published checker must read that exact example and actual starter/solution,
+materialize them in a fresh temporary directory, and run real `.mjs` files with
+`process.execPath`. Verify both the intended named-export failure and the repaired
+output. Never rewrite imports into CommonJS or evaluate module snippets as CJS.
+Remove only the checker-created temporary directory in finally. The online
+version-specific and latest-v22 Node ESM pages were unavailable through the web
+tool during design; F7 establishes the format, and the implementer must establish
+actual Node 22.23.4 execution evidence rather than claiming those pages were read.
+
+### Additive subsection contract and rendering
+
+Keep the same structured source and existing `Row` fields. Add optional
+`Row.study: { id: string; summary: string; activityIds: string[] }` to make one
+row a subsection. Its title is `term` or `code`; its body remains `what`,
+`example` and `when`. Summary is a short plain-text orientation, not another
+copy of the explanation. Authored activities remain in `Cheatsheet.activities`.
+
+Make `Section.study.activityIds` optional for the new subsection mode. In that
+mode, omit the section-level list and derive the section's ordered activities
+from its rows. A legacy study section with no row metadata still requires its
+existing activityIds list and renders exactly as before. If any row in a section
+uses study metadata, all rows in that section must use it. Reject simultaneous
+section-level assignment and subsection assignment, orphan row metadata,
+empty summaries/titles, unsafe/duplicate local IDs, missing/duplicate/unassigned
+activities and partial metadata. Keep IDs prefixed by sheet and main-section IDs.
+
+Extend the existing `studySections(sheet)` resolver to return optional resolved
+subsections, each with its referenced activities, alongside the derived section
+activity list. Reuse it for page and Markdown traversal. Do not create a second
+array of lesson bodies. All eight JavaScript sections use the new mode; ordinary
+and legacy study sheets remain compatible.
+
+`StudySheet` uses the existing `RevealList` title/summary/body slots for subsections,
+with `sheet-<slug>-section-<sectionId>-subsection` as the ID prefix. Multiple
+subsections may stay open. The main URL hash still identifies the main section;
+subsection expansion is local state. Changing main sections remounts/reset local
+subsections and answers, as Stepper already does. Reopening a closed subsection
+starts its nested solutions hidden. Keep existing keyboard-scroll tab stops,
+visible focus, sticky-rail clearance and source footer placement.
+Use the established scoped list-width override for structural disclosure rows,
+so subsection headers fill their card at wide widths while prose retains its
+normal reading measure. Check the delivered layout rather than global CSS changes.
+
+Preserve semantic heading order: main section h2, subsection disclosure h3,
+local Practice h4 and solution disclosure h5. Add an optional headingLevel to
+RevealList with its current h3 default, and an optional headingLevel of 2 or 4
+to SheetActivities with its current h2 default; its solution level follows as
+h3 or h5. Limit changed callers to this hierarchy. This does not claim to fix
+all existing RevealList heading usage elsewhere.
+
+Markdown emits main h3, subsection h4, local Practice h5 and activity h6;
+solutions/reasons remain body labels. Include the subsection summary and full
+teaching in authored order with each activity exactly once. Keep all other
+29 generated sheet bodies unchanged. New nested disclosures must be discovered
+and opened by the shared audit, including solution controls mounted only after
+subsections open. Existing helper re-querying may already support this; prove it
+with actual rendered IDs before changing generic audit behavior.
+
+### Acceptance and implementation handoff
+
+Use the [compact subsection plan](../docs/superpowers/plans/2026-11-06-javascript-fundamentals-subsections.md).
+This is D-99 consequential work because shared data/resolver, generator,
+composition and heading behavior change. Use behavior TDD, actual content/render
+checks, one independent final content/branch/page review and the final web gate.
+
+At 1024×768, default main panels and each individually opened subsection with
+solutions hidden must fit the four-screen budget. Supporting detail belongs
+behind the subsection reveal, without deleting a required mechanism. Open-all
+states and solutions must remain readable and free of horizontal page overflow.
+Check all eight main hashes, nested reveal/re-collapse and navigation reset,
+both themes, representative narrow/middle/wide widths, code scrolling, focus,
+contrast/targets and a clean development console. Do not weaken existing checks
+or add panel-size exceptions to fit the content.
+
+Start a fresh **GPT-6.1 Sol / High** implementation session from this committed
+design tip, descended from research **76119c2**, creating
+`feat/javascript-fundamentals-subsections`. Preserve all prior feature history;
+do not merge the existing version first. Return exact branch/commit, actual
+checks, unresolved issues and session reference to coordinator
+**01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended **GPT-6 Astra / Low**.
+Separate integration approval remains required.
+
+Deferred: other four sheets, complete language/API coverage, DOM/Node-specific
+interview extensions, graphs/DP catalogues, advanced regex/generators/module
+cycles, dependencies, scoring/persistence/browser execution, push and promotion.

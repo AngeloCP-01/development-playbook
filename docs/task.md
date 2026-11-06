@@ -13,13 +13,15 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-06): research stronger JavaScript fundamentals and interview coverage.**
-After reading the accepted implementation, the user requested research on useful
-additions. The [coverage reassessment](../reference/javascript-source-research.md#fundamentals-and-interview-content-reassessment-2026-11-06)
-recommends control flow, string processing, Map/Set and complete coding practice
-first; everyday function/object syntax and error/composition contracts follow.
-These are recommendations pending selection. Current research does not select
-new content, counts or controls, and application inputs remain unchanged.
+**Current work (2026-11-06): all six JavaScript additions selected, with subsections (D-103).**
+The user selected every recommendation, including modules, then requested
+sections with subsections. The [selected design](../reference/javascript-source-research.md#all-six-additions-and-subsections-selected-2026-11-06)
+uses eight main sections and expandable topic subsections, preserving current
+main hashes and adding modules. It covers control flow/text, Map/Set, complete
+coding practice, function/object syntax, errors/async composition and ESM basics.
+The [compact plan](superpowers/plans/2026-11-06-javascript-fundamentals-subsections.md)
+and KICKOFF hand off implementation to a fresh **GPT-6.1 Sol / High** session.
+Application inputs remain unchanged; no merge, push or promotion.
 
 **Accepted implementation:**
 On `feat/javascript-study-sections`, correction **322c873** starts at
@@ -1056,7 +1058,7 @@ diagrams/upgrades, push and promotion are deferred.
 No nineteenth stage, comprehensive course, runner/grading/persistence, broad
 redesign of other references, or work on the remaining four sheets is selected.
 
-**W-6.3u.1b — Fundamentals and interview-content research ☑** *(recommendation pending selection)*
+**W-6.3u.1b — Fundamentals and interview-content research ☑** *(all six areas subsequently selected in D-103)*
 
 Research authorized by the user on 2026-11-06, after acceptance of **322c873**.
 Docs branch `docs/2026-11-06-javascript-content-research` starts from
@@ -1074,17 +1076,40 @@ accepted against its selected scope; this asks whether that scope teaches enough
 - [x] Keep introductory modules as a scoped follow-up with explicit ESM context;
   preserve the current CommonJS execution boundary. Further timer/coercion puzzles,
   framework questions and large algorithm catalogues remain deferred.
-- [ ] Select the next content slice and its placement within the existing
-  6–8-section / 1–2-activities-per-section direction. An eighth Control flow and
-  text section and deeper existing collections coverage are an option, not an
-  approved layout. Check panel weight before committing to content counts.
-- [ ] After selection, prepare a compact design/acceptance checklist and fresh
-  **GPT-6.1 Sol / High** implementation handoff. Coordination/research remains
-  **GPT-6 Astra / Low** in **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
+- [x] User selected all six recommendations and sections with subsections.
+  D-103 and W-6.3u.1c carry the new delivery; the phased recommendation above
+  remains historical research rather than a continuing module deferral.
+- [x] Prepare compact design/acceptance and a fresh **GPT-6.1 Sol / High** handoff.
+  Coordination remains **GPT-6 Astra / Low**, **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
 
-This research changes no app or generated inputs and authorizes no merge/push/
-promotion. The user has not selected a replacement syllabus or expanded all five
-language/framework sheets by requesting this assessment.
+The assessment itself changed no app/generated inputs and authorized no merge,
+push, promotion or five-sheet curriculum expansion. The later all-six JavaScript
+selection is recorded in W-6.3u.1c below.
+
+**W-6.3u.1c — All JavaScript additions with subsections ◐** *(scope selected; implementation pending)*
+
+- [x] Record user selection of all six additions and section/subsection hierarchy,
+  D-103. Eight main sections fit the earlier 6–8 range; preserve the seven main
+  IDs and add modules. The implementation design proposes fourteen activities,
+  1–2 per main section; the user did not specify this exact count.
+- [x] Define additive row metadata, exclusive section/subsection activity
+  assignment modes, accessible nested headings and single-source Markdown
+  traversal in the [source/design record](../reference/javascript-source-research.md#all-six-additions-and-subsections-selected-2026-11-06).
+- [x] Prepare the [compact implementation plan](superpowers/plans/2026-11-06-javascript-fundamentals-subsections.md)
+  and KICKOFF. Start from the committed documentation tip descended from
+  **76119c2**, creating `feat/javascript-fundamentals-subsections` in a fresh
+  **GPT-6.1 Sol / High** session.
+- [ ] Implement all six areas using existing Stepper/RevealList/activities;
+  retain ordinary/legacy rendering and the original four exercises.
+- [ ] Validate actual CJS and two-file ESM snippets, nested Markdown order,
+  every nested disclosure, heading/focus/history behavior, panel budget and
+  both-theme layouts; run final gate/dev-console and one independent final review.
+- [ ] Return exact branch/commit, actual checks, limits and session reference
+  to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended
+  **GPT-6 Astra / Low**, before separate user integration approval.
+
+No new stage, browser execution, scoring/persistence, dependencies, broad
+framework/algorithm catalogue or work on the other four sheets is selected.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☑** *(merged locally as `b8515a0`)*
 
