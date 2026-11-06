@@ -13,14 +13,22 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-06): JavaScript correction accepted; separate merge approval pending.**
+**Current work (2026-11-06): research stronger JavaScript fundamentals and interview coverage.**
+After reading the accepted implementation, the user requested research on useful
+additions. The [coverage reassessment](../reference/javascript-source-research.md#fundamentals-and-interview-content-reassessment-2026-11-06)
+recommends control flow, string processing, Map/Set and complete coding practice
+first; everyday function/object syntax and error/composition contracts follow.
+These are recommendations pending selection. Current research does not select
+new content, counts or controls, and application inputs remain unchanged.
+
+**Accepted implementation:**
 On `feat/javascript-study-sections`, correction **322c873** starts at
 **b3b790e**. `StudySheet` and `SheetActivities` scrolling code now has explicit
 keyboard tab stops. Two render regressions failed before the fix; focused render
 **6/6** and narrow browser scrolling/focus **2/2** pass. Fresh full gate:
 **1,637 tests / 233 files**, 57-page build, production **42/42**,
 dev-console **1/1**, plus 36 revealed-body toggles without warnings/errors.
-See KICKOFF for exact commands, the worker-start failure/retry and isolated-dev limit.
+See the tracker for exact commands, the worker-start failure/retry and isolated-dev limit.
 
 Coordinator's review of **73414a8** / application **3d4b140** found this one P2;
 content/spec had no findings. The user explicitly requested "proceed here" after
@@ -1047,6 +1055,36 @@ diagrams/upgrades, push and promotion are deferred.
 
 No nineteenth stage, comprehensive course, runner/grading/persistence, broad
 redesign of other references, or work on the remaining four sheets is selected.
+
+**W-6.3u.1b — Fundamentals and interview-content research ☑** *(recommendation pending selection)*
+
+Research authorized by the user on 2026-11-06, after acceptance of **322c873**.
+Docs branch `docs/2026-11-06-javascript-content-research` starts from
+**d0ae353dd63667fa0e76199d50681cfd254e1d6e**. The earlier implementation remains
+accepted against its selected scope; this asks whether that scope teaches enough.
+
+- [x] Compare the actual seven sections/fourteen teaching entries/nine activities
+  with primary language documentation and employer preparation guidance.
+- [x] Record absent versus shallow versus already-covered topics, activity
+  candidates, source provenance and interview-evidence limits in the
+  [existing research record](../reference/javascript-source-research.md#fundamentals-and-interview-content-reassessment-2026-11-06).
+- [x] Recommend control flow/text and Map/Set, plus a small coding problem with
+  requirement clarification, edge tests and complexity reasoning. Follow with
+  defaults/rest/destructuring/optional access and error/promise composition.
+- [x] Keep introductory modules as a scoped follow-up with explicit ESM context;
+  preserve the current CommonJS execution boundary. Further timer/coercion puzzles,
+  framework questions and large algorithm catalogues remain deferred.
+- [ ] Select the next content slice and its placement within the existing
+  6–8-section / 1–2-activities-per-section direction. An eighth Control flow and
+  text section and deeper existing collections coverage are an option, not an
+  approved layout. Check panel weight before committing to content counts.
+- [ ] After selection, prepare a compact design/acceptance checklist and fresh
+  **GPT-6.1 Sol / High** implementation handoff. Coordination/research remains
+  **GPT-6 Astra / Low** in **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
+
+This research changes no app or generated inputs and authorizes no merge/push/
+promotion. The user has not selected a replacement syllabus or expanded all five
+language/framework sheets by requesting this assessment.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☑** *(merged locally as `b8515a0`)*
 

@@ -3,9 +3,10 @@
 Date: 2026-11-05. Scope: W-6.3u / D-101, JavaScript only. Starting branch:
 `docs/2026-11-05-javascript-reference-assessment`, based on `6f1f67e`.
 
-**Current target:** the user-selected [sectioned expansion](#sectioned-expansion-selected-2026-11-05)
-supersedes the original nine-topic/four-activity scope below. Earlier findings
-and checks are preserved with their original context.
+**Current work:** [fundamentals and interview-content reassessment](#fundamentals-and-interview-content-reassessment-2026-11-06),
+requested after the user read the accepted implementation. Recommendations are
+pending selection. The latest selected delivery is the [sectioned expansion](#sectioned-expansion-selected-2026-11-05);
+earlier findings and checks retain their original context.
 
 ## Research boundary
 
@@ -506,3 +507,181 @@ explains strict comparison, numeric coercion and conversion. This explanation
 was required teaching within the selected scope, not deferred polish. The final
 **40/40** production audit includes the unchanged panel-weight limit. Final
 verification and review details are retained in the tracker.
+
+## Fundamentals and interview-content reassessment (2026-11-06)
+
+Recommendation research only; this does not select implementation scope or change
+an approved section count. Compared against
+`web/src/lib/cheatsheets/javascript.ts` at application checkpoint **322c873**
+(branch tip **d0ae353**). Its seven sections already teach equality/defaults,
+closures, receivers, object identity/prototypes, array transformations, promises
+and scheduling. The strongest opportunity is to connect those mechanisms to
+small programs that readers can write and explain. MDN's learning curriculum
+includes strings, conditionals, loops and function return values [F1]; this is a
+coverage reference, not evidence of interview frequency.
+
+### Language coverage findings and candidate activities
+
+**First priority: branching, operators and ordinary iteration.** Dedicated instruction
+is absent, although comparisons occur in callbacks and `for...of` appears in the
+async repair. Teach `if`/early return, `&&`/`!`, arithmetic, a bounded `for` loop,
+`for...of`, and `break`/`continue`. Explain that `for...in` visits enumerable
+property names rather than array values [F2–F4]. Keep `switch` as a short lookup.
+Activity: implement `firstEligibleAge(ages, minimum)`; `[15, 18, 21], 18` returns
+`18`, while `[], 18` returns `undefined`. Specify numeric inputs. Ask the learner
+to stop at the first match and explain the inclusive boundary. This exercises a
+predicate, return contract and termination without an output trick.
+
+**First priority: strings as working data.** Strings currently appear only as primitive
+values or labels. Cover template interpolation, `trim`, `toLowerCase`, `includes`,
+`slice` and `split`, with immutable results [F1, F9]. Activity: convert
+`' JS, css , JS, '` into `['js', 'css', 'js']`, preserving duplicates and dropping
+empty fields; `''` produces `[]`. Require the original string to remain unchanged.
+This combines text processing with already-taught array methods. Give one bounded
+Unicode caveat: indexes/length use UTF-16 code units, and code-point iteration
+still does not count visible grapheme clusters [F9]. Defer Unicode algorithms.
+
+**First priority: Map and Set.** Both are absent. Teach keyed lookup/counting with `Map`
+and uniqueness/membership with `Set`; connect object keys to existing identity
+teaching [F5]. Activity: count `['js', 'css', 'js']` into entries
+`[['js', 2], ['css', 1]]` and produce unique labels `['js', 'css']`;
+empty input gives empty collections. Follow up with two distinct `{id: 1}` objects:
+a Set retains both, so deduplicating records requires an explicit key policy.
+This develops collection choice and avoids pretending structural equality exists.
+
+**DEEPEN: function inputs and object access.** Calls, returns, callbacks, arrows,
+closures and `this` already exist. Missing pieces are parameter defaults/rest,
+destructuring/renaming and optional chaining [F3, F6, F10]. Add a brief comparison
+of calling a declaration before its source line versus reading a function held
+in a not-yet-initialized `const` binding [F6]; the current TDZ lesson is useful
+prerequisite knowledge. Spread is already
+taught as a shallow copy; distinguish gathering rest arguments from spreading
+them. Activity: read `settings?.pageSize ?? 20`; absent settings produces `20`,
+`{pageSize: 0}` preserves `0`. Then compare destructuring defaults: a missing
+`pageSize` gets its default, but `null` remains `null`. These are useful API-input
+contracts, not interchangeable shorthand. A separate small `sum(...values)` task
+can reuse the existing empty-sum requirement rather than repeat its lesson.
+
+**DEEPEN: errors and promise composition.** Awaited rejection, catch boundaries,
+`Promise.all`, input-order results and non-cancellation already have meaningful
+coverage. Add synchronous validation with `throw new Error`, selective recovery
+or rethrow, and `finally` for cleanup [F2]. Activity: injected work returns `7`
+or throws; cleanup must run once in either case and the error must reach the
+caller. Avoid returning from `finally`. Add `allSettled` where partial results
+matter [F8]: one fulfilled `2` and one rejected `'offline'` should yield both
+status records; empty input yields `[]`. Introduce `any`/`race` through requirement
+selection only after those contracts, not another timing puzzle.
+
+**DEFER, explicitly: modules and specialist breadth.** Modules are absent and
+previously deferred. Named/default imports and exports merit later introductory
+coverage [F7], but executable examples need an explicitly labeled ESM context;
+the current strict CommonJS baseline cannot simply run them. Defer module-cycle
+puzzles, custom iterators/generators, weak collections, advanced regex and further
+host-scheduling detail. Prioritize the missing fundamentals before more TDZ,
+receiver or event-loop traces. These topic groups are not a proposed rail count.
+
+### Primary-source claim map
+
+All ten sources: **MDN contributors / MDN Web Docs**, living documentation,
+accessed **2026-11-06**. Links were opened during this research. Candidate examples
+above are original proposed exercises; they were **not executed**.
+
+- **F1 — curriculum coverage:** [Dynamic scripting with JavaScript](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting).
+- **F2 — conditionals, throw/catch/finally:** [Control flow and error handling](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling).
+- **F3 — logical/arithmetic operators and optional chaining:** [Expressions and operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_operators).
+- **F4 — loop choice, break/continue, property names versus values:** [Loops and iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration).
+- **F5 — Map/Set operations, insertion order and identity-based object equality:** [Keyed collections](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Keyed_collections).
+- **F6 — default and rest parameters:** [Functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions).
+- **F7 — import/export and module execution context:** [JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
+- **F8 — composition choices and retained outcomes:** [Using promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises).
+- **F9 — string methods and Unicode representation limits:** [String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String).
+- **F10 — extraction, renaming, rest and undefined-only defaults:** [Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring).
+
+### Interview preparation evidence
+
+Organizations' own guidance, opened and accessed **2026-11-06**; undated living
+pages. These sources support the preparation approach and named competencies.
+They do not provide a representative JavaScript question-frequency dataset.
+
+| Source / owner | Supported finding | Editorial consequence |
+| --- | --- | --- |
+| [Technical interviewing](https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing), Microsoft Careers | Candidates should clarify ambiguous requirements, plan, write actual code, test boundaries/errors and explain algorithm complexity. Its representative data-structure list includes arrays, strings and hash maps/sets. | Add short construction tasks with edge tests and a time/space discussion, plus collection-choice practice. This does not make the employer's entire algorithms syllabus a requirement for this reference. |
+| [Front-End Engineer Interview Prep](https://amazon.jobs/content/en/how-we-hire/fee-interview-prep), Amazon Jobs | Frontend candidates write runnable code, handle edge cases and discuss maintainable solutions. Its coding resources include data structures/algorithms and frontend technologies; its walkthrough includes testing and runtime refinement. | Assess a solution beyond the predicted output. Browser-specific activities belong in an explicitly selected frontend extension rather than the general language baseline. |
+| [Software development interview topics](https://www.amazon.jobs/content/en-gb/how-we-hire/interview-prep/software-development-topics), Amazon Jobs | Preparation emphasizes applying computer-science fundamentals and practising coding; the recruiter provides role-specific expectations. | Keep mechanisms, construction and explanation connected. No universal employer or seniority coverage is established. |
+| [JavaScript Basic](https://www.hackerrank.com/skills-directory/javascript_basic), HackerRank Skills Directory | Its own assessment taxonomy names functions/errors, scope/hoisting, closures, inheritance and modules. | Most listed language mechanisms already exist here. Modules are an acknowledged follow-up gap; a basic label alone does not determine our teaching order. Use MDN/spec sources for mechanisms: the directory's shorthand about declarations being moved is unsuitable as a literal explanation of hoisting. |
+| [JavaScript Intermediate](https://www.hackerrank.com/skills-directory/javascript_intermediate), HackerRank Skills Directory | Its taxonomy includes promises, memory management, concurrency and event loops. | The current sheet already has meaningful intermediate coverage. Another scheduling puzzle is lower priority than the absent everyday programming skills. The directory is evidence of that platform's categories, not interview prevalence. |
+
+### Recommended first content slice
+
+**Recommendation:** add the missing control-flow, string and keyed-collection
+foundations, with one small problem-solving exercise that connects them. Then
+deepen everyday function/object syntax and error/composition contracts. The
+ranking is the coordinator's inference from the coverage comparison and source
+evidence; it has not been selected as implementation scope.
+
+Current content has **14 teaching entries** and nine activities. An editorial
+classification of their main task gives **two construction, five repair and two
+prediction activities**. None explicitly asks for a plan, a test-case set and
+complexity reasoning together. The present review established that the page
+implements its approved scope correctly; this reassessment asks whether that
+scope gives the learner enough practical coverage.
+
+| Priority | Add or deepen | Concrete outcome |
+| --- | --- | --- |
+| First | Control flow and text | Write a bounded loop/condition, return the right result at a boundary and normalize a simple comma-delimited label list. State that quoted CSV fields are outside that exercise. |
+| First | Map, Set and collection choice | Count labels, preserve first-seen order, distinguish value equality from object identity, and choose an explicit key when deduplicating records. |
+| First | A complete interview-style coding task | Clarify inputs, explain an approach, implement it, test empty/repeated inputs and discuss costs. Use first-unique-label or a small frequency problem; avoid a large algorithm catalogue. |
+| Next | Everyday function and object syntax | Supply default/rest arguments, destructure/rename fields and safely read optional nested data. Preserve valid zero/false values and explain undefined-only defaults. |
+| Next | Error ownership and asynchronous results | Validate synchronously, propagate unexpected failures, run cleanup on success/failure, and choose between an all-success contract and retained partial outcomes. |
+| Follow-up | Introductory modules | Learn named/default exports, imports and module-local scope with a small two-file exercise. Use a separately labelled ESM setup; do not paste imports into the current `.cjs` baseline. Module cycles, loader internals and bundler configuration remain outside this proposal. |
+
+For the complete coding task, propose `firstUniqueLabel(labels)` with
+case-sensitive string inputs. `['js', 'css', 'js', 'html']` returns `'css'`;
+`[]` and `['js', 'js']` return `null`. Keep input unchanged. The reader should
+justify a counting map and second pass, compare it with repeated scanning,
+and give time/space assumptions. This is an original practice task, not an
+employer's question or a measured common question. Expected results are proposed
+contracts, not execution evidence.
+
+Complexity teaching needs one explicit boundary: MDN's
+[Map reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
+(MDN contributors, accessed **2026-11-06**) describes the specification's
+average sublinear access requirement. A hash-map lookup assumption can support
+the usual expected-linear counting analysis, but JavaScript does not promise
+universal constant-time `Map` operations. Also distinguish two sequential passes
+from nested repeated scans and count auxiliary storage; avoid assigning a
+guaranteed complexity to the engine's built-in sort.
+
+### Keeping the reference bounded
+
+The selected **6–8-section / 1–2-activities-per-section** direction remains the
+layout constraint until the user changes it. One possible delivery is an eighth
+**Control flow and text** section and a strengthened existing **Arrays** section
+covering collections and the coding task. Keep its existing hash stable. This is
+a layout option, not an approved rail redesign or activity-count target.
+
+Fit the added work through task selection and concise worked examples. When an
+activity repeats the same skill, it can become a worked example or follow-up;
+do not simply append every candidate below the existing two activities. Preserve
+the four original closure/copy/async/scheduling exercises unless a later selected
+design explicitly changes that commitment. Respect the four-screen default-panel
+budget; do not pack several unrelated lessons into one panel merely to retain a
+number. Assess exact placement when selecting the next implementation slice.
+
+For each new coding activity, provide the input contract, expected result,
+reference solution, explanation, edge tests and a short cost discussion where
+useful. Include answer checkpoints for explanation prompts so readers can assess
+their reasoning. Keep a mixture of building, debugging and prediction.
+
+Modules are worth a later beginner introduction; their execution-context work
+is a reason to scope them separately, not to omit them indefinitely. DOM/event
+delegation/fetch/debounce can form a later frontend extension if that interview
+profile is selected. Node I/O phases, framework questions, graph/DP catalogues,
+advanced regex, generators and more coercion/timer trivia remain deferred here.
+
+No app, generated content, section count or activity contract changes in this
+research. The suggested examples have not been published or executed. A selected
+next slice needs a compact acceptance checklist/design before a fresh
+**GPT-6.1 Sol / High** implementation session; research and planning remain
+**GPT-6 Astra / Low** in coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
+No merge or deployment authorization is inferred from the research request.
