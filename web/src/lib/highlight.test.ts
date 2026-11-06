@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest'
+import { expect, test, vi } from 'vitest'
 import { highlightTs } from './highlight'
 
 // The highlighter is created once and reused (a fresh Shiki instance per call
@@ -25,4 +25,18 @@ test('is deterministic — the same source produces the same output', async () =
   const first = await highlightTs('interface Shape {\n  area(): number\n}')
   const second = await highlightTs('interface Shape {\n  area(): number\n}')
   expect(first).toBe(second)
+})
+
+test('generation completes tokenization even if the host pauses between grammar steps', async () => {
+  const source = "const message = 'ready';\nconsole.log(message);"
+  const complete = await highlightTs(source)
+  // A descheduled worker advances wall time without changing authored content.
+  // Shiki's live-render time budget must not truncate a committed artifact.
+  let tick = 0
+  const clock = vi.spyOn(Date, 'now').mockImplementation(() => (tick += 1000))
+  try {
+    expect(await highlightTs(source)).toBe(complete)
+  } finally {
+    clock.mockRestore()
+  }
 })
