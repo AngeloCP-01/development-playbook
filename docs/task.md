@@ -13,25 +13,22 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-06): JavaScript coordinator review found one P2 accessibility correction.**
-W-6.3u.1a now has seven study sections, nine local activities and eleven worked
-examples on `feat/javascript-study-sections`, from **17c4808**. Reviewed checkpoint
-**be5cf77**; corrections **3d4b140** fix audit registration and explain equality.
-The [source/design record](../reference/javascript-source-research.md#sectioned-expansion-selected-2026-11-05)
-and [compact plan](superpowers/plans/2026-11-05-javascript-study-expansion.md)
-retain selected scope. Full unit/DOM **1,635/233** and expanded published checker
-**52 assertions** pass; final build **57 pages**, production **40/40**, dev-console
-**1/1** and expanded-body development checks **36 toggles / zero warnings**. Counts remain
-**26/30** sheets and **18/18** stages; no merge, push or promotion.
+**Current work (2026-11-06): JavaScript keyboard-scroll correction verified; coordinator confirmation pending.**
+On `feat/javascript-study-sections`, correction **322c873** starts at
+**b3b790e**. `StudySheet` and `SheetActivities` scrolling code now has explicit
+keyboard tab stops. Two render regressions failed before the fix; focused render
+**6/6** and narrow browser scrolling/focus **2/2** pass. Fresh full gate:
+**1,637 tests / 233 files**, 57-page build, production **42/42**,
+dev-console **1/1**, plus 36 revealed-body toggles without warnings/errors.
+See KICKOFF for exact commands, the worker-start failure/retry and isolated-dev limit.
 
-Coordinator reviewed **73414a8**, application **3d4b140**, from **8ff159f**,
-emphasizing the expansion after **bd72e70**. Content/scope review found no
-blockers. `StudySheet` and `SheetActivities` code blocks need explicit keyboard
-tab stops as required by `web/PATTERNS.md`; narrow overflowing code currently
-relies on browser defaults. Fix and verify keyboard horizontal scrolling before
-integration. Fresh focused **52 tests / 8 files**, **52 published assertions**
-and unchanged **29 other sheet bodies** pass. See [KICKOFF](../KICKOFF.md) for
-the bounded correction handoff, recommended fresh **GPT-6.1 Sol / High**.
+Coordinator's review of **73414a8** / application **3d4b140** found this one P2;
+content/spec had no findings. The user explicitly requested "proceed here" after
+the D-100 notice; that instruction applies to this correction only. Return the
+bounded correction and checks for coordinator confirmation before integration.
+[KICKOFF](../KICKOFF.md) identifies the application commit and fresh evidence.
+Selected content remains seven sections, eleven worked examples and nine local
+activities; **26/30** feature sheets and **18/18** stages. No merge, push or promotion.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -43,7 +40,7 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **25 drawn / 30 registered**, through **2cc7d5d**. W-6.4 is integrated as **b8515a0**; five language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** coordinator review of W-6.3u.1a's expanded branch and evidence,
+**Next task/model:** coordinator confirmation of W-6.3u.1a's keyboard-scroll correction,
 recommended **GPT-6 Astra / Low** in coordinator session
 `01a18acc-3b54-7202-92f3-404cc94fd0ad`. Integration into develop requires
 separate user approval. Remaining language sheets need their own assessment
@@ -1035,12 +1032,15 @@ diagrams/upgrades, push and promotion are deferred.
   implementation response.
 - [x] Coordinator reviewed **73414a8** / application **3d4b140**, including
   independent Standards and Spec axes and focused production-page inspection.
-  One P2 keyboard-scroll finding remains; content/spec has no findings.
-- [ ] Add explicit tab stops to worked-example and activity code containers,
-  with focused render coverage and a narrow-width keyboard scrolling check.
-  Use a fresh **GPT-6.1 Sol / High** session; preserve the current feature history.
-- [ ] Return the correction diff/checks to coordinator; obtain separate user
-  integration approval after the finding is resolved.
+  One P2 keyboard-scroll finding required correction; content/spec has no findings.
+- [x] Add explicit tab stops to worked-example and activity code containers,
+  with RED/GREEN render coverage and both-theme 320px keyboard scrolling/focus.
+  Correction **322c873**, from **b3b790e**; latest user instruction
+  "proceed here" authorizes this task in the existing implementation thread.
+- [x] Prepare the verified correction diff/checks and session reference in
+  KICKOFF and the implementation response for coordinator confirmation.
+- [ ] Coordinator confirms correction **322c873**; obtain separate user approval
+  before integration into develop.
 
 No nineteenth stage, comprehensive course, runner/grading/persistence, broad
 redesign of other references, or work on the remaining four sheets is selected.

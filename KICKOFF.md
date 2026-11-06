@@ -2,103 +2,64 @@
 
 Updated 2026-11-06. Follow [AGENTS.md](AGENTS.md), D-99–D-102.
 
-## Current review and next task
+## Correction and branch
 
-Coordinator reviewed **73414a872be8b826d309c9058564a1896f40ca7e**, application
-**3d4b140ae8517134c9fe4fb6916dbe33bfd35952**, full diff from **8ff159f** with
-emphasis on the expansion after **bd72e70**. Independent Standards and Spec
-reviews agree the delivered scope is sound; **one P2 standards finding remains**.
+Coordinator reviewed application **3d4b140** and found one P2: scrolling code
+lacked the explicit keyboard tab stops required by `web/PATTERNS.md`.
+`StudySheet` worked examples and `SheetActivities` starters/revealed solutions
+now use `tabIndex={0}`. Internal scrolling and existing focus styling are retained.
+Render tests cover both renderers; browser tests tab into all three code contexts
+at 320px, check visible unobscured focus and ArrowRight horizontal movement in
+both themes, then re-collapse the solution with the keyboard.
 
-**Next task: fix keyboard access to scrolling code. Recommended: fresh
-GPT-6.1 Sol / High session**, per D-100. Start from this committed records tip
-on `feat/javascript-study-sections`; record its exact SHA. Keep the feature
-history and return the bounded correction to the coordinator before integration.
-
-- `web/src/components/StudySheet.tsx:36` and
-  `web/src/components/SheetActivities.tsx:12` render horizontally scrolling
-  `<pre>` blocks without explicit `tabIndex={0}`. PATTERNS lines 399–400 require
-  a tab stop so keyboard users can reach the scroll. This affects both worked
-  examples and activity starters/solutions; it currently relies on browser defaults.
-- Coordinator confirmed four overflowing code blocks at 320px on open Promises,
-  all with no explicit tabindex. Preserve existing internal scrolling and layout.
-- Add focused render coverage for keyboard-focusable code in both renderers and
-  a narrow browser check that tabs into an overflowing block and scrolls it with
-  the keyboard. Include a revealed solution and visible focus. Observe the
-  meaningful failure before fixing; confirm activity buttons/history still work.
-- Run checks invalidated by the correction and the existing final app gate for
-  the completed correction tree; run dev-console once for changed shared React
-  output. Return exact commit, checks and session reference for coordinator review.
-  Existing **3d4b140** evidence below remains historical, not correction evidence.
-
-Fresh coordinator checks: eight focused unit/DOM files **52/52**, published
-checker **52 assertions**, all **29 other sheet bodies unchanged** and whitespace
-pass. Production inspection: 320px/light open Promises and 1024px/dark Functions
-are readable, without page overflow; Functions default panel **2.06 screens**,
-keyboard solution reveal/re-collapse, End and Back work. Console has zero
-warnings/errors. The tracker records reviewer provenance and retained gate evidence.
-
-Closing records on the review tree descended from **73414a8**: ledger **2/2**,
-local links/anchors **141 targets / 5 files** and `git diff --check`, all exit 0.
-No application inputs changed during coordinator review. No merge, push or promotion.
-
-## Delivered scope
-
-`/reference/javascript` now has seven navigable study sections, eleven worked
-examples and nine local activities: values/equality; scope/closures;
-functions/this; objects/prototypes; arrays; promises/errors; scheduling.
-Prompts remain visible while solutions open independently. Shared checked
-metadata drives section order and local practice in both web and Markdown.
-All 29 other generated sheet bodies remain byte-identical to the design base.
-
-Read the [source/design record](reference/javascript-source-research.md#sectioned-expansion-selected-2026-11-05),
-[compact plan](docs/superpowers/plans/2026-11-05-javascript-study-expansion.md)
-and [completion evidence](docs/tracker.md#completed).
-
-## Branch, review and session
-
-- Branch: `feat/javascript-study-sections`, exact base
-  **17c480821240eb74261b5c18fb7864d6c377ca40**.
-- Expansion **be5cf7720f19aad1c01aefbee420c5afb5f53123**;
-  final application **3d4b140ae8517134c9fe4fb6916dbe33bfd35952**.
-  Later delivery records do not change application inputs.
-- Independent **GPT-6 Astra / Low** review covered **8ff159f..be5cf77**,
-  emphasizing the expansion after **bd72e70**, including delivered page states.
-  Two findings are fixed in **3d4b140**: duplicate browser-test registration and
-  missing explicit equality-coercion explanation. Collection now reaches all
-  40 cases; final actual-sheet/generator tests pass **3/3**. The later coordinator
-  review above adds the remaining keyboard-scroll finding.
-- Implementation session: **01a1a908-ddb6-7f91-bb4d-7834839b62e8**. The user
-  requested "continue" after the fresh-session notice; work continued here.
-  This does not change D-100 for future tasks. Recommended implementation model
-  remains **GPT-6.1 Sol / High**; no active-model setting is claimed.
+- Branch: `feat/javascript-study-sections`.
+- Correction base: **b3b790e3a13d1e467a48d855f7b5b67ff63d58cc**.
+- Correction application: **322c8733bb8553afd57c3fd32125105ac44f603a**.
+  Later records do not change application inputs. Earlier application **3d4b140** checks remain historical.
+- Session: **01a1a908-ddb6-7f91-bb4d-7834839b62e8**. The user explicitly said
+  "proceed here" after the fresh-session notice. This correction-specific
+  instruction does not change D-100 for future tasks. Recommended implementation
+  setting remains **GPT-6.1 Sol / High**; no active-setting claim is made.
 
 ## Verification
 
-Supported **Node 22.23.4**, pinned **pnpm 10.33.0** via a temporary Corepack shim.
-Retained checkpoint checks: format/lint/generated-route typecheck exit 0;
-full unit/DOM **1,635 tests / 233 files**. After the bounded review fixes,
-fresh actual-sheet/generator **3/3**, production build **57 pages**, complete
-production audit **40/40** (`--fully-parallel --workers=2`, unchanged timeouts)
-and exact published-example checker **52 assertions**, all exit 0.
+Node **22.23.4**, pinned pnpm **10.33.0** through the task-local Corepack shim.
+TDD: both new render tests failed because `tabindex` was absent (**2 failed /
+4 passed**), then the focused files passed **6/6**. Fresh focused production
+keyboard-scroll tests **2/2**, both themes, exit 0.
 
-Fresh `pnpm test:dev-console` **1/1**, exit 0 (**3.7m**), ran sequentially
-after production in an isolated copy with identical `src`/`public`; only explicit
-Turbopack root and testDir configuration differ. It leaves the user’s :3200
-server untouched. Additional development checks opened/re-collapsed all local
-solutions: **36 keyboard toggles / two themes / zero warnings or errors**.
+Fresh correction-tree checks: `pnpm format:check`, `pnpm lint`,
+`pnpm typecheck` and `pnpm build` (**57 pages**) exit 0. Complete production
+`pnpm test:e2e --fully-parallel --workers=2` **42/42**, **7.0m**, exit 0.
+Full `pnpm test --maxWorkers=1` **1,637 tests / 233 files**, exit 0, **167.62s**.
+Fresh isolated-copy `pnpm test:dev-console` **1/1**, **4.5m**, exit 0;
+identical `src`/`public`, explicit Turbopack root and testDir configuration only.
+This preserves the user's :3200 server. Additional revealed-body checks:
+**36 keyboard toggles / two themes / zero warnings or errors**.
 
-Closing records: ledger **2/2**, local links/anchors **140 targets / 5 files**,
-`git diff --check`, and final example checker **52 assertions**, all exit 0. Application checks above are retained
-for unchanged inputs after this records update. Earlier failed attempts and
-reproductions are summarized in the tracker; no assertions/timeouts were weakened.
+The first `pnpm test --maxWorkers=2` passed **1,632 tests / 231 files** but
+failed to start fork workers for `CiCd.test.tsx` and
+`PerformanceChecklist.test.tsx` (worker-response timeouts, no assertion failures).
+The full suite was rerun alone with one worker and unchanged assertions/timeouts.
 
-## Return and next action
+Closing records: ledger **2/2**, local links/anchors **141 targets / 5 files**,
+`git diff --check`, all exit 0. Identified application checks are retained
+after the records-only update; no assertions/timeouts were weakened.
 
-Return the correction branch/diff and evidence to coordinator session
-**01a18acc-3b54-7202-92f3-404cc94fd0ad**. Recommended next task/model:
-**review the keyboard-scroll correction, GPT-6 Astra / Low**. Read the implementation
-thread before relying on its handoff; review the actual diff and identified
-commits. This file and the implementation response are the return package.
-Separate user approval is required before a no-ff merge into develop. No merge,
-push or production promotion occurred. Four other sheets, a complete course,
-runner/grading/persistence, dependencies and diagrams remain deferred.
+## Coordinator return
+
+Recommended next task/model: **review the bounded keyboard-scroll correction,
+GPT-6 Astra / Low**, coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
+Read this implementation thread and review the actual correction commit/diff.
+The fix and regression coverage are ready for coordinator confirmation; the prior content/spec review found no findings. This file and the implementation
+response are the return package. Separate user approval is required before a
+no-ff merge into develop. No merge, push or promotion occurred.
+
+Scope remains seven sections, eleven worked examples and nine local activities,
+**26/30** sheets and **18/18** stages. Content/generated files are unchanged by
+this correction. Four other language sheets, a complete course, code execution,
+grading/persistence, dependencies and diagrams remain deferred.
+
+Pointers: [source/design](reference/javascript-source-research.md#sectioned-expansion-selected-2026-11-05),
+[compact plan](docs/superpowers/plans/2026-11-05-javascript-study-expansion.md),
+[completion evidence](docs/tracker.md#completed), [tasks](docs/task.md).
