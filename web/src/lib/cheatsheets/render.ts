@@ -28,13 +28,13 @@ function activityCode(example: SheetActivity['starter']): string[] {
 
 function renderActivities(
   activities: SheetActivity[],
-  local = false,
+  practiceLevel = 3,
 ): string[] {
   if (!activities.length) return []
-  const lines: string[] = [local ? '#### Practice' : '### Practice', '']
+  const lines: string[] = [`${'#'.repeat(practiceLevel)} Practice`, '']
   for (const activity of activities) {
     lines.push(
-      `${local ? '#####' : '####'} ${activityText(activity.title)}`,
+      `${'#'.repeat(practiceLevel + 1)} ${activityText(activity.title)}`,
       '',
       activityText(activity.prompt),
       '',
@@ -91,6 +91,24 @@ function renderSheet(sheet: Cheatsheet): string {
   for (const section of sections) {
     lines.push(`### ${section.title}`, '')
     if (section.note) lines.push(section.note, '')
+    if ('subsections' in section && section.subsections) {
+      for (const subsection of section.subsections) {
+        const row = subsection.row
+        lines.push(
+          `#### ${activityText((row.term ?? row.code)!)}`,
+          '',
+          activityText(row.study.summary),
+          '',
+          activityText(row.what),
+          '',
+        )
+        for (const example of row.example ?? [])
+          lines.push(...activityCode(example))
+        if (row.when) lines.push(activityText(row.when), '')
+        lines.push(...renderActivities(subsection.activities, 5))
+      }
+      continue
+    }
     for (const row of section.rows) {
       const left = row.code ? `\`${row.code}\`` : `**${row.term}**`
       const when = row.when ? ` — ${row.when}` : ''
@@ -110,7 +128,7 @@ function renderSheet(sheet: Cheatsheet): string {
       }
     }
     lines.push('')
-    if (study) lines.push(...renderActivities(section.activities, true))
+    if (study) lines.push(...renderActivities(section.activities, 4))
   }
 
   if (!study && isDrawn(sheet))

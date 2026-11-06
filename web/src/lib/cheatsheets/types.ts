@@ -37,6 +37,8 @@ export type RowExample = {
 }
 
 export type Row = {
+  /** Topic disclosure and exclusive local activity assignment on study sheets. */
+  study?: { id: string; summary: string; activityIds: string[] }
   /** Set in mono when present — a command, signature, or literal. */
   code?: string
   /** The left column when the thing being named is not code. */
@@ -54,7 +56,7 @@ export type Section = {
   note?: string
   rows: Row[]
   /** All sections on a study sheet opt in; activity IDs are assigned once. */
-  study?: { id: string; label: string; hint: string; activityIds: string[] }
+  study?: { id: string; label: string; hint: string; activityIds?: string[] }
 }
 
 /**

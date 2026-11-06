@@ -159,3 +159,43 @@ for (const [name, mutate] of [
     expect(() => renderCheatsheets()).toThrow(/study/i)
   })
 }
+
+test('nested Markdown keeps literal summaries, safe fences and practice once under its subsection', () => {
+  fixtures.sheets.push({
+    ...base,
+    sections: [
+      {
+        title: 'Main',
+        study: { id: 'topic', label: 'Topic', hint: 'Read' },
+        rows: [
+          {
+            term: 'First *topic*',
+            what: 'Explain <this>.',
+            study: {
+              id: 'first',
+              summary: 'Summary **literal**',
+              activityIds: ['counter'],
+            },
+            example: [activity.starter],
+          },
+          {
+            term: 'Second topic',
+            what: 'Later teaching.',
+            study: { id: 'second', summary: 'Next summary.', activityIds: [] },
+          },
+        ],
+      },
+    ],
+    activities: [activity],
+  })
+  const text = renderCheatsheets()
+  expect(text).toContain('### Main\n\n#### First \\*topic\\*')
+  expect(text).toContain('Summary \\*\\*literal\\*\\*')
+  expect(text).toContain('Explain \\<this\\>\\.')
+  expect(text).toContain('````\nfunction count() {\n\n  return "```";\n}\n````')
+  expect(text).toContain('##### Practice\n\n###### Counter \\*factory\\*')
+  expect(text.indexOf('###### Counter')).toBeLessThan(
+    text.indexOf('#### Second topic'),
+  )
+  expect(text.match(/Predict \\</g)).toHaveLength(1)
+})
