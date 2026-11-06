@@ -1537,7 +1537,7 @@ Common mistake: assuming every way to write a function has identical early\-call
 
 Read live lexical state after the creating call returns\.
 
-A function carries access to the lexical environment in which it was created, even after the surinitial call returns\. It reads the current binding rather than a frozen snapshot\. In the example, set changes the same value that read later observes\. A separate makeReader call would create another value binding\.
+A function carries access to the lexical environment in which it was created, even after the surrounding call returns\. It reads the current binding rather than a frozen snapshot\. In the example, set changes the same value that read later observes\. A separate makeReader call would create another value binding\.
 
 Read after the creating call returns
 
@@ -1668,7 +1668,7 @@ Common mistake: writing a block\-bodied arrow without return when a result is re
 
 Keep the ordinary receiver or retain lexical this\.
 
-For an ordinary function, the receiver follows the call\. meter\.read\(\) supplies meter as this\. A detached strict call supplies undefined, so reading this\.value throws\. bind creates a new function that preserves the receiver; it neither calls nor changes the original function\. An arrow instead retains the surinitial this binding\.
+For an ordinary function, the receiver follows the call\. meter\.read\(\) supplies meter as this\. A detached strict call supplies undefined, so reading this\.value throws\. bind creates a new function that preserves the receiver; it neither calls nor changes the original function\. An arrow instead retains the surrounding this binding\.
 
 An arrow retains the explicit method boundary
 
@@ -2028,7 +2028,7 @@ Common mistake: catching every failure and reporting success, or returning from 
 
 Keep the returned promise inside the caller’s catch boundary\.
 
-A promise represents eventual fulfillment or rejection\. then returns another promise: returning a value fulfills the next link, while throwing rejects it\. An async function returns a promise too\. await suspends that function until the value settles; a rejection throws at the await, where a surinitial try/catch can observe it\.
+A promise represents eventual fulfillment or rejection\. then returns another promise: returning a value fulfills the next link, while throwing rejects it\. An async function returns a promise too\. await suspends that function until the value settles; a rejection throws at the await, where a surrounding try/catch can observe it\.
 
 The awaited rejection reaches this catch
 
@@ -2041,7 +2041,7 @@ async function show() {
 show(); // offline
 ```
 
-Common mistake: starting asynchronous work without returning or awaiting it\. The caller can then report success before the work finishes, and a surinitial synchronous try/catch cannot observe a later rejection\.
+Common mistake: starting asynchronous work without returning or awaiting it\. The caller can then report success before the work finishes, and a surrounding synchronous try/catch cannot observe a later rejection\.
 
 #### Sequential dependencies or concurrent initiation
 

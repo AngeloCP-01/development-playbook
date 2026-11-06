@@ -25,8 +25,10 @@ async function openTopic(
   const control = page.locator(
     `button[aria-controls="${prefix(section, row)}"]`,
   )
-  if ((await control.getAttribute('aria-expanded')) === 'false')
-    await control.click()
+  if ((await control.getAttribute('aria-expanded')) === 'false') {
+    await control.focus()
+    await page.keyboard.press('Enter')
+  }
 }
 
 test('the shared audit discovers every rendered study hash and observes every nested topic and all fourteen local solutions', async ({

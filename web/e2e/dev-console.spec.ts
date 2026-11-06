@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { auditPages } from './audit-pages'
+import { forEachPanelState } from './panel-states'
 
 /**
  * TD-35. `audit.spec.ts`'s console check runs against a production build, where
@@ -65,6 +66,8 @@ test('@dev no React development warnings on any audited page, which the producti
     page.on('console', onConsole)
     page.on('pageerror', onPageError)
     await page.goto(path, { waitUntil: 'networkidle' })
+    if (path.startsWith('/reference/javascript#'))
+      await forEachPanelState(page, async () => {})
     await page.waitForTimeout(250)
     page.off('console', onConsole)
     page.off('pageerror', onPageError)
