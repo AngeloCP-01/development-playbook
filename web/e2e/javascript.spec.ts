@@ -2,51 +2,34 @@ import { expect, test } from '@playwright/test'
 import { forEachPanelState } from './panel-states'
 import { auditPages } from './audit-pages'
 
-const sections = [
-  {
-    id: 'values',
-    title: 'Values and equality',
-    activities: [['valid-default', 'Preserve valid defaults']],
-  },
-  {
-    id: 'scope',
-    title: 'Scope and closures',
-    activities: [
-      ['tdz-trace', 'Shadowing and initialization'],
-      ['closure-counter', 'Closure factory'],
-    ],
-  },
-  {
-    id: 'functions',
-    title: 'Functions and this',
-    activities: [['receiver-repair', 'Repair a detached receiver']],
-  },
-  {
-    id: 'objects',
-    title: 'Objects and prototypes',
-    activities: [['nested-copy', 'Nested-copy repair']],
-  },
-  {
-    id: 'arrays',
-    title: 'Arrays',
-    activities: [
-      ['collection-result', 'Transform a collection'],
-      ['numeric-sort', 'Sort without mutating input'],
-    ],
-  },
-  {
-    id: 'async',
-    title: 'Promises and errors',
-    activities: [['async-iteration', 'Async iteration repair']],
-  },
-  {
-    id: 'scheduling',
-    title: 'Scheduling',
-    activities: [['scheduling-trace', 'Scheduling trace']],
-  },
-] as const
+import { javascript } from '../src/lib/cheatsheets/javascript'
 
-test('the shared audit discovers every rendered study hash and observes all nine local solutions', async ({
+const sections = javascript.sections.map((section) => ({
+  id: section.study!.id,
+  title: section.title,
+  rows: section.rows,
+  activities: section.rows.flatMap((row) =>
+    row.study!.activityIds.map((id) => {
+      const activity = javascript.activities!.find((item) => item.id === id)!
+      return [id, activity.title] as const
+    }),
+  ),
+}))
+const prefix = (section: string, row: string) =>
+  `sheet-javascript-section-${section}-subsection-${row}`
+async function openTopic(
+  page: import('@playwright/test').Page,
+  section: string,
+  row: string,
+) {
+  const control = page.locator(
+    `button[aria-controls="${prefix(section, row)}"]`,
+  )
+  if ((await control.getAttribute('aria-expanded')) === 'false')
+    await control.click()
+}
+
+test('the shared audit discovers every rendered study hash and observes every nested topic and all fourteen local solutions', async ({
   page,
 }) => {
   const paths = await auditPages(page)
@@ -61,14 +44,15 @@ test('the shared audit discovers every rendered study hash and observes all nine
       page.getByRole('heading', { name: section.title, exact: true }),
     ).toBeVisible()
     const { all, observed } = await forEachPanelState(page, async () => {})
-    const expected = section.activities.map(
-      ([id]) => `sheet-javascript-activity-${id}`,
-    )
+    const expected = [
+      ...section.rows.map((row) => prefix(section.id, row.study!.id)),
+      ...section.activities.map(([id]) => `sheet-javascript-activity-${id}`),
+    ]
     expect(all.sort()).toEqual([...expected].sort())
     expect(observed.sort()).toEqual([...expected].sort())
     observedIds.push(...observed)
   }
-  expect(new Set(observedIds).size).toBe(9)
+  expect(new Set(observedIds).size).toBe(39)
 })
 
 test('study sections support later deep links, Back/Forward, keyboard navigation and fresh local answers', async ({
@@ -80,28 +64,31 @@ test('study sections support later deep links, Back/Forward, keyboard navigation
     'aria-selected',
     'true',
   )
+  await openTopic(page, 'scope', 'closures')
   const counter = page.getByRole('button', {
     name: 'Solution: Closure factory',
     exact: true,
   })
   await counter.click()
-  await rail.getByRole('tab', { name: /Arrays/ }).click()
+  await rail.getByRole('tab', { name: /Collections/ }).click()
   await expect(page).toHaveURL(/#arrays$/)
   await expect(counter).toHaveCount(0)
   await page.goBack()
   await expect(page).toHaveURL(/#scope$/)
+  await expect(counter).toHaveCount(0)
+  await openTopic(page, 'scope', 'closures')
   await expect(counter).toHaveAttribute('aria-expanded', 'false')
   await page.goForward()
   await expect(page).toHaveURL(/#arrays$/)
   await page.reload()
-  await expect(rail.getByRole('tab', { name: /Arrays/ })).toHaveAttribute(
+  await expect(rail.getByRole('tab', { name: /Collections/ })).toHaveAttribute(
     'aria-selected',
     'true',
   )
-  await rail.getByRole('tab', { name: /Arrays/ }).focus()
+  await rail.getByRole('tab', { name: /Collections/ }).focus()
   await page.keyboard.press('End')
-  await expect(page).toHaveURL(/#scheduling$/)
-  await expect(rail.getByRole('tab', { name: /Scheduling/ })).toBeFocused()
+  await expect(page).toHaveURL(/#modules$/)
+  await expect(rail.getByRole('tab', { name: /Modules/ })).toBeFocused()
   await page.keyboard.press('Home')
   await expect(page).toHaveURL(/#values$/)
   await page.keyboard.press('ArrowRight')
@@ -159,6 +146,12 @@ for (const theme of ['light', 'dark'])
           page.getByRole('heading', { name: section.title, exact: true }),
         ).toBeVisible()
         await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
+        for (const row of section.rows) {
+          await expect(
+            page.getByText(row.study!.summary, { exact: true }),
+          ).toBeVisible()
+          await openTopic(page, section.id, row.study!.id)
+        }
         for (const [id, title] of section.activities) {
           const control = page.getByRole('button', {
             name: `Solution: ${title}`,
@@ -234,6 +227,7 @@ test('a solution focused near the top clears the sticky study rail', async ({
     'aria-selected',
     'true',
   )
+  await openTopic(page, 'async', 'joining')
   const control = page.getByRole('button', {
     name: 'Solution: Async iteration repair',
     exact: true,
@@ -266,6 +260,8 @@ for (const theme of ['light', 'dark']) {
       theme,
     )
     await page.goto('/reference/javascript#async', { waitUntil: 'networkidle' })
+    await openTopic(page, 'async', 'awaiting')
+    await openTopic(page, 'async', 'joining')
     const panel = page.getByRole('tabpanel')
     const solution = panel.getByRole('button', {
       name: 'Solution: Async iteration repair',
@@ -285,7 +281,11 @@ for (const theme of ['light', 'dark']) {
         await block.evaluate((el) => el.scrollWidth > el.clientWidth),
       ).toBe(true)
       await panel.focus()
-      for (let attempt = 0; attempt < 8; attempt++) {
+      for (
+        let attempt = 0;
+        attempt < (await panel.locator('button, pre[tabindex]').count()) + 1;
+        attempt++
+      ) {
         await page.keyboard.press('Tab')
         if (await block.evaluate((el) => document.activeElement === el)) break
       }
@@ -327,3 +327,33 @@ for (const theme of ['light', 'dark']) {
     ).toBe(0)
   })
 }
+
+test('default panels and each single open topic fit four screens without exposing answers', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1024, height: 768 })
+  const measurements: Record<string, number> = {}
+  for (const section of sections) {
+    await page.goto(`/reference/javascript#${section.id}`, {
+      waitUntil: 'networkidle',
+    })
+    const panel = page.getByRole('tabpanel')
+    const measure = async (id: string) => {
+      const height = await panel.evaluate(
+        (el) => el.getBoundingClientRect().height,
+      )
+      measurements[id] = Number((height / 768).toFixed(2))
+      expect(height, id).toBeLessThanOrEqual(4 * 768)
+    }
+    await measure(section.id)
+    for (const row of section.rows) {
+      await openTopic(page, section.id, row.study!.id)
+      await measure(`${section.id}/${row.study!.id}`)
+      await expect(panel.locator('button[aria-expanded="true"]')).toHaveCount(1)
+      await page
+        .locator(`button[aria-controls="${prefix(section.id, row.study!.id)}"]`)
+        .click()
+    }
+  }
+  console.log('[javascript-panel-screens]', JSON.stringify(measurements))
+})

@@ -86,6 +86,7 @@ function renderSheet(sheet: Cheatsheet): string {
     study ??
     sheet.sections.map((section) => ({
       ...section,
+      subsections: undefined,
       activities: [] as SheetActivity[],
     }))
   for (const section of sections) {

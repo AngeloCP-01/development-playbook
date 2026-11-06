@@ -3,6 +3,10 @@
 // Node 22.23.4 can load this data-only TypeScript module by stripping types.
 // Read the published fields directly; do not maintain another snippet copy.
 const assert = require("node:assert/strict");
+const { mkdtempSync, writeFileSync, rmSync } = require("node:fs");
+const { tmpdir } = require("node:os");
+const { join } = require("node:path");
+const { spawnSync } = require("node:child_process");
 const { javascript } = require("../../web/src/lib/cheatsheets/javascript.ts");
 let assertions = 0;
 const equal = (actual, expected) => {
@@ -10,6 +14,14 @@ const equal = (actual, expected) => {
   assertions += 1;
 };
 const activity = (id) => javascript.activities.find((item) => item.id === id);
+const publishedExamples = javascript.sections.flatMap((section) =>
+  section.rows.flatMap((row) => row.example ?? []),
+);
+const example = (label) => {
+  const found = publishedExamples.find((item) => item.label === label);
+  assert.ok(found, `Missing authored example ${label}`);
+  return found;
+};
 function deferred() {
   let resolve;
   const promise = new Promise((done) => {
@@ -192,7 +204,7 @@ async function main() {
   receiver.meter.read = () => 99;
   equal([receiver.read(), wrapper()], [7, 99]);
   const transform = execute(
-    activity("collection-result").solution.code,
+    example("Select, then transform: unchanged input").code,
     "doubledAboveTwo",
     logs,
   );
@@ -216,34 +228,222 @@ async function main() {
   equal(sorted(empty), []);
   equal(sorted(empty) === empty, false);
 
-  // Every visible worked example is checked from its actual authored field.
-  const expected = [
-    [[1], [true], [false], [false, true], [0]],
-    [["inner"], ["outer", 7]],
-    [[2]],
-    [[6], [undefined]],
-    [[7], [7]],
-    [[true], [false], ["Ada"]],
-    [[[2, 4, 6]], [[2, 3]], [undefined], [false], [true]],
-    [[5, 0]],
-    [["offline"]],
-    [[5]],
-    [["current"], ["still current"], ["queued"]],
-  ];
-  const examples = javascript.sections.flatMap((section) =>
-    section.rows.flatMap((row) => row.example ?? []),
+  // Every CJS example is evaluated from its exact authored field. ESM is
+  // deliberately excluded here and materialized as two real files below.
+  const expected = new Map([
+    [
+      "Trace identity and conversion",
+      [[1], [true], [false], [false, true], [0]],
+    ],
+    ["First eligible age: boundary and empty input", [[18], [null]]],
+    [
+      "String operations return new values",
+      [["javascript"], [" JavaScript "], ["Java"]],
+    ],
+    ["Two different block behaviors", [["inner"], ["outer", 7]]],
+    [
+      "Keep the comparison inside an explicit function",
+      [["ready"], ["ReferenceError"], ["ready"]],
+    ],
+    ["Read after the creating call returns", [[2]]],
+    ["Defaults are undefined-only", [[20, 20, null, 0]]],
+    ["An expression returns; a block needs return", [[6], [undefined]]],
+    ["An arrow retains the explicit method boundary", [[7], [7]]],
+    ["Renaming and defaults have their own rules", [[null, 20, 0]]],
+    ["An instance owns its name, not its method", [[true], [false], ["Ada"]]],
+    [
+      "Different questions, different result shapes",
+      [[[2, 4, 6]], [[2, 3]], [undefined], [false], [true]],
+    ],
+    ["Select, then transform: unchanged input", [[[6, 8]], [[]]]],
+    ["A total with a defined empty case", [[5, 0]]],
+    [
+      "Counts, first-seen order and object identity",
+      [
+        [
+          [
+            ["js", 2],
+            ["css", 1],
+          ],
+        ],
+        [["js", "css"]],
+        [2, 1],
+        [true],
+      ],
+    ],
+    ["Run cleanup without swallowing the work failure", [["cleanup"], [7]]],
+    ["The awaited rejection reaches this catch", [["offline"]]],
+    ["Join results before using them", [[5]]],
+    [
+      "Run together inside one fresh timer callback",
+      [["current"], ["still current"], ["queued"]],
+    ],
+  ]);
+  const esm = example("totals.mjs — Node 22.23.4 ESM");
+  const examples = publishedExamples.filter((item) => item !== esm);
+  equal(
+    examples.map((item) => item.label),
+    [...expected.keys()],
   );
-  equal(examples.length, expected.length);
-  for (const [index, example] of examples.entries()) {
-    if (index === examples.length - 1) {
+  for (const item of examples) {
+    if (item.label === "Run together inside one fresh timer callback") {
       await new Promise((resolve) =>
         setTimeout(() => {
-          execute(example.code, undefined, logs);
+          execute(item.code, undefined, logs);
           queueMicrotask(resolve);
         }, 0),
       );
-    } else await execute(example.code, undefined, logs);
-    equal(logs.splice(0), expected[index]);
+    } else await execute(item.code, undefined, logs);
+    equal(logs.splice(0), expected.get(item.label));
+  }
+
+  const normalize = execute(
+    activity("normalize-labels").solution.code,
+    "normalizeLabels",
+  );
+  for (const [input, result] of [
+    [" JS, css , JS, ", ["js", "css", "js"]],
+    ["", []],
+    [" , ", []],
+    ["X,,x", ["x", "x"]],
+  ])
+    equal(normalize(input), result);
+  const eligible = execute(
+    example("First eligible age: boundary and empty input").code,
+    "firstEligibleAge",
+    logs,
+  );
+  logs.length = 0;
+  for (const [ages, minimum, result] of [
+    [[15, 18, 21], 18, 18],
+    [[], 18, null],
+    [[15], 18, null],
+    [[0], 0, 0],
+  ])
+    equal(eligible(ages, minimum), result);
+  const total = execute(activity("rest-total").solution.code, "total");
+  equal(
+    [total(), total(2, 3), total(0, -2, 2), total(...[2, 3])],
+    [0, 5, 0, 5],
+  );
+  const read = execute(activity("read-settings").solution.code, "readPageSize");
+  equal(
+    [
+      undefined,
+      null,
+      {},
+      { pageSize: undefined },
+      { pageSize: null },
+      { pageSize: 0 },
+      { pageSize: 7 },
+    ].map(read),
+    [20, 20, 20, 20, 20, 0, 7],
+  );
+  const unique = execute(
+    activity("first-unique-label").solution.code,
+    "firstUniqueLabel",
+  );
+  for (const [input, result] of [
+    [[], null],
+    [["js"], "js"],
+    [["js", "js"], null],
+    [["js", "css", "js", "html"], "css"],
+    [["JS", "js"], "JS"],
+    [[""], ""],
+    [["js", "js", ""], ""],
+    [["__proto__", "x", "x"], "__proto__"],
+  ]) {
+    equal(unique(Object.freeze(input)), result);
+  }
+  const { runChecked, recoverInput } = execute(
+    example("Run cleanup without swallowing the work failure").code,
+    "({runChecked, recoverInput})",
+    logs,
+  );
+  logs.length = 0;
+  const cleaned = [];
+  equal(
+    runChecked(
+      2,
+      () => 7,
+      () => cleaned.push("success"),
+    ),
+    7,
+  );
+  const unexpected = new TypeError("finite number required");
+  throws(
+    () =>
+      runChecked(
+        2,
+        () => {
+          throw unexpected;
+        },
+        () => cleaned.push("failure"),
+      ),
+    (error) => error === unexpected,
+  );
+  throws(
+    () =>
+      recoverInput(
+        2,
+        () => {
+          throw unexpected;
+        },
+        () => cleaned.push("rethrow"),
+      ),
+    (error) => error === unexpected,
+  );
+  equal(
+    recoverInput(
+      NaN,
+      () => {
+        throw new Error("must not run");
+      },
+      () => cleaned.push("invalid"),
+    ),
+    null,
+  );
+  equal(cleaned, ["success", "failure", "rethrow", "invalid"]);
+  const outcomes = execute(
+    activity("partial-results").solution.code,
+    "collectOutcomes",
+  );
+  const first = deferred();
+  const report = outcomes([first.promise, Promise.reject("offline")]);
+  first.resolve(2);
+  equal(await report, [
+    { status: "fulfilled", value: 2 },
+    { status: "rejected", reason: "offline" },
+  ]);
+  equal(await outcomes([]), []);
+
+  // Use a fresh directory for each run. A missing/stale fixture cannot masquerade
+  // as the intended named-export error, and imports are never rewritten/evaled.
+  const directory = mkdtempSync(join(tmpdir(), "javascript-published-esm-"));
+  try {
+    writeFileSync(join(directory, "totals.mjs"), esm.code);
+    const path = join(directory, "main.mjs");
+    writeFileSync(path, activity("module-boundary").starter.code);
+    const brokenModule = spawnSync(process.execPath, [path], {
+      encoding: "utf8",
+    });
+    equal(brokenModule.error, undefined);
+    equal(brokenModule.status, 1);
+    equal(brokenModule.stdout, "");
+    equal(
+      /does not provide an export named 'total'/.test(brokenModule.stderr),
+      true,
+    );
+    writeFileSync(path, activity("module-boundary").solution.code);
+    const repairedModule = spawnSync(process.execPath, [path], {
+      encoding: "utf8",
+    });
+    equal(repairedModule.error, undefined);
+    equal(repairedModule.status, 0);
+    equal(repairedModule.stderr, "");
+    equal(repairedModule.stdout.trim(), "USD 5 0");
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
   }
 
   // Move the actual enqueue line for the stated scheduling follow-up.
@@ -279,11 +479,12 @@ async function main() {
         context: "strict CommonJS, published fields via direct eval",
         activities: javascript.activities.length,
         sections: javascript.sections.length,
-        workedExamples: examples.length,
+        workedExamples: publishedExamples.length,
+        esm: "two real .mjs files, named-export failure then USD 5 0",
         assertions,
         status: "passed",
         limits:
-          "Controlled save promises and isolated timer callbacks; no timer-duration, browser, ESM or I/O ordering claim.",
+          "Controlled save promises and isolated timer callbacks; real ESM import/export checks; no timer-duration, browser, ESM scheduling or I/O ordering claim.",
       },
       null,
       2,

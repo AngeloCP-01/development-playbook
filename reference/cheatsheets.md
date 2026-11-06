@@ -1313,32 +1313,44 @@ Source: [Insecure Direct Object References testing](https://wstg.owasp.org/lates
 
 ## JavaScript
 
-Study JavaScript mechanisms through seven focused sections, worked examples and nine small activities. Predict, explain and repair code; representative interview practice, not a frequency ranking.
+Write, debug and explain JavaScript through eight focused sections. Open a topic for worked examples and local practice, then compare your reasoning with the solution.
 
-### Values and equality
+### Fundamentals
 
 Keep valid input while distinguishing values, identity and conversion. All examples use Node 22.23.4, strict CommonJS (.cjs with "use strict"). Explain it: when should zero count as a supplied value?
 
-- **Values and references** — A primitive, such as a number, boolean or string, is an immutable value. An object can be mutated. Assigning an object value to another binding gives both bindings access to the same object; making a new object creates a different identity even if its fields look equal. Strict equality (===) compares without type conversion: 0 and the string "0" have different types, so they are not strictly equal. Loose equality (==) applies defined conversions; in this example the string becomes a number, producing true. Number("0") makes that conversion explicit. — Common mistake: treating equal-looking objects as equal references. JavaScript passes argument values; an object argument is not a new copy of its contents.
+#### Values and references
 
-  *Trace identity and conversion*
+Compare values, types and shared object identity\.
 
-  ```
-  const original = { count: 0 };
-  const alias = original;
-  alias.count = 1;
-  console.log(original.count);          // 1
-  console.log(alias === original);      // true
-  console.log({ count: 1 } === alias);  // false
-  console.log(0 === '0', 0 == '0');      // false, true
-  console.log(Number('0'));             // 0
-  ```
+A primitive, such as a number, boolean or string, is an immutable value\. An object can be mutated\. Assigning an object value to another binding gives both bindings access to the same object; making a new object creates a different identity even if its fields look equal\. Strict equality \(===\) compares without type conversion: 0 and the string "0" have different types, so they are not strictly equal\. Loose equality \(==\) applies defined conversions; in this example the string becomes a number, producing true\. Number\("0"\) makes that conversion explicit\.
 
-- **Absence, defaults and equality** — undefined often marks a missing value; null is an explicit absence by convention. Both are nullish. The ?? operator falls back only for those two values. The || operator instead falls back for every falsy value, including 0, false and empty text. Both short-circuit, so the right expression runs only when a fallback is needed. — Common mistake: using a default as validation. ?? preserves NaN, and Number('') is 0. Validate the allowed type and range separately. NaN === NaN is false; Number.isNaN detects it. Object.is treats NaN as equal to itself and distinguishes signed zero, so it is not a universal replacement for ===.
+Trace identity and conversion
 
-#### Practice
+```
+const original = { count: 0 };
+const alias = original;
+alias.count = 1;
+console.log(original.count);          // 1
+console.log(alias === original);      // true
+console.log({ count: 1 } === alias);  // false
+console.log(0 === '0', 0 == '0');      // false, true
+console.log(Number('0'));             // 0
+```
 
-##### Preserve valid defaults
+Common mistake: treating equal\-looking objects as equal references\. JavaScript passes argument values; an object argument is not a new copy of its contents\.
+
+#### Absence, defaults and equality
+
+Choose absence rules without discarding valid falsy values\.
+
+undefined often marks a missing value; null is an explicit absence by convention\. Both are nullish\. The ?? operator falls back only for those two values\. The \|\| operator instead falls back for every falsy value, including 0, false and empty text\. Both short\-circuit, so the right expression runs only when a fallback is needed\.
+
+Common mistake: using a default as validation\. ?? preserves NaN, and Number\(''\) is 0\. Validate the allowed type and range separately\. NaN === NaN is false; Number\.isNaN detects it\. Object\.is treats NaN as equal to itself and distinguishes signed zero, so it is not a universal replacement for ===\.
+
+##### Practice
+
+###### Preserve valid defaults
 
 Repair fallback so 0, false and empty text stay supplied values, while null and undefined become missing\. Predict the full output before revealing the repair\. Does your operator also validate numeric input?
 
@@ -1370,45 +1382,104 @@ Follow-up
 
 Choose a separate validation rule for a nonnegative finite quantity\. Explain why defaulting and validating answer different questions\.
 
+#### Decisions, operators and loops
+
+Write branches and stop at the first inclusive match\.
+
+if/else selects a branch\. Comparisons such as \>= produce booleans; \&\& and \|\| short\-circuit and return an operand, not necessarily a boolean\. A conditional expression test ? yes : no selects one value\. Use for\.\.\.of for array values, an indexed for when the position matters, and while while a condition remains true\. break exits a loop; continue skips to its next iteration\. return exits the function\. Here the first eligible value includes the minimum itself\.
+
+First eligible age: boundary and empty input
+
+```
+function firstEligibleAge(ages, minimum) {
+  for (const age of ages) {
+    if (age >= minimum) return age;
+  }
+  return null;
+}
+console.log(firstEligibleAge([15, 18, 21], 18)); // 18
+console.log(firstEligibleAge([], 18));           // null
+```
+
+Common mistake: using \> when the boundary is inclusive, forgetting a return after the loop, or using for\.\.\.in \(property keys\) when you need array values\. Explain it: why does the empty case reach null?
+
+#### Process simple label text
+
+Split, trim and normalize labels without changing their order\.
+
+Strings are immutable: trim, toLowerCase and slice return values rather than changing the original string\. split separates text at a delimiter\. For simple comma\-delimited labels, trim each part, lowercase it, and skip empty results\. Keep order and duplicates; this task is not deduplication\.
+
+String operations return new values
+
+```
+const text = ' JavaScript ';
+console.log(text.trim().toLowerCase()); // javascript
+console.log(text);                      // unchanged
+console.log('JavaScript'.slice(0, 4));   // Java
+```
+
+Common mistake: forgetting to use a string method’s return value, or treating split as a full CSV parser\. Inputs here are strings with simple commas; quoted CSV and Unicode normalization are outside the contract\. Explain it: what should consecutive commas produce?
+
+##### Practice
+
+###### Normalize simple labels
+
+Write normalizeLabels\(text\) for a string of simple comma\-delimited labels\. Trim and lowercase each part; discard empty parts, keeping order and duplicates\. Check " JS, css , JS, ", "" and " , "\. Quoted CSV and Unicode normalization are outside this contract\.
+
+Context: Node 22\.23\.4, strict CommonJS\. Run this block separately in a \.cjs file with "use strict" at the top\.
+
+Solution: Normalize simple labels
+
+The results are \["js", "css", "js"\], \[\] and \[\]\.
+
+Reference solution
+
+```
+function normalizeLabels(text) {
+  const labels = [];
+  for (const part of text.split(',')) {
+    const label = part.trim().toLowerCase();
+    if (label !== '') labels.push(label);
+  }
+  return labels;
+}
+```
+
+Why it works
+
+Iteration visits each split part in order\. The explicit condition skips empty strings after trimming; it never removes a repeated nonempty label\.
+
+Follow-up
+
+Compare a filter/map pipeline with the loop\. Where should the empty check happen?
+
 ### Scope and closures
 
-Locate the binding a function reads, then track when it becomes usable. Explain it: why can a name be in scope but still throw when read?
+Node 22.23.4, strict CommonJS; run each block separately with "use strict". Locate the binding a function reads, then track when it becomes usable. Explain it: why can a name be in scope but still throw when read?
 
-- **Blocks, functions and initialization** — let and const belong to their enclosing block. var belongs to the containing function; top-level behavior depends on script, module and host context. A plain nested block does not contain it. An inner let or const shadows an outer name throughout its block. Before its declaration initializes that binding, reads throw ReferenceError: this interval is the temporal dead zone. — Common mistake: saying let does not exist until its line runs. The binding already shadows the outer name. typeof an undeclared name can return "undefined", but typeof a binding in its temporal dead zone throws. const prevents reassignment, not property mutation.
+#### Blocks, functions and initialization
 
-  *Two different block behaviors*
+Find the binding and the moment it becomes usable\.
 
-  ```
-  let label = 'outer';
-  {
-    let label = 'inner';
-    var escaped = 7;
-    console.log(label); // inner
-  }
-  console.log(label, escaped); // outer, 7
-  ```
+let and const belong to their enclosing block\. var belongs to the containing function; top\-level behavior depends on script, module and host context\. A plain nested block does not contain it\. An inner let or const shadows an outer name throughout its block\. Before its declaration initializes that binding, reads throw ReferenceError: this interval is the temporal dead zone\.
 
-- **A closure keeps access to a binding** — A function carries access to the lexical environment in which it was created, even after the surrounding call returns. It reads the current binding rather than a frozen snapshot. In the example, set changes the same value that read later observes. A separate makeReader call would create another value binding. — Common mistake: putting private state outside a factory when instances need independent state. Calls through one returned function share that factory invocation’s bindings; separate factory calls can keep separate bindings.
+Two different block behaviors
 
-  *Read after the creating call returns*
+```
+let label = 'outer';
+{
+  let label = 'inner';
+  var escaped = 7;
+  console.log(label); // inner
+}
+console.log(label, escaped); // outer, 7
+```
 
-  ```
-  function makeReader() {
-    let value = 1;
-    return {
-      read: () => value,
-      set: (next) => { value = next; },
-    };
-  }
-  const reader = makeReader();
-  reader.set(2);
-  console.log(reader.read()); // 2
-  ```
+Common mistake: saying let does not exist until its line runs\. The binding already shadows the outer name\. typeof an undeclared name can return "undefined", but typeof a binding in its temporal dead zone throws\. const prevents reassignment, not property mutation\.
 
+##### Practice
 
-#### Practice
-
-##### Shadowing and initialization
+###### Shadowing and initialization
 
 Predict the log sequence\. Explain why the inner read cannot use the outer value, even though the inner initialization appears later\. What changes if the inner declaration becomes var?
 
@@ -1440,7 +1511,54 @@ Follow-up
 
 Read typeof value in the inner block before initialization\. It still throws; typeof only avoids an error for an undeclared name\.
 
-##### Closure factory
+#### Declaration availability and function values
+
+Distinguish an early callable declaration from an uninitialized const\.
+
+An ordinary function declaration in a function body is available before its textual declaration\. A const\-held function expression cannot be read until the const initialization runs\. The runtime initializes the binding before execution reaches the declaration; it does not move source lines\. Both forms produce callable values once initialized\.
+
+Keep the comparison inside an explicit function
+
+```
+function inspectFunctions() {
+  console.log(declared()); // ready
+  function declared() { return 'ready'; }
+  try { held(); }
+  catch (error) { console.log(error.name); } // ReferenceError
+  const held = () => 'ready';
+  console.log(held()); // ready
+}
+inspectFunctions();
+```
+
+Common mistake: assuming every way to write a function has identical early\-call behavior\. Explain it: is the second failure caused by calling the function or by reading its uninitialized binding?
+
+#### A closure keeps access to a binding
+
+Read live lexical state after the creating call returns\.
+
+A function carries access to the lexical environment in which it was created, even after the surinitial call returns\. It reads the current binding rather than a frozen snapshot\. In the example, set changes the same value that read later observes\. A separate makeReader call would create another value binding\.
+
+Read after the creating call returns
+
+```
+function makeReader() {
+  let value = 1;
+  return {
+    read: () => value,
+    set: (next) => { value = next; },
+  };
+}
+const reader = makeReader();
+reader.set(2);
+console.log(reader.read()); // 2
+```
+
+Common mistake: putting private state outside a factory when instances need independent state\. Calls through one returned function share that factory invocation’s bindings; separate factory calls can keep separate bindings\.
+
+##### Practice
+
+###### Closure factory
 
 Implement makeCounter so each factory call starts at zero and returns a function that increments before returning\. Predict the three logged values, then explain which invocation owns each count binding\.
 
@@ -1483,37 +1601,92 @@ Move count outside makeCounter\. Predict the same calls when both returned funct
 
 ### Functions and this
 
-Follow arguments, return values and the call site. Explain it: what information disappears when a method is passed as a callback?
+Node 22.23.4, strict CommonJS; run each block separately with "use strict". Follow arguments, return values and the call site. Explain it: what information disappears when a method is passed as a callback?
 
-- **Functions as values and callbacks** — A function declaration names a callable value; an expression or arrow can produce a function value too. Parameters receive arguments, and return supplies the result. Falling through without returning produces undefined. Passing a callback passes the function itself; the receiving code decides when and how to call it. — Common mistake: writing a block-bodied arrow without return when a result is required. Do not call a callback while registering it unless you mean to pass its result.
+#### Default parameters and rest arguments
 
-  *An expression returns; a block needs return*
+Define missing arguments and collect a numeric rest list\.
 
-  ```
-  const double = (value) => value * 2;
-  const forgot = (value) => { value * 2; };
-  console.log(double(3)); // 6
-  console.log(forgot(3)); // undefined
-  ```
+A default parameter is used for an omitted argument or undefined, not null or zero\. A rest parameter collects remaining arguments into an array; it must be last\. Spread at a call does the reverse, supplying values from an iterable as separate arguments\. Use a numeric contract here instead of silently accepting strings\.
 
-- **Ordinary receivers and lexical arrows** — For an ordinary function, the receiver follows the call. meter.read() supplies meter as this. A detached strict call supplies undefined, so reading this.value throws. bind creates a new function that preserves the receiver; it neither calls nor changes the original function. An arrow instead retains the surrounding this binding. — Common mistake: expecting an object literal to bind an arrow to that object. Create an arrow inside an ordinary method when it should retain that method call’s receiver. Calling bind on that arrow cannot replace its lexical this; avoid host-dependent top-level this puzzles.
+Defaults are undefined\-only
 
-  *An arrow retains the explicit method boundary*
+```
+function choose(value = 20) { return value; }
+console.log(choose(), choose(undefined), choose(null), choose(0));
+// 20, 20, null, 0
+```
 
-  ```
-  const meter = {
-    value: 7,
-    makeReader() { return () => this.value; },
-  };
-  const read = meter.makeReader();
-  console.log(read());                         // 7
-  console.log(read.bind({ value: 99 })());     // 7
-  ```
+Common mistake: using a default as validation or confusing \.\.\.values in a declaration with \.\.\.values at a call\. Explain it: why do both total\(\) and total\(\.\.\.\[\]\) return zero?
 
+##### Practice
 
-#### Practice
+###### Total numeric rest arguments
 
-##### Repair a detached receiver
+Write total\(\.\.\.values\) for numeric arguments only\. Return their sum, including zero and negatives; no arguments must produce 0\. Try total\(2, 3\), total\(\), total\(0, \-2, 2\) and total\(\.\.\.\[2, 3\]\)\.
+
+Context: Node 22\.23\.4, strict CommonJS\. Run this block separately in a \.cjs file with "use strict" at the top\.
+
+Solution: Total numeric rest arguments
+
+The four results are 5, 0, 0 and 5\.
+
+Reference solution
+
+```
+function total(...values) {
+  return values.reduce((sum, value) => sum + value, 0);
+}
+```
+
+Why it works
+
+Rest collects arguments into an array\. The initial zero makes the empty reduction defined\. Spreading an array at the call supplies the same separate numeric arguments\.
+
+Follow-up
+
+What would change if strings were allowed? Choose a validation policy before broadening this numeric contract\.
+
+#### Functions as values and callbacks
+
+Pass a callable value and return the result you intend\.
+
+A function declaration names a callable value; an expression or arrow can produce a function value too\. Parameters receive arguments, and return supplies the result\. Falling through without returning produces undefined\. Passing a callback passes the function itself; the receiving code decides when and how to call it\.
+
+An expression returns; a block needs return
+
+```
+const double = (value) => value * 2;
+const forgot = (value) => { value * 2; };
+console.log(double(3)); // 6
+console.log(forgot(3)); // undefined
+```
+
+Common mistake: writing a block\-bodied arrow without return when a result is required\. Do not call a callback while registering it unless you mean to pass its result\.
+
+#### Ordinary receivers and lexical arrows
+
+Keep the ordinary receiver or retain lexical this\.
+
+For an ordinary function, the receiver follows the call\. meter\.read\(\) supplies meter as this\. A detached strict call supplies undefined, so reading this\.value throws\. bind creates a new function that preserves the receiver; it neither calls nor changes the original function\. An arrow instead retains the surinitial this binding\.
+
+An arrow retains the explicit method boundary
+
+```
+const meter = {
+  value: 7,
+  makeReader() { return () => this.value; },
+};
+const read = meter.makeReader();
+console.log(read());                         // 7
+console.log(read.bind({ value: 99 })());     // 7
+```
+
+Common mistake: expecting an object literal to bind an arrow to that object\. Create an arrow inside an ordinary method when it should retain that method call’s receiver\. Calling bind on that arrow cannot replace its lexical this; avoid host\-dependent top\-level this puzzles\.
+
+##### Practice
+
+###### Repair a detached receiver
 
 The detached function below throws in strict mode\. Supply a callback named read that returns 7 when invoked without a receiver\. Explain both bind and a wrapper alternative; could binding an arrow replace its captured this?
 
@@ -1547,30 +1720,87 @@ Follow-up
 
 Replace meter\.read after creating each callback\. The bound callback keeps the original function; the wrapper looks up the replacement when called\.
 
-### Objects and prototypes
+### Objects and data
 
-Trace property lookup and a changed object path. Explain it: what does an instance own, and what can it find through its prototype?
+Node 22.23.4, strict CommonJS; run each block separately with "use strict". Trace property lookup and a changed object path. Explain it: what does an instance own, and what can it find through its prototype?
 
-- **Own properties and inherited methods** — Read a property with dot notation for a known name or brackets for a computed key. Lookup checks the object’s own properties, then follows its prototype chain until a match or null. An own property can shadow an inherited one. Class syntax uses this mechanism: ordinary instance methods live on the class prototype, while this.name below creates an own field. — Common mistake: assuming every constructor call copies the method into the instance. Instances share the prototype method; their own state can differ.
+#### Destructure and read optional data
 
-  *An instance owns its name, not its method*
+Extract fields and preserve zero when optional settings are absent\.
 
-  ```
-  class Account {
-    constructor(name) { this.name = name; }
-    label() { return this.name; }
-  }
-  const account = new Account('Ada');
-  console.log(Object.hasOwn(account, 'name'));  // true
-  console.log(Object.hasOwn(account, 'label')); // false
-  console.log(account['label']());             // Ada
-  ```
+Dot access uses a known property name; brackets allow a computed key\. Destructuring extracts properties and can rename them\. A destructuring default applies only to undefined\. Optional chaining stops at null or undefined and returns undefined; combine it with ?? when nullish data should use a fallback\. These examples assume an absent setting or a plain object, not arbitrary validation inputs\.
 
-- **A new outer object can still share nested state** — Object spread copies own enumerable properties into a new outer object. If a property holds an object, the copied property still refers to that nested object. Copy every object on the path you intend to change when the original must remain untouched; untouched sibling objects may deliberately stay shared. — Common mistake: calling spread a deep clone. It does not copy the source prototype or non-enumerable properties either. The repair below concerns plain data objects; it is not a general cloning algorithm.
+Renaming and defaults have their own rules
 
-#### Practice
+```
+const { pageSize: size = 20 } = { pageSize: null };
+const { pageSize: missing = 20 } = {};
+const key = 'pageSize';
+console.log(size, missing, { pageSize: 0 }[key]); // null, 20, 0
+```
 
-##### Nested\-copy repair
+Common mistake: describing a destructuring default as a null fallback\. An existing null stays null until you apply a separate nullish policy\. Explain it: how does optional access differ from validating pageSize?
+
+##### Practice
+
+###### Read optional settings
+
+Write readPageSize\(settings\)\. An absent setting, absent pageSize, undefined or null pageSize yields 20; preserve 0\. Assume an absent setting or a plain object\. Explain why destructuring defaults alone do not satisfy the null case\.
+
+Context: Node 22\.23\.4, strict CommonJS\. Run this block separately in a \.cjs file with "use strict" at the top\.
+
+Solution: Read optional settings
+
+Missing or nullish data gives 20; \{ pageSize: 0 \} gives 0\.
+
+Reference solution
+
+```
+function readPageSize(settings) {
+  return settings?.pageSize ?? 20;
+}
+```
+
+Why it works
+
+Optional chaining handles an absent settings object; ?? handles a nullish property\. A destructuring default handles undefined but preserves a supplied null\. Neither form validates a type or range\.
+
+Follow-up
+
+Check null, undefined, \{\}, \{pageSize: undefined\}, \{pageSize: null\} and \{pageSize: 0\}\.
+
+#### Own properties and inherited methods
+
+Follow own properties and shared prototype methods\.
+
+Read a property with dot notation for a known name or brackets for a computed key\. Lookup checks the object’s own properties, then follows its prototype chain until a match or null\. An own property can shadow an inherited one\. Class syntax uses this mechanism: ordinary instance methods live on the class prototype, while this\.name below creates an own field\.
+
+An instance owns its name, not its method
+
+```
+class Account {
+  constructor(name) { this.name = name; }
+  label() { return this.name; }
+}
+const account = new Account('Ada');
+console.log(Object.hasOwn(account, 'name'));  // true
+console.log(Object.hasOwn(account, 'label')); // false
+console.log(account['label']());             // Ada
+```
+
+Common mistake: assuming every constructor call copies the method into the instance\. Instances share the prototype method; their own state can differ\.
+
+#### A new outer object can still share nested state
+
+Copy the changed path while keeping the original intact\.
+
+Object spread copies own enumerable properties into a new outer object\. If a property holds an object, the copied property still refers to that nested object\. Copy every object on the path you intend to change when the original must remain untouched; untouched sibling objects may deliberately stay shared\.
+
+Common mistake: calling spread a deep clone\. It does not copy the source prototype or non\-enumerable properties either\. The repair below concerns plain data objects; it is not a general cloning algorithm\.
+
+##### Practice
+
+###### Nested\-copy repair
 
 The spread copy below unexpectedly changes original\. Explain why, then repair the update so original stays light and the updated settings object is distinct\. Start the repair from fresh input\.
 
@@ -1610,56 +1840,28 @@ Follow-up
 
 Add an untouched sibling object named profile\. It can deliberately stay shared; explain why that does not make the settings repair fail\.
 
-### Arrays
+### Collections and problem solving
 
-Transform, select, aggregate and order values without surprising the caller. Explain it: which method expresses the result you need, and what happens on empty input?
+Node 22.23.4, strict CommonJS; run each block separately with "use strict". Transform, select, aggregate and order values without surprising the caller. Explain it: which method expresses the result you need, and what happens on empty input?
 
-- **Choose by the result you need** — map produces a transformed array; filter keeps all matches; find returns the first matching value or undefined. some asks whether at least one item matches, while every asks whether all do. Iteration fits side effects when no transformed result is needed. Array copies remain shallow, and callbacks can mutate the objects inside them. — Common mistake: confusing no matches with an empty result of the same type. On an empty array, some is false, every is true, find is undefined, and map/filter return empty arrays.
+#### Choose by the result you need
 
-  *Different questions, different result shapes*
+Select a result shape before choosing an array method\.
 
-  ```
-  const values = [1, 2, 3];
-  console.log(values.map(n => n * 2));    // [2, 4, 6]
-  console.log(values.filter(n => n > 1)); // [2, 3]
-  console.log(values.find(n => n > 5));   // undefined
-  console.log(values.some(n => n > 5));   // false
-  console.log([].every(n => n > 5));      // true
-  ```
+map produces a transformed array; filter keeps all matches; find returns the first matching value or undefined\. some asks whether at least one item matches, while every asks whether all do\. Iteration fits side effects when no transformed result is needed\. Array copies remain shallow, and callbacks can mutate the objects inside them\. The worked doubledAboveTwo example uses filter then map: numbers greater than 2 become doubled values, with \[\] for empty input and no change to the numeric input\.
 
-- **Aggregate explicitly; sort deliberately** — reduce passes the returned accumulator into the next callback. An explicit starting value explains the result for an empty collection. For sorting, sort changes its input array, whereas toSorted creates a sorted copy. Default ordering compares strings; an ascending numeric comparator returns a - b. — Common mistake: omitting the initial accumulator and then failing on an empty array, or mutating a caller’s input with sort. A loop may be clearer than reduce for complicated logic.
-
-  *A total with a defined empty case*
-
-  ```
-  const sum = values => values.reduce((total, n) => total + n, 0);
-  console.log(sum([2, 3]), sum([])); // 5, 0
-  ```
-
-
-#### Practice
-
-##### Transform a collection
-
-Implement doubledAboveTwo: keep numbers greater than 2, double them, and return the resulting array\. Keep input unchanged\. What should an empty input produce, and why would forEach be a poor return\-value choice?
-
-Context: Node 22\.23\.4, strict CommonJS\. Run each block separately in a \.cjs file with "use strict" at the top\. Inputs are supplied in the snippet\.
-
-Starter: choose by result shape
+Different questions, different result shapes
 
 ```
-function doubledAboveTwo(values) {
-  // Return the selected, doubled values.
-}
-console.log(doubledAboveTwo([1, 3, 2, 4]));
-console.log(doubledAboveTwo([]));
+const values = [1, 2, 3];
+console.log(values.map(n => n * 2));    // [2, 4, 6]
+console.log(values.filter(n => n > 1)); // [2, 3]
+console.log(values.find(n => n > 5));   // undefined
+console.log(values.some(n => n > 5));   // false
+console.log([].every(n => n > 5));      // true
 ```
 
-Solution: Transform a collection
-
-The reference logs \[6, 8\] and \[\]\. The original array keeps its original values\.
-
-Reference: select, then transform
+Select, then transform: unchanged input
 
 ```
 function doubledAboveTwo(values) {
@@ -1669,15 +1871,26 @@ console.log(doubledAboveTwo([1, 3, 2, 4]));
 console.log(doubledAboveTwo([]));
 ```
 
-Why it works
+Common mistake: confusing no matches with an empty result of the same type\. On an empty array, some is false, every is true, find is undefined, and map/filter return empty arrays\.
 
-filter keeps the requested values and map returns their transformed values\. Empty input flows through both as an empty array\. forEach returns undefined rather than a transformed result\. These number callbacks do not mutate input; object callbacks would still need a separate mutation check\.
+#### Aggregate explicitly; sort deliberately
 
-Follow-up
+Define the empty total and avoid changing a caller’s order\.
 
-Would some or find express the same request? Explain their different result shapes\.
+reduce passes the returned accumulator into the next callback\. An explicit starting value explains the result for an empty collection\. For sorting, sort changes its input array, whereas toSorted creates a sorted copy\. Default ordering compares strings; an ascending numeric comparator returns a \- b\.
 
-##### Sort without mutating input
+A total with a defined empty case
+
+```
+const sum = values => values.reduce((total, n) => total + n, 0);
+console.log(sum([2, 3]), sum([])); // 5, 0
+```
+
+Common mistake: omitting the initial accumulator and then failing on an empty array, or mutating a caller’s input with sort\. A loop may be clearer than reduce for complicated logic\.
+
+##### Practice
+
+###### Sort without mutating input
 
 Repair sorted so it returns ascending numbers while leaving the caller’s array unchanged\. Predict the default sort result and the original array after the buggy call\. Include empty input in your check\.
 
@@ -1713,41 +1926,146 @@ Follow-up
 
 Compare \[\.\.\.values\]\.sort\(\(a, b\) =\> a \- b\) with this repair\. Both copy the outer array before returning the sorted result\.
 
+#### Map, Set and a key policy
+
+Count values and choose whether identity or a field defines a duplicate\.
+
+Map associates keys with values; use get/set/has/delete and size rather than object\-property access\. Set stores unique values with add/has/delete and size\. Both iterate in insertion order\. A frequency Map can count labels without object\-prototype key collisions\. Primitive keys use SameValueZero equality \(including NaN with itself\); object keys compare by identity\. Two records with equal fields remain distinct unless you choose a field as their deduplication key\.
+
+Counts, first\-seen order and object identity
+
+```
+const labels = ['js', 'css', 'js'];
+const counts = new Map();
+for (const label of labels) counts.set(label, (counts.get(label) ?? 0) + 1);
+console.log([...counts]); // [['js', 2], ['css', 1]]
+console.log([...new Set(labels)]); // ['js', 'css']
+const records = [{ id: 1 }, { id: 1 }];
+const keyed = new Map(records.map(record => [record.id, record]));
+console.log(new Set(records).size, keyed.size); // 2, 1
+console.log(keyed.get(1) === records[1]);        // true
+```
+
+Common mistake: assuming new Set\(records\) deduplicates equal\-looking records\. Decide which key identifies a record and which duplicate wins\. The example uses id and keeps the last record for a repeated id, in first\-seen key order\. Explain it: why is the Set size different from the keyed Map size?
+
+#### Plan, test and explain a small algorithm
+
+Plan two passes, test edges and state the cost assumptions\.
+
+Clarify the contract first: case\-sensitive string labels, unchanged input, first value appearing exactly once, null when none exists\. Plan two passes: count each label in a Map, then scan original order for a count of one\. Two sequential passes still make a linear number of visits; they are not a nested loop\. Counting each candidate by scanning the array again can take quadratic comparisons\.
+
+Tests should include an empty list, one label, all repeated labels, mixed case, and an empty\-string label\. Under expected constant\-time Map access and unit\-cost key operations, the plan takes expected O\(n\) time and O\(k\) auxiliary entries for k distinct labels \(at most n\)\. JavaScript requires average sublinear Map access, not universal O\(1\); long string\-key costs depend on the representation\. Explain it: why does the second pass preserve the requested order?
+
+##### Practice
+
+###### Find the first unique label
+
+Given a case\-sensitive string array, return its first label that occurs exactly once, or null if none exists\. Keep input unchanged\. State a plan, implement firstUniqueLabel\(labels\), test edges and compare its cost with repeated scanning\. \["js", "css", "js", "html"\] must return "css"\.
+
+Context: Node 22\.23\.4, strict CommonJS\. Run this block separately in a \.cjs file with "use strict" at the top\.
+
+Solution: Find the first unique label
+
+Count labels, then scan original order\. \[\] and \["js", "js"\] yield null; \[""\] yields "" and \["JS", "js"\] yields "JS"\.
+
+Reference solution
+
+```
+function firstUniqueLabel(labels) {
+  const counts = new Map();
+  for (const label of labels) counts.set(label, (counts.get(label) ?? 0) + 1);
+  for (const label of labels) {
+    if (counts.get(label) === 1) return label;
+  }
+  return null;
+}
+```
+
+Why it works
+
+The first pass counts without modifying input\. The second returns the earliest label with count one, including an empty string\. With expected constant\-time Map operations and unit\-cost keys, two passes take expected O\(n\) time and O\(k\) auxiliary storage\. Repeated scanning can take O\(n²\)\. Map access is only specified to be average sublinear; string\-key costs need separate assumptions\.
+
+Follow-up
+
+Test empty input, one label, all repeated, mixed case, empty text and a unique label at the end\. Why is testing the returned label’s truthiness wrong?
+
 ### Promises and errors
 
-Track the promise returned to the caller, then decide whether operations depend on one another. Explain it: what must a caller await to catch a failure?
+Node 22.23.4, strict CommonJS; run each block separately with "use strict". Track the promise returned to the caller, then decide whether operations depend on one another. Explain it: what must a caller await to catch a failure?
 
-- **Return the chain; await inside the catch boundary** — A promise represents eventual fulfillment or rejection. then returns another promise: returning a value fulfills the next link, while throwing rejects it. An async function returns a promise too. await suspends that function until the value settles; a rejection throws at the await, where a surrounding try/catch can observe it. — Common mistake: starting asynchronous work without returning or awaiting it. The caller can then report success before the work finishes, and a surrounding synchronous try/catch cannot observe a later rejection.
+#### Validation, recovery and cleanup
 
-  *The awaited rejection reaches this catch*
+Validate known inputs, recover selectively and always run cleanup\.
 
-  ```
-  async function read() { throw new Error('offline'); }
-  async function show() {
-    try { await read(); }
-    catch (error) { console.log(error.message); }
+throw transfers control to the nearest matching catch\. Handle an expected invalid input at the boundary that owns its recovery; rethrow unexpected failures\. finally runs on success, a return, or a thrown error, so it is a place for cleanup\. Keep cleanup from overriding the result or failure: do not return from finally\. Here work and cleanup are synchronous injected functions, and cleanup is assumed not to throw\.
+
+Run cleanup without swallowing the work failure
+
+```
+class InvalidInput extends Error {}
+function runChecked(value, work, cleanup) {
+  try {
+    if (!Number.isFinite(value)) throw new InvalidInput('finite number required');
+    return work(value);
+  } finally {
+    cleanup();
   }
-  show(); // offline
-  ```
-
-- **Sequential dependencies or concurrent initiation** — Use for...of with await when one operation must finish before the next begins. For independent work, Promise.all joins the input promises and returns results in input order, regardless of completion order. It rejects when an input rejects; it does not cancel work already started. Concurrent initiation is not a guarantee of parallel JavaScript execution. — Common mistake: awaiting forEach and assuming it joins async callbacks. forEach discards callback results. The local repair asks for sequential completion, so starting all saves together would change its requirement.
-
-  *Join results before using them*
-
-  ```
-  async function total() {
-    const values = await Promise.all([
-      Promise.resolve(2), Promise.resolve(3),
-    ]);
-    return values[0] + values[1];
+}
+function recoverInput(value, work, cleanup) {
+  try { return runChecked(value, work, cleanup); }
+  catch (error) {
+    if (error instanceof InvalidInput) return null;
+    throw error;
   }
-  total().then(value => console.log(value)); // 5
-  ```
+}
+console.log(runChecked(2, n => n + 5, () => console.log('cleanup')));
+// cleanup, then 7
+```
 
+Common mistake: catching every failure and reporting success, or returning from finally and hiding an earlier error\. The wrapper runs cleanup once after success or failure, including failed validation\. InvalidInput marks the validation failure this boundary owns; other errors propagate\. Explain it: which boundary decides whether an invalid input can be recovered?
 
-#### Practice
+#### Return the chain; await inside the catch boundary
 
-##### Async iteration repair
+Keep the returned promise inside the caller’s catch boundary\.
+
+A promise represents eventual fulfillment or rejection\. then returns another promise: returning a value fulfills the next link, while throwing rejects it\. An async function returns a promise too\. await suspends that function until the value settles; a rejection throws at the await, where a surinitial try/catch can observe it\.
+
+The awaited rejection reaches this catch
+
+```
+async function read() { throw new Error('offline'); }
+async function show() {
+  try { await read(); }
+  catch (error) { console.log(error.message); }
+}
+show(); // offline
+```
+
+Common mistake: starting asynchronous work without returning or awaiting it\. The caller can then report success before the work finishes, and a surinitial synchronous try/catch cannot observe a later rejection\.
+
+#### Sequential dependencies or concurrent initiation
+
+Choose sequential dependencies or an all\-success join\.
+
+Use for\.\.\.of with await when one operation must finish before the next begins\. For independent work, Promise\.all joins the input promises and returns results in input order, regardless of completion order\. It rejects when an input rejects; it does not cancel work already started\. Concurrent initiation is not a guarantee of parallel JavaScript execution\.
+
+Join results before using them
+
+```
+async function total() {
+  const values = await Promise.all([
+    Promise.resolve(2), Promise.resolve(3),
+  ]);
+  return values[0] + values[1];
+}
+total().then(value => console.log(value)); // 5
+```
+
+Common mistake: awaiting forEach and assuming it joins async callbacks\. forEach discards callback results\. The local repair asks for sequential completion, so starting all saves together would change its requirement\.
+
+##### Practice
+
+###### Async iteration repair
 
 save returns a promise\. Repair saveAll so saves finish one at a time in input order, complete is reported only after the last save, and a rejection reaches the awaited caller\. What happens to item 3 if saving item 2 fails?
 
@@ -1795,26 +2113,66 @@ Follow-up
 
 If saves are independent and may start together, await Promise\.all\(items\.map\(save\)\) can join them instead\. It rejects when an input rejects, but does not cancel saves already started\. Choose this only when sequential completion is not required\.
 
+#### Keep partial outcomes
+
+Retain fulfillment and rejection records in input order\.
+
+Promise\.allSettled waits for every input to settle and returns a status record for each, in input order\. Fulfilled records carry value; rejected records carry reason\. It also handles an empty input\. Promise\.all suits an all\-success result; allSettled suits a report that retains failures\. Neither join cancels underlying work\. Promise\.any asks for the first fulfillment \(rejecting if all reject\); Promise\.race adopts the first settlement\. Choose the join whose result matches the caller’s requirement\.
+
+Common mistake: expecting allSettled to throw for an input rejection or remove failed entries\. Explain it: how would filtering failed records change their correspondence with the input list?
+
+##### Practice
+
+###### Retain partial results
+
+Write collectOutcomes\(promises\) to return every fulfillment/rejection record in input order\. Test Promise\.resolve\(2\), Promise\.reject\("offline"\) and empty input\. Use an awaited caller so the resulting records stay observable\.
+
+Context: Node 22\.23\.4, strict CommonJS\. Run this block separately in a \.cjs file with "use strict" at the top\.
+
+Solution: Retain partial results
+
+The records are \{status: "fulfilled", value: 2\} and \{status: "rejected", reason: "offline"\}; empty input gives \[\]\.
+
+Reference solution
+
+```
+async function collectOutcomes(promises) {
+  return await Promise.allSettled(promises);
+}
+```
+
+Why it works
+
+allSettled observes every input and keeps failures as records rather than rejecting for them\. Result order follows input order, even if completion order differs\. Promise\.all instead rejects on an input failure; neither operation cancels started work\.
+
+Follow-up
+
+Hold the first promise pending and settle the second first\. Does the result array change order?
+
 ### Scheduling
 
-Predict one isolated callback before making broader claims about a runtime. Explain it: does a zero-delay timer get to interrupt current synchronous code?
+Node 22.23.4, strict CommonJS; run each block separately with "use strict". Predict one isolated callback before making broader claims about a runtime. Explain it: does a zero-delay timer get to interrupt current synchronous code?
 
-- **Finish current code before queued callbacks** — Current synchronous statements run to completion. A fulfilled promise can enqueue a reaction; queueMicrotask explicitly enqueues another microtask. In the worked example, queued waits for both synchronous lines. Microtasks added in this isolated context run in enqueue order before the later timer in the practice trace. — Common mistake: reading the position of a callback’s function body in the source as its execution time. Enqueuing it and running it are separate events.
+#### Finish current code before queued callbacks
 
-  *Run together inside one fresh timer callback*
+Finish synchronous work before processing the isolated queue\.
 
-  ```
-  console.log('current');
-  queueMicrotask(() => console.log('queued'));
-  console.log('still current');
-  // current, still current, queued
-  ```
+Current synchronous statements run to completion\. A fulfilled promise can enqueue a reaction; queueMicrotask explicitly enqueues another microtask\. In the worked example, queued waits for both synchronous lines\. Microtasks added in this isolated context run in enqueue order before the later timer in the practice trace\.
 
-- **Keep the host boundary visible** — A zero-delay timer cannot interrupt the current callback, and its delay is a threshold rather than an exact execution time. Browser tasks and microtask checkpoints are a browser host model. Node has event-loop phases; the terms are not interchangeable. The examples deliberately avoid unrelated work. — Common mistake: turning this trace into a browser paint rule or a timer-versus-I/O prediction. It establishes no nextTick/setImmediate, ES-module evaluation or I/O-phase ordering claim. Moving an enqueue can change microtask order without changing which lines are synchronous.
+Run together inside one fresh timer callback
 
-#### Practice
+```
+console.log('current');
+queueMicrotask(() => console.log('queued'));
+console.log('still current');
+// current, still current, queued
+```
 
-##### Scheduling trace
+Common mistake: reading the position of a callback’s function body in the source as its execution time\. Enqueuing it and running it are separate events\.
+
+##### Practice
+
+###### Scheduling trace
 
 Predict the five log lines and explain why the zero\-delay timer cannot run between the two synchronous lines\. Account for both the promise reaction and queueMicrotask registration\.
 
@@ -1841,6 +2199,78 @@ The current synchronous statements finish first\. The fulfilled promise queues i
 Follow-up
 
 Move the queueMicrotask statement above Promise\.resolve\. Predict sync 1, sync 2, microtask, promise, timer: the synchronous lines still finish first, but the enqueue order changes\.
+
+#### Keep the host boundary visible
+
+Keep timer thresholds and runtime\-specific claims separate\.
+
+A zero\-delay timer cannot interrupt the current callback, and its delay is a threshold rather than an exact execution time\. Browser tasks and microtask checkpoints are a browser host model\. Node has event\-loop phases; the terms are not interchangeable\. The examples deliberately avoid unrelated work\.
+
+Common mistake: turning this trace into a browser paint rule or a timer\-versus\-I/O prediction\. It establishes no nextTick/setImmediate, ES\-module evaluation or I/O\-phase ordering claim\. Moving an enqueue can change microtask order without changing which lines are synchronous\.
+
+### Modules
+
+These examples use Node 22.23.4 ESM (.mjs), which is strict automatically. Keep them separate from the CommonJS blocks elsewhere. Explain it: which names are exported, and which are local?
+
+#### Named exports, a default and local scope
+
+Supply a module with one named value and one default function\.
+
+An ES module exposes only what it exports; other top\-level names stay module\-local\. A named import must match an exported name \(it may be renamed locally with as\)\. A default import does not use braces and may choose a local name\. This totals\.mjs supplies one named currency and one default function; total is the function’s local name, not an additional named export\.
+
+totals\.mjs — Node 22\.23\.4 ESM
+
+```
+export const currency = 'USD';
+const initial = 0; // module-local
+export default function total(values) {
+  return values.reduce((sum, value) => sum + value, initial);
+}
+```
+
+Common mistake: assuming a function’s name makes a default export into a named export\. Explain it: why can another file import currency but not the local name initial?
+
+#### Run two real module files
+
+Repair main\.mjs, then run it alongside the supplied module\.
+
+Save the supplied source as totals\.mjs and the importing file as main\.mjs in the same directory\. Run node main\.mjs\. The relative import includes the \.mjs extension\. The starter imports a name totals\.mjs does not export, so module linking fails before its logs run\. Repair main\.mjs against that supplied file; the solution produces USD 5 0\.
+
+Common mistake: pasting import/export into the strict \.cjs examples\. Use the labelled ESM files here\. Explain it: why can a default import use a local name different from total?
+
+##### Practice
+
+###### Repair a module boundary
+
+Using the supplied totals\.mjs above, repair only main\.mjs so it imports the default total function and named currency\. Run node main\.mjs; \[2, 3\] and \[\] must produce USD 5 0\. Explain why the original import fails before logging\.
+
+Context: Node 22\.23\.4 ESM\. Save the exact supplied totals\.mjs from Named exports, a default and local scope beside main\.mjs\. This starter and solution are main\.mjs only; do not run them as \.cjs\.
+
+main\.mjs — broken named import
+
+```
+import { total, currency } from './totals.mjs';
+console.log(currency, total([2, 3]), total([]));
+```
+
+Solution: Repair a module boundary
+
+Use a default import without braces for total, plus the named import currency\. The repaired program logs USD 5 0\.
+
+main\.mjs — repaired imports
+
+```
+import total, { currency } from './totals.mjs';
+console.log(currency, total([2, 3]), total([]));
+```
+
+Why it works
+
+totals\.mjs has no named export total\. Its default export may be given the local name total by the importer; currency must match the named export\. The helper initial remains local to totals\.mjs\.
+
+Follow-up
+
+Rename the default import to sum and update its calls\. Why would importing \{ initial \} still fail?
 
 Sources:
 
@@ -1875,6 +2305,26 @@ Source: [Nullish coalescing](https://developer.mozilla.org/en-US/docs/Web/JavaSc
 Source: [Function bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) — MDN contributors.
 
 Source: [Array reduce](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) — MDN contributors.
+
+Source: [Control flow and error handling](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling) — MDN contributors.
+
+Source: [Loops and iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration) — MDN contributors.
+
+Source: [Text formatting](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Text_formatting) — MDN contributors.
+
+Source: [Keyed collections](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Keyed_collections) — MDN contributors.
+
+Source: [Default and rest parameters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions) — MDN contributors.
+
+Source: [Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring) — MDN contributors.
+
+Source: [Optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) — MDN contributors.
+
+Source: [Promise.allSettled](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled) — MDN contributors.
+
+Source: [Map access guarantees](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) — MDN contributors.
+
+Source: [JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) — MDN contributors.
 
 ## Python
 

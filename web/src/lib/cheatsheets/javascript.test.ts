@@ -1,3 +1,5 @@
+import { execFileSync } from 'node:child_process'
+import { resolve } from 'node:path'
 import { runInNewContext } from 'node:vm'
 import { expect, test } from 'vitest'
 import { javascript } from './javascript'
@@ -191,4 +193,16 @@ test('lookup examples distinguish equality, TDZ, receivers, prototypes and shall
     numbers: [10, 2, 1],
     sorted: [1, 2, 10],
   })
+})
+
+test('all authored snippets satisfy their CJS contracts and real two-file ESM linking/execution', () => {
+  const output = execFileSync(
+    process.execPath,
+    [
+      '--unhandled-rejections=strict',
+      resolve('../reference/examples/javascript-published-checks.cjs'),
+    ],
+    { encoding: 'utf8' },
+  )
+  expect(JSON.parse(output).status).toBe('passed')
 })
