@@ -853,3 +853,44 @@ Separate integration approval remains required.
 Deferred: other four sheets, complete language/API coverage, DOM/Node-specific
 interview extensions, graphs/DP catalogues, advanced regex/generators/module
 cycles, dependencies, scoring/persistence/browser execution, push and promotion.
+
+### Subsection implementation evidence (2026-11-06)
+
+The selected design is implemented on `feat/javascript-fundamentals-subsections`,
+starting at **1be712e**. Application commit **f4fd8f1** has eight main sections,
+25 topic subsections, 14 local activities and 20 worked examples. The four
+original closure/copy/async/scheduling activity objects match the starting source
+exactly. The collection transformation is now a worked example. All 29 other
+generated Markdown sheet bodies remain byte-for-byte identical.
+
+The authored additions use the primary-source map F2-F10 above. During
+implementation, MDN contributors' living documentation was rechecked on
+**2026-11-06** for [named/default exports and module scope](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules),
+[Map access guarantees](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map),
+[ordered allSettled outcomes](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled)
+and [cleanup/rethrow behavior](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch).
+The coding tasks and snippets are original teaching examples. The counts and
+runtime results below are local execution evidence, not claims about interview
+frequency or an employer's syllabus.
+
+`node --unhandled-rejections=strict reference/examples/javascript-published-checks.cjs`
+passes **93 assertions** on actual **Node v22.23.4**. It reads the published fields,
+runs the 19 ordinary examples in strict CommonJS, checks the local activity
+solutions and uses held promises for completion/failure checks. Coverage includes
+empty/falsy/duplicate labels, the inclusive loop boundary, rest totals,
+undefined-only versus nullish defaults, Map/Set identity and insertion order,
+unchanged inputs, cleanup once on success/failure, selective recovery and
+propagation of an unexpected error. A sensitivity check replacing a unique
+empty-string result with null failed as intended; the restored source passes.
+
+For ESM, the checker writes the actual totals.mjs example and main.mjs activity
+fields into a fresh temporary directory and invokes `process.execPath`. The
+starter exits 1 with the missing named export `total` error and no stdout; the
+repaired file exits 0, has empty stderr and prints `USD 5 0`. The checker removes
+only its own directory in finally. It neither rewrites imports nor evaluates
+ESM as CommonJS. Scheduling remains limited to isolated callbacks: these checks
+establish no timer-duration, browser-rendering, ESM-scheduling or I/O-order rule.
+
+The generation-only fix in **4ff8f8e** leaves these authored fields and the
+committed highlighted map unchanged. Completion checks, final review and
+integration status live in the tracker and KICKOFF; this record owns the source mapping and example evidence.

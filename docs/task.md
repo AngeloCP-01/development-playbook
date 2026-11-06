@@ -13,17 +13,18 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-06): all six JavaScript additions selected, with subsections (D-103).**
-The user selected every recommendation, including modules, then requested
-sections with subsections. The [selected design](../reference/javascript-source-research.md#all-six-additions-and-subsections-selected-2026-11-06)
-uses eight main sections and expandable topic subsections, preserving current
-main hashes and adding modules. It covers control flow/text, Map/Set, complete
-coding practice, function/object syntax, errors/async composition and ESM basics.
-The [compact plan](superpowers/plans/2026-11-06-javascript-fundamentals-subsections.md)
-and KICKOFF hand off implementation to a fresh **GPT-6.1 Sol / High** session.
-Application inputs remain unchanged; no merge, push or promotion.
+**Current work (2026-11-06): JavaScript subsections delivered; coordinator review next.**
+Application **4ff8f8e** on `feat/javascript-fundamentals-subsections` implements
+all six additions in eight main sections, with 25 topic subsections and 14 local
+activities. The seven existing hashes and original four activities remain intact.
+[Source/design and example evidence](../reference/javascript-source-research.md#all-six-additions-and-subsections-selected-2026-11-06),
+[completed plan](superpowers/plans/2026-11-06-javascript-fundamentals-subsections.md)
+and KICKOFF carry the handoff. Final unit/DOM **1,653/234**, production **43/43**
+and retained dev-console **1/1** pass. Coordinator review is recommended in
+**GPT-6 Astra / Low** before separate user integration approval. No merge, push
+or promotion.
 
-**Accepted implementation:**
+**Earlier accepted implementation:**
 On `feat/javascript-study-sections`, correction **322c873** starts at
 **b3b790e**. `StudySheet` and `SheetActivities` scrolling code now has explicit
 keyboard tab stops. Two render regressions failed before the fix; focused render
@@ -1086,7 +1087,7 @@ The assessment itself changed no app/generated inputs and authorized no merge,
 push, promotion or five-sheet curriculum expansion. The later all-six JavaScript
 selection is recorded in W-6.3u.1c below.
 
-**W-6.3u.1c — All JavaScript additions with subsections ◐** *(scope selected; implementation pending)*
+**W-6.3u.1c — All JavaScript additions with subsections ☑** *(verified; coordinator review and integration pending)*
 
 - [x] Record user selection of all six additions and section/subsection hierarchy,
   D-103. Eight main sections fit the earlier 6–8 range; preserve the seven main
@@ -1099,12 +1100,12 @@ selection is recorded in W-6.3u.1c below.
   and KICKOFF. Start from the committed documentation tip descended from
   **76119c2**, creating `feat/javascript-fundamentals-subsections` in a fresh
   **GPT-6.1 Sol / High** session.
-- [ ] Implement all six areas using existing Stepper/RevealList/activities;
+- [x] Implement all six areas using existing Stepper/RevealList/activities;
   retain ordinary/legacy rendering and the original four exercises.
-- [ ] Validate actual CJS and two-file ESM snippets, nested Markdown order,
+- [x] Validate actual CJS and two-file ESM snippets, nested Markdown order,
   every nested disclosure, heading/focus/history behavior, panel budget and
   both-theme layouts; run final gate/dev-console and one independent final review.
-- [ ] Return exact branch/commit, actual checks, limits and session reference
+- [x] Return exact branch/commit, actual checks, limits and session reference
   to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended
   **GPT-6 Astra / Low**, before separate user integration approval.
 

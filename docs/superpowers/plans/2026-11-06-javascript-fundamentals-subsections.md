@@ -57,14 +57,14 @@ mode only. `studySections(sheet): StudySection[] | null` adds optional resolved
 subsections with their local activities. The design defines the two exclusive
 assignment modes and all guards; legacy mode retains the existing list.
 
-- [ ] Observe missing-behavior failures for a valid nested fixture's order and
+- [x] Observe missing-behavior failures for a valid nested fixture's order and
   local activities, partial row metadata, conflicting assignment modes, orphan
   row metadata, unsafe/duplicate subsection IDs, blank summaries/titles and
   missing/duplicate/unassigned activity references.
-- [ ] Implement checked resolution and nested Markdown headings/order. Preserve
+- [x] Implement checked resolution and nested Markdown headings/order. Preserve
   literal summary/code text and safe code fencing. Include examples and every
   activity field once, with no duplicate section-bottom practice.
-- [ ] Confirm focused tests pass, legacy study and ordinary sheet output remain
+- [x] Confirm focused tests pass, legacy study and ordinary sheet output remain
   stable, and the generated structure supports main h3/subsection h4/Practice
   h5/activity h6 without invalid heading depths.
 
@@ -79,16 +79,16 @@ assignment modes and all guards; legacy mode retains the existing list.
 3 or 5. Subsections use existing RevealRow summary/title/body slots. No new
 Stepper history model or URL fragment syntax.
 
-- [ ] Observe render failures for visible subsection title/summary, hidden
+- [x] Observe render failures for visible subsection title/summary, hidden
   teaching/answers, keyboard-operable disclosure, semantic heading order and
   the actual data-driven worked example/activity when opened.
-- [ ] Implement nested composition and optional heading levels. Keep explicit
+- [x] Implement nested composition and optional heading levels. Keep explicit
   code tab stops, prefixed IDs and sources outside the panel. Legacy/default
   callers keep current markup and behavior.
-- [ ] Prove independent open subsections, reveal/re-collapse, close/reopen reset
+- [x] Prove independent open subsections, reveal/re-collapse, close/reopen reset
   of nested answers and main-section Back/Forward/deep-link reset. Retain
   regression coverage for ordinary sheets and existing stage heading defaults.
-- [ ] Add a rendered audit check that observes every subsection and local
+- [x] Add a rendered audit check that observes every subsection and local
   solution, including initially unmounted children. Change generic discovery
   only if a real failure demonstrates the need; keep stage rail isolation.
 
@@ -98,41 +98,41 @@ Stepper history model or URL fragment syntax.
 `reference/examples/javascript-published-checks.cjs`, generated
 `reference/cheatsheets.md`, highlighting output only if regeneration changes it.
 
-- [ ] Author the eight-section/subsection table in the design. Cover all six
+- [x] Author the eight-section/subsection table in the design. Cover all six
   additions, preserve existing important mechanisms and add explanation
   checkpoints, tests and cost reasoning where relevant. Retain each activity's
   input/execution contract; convert collection-result to a worked example.
-- [ ] Implement checks against actual published snippets and solutions for
+- [x] Implement checks against actual published snippets and solutions for
   label normalization, inclusive loop boundary, empty/rest totals, nullish versus
   undefined-only defaults, Map/Set identity/order, unique-label edge cases,
   success/failure cleanup and partial outcomes. Keep deterministic promise fixtures.
-- [ ] Materialize actual totals.mjs and activity main.mjs in a fresh temporary
+- [x] Materialize actual totals.mjs and activity main.mjs in a fresh temporary
   directory. Spawn `process.execPath` for the broken named-import case and fixed
   default-import case. Require the intended missing-export error and `USD 5 0`
   success output; clean only that directory in finally. Do not eval/rewrite ESM.
-- [ ] Run `node --unhandled-rejections=strict reference/examples/javascript-published-checks.cjs`
+- [x] Run `node --unhandled-rejections=strict reference/examples/javascript-published-checks.cjs`
   from repo root. Report actual assertions/context and no broader scheduling claims.
-- [ ] Regenerate portable/highlighted outputs using existing commands. Confirm
+- [x] Regenerate portable/highlighted outputs using existing commands. Confirm
   all 29 other sheet bodies unchanged. Apply the humanizer editing pass to new prose.
 
 ## Task 4: completed-tree checks and one independent final review
 
-- [ ] Check defaults plus each individually opened subsection with hidden
+- [x] Check defaults plus each individually opened subsection with hidden
   solutions at **1024×768**, within four screens. Inspect open-all/solution
   states for readability and overflow; do not add size exceptions.
-- [ ] Check both themes at representative **320/768/1440px**, keyboard navigation,
+- [x] Check both themes at representative **320/768/1440px**, keyboard navigation,
   nested disclosures, proper focus clearance, code scrolling, all eight main
   hashes, target/contrast behavior and a clean console. Update browser tests
   to open required parents explicitly before asserting on child content.
-- [ ] Run final `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`,
+- [x] Run final `pnpm format:check`, `pnpm lint`, `pnpm typecheck`, `pnpm test`,
   `pnpm build` and `pnpm test:e2e` once on the completed app tree. Run
   `pnpm test:dev-console` once for the changed shared composition/headings.
   Diagnose failures; preserve meaningful assertions and timeouts.
-- [ ] Obtain one independent **GPT-6 Astra / Low** review of the full app diff
+- [x] Obtain one independent **GPT-6 Astra / Low** review of the full app diff
   from **8ff159f**, emphasizing the new delta after **322c873**. Cover source
   accuracy, delivered hierarchy, data/Markdown compatibility and example evidence.
   Identify the exact reviewed commit, fix blockers and rerun invalidated checks.
-- [ ] Record final branch/commit, actual commands/counts, limits, unresolved scope
+- [x] Record final branch/commit, actual commands/counts, limits, unresolved scope
   and implementation session in task/tracker/KICKOFF. Return to coordinator
   **01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended **GPT-6 Astra / Low**.
 
