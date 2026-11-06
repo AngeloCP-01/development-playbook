@@ -86,3 +86,12 @@ test('study composition exposes worked teaching and only local practice, with fr
   expect(screen.queryByText('First answer.')).toBeNull()
   expect(screen.getByText('Source guide')).toBeTruthy()
 })
+
+test('worked code is an explicit keyboard tab stop that can receive focus', () => {
+  window.history.replaceState(null, '', '/reference/lesson')
+  render(<CheatsheetView sheet={sheet} />)
+  const block = screen.getByText('let count = 0; () => ++count').closest('pre')!
+  expect(block.getAttribute('tabindex')).toBe('0')
+  block.focus()
+  expect(document.activeElement).toBe(block)
+})

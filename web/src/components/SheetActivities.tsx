@@ -9,7 +9,10 @@ function ActivityCode({
   return (
     <div className="min-w-0">
       <p className="t-label mb-1.5 text-subtle">{example.label}</p>
-      <pre className="overflow-x-auto border border-line bg-sunken p-3 text-[0.8125rem]">
+      <pre
+        tabIndex={0}
+        className="overflow-x-auto border border-line bg-sunken p-3 text-[0.8125rem]"
+      >
         <code className="t-data whitespace-pre text-fg">{example.code}</code>
       </pre>
     </div>

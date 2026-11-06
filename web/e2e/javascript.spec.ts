@@ -255,3 +255,75 @@ test('a solution focused near the top clears the sticky study rail', async ({
     )
     .toBe(true)
 })
+
+for (const theme of ['light', 'dark']) {
+  test(`overflowing study code supports visible keyboard focus and horizontal scrolling in ${theme}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 320, height: 900 })
+    await page.addInitScript(
+      (value) => localStorage.setItem('playbook:theme', JSON.stringify(value)),
+      theme,
+    )
+    await page.goto('/reference/javascript#async', { waitUntil: 'networkidle' })
+    const panel = page.getByRole('tabpanel')
+    const solution = panel.getByRole('button', {
+      name: 'Solution: Async iteration repair',
+      exact: true,
+    })
+    await solution.focus()
+    await page.keyboard.press('Enter')
+    await expect(solution).toHaveAttribute('aria-expanded', 'true')
+
+    const blocks = [
+      panel.locator('pre').filter({ hasText: 'async function read()' }),
+      panel.locator('pre').filter({ hasText: 'await items.forEach' }),
+      panel.locator('pre').filter({ hasText: 'for (const item of items)' }),
+    ]
+    for (const block of blocks) {
+      expect(
+        await block.evaluate((el) => el.scrollWidth > el.clientWidth),
+      ).toBe(true)
+      await panel.focus()
+      for (let attempt = 0; attempt < 8; attempt++) {
+        await page.keyboard.press('Tab')
+        if (await block.evaluate((el) => document.activeElement === el)) break
+      }
+      await expect(block).toBeFocused()
+      await expect
+        .poll(() =>
+          block.evaluate((el) => {
+            const style = getComputedStyle(el)
+            const rect = el.getBoundingClientRect()
+            const rail = document
+              .querySelector('[aria-label="JavaScript sections"]')!
+              .getBoundingClientRect()
+            return (
+              el.matches(':focus-visible') &&
+              style.outlineStyle !== 'none' &&
+              parseFloat(style.outlineWidth) > 0 &&
+              rect.top >= rail.bottom &&
+              rect.bottom <= innerHeight
+            )
+          }),
+        )
+        .toBe(true)
+      const before = await block.evaluate((el) => el.scrollLeft)
+      await page.keyboard.press('ArrowRight')
+      await expect
+        .poll(() => block.evaluate((el) => el.scrollLeft))
+        .toBeGreaterThan(before)
+    }
+    await solution.focus()
+    await page.keyboard.press('Space')
+    await expect(solution).toHaveAttribute('aria-expanded', 'false')
+    await expect(solution).toBeFocused()
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth -
+          document.documentElement.clientWidth,
+      ),
+    ).toBe(0)
+  })
+}

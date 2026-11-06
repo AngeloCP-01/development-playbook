@@ -114,3 +114,21 @@ test('sheet-prefixed IDs avoid collisions and a new sheet starts with its own cl
   expect(control.getAttribute('aria-expanded')).toBe('false')
   expect(screen.queryByText('Independent counts.')).toBeNull()
 })
+
+test('starter and revealed solution code are explicit keyboard tab stops that can receive focus', () => {
+  render(<CheatsheetView sheet={sheet} />)
+  const starter = screen.getByText('first() second()').closest('pre')!
+  expect(starter.getAttribute('tabindex')).toBe('0')
+  starter.focus()
+  expect(document.activeElement).toBe(starter)
+
+  fireEvent.click(
+    screen.getByRole('button', { name: 'Solution: Counter factory' }),
+  )
+  const solution = screen
+    .getByText('let count = 0; return () => ++count;')
+    .closest('pre')!
+  expect(solution.getAttribute('tabindex')).toBe('0')
+  solution.focus()
+  expect(document.activeElement).toBe(solution)
+})
