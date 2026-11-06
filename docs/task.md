@@ -13,16 +13,18 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-06): JavaScript subsections delivered; coordinator review next.**
+**Current work (2026-11-06): JavaScript subsections accepted; separate merge approval pending.**
 Application **4ff8f8e** on `feat/javascript-fundamentals-subsections` implements
 all six additions in eight main sections, with 25 topic subsections and 14 local
 activities. The seven existing hashes and original four activities remain intact.
 [Source/design and example evidence](../reference/javascript-source-research.md#all-six-additions-and-subsections-selected-2026-11-06),
 [completed plan](superpowers/plans/2026-11-06-javascript-fundamentals-subsections.md)
 and KICKOFF carry the handoff. Final unit/DOM **1,653/234**, production **43/43**
-and retained dev-console **1/1** pass. Coordinator review is recommended in
-**GPT-6 Astra / Low** before separate user integration approval. No merge, push
-or promotion.
+and retained dev-console **1/1** pass. Coordinator reviewed **973df70** /
+application **4ff8f8e**, with no actionable Standards or Spec findings. Fresh
+focused tests **37/7**, production browser **3/3** and published checks
+**93 assertions** pass; narrow/middle/wide page inspection also passed.
+Separate user integration approval remains. No merge, push or promotion.
 
 **Earlier accepted implementation:**
 On `feat/javascript-study-sections`, correction **322c873** starts at
@@ -1087,7 +1089,7 @@ The assessment itself changed no app/generated inputs and authorized no merge,
 push, promotion or five-sheet curriculum expansion. The later all-six JavaScript
 selection is recorded in W-6.3u.1c below.
 
-**W-6.3u.1c — All JavaScript additions with subsections ☑** *(verified; coordinator review and integration pending)*
+**W-6.3u.1c — All JavaScript additions with subsections ☑** *(verified and accepted; integration pending)*
 
 - [x] Record user selection of all six additions and section/subsection hierarchy,
   D-103. Eight main sections fit the earlier 6–8 range; preserve the seven main
@@ -1108,6 +1110,10 @@ selection is recorded in W-6.3u.1c below.
 - [x] Return exact branch/commit, actual checks, limits and session reference
   to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended
   **GPT-6 Astra / Low**, before separate user integration approval.
+- [x] Coordinator accepted **973df70** / app **4ff8f8e**, no actionable findings;
+  fresh focused tests **37/7**, production browser **3/3**, published checks
+  **93 assertions** and three inspected page states pass.
+- [ ] Obtain separate user approval for no-ff integration into develop.
 
 No new stage, browser execution, scoring/persistence, dependencies, broad
 framework/algorithm catalogue or work on the other four sheets is selected.
