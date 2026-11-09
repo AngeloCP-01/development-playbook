@@ -3,7 +3,7 @@
 Date: 2026-11-05. Scope: W-6.3u / D-101, JavaScript only. Starting branch:
 `docs/2026-11-05-javascript-reference-assessment`, based on `6f1f67e`.
 
-**Current work:** [implement the runtime-neutral Promise pilot](#runtime-neutral-promise-pilot-selected-2026-11-06).
+**Current work:** [runtime-neutral Promise pilot implementation](#runtime-neutral-pilot-implementation-2026-11-09).
 The user selected the prototype for on-page evaluation and requested JavaScript
 teaching without Node-version coupling. Earlier implementation/prototype evidence
 retains its original context; the page port has not started yet.

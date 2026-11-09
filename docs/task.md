@@ -13,14 +13,13 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-06): runtime-neutral Promises page pilot selected (D-105).**
-The user selected implementation of the [learner prototype](superpowers/specs/2026-11-06-javascript-promises-mini-lesson.md)
-for on-page evaluation and requested JavaScript teaching without Node-version
-coupling. The [pilot plan](superpowers/plans/2026-11-06-javascript-promises-pilot.md)
-ports the lesson to #async, adds ordered teaching blocks/visible introduction,
-and removes Node/CJS setup copy across the JavaScript sheet while retaining
-truthful strict-mode/module/host assumptions. D-100 session choice is pending;
-no app inputs have changed. See W-6.3u.1e and KICKOFF.
+**Current work (2026-11-09): Promises pilot ready for user evaluation (D-105).**
+Application **7975be9** on `feat/javascript-promises-lesson` implements and verifies
+the connected #async lesson, visible introduction, ordered teaching blocks and
+JavaScript-wide context cleanup. The eight hashes, fourteen activities and original
+four exercises remain. The [production preview](http://localhost:3100/reference/javascript#async)
+is running; independent final review has no findings. Evidence and limits live in
+tracker; KICKOFF carries the coordinator handoff. Integration is not authorized.
 
 **Previously accepted application:**
 Application **4ff8f8e** on `feat/javascript-fundamentals-subsections` implements
@@ -1156,27 +1155,26 @@ accepted app **4ff8f8e** is unchanged. This draft is an editorial prototype, not
 a second maintained published lesson. Existing content authority, original
 activities, main hashes and accessibility contracts remain.
 
-**W-6.3u.1e — Runtime-neutral Promises page pilot ◐** *(selected; implementation session pending)*
+**W-6.3u.1e — Runtime-neutral Promises page pilot ☑** *(implemented and verified; user evaluation pending)*
 
 - [x] User selected the prototype for on-page evaluation and requested no
   Node-version coupling in JavaScript teaching (D-105).
 - [x] Prepare the [compact implementation plan](superpowers/plans/2026-11-06-javascript-promises-pilot.md)
   for ordered teaching blocks, a visible opening, generator parity, runtime-neutral
   examples/copy, actual browser example checks and a reviewable preview.
-- [ ] Resolve the pending D-100 workflow choice; default is a fresh user-selected
-  **GPT-6.1 Sol / High** session. Start from the committed plan tip descended
-  from **8b6156f**, creating `feat/javascript-promises-lesson`.
-- [ ] Implement #async and context cleanup with behavior TDD; preserve the other
+- [x] User selected a fresh **GPT-6.1 Sol / High** implementation session, confirmed
+  by session metadata. Started from **a92a495** on `feat/javascript-promises-lesson`.
+- [x] Implement #async and context cleanup with behavior TDD; preserve the other
   seven sections, original exercise implementations, activity IDs and main hashes.
-- [ ] Verify actual published code in the command-line runtime and browser,
+- [x] Verify actual published code in the command-line runtime and browser,
   generated parity, visible introduction, all topic states, keyboard/table/code
   access and final gate/dev-console. Leave a running preview for the user.
-- [ ] Obtain independent final teaching/content/branch/page review and return
+- [x] Obtain independent final teaching/content/branch/page review and return
   actual branch/commit/checks/session to coordinator
   **01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended **GPT-6 Astra / Low**.
 
 Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
-new topics/runner/scoring/persistence, merge/push/promotion remain outside scope.
+other-sheet rollout, runner/scoring/persistence and merge/push/promotion remain outside scope.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☑** *(merged locally as `b8515a0`)*
 

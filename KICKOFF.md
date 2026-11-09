@@ -1,64 +1,57 @@
-# Kickoff: implement the runtime-neutral Promises pilot
+# Kickoff: Promises pilot ready for user evaluation
 
-Updated 2026-11-06. Follow [AGENTS.md](AGENTS.md), D-99–D-105.
+Updated 2026-11-09. Follow [AGENTS.md](AGENTS.md), D-99–D-105.
 
-## Selected outcome
+## Delivered outcome
 
-The user requested implementation of the [Promises prototype](docs/superpowers/specs/2026-11-06-javascript-promises-mini-lesson.md)
-so it can be evaluated on the page, and asked for JavaScript teaching without
-Node-version coupling. The [compact pilot plan](docs/superpowers/plans/2026-11-06-javascript-promises-pilot.md)
-is the implementation handoff; [source notes](reference/javascript-source-research.md#runtime-neutral-promise-pilot-selected-2026-11-06)
-record the selected scope and runtime distinction.
+W-6.3u.1e is implemented and verified on `feat/javascript-promises-lesson`,
+application **7975be9**, starting from **a92a495**. Renderer **d19d67a** and lesson
+**affa6f0** precede the two-paragraph panel-budget repair. The user selected this
+fresh **GPT-6.1 Sol / High** implementation session, confirmed by session metadata:
+**01a1bdaa-374d-7d81-bf44-94b0e9e0d73d**.
 
-Port the connected story at `/reference/javascript#async` with a visible opening,
-ordered prose/code/tables/interview answers and existing transfer exercises.
-Use a narrow typed teaching-block renderer/generator extension. The draft is a
-proposal; live TypeScript data and generated Markdown remain authoritative.
+[Inspect the running production preview](http://localhost:3100/reference/javascript#async).
+The visible opening leads through one callback/Promise/then/await lookup story,
+semantic tables, model interview answers and existing transfer exercises. Typed
+blocks own both page and generated Markdown. Reader copy uses language-level
+strict-script/module context; module examples are totals.js/main.js.
 
-Clean Node-version/CommonJS/.cjs setup wording across the JavaScript sheet.
-Use modern JavaScript, retaining strict-script/module context and truthful host
-scheduling boundaries. Module examples use totals.js/main.js as ECMAScript
-modules. Actual runtime/version evidence stays in developer checks and records.
+Eight hashes, fourteen activity IDs, original four exercise implementations and
+29 other generated sheet bodies remain unchanged. The sheet has 34 topics, thirteen
+in #async; feature totals remain **26/30** sheets and **18/18** stages.
 
-## Implementation session choice
+## Evidence and limits
 
-A D-100 workflow clarification is pending: fresh implementation session or an
-explicit one-task exception to continue here. No exception is inferred from
-elapsed time, and application code has not been edited. The default remains a
-fresh user-selected **GPT-6.1 Sol / High** session. The pending question does not
-change the approved implementation scope.
+The [tracker completion row](docs/tracker.md#completed) owns actual commands,
+counts, failures and retained-evidence boundaries. Full 1,672-test evidence is
+retained from **affa6f0** after two prose strings changed; affected render/generator
+and browser checks, format/lint/typecheck/build are fresh on **7975be9**. All
+production audit cases are covered by the full run plus focused final reruns.
+Development-console **1/1** passed on an isolated copy with identical source and public files;
+its temporary Turbopack root resolved shared dependencies. The user's :3200
+server stalled on Discovery and was preserved; the temporary :3101 server is stopped.
+Production :3100 remains running.
 
-- Plan branch: `docs/2026-11-06-promises-pilot-plan`, from **8b6156f**.
-  Record its exact committed tip before implementation and create
-  `feat/javascript-promises-lesson`.
-- Existing accepted app: **4ff8f8e**. Counts remain eight main sections,
-  25 subsections, 14 activities, **26/30** sheets and **18/18** stages.
-- Keep all main hashes, activity IDs and original four exercise implementations.
-  Other seven sections receive context cleanup, not a teaching rewrite; the
-  other 29 generated sheet bodies stay unchanged.
-- Return to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended
-  **GPT-6 Astra / Low**. No merge, push or promotion is authorized.
+One independent **GPT-6 Astra / Low** review, `/root/promises_final_review`, covers
+**7975be9**, including the final prose tightening: no findings. Production page
+inspection covered dark/320 and light/1440, earlier light/768, keyboard disclosure,
+tables, nested answers and clean console. Screenshots were visually inspected.
+This is implementation/review evidence; the user still evaluates teaching depth.
 
-## Acceptance and recovery checklist
+## Next action and recovery
 
-- [ ] Resolve the D-100 session choice and record the actual starting SHA/session.
-- [ ] Observe missing rich-render/Markdown behavior failures, then implement
-  ordered blocks, semantic tables, literal code and interview structure.
-- [ ] Publish the prototype as runtime-neutral live data, with an optional
-  standard-JavaScript fixture explained after its contract.
-- [ ] Extend checks against actual published code and real module files; prove
-  the Promise examples in an actual browser as well as the recorded test runtime.
-- [ ] Verify the visible opening, every new topic, nested answers/history reset,
-  table/code keyboard scrolling, headings/focus and four-screen panel limits in
-  both themes at representative 320/768/1440px widths.
-- [ ] Run final web gate/dev-console and one independent final content/branch/page
-  review focused on teaching quality. Leave a running preview/link for the user.
+Return this branch/commit and evidence to coordinator
+**01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended **GPT-6 Astra / Low**, for
+user preview feedback and integration coordination. No implementation checks remain.
+Separate user approval is required before a no-ff develop merge; no merge, push
+or main promotion is authorized.
 
-If interrupted, record completed tasks, branch/commit, failing command and
-remaining checks here. The [task ledger](docs/task.md#overview) tracks W-6.3u.1e;
-[tracker](docs/tracker.md) holds historical accepted-app evidence. No new app
-checks are claimed by this documentation-only plan.
+Use the [plan](docs/superpowers/plans/2026-11-06-javascript-promises-pilot.md) and
+[source record](reference/javascript-source-research.md#runtime-neutral-pilot-implementation-2026-11-09)
+for scope and teaching provenance. Temporary command logs are `/tmp/promises-*`;
+Corepack supplies pnpm through `/tmp/promises-bin/pnpm` in this shell. If preview
+:3100 has stopped, run `pnpm start -p 3100` from web/ against the verified build.
 
-Closing plan-tree checks descended from **8b6156f**: tracker-ledger **2/2**,
-local links/anchors **195 targets / 9 files** and `git diff --check`, all exit 0.
-No app/generated/example inputs changed; no app suite/build/browser rerun.
+Closing records checks: tracker-ledger **2/2**, **160 local links/anchors across
+5 files**, and `git diff --check`, all exit 0. These records-only edits retain the
+identified application evidence above.
