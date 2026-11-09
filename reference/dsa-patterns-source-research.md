@@ -6,6 +6,8 @@ User direction: teach DSA patterns, interview-style questions, problems where th
 pattern fits, and an overview of time and space complexity. The user selected
 JavaScript examples during this research. The proposed fifteen-pattern budget,
 lesson structure and delivery order below are recommendations, not approved scope.
+The user then required very simple explanations with familiar real-life analogies
+(D-107). Start from an intuitive story and introduce technical language gradually.
 
 Repository checkpoint: `docs/2026-11-09-dsa-patterns-research`, from local develop
 `c996177d8e4fbc4c6f9b3659c10197dc7eb8fbc9`. Application totals remain 26/30
@@ -108,6 +110,85 @@ name the interview platform's provided helper. Do not present an unexplained
 open until the lesson scope is selected.
 
 ## Recommended teaching structure
+
+### Relevance to coding assessments and interviews
+
+The fifteen techniques form a useful preparation set in our assessment. They
+exercise the structures and reasoning represented in employer guidance J1/J2
+and the platform curriculum J11 below. Those sources do not establish that each
+technique appears often, that the fifteen have equal priority, or that this
+reference covers every kind of technical interview. Our pattern names are an
+editorial grouping, not a published employer syllabus.
+
+| ID | Additional primary source, accessed 2026-11-09 | Finding supported |
+| --- | --- | --- |
+| J11 | [Interview Preparation Kit](https://www.hackerrank.com/interview/interview-preparation-kit), HackerRank | Its curriculum includes arrays, hash maps, sorting, strings, search, greedy, DP, stacks/queues, graphs, trees, linked lists and recursion/backtracking. This supports preparation relevance at the topic level. The page's company percentages are not used: the visible page does not supply the sampling date or methodology needed for this research's frequency claims. |
+
+The separate one-week kit URL could not be retrieved; it is not evidence here.
+Amazon and Microsoft guidance was reopened on 2026-11-09 for this follow-up.
+We are assessing suitability, not estimating a pass probability or question rate.
+
+For learning order, recommend simple scans/maps, sorting, two pointers, windows,
+prefix sums and basic binary search before graph/tree traversal. Then introduce
+backtracking, DP and greedy reasoning. Teach specialized candidate maintenance,
+successor cycles, event sweeps and dependency ordering after their prerequisites.
+This order reflects conceptual dependencies and teaching judgment, not measured
+interview frequency. Sorting and basic stack/queue operations must receive
+explicit introductory practice even though they are not separate entries in
+the fifteen-pattern count.
+
+### Everyday explanations before formal terms
+
+The user's "even a five-year-old" direction is a request for accessible entry
+points. Write in simple adult language: short sentences, familiar objects,
+tiny inputs and no unexplained jargon. Keep the reasoning accurate as the lesson
+builds toward an interview-ready explanation and JavaScript implementation.
+
+Use this teaching order for each pattern:
+
+1. Tell a short everyday story with a concrete goal.
+2. Work through three to six items, showing each decision and what is remembered.
+3. Map the story's objects and actions to arrays, positions, maps, queues or states.
+4. Name the pattern and explain the fact that stays true. Introduce "invariant"
+   only after the reader understands that fact.
+5. Walk through the JavaScript solution, linking each variable to the story.
+6. Explain work and extra storage in plain words, then derive Big-O.
+7. Ask an interview question and give a complete model explanation.
+8. Offer an attempt-first activity and a changed condition that tests transfer.
+
+These analogy seeds are original teaching proposals. Each needs a small trace
+and an explicit mapping when authored; a story alone is not a complete lesson.
+
+| Pattern | Everyday starting story | Mapping and boundary to explain |
+| --- | --- | --- |
+| Hash lookup/counting | Put toy-color counts in labelled cubbies so you do not count the whole toy box again. | A label is a key; the stored count or earlier position is a value. A cubby is an illustration of lookup, not proof that every language map has constant-time access. |
+| Ordered two pointers | Two helpers stand at opposite ends of a row of numbered cards, looking for a pair with a chosen total. | Sorted numbers make a too-small or too-large total tell us which end to move. Unsorted cards lose that guarantee. |
+| Sliding window | Find the longest unbroken row of toy cars containing no repeated color. Add on the right; remove on the left until every color is different again. | The row must stay contiguous. This explains distinctness; a sum-based window needs a separate argument about the allowed numbers. |
+| Prefix sums | A sticker notebook records the total collected by each evening. Subtract Monday's total from Thursday's to find what was added Tuesday through Thursday. | Store cumulative totals, including zero before the first day. Later edits to an old day make later totals stale. |
+| Binary search | Guess a number while a friend answers "higher" or "lower," ruling out half the remaining guesses. | Each answer must safely eliminate a region. Searching a minimum feasible answer needs its own monotone yes/no rule. |
+| Interval event sweep | At a party, add one to the guest counter when someone enters and subtract one when someone leaves. Remember the biggest count. | Sort events by time first. Decide what simultaneous arrival/departure means; counting guests does not itself assign seats or merge visits. |
+| Monotonic stack | Keep height cards for children in a line to answer "who is the nearest shorter child to my left?" Retire older cards when a nearer child is no taller. | Cards are candidate reminders; actual children remain in the original line. Explain why a retired card can never beat the nearer replacement, including equal heights. |
+| Bounded top-k heap | Keep only the three biggest apples seen so far. When a new apple arrives, compare it with the smallest apple in the basket. | The basket holds the best candidates; the heap makes its weakest retained candidate easy to inspect. The basket is not a fully sorted list. |
+| Fast/slow successors | Two toy cars follow the same track, one moving one step and the other two. On a loop, the faster one eventually catches the slower one. | Each position has one next position; matching means the same position, not two cars with the same color. Branching roads need another method. |
+| Tree DFS | Each child counts their own little family branch and passes the total to their parent. Parents combine the returned totals. | Each subtree is counted once; the leaf/base case starts the calculation. A long thin family tree still needs a long stack. |
+| Graph BFS/DFS | Explore connected rooms. BFS visits all rooms one door away before those two doors away; DFS follows one corridor deeply before returning. | Keep visited marks. BFS minimizes door count when every move counts equally, not arbitrary travel cost. |
+| Topological order | Breakfast has prerequisites: put bread in the toaster before taking out toast, then spread the jam. | Any order satisfying all arrows is acceptable. Circular requirements mean there is no complete valid order. |
+| Backtracking | Pick a shirt and trousers for a doll, check the rules, then undo a choice to try the next outfit. | A partial outfit is a search state. Prune only if no remaining choice can repair it; many possible outfits can still require much work. |
+| Dynamic programming | A game asks how many routes reach each stair using one-step or two-step moves. Write each stair's answer on a card and reuse it. | Define exactly what the card means; combine earlier answers and give the first cards explicit values. The number of cards and work per card determine the cost. |
+| Greedy | Choose story-time sessions that end early enough to leave room for more sessions. | Show why replacing the first choice with the earliest-finishing one cannot reduce the count. Different session rewards can change the best choice. |
+
+For complexity, begin with "How many things do we check as the input grows?"
+and "How much extra room do we need?" With n toys, one pass takes O(n) checks;
+trying every pair takes O(n²) checks; repeatedly halving a search range takes
+O(log n) guesses under the stated model. Extra storage includes reminder cards,
+waiting rooms/queues and unfinished recursive calls. These are growth models,
+not stopwatch predictions. Make the first derivation concrete before using
+symbols; later lessons still identify preprocessing, expected costs and output.
+
+Future content acceptance: a reader should be able to retell the story, map it
+to a tiny input, explain the safe step in their own words, and identify one case
+where the analogy does not transfer. Check explanatory steps and actual code in
+final review; no readability score or age-level learning study is claimed.
 
 Recommend a standalone **DSA Patterns** reference at proposed slug `dsa-patterns`,
 with an **Algorithms** group. These are editorial recommendations: the current

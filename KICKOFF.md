@@ -7,6 +7,10 @@ Updated 2026-11-09. Follow [AGENTS.md](AGENTS.md), especially D-99/D-100.
 The user requested a new DSA Patterns reference: learn the techniques, explain
 interview-style questions, solve fitting problems, and understand time/space
 complexity. The user selected JavaScript examples. D-106 records that direction.
+The user then required simple explanations with everyday analogies (D-107).
+The source record now supplies an analogy seed for each pattern and a story,
+tiny trace, code, cost and practice teaching sequence. Preparation relevance is
+supported; individual appearance rates are not established.
 
 The [source research](reference/dsa-patterns-source-research.md) owns findings,
 verified original problem links, the fifteen-pattern recommendation, JavaScript

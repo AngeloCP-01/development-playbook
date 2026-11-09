@@ -1199,6 +1199,10 @@ other-sheet rollout, runner/scoring/persistence, push and promotion remain outsi
 explain its invariant or recurrence, implement it in JavaScript, test it, and
 justify time and auxiliary/output space. Practice problems must show why the
 pattern fits and what changed conditions would require another approach.
+User clarification (D-107): explain as simply as possible through everyday
+analogies, tiny traces and plain work/storage reasoning before technical terms
+and JavaScript. The research distinguishes preparation relevance from measured
+question frequency; the fifteen-pattern budget still awaits scope selection.
 
 - [x] Record the user's teaching/interview/problem/complexity direction and
   JavaScript choice (D-106).
