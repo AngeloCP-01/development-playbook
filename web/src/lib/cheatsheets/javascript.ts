@@ -1024,12 +1024,12 @@ console.log(keyed.get(1) === records[1]);        // true`,
             {
               id: 'save-task',
               kind: 'paragraph',
-              text: 'The next activity changes the story. The caller must observe every save, and item 3 must not start if item 2 fails. First identify the promise the caller receives and the completion each loop method exposes. Awaiting forEach cannot join promises its callbacks return: forEach discards those results. Use for...of with await when one save must finish before the next starts.',
+              text: 'The caller must observe every save; item 3 must not start if item 2 fails. Identify the returned promise. forEach discards callback results, so awaiting it cannot join those promises. Use for...of with await when one save must finish before the next starts.',
             },
             {
               id: 'save-try',
               kind: 'paragraph',
-              text: 'Attempt Async iteration repair below before inspecting its solution. After implementing saveAll, combine it with this fixture. Its executor stores the supplied resolving function in releaseFirst, letting you finish the first save manually.',
+              text: 'Try Async iteration repair below, then check your saveAll with this fixture. The executor stores its supplied resolving function in releaseFirst so you can finish the first save manually.',
             },
             {
               id: 'save-test-fixture',

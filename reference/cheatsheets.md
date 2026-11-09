@@ -2312,9 +2312,9 @@ Follow-up: Calling the lookup functions initiates work\. Promise\.all does not c
 
 Make the caller observe each save, and stop initiation on failure\.
 
-The next activity changes the story\. The caller must observe every save, and item 3 must not start if item 2 fails\. First identify the promise the caller receives and the completion each loop method exposes\. Awaiting forEach cannot join promises its callbacks return: forEach discards those results\. Use for\.\.\.of with await when one save must finish before the next starts\.
+The caller must observe every save; item 3 must not start if item 2 fails\. Identify the returned promise\. forEach discards callback results, so awaiting it cannot join those promises\. Use for\.\.\.of with await when one save must finish before the next starts\.
 
-Attempt Async iteration repair below before inspecting its solution\. After implementing saveAll, combine it with this fixture\. Its executor stores the supplied resolving function in releaseFirst, letting you finish the first save manually\.
+Try Async iteration repair below, then check your saveAll with this fixture\. The executor stores its supplied resolving function in releaseFirst so you can finish the first save manually\.
 
 Check the repaired saveAll initiation order
 
