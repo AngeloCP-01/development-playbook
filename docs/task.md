@@ -13,7 +13,15 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-09): JavaScript sheet merged locally into develop (D-105).**
+**Current work (2026-11-09): DSA Patterns reference research (W-6.3v, D-106).**
+The user selected a new reference for learning DSA patterns, interview reasoning,
+well-fitting practice problems, and time/space complexity, with JavaScript
+examples. The [research record](../reference/dsa-patterns-source-research.md)
+contains primary-source findings and a proposed teaching scope. Research is
+authorized; the pattern count, page structure and implementation are recommendations.
+The existing application remains **26/30** sheets and **18/18** stages.
+
+**Latest completed work: JavaScript sheet merged locally into develop (D-105).**
 Application **7975be9** on `feat/javascript-promises-lesson` implements and verifies
 the connected #async lesson, visible introduction, ordered teaching blocks and
 JavaScript-wide context cleanup. The eight hashes, fourteen activities and original
@@ -69,11 +77,12 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **25 drawn / 30 registered**, through **2cc7d5d**. W-6.4 is integrated as **b8515a0**; five language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** coordinator confirmation of W-6.3u.1a's keyboard-scroll correction,
-recommended **GPT-6 Astra / Low** in coordinator session
-`01a18acc-3b54-7202-92f3-404cc94fd0ad`. Integration into develop requires
-separate user approval. Remaining language sheets need their own assessment
-before any new implementation session.
+**Next task/model:** review the DSA Patterns research recommendation and select
+the first teaching scope, **GPT-6 Astra / Low**, in coordinator session
+`01a1bedf-bdad-7b72-ba40-9b5406807d43`. Then prepare only the design/compact plan
+needed by the selected scope. Future implementation uses a fresh user-selected
+**GPT-6.1 Sol / High** session. The JavaScript correction/review/integration are
+complete; remaining language sheets and broader JavaScript teaching are separate.
 
 Two deliverables from one body of content.
 
@@ -1183,6 +1192,35 @@ User accepted the preview and approved local no-ff integration of **f3f376c**
 into develop **ede8e1f** on 2026-11-09; the merge includes its integration records.
 Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
 other-sheet rollout, runner/scoring/persistence, push and promotion remain outside scope.
+
+**W-6.3v — DSA Patterns study reference ◐** *(research complete; scope selection next)*
+
+**Reader outcome:** recognize the conditions that make a technique useful,
+explain its invariant or recurrence, implement it in JavaScript, test it, and
+justify time and auxiliary/output space. Practice problems must show why the
+pattern fits and what changed conditions would require another approach.
+
+- [x] Record the user's teaching/interview/problem/complexity direction and
+  JavaScript choice (D-106).
+- [x] Research primary algorithm teaching, original problem statements,
+  employer interview guidance, and JavaScript implementation assumptions in
+  [one source record](../reference/dsa-patterns-source-research.md).
+- [ ] Select the pattern coverage and first lesson slice from the recommendation.
+- [ ] Prepare the relevant content/design acceptance and fresh implementation
+  handoff after scope selection; preserve one web/generated-Markdown source.
+- [ ] Implement, verify actual published examples and the finished reference,
+  complete appropriate web checks and one independent final review.
+- [ ] Obtain separate user approval for no-ff integration into develop.
+
+Research branch `docs/2026-11-09-dsa-patterns-research` starts at local develop
+**c996177**; source findings are committed as **dbeafbf**.
+Research/coordination recommendation: **GPT-6 Astra / Low**.
+Implementation recommendation: fresh user-selected **GPT-6.1 Sol / High**.
+Current coordinator: **01a1bedf-bdad-7b72-ba40-9b5406807d43**.
+This is a proposed reference-hub addition; no stage number, route, registry entry,
+category or product control is added by the research. Existing totals stay
+**26/30** sheets and **18/18** stages. Other language sheets, broader JavaScript
+rollout, code execution/scoring/persistence, push and promotion are separate.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☑** *(merged locally as `b8515a0`)*
 
