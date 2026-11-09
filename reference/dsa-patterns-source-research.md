@@ -1,11 +1,17 @@
 # DSA patterns reference: source research
 
-Research date: 2026-11-09. Status: proposed teaching scope; no page or application implementation. Intended language: JavaScript. This record supplies source findings and candidate content for the coordinator's scope recommendation.
+Research date: 2026-11-09. Status: research complete, fifteen-pattern scope selected;
+no application implementation. Intended language: JavaScript. This record supplies
+source findings and teaching proposals; the selected delivery details now live in
+the [design](../docs/superpowers/specs/2026-11-09-dsa-patterns-design.md) and
+[compact plan](../docs/superpowers/plans/2026-11-09-dsa-patterns.md).
 
 User direction: teach DSA patterns, interview-style questions, problems where the
 pattern fits, and an overview of time and space complexity. The user selected
-JavaScript examples during this research. The proposed fifteen-pattern budget,
-lesson structure and delivery order below are recommendations, not approved scope.
+JavaScript examples during this research, then accepted the fifteen-pattern
+coverage and analogy-first teaching approach with "okay lets proceed with that".
+The earlier lesson structure and delivery proposals below retain their research
+provenance; the selected design delivers all fifteen patterns in one reference.
 The user then required very simple explanations with familiar real-life analogies
 (D-107). Start from an intuitive story and introduce technical language gradually.
 
@@ -44,6 +50,7 @@ All sources were accessed 2026-11-09. MIT material is the Fall 2011 version of 6
 | S13 | [USACO Guide: greedy algorithms with sorting](https://usaco.guide/silver/greedy-sorting) | Earliest finish works for unweighted interval selection; superficially plausible choices and general coin-change greedy can fail. |
 | S14 | [USACO Guide: disjoint-set union](https://usaco.guide/gold/dsu) | Union/find with compression and size balancing supports amortized inverse-Ackermann operations. |
 | S15 | [Microsoft Careers: technical interviewing](https://careers.microsoft.com/v2/global/en/hiring-tips/technical-interviewing) | Microsoft's guidance stresses clarifying ambiguity, planning, executable code in a strong language and testing. This supports a reasoning-and-practice format, not universal employer requirements or frequency estimates. |
+| S16 | [USACO Guide: topological sort](https://usaco.guide/gold/toposort), Competitive Programming Initiative; opened 2026-11-09 during planning | Its own teaching presents indegree-based Kahn ordering and detects a cycle when the produced order is incomplete. The design chooses this iterative variant; the earlier candidate matrix's DFS variant remains a valid alternative. No sample code is copied. |
 
 Princeton's Algorithms cheatsheet returned HTTP 403 during research. It is not evidence for this record.
 
@@ -308,6 +315,15 @@ that an employer asks the problems.
 
 ## Delivery recommendation and acceptance
 
+**Selected follow-up (2026-11-09, D-108):** deliver all fifteen core mechanisms
+with the user-approved JavaScript and simple analogy approach. The design starts
+with eight panels and eighteen local activities, using existing study blocks and
+an Algorithms category. These exact layout/activity/function choices are the
+coordinator's implementation decisions. Author in families, then deliver the
+complete selected scope; the earlier first-family suggestion below is no longer
+an alternative final deliverable. Union-find stays deferred. See the design/plan
+linked at the top for current acceptance and the fresh Sol High handoff.
+
 Recommend authoring the foundations plus scan/remember lessons first, then
 continuing the remaining selected pattern families. This is a delivery sequence
 within a study reference, not a sequence of lifecycle stages. The full proposed
@@ -332,12 +348,12 @@ future checks, not tests run in this research. Validate generated parity and the
 finished page's keyboard/history/reveal behavior and layout with the existing
 app gate and one independent final review.
 
-Next task recommendation: scope selection and compact design/plan with
-**GPT-6 Astra / Low**, returning to coordinator
-`01a1bedf-bdad-7b72-ba40-9b5406807d43`. Implementation then uses a fresh
-user-selected **GPT-6.1 Sol / High** session under D-100, starting from the exact
-approved documentation commit and returning branch/commit/checks/session to that
-coordinator. A plan is not merge approval. Other language sheets, broader
+Current next task: implement the selected design/plan in a fresh user-selected
+**GPT-6.1 Sol / High** session under D-100, starting from the exact committed
+documentation tip and returning branch/commit/checks/session to coordinator
+`01a1bedf-bdad-7b72-ba40-9b5406807d43`, recommended **GPT-6 Astra / Low**.
+The user has selected the scope; another scope-selection round is unnecessary.
+A plan is not merge approval. Other language sheets, broader
 JavaScript teaching, additional advanced algorithms, runner/scoring/persistence,
 push and promotion remain separate.
 

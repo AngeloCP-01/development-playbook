@@ -1,67 +1,69 @@
-# Kickoff: DSA Patterns research ready for scope selection
+# Kickoff: implement the selected DSA Patterns reference
 
 Updated 2026-11-09. Follow [AGENTS.md](AGENTS.md), especially D-99/D-100.
 
-## Reader outcome and selected direction
+## Selected outcome
 
-The user requested a new DSA Patterns reference: learn the techniques, explain
-interview-style questions, solve fitting problems, and understand time/space
-complexity. The user selected JavaScript examples. D-106 records that direction.
-The user then required simple explanations with everyday analogies (D-107).
-The source record now supplies an analogy seed for each pattern and a story,
-tiny trace, code, cost and practice teaching sequence. Preparation relevance is
-supported; individual appearance rates are not established.
+The user accepted all fifteen core DSA patterns, JavaScript examples and simple
+real-life analogies with "okay lets proceed with that". D-106/D-107 record the
+brief and teaching style; D-108 records selection. Implementation is authorized
+within this scope. Integration remains a separate decision.
 
-The [source research](reference/dsa-patterns-source-research.md) owns findings,
-verified original problem links, the fifteen-pattern recommendation, JavaScript
-assumptions, complexity overview and proposed lesson structure. It includes an
-original window trace and a signed-value counterexample. The pattern budget,
-Algorithms category, eight-section outline and delivery order are recommendations.
-No page, category, route, stage or product behavior was implemented.
+Deliver a standalone DSA Patterns study reference under Algorithms. Each core
+lesson connects a familiar story, tiny trace, JavaScript solution, correctness,
+time/space reasoning, model interview answer and local attempt-first practice.
+The design starts with eight panels and eighteen activities; all fifteen core
+patterns ship together. These exact layout/activity choices are coordinator
+implementation decisions. Use existing study components and preserve all stages
+and thirty current reference bodies. Finished totals should be 27/31 sheets and
+18/18 stages; current application remains 26/30 and 18/18.
 
-## Branch and evidence
+## Read before implementing
 
-Research branch: `docs/2026-11-09-dsa-patterns-research`.
-Source research commit: **dbeafbf**; accompanying records carry the scope/handoff.
-Starting local develop: **c996177d8e4fbc4c6f9b3659c10197dc7eb8fbc9**.
-Research/coordination recommendation: **GPT-6 Astra / Low**. The bounded source
-researcher `/root/dsa_primary_research` was explicitly dispatched with that setting;
-this is not a claim that the parent session setting changed.
+- [Design and acceptance](docs/superpowers/specs/2026-11-09-dsa-patterns-design.md).
+- [Compact implementation plan](docs/superpowers/plans/2026-11-09-dsa-patterns.md).
+- [Primary sources, problems and analogy seeds](reference/dsa-patterns-source-research.md).
+- [Existing study/render/test patterns](web/PATTERNS.md#focused-study-references--studysheet).
 
-The source record identifies primary teaching material, original problem pages,
-employer guidance and language documentation with owners and access date.
-Interview prompts and fit/complexity derivations are labelled teaching synthesis.
-No company-frequency claims or copied problem statements/images. Humanizer pass
-applied. Closing checks are recorded in the [tracker](docs/tracker.md#completed).
-No algorithms, app build or browser suite were run for this documentation work.
+The design fixes stable topic hashes, published function contracts, interval/index
+conventions, source linking and selected Kahn ordering. The plan names content
+modules, actual-sheet render/example checks, discovery/count updates and the
+DSA addition to development-console's nested-disclosure sweep. No new renderer,
+runner/scoring/persistence, dependencies or numbered stage.
 
-## Next task and recovery
+## Starting point and session settings
 
-Review the proposed coverage and select the first teaching scope, recommended
-**GPT-6 Astra / Low**, in current coordinator session
-**01a1bedf-bdad-7b72-ba40-9b5406807d43**. The recommendation starts with foundations
-and scan/remember lessons, preserving the remaining pattern families as explicit
-scope. Prepare the selected scope's compact design/plan and acceptance before
-implementation; avoid reopening unrelated JavaScript work.
+Documentation branch: `docs/2026-11-09-dsa-patterns-research`.
+Local develop base: **c996177d8e4fbc4c6f9b3659c10197dc7eb8fbc9**.
+Research **dbeafbf**, records **3919821**, teaching clarification **45ca5f8**.
+Planning starts from **45ca5f8**; use the documentation branch's final committed
+HEAD including this handoff, record its exact SHA, then create
+`feat/dsa-patterns-reference`. Do not start from develop without these records.
 
-Implementation recommendation: a fresh user-selected **GPT-6.1 Sol / High**
-session under D-100, from the exact approved documentation commit. Return its
-branch/commit, actual checks, unresolved issues and session reference to the
-coordinator above. [W-6.3v](docs/task.md) holds the scope checklist. Shared category
-or renderer changes need D-99's stronger path; existing study components already
-support prose, JavaScript, trace tables, interview answers and local practice.
+Next task/model: implement W-6.3v in a fresh user-selected
+**GPT-6.1 Sol / High** session. Use one implementer and the scoped executing-plans
+workflow, then one independent final **GPT-6 Astra / Low** content/page/branch
+review. D-99 does not require task agents or per-task/design review rounds.
 
-## Existing application and deferred work
+Return branch/commit, actual checks, unresolved issues, preview URL and the
+implementation session reference to coordinator
+**01a1bedf-bdad-7b72-ba40-9b5406807d43**, recommended **GPT-6 Astra / Low**.
+The coordinator reads the actual diff and session before relying on the evidence.
 
-The JavaScript Promises pilot was accepted and merged locally into develop as
-**c996177**, with parents **ede8e1f / f3f376c**. Application **7975be9** and its
-identified verification are unchanged. Local totals remain **26/30** references
-and **18/18** stages. The [tracker](docs/tracker.md#completed) preserves the full
-implementation/coordinator evidence and limits; original coordinator was
-**01a18acc-3b54-7202-92f3-404cc94fd0ad**.
+## Recovery and evidence
 
-Python, Java, Spring Boot, Express & Node, broader JavaScript teaching, advanced
-DSA extensions, runner/scoring/persistence, integration, push and main promotion
-remain separate. Every merge requires separate user approval; main belongs to
-the user. If still running, the previous production preview is
-[JavaScript async](http://localhost:3100/reference/javascript#async).
+Planning changed documentation only. The tracker completion entry holds current
+link/ledger/whitespace checks; the research record owns factual source findings.
+No new app/algorithm execution is claimed. Prior identified app evidence is
+retained for unchanged application **7975be9** / develop **c996177**.
+
+At each implementation handoff name completed families, remaining topics,
+actual published-code checks and changed section hashes. Complete the final gate
+once, the dev-console sweep once, affected theme/width/keyboard checks and one
+independent final review. Preserve a running preview for the user. Obtain
+separate approval before any no-ff develop merge; main belongs to the user.
+
+Other language sheets, broader JavaScript teaching, union-find/advanced DSA,
+push and production promotion remain separate. The old JavaScript production
+preview may still be at http://localhost:3100/reference/javascript#async;
+preserve the user's existing servers when choosing verification ports.
