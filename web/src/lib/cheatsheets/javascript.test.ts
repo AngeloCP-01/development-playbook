@@ -195,7 +195,7 @@ test('lookup examples distinguish equality, TDZ, receivers, prototypes and shall
   })
 })
 
-test('all authored snippets satisfy their CJS contracts and real two-file ESM linking/execution', () => {
+test('all authored snippets satisfy their published contracts and real two-file ESM linking/execution', () => {
   const output = execFileSync(
     process.execPath,
     [
@@ -205,4 +205,16 @@ test('all authored snippets satisfy their CJS contracts and real two-file ESM li
     { encoding: 'utf8' },
   )
   expect(JSON.parse(output).status).toBe('passed')
+})
+
+test('reader setup stays language-level while scheduling names its host boundary', () => {
+  const reader = JSON.stringify({
+    sections: javascript.sections,
+    activities: javascript.activities,
+  })
+  expect(reader).not.toMatch(/Node(?:\.js)? \d|CommonJS|\.cjs|\.mjs|node main/)
+  expect(
+    javascript.sections.find((s) => s.study?.id === 'modules')!.rows[0]
+      .example![0].label,
+  ).toBe('totals.js — ECMAScript module')
 })

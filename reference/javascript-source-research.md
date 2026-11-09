@@ -1016,3 +1016,36 @@ implementation setting is a fresh user-selected **GPT-6.1 Sol / High** session
 under D-100. A workflow clarification about a one-task same-session exception
 is pending; it is not inferred from elapsed time or scope approval. No application
 code has changed during plan preparation.
+
+
+### Runtime-neutral pilot implementation (2026-11-09)
+
+Started from **a92a495** on `feat/javascript-promises-lesson`. The user selected
+this fresh implementation session for W-6.3u.1e, resolving the pending D-100
+session choice. The lesson uses the accepted prototype’s lookup story, with a
+visible opening and optional implementation after the callback contract and adapter.
+The TypeScript blocks own both page and Markdown output; the draft stays historical.
+
+Rechecked MDN contributor documentation on **2026-11-09**:
+[constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise)
+for synchronous executor invocation and supplied resolving functions;
+[then](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then)
+for derived-promise outcomes and asynchronous handlers; and
+[finally](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally)
+for outcome preservation and replacement by failed cleanup. The source mappings
+above still govern states, await, aggregation and modules. The live sheet now
+includes the constructor/then/finally citations beside its existing sources.
+
+The simulated lookup uses Promise.resolve().then(...) to call back after current
+synchronous work, without a network or host-only scheduling API. It intentionally
+ignores the callback return. Its internal derived promise is not returned through
+the callback API: a callback throw would reject that unobserved promise. The lesson
+states this limit and keeps transformations on the adapter’s returned chain.
+This is an illustrative fixture contract, not a property of all callback APIs.
+
+Humanizer editing pass applied to the new lesson: retained the concrete lookup
+story, tightened the explanation of ownership and avoided tutorial-script filler.
+Topics split at callback/state/adapter/chain/caller/batch boundaries. The existing
+validation/recovery material and original four exercise implementations remain.
+The seven other sections receive context and module-filename cleanup only.
+Final commands, browser proof, review and preview evidence belong in the tracker.

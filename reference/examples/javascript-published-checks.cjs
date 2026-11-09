@@ -272,14 +272,12 @@ async function main() {
       ],
     ],
     ["Run cleanup without swallowing the work failure", [["cleanup"], [7]]],
-    ["The awaited rejection reaches this catch", [["offline"]]],
-    ["Join results before using them", [[5]]],
     [
       "Run together inside one fresh timer callback",
       [["current"], ["still current"], ["queued"]],
     ],
   ]);
-  const esm = example("totals.mjs — Node 22.23.4 ESM");
+  const esm = example("totals.js — ECMAScript module");
   const examples = publishedExamples.filter((item) => item !== esm);
   equal(
     examples.map((item) => item.label),
@@ -417,12 +415,166 @@ async function main() {
   ]);
   equal(await outcomes([]), []);
 
+  const blocks = javascript.sections
+    .find((s) => s.study.id === "async")
+    .rows.flatMap((row) => row.teaching ?? []);
+  const lessonCode = (id) => {
+    const found = blocks.find(
+      (block) => block.id === id && block.kind === "code",
+    );
+    assert.ok(found, `Missing published code block ${id}`);
+    return found.code;
+  };
+  const setup = [
+    "profile-fixture",
+    "promise-adapter-code",
+    "chain-version",
+    "await-version",
+  ]
+    .map(lessonCode)
+    .join("\n");
+  const lessonLogs = [],
+    lessonErrors = [];
+  const lesson = execute(
+    setup,
+    "({readProfile, loadProfile, displayNameWithThen, displayNameWithAwait, profiles})",
+    lessonLogs,
+    lessonErrors,
+  );
+  // The callback and wrong-return caller use their exact published fields.
+  await execute(
+    `${lessonCode("profile-fixture")}\n${lessonCode("callback-caller")}`,
+    "Promise.resolve().then(() => {})",
+    lessonLogs,
+  );
+  equal(lessonLogs.splice(0), [["request started"], ["Ada"]]);
+  await execute(
+    `${lessonCode("profile-fixture")}\n${lessonCode("wrong-callback-return")}`,
+    "Promise.resolve().then(() => {})",
+    lessonLogs,
+  );
+  equal(lessonLogs.splice(0), [[undefined]]);
+  // Supply the producer to prove registration runs before the adapter returns.
+
+  const executorTrace = execute(`
+    const registered = [];
+    let held;
+    const readProfile = (id, done) => { registered.push(id); held = done; };
+    ${lessonCode("promise-adapter-code")}
+    const pending = loadProfile(1);
+    ({registered, held, pending});
+  `);
+  equal(executorTrace.registered, [1]);
+  equal(executorTrace.pending instanceof Promise, true);
+  executorTrace.held(null, { name: "Ada" });
+  equal(await executorTrace.pending, { name: "Ada" });
+  const lookup = lesson.loadProfile(1);
+  const transformed = lookup.then((profile) => profile.name.toUpperCase());
+  equal(lookup === transformed, false);
+  equal(await lookup, { name: "Ada" });
+  equal(await transformed, "ADA");
+  for (const fn of [lesson.displayNameWithThen, lesson.displayNameWithAwait]) {
+    equal(await fn(1), "ADA");
+    await assert.rejects(fn(99), /Profile 99 was not found/);
+    assertions += 1;
+    lesson.profiles.set(3, { name: null });
+    await assert.rejects(fn(3), TypeError);
+    assertions += 1;
+  }
+  equal(lessonLogs.splice(0), [
+    ["finished 1"],
+    ["finished 99"],
+    ["finished 3"],
+    ["finished 1"],
+    ["finished 99"],
+    ["finished 3"],
+  ]);
+  // Both authored implementations reject if their injected console cleanup throws.
+  const cleanupFailure = new Error("cleanup failed");
+  const badCleanup = [];
+  badCleanup.push = () => {
+    throw cleanupFailure;
+  };
+  const cleanup = execute(
+    setup,
+    "({displayNameWithThen, displayNameWithAwait})",
+    badCleanup,
+  );
+  for (const fn of [cleanup.displayNameWithThen, cleanup.displayNameWithAwait])
+    for (const id of [1, 99]) {
+      await assert.rejects(fn(id), (error) => error === cleanupFailure);
+      assertions += 1;
+    }
+  for (const form of ["displayNameWithAwait", "displayNameWithThen"]) {
+    // Change only the caller's selected implementation, not either implementation.
+    const caller = lessonCode("awaited-caller").replace(
+      "displayNameWithAwait(id)",
+      `${form}(id)`,
+    );
+    await execute(
+      `${setup}\n${caller.replace("demo().catch(error => console.error(error));", "const completedDemo = demo().catch(error => console.error(error));")}`,
+      "completedDemo",
+      lessonLogs,
+      lessonErrors,
+    );
+    equal(lessonLogs.splice(0), [
+      ["finished 1"],
+      ["ADA"],
+      ["finished 99"],
+      ["caught: Profile 99 was not found"],
+    ]);
+  }
+  const reportCode = lessonCode("outcomes-example").replace(
+    "profileReport().catch(error => console.error(error));",
+    "const completedReport = profileReport().catch(error => console.error(error));",
+  );
+  equal(
+    await execute(
+      `${setup}\n${reportCode}`,
+      "completedReport",
+      lessonLogs,
+      lessonErrors,
+    ),
+    undefined,
+  );
+  equal(lessonLogs.splice(0), [
+    ["ok: Ada"],
+    ["failed: Profile 99 was not found"],
+  ]);
+  const transfer = lessonCode("save-test-fixture").replace(
+    "done.then(result => console.log(result)).catch(error => console.error(error));",
+    "const checked = done.then(result => console.log(result)).catch(error => console.error(error));",
+  );
+  for (const [field, expected] of [
+    ["solution", [["1"], ["complete"]]],
+    ["starter", [["1,2"], ["complete"]]],
+  ]) {
+    await execute(
+      `${activity("async-iteration")[field].code}\n${transfer}`,
+      "checked",
+      lessonLogs,
+      lessonErrors,
+    );
+    equal(lessonLogs.splice(0), expected);
+  }
+  equal(
+    await fixed.saveAll([], () => {
+      throw new Error("must not save");
+    }),
+    "complete",
+  );
+  equal(lessonErrors, []);
+
   // Use a fresh directory for each run. A missing/stale fixture cannot masquerade
   // as the intended named-export error, and imports are never rewritten/evaled.
   const directory = mkdtempSync(join(tmpdir(), "javascript-published-esm-"));
   try {
-    writeFileSync(join(directory, "totals.mjs"), esm.code);
-    const path = join(directory, "main.mjs");
+    writeFileSync(
+      join(directory, "package.json"),
+      JSON.stringify({ type: "module" }),
+    );
+    writeFileSync(join(directory, "totals.js"), esm.code);
+    const path = join(directory, "main.js");
     writeFileSync(path, activity("module-boundary").starter.code);
     const brokenModule = spawnSync(process.execPath, [path], {
       encoding: "utf8",
@@ -480,7 +632,7 @@ async function main() {
         activities: javascript.activities.length,
         sections: javascript.sections.length,
         workedExamples: publishedExamples.length,
-        esm: "two real .mjs files, named-export failure then USD 5 0",
+        esm: "two real .js modules, named-export failure then USD 5 0",
         assertions,
         status: "passed",
         limits:

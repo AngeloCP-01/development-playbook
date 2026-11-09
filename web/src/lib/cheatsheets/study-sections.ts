@@ -22,7 +22,8 @@ export function studySections(sheet: Cheatsheet): StudySection[] | null {
   const fail = (reason: string): never => {
     throw new Error(`${sheet.slug} study: ${reason}`)
   }
-  const safeId = (id: string) => /^[a-z][a-z0-9-]*$/.test(id)
+  const safeId = (id: string) =>
+    typeof id === 'string' && /^[a-z][a-z0-9-]*$/.test(id)
   const validate = (blocks: TeachingBlock[] | undefined, ids: Set<string>) => {
     if (blocks === undefined) return
     if (!Array.isArray(blocks) || !blocks.length) fail('empty teaching blocks')

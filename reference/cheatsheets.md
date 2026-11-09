@@ -1317,7 +1317,7 @@ Write, debug and explain JavaScript through eight focused sections. Open a topic
 
 ### Fundamentals
 
-Keep valid input while distinguishing values, identity and conversion. All examples use Node 22.23.4, strict CommonJS (.cjs with "use strict"). Explain it: when should zero count as a supplied value?
+Keep valid input while distinguishing values, identity and conversion. Examples use modern JavaScript; run independent blocks as strict scripts (add "use strict") or as ECMAScript modules. Explain it: when should zero count as a supplied value?
 
 #### Values and references
 
@@ -1354,7 +1354,7 @@ Common mistake: using a default as validation\. ?? preserves NaN, and Number\(''
 
 Repair fallback so 0, false and empty text stay supplied values, while null and undefined become missing\. Predict the full output before revealing the repair\. Does your operator also validate numeric input?
 
-Context: Node 22\.23\.4, strict CommonJS\. Run each block separately in a \.cjs file with "use strict" at the top\. Inputs are supplied in the snippet\.
+Context: Modern JavaScript in strict mode\. Run independent blocks as strict scripts \(add "use strict"\) or ECMAScript modules\. Inputs are supplied in the snippet\.
 
 Bug: valid values disappear
 
@@ -1426,7 +1426,7 @@ Common mistake: forgetting to use a string method’s return value, or treating 
 
 Write normalizeLabels\(text\) for a string of simple comma\-delimited labels\. Trim and lowercase each part; discard empty parts, keeping order and duplicates\. Check " JS, css , JS, ", "" and " , "\. Quoted CSV and Unicode normalization are outside this contract\.
 
-Context: Node 22\.23\.4, strict CommonJS\. Run this block separately in a \.cjs file with "use strict" at the top\.
+Context: Modern JavaScript in strict mode\. Run this block as a strict script \(add "use strict"\) or an ECMAScript module\.
 
 Solution: Normalize simple labels
 
@@ -1455,7 +1455,7 @@ Compare a filter/map pipeline with the loop\. Where should the empty check happe
 
 ### Scope and closures
 
-Node 22.23.4, strict CommonJS; run each block separately with "use strict". Locate the binding a function reads, then track when it becomes usable. Explain it: why can a name be in scope but still throw when read?
+Modern JavaScript; run each block separately with "use strict". Locate the binding a function reads, then track when it becomes usable. Explain it: why can a name be in scope but still throw when read?
 
 #### Blocks, functions and initialization
 
@@ -1483,7 +1483,7 @@ Common mistake: saying let does not exist until its line runs\. The binding alre
 
 Predict the log sequence\. Explain why the inner read cannot use the outer value, even though the inner initialization appears later\. What changes if the inner declaration becomes var?
 
-Context: Node 22\.23\.4, strict CommonJS\. Run each block separately in a \.cjs file with "use strict" at the top\. Inputs are supplied in the snippet\. The explicit function keeps the var follow\-up function\-scoped rather than host\-global\.
+Context: Modern JavaScript in strict mode\. Run independent blocks as strict scripts \(add "use strict"\) or ECMAScript modules\. Inputs are supplied in the snippet\. The explicit function keeps the var follow\-up function\-scoped rather than host\-global\.
 
 Trace the inner name
 
@@ -1562,7 +1562,7 @@ Common mistake: putting private state outside a factory when instances need inde
 
 Implement makeCounter so each factory call starts at zero and returns a function that increments before returning\. Predict the three logged values, then explain which invocation owns each count binding\.
 
-Context: Node 22\.23\.4, strict CommonJS\. The starter intentionally leaves the factory body for you to write\. Run the reference as a \.cjs file with "use strict" at the top\.
+Context: Modern JavaScript in strict mode\. The starter intentionally leaves the factory body for you to write\. Run the reference as a strict script \(add "use strict"\) or an ECMAScript module\.
 
 Starter: complete the factory
 
@@ -1601,7 +1601,7 @@ Move count outside makeCounter\. Predict the same calls when both returned funct
 
 ### Functions and this
 
-Node 22.23.4, strict CommonJS; run each block separately with "use strict". Follow arguments, return values and the call site. Explain it: what information disappears when a method is passed as a callback?
+Modern JavaScript; run each block separately with "use strict". Follow arguments, return values and the call site. Explain it: what information disappears when a method is passed as a callback?
 
 #### Default parameters and rest arguments
 
@@ -1625,7 +1625,7 @@ Common mistake: using a default as validation or confusing \.\.\.values in a dec
 
 Write total\(\.\.\.values\) for numeric arguments only\. Return their sum, including zero and negatives; no arguments must produce 0\. Try total\(2, 3\), total\(\), total\(0, \-2, 2\) and total\(\.\.\.\[2, 3\]\)\.
 
-Context: Node 22\.23\.4, strict CommonJS\. Run this block separately in a \.cjs file with "use strict" at the top\.
+Context: Modern JavaScript in strict mode\. Run this block as a strict script \(add "use strict"\) or an ECMAScript module\.
 
 Solution: Total numeric rest arguments
 
@@ -1690,7 +1690,7 @@ Common mistake: expecting an object literal to bind an arrow to that object\. Cr
 
 The detached function below throws in strict mode\. Supply a callback named read that returns 7 when invoked without a receiver\. Explain both bind and a wrapper alternative; could binding an arrow replace its captured this?
 
-Context: Node 22\.23\.4, strict CommonJS\. Run each block separately in a \.cjs file with "use strict" at the top\. Inputs are supplied in the snippet\.
+Context: Modern JavaScript in strict mode\. Run independent blocks as strict scripts \(add "use strict"\) or ECMAScript modules\. Inputs are supplied in the snippet\.
 
 Bug: the method loses its receiver
 
@@ -1722,7 +1722,7 @@ Replace meter\.read after creating each callback\. The bound callback keeps the 
 
 ### Objects and data
 
-Node 22.23.4, strict CommonJS; run each block separately with "use strict". Trace property lookup and a changed object path. Explain it: what does an instance own, and what can it find through its prototype?
+Modern JavaScript; run each block separately with "use strict". Trace property lookup and a changed object path. Explain it: what does an instance own, and what can it find through its prototype?
 
 #### Destructure and read optional data
 
@@ -1747,7 +1747,7 @@ Common mistake: describing a destructuring default as a null fallback\. An exist
 
 Write readPageSize\(settings\)\. An absent setting, absent pageSize, undefined or null pageSize yields 20; preserve 0\. Assume an absent setting or a plain object\. Explain why destructuring defaults alone do not satisfy the null case\.
 
-Context: Node 22\.23\.4, strict CommonJS\. Run this block separately in a \.cjs file with "use strict" at the top\.
+Context: Modern JavaScript in strict mode\. Run this block as a strict script \(add "use strict"\) or an ECMAScript module\.
 
 Solution: Read optional settings
 
@@ -1804,7 +1804,7 @@ Common mistake: calling spread a deep clone\. It does not copy the source protot
 
 The spread copy below unexpectedly changes original\. Explain why, then repair the update so original stays light and the updated settings object is distinct\. Start the repair from fresh input\.
 
-Context: Node 22\.23\.4, strict CommonJS\. Each block starts with a fresh plain object\. Add "use strict" at the top of its \.cjs file\.
+Context: Modern JavaScript in strict mode\. Each block starts with a fresh plain object\. Use a strict script \(add "use strict"\) or an ECMAScript module\.
 
 Bug: one level copied
 
@@ -1842,7 +1842,7 @@ Add an untouched sibling object named profile\. It can deliberately stay shared;
 
 ### Collections and problem solving
 
-Node 22.23.4, strict CommonJS; run each block separately with "use strict". Transform, select, aggregate and order values without surprising the caller. Explain it: which method expresses the result you need, and what happens on empty input?
+Modern JavaScript; run each block separately with "use strict". Transform, select, aggregate and order values without surprising the caller. Explain it: which method expresses the result you need, and what happens on empty input?
 
 #### Choose by the result you need
 
@@ -1894,7 +1894,7 @@ Common mistake: omitting the initial accumulator and then failing on an empty ar
 
 Repair sorted so it returns ascending numbers while leaving the caller’s array unchanged\. Predict the default sort result and the original array after the buggy call\. Include empty input in your check\.
 
-Context: Node 22\.23\.4, strict CommonJS\. Run each block separately in a \.cjs file with "use strict" at the top\. Inputs are supplied in the snippet\.
+Context: Modern JavaScript in strict mode\. Run independent blocks as strict scripts \(add "use strict"\) or ECMAScript modules\. Inputs are supplied in the snippet\.
 
 Bug: default ordering and mutation
 
@@ -1962,7 +1962,7 @@ Tests should include an empty list, one label, all repeated labels, mixed case, 
 
 Given a case\-sensitive string array, return its first label that occurs exactly once, or null if none exists\. Keep input unchanged\. State a plan, implement firstUniqueLabel\(labels\), test edges and compare its cost with repeated scanning\. \["js", "css", "js", "html"\] must return "css"\.
 
-Context: Node 22\.23\.4, strict CommonJS\. Run this block separately in a \.cjs file with "use strict" at the top\.
+Context: Modern JavaScript in strict mode\. Run this block as a strict script \(add "use strict"\) or an ECMAScript module\.
 
 Solution: Find the first unique label
 
@@ -1991,7 +1991,218 @@ Test empty input, one label, all repeated, mixed case, empty text and a unique l
 
 ### Promises and errors
 
-Node 22.23.4, strict CommonJS; run each block separately with "use strict". Track the promise returned to the caller, then decide whether operations depend on one another. Explain it: what must a caller await to catch a failure?
+Modern JavaScript. Run independent demonstrations separately; combine the shared lookup fixture with the definitions and caller named by each example. The optional fixture implementation follows its contract and adapter.
+
+Imagine a screen needs a person’s display name\. A profile lookup supplies the record later, but its caller continues now\. How can that caller observe success, failure and cleanup? Follow one lookup from an error\-first callback through a returned promise, a transformation and an awaited caller\.
+
+Start with functions, callbacks, basic loops and try/catch\. By the end, trace what returns immediately, what becomes available later and who owns each failure\. Open the topics in order for the connected walkthrough, then explain the model and apply it to two different tasks\.
+
+#### The function returns before its result arrives
+
+Separate the callback’s return from the caller’s completion\.
+
+Our simulated readProfile\(id, done\) lookup calls done once, after the current synchronous code finishes\. It passes either an error or a profile\. ID 1 supplies \{ name: 'Ada' \}; ID 99 reports “Profile 99 was not found”\. There is no network request or timer\-duration assumption\. Treat this contract as given; its optional implementation appears after the promise adapter\.
+
+A caller using the callback directly
+
+```
+readProfile(1, (error, profile) => {
+  if (error) {
+    console.log(`caught: ${error.message}`);
+    return;
+  }
+  console.log(profile.name);
+});
+console.log('request started');
+```
+
+With the lookup fixture, this prints request started, then Ada\. Registering a callback does not wait for it to run\. The caller continues; later, the lookup invokes the callback\.
+
+A return from the wrong function
+
+```
+function wrongName(id) {
+  readProfile(id, (error, profile) => {
+    if (error) return 'Guest';
+    return profile.name;
+  });
+}
+console.log(wrongName(1)); // undefined
+```
+
+There are two functions here\. return profile\.name returns from the callback\. wrongName has already reached its end without returning a value, and readProfile ignores the callback’s return value\. A longer lookup cannot change which function a return belongs to\. The caller needs a completion contract\.
+
+#### Return a promise now, observe its outcome later
+
+Distinguish the promise object from its eventual value\.
+
+A promise is an object representing an eventual outcome\. The caller can receive that object immediately and attach work to its outcome\. The lookup still decides when its result becomes available; creating a promise does not move work onto another JavaScript thread\.
+
+Promise states in the lookup
+
+| State | Meaning here | What the caller has |
+| --- | --- | --- |
+| Pending | The callback has not supplied an outcome yet\. | The promise object\. |
+| Fulfilled | The lookup supplied a profile\. | A fulfillment handler can receive that profile\. |
+| Rejected | The lookup supplied an error\. | A rejection handler can receive that reason\. |
+
+Fulfilled and rejected are the two settled states\. Once settled, a promise cannot switch to the other result\. Resolved is a different term: a promise can adopt another promise that is still pending\. The adapter below resolves with a plain profile object, so that particular resolution fulfills it\.
+
+#### Connect the callback to a returned promise
+
+Identify the executor and the two functions supplied to it\.
+
+Wrap this callback boundary once\. The function passed to new Promise is its executor\. The constructor calls it immediately and supplies resolve and reject, two functions tied to that new promise\. We do not define these arguments ourselves\.
+
+The lookup adapter
+
+```
+function loadProfile(id) {
+  return new Promise((resolve, reject) => {
+    readProfile(id, (error, profile) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(profile);
+    });
+  });
+}
+```
+
+The constructor invokes the executor now; readProfile invokes \(error, profile\) =\> \.\.\. later\. That later callback retains access to resolve and reject\. Calling resolve\(profile\) supplies the promise’s outcome; it does not return the profile from loadProfile\.
+
+From call to reaction
+
+| Moment | What happens | What has returned? |
+| --- | --- | --- |
+| Call loadProfile\(1\)\. | The constructor creates a promise and runs its executor\. | loadProfile is still running\. |
+| Call readProfile\. | The lookup registers its later callback\. | readProfile returns; the executor reaches its end\. |
+| Return from loadProfile\. | The caller can attach handlers\. | The pending promise, before the profile\. |
+| Invoke the lookup callback\. | Call resolve\(profile\) or reject\(error\)\. | The callback finishes\. |
+| Run a registered reaction\. | Receive the value or reason\. | Its return determines a derived promise’s outcome\. |
+
+A synchronous executor throw can reject the promise\. A throw from a later callback does not travel backward into the finished executor\. This adapter explicitly passes reported callback errors to reject\. Keep transformations in the promise chain so their throws become chain rejections\.
+
+#### Optional: the simulated lookup implementation
+
+Use this shared fixture when trying the demonstrations\.
+
+This fixture uses standard JavaScript promises to schedule its callback after current synchronous work\. Promise\.resolve\(\) supplies a fulfilled promise; then schedules its handler\. This is an implementation detail of the simulation, not a requirement for callback APIs in general\. The Scheduling section covers queue ordering\.
+
+Shared lookup fixture
+
+```
+const profiles = new Map([
+  [1, { name: 'Ada' }],
+  [2, { name: 'Lin' }],
+]);
+
+function readProfile(id, done) {
+  Promise.resolve().then(() => {
+    const profile = profiles.get(id);
+    if (!profile) {
+      done(new Error(`Profile ${id} was not found`));
+      return;
+    }
+    done(null, profile);
+  });
+}
+```
+
+Combine this fixture with the adapter and the definitions needed by the caller you want to try\. Run each demonstration independently so its output is clear\. The fixture ignores the callback’s return\. If that callback throws, then rejects its own derived promise, which this callback\-style API does not return; avoid throwing from it\. The adapter reports errors explicitly and leaves transformations to the returned chain\.
+
+#### Transform the result and return the chain
+
+Give the caller ownership of the complete display\-name operation\.
+
+The screen needs an uppercase display name and a completion message on either outcome\. With the fixture and adapter defined, this version uses promise methods:
+
+Display name with then
+
+```
+function displayNameWithThen(id) {
+  return loadProfile(id)
+    .then(profile => profile.name.toUpperCase())
+    .finally(() => console.log(`finished ${id}`));
+}
+```
+
+Each then creates a new promise\. It does not replace the value inside the original promise\.
+
+Which promise carries which value?
+
+| Expression | Eventual fulfillment value |
+| --- | --- |
+| loadProfile\(id\) | A profile such as \{ name: 'Ada' \}\. |
+| \.then\(profile =\> profile\.name\.toUpperCase\(\)\) | The string 'ADA'\. |
+| \.finally\(\.\.\.\), when cleanup succeeds | The same 'ADA'\. |
+
+Returning the chain lets the caller observe the whole operation\. Omitting the outer return makes this ordinary function return undefined while the lookup continues\. Omitting the return inside a block\-bodied handler instead fulfills its derived promise with undefined\. Identify which function lost its return\. A handler throw rejects the promise returned by then; returning another promise makes that link follow its outcome\.
+
+#### Trace a failed lookup through cleanup
+
+Follow id 99 without inventing a profile to transform\.
+
+For displayNameWithThen\(99\), the lookup fails before there is any profile to uppercase\. Trace the same operation’s rejection:
+
+A rejection from lookup to caller
+
+| Boundary | What happens |
+| --- | --- |
+| Callback → adapter | The callback supplies an error; reject\(error\) rejects the lookup promise\. |
+| Lookup promise → then | The success handler is skipped\. With no rejection handler here, the derived promise rejects with the same reason\. |
+| Derived promise → finally | Cleanup prints finished 99\. Successful cleanup preserves the rejection\. |
+| Returned promise → awaited caller | Await throws that reason; the caller’s surrounding catch can handle it\. |
+
+Successful cleanup does not turn a failed lookup into success\. A throwing cleanup can replace the original outcome\. Promise\.finally ignores an ordinary returned value, but waits for a returned promise; a rejected cleanup promise replaces the outcome too\. A return statement in a JavaScript finally block can override an earlier return or throw\. Keep cleanup separate from choosing a result\.
+
+#### Express the same operation with async and await
+
+Compare the two forms, then trace the awaited caller\.
+
+Display name with await
+
+```
+async function displayNameWithAwait(id) {
+  try {
+    const profile = await loadProfile(id);
+    return profile.name.toUpperCase();
+  } finally {
+    console.log(`finished ${id}`);
+  }
+}
+```
+
+An async function returns a promise\. At await, this invocation pauses until the awaited outcome is available; other JavaScript work can run\. Fulfillment supplies profile\. Rejection throws at that expression and travels through finally before this function’s returned promise rejects\. A transformation error, such as uppercasing a non\-string name, also propagates\.
+
+There is no recovery in either display\-name version\. The caller decides whether to show a fallback, retry or report the error\. Adding a catch that only logs and returns normally would turn rejection into fulfillment, possibly with undefined\.
+
+Caller: fixture, adapter and await version
+
+```
+async function demo() {
+  for (const id of [1, 99]) {
+    try {
+      console.log(await displayNameWithAwait(id));
+    } catch (error) {
+      console.log(`caught: ${error.message}`);
+    }
+  }
+}
+demo().catch(error => console.error(error));
+```
+
+Caller output
+
+```
+finished 1
+ADA
+finished 99
+caught: Profile 99 was not found
+```
+
+Cleanup runs before the display\-name promise settles\. Only then does the caller’s await resume to print the name or catch the rejection\. The loop awaits each call, so request 99 starts after the first result is handled\. Replace displayNameWithAwait\(id\) with displayNameWithThen\(id\) for the same observable outcomes here\.
 
 #### Validation, recovery and cleanup
 
@@ -2024,44 +2235,112 @@ console.log(runChecked(2, n => n + 5, () => console.log('cleanup')));
 
 Common mistake: catching every failure and reporting success, or returning from finally and hiding an earlier error\. The wrapper runs cleanup once after success or failure, including failed validation\. InvalidInput marks the validation failure this boundary owns; other errors propagate\. Explain it: which boundary decides whether an invalid input can be recovered?
 
-#### Return the chain; await inside the catch boundary
+#### Choose what completes a batch
 
-Keep the returned promise inside the caller’s catch boundary\.
+Compare an all\-success result with a partial\-results report\.
 
-A promise represents eventual fulfillment or rejection\. then returns another promise: returning a value fulfills the next link, while throwing rejects it\. An async function returns a promise too\. await suspends that function until the value settles; a rejection throws at the await, where a surrounding try/catch can observe it\.
+A report can still be useful when one profile is missing\. With the fixture and adapter defined, give allSettled the lookup promises and inspect every outcome:
 
-The awaited rejection reaches this catch
-
-```
-async function read() { throw new Error('offline'); }
-async function show() {
-  try { await read(); }
-  catch (error) { console.log(error.message); }
-}
-show(); // offline
-```
-
-Common mistake: starting asynchronous work without returning or awaiting it\. The caller can then report success before the work finishes, and a surrounding synchronous try/catch cannot observe a later rejection\.
-
-#### Sequential dependencies or concurrent initiation
-
-Choose sequential dependencies or an all\-success join\.
-
-Use for\.\.\.of with await when one operation must finish before the next begins\. For independent work, Promise\.all joins the input promises and returns results in input order, regardless of completion order\. It rejects when an input rejects; it does not cancel work already started\. Concurrent initiation is not a guarantee of parallel JavaScript execution\.
-
-Join results before using them
+A report retaining both outcomes
 
 ```
-async function total() {
-  const values = await Promise.all([
-    Promise.resolve(2), Promise.resolve(3),
+async function profileReport() {
+  const outcomes = await Promise.allSettled([
+    loadProfile(1),
+    loadProfile(99),
   ]);
-  return values[0] + values[1];
+  for (const outcome of outcomes) {
+    if (outcome.status === 'fulfilled') {
+      console.log(`ok: ${outcome.value.name}`);
+    } else {
+      console.log(`failed: ${outcome.reason.message}`);
+    }
+  }
 }
-total().then(value => console.log(value)); // 5
+profileReport().catch(error => console.error(error));
 ```
 
-Common mistake: awaiting forEach and assuming it joins async callbacks\. forEach discards callback results\. The local repair asks for sequential completion, so starting all saves together would change its requirement\.
+This prints ok: Ada, then failed: Profile 99 was not found\. allSettled waits for every input to settle, then fulfills with records in input order\. Fulfilled records have value; rejected records have reason\. profileReport prints the records and returns no value, so its own promise fulfills with undefined\. It calls loadProfile directly, without display\-name cleanup messages\.
+
+Choose the completion contract
+
+| Requirement | Method and result |
+| --- | --- |
+| Every lookup must succeed\. | Promise\.all fulfills with values or rejects when an input rejection reaches it\. It does not give a full outcome report\. |
+| Keep each success and failure\. | Promise\.allSettled fulfills with status records after every input settles, including an empty input\. |
+| First fulfillment / first settlement\. | Promise\.any / Promise\.race\. any rejects if all inputs reject; race follows the first settlement\. |
+
+Calling the lookup functions initiates work; the join does not call them for you\. Neither all nor allSettled cancels work already started\. Concurrent initiation does not guarantee parallel JavaScript execution\. Choose the caller’s contract before choosing the method\.
+
+#### Explain promises and chaining in an interview
+
+Give a model answer, then test the boundary with a follow\-up\.
+
+##### What does loadProfile\(1\) return before the callback runs?
+
+A promise representing the lookup\. Its executor has already registered the callback, but the profile is not available to the caller yet\. The caller observes its outcome through a handler or await\.
+
+Weak answer: The profile itself\.
+
+Follow-up: Returning a profile from the executor does not fulfill the promise; the executor’s return value is ignored\.
+
+##### Does then change the original promise?
+
+It returns a new promise\. Returning a normal value fulfills that derived promise; throwing rejects it; returning another promise makes it follow that outcome\.
+
+Weak answer: It updates the promise\.
+
+Follow-up: A handler returning nothing supplies undefined to the derived promise\.
+
+#### Explain awaiting and batch ownership
+
+Identify who observes rejection and what keeps running\.
+
+##### Does await block JavaScript? When does local try/catch need it?
+
+Await suspends this async invocation while the operation is pending\. Await inside a local try makes a rejection throw at that boundary\. Simply returning a pending promise forwards its eventual rejection to the caller without that local catch seeing it\.
+
+Follow-up: Use await when local error handling or cleanup must span the operation\. Direct forwarding is useful when the caller owns those responsibilities\.
+
+##### Would Promise\.all cancel the remaining lookups after one fails?
+
+No\. It joins the promises and rejects its aggregate when an input rejection reaches it; started work can continue\. Use all when partial success is unusable, and allSettled when the caller needs each outcome\.
+
+Follow-up: Calling the lookup functions initiates work\. Promise\.all does not call those functions for you\.
+
+#### Transfer: save a batch in order
+
+Make the caller observe each save, and stop initiation on failure\.
+
+The next activity changes the story\. The caller must observe every save, and item 3 must not start if item 2 fails\. First identify the promise the caller receives and the completion each loop method exposes\. Awaiting forEach cannot join promises its callbacks return: forEach discards those results\. Use for\.\.\.of with await when one save must finish before the next starts\.
+
+Attempt Async iteration repair below before inspecting its solution\. After implementing saveAll, combine it with this fixture\. Its executor stores the supplied resolving function in releaseFirst, letting you finish the first save manually\.
+
+Check the repaired saveAll initiation order
+
+```
+let releaseFirst;
+const firstSave = new Promise(resolve => { releaseFirst = resolve; });
+const started = [];
+const save = item => {
+  started.push(item);
+  return item === 1 ? firstSave : Promise.resolve();
+};
+const done = saveAll([1, 2], save);
+console.log(started.join(','));
+releaseFirst();
+done.then(result => console.log(result)).catch(error => console.error(error));
+```
+
+The repair prints 1, then complete\. At the first log, item 1 is still pending and item 2 has not started\. The original bug prints 1,2 at that point\. Naming for\.\.\.of alone is not an explanation: show how rejection reaches the awaited caller\.
+
+Test these contracts separately
+
+| Input and save behavior | Required outcome |
+| --- | --- |
+| Empty items | Fulfill with complete; never call save\. |
+| \[1, 2\], both fulfill | Start in order and fulfill only after both saves\. |
+| \[1, 2, 3\], save 2 rejects | Reject saveAll with that error; save 3 never starts\. |
 
 ##### Practice
 
@@ -2069,7 +2348,7 @@ Common mistake: awaiting forEach and assuming it joins async callbacks\. forEach
 
 save returns a promise\. Repair saveAll so saves finish one at a time in input order, complete is reported only after the last save, and a rejection reaches the awaited caller\. What happens to item 3 if saving item 2 fails?
 
-Context: Node 22\.23\.4, strict CommonJS\. Function definitions below take items and an injected save\(item\); no top\-level await is needed\. To try them, call report\(items, save\) from your async harness\. Saves in the completion check are deliberately held pending\.
+Context: Modern JavaScript in strict mode\. Function definitions below take items and an injected save\(item\); no top\-level await is needed\. To try them, call report\(items, save\) from your async harness\. Saves in the completion check are deliberately held pending\.
 
 Bug: completion before saves finish
 
@@ -2113,13 +2392,13 @@ Follow-up
 
 If saves are independent and may start together, await Promise\.all\(items\.map\(save\)\) can join them instead\. It rejects when an input rejects, but does not cancel saves already started\. Choose this only when sequential completion is not required\.
 
-#### Keep partial outcomes
+#### Transfer: produce a partial\-results report
 
-Retain fulfillment and rejection records in input order\.
+Retain each result and explain its correspondence to the input\.
 
-Promise\.allSettled waits for every input to settle and returns a status record for each, in input order\. Fulfilled records carry value; rejected records carry reason\. It also handles an empty input\. Promise\.all suits an all\-success result; allSettled suits a report that retains failures\. Neither join cancels underlying work\. Promise\.any asks for the first fulfillment \(rejecting if all reject\); Promise\.race adopts the first settlement\. Choose the join whose result matches the caller’s requirement\.
+Attempt Retain partial results below with one fulfillment, one rejection and empty input\. Distinguish an outcome record from a recovered value\. State input order versus completion order, and say what continues after failure\. Choosing allSettled should follow from the report’s requirements\.
 
-Common mistake: expecting allSettled to throw for an input rejection or remove failed entries\. Explain it: how would filtering failed records change their correspondence with the input list?
+Then trace id 1 and id 99 through the producer, adapter, transformation, cleanup and caller without rereading\. At each boundary, say what returns immediately, what arrives later and who owns an error\. Explain what changes if the transformation throws\. Return to the unclear boundary’s walkthrough and reconstruct the behavior\.
 
 ##### Practice
 
@@ -2127,7 +2406,7 @@ Common mistake: expecting allSettled to throw for an input rejection or remove f
 
 Write collectOutcomes\(promises\) to return every fulfillment/rejection record in input order\. Test Promise\.resolve\(2\), Promise\.reject\("offline"\) and empty input\. Use an awaited caller so the resulting records stay observable\.
 
-Context: Node 22\.23\.4, strict CommonJS\. Run this block separately in a \.cjs file with "use strict" at the top\.
+Context: Modern JavaScript in strict mode\. Run this block as a strict script \(add "use strict"\) or an ECMAScript module\.
 
 Solution: Retain partial results
 
@@ -2151,7 +2430,7 @@ Hold the first promise pending and settle the second first\. Does the result arr
 
 ### Scheduling
 
-Node 22.23.4, strict CommonJS; run each block separately with "use strict". Predict one isolated callback before making broader claims about a runtime. Explain it: does a zero-delay timer get to interrupt current synchronous code?
+Modern JavaScript; run each block separately with "use strict". Predict one isolated callback before making broader claims about a runtime. Explain it: does a zero-delay timer get to interrupt current synchronous code?
 
 #### Finish current code before queued callbacks
 
@@ -2176,7 +2455,7 @@ Common mistake: reading the position of a callback’s function body in the sour
 
 Predict the five log lines and explain why the zero\-delay timer cannot run between the two synchronous lines\. Account for both the promise reaction and queueMicrotask registration\.
 
-Context: Node 22\.23\.4, strict CommonJS\. Execute these statements together inside one fresh timer callback, with no unrelated work\. This isolates the trace from earlier async continuations; it is an order check, not a timer\-duration check\.
+Context: Modern JavaScript in strict mode\. Execute these statements together inside one fresh timer callback, with no unrelated work\. This isolates the trace from earlier async continuations; it is an order check, not a timer\-duration check\.
 
 Predict this isolated trace
 
@@ -2210,15 +2489,15 @@ Common mistake: turning this trace into a browser paint rule or a timer\-versus\
 
 ### Modules
 
-These examples use Node 22.23.4 ESM (.mjs), which is strict automatically. Keep them separate from the CommonJS blocks elsewhere. Explain it: which names are exported, and which are local?
+These examples are ECMAScript modules, which are automatically strict. Treat the labelled files as separate modules; import/export requires module loading by the host. Explain it: which names are exported, and which are local?
 
 #### Named exports, a default and local scope
 
 Supply a module with one named value and one default function\.
 
-An ES module exposes only what it exports; other top\-level names stay module\-local\. A named import must match an exported name \(it may be renamed locally with as\)\. A default import does not use braces and may choose a local name\. This totals\.mjs supplies one named currency and one default function; total is the function’s local name, not an additional named export\.
+An ES module exposes only what it exports; other top\-level names stay module\-local\. A named import must match an exported name \(it may be renamed locally with as\)\. A default import does not use braces and may choose a local name\. This totals\.js supplies one named currency and one default function; total is the function’s local name, not an additional named export\.
 
-totals\.mjs — Node 22\.23\.4 ESM
+totals\.js — ECMAScript module
 
 ```
 export const currency = 'USD';
@@ -2232,24 +2511,24 @@ Common mistake: assuming a function’s name makes a default export into a named
 
 #### Run two real module files
 
-Repair main\.mjs, then run it alongside the supplied module\.
+Repair main\.js, then run it alongside the supplied module\.
 
-Save the supplied source as totals\.mjs and the importing file as main\.mjs in the same directory\. Run node main\.mjs\. The relative import includes the \.mjs extension\. The starter imports a name totals\.mjs does not export, so module linking fails before its logs run\. Repair main\.mjs against that supplied file; the solution produces USD 5 0\.
+Save the supplied source as totals\.js and the importing file as main\.js in the same directory\. Load main\.js as an ECMAScript module in a host with module support\. The relative import includes the \.js extension\. The starter imports a name totals\.js does not export, so module linking fails before its logs run\. Repair main\.js against that supplied file; the solution produces USD 5 0\.
 
-Common mistake: pasting import/export into the strict \.cjs examples\. Use the labelled ESM files here\. Explain it: why can a default import use a local name different from total?
+Common mistake: treating import/export as ordinary script syntax\. Use the labelled ECMAScript module files here\. Explain it: why can a default import use a local name different from total?
 
 ##### Practice
 
 ###### Repair a module boundary
 
-Using the supplied totals\.mjs above, repair only main\.mjs so it imports the default total function and named currency\. Run node main\.mjs; \[2, 3\] and \[\] must produce USD 5 0\. Explain why the original import fails before logging\.
+Using the supplied totals\.js above, repair only main\.js so it imports the default total function and named currency\. Load main\.js as an ECMAScript module; \[2, 3\] and \[\] must produce USD 5 0\. Explain why the original import fails before logging\.
 
-Context: Node 22\.23\.4 ESM\. Save the exact supplied totals\.mjs from Named exports, a default and local scope beside main\.mjs\. This starter and solution are main\.mjs only; do not run them as \.cjs\.
+Context: ECMAScript modules, automatically strict\. Save the exact supplied totals\.js from Named exports, a default and local scope beside main\.js\. This starter and solution are main\.js only; load them as modules rather than ordinary scripts\.
 
-main\.mjs — broken named import
+main\.js — broken named import
 
 ```
-import { total, currency } from './totals.mjs';
+import { total, currency } from './totals.js';
 console.log(currency, total([2, 3]), total([]));
 ```
 
@@ -2257,16 +2536,16 @@ Solution: Repair a module boundary
 
 Use a default import without braces for total, plus the named import currency\. The repaired program logs USD 5 0\.
 
-main\.mjs — repaired imports
+main\.js — repaired imports
 
 ```
-import total, { currency } from './totals.mjs';
+import total, { currency } from './totals.js';
 console.log(currency, total([2, 3]), total([]));
 ```
 
 Why it works
 
-totals\.mjs has no named export total\. Its default export may be given the local name total by the importer; currency must match the named export\. The helper initial remains local to totals\.mjs\.
+totals\.js has no named export total\. Its default export may be given the local name total by the importer; currency must match the named export\. The helper initial remains local to totals\.js\.
 
 Follow-up
 
@@ -2275,6 +2554,12 @@ Rename the default import to sum and update its calls\. Why would importing \{ i
 Sources:
 
 Source: [JavaScript Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide) — MDN contributors.
+
+Source: [Promise constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise) — MDN contributors.
+
+Source: [Promise.then](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then) — MDN contributors.
+
+Source: [Promise.finally](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally) — MDN contributors.
 
 Source: [Equality comparisons and sameness](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Equality_comparisons_and_sameness) — MDN contributors.
 

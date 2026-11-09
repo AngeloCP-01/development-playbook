@@ -155,6 +155,7 @@ for (const [name, blocks] of [
       },
     ],
   ],
+  ['missing id', [{ kind: 'paragraph', text: 'Missing identity' }]],
   ['unknown kind', [{ id: 'unknown', kind: 'unknown' }]],
   ['blank prose', [{ id: 'empty', kind: 'paragraph', text: ' ' }]],
 ] as const)

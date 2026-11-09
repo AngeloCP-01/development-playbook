@@ -54,7 +54,7 @@ test('the shared audit discovers every rendered study hash and observes every ne
     expect(observed.sort()).toEqual([...expected].sort())
     observedIds.push(...observed)
   }
-  expect(new Set(observedIds).size).toBe(39)
+  expect(new Set(observedIds).size).toBe(observedIds.length)
 })
 
 test('study sections support later deep links, Back/Forward, keyboard navigation and fresh local answers', async ({
@@ -274,7 +274,7 @@ for (const theme of ['light', 'dark']) {
     await expect(solution).toHaveAttribute('aria-expanded', 'true')
 
     const blocks = [
-      panel.locator('pre').filter({ hasText: 'async function read()' }),
+      panel.getByLabel('Display name with await', { exact: true }),
       panel.locator('pre').filter({ hasText: 'await items.forEach' }),
       panel.locator('pre').filter({ hasText: 'for (const item of items)' }),
     ]
@@ -285,7 +285,7 @@ for (const theme of ['light', 'dark']) {
       await panel.focus()
       for (
         let attempt = 0;
-        attempt < (await panel.locator('button, pre[tabindex]').count()) + 1;
+        attempt < (await panel.locator('button, [tabindex="0"]').count()) + 1;
         attempt++
       ) {
         await page.keyboard.press('Tab')
@@ -358,4 +358,299 @@ test('default panels and each single open topic fit four screens without exposin
     }
   }
   console.log('[javascript-panel-screens]', JSON.stringify(measurements))
+})
+
+for (const theme of ['light', 'dark']) {
+  test(`the visible Promises opening and semantic table support keyboard reading in ${theme}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 320, height: 900 })
+    await page.addInitScript(
+      (value) => localStorage.setItem('playbook:theme', JSON.stringify(value)),
+      theme,
+    )
+    await page.goto('/reference/javascript#async', { waitUntil: 'networkidle' })
+    await expect(
+      page.getByText(/Imagine a screen needs a person/),
+    ).toBeVisible()
+    await expect(page.getByRole('table')).toHaveCount(0)
+    await openTopic(page, 'async', 'promise-states')
+    const table = page.getByRole('table', {
+      name: 'Promise states in the lookup',
+    })
+    await expect(
+      table.getByRole('columnheader', { name: 'State', exact: true }),
+    ).toBeVisible()
+    await expect(
+      table.getByRole('cell', { name: 'Pending', exact: true }),
+    ).toBeVisible()
+    const region = page.getByRole('region', {
+      name: 'Promise states in the lookup',
+    })
+    const control = page.locator(
+      `button[aria-controls="${prefix('async', 'promise-states')}"]`,
+    )
+    await control.focus()
+    await page.keyboard.press('Tab')
+    await expect(region).toBeFocused()
+    await expect
+      .poll(() =>
+        region.evaluate((el) => {
+          const rect = el.getBoundingClientRect()
+          const rail = document
+            .querySelector('[aria-label="JavaScript sections"]')!
+            .getBoundingClientRect()
+          const style = getComputedStyle(el)
+          return (
+            rect.top >= rail.bottom &&
+            rect.bottom <= innerHeight &&
+            style.outlineStyle !== 'none' &&
+            parseFloat(style.outlineWidth) > 0
+          )
+        }),
+      )
+      .toBe(true)
+    expect(await region.evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(
+      true,
+    )
+    await page.keyboard.press('ArrowRight')
+    await expect
+      .poll(() => region.evaluate((el) => el.scrollLeft))
+      .toBeGreaterThan(0)
+
+    await openTopic(page, 'async', 'interview-promises')
+    await expect(
+      page.getByRole('heading', {
+        name: 'Does then change the original promise?',
+        level: 4,
+      }),
+    ).toBeVisible()
+    await openTopic(page, 'async', 'joining')
+    const answer = page.getByRole('button', {
+      name: 'Solution: Async iteration repair',
+      exact: true,
+    })
+    await answer.click()
+    await page.getByRole('tab', { name: /Scheduling/ }).click()
+    await page.goBack()
+    await expect(page).toHaveURL(/#async$/)
+    await expect(page.getByRole('table')).toHaveCount(0)
+    await expect(answer).toHaveCount(0)
+    await openTopic(page, 'async', 'joining')
+    await expect(answer).toHaveAttribute('aria-expanded', 'false')
+  })
+}
+
+const promiseCode = (id: string) => {
+  const block = javascript.sections
+    .find((s) => s.study!.id === 'async')!
+    .rows.flatMap((row) => row.teaching ?? [])
+    .find((block) => block.id === id)
+  if (!block || block.kind !== 'code')
+    throw new Error(`Missing published code ${id}`)
+  return block.code
+}
+
+test('the actual published Promise fixture, adapter, consumers and transfer fixture work in a browser', async ({
+  page,
+}) => {
+  await page.goto('/reference/javascript#async')
+  const code = Object.fromEntries(
+    [
+      'profile-fixture',
+      'callback-caller',
+      'wrong-callback-return',
+      'promise-adapter-code',
+      'chain-version',
+      'await-version',
+      'awaited-caller',
+      'outcomes-example',
+      'save-test-fixture',
+    ].map((id) => [id, promiseCode(id)]),
+  )
+  const output = await page.evaluate(
+    async ({ code, saveSolution }) => {
+      const logs: unknown[][] = []
+      const errors: unknown[][] = []
+      const console = {
+        log: (...args: unknown[]) => logs.push(args),
+        error: (...args: unknown[]) => errors.push(args),
+      }
+      const run = (source: string, result = 'undefined') =>
+        new Function('console', `"use strict";\n${source}\nreturn ${result};`)(
+          console,
+        )
+      const setup = [
+        'profile-fixture',
+        'promise-adapter-code',
+        'chain-version',
+        'await-version',
+      ]
+        .map((id) => code[id])
+        .join('\n')
+      await run(
+        `${code['profile-fixture']}\n${code['callback-caller']}`,
+        'Promise.resolve()',
+      )
+      const callback = logs.splice(0)
+      await run(
+        `${code['profile-fixture']}\n${code['wrong-callback-return']}`,
+        'Promise.resolve()',
+      )
+      // Undefined is serialized as null inside an array by the browser protocol.
+      const wrongReturn = logs
+        .splice(0)
+        .map((args) =>
+          args.map((value) => (value === undefined ? 'undefined' : value)),
+        )
+      const lesson = run(
+        setup,
+        '({loadProfile, displayNameWithThen, displayNameWithAwait, profiles})',
+      )
+      const outcomes: unknown[] = []
+      for (const fn of [
+        lesson.displayNameWithThen,
+        lesson.displayNameWithAwait,
+      ]) {
+        outcomes.push(await fn(1))
+        for (const id of [99, 3]) {
+          lesson.profiles.set(3, { name: null })
+          try {
+            await fn(id)
+            outcomes.push('unexpected success')
+          } catch (error) {
+            outcomes.push(
+              error instanceof Error
+                ? error.name + ': ' + error.message
+                : String(error),
+            )
+          }
+        }
+      }
+      const cleanup = logs.splice(0)
+      const callerOutputs = []
+      for (const name of ['displayNameWithAwait', 'displayNameWithThen']) {
+        const caller = code['awaited-caller']
+          .replace('displayNameWithAwait(id)', `${name}(id)`)
+          .replace(
+            'demo().catch(error => console.error(error));',
+            'const completion = demo().catch(error => console.error(error));',
+          )
+        await run(`${setup}\n${caller}`, 'completion')
+        callerOutputs.push(logs.splice(0))
+      }
+      const report = code['outcomes-example'].replace(
+        'profileReport().catch(error => console.error(error));',
+        'const completion = profileReport().catch(error => console.error(error));',
+      )
+      await run(`${setup}\n${report}`, 'completion')
+      const partial = logs.splice(0)
+      const transfer = code['save-test-fixture'].replace(
+        'done.then(result => console.log(result)).catch(error => console.error(error));',
+        'const completion = done.then(result => console.log(result)).catch(error => console.error(error));',
+      )
+      await run(`${saveSolution}\n${transfer}`, 'completion')
+      const saves = logs.splice(0)
+      const timing = run(
+        `const trace = []; let finish; const readProfile = (id, done) => { trace.push('registered'); finish = done; };\n${code['promise-adapter-code']}\nconst pending = loadProfile(1); trace.push('returned');`,
+        '({trace, finish, pending})',
+      )
+      timing.finish(null, { name: 'Ada' })
+      const profile = await timing.pending
+      return {
+        callback,
+        wrongReturn,
+        outcomes,
+        cleanup,
+        callerOutputs,
+        partial,
+        saves,
+        trace: timing.trace,
+        profile,
+        errors,
+      }
+    },
+    {
+      code,
+      saveSolution: javascript.activities!.find(
+        (a) => a.id === 'async-iteration',
+      )!.solution!.code,
+    },
+  )
+  expect(output.callback).toEqual([['request started'], ['Ada']])
+  expect(output.wrongReturn).toEqual([['undefined']])
+  expect(output.outcomes[0]).toBe('ADA')
+  expect(output.outcomes[1]).toBe('Error: Profile 99 was not found')
+  expect(output.outcomes[2]).toMatch(/^TypeError:/)
+  expect(output.outcomes[3]).toBe('ADA')
+  expect(output.outcomes[4]).toBe('Error: Profile 99 was not found')
+  expect(output.outcomes[5]).toMatch(/^TypeError:/)
+  expect(output.cleanup).toEqual([
+    ['finished 1'],
+    ['finished 99'],
+    ['finished 3'],
+    ['finished 1'],
+    ['finished 99'],
+    ['finished 3'],
+  ])
+  for (const caller of output.callerOutputs)
+    expect(caller).toEqual([
+      ['finished 1'],
+      ['ADA'],
+      ['finished 99'],
+      ['caught: Profile 99 was not found'],
+    ])
+  expect(output.partial).toEqual([
+    ['ok: Ada'],
+    ['failed: Profile 99 was not found'],
+  ])
+  expect(output.saves).toEqual([['1'], ['complete']])
+  expect(output.trace).toEqual(['registered', 'returned'])
+  expect(output.profile).toEqual({ name: 'Ada' })
+  expect(output.errors).toEqual([])
+})
+
+test('the actual totals.js and main.js sources link and run through a browser module loader', async ({
+  page,
+}) => {
+  await page.goto('/reference/javascript#modules')
+  const totals = javascript.sections.find((s) => s.study!.id === 'modules')!
+    .rows[0].example![0].code
+  const task = javascript.activities!.find((a) => a.id === 'module-boundary')!
+  // Test-only intercepted resources; no fixture route ships in the application.
+  const sources: Record<string, string> = {
+    'totals.js': totals,
+    'broken.js': task.starter!.code,
+    'main.js': task.solution!.code,
+  }
+  await page.route('**/__module-proof__/*.js', (route) =>
+    route.fulfill({
+      contentType: 'text/javascript',
+      body: sources[new URL(route.request().url()).pathname.split('/').pop()!],
+    }),
+  )
+  const logs: string[] = []
+  page.on('console', (message) => {
+    if (message.type() === 'log') logs.push(message.text())
+  })
+  const failure = await page.evaluate(async () => {
+    try {
+      const source = '/__module-proof__/broken.js'
+      await import(source)
+      return 'unexpected success'
+    } catch (error) {
+      return error instanceof Error
+        ? error.name + ': ' + error.message
+        : String(error)
+    }
+  })
+  expect(failure).toMatch(
+    /SyntaxError:.*does not provide an export named 'total'/,
+  )
+  expect(logs).toEqual([])
+  await page.evaluate(async () => {
+    const source = '/__module-proof__/main.js'
+    await import(source)
+  })
+  expect(logs).toEqual(['USD 5 0'])
 })
