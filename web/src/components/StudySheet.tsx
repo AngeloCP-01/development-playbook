@@ -2,6 +2,7 @@ import type { Cheatsheet, Row } from '@/lib/cheatsheets'
 import { studySections } from '@/lib/cheatsheets/study-sections'
 import { Stepper } from './Stepper'
 import { SheetActivities } from './SheetActivities'
+import { TeachingBlocks } from './TeachingBlocks'
 import { RevealList } from './RevealList'
 
 /** Server-built teaching follows the checked data traversal used by Markdown. */
@@ -19,6 +20,9 @@ export function StudySheet({ sheet }: { sheet: Cheatsheet }) {
           <section className="min-w-0 [&_button]:scroll-mt-36 [&_button]:scroll-mb-4">
             <h2 className="t-head text-xl">{section.title}</h2>
             {section.note && <p className="mt-3 text-muted">{section.note}</p>}
+            {section.introduction && (
+              <TeachingBlocks blocks={section.introduction} headingLevel={3} />
+            )}
             {section.subsections ? (
               <div className="mt-7 [&_li]:max-w-none!">
                 <RevealList
@@ -69,6 +73,7 @@ export function StudySheet({ sheet }: { sheet: Cheatsheet }) {
 }
 
 function Teaching({ row }: { row: Row }) {
+  if (row.teaching) return <TeachingBlocks blocks={row.teaching} />
   return (
     <>
       <p className="mt-2 text-[0.9375rem] leading-relaxed">{row.what}</p>

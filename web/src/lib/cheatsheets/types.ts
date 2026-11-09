@@ -36,7 +36,23 @@ export type RowExample = {
   html?: string
 }
 
+/** Ordered, plain-text teaching shared by study pages and portable Markdown. */
+export type TeachingBlock = { id: string } & (
+  | { kind: 'paragraph'; text: string }
+  | { kind: 'code'; label: string; code: string }
+  | { kind: 'table'; label: string; columns: string[]; rows: string[][] }
+  | {
+      kind: 'interview'
+      question: string
+      answer: string
+      weakAnswer?: string
+      followUp?: string
+    }
+)
+
 export type Row = {
+  /** Replaces legacy what/example/when output when present. */
+  teaching?: TeachingBlock[]
   /** Topic disclosure and exclusive local activity assignment on study sheets. */
   study?: { id: string; summary: string; activityIds: string[] }
   /** Set in mono when present — a command, signature, or literal. */
@@ -52,6 +68,8 @@ export type Row = {
 }
 
 export type Section = {
+  /** Visible before topic disclosures on study sheets. */
+  introduction?: TeachingBlock[]
   title: string
   note?: string
   rows: Row[]

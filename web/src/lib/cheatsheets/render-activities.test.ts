@@ -199,3 +199,58 @@ test('nested Markdown keeps literal summaries, safe fences and practice once und
   )
   expect(text.match(/Predict \\</g)).toHaveLength(1)
 })
+
+test('rich study Markdown preserves interleaving, safely fences code and escapes table cells and interview prose', () => {
+  const rich: Cheatsheet = study()
+  rich.sections[0].introduction = [
+    { id: 'intro', kind: 'paragraph', text: 'Visible <opening>.' },
+  ]
+  rich.sections[0].rows[0].teaching = [
+    { id: 'before', kind: 'paragraph', text: 'Before.' },
+    {
+      id: 'code',
+      kind: 'code',
+      label: 'Literal code',
+      code: 'let x = "```";\n\n  x;',
+    },
+    {
+      id: 'table',
+      kind: 'table',
+      label: 'State table',
+      columns: ['State', 'Value'],
+      rows: [['A|B', '<value>\nnext']],
+    },
+    { id: 'after', kind: 'paragraph', text: 'After.' },
+    {
+      id: 'interview',
+      kind: 'interview',
+      question: 'Why <now>?',
+      answer: 'Because **later**.',
+      weakAnswer: 'A [link](x).',
+      followUp: 'Who _owns_ it?',
+    },
+  ]
+  fixtures.sheets.push(rich)
+  const text = renderCheatsheets()
+  expect(text).toContain('Visible \\<opening\\>\\.')
+  expect(text).toContain('````\nlet x = "```";\n\n  x;\n````')
+  expect(text).toContain(
+    '| State | Value |\n| --- | --- |\n| A\\|B | \\<value\\><br>next |',
+  )
+  expect(text).toContain('##### Why \\<now\\>?')
+  expect(text).toContain('Because \\*\\*later\\*\\*\\.')
+  expect(text).toContain('Weak answer: A \\[link\\]\\(x\\)\\.')
+  expect(text).toContain('Follow-up: Who \\_owns\\_ it?')
+  const markers = [
+    'Visible',
+    'Before',
+    'Literal code',
+    'State table',
+    'After',
+    'Why \\<now',
+    'Practice',
+  ]
+  for (let i = 1; i < markers.length; i++)
+    expect(text.indexOf(markers[i - 1])).toBeLessThan(text.indexOf(markers[i]))
+  expect(text).not.toContain('Retained access.')
+})

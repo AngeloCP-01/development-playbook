@@ -147,3 +147,78 @@ test('nested teaching is independently disclosed, has ordered headings and reset
   expect(screen.queryByText('A function accesses its binding.')).toBeNull()
   expect(screen.queryByText('Other teaching.')).toBeNull()
 })
+
+test('ordered teaching shows an opening before disclosure, semantic tables, literal code and interview structure', () => {
+  const rich = structuredClone(sheet)
+  rich.sections[0].introduction = [
+    {
+      id: 'opening',
+      kind: 'paragraph',
+      text: 'Receive a promise before the result.',
+    },
+  ]
+  rich.sections[0].rows[0].teaching = [
+    { id: 'before', kind: 'paragraph', text: 'Before the operation.' },
+    {
+      id: 'source',
+      kind: 'code',
+      label: 'Literal source',
+      code: '<value>\n  `code`',
+    },
+    {
+      id: 'states',
+      kind: 'table',
+      label: 'States and values',
+      columns: ['State', 'Value'],
+      rows: [
+        ['Pending', 'Unavailable'],
+        ['Fulfilled', 'Profile'],
+      ],
+    },
+    { id: 'after', kind: 'paragraph', text: 'After the operation.' },
+    {
+      id: 'question',
+      kind: 'interview',
+      question: 'What returns now?',
+      answer: 'A promise.',
+      weakAnswer: 'The profile.',
+      followUp: 'Who handles rejection?',
+    },
+  ]
+  window.history.replaceState(null, '', '/reference/lesson')
+  render(<CheatsheetView sheet={rich} />)
+  expect(screen.getByText('Receive a promise before the result.')).toBeTruthy()
+  const panel = screen.getByRole('tabpanel')
+  expect(panel.textContent!.indexOf('Receive a promise')).toBeLessThan(
+    panel.textContent!.indexOf('Retained state'),
+  )
+  const code = screen.getByText('<value> `code`').closest('pre')!
+  expect(code.textContent).toBe('<value>\n  `code`')
+  expect(code.tabIndex).toBe(0)
+  const table = screen.getByRole('table', { name: 'States and values' })
+  expect(
+    within(table).getByRole('columnheader', { name: 'State' }),
+  ).toBeTruthy()
+  expect(within(table).getByRole('cell', { name: 'Unavailable' })).toBeTruthy()
+  const region = screen.getByRole('region', { name: 'States and values' })
+  expect(region.tabIndex).toBe(0)
+  region.focus()
+  expect(document.activeElement).toBe(region)
+  const text = panel.textContent!
+  expect(text.indexOf('Before the operation.')).toBeLessThan(
+    text.indexOf('Literal source'),
+  )
+  expect(text.indexOf('Literal source')).toBeLessThan(
+    text.indexOf('States and values'),
+  )
+  expect(text.indexOf('States and values')).toBeLessThan(
+    text.indexOf('After the operation.'),
+  )
+  expect(
+    screen.getByRole('heading', { level: 4, name: 'What returns now?' }),
+  ).toBeTruthy()
+  expect(screen.getByText('A promise.')).toBeTruthy()
+  expect(screen.getByText(/Weak answer: The profile/)).toBeTruthy()
+  expect(screen.getByText(/Follow-up: Who handles rejection/)).toBeTruthy()
+  expect(screen.queryByText('A function accesses its binding.')).toBeNull()
+})

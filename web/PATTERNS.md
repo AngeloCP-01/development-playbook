@@ -514,3 +514,19 @@ navigation, and confirm the audit opens every subsection and local solution, inc
 child controls mounted only after their parent opens. Default panels use
 the existing four-screen budget at 1024×768. Verify both themes, narrow layouts,
 code scrolling and focus below the sticky rail, including open solutions.
+
+
+Study sections may add `introduction: TeachingBlock[]` for a visible opening before
+collapsed topics. A row's `teaching: TeachingBlock[]` replaces its legacy
+what/example/when output. Use ordered paragraph, labelled literal code, labelled
+semantic table and interview blocks when an explanation needs to connect several
+forms. Keep optional detail in the existing topic disclosures. Block IDs are safe
+and unique within a section, including its introduction. The checked traversal
+rejects malformed blocks, empty/ragged tables and teaching on ordinary lookup sheets.
+
+`TeachingBlocks` is server output. Tables have captions, column headers and named,
+keyboard-focusable horizontal scroll regions; code has explicit tab stops.
+Interview questions use h4 inside h3 topics (h3 in a section introduction). Portable
+Markdown preserves block order, escapes plain text/table cells and chooses code
+fences longer than embedded backtick runs. Render tests must check semantic cells,
+literal code, ordering and interview answers as well as disclosure composition.

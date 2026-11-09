@@ -129,3 +129,55 @@ for (const [name, mutate] of invalid)
     mutate(sheet)
     expect(() => studySections(sheet)).toThrow(/nested study:/)
   })
+
+for (const [name, blocks] of [
+  ['unsafe id', [{ id: 'bad#id', kind: 'paragraph', text: 'Text' }]],
+  [
+    'duplicate id',
+    [
+      { id: 'same', kind: 'paragraph', text: 'One' },
+      { id: 'same', kind: 'paragraph', text: 'Two' },
+    ],
+  ],
+  [
+    'empty table',
+    [{ id: 'table', kind: 'table', label: 'Table', columns: [], rows: [] }],
+  ],
+  [
+    'ragged table',
+    [
+      {
+        id: 'table',
+        kind: 'table',
+        label: 'Table',
+        columns: ['One', 'Two'],
+        rows: [['One']],
+      },
+    ],
+  ],
+  ['unknown kind', [{ id: 'unknown', kind: 'unknown' }]],
+  ['blank prose', [{ id: 'empty', kind: 'paragraph', text: ' ' }]],
+] as const)
+  test(`rejects malformed teaching: ${name}`, () => {
+    const s = nested()
+    s.sections[0].rows[0].teaching =
+      blocks as unknown as import('./types').TeachingBlock[]
+    expect(() => studySections(s)).toThrow(/nested study:/)
+  })
+
+test('rejects orphan teaching on a lookup sheet rather than dropping it', () => {
+  const s = nested()
+  for (const section of s.sections) {
+    delete section.study
+    for (const row of section.rows) delete row.study
+  }
+  s.sections[0].introduction = [
+    { id: 'intro', kind: 'paragraph', text: 'Teaching' },
+  ]
+  expect(() => studySections(s)).toThrow(/orphan teaching/)
+  delete s.sections[0].introduction
+  s.sections[0].rows[0].teaching = [
+    { id: 'body', kind: 'paragraph', text: 'Teaching' },
+  ]
+  expect(() => studySections(s)).toThrow(/orphan teaching/)
+})

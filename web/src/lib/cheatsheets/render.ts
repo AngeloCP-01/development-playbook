@@ -7,6 +7,7 @@ import {
   isDrawn,
   type Cheatsheet,
   type SheetActivity,
+  type TeachingBlock,
 } from './types'
 
 /** Escape inline citation syntax while leaving authored URLs to link formatting. */
@@ -24,6 +25,46 @@ function activityCode(example: SheetActivity['starter']): string[] {
   const runs = example.code.match(/`+/g) ?? []
   const fence = '`'.repeat(Math.max(3, ...runs.map((run) => run.length + 1)))
   return [activityText(example.label), '', fence, example.code, fence, '']
+}
+
+function renderTeaching(
+  blocks: TeachingBlock[] | undefined,
+  headingLevel = 5,
+): string[] {
+  return (blocks ?? []).flatMap((block) => {
+    switch (block.kind) {
+      case 'paragraph':
+        return [activityText(block.text), '']
+      case 'code':
+        return activityCode(block)
+      case 'table': {
+        const cell = (value: string) =>
+          activityText(value).replace(/\r?\n/g, '<br>')
+        const row = (cells: string[]) => `| ${cells.map(cell).join(' | ')} |`
+        return [
+          activityText(block.label),
+          '',
+          row(block.columns),
+          `| ${block.columns.map(() => '---').join(' | ')} |`,
+          ...block.rows.map(row),
+          '',
+        ]
+      }
+      case 'interview':
+        return [
+          `${'#'.repeat(headingLevel)} ${activityText(block.question)}`,
+          '',
+          activityText(block.answer),
+          '',
+          ...(block.weakAnswer
+            ? [`Weak answer: ${activityText(block.weakAnswer)}`, '']
+            : []),
+          ...(block.followUp
+            ? [`Follow-up: ${activityText(block.followUp)}`, '']
+            : []),
+        ]
+    }
+  })
 }
 
 function renderActivities(
@@ -92,6 +133,7 @@ function renderSheet(sheet: Cheatsheet): string {
   for (const section of sections) {
     lines.push(`### ${section.title}`, '')
     if (section.note) lines.push(section.note, '')
+    lines.push(...renderTeaching(section.introduction, 4))
     if ('subsections' in section && section.subsections) {
       for (const subsection of section.subsections) {
         const row = subsection.row
@@ -100,17 +142,27 @@ function renderSheet(sheet: Cheatsheet): string {
           '',
           activityText(row.study.summary),
           '',
-          activityText(row.what),
-          '',
         )
-        for (const example of row.example ?? [])
-          lines.push(...activityCode(example))
-        if (row.when) lines.push(activityText(row.when), '')
+        if (row.teaching) lines.push(...renderTeaching(row.teaching))
+        else {
+          lines.push(activityText(row.what), '')
+          for (const example of row.example ?? [])
+            lines.push(...activityCode(example))
+          if (row.when) lines.push(activityText(row.when), '')
+        }
         lines.push(...renderActivities(subsection.activities, 5))
       }
       continue
     }
     for (const row of section.rows) {
+      if (row.teaching) {
+        lines.push(
+          `#### ${activityText((row.term ?? row.code)!)}`,
+          '',
+          ...renderTeaching(row.teaching),
+        )
+        continue
+      }
       const left = row.code ? `\`${row.code}\`` : `**${row.term}**`
       const when = row.when ? ` — ${row.when}` : ''
       lines.push(`- ${left} — ${row.what}${when}`)
