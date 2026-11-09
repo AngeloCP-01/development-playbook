@@ -18,8 +18,11 @@ Application **7975be9** on `feat/javascript-promises-lesson` implements and veri
 the connected #async lesson, visible introduction, ordered teaching blocks and
 JavaScript-wide context cleanup. The eight hashes, fourteen activities and original
 four exercises remain. The [production preview](http://localhost:3100/reference/javascript#async)
-is running; independent final review has no findings. Evidence and limits live in
-tracker; KICKOFF carries the coordinator handoff. Integration is not authorized.
+is running; independent final review and coordinator review of **86ec79a** /
+app **7975be9** have no actionable findings. Fresh coordinator checks are **59/7**
+focused tests, **118** example assertions and **4/4** production browser tests.
+Evidence and limits live in tracker; KICKOFF carries the review handoff.
+User evaluation of teaching depth and integration remain pending.
 
 **Previously accepted application:**
 Application **4ff8f8e** on `feat/javascript-fundamentals-subsections` implements

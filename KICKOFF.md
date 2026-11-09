@@ -1,4 +1,4 @@
-# Kickoff: Promises pilot ready for user evaluation
+# Kickoff: Promises pilot reviewed; user evaluation pending
 
 Updated 2026-11-09. Follow [AGENTS.md](AGENTS.md), D-99–D-105.
 
@@ -38,11 +38,25 @@ inspection covered dark/320 and light/1440, earlier light/768, keyboard disclosu
 tables, nested answers and clean console. Screenshots were visually inspected.
 This is implementation/review evidence; the user still evaluates teaching depth.
 
+Coordinator reviewed **86ec79a** / application **7975be9**, read the implementation
+and independent-review threads, inspected the actual **a92a495...86ec79a** diff
+and checked the raw verification logs. No actionable Standards or Spec findings.
+Fresh coordinator checks: focused unit/render/generator/ledger **59 tests / 7 files**,
+published checker **118 assertions**, and focused production browser **4/4**
+(both-theme table keyboard/history checks and actual Promise/module execution),
+all exit 0. Manual inspection at dark/320, light/768 and light/1440 found no
+overflow or console errors. Direct comparisons confirmed eight hashes, fourteen
+activity IDs, four original starter/solution implementations and 29 other generated
+bodies unchanged. Two additional review agents could not start because of a
+usage limit; coordinator review proceeded directly, retaining the completed
+independent implementation review above. The identified full gate and
+development-console evidence is retained for the unchanged application.
+
 ## Next action and recovery
 
-Return this branch/commit and evidence to coordinator
-**01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended **GPT-6 Astra / Low**, for
-user preview feedback and integration coordination. No implementation checks remain.
+Coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad** has completed review.
+The user can evaluate the preview's teaching depth and decide on integration.
+No implementation checks remain.
 Separate user approval is required before a no-ff develop merge; no merge, push
 or main promotion is authorized.
 
