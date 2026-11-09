@@ -171,8 +171,9 @@ freshly started server — it prints the total, the id count, and the ids themse
 
 Two constraints, neither fixed, both of which will bite the next caller:
 
-**Row headings are hardcoded `<h3>`.** A caller whose own section heading is also `<h3>`
-gets a flat outline instead of a nested one, and `RevealList` gives it no say. `ScalingMoves`
+**Row headings default to `<h3>`.** `headingLevel={5}` supports nested study
+solutions. Callers with another hierarchy still need a separately scoped change.
+A caller whose own section heading is also `<h3>` gets a flat outline. `ScalingMoves`
 already had this shape before the extraction; `AIArchitecturePlays` acquired it, its rows
 having been `<h4>`. Nothing renders differently — `globals.css` sets no global `h3`/`h4`
 rule — so this costs assistive-technology users and nobody else. Tracked as **TD-34**.
@@ -480,3 +481,52 @@ Three shapes that qualify:
 What does not need one: a component that renders a prop as text, a layout wrapper, a
 component whose whole behaviour is already covered by the audit suite driving the real
 page.
+
+
+### Focused study references — `StudySheet`
+
+A study reference keeps one canonical sheet module and annotates every section
+with `study: { id, label, hint, activityIds }` (legacy) or `study: { id, label, hint }`
+with every row carrying `study: { id, summary, activityIds }` (subsections).
+Never combine the two assignment modes in one section. Ordinary sheets omit this metadata.
+`studySections()` validates stable, safe, unique hashes and assigns each activity
+exactly once; missing, duplicated or unassigned references and partial metadata
+fail generation/build rather than silently dropping content.
+
+`StudySheet` turns that checked order into server-built `Step` content. Pass a
+reference-specific Stepper label, such as `JavaScript sections`; stages retain
+`Stage steps`. Each panel has an outcome/explanation prompt, vertical teaching
+units with worked examples and nearby mistakes, then local `SheetActivities`.
+Keep sources outside the panels. Preserve visible prompts and initially hidden
+answers. Switching panels remounts the local controls; visited checks track visits.
+Subsections use RevealList with a visible title/summary and independently hidden
+teaching/local practice. Heading order is h2 main, h3 subsection, h4 Practice,
+h5 solution; SheetActivities defaults to h2 Practice/h3 solution for legacy callers.
+Closing a subsection unmounts its solutions. IDs include sheet and section prefixes.
+Scope `[&_li]:max-w-none!` to structural disclosure rows, keeping prose measured.
+Generated Markdown emits main h3/subsection h4/Practice h5/activity h6 in authored
+order, with plain-text summaries and safely fenced code.
+
+Render tests must exercise worked code, local prompts, reveal/re-collapse and
+state isolation across section changes. Browser checks compare rendered rail IDs
+with declared content, visit every hash, test direct links/history and keyboard
+navigation, and confirm the audit opens every subsection and local solution, including
+child controls mounted only after their parent opens. Default panels use
+the existing four-screen budget at 1024×768. Verify both themes, narrow layouts,
+code scrolling and focus below the sticky rail, including open solutions.
+
+
+Study sections may add `introduction: TeachingBlock[]` for a visible opening before
+collapsed topics. A row's `teaching: TeachingBlock[]` replaces its legacy
+what/example/when output. Use ordered paragraph, labelled literal code, labelled
+semantic table and interview blocks when an explanation needs to connect several
+forms. Keep optional detail in the existing topic disclosures. Block IDs are safe
+and unique within a section, including its introduction. The checked traversal
+rejects malformed blocks, empty/ragged tables and teaching on ordinary lookup sheets.
+
+`TeachingBlocks` is server output. Tables have captions, column headers and named,
+keyboard-focusable horizontal scroll regions; code has explicit tab stops.
+Interview questions use h4 inside h3 topics (h3 in a section introduction). Portable
+Markdown preserves block order, escapes plain text/table cells and chooses code
+fences longer than embedded backtick runs. Render tests must check semantic cells,
+literal code, ordering and interview answers as well as disclosure composition.

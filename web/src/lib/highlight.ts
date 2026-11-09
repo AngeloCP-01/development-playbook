@@ -1,9 +1,8 @@
 import { createHighlighter, type ThemeRegistrationRaw } from 'shiki'
 
 /**
- * Server-only. Every caller is a top-level `await` inside a cheatsheet data
- * module (`solid-principles.ts`, `clean-code.ts`), which runs once at module
- * evaluation and bakes the HTML into `RowExample.html` — the highlighter never
+ * Generation-only. generate-highlighted.ts calls this for authored examples;
+ * sheets read the committed HTML map synchronously. The highlighter never
  * runs in the render path, and nothing here ships to the client.
  *
  * Four roles, not a full TextMate scope list — this app's own restraint rule
@@ -90,5 +89,9 @@ export async function highlightTs(code: string): Promise<string> {
     lang: 'typescript',
     themes: { light: 'playbook-light', dark: 'playbook-dark' },
     defaultColor: false,
+    // A committed artifact must finish tokenization even if its worker is
+    // descheduled. Shiki's live-render budget can silently truncate a line
+    // after 500ms of wall time and change the generated colors under load.
+    tokenizeTimeLimit: 0,
   })
 }

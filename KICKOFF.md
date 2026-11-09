@@ -1,125 +1,75 @@
-# Kickoff: W-6.4 merged; JavaScript reference assessment next
+# Kickoff: JavaScript sheet merged locally into develop
 
-Updated 2026-11-05. Follow [AGENTS.md](AGENTS.md), D-99 and D-100.
+Updated 2026-11-09. Follow [AGENTS.md](AGENTS.md), D-99–D-105.
 
-## Current state
+## Delivered outcome
 
-- Local `develop`: user-approved no-ff merge **b8515a0**, parents
-  **097fdd0 / 14ca2da**. Merge tree equals reviewed feature tip **14ca2da**;
-  application inputs equal verified **9231dc9**. Use `git log -1 --oneline`
-  for the closing records tip. Approved implementation handoff was **131c303**.
-- Native `/reference/glossary` and `/reference/stack` appear in the hub,
-  Reference navigation, sitemap and production audit. Glossary consumes unchanged
-  `terms.ts`; stack page and generated `reference/stack.md` consume canonical
-  `web/src/lib/stack.ts` (`pnpm gen:stack`).
-- Stack preserves four groups/22 choices/five deviation cases and upkeep guidance,
-  with researched corrections, narrow Stage 04 alignment and the original Testing
-  chapter link. Counts stay **25/30** sheets and **18/18** stages.
-- **TD-47 closed on local develop:** `.nvmrc` **22.23.4**, package Node
-  **^22.22.2**, support/alignment guard. [Archived assessment and closure](docs/tracker-archive.md).
-- W-6.4 is complete on local develop. Five language placeholders remain.
-  No push or deployment; main is unchanged.
+The user accepted the pilot and authorized a local no-ff merge into `develop`.
+Integration joins develop **ede8e1f** and reviewed feature tip **f3f376c**;
+the merge includes these integration records. The application is identical to
+reviewed **7975be9**. Local develop now has **26/30** sheets and **18/18** stages.
 
-[One source/design record](reference/w6-4-source-research.md) preserves findings,
-the approved plan and source limits. User selected "Implement here; override
-D-100 for this task". Implementation thread:
-**01a1a51d-8cb1-7983-8e51-1c3e48ecf142**; active model/effort unconfirmed.
-Standing D-100 policy remains unchanged.
+W-6.3u.1e is implemented and verified on `feat/javascript-promises-lesson`,
+application **7975be9**, starting from **a92a495**. Renderer **d19d67a** and lesson
+**affa6f0** precede the two-paragraph panel-budget repair. The user selected this
+fresh **GPT-6.1 Sol / High** implementation session, confirmed by session metadata:
+**01a1bdaa-374d-7d81-bf44-94b0e9e0d73d**.
 
-## Verification and review
+[Inspect the running production preview](http://localhost:3100/reference/javascript#async).
+The visible opening leads through one callback/Promise/then/await lookup story,
+semantic tables, model interview answers and existing transfer exercises. Typed
+blocks own both page and generated Markdown. Reader copy uses language-level
+strict-script/module context; module examples are totals.js/main.js.
 
-The reported verification commands used installed Node **22.23.4**.
-[The W-6.4 completion row](docs/tracker.md) holds commands, results, failure
-reasons and deferred scope. Raw logs:
-`/private/tmp/w64-*.log`.
+Eight hashes, fourteen activity IDs, original four exercise implementations and
+29 other generated sheet bodies remain unchanged. The sheet has 34 topics, thirteen
+in #async; feature totals remain **26/30** sheets and **18/18** stages.
 
-- **Fresh on 9231dc9:** production build **57 routes**, production audit **29/29**;
-  affected-file format/lint and glossary render **3/3** for the final `min-w-11`
-  touch-target correction. npm/Zod now measure **44×44px** at 320px.
-- **Retained from 1ee672e:** full format/lint/generated-route typecheck and
-  **1,609 tests / 228 files**, all exit 0. The sole later app change is that class.
-- **Development console 1/1**, exit 0, on an isolated **1ee672e** source copy on
-  port 3101. Only glossary minimum width differs from final source; React
-  behavior/structure and audit tests are identical. Temporary Turbopack root
-  resolves linked dependencies; original config/port-3200 server untouched.
-- Focused **30 states**: both themes at **320/768/1440px**, hub/both resources and
-  representative stage/sheet, no overflow or console errors; native links meet
-  **44×44px**. Keyboard, fragment focus/reload/Back, Stage 06 link/Back, drawer
-  closing/current navigation and collapsed desktop resource access pass.
-- One independent **Astra Low** content/page/branch review covers **9231dc9** and
-  six rendered captures: no blockers. Both findings fixed; humanizer pass done.
+## Evidence and limits
 
-CI execution, hosted patches, a full provider audit and reader benefit remain
-unverified. Undated choices retain their source-review limits.
+The [tracker completion row](docs/tracker.md#completed) owns actual commands,
+counts, failures and retained-evidence boundaries. Full 1,672-test evidence is
+retained from **affa6f0** after two prose strings changed; affected render/generator
+and browser checks, format/lint/typecheck/build are fresh on **7975be9**. All
+production audit cases are covered by the full run plus focused final reruns.
+Development-console **1/1** passed on an isolated copy with identical source and public files;
+its temporary Turbopack root resolved shared dependencies. The user's :3200
+server stalled on Discovery and was preserved; the temporary :3101 server is stopped.
+Production :3100 remains running.
 
-Implementation closing-record checks: ledger **2/2**, local links/anchors **141 targets
-across 8 files**, and whitespace check, all exit 0. App inputs remain unchanged
-from **9231dc9**; the identified app verification is retained.
+One independent **GPT-6 Astra / Low** review, `/root/promises_final_review`, covers
+**7975be9**, including the final prose tightening: no findings. Production page
+inspection covered dark/320 and light/1440, earlier light/768, keyboard disclosure,
+tables, nested answers and clean console. Screenshots were visually inspected.
+The user accepted the preview. This review does not claim a learner study.
 
-## Review and integration
+Coordinator reviewed **86ec79a** / application **7975be9**, read the implementation
+and independent-review threads, inspected the actual **a92a495...86ec79a** diff
+and checked the raw verification logs. No actionable Standards or Spec findings.
+Fresh coordinator checks: focused unit/render/generator/ledger **59 tests / 7 files**,
+published checker **118 assertions**, and focused production browser **4/4**
+(both-theme table keyboard/history checks and actual Promise/module execution),
+all exit 0. Manual inspection at dark/320, light/768 and light/1440 found no
+overflow or console errors. Direct comparisons confirmed eight hashes, fourteen
+activity IDs, four original starter/solution implementations and 29 other generated
+bodies unchanged. Two additional review agents could not start because of a
+usage limit; coordinator review proceeded directly, retaining the completed
+independent implementation review above. The identified full gate and
+development-console evidence is retained for the unchanged application.
 
-Coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad** reviewed implementation
-thread **01a1a51d-8cb1-7983-8e51-1c3e48ecf142** and actual
-**131c303...9231dc9** diff. [W-6.4](docs/task.md)
-records the completed integration. Coordinator read the thread and reviewed actual
-**131c303...52e703e**, including the final records changes. No actionable standards
-or scope findings. Independent read-only checks of these two axes also returned
-no findings; they did not rerun suites/browser verification. Coordinator checked
-raw test/type/build/audit/dev-console logs and the meaningful runtime/generator
-RED evidence, plus retained light-hub-768 and dark-stack-1440 captures.
+## Next action and recovery
 
-Application inputs, generated stack Markdown, Stage 04 guidance and source policy
-still match **9231dc9**. Retain the application verification above; there was no
-full coordinator rerun or new browser matrix. Node **22.23.4** binary is installed
-and was checked directly for the closing-record command environment.
+Coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad** has completed review.
+Local integration is complete; the merged feature branch is deleted after
+verification. Push and main promotion remain separate. Broader teaching rollout
+and the other language sheets have not been selected for implementation.
 
-Pre-merge coordinator closing-record checks on Node **22.23.4**: tracker ledger
-**2/2**, `python3 /private/tmp/w64-coordinator-links.py` **141 local targets /
-8 Markdown files**, and `git diff --check`, all exit 0. These records-only changes
-retain the identified application verification for **9231dc9** inputs. Every
-no-ff merge into develop needs separate user approval. The user subsequently
-approved integration as **b8515a0**; its tree equals **14ca2da**. Main promotion
-belongs to the user.
+Use the [plan](docs/superpowers/plans/2026-11-06-javascript-promises-pilot.md) and
+[source record](reference/javascript-source-research.md#runtime-neutral-pilot-implementation-2026-11-09)
+for scope and teaching provenance. Temporary command logs are `/tmp/promises-*`;
+Corepack supplies pnpm through `/tmp/promises-bin/pnpm` in this shell. If preview
+:3100 has stopped, run `pnpm start -p 3100` from web/ against the verified build.
 
-Deferred: unusual source-URL delimiter hardening (minor, current URLs unaffected),
-five language sheets, search, stage-to-sheet backlinks, term popovers, dependency
-upgrades, artwork, live infrastructure, push and main promotion.
-
-
-## Merge closing checks and cleanup
-
-Merge/tree equality and unchanged application-input checks pass. Fresh closing
-records checks on Node **22.23.4**: tracker ledger **2/2**,
-`python3 /private/tmp/w64-coordinator-links.py` **142 local targets / 8 Markdown
-files**, and `git diff --check`, all exit 0. The full application gate is retained
-for the identical merge tree; no full suite/build/browser matrix was repeated.
-
-The merged feature and assessment branches were deleted after ancestor/worktree
-checks. Their commits remain in develop. No server was stopped, no push or
-deployment occurred, and main is unchanged.
-
-## Next task and session
-
-**Task:** JavaScript reference-sheet source and scope assessment.
-**Recommended model:** `gpt-6-astra`, **reasoning:** `low`, research session or the
-existing coordinator. This recommendation does not confirm an active setting.
-
-Start a scoped documentation branch from the committed local develop tip and
-record its exact SHA. Inspect the JavaScript entry in
-[planned sheets](web/src/lib/cheatsheets/planned.ts), existing reference content,
-[W-6](docs/task.md), and relevant gathered-source provenance before choosing a
-bounded lookup. The placeholder names array methods, async semantics and the
-event loop; assess the useful slice rather than drafting a whole language course.
-Check primary language/platform sources and distinguish browser and Node behavior
-when that changes an example. Label examples and verify executable claims where
-needed. Record original-source/license limits for any useful image.
-
-Keep findings in one research record and use D-99 content/link checks. Do not
-implement or register a sheet during assessment. Retain the chosen single-source
-sheet data/generated-Markdown pattern, eighteen-stage model and existing runtime
-contract. Python, Java, Spring Boot and Express are separate sheets.
-
-If a bounded scope is selected, later implementation uses a fresh user-selected
-**GPT-6.1 Sol / High** session with an explicit acceptance handoff. Coordinator
-remains **01a18acc-3b54-7202-92f3-404cc94fd0ad**. Future merges need separate
-approval; main promotion belongs to the user.
+Closing records checks: tracker-ledger **2/2**, **160 local links/anchors across
+5 files**, and `git diff --check`, all exit 0. An empty application/generated-output
+diff against **7975be9** retains the identified checks above for the merged tree.

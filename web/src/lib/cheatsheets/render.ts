@@ -1,11 +1,101 @@
 import { getStage } from '@/lib/stages'
 import { sheetSources } from './sheet-sources'
+import { studySections } from './study-sections'
 import { CHEATSHEETS, cheatsheetsByGroup } from './index'
-import { CHEATSHEET_GROUPS, isDrawn, type Cheatsheet } from './types'
+import {
+  CHEATSHEET_GROUPS,
+  isDrawn,
+  type Cheatsheet,
+  type SheetActivity,
+  type TeachingBlock,
+} from './types'
 
 /** Escape inline citation syntax while leaving authored URLs to link formatting. */
 function citationText(text: string): string {
   return text.replace(/[\\`*_\[\]<>!&]/g, '\\$&')
+}
+
+/** Activity prose is plain text, not authored Markdown or HTML. */
+function activityText(text: string): string {
+  return text.replace(/[\\`*_{}\[\]<>()!&#+\-.|~]/g, '\\$&')
+}
+
+function activityCode(example: SheetActivity['starter']): string[] {
+  if (!example) return []
+  const runs = example.code.match(/`+/g) ?? []
+  const fence = '`'.repeat(Math.max(3, ...runs.map((run) => run.length + 1)))
+  return [activityText(example.label), '', fence, example.code, fence, '']
+}
+
+function renderTeaching(
+  blocks: TeachingBlock[] | undefined,
+  headingLevel = 5,
+): string[] {
+  return (blocks ?? []).flatMap((block) => {
+    switch (block.kind) {
+      case 'paragraph':
+        return [activityText(block.text), '']
+      case 'code':
+        return activityCode(block)
+      case 'table': {
+        const cell = (value: string) =>
+          activityText(value).replace(/\r?\n/g, '<br>')
+        const row = (cells: string[]) => `| ${cells.map(cell).join(' | ')} |`
+        return [
+          activityText(block.label),
+          '',
+          row(block.columns),
+          `| ${block.columns.map(() => '---').join(' | ')} |`,
+          ...block.rows.map(row),
+          '',
+        ]
+      }
+      case 'interview':
+        return [
+          `${'#'.repeat(headingLevel)} ${activityText(block.question)}`,
+          '',
+          activityText(block.answer),
+          '',
+          ...(block.weakAnswer
+            ? [`Weak answer: ${activityText(block.weakAnswer)}`, '']
+            : []),
+          ...(block.followUp
+            ? [`Follow-up: ${activityText(block.followUp)}`, '']
+            : []),
+        ]
+    }
+  })
+}
+
+function renderActivities(
+  activities: SheetActivity[],
+  practiceLevel = 3,
+): string[] {
+  if (!activities.length) return []
+  const lines: string[] = [`${'#'.repeat(practiceLevel)} Practice`, '']
+  for (const activity of activities) {
+    lines.push(
+      `${'#'.repeat(practiceLevel + 1)} ${activityText(activity.title)}`,
+      '',
+      activityText(activity.prompt),
+      '',
+      `Context: ${activityText(activity.context)}`,
+      '',
+      ...activityCode(activity.starter),
+      `Solution: ${activityText(activity.title)}`,
+      '',
+      activityText(activity.answer),
+      '',
+      ...activityCode(activity.solution),
+      'Why it works',
+      '',
+      activityText(activity.explanation),
+      '',
+    )
+    if (activity.followUp)
+      lines.push('Follow-up', '', activityText(activity.followUp), '')
+  }
+  return lines
 }
 
 /**
@@ -14,11 +104,12 @@ function citationText(text: string): string {
  * render.test.ts and regenerated with `pnpm gen:cheatsheets`. Do not hand-edit
  * the markdown.
  *
- * One combined file rather than one per sheet: ten of the eleven are empty, and
- * ten stub files would be noise. Split when that ratio inverts.
+ * A combined portable reference includes both ordinary lookup and local study
+ * practice, in the same authored order as the web page.
  */
 function renderSheet(sheet: Cheatsheet): string {
   const stage = sheet.stage ? getStage(sheet.stage) : undefined
+  const study = studySections(sheet)
   const lines: string[] = [`## ${sheet.title}`, '', sheet.blurb, '']
 
   if (stage) {
@@ -32,10 +123,46 @@ function renderSheet(sheet: Cheatsheet): string {
     lines.push('*Not drawn yet.*', '')
   }
 
-  for (const section of sheet.sections) {
+  const sections =
+    study ??
+    sheet.sections.map((section) => ({
+      ...section,
+      subsections: undefined,
+      activities: [] as SheetActivity[],
+    }))
+  for (const section of sections) {
     lines.push(`### ${section.title}`, '')
     if (section.note) lines.push(section.note, '')
+    lines.push(...renderTeaching(section.introduction, 4))
+    if ('subsections' in section && section.subsections) {
+      for (const subsection of section.subsections) {
+        const row = subsection.row
+        lines.push(
+          `#### ${activityText((row.term ?? row.code)!)}`,
+          '',
+          activityText(row.study.summary),
+          '',
+        )
+        if (row.teaching) lines.push(...renderTeaching(row.teaching))
+        else {
+          lines.push(activityText(row.what), '')
+          for (const example of row.example ?? [])
+            lines.push(...activityCode(example))
+          if (row.when) lines.push(activityText(row.when), '')
+        }
+        lines.push(...renderActivities(subsection.activities, 5))
+      }
+      continue
+    }
     for (const row of section.rows) {
+      if (row.teaching) {
+        lines.push(
+          `#### ${activityText((row.term ?? row.code)!)}`,
+          '',
+          ...renderTeaching(row.teaching),
+        )
+        continue
+      }
       const left = row.code ? `\`${row.code}\`` : `**${row.term}**`
       const when = row.when ? ` — ${row.when}` : ''
       lines.push(`- ${left} — ${row.what}${when}`)
@@ -54,7 +181,11 @@ function renderSheet(sheet: Cheatsheet): string {
       }
     }
     lines.push('')
+    if (study) lines.push(...renderActivities(section.activities, 4))
   }
+
+  if (!study && isDrawn(sheet))
+    lines.push(...renderActivities(sheet.activities ?? []))
 
   if (isDrawn(sheet) && sheet.source?.image?.origin === 'original') {
     lines.push(
@@ -86,8 +217,8 @@ export function renderCheatsheets(): string {
     '<!-- Generated from web/src/lib/cheatsheets/. Do not edit by hand.',
     '     Edit the sheet there and run `pnpm gen:cheatsheets` (from web/) to regenerate. -->',
     '',
-    'Lookup material rather than reading material. A stage teaches a decision; a',
-    'sheet answers what that command was.',
+    'Look up a command or study a focused topic. Study sheets include worked',
+    'examples and local practice; stages teach lifecycle decisions.',
     '',
     `Drawn: ${drawn} of ${CHEATSHEETS.length}. A sheet listed as not drawn is`,
     'registered on purpose — the gap is the point, so it can be seen and filled.',

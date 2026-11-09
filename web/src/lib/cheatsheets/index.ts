@@ -16,6 +16,7 @@ import { gitCommands } from './git-commands'
 import { githubActions } from './github-actions'
 import { incidentManagement } from './incident-management'
 import { improvementReview } from './improvement-review'
+import { javascript } from './javascript'
 import { PLANNED } from './planned'
 import { postDeployVerification } from './post-deploy-verification'
 import { playwright } from './playwright'
@@ -32,6 +33,7 @@ export type {
   Row,
   RowExample,
   Section,
+  SheetActivity,
   Source,
   SourceCitation,
   SourceImage,
@@ -64,6 +66,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   security,
   caching,
   scaling,
+  javascript,
   ...PLANNED,
 ]
 

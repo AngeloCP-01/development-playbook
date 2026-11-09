@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { auditPages, readStepIds } from './audit-pages'
+import { auditPages, readStepIds, readStudyIds } from './audit-pages'
 import { CHEATSHEETS } from '../src/lib/cheatsheets'
 import { STEP_IDS_BY_SLUG } from '../src/features/step-ids'
 
@@ -69,8 +69,35 @@ test('appends the reference index, native resources and every registered sheet, 
     '/reference',
     '/reference/glossary',
     '/reference/stack',
-    ...CHEATSHEETS.map((sheet) => `/reference/${sheet.slug}`),
+    ...CHEATSHEETS.flatMap((sheet) => [
+      `/reference/${sheet.slug}`,
+      ...sheet.sections
+        .filter((section) => section.study)
+        .map((section) => `/reference/${sheet.slug}#${section.study!.id}`),
+    ]),
   ])
+})
+
+test('study discovery rejects an empty rail and ignores nested teaching tabs', async ({
+  page,
+}) => {
+  const sheet = { slug: 'study-rail-fixture', title: 'Fixture' }
+  const path = '**/reference/study-rail-fixture'
+  await page.route(path, (route) =>
+    route.fulfill({
+      contentType: 'text/html',
+      body: '<main><div role="tablist" aria-label="Fixture sections"></div></main>',
+    }),
+  )
+  await expect(readStudyIds(page, sheet)).rejects.toThrow(/renders no sections/)
+  await page.unroute(path)
+  await page.route(path, (route) =>
+    route.fulfill({
+      contentType: 'text/html',
+      body: '<main><div role="tablist" aria-label="Fixture sections"><button role="tab" id="tab-real">Real</button><div role="tablist" aria-label="Inner"><button role="tab" id="tab-phantom">Inner</button></div></div></main>',
+    }),
+  )
+  expect(await readStudyIds(page, sheet)).toEqual(['real'])
 })
 
 test('refuses to sweep a stage that is ready but renders no steps, since silence there is the failure TD-12 describes', async ({

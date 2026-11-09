@@ -8,10 +8,16 @@ import {
   cheatsheetsForStage,
 } from './index'
 import { CHEATSHEET_GROUPS, isDrawn } from './types'
+import { studySections } from './study-sections'
 
 test('every slug is unique, since two sheets on one route is a silent overwrite', () => {
   const slugs = CHEATSHEETS.map((s) => s.slug)
   expect(new Set(slugs).size).toBe(slugs.length)
+})
+
+test('study sheets have complete metadata, unique hashes and exactly one owner for every activity', () => {
+  for (const sheet of CHEATSHEETS)
+    expect(() => studySections(sheet), sheet.slug).not.toThrow()
 })
 
 // The tether is the whole point of the section living beside the stages rather
@@ -123,6 +129,7 @@ test('isDrawn distinguishes a sheet with content from a registered placeholder',
     'github-actions',
     'improvement-review',
     'incident-management',
+    'javascript',
     'playwright',
     'post-deploy-verification',
     'scaling',
@@ -275,4 +282,28 @@ test('native resource paths cannot collide with sheet routes', () => {
   expect(
     new Set(REFERENCE_RESOURCES.map((resource) => resource.href)).size,
   ).toBe(REFERENCE_RESOURCES.length)
+})
+
+test('activities have stable unique IDs and belong to drawn sheets with ordinary sections', () => {
+  for (const sheet of CHEATSHEETS) {
+    if (!sheet.activities?.length) continue
+    expect(isDrawn(sheet), sheet.slug).toBe(true)
+    const ids = sheet.activities.map((activity) => activity.id)
+    expect(new Set(ids).size, sheet.slug).toBe(ids.length)
+    for (const activity of sheet.activities) {
+      expect(activity.id, sheet.slug).toMatch(/^[a-z][a-z0-9-]*$/)
+      for (const field of [
+        'title',
+        'prompt',
+        'context',
+        'answer',
+        'explanation',
+      ] as const) {
+        expect(
+          activity[field].trim().length,
+          `${sheet.slug}/${activity.id}/${field}`,
+        ).toBeGreaterThan(0)
+      }
+    }
+  }
 })

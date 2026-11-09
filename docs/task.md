@@ -13,7 +13,51 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-05): W-6.4 merged locally into develop.** User-approved no-ff merge **b8515a0**, parents **097fdd0 / 14ca2da**, integrates native glossary/stack resources, stack single-sourcing/generated Markdown, shared discovery/SEO/audit, aligned Stage 04 guidance and TD-47's supported Node contract. Merge tree equals reviewed feature tip **14ca2da**; application inputs equal verified **9231dc9**. Current counts **25/30** sheets and **18/18** stages; W-6.4 is complete, five language placeholders remain. [KICKOFF](../KICKOFF.md) holds the next handoff. No push or promotion.
+**Current work (2026-11-09): JavaScript sheet merged locally into develop (D-105).**
+Application **7975be9** on `feat/javascript-promises-lesson` implements and verifies
+the connected #async lesson, visible introduction, ordered teaching blocks and
+JavaScript-wide context cleanup. The eight hashes, fourteen activities and original
+four exercises remain. The [production preview](http://localhost:3100/reference/javascript#async)
+is running; independent final review and coordinator review of **86ec79a** /
+app **7975be9** have no actionable findings. Fresh coordinator checks are **59/7**
+focused tests, **118** example assertions and **4/4** production browser tests.
+Evidence and limits live in tracker; KICKOFF carries the review handoff.
+The user accepted the pilot and authorized local no-ff integration of reviewed
+feature **f3f376c** into develop **ede8e1f**. Local develop now has **26/30** sheets
+and **18/18** stages; the merged application is identical to **7975be9**.
+Push, main promotion and broader teaching rollout remain separate.
+
+**Previously accepted application:**
+Application **4ff8f8e** on `feat/javascript-fundamentals-subsections` implements
+all six additions in eight main sections, with 25 topic subsections and 14 local
+activities. The seven existing hashes and original four activities remain intact.
+[Source/design and example evidence](../reference/javascript-source-research.md#all-six-additions-and-subsections-selected-2026-11-06),
+[completed plan](superpowers/plans/2026-11-06-javascript-fundamentals-subsections.md)
+and KICKOFF carry the handoff. Final unit/DOM **1,653/234**, production **43/43**
+and retained dev-console **1/1** pass. Coordinator reviewed **973df70** /
+application **4ff8f8e**, with no actionable Standards or Spec findings. Fresh
+focused tests **37/7**, production browser **3/3** and published checks
+**93 assertions** pass; narrow/middle/wide page inspection also passed.
+Separate user integration approval remains. No merge, push or promotion.
+
+**Earlier accepted implementation:**
+On `feat/javascript-study-sections`, correction **322c873** starts at
+**b3b790e**. `StudySheet` and `SheetActivities` scrolling code now has explicit
+keyboard tab stops. Two render regressions failed before the fix; focused render
+**6/6** and narrow browser scrolling/focus **2/2** pass. Fresh full gate:
+**1,637 tests / 233 files**, 57-page build, production **42/42**,
+dev-console **1/1**, plus 36 revealed-body toggles without warnings/errors.
+See the tracker for exact commands, the worker-start failure/retry and isolated-dev limit.
+
+Coordinator's review of **73414a8** / application **3d4b140** found this one P2;
+content/spec had no findings. The user explicitly requested "proceed here" after
+the D-100 notice; that instruction applies to this correction only. The bounded
+correction was reviewed at **0aa3764**, application **322c873**. The P2
+is resolved; Standards and Spec recheck found no new findings. Fresh coordinator
+render checks **6/6** and both-theme keyboard-scroll browser checks **2/2** pass.
+[KICKOFF](../KICKOFF.md) identifies the application commit and fresh evidence.
+Selected content remains seven sections, eleven worked examples and nine local
+activities; **26/30** feature sheets and **18/18** stages. No merge, push or promotion.
 
 **Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
 
@@ -25,7 +69,11 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **25 drawn / 30 registered**, through **2cc7d5d**. W-6.4 is integrated as **b8515a0**; five language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** JavaScript reference-sheet source and scope assessment, recommended **GPT-6 Astra / Low**. Start with the existing JavaScript placeholder (array methods, async semantics and event loop), choose a bounded lookup task and verify primary sources before implementation. Python, Java, Spring Boot and Express remain separate; no new sheet work is started by this merge.
+**Next task/model:** coordinator confirmation of W-6.3u.1a's keyboard-scroll correction,
+recommended **GPT-6 Astra / Low** in coordinator session
+`01a18acc-3b54-7202-92f3-404cc94fd0ad`. Integration into develop requires
+separate user approval. Remaining language sheets need their own assessment
+before any new implementation session.
 
 Two deliverables from one body of content.
 
@@ -860,6 +908,281 @@ and guard correction **04e3623** are integrated as **2cc7d5d**; local develop
 now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-f7d7e1fa352c**.
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
+
+**W-6.3u — Language and framework study sheets ◐** *(JavaScript expansion selected; four sheets remain)*
+
+**User direction, 2026-11-05 (D-101):** for JavaScript, Python, Java, Spring Boot
+and Express & Node, focus on fundamentals, important topics and concepts that
+support technical interviews. Add activities inside each sheet. Keep the coverage
+selective and substantially shorter than a general tutorial site.
+
+**Reader outcome:** recall a concept, explain how it behaves or why a choice fits,
+and apply it to a small piece of code. Each sheet should support both review and
+practice; the goal is not a comprehensive course or an API inventory.
+
+**Common content brief:**
+
+- Select foundational concepts with practical and interview relevance. Explain
+  the mechanism and consequence concisely; include a small example or useful
+  contrast where it helps. Put common mistakes close to the concept they affect.
+- Add representative interview prompts that ask the reader to explain, predict,
+  debug or choose between approaches. Avoid claiming universal employer coverage
+  or frequency rankings without suitable evidence. Label illustrative prompts.
+- Put short activities inside each sheet, with a prompt, expected result or
+  reference solution, reasoning and a useful mistake/variation. Readers should
+  be able to attempt an activity before revealing its explanation.
+- Mix reasoning and small coding tasks where they fit the topic. Proposed
+  starting budget: **6–10 selected topics and 3–4 activities per sheet**, to be
+  adjusted after source/scope assessment. These numbers and formats are the
+  coordinator's recommendation, not additional user-specified requirements.
+- State the language/framework version and relevant execution context. Verify
+  executable examples and reference solutions in that context; browser and Node
+  behavior must be distinguished where it changes the answer. Do not replace
+  missing checks with invented output or tool results.
+- Use original concise teaching grounded in primary documentation. Keep one
+  structured content source for web and generated Markdown, including activity
+  prompts, solutions and reasoning. The Markdown must remain useful for study.
+
+**Delivery and acceptance:**
+
+- [x] Record the user's content/practice direction and its scoped extension of
+  the earlier pure-lookup contract (D-101).
+- [x] Assess JavaScript first: bounded topic list, primary sources, interview
+  relevance, activities and executable-example checks. Keep findings in one
+  research record; no broad five-language course is selected by this brief.
+- [x] Propose the smallest optional activity representation and rendering needed
+  for the first sheet, using existing disclosure/exercise patterns when suitable.
+  JavaScript now uses optional shared activity support on its feature branch,
+  following the approved compact plan, behavior TDD and independent review.
+- [x] Implement JavaScript and reusable activity support after scope selection;
+  application commit **0dcfe2d**, with completion evidence in W-6.3u.1.
+- [ ] Assess/deliver Python, Java, Spring Boot and Express & Node as bounded slices.
+- [x] Verify the JavaScript/shared attempt/reveal/reset behavior, accessible
+  controls, rendered data/generated prompts, static-sheet compatibility,
+  native resources/counts/audit, final gate/dev-console and affected
+  theme/width/keyboard states; see W-6.3u.1 for evidence and limits.
+
+No widget, scoring model, browser code runner, persistent progress, runtime
+provisioning or exact topic list is selected here. Prefer a small activity format
+before adding controls that need another behavior contract. Research/coordination
+uses **GPT-6 Astra / Low**; implementation uses a fresh user-selected
+**GPT-6.1 Sol / High** session under D-100. The earlier inline override applied to
+W-6.4 only. Coordinator remains **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
+
+This brief applies to the five pending language/framework sheets; it does not
+redesign the completed native Default Stack page or retroactively change the
+existing sheets. Keep the eighteen-stage filing model. Integration still needs
+separate approval; main promotion belongs to the user.
+
+**W-6.3u.1 — JavaScript study sheet ◐** *(initial implementation verified; expansion required before integration)*
+
+**Later user direction (D-102):** the original delivery below is too short for
+the intended study task. The user selected 6–8 focused sections with worked
+examples and 1–2 activities per section. The original evidence remains attached
+to its tree; W-6.3u.1a is the current delivery target. Do not merge the shorter
+version as a prerequisite.
+
+Checkpoint **cd724c4** on `docs/2026-11-05-javascript-reference-assessment`, based
+on D-101 brief **6f1f67e6dadefe890d9869100ebdbfff4525d386**. Research/model
+recommendation **GPT-6 Astra / Low**. The user authorized assessment with
+"proceed", then selected the nine-topic/four-activity/shared behavior scope
+with "lets go with that" on 2026-11-05.
+
+- [x] Check primary language/platform and employer-preparation sources; keep
+  interview relevance distinct from unsupported frequency rankings.
+- [x] Propose nine topics/four groups and four original activities.
+- [x] Preserve a reproducible checker: **4 activities / 15 assertions**, Node
+  **22.23.4**, strict CommonJS, exit 0; declare fixture and scheduling limits.
+- [x] Record the small optional activity contract, interaction and Markdown
+  design, compact plan, acceptance and model/session handoff.
+- [x] User selected the JavaScript/shared activity scope with "lets go with that".
+- [x] Implement in the requested fresh session, recommended **GPT-6.1 Sol / High**,
+  with behavior TDD and actual-sheet render checks. Branch starts at **8ff159f**;
+  application commit **0dcfe2d**. Session **01a1a908-ddb6-7f91-bb4d-7834839b62e8**.
+- [x] Verify published examples, generated content, final web gate/dev-console,
+  affected closed/open/re-collapsed states in both themes and one independent
+  final content/page/branch review; return package in KICKOFF. Production **36
+  passed + 1/1 isolated timeout retry**, dev **1/1**, additional dev toggles **16**;
+  actual limits and reviewed commit are recorded in the tracker.
+- [ ] Obtain separate user approval before no-ff integration into develop.
+
+The [source/design/compact plan](../reference/javascript-source-research.md#proposed-scope-selection-and-compact-design)
+proposes Values and bindings (equality/coercion, lexical scope/TDZ), Functions
+and objects (closures, this/arrows, shallow copying, prototypes/classes), Arrays
+(method choice and mutation), and Async work (promises/errors, scheduling).
+Activities: closure counter, nested-copy repair, async iteration repair and a
+bounded sync/promise/queueMicrotask/timer trace. Nine topics remain concise
+lookups; this is not a complete course or claimed interview-frequency ranking.
+
+Implemented `Cheatsheet.activities?` stores stable IDs, prompt/context, optional
+labelled code, answer/solution, explanation and optional follow-up in one source.
+Compose prompt-visible/answer-hidden cards with existing disclosure behavior;
+no score, runner, persistence or new highlighting pipeline. Extend generated
+Markdown with the same prompts/solutions, leaving no-activity sheets unchanged.
+The plan names type/generator, composer, JavaScript module, example/artifact
+validation and final shared-behavior verification. This is D-99 consequential
+work; static copy/data still uses its normal exception.
+
+Retained slug `javascript`, Languages group and no stage tether; only its
+placeholder moved. Feature-branch counts are **26/30** drawn with four other
+placeholders and **18/18** stages. Local develop remains **25/30** references.
+No image selected. The published checker reads actual structured snippets:
+**4 activities / 20 assertions**, Node **22.23.4**, strict CommonJS, exit 0.
+Historical assessment evidence remains distinct from implementation evidence.
+
+Return the completed branch/diff and actual checks to coordinator
+**01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended **GPT-6 Astra / Low**;
+[KICKOFF](../KICKOFF.md) names the implementation session and application commit.
+D-100's fresh-session policy applies. Other four sheets, algorithm catalogues,
+DOM/Node I/O puzzles, modules/generators/workers, new controls beyond disclosure,
+diagrams/upgrades, push and promotion are deferred.
+
+**W-6.3u.1a — Sectioned JavaScript expansion ◐** *(verified; coordinator review and integration pending)*
+
+- [x] Inspect original feature **bd72e70** / application **0dcfe2d** and read
+  implementation session **01a1a908-ddb6-7f91-bb4d-7834839b62e8** before using
+  its handoff. Identify compressed rows and end-only practice as the depth gap.
+- [x] Record the selected 6–8-section range and recommend seven sections/nine
+  activities, with primary sources, worked examples and local practice in the
+  [existing source record](../reference/javascript-source-research.md#sectioned-expansion-selected-2026-11-05).
+- [x] Prepare the [compact implementation plan](superpowers/plans/2026-11-05-javascript-study-expansion.md)
+  for optional study metadata, reusable section composition, local Markdown
+  ordering and rendered reference-hash audit discovery.
+- [x] Implement on `feat/javascript-study-sections`, from exact **17c4808**;
+  application **be5cf77**, reviewed corrections **3d4b140**. The user asked
+  "continue" after this thread's fresh-session notice, so work continued here.
+  This task-specific continuation does not change D-100 for future work;
+  recommended implementation setting remains **GPT-6.1 Sol / High**.
+- [x] Validate actual expanded examples, all section/theme/keyboard states,
+  unchanged ordinary sheets, final gate/dev-console and independent final review.
+  Exact commits, retained/fresh checks and limits are in [KICKOFF](../KICKOFF.md).
+- [x] Prepare branch/commit, actual checks, deferred scope and session reference
+  for coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad** in KICKOFF and the
+  implementation response.
+- [x] Coordinator reviewed **73414a8** / application **3d4b140**, including
+  independent Standards and Spec axes and focused production-page inspection.
+  One P2 keyboard-scroll finding required correction; content/spec has no findings.
+- [x] Add explicit tab stops to worked-example and activity code containers,
+  with RED/GREEN render coverage and both-theme 320px keyboard scrolling/focus.
+  Correction **322c873**, from **b3b790e**; latest user instruction
+  "proceed here" authorizes this task in the existing implementation thread.
+- [x] Prepare the verified correction diff/checks and session reference in
+  KICKOFF and the implementation response for coordinator confirmation.
+- [x] Coordinator confirmed **0aa3764** / correction **322c873**, no new findings;
+  fresh render **6/6** and both-theme keyboard-scroll browser **2/2** pass.
+- [ ] Obtain separate user approval before no-ff integration into develop.
+
+No nineteenth stage, comprehensive course, runner/grading/persistence, broad
+redesign of other references, or work on the remaining four sheets is selected.
+
+**W-6.3u.1b — Fundamentals and interview-content research ☑** *(all six areas subsequently selected in D-103)*
+
+Research authorized by the user on 2026-11-06, after acceptance of **322c873**.
+Docs branch `docs/2026-11-06-javascript-content-research` starts from
+**d0ae353dd63667fa0e76199d50681cfd254e1d6e**. The earlier implementation remains
+accepted against its selected scope; this asks whether that scope teaches enough.
+
+- [x] Compare the actual seven sections/fourteen teaching entries/nine activities
+  with primary language documentation and employer preparation guidance.
+- [x] Record absent versus shallow versus already-covered topics, activity
+  candidates, source provenance and interview-evidence limits in the
+  [existing research record](../reference/javascript-source-research.md#fundamentals-and-interview-content-reassessment-2026-11-06).
+- [x] Recommend control flow/text and Map/Set, plus a small coding problem with
+  requirement clarification, edge tests and complexity reasoning. Follow with
+  defaults/rest/destructuring/optional access and error/promise composition.
+- [x] Keep introductory modules as a scoped follow-up with explicit ESM context;
+  preserve the current CommonJS execution boundary. Further timer/coercion puzzles,
+  framework questions and large algorithm catalogues remain deferred.
+- [x] User selected all six recommendations and sections with subsections.
+  D-103 and W-6.3u.1c carry the new delivery; the phased recommendation above
+  remains historical research rather than a continuing module deferral.
+- [x] Prepare compact design/acceptance and a fresh **GPT-6.1 Sol / High** handoff.
+  Coordination remains **GPT-6 Astra / Low**, **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
+
+The assessment itself changed no app/generated inputs and authorized no merge,
+push, promotion or five-sheet curriculum expansion. The later all-six JavaScript
+selection is recorded in W-6.3u.1c below.
+
+**W-6.3u.1c — All JavaScript additions with subsections ☑** *(verified and accepted; integration pending)*
+
+- [x] Record user selection of all six additions and section/subsection hierarchy,
+  D-103. Eight main sections fit the earlier 6–8 range; preserve the seven main
+  IDs and add modules. The implementation design proposes fourteen activities,
+  1–2 per main section; the user did not specify this exact count.
+- [x] Define additive row metadata, exclusive section/subsection activity
+  assignment modes, accessible nested headings and single-source Markdown
+  traversal in the [source/design record](../reference/javascript-source-research.md#all-six-additions-and-subsections-selected-2026-11-06).
+- [x] Prepare the [compact implementation plan](superpowers/plans/2026-11-06-javascript-fundamentals-subsections.md)
+  and KICKOFF. Start from the committed documentation tip descended from
+  **76119c2**, creating `feat/javascript-fundamentals-subsections` in a fresh
+  **GPT-6.1 Sol / High** session.
+- [x] Implement all six areas using existing Stepper/RevealList/activities;
+  retain ordinary/legacy rendering and the original four exercises.
+- [x] Validate actual CJS and two-file ESM snippets, nested Markdown order,
+  every nested disclosure, heading/focus/history behavior, panel budget and
+  both-theme layouts; run final gate/dev-console and one independent final review.
+- [x] Return exact branch/commit, actual checks, limits and session reference
+  to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended
+  **GPT-6 Astra / Low**, before separate user integration approval.
+- [x] Coordinator accepted **973df70** / app **4ff8f8e**, no actionable findings;
+  fresh focused tests **37/7**, production browser **3/3**, published checks
+  **93 assertions** and three inspected page states pass.
+- [ ] Obtain separate user approval for no-ff integration into develop.
+
+No new stage, browser execution, scoring/persistence, dependencies, broad
+framework/algorithm catalogue or work on the other four sheets is selected.
+
+**W-6.3u.1d — Promises mini-lesson teaching prototype ☑** *(draft complete; reader depth feedback pending)*
+
+- [x] User selected one representative mini-lesson as the quality prototype
+  after finding the broader page lacking; use Promises/errors and one connected
+  story. D-104 scopes this separately from the accepted implementation review.
+- [x] Write the [learner-facing draft](superpowers/specs/2026-11-06-javascript-promises-mini-lesson.md):
+  prerequisite/outcome, callback problem, promise mental model, supplied executor
+  functions, chains and await, both failure paths, cleanup, aggregation,
+  model answers/follow-ups and actionable transfer tasks.
+- [x] Record nine primary-source findings and prototype evidence in the
+  [existing source record](../reference/javascript-source-research.md#promise-mini-lesson-source-check-2026-11-06).
+  The [checker](../reference/examples/javascript-promises-lesson-checks.cjs)
+  reads literal draft examples and the existing transfer activity; Node
+  **22.23.4**, strict CJS, **9 examples / 51 assertions**, exit 0.
+- [x] Complete one independent editorial reader pass focused on reconstructing
+  producer-to-caller behavior, rather than topic counts. Three material gaps
+  were corrected and confirmed resolved; self-review/humanizer pass applied.
+- [x] User selected the draft for a bounded page pilot, preferring to judge the
+  result on the page. That does not claim final acceptance of teaching depth;
+  the implementation/evaluation scope is W-6.3u.1e / D-105 below.
+- [x] Prepare the pilot's single-source teaching/presentation plan. Shared
+  behavior uses D-99's stronger path; D-100 workflow choice is pending. A
+  whole-page rewrite is not automatically selected.
+
+Docs branch `docs/2026-11-06-promises-mini-lesson` starts from **e991ab5**;
+accepted app **4ff8f8e** is unchanged. This draft is an editorial prototype, not
+a second maintained published lesson. Existing content authority, original
+activities, main hashes and accessibility contracts remain.
+
+**W-6.3u.1e — Runtime-neutral Promises page pilot ☑** *(user accepted; merged locally into develop)*
+
+- [x] User selected the prototype for on-page evaluation and requested no
+  Node-version coupling in JavaScript teaching (D-105).
+- [x] Prepare the [compact implementation plan](superpowers/plans/2026-11-06-javascript-promises-pilot.md)
+  for ordered teaching blocks, a visible opening, generator parity, runtime-neutral
+  examples/copy, actual browser example checks and a reviewable preview.
+- [x] User selected a fresh **GPT-6.1 Sol / High** implementation session, confirmed
+  by session metadata. Started from **a92a495** on `feat/javascript-promises-lesson`.
+- [x] Implement #async and context cleanup with behavior TDD; preserve the other
+  seven sections, original exercise implementations, activity IDs and main hashes.
+- [x] Verify actual published code in the command-line runtime and browser,
+  generated parity, visible introduction, all topic states, keyboard/table/code
+  access and final gate/dev-console. Leave a running preview for the user.
+- [x] Obtain independent final teaching/content/branch/page review and return
+  actual branch/commit/checks/session to coordinator
+  **01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended **GPT-6 Astra / Low**.
+
+User accepted the preview and approved local no-ff integration of **f3f376c**
+into develop **ede8e1f** on 2026-11-09; the merge includes its integration records.
+Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
+other-sheet rollout, runner/scoring/persistence, push and promotion remain outside scope.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☑** *(merged locally as `b8515a0`)*
 

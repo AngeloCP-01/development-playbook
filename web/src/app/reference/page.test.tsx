@@ -18,5 +18,5 @@ test('offers the glossary and stack alongside the existing drawn and undrawn she
   expect(screen.getByRole('link', { name: /Python/ }).textContent).toContain(
     'Not drawn',
   )
-  expect(screen.getByText('25 of 30')).toBeTruthy()
+  expect(screen.getByText('26 of 30')).toBeTruthy()
 })
