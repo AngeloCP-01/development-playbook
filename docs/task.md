@@ -13,13 +13,12 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-10): Node.js & Express implemented; six coordinator corrections pending (W-6.3u.2).**
-Reviewed delivery **67b8cb6**, application **972edf9**: twelve panels, 38 topics
-and activities, 28/31 references and 18/18 stages on the feature branch. Three
-teaching gaps and three verification gaps need correction before integration.
-[KICKOFF](../KICKOFF.md) defines NE-R1–NE-R6 and bounded acceptance.
-D-110 model assignments are restored from **1757d11**: fresh Sol Medium correction,
-Sol High coordinator review. No merge or push.
+**Current work (2026-11-10): Node.js & Express corrections verified; coordinator recheck pending (W-6.3u.2).**
+Correction application **e852170**, from **fa724bb**, addresses NE-R1–NE-R6.
+Twelve panels, 38 topics/activities, 28/31 references and 18/18 stages remain.
+The user explicitly authorized correction in the existing implementation session.
+[KICKOFF](../KICKOFF.md) records the actual checks and coordinator return.
+No merge or push.
 
 **Previous completed work: JavaScript sheet merged locally into develop (D-105).**
 Application **7975be9** on `feat/javascript-promises-lesson` implements and verifies
@@ -77,10 +76,10 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **27 drawn / 31 registered**, including W-6.3v. W-6.4 is integrated as **b8515a0**; four language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** correct NE-R1–NE-R6 in a fresh user-selected
-**GPT-6.1 Sol / Medium** session, then return the actual diff/checks/session to
-coordinator `01a1bedf-bdad-7b72-ba40-9b5406807d43`, recommended
-**GPT-6.1 Sol / High**. Other language sheets/integration stay separate.
+**Next task/model:** focused coordinator recheck of NE-R1–NE-R6 at **e852170**,
+recommended **GPT-6.1 Sol / High**, in coordinator
+`01a1bedf-bdad-7b72-ba40-9b5406807d43`. Return the actual diff/checks/session;
+other language sheets and integration stay separate.
 
 Two deliverables from one body of content.
 
@@ -1191,7 +1190,7 @@ into develop **ede8e1f** on 2026-11-09; the merge includes its integration recor
 Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
 other-sheet rollout, runner/scoring/persistence, push and promotion remain outside scope.
 
-**W-6.3u.2 — Node.js & Express study reference ◐** *(implemented; six coordinator corrections pending)*
+**W-6.3u.2 — Node.js & Express study reference ◐** *(corrections implemented and verified; coordinator acceptance pending)*
 
 User direction (D-109), 2026-11-10: use the DSA review/interview approach,
 fundamentals are mandatory, give many worked examples and add subsections when
@@ -1207,9 +1206,9 @@ The requested interview-preparation goal is not a guarantee of interview success
 - [x] Execute actual published Node/Express examples and failure/security paths;
   verify the delivered page and final web/dev-console checks.
 - [x] Obtain one independent final review; findings fixed with focused regressions.
-- [ ] Correct NE-R1/R2/R3: worked modules, real filtering/pagination and a concrete
+- [x] Correct NE-R1/R2/R3: worked modules, real filtering/pagination and a concrete
   explained CSRF-defense contrast.
-- [ ] Correct NE-R4/R5/R6: complete Express dev-console IDs, nested-query contract
+- [x] Correct NE-R4/R5/R6: complete Express dev-console IDs, nested-query contract
   and SIGTERM drain/cleanup-sensitive tests.
 - [ ] Obtain focused coordinator acceptance of the correction diff/evidence.
 - [ ] Obtain separate user approval for integration into develop.

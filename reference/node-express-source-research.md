@@ -343,3 +343,59 @@ Those findings were corrected and covered by focused checks. The final capstone
 parser-boundary correction was followed by **90 passing focused tests** across
 five files. All thirty other generated sheet bodies compare unchanged against
 **976198b**. No new factual source or image was introduced during implementation.
+
+## Coordinator corrections NE-R1–NE-R6 — 2026-11-10
+
+Correction application **e852170** starts from handoff **fa724bb**. The reader now
+loads six actual `.mjs`/`.cjs` files to observe named exports, ESM live bindings,
+CommonJS cache reuse and a partially initialized cycle. All displayed files are
+written verbatim into temporary directories and executed with Node **22.23.4**;
+fixture cleanup runs in `finally`. The manifest still rejects unclassified code.
+
+Primary sources rechecked on **2026-11-10**:
+
+| Source / organization / version | Finding used |
+| --- | --- |
+| [CommonJS modules](https://nodejs.org/docs/latest-v22.x/api/modules.html), Node.js contributors/OpenJS, **22.23.4**; Context7 `/nodejs/node/v22.23.4` | `exports` is initially a shortcut to `module.exports`; resolved-filename cache reuse and unfinished exports during cycles explain the CJS traces. |
+| [ESM source documentation](https://github.com/nodejs/node/blob/v22.23.4/doc/api/esm.md), Node.js contributors/OpenJS, **22.23.4**, via Context7 | Explicit module formats and ESM binding/loading boundaries; distinguish ESM bindings from CommonJS export snapshots and interop. The public Node22 ESM URL was unavailable through the web tool; the versioned source and actual file execution supply the check. |
+| [CSRF prevention](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html), OWASP, living guidance accessed **2026-11-10** | Synchronizer tokens must match the session and be protected from disclosure; SameSite and CORS address different browser conditions. |
+
+The pagination fixture now accepts bounded `limit`, `offset` and `tag` values,
+filters before slicing and preserves the injected frozen records. Unknown,
+nested-looking and repeated keys are rejected with 400. Both simple and extended
+parsers may reject the same invalid request under that allowlist, so a test-only
+HTTP probe also asserts the actual simple-parser query shape. Changing the
+published parser to extended now fails an observable-response assertion.
+
+The CSRF request/state table is an original illustrative scenario, **not an
+executed browser security demonstration**. It explicitly assumes an active victim
+session and a browser permitting the cross-site cookie. It contrasts an unreadable
+but successful mutation with accepted/missing/wrong-session synchronizer-token
+requests. SameSite=Lax and absent-session cases state why the cookie condition
+changes. The existing executable GET example still proves headers only.
+
+Verification sensitivity was demonstrated before completing the corrections:
+
+- Extracting the previous DSA-only disclosure check left all **12 Express guard
+  tests failing**; extending it made complete observations pass and every omitted
+  topic/solution fail. The actual dev-console sweep uses this same assertion.
+- The new list contract failed against the original first-slice-only lesson;
+  successive pages, filtering/end cases, invalid inputs, immutable fixtures and
+  the parser mutation now pass their positive/negative checks.
+- The new module fixture failed because the displayed dependency files were
+  absent; the six published files now produce their explained outputs.
+- The immediate-exit SIGTERM mutant failed with **child exited before draining**.
+  The positive test now requires readiness, an in-flight request, readiness=false
+  after SIGTERM, a released complete response, dependency cleanup and successful
+  exit in order. Its cleanup marker uses an acknowledged IPC send. Startup
+  failure, repeated-stop and bounded stuck-cleanup coverage remain intact.
+
+Focused checks: **87 tests / 5 files**, exit 0. Full correction-tree unit/DOM:
+**1779 tests / 241 files**, exit 0. The dev-console sweep passed **1/1**, with a
+read-only temporary config targeting the preserved preview on **3200**. Initial
+concurrent gate attempts hit Playwright `test-results` and Next `.next/types`
+file races; lint and route typecheck passed after the build finished. The CSRF
+panel initially measured **3132.55px**, exceeding the 3072px limit; replacing its
+old duplicated model/result table with a concise result paragraph preserved the
+new teaching and made the unchanged all-topic height test pass. No hash changed.
+All **30** other generated sheet bodies compare unchanged against **fa724bb**.

@@ -1,113 +1,78 @@
-# Kickoff: correct the Node.js & Express review findings
+# Kickoff: recheck the Node.js & Express corrections
 
 Updated 2026-11-10. Follow [AGENTS.md](AGENTS.md), D-99/D-100/D-110.
-Reviewed **976198b...67b8cb6** on `feat/node-express-study`. Application **972edf9**;
-later browser/test fixes **4489cd5**, **aaed08e**. No merge or push.
-Twelve panels/38 topics/38 activities are present; 28/31 references, 18/18 stages.
-The coordinator found six P2s; passing counts do not establish the missing teaching.
+Branch **feat/node-express-study**; correction application **e852170**, starting
+from review handoff **fa724bb**. The user authorized continuing in the existing
+implementation session. No merge, push or promotion.
 
-## Correction scope and acceptance
+## Corrected scope
 
-**NE-R1 — demonstrate module fundamentals.**
-`web/src/lib/cheatsheets/express/modules.ts:39` only imports `basename`; exports,
-CommonJS, module caching and cycle behavior are named but not worked through.
-The design requires those mechanisms in modules-and-packages. Add a small visible
-multi-file ESM/CJS example with the necessary files/imports, explained output and
-cache/cycle trace. Add meaningful prediction/repair practice and execute the actual
-published files in their declared module context. Avoid a duplicate backend or a
-test that merely prints a basename. Keep interop claims specific to Node22.
+- **NE-R1:** six visible `.mjs`/`.cjs` files demonstrate ESM exports/live bindings,
+  CommonJS exports/cache identity and a partially initialized cycle. Prediction
+  practice changes the cache/cycle conditions. Tests execute the actual files in
+  temporary directories; the displayed-code classification guard includes them.
+- **NE-R2/R5:** bounded `limit`/`offset`/`tag` contract, filter before sorting/slicing,
+  subsequent and empty pages, unknown/nested/repeated/invalid inputs rejected,
+  frozen caller fixtures preserved. A test-only HTTP probe pins the actual
+  simple-parser shape; switching the published parser to extended is detected.
+- **NE-R3:** sourced CSRF request/state table explains when a cookie-authenticated
+  mutation succeeds despite blocked response reading, then accepted/missing/wrong-
+  session synchronizer-token outcomes and SameSite conditions. Original transfer
+  practice and independent semantic render assertions. This is an illustrative
+  protocol trace, not an executed browser enforcement claim.
+- **NE-R4:** the actual dev-console sweep compares Express observed topic/solution
+  IDs with authored rows/assignments using the same assertion as DSA. Tests prove
+  omission of every Express topic or solution fails (12 panel tests, 76 omissions).
+  JavaScript traversal is preserved.
+- **NE-R6:** isolated child readiness/in-flight/draining/completion/cleanup/exit
+  protocol. SIGTERM must clear readiness, finish the released request and run
+  acknowledged dependency cleanup before exit 0. Immediate-exit mutation fails.
+  Existing startup-failure, repeat-stop and bounded stuck-cleanup tests remain.
 
-**NE-R2 — teach a real next page and filter.**
-`express/input.ts:138` only validates `limit` and slices from zero. Confirmed HTTP:
-`limit=1` and `limit=1&offset=1` both return b1; a filter parameter is ignored.
-Implement a stated bounded filter and offset/page or cursor contract, with stable
-ordering, successive pages and empty/end results. Show request/result reasoning;
-verify malformed/repeated/filter/page inputs and preserve caller data. No real DB
-or production pagination platform is needed. Coordinate NE-R5 in the same lesson.
+All **12 panel hashes / 38 topics / 38 activities** remain. Registry **28/31**,
+stages **18/18**; other **30 generated sheet bodies** unchanged against fa724bb.
+No new backend, reader runner, authentication/DB system or dependency change.
+Actual runtime remains **Node 22.23.4**, exact dev-only **Express 5.3.0**.
 
-**NE-R3 — explain a concrete CSRF defense.**
-`express/security.ts:139` only demonstrates a GET CORS header; practice names token/
-origin policies without explaining one. Add a sourced request/state-table contrast:
-state the cookie/origin conditions, show why blocking response reading can still
-allow an authenticated mutation, then how one selected defense accepts/rejects it.
-A bounded illustrative request trace is sufficient; no login/token system required.
-Do not claim Node fetch demonstrates browser enforcement. If executable browser
-behavior is claimed, test actual browser origin/cookie conditions. Explain CORS,
-CSRF and SameSite conditions in plain language and provide a transfer activity.
+## Evidence and limits
 
-**NE-R4 — assert Express dev-console traversal completeness.**
-`web/e2e/dev-console.spec.ts:71–91` traverses Express, but exact observed topic/
-solution ID checks remain DSA-only. Compare Express observed IDs against authored
-section rows/activity assignments, retaining JS/DSA coverage. Prove omitting one
-Express ID fails; merely calling forEachPanelState is insufficient because it can
-stop and return a partial observation without asserting it.
+Fresh correction-tree checks at **e852170**: format/lint/generated-route typecheck
+exit 0; **1779 unit/DOM tests / 241 files** passed. Focused published/data/render/
+ID-guard/Markdown checks **87/87**, including real loopback requests and mutations.
+Dev-console **1/1** passed using `pnpm test:dev-console
+--config=/tmp/ne-dev.config.ts`: temporary read-only server targeting of the existing
+**3200** preview avoids Next's single dev lock and preserves user servers. The
+checked-in configuration is unchanged. Production build completed as part of
+`pnpm test:e2e --workers=1`; the full production browser gate passed **52/52**,
+exit 0 (12.1 minutes). All gate results are fresh for application **e852170**.
 
-**NE-R5 — pin nested-query behavior.**
-`express-published.test.ts:45–46` does not cover nested-looking query keys. Replacing
-the displayed parser `simple` with `extended` passes every existing list assertion,
-but `?limit[value]=1` changes from 200 to 400. Define and test the intended nested/
-unknown-key policy alongside repeated/invalid scalar queries. Align displayed
-configuration, validation, explanation and tests; assert the actual response.
-Do not impose 200 merely to preserve today's accidental omission of that key.
+Preview checks: both themes at **320/768/1440**, all nested topics/solutions **2/2**
+passed. The expanded CSRF panel first measured **3132.55px**; replacing the old
+repeated CORS model/result table with a concise result paragraph retained all new
+teaching. The unchanged all-topic/default-panel/keyboard/history height test then
+passed **1/1** at **1024×768**, budget **3072px**. No weakened assertions/timeouts.
+A humanizer editing pass kept the prose concrete and removed the redundant table.
 
-**NE-R6 — SIGTERM test must observe drain and cleanup.**
-`express-published.test.ts:193–196` accepts an immediate successful exit. Coordinator
-replaced only `stop().then(() => process.exit(0), () => process.exit(1));` with
-`process.exit(0);`: both existing probes exit 0 with empty stderr. With an injected
-cleanup marker, real code emits `dependency cleanup`, mutant emits nothing.
-Add an isolated child test with readiness/shutdown handshakes, an in-flight request
-and observable dependency cleanup. Assert request completion/cleanup before exit;
-reject the immediate-exit mutation. Retain startup-failure, repeated-stop and
-bounded stuck-cleanup coverage. No timing-only race or weakened timeout.
+Observed failure evidence: Express omission guard **12 red → 12 green**; old list
+failed the new filter/page contract; old module topic lacked required displayed
+files; immediate-exit signal mutant failed **child exited before draining**.
+Initial concurrent gate attempts hit `test-results` removal during lint and
+`.next/types` removal during typegen; both checks passed after build/startup settled.
+Full command outputs are under `/tmp/ne-*.log`; source findings and detailed
+correction evidence are in [the source record](reference/node-express-source-research.md).
+Retain the identified application checks for subsequent records-only edits.
 
-All six are bounded corrections within the selected design. Extend existing
-subsections or split only where teaching weight warrants it. Keep current hashes
-unless a measured split requires a recorded change. Preserve the thirty other
-sheet bodies. Regenerate Markdown from canonical data and rerun affected checks;
-run the required completed-tree web gate with the project's fresh/retained policy.
-No new design, per-task agent or independent-review round is needed; return the
-actual correction diff/evidence for focused coordinator recheck.
+## Coordinator return
 
-## Review evidence and provenance
-
-Bounded reviewers, both **GPT-6.1 Sol / High**:
-`/root/express_standards_review` (NE-R4/R5/R6) and
-`/root/express_spec_review` (NE-R1/R2/R3). Coordinator read actual source and
-independently reproduced pagination/parser/SIGTERM witnesses and live teaching.
-No algorithm/server malfunction is established by the SIGTERM coverage finding.
-
-Fresh focused Vitest: **66 tests / 5 files**, exit 0, covering actual Express
-published code, data/render/Markdown and ledger. Thirty other generated bodies
-unchanged. Live isolated browser: light 320 modules, dark 768 CORS/CSRF, light 1440
-lists; themes correct, keyboard disclosure opening, hidden solutions, no overflow,
-console warnings or page errors. These checks do not establish missing lesson depth.
-
-Read implementation thread **01a1c38c-5adb-7540-b46d-9638153021bc** and raw logs:
-initial Sol High then Sol Medium. Retain identified full **1756/240**, later **90**
-focused, format/lint/typecheck/build, dev-console **1/1**, broad production **50/52**.
-The two broad failures were exact registry counts, corrected to 28/31; final affected
-browser cases **22/22** passed. No new full gate is claimed for review records.
-Application/generated diff after reviewed **67b8cb6** remains unchanged.
-Closing records: tracker-ledger **2/2**, six KICKOFF local links and
-`git diff --check`, all exit 0. Humanizer editing pass applied to the handoff.
-
-This feature started from **976198b**, omitting policy commit **1757d11** from the
-documentation branch. Review records restore its D-110 AGENTS/active design/plan
-assignments and decision verbatim; historical evidence is preserved. This does
-not change the runtime model of an existing session.
-
-## Next session
-
-Correct NE-R1–NE-R6 in a fresh user-selected **GPT-6.1 Sol / Medium** session.
-Start from this feature branch's exact committed review-handoff tip (confirm git),
-retaining branch `feat/node-express-study`. Return branch/application/records SHAs,
-actual commands/results, unresolved issues and root session reference to coordinator
-**01a1bedf-bdad-7b72-ba40-9b5406807d43**, recommended **GPT-6.1 Sol / High**.
+Recommended next task: **focused NE-R1–NE-R6 correction recheck**, **GPT-6.1 Sol /
+High**, coordinator **01a1bedf-bdad-7b72-ba40-9b5406807d43**. Read implementation
+thread **01a1c38c-5adb-7540-b46d-9638153021bc** before relying on its evidence;
+review **fa724bb...e852170** and the actual page. No additional independent-review
+round was added; this returns the bounded correction diff for coordinator acceptance.
 
 [Design](docs/superpowers/specs/2026-11-10-node-express-design.md),
 [plan](docs/superpowers/plans/2026-11-10-node-express.md),
-[sources](reference/node-express-source-research.md),
-[task](docs/task.md) and [tracker](docs/tracker.md).
-Preview: http://localhost:3200/reference/express. Preserve user servers and the
-unrelated untracked `.pnpm-store/`; keep it out of commits.
-No merge/push/promotion. Other language sheets and advanced follow-ons stay deferred.
+[task](docs/task.md), [tracker](docs/tracker.md).
+Preview remains **http://localhost:3200/reference/express**. Preserve the unrelated
+untracked `.pnpm-store/`. Integration into develop needs separate user approval;
+other language sheets and advanced follow-ons remain deferred.
