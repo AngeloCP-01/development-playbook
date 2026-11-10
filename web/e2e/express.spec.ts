@@ -43,7 +43,9 @@ test('panel heights and keyboard history navigation', async ({ page }) => {
     const panel = page.getByRole('tabpanel')
     expect((await panel.boundingBox())!.height).toBeLessThanOrEqual(3072)
     for (const row of section.rows) {
-      const button = page.getByRole('button', { name: new RegExp(row.term!) })
+      const button = page.locator(
+        `button[aria-controls="sheet-express-section-${section.study!.id}-subsection-${row.study!.id}"]`,
+      )
       await button.focus()
       await page.keyboard.press('Enter')
       expect((await panel.boundingBox())!.height).toBeLessThanOrEqual(3072)
