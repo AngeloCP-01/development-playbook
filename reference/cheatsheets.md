@@ -6,7 +6,7 @@
 Look up a command or study a focused topic. Study sheets include worked
 examples and local practice; stages teach lifecycle decisions.
 
-Drawn: 26 of 30. A sheet listed as not drawn is
+Drawn: 27 of 31. A sheet listed as not drawn is
 registered on purpose — the gap is the point, so it can be seen and filled.
 
 | Sheet | Group | Stage | Status |
@@ -37,6 +37,7 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | Caching | Architecture | 09 | Drawn |
 | Infrastructure Scaling | Architecture | 09 | Drawn |
 | JavaScript | Languages | — | Drawn |
+| DSA Patterns | Algorithms | — | Drawn |
 | Python | Languages | — | Not drawn |
 | Java | Languages | — | Not drawn |
 | Spring Boot | Languages | — | Not drawn |
@@ -2634,3 +2635,1432 @@ Annotations, bean lifecycle, and where configuration comes from.
 Middleware order, routing, and what blocks the event loop.
 
 *Not drawn yet.*
+
+## DSA Patterns
+
+Learn fifteen problem-solving patterns through everyday stories, tiny traces, JavaScript and attempt-first practice.
+
+### Foundations
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Count work and room
+
+Compare checking every pair of socks with checking each sock once\.
+
+Compare checking every pair of socks with checking each sock once\. Describe growth rather than guessing elapsed seconds\.
+
+For n items a scan makes n visits; all unordered pairs make n\(n\-1\)/2 comparisons\.
+
+Count work and room trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| n = 4 | scan 4; pairs 6 | Small inputs hide growth |
+| n = 8 | scan 8; pairs 28 | Pair work grows faster |
+
+Count work and room — JavaScript
+
+```
+// A single scan: n additions, one running total.
+function total(values) {
+  let sum = 0;
+  for (const x of values) sum += x;
+  return sum;
+}
+```
+
+O is an upper growth bound; Θ gives matching upper/lower growth\. Expected cost averages over the stated randomness/model; amortized cost spreads work over a sequence\. Neither promises a fast individual operation\.
+
+Use fixed\-cost indexed access, comparison and arithmetic here\. Numbers and intermediate sums/counts must remain finite safe integers\. Hash claims assume expected constant\-time operations; JavaScript Map does not guarantee that bound\. Sorting claims use a comparison\-sort model, not a language guarantee\. Count copies, recursion and required output separately\.
+
+##### Does a nested loop always mean quadratic?
+
+No\. Count total work; a moving boundary or stack may make only n removals across all iterations\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Count work and room practice
+
+Compare a scan and all unordered pairs for n = 10\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://usaco\.guide/bronze/time\-comp
+
+Solution: Count work and room practice
+
+10 visits versus 45 pairs\.
+
+Why it works
+
+10 visits versus 45 pairs\. O is an upper growth bound; Θ gives matching upper/lower growth\. Expected cost averages over the stated randomness/model; amortized cost spreads work over a sequence\. Neither promises a fast individual operation\.
+
+#### Choose a container
+
+Use a row of labelled boxes, a lookup notebook, a plate stack or a waiting line depending on what comes next\.
+
+Use a row of labelled boxes, a lookup notebook, a plate stack or a waiting line depending on what comes next\. Arrays index boxes; Maps associate keys with values; stacks take the newest; queues take the oldest\.
+
+Searching a notebook page by page repeats work; indexed and keyed access organize it\.
+
+Choose a container trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| Array | values\[0\] | First indexed slot |
+| Stack | push then pop | Last in, first out |
+| Queue | append, advance head | First in, first out |
+
+Choose a container — JavaScript
+
+```
+const leaf = { value: 2, left: null, right: null };
+const root = { value: 1, left: leaf, right: null };
+const end = { value: 2, next: null };
+const head = { value: 1, next: end };
+const adj = [[1], [0], []];
+const sorted = [3, 1, 2].slice().sort((a, b) => a - b);
+```
+
+Objects are connected by references: two variables can point at the same node\. Recursion pauses one call while child calls run; each paused call consumes storage\. Sorting changes positions, so carry original indices when they matter\. The shown tree has no sharing or cycles\.
+
+A copied array costs O\(n\) storage\. Stack/queue storage depends on how many pending items remain; a head\-index queue retains its visited prefix until discarded\. Sort workspace depends on the engine\.
+
+##### Why avoid shift for a BFS queue?
+
+A head index avoids repeated removal from the front and supports the linear traversal model\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Choose a container practice
+
+In adj \[\[1\], \[0\], \[\]\], which vertex is isolated? Are two \{value: 2\} objects identical?
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://usaco\.guide/silver/intro\-tree
+
+Solution: Choose a container practice
+
+Vertex 2 is isolated\. Separately created objects have different identities\.
+
+Why it works
+
+Vertex 2 is isolated\. Separately created objects have different identities\. Objects are connected by references: two variables can point at the same node\. Recursion pauses one call while child calls run; each paused call consumes storage\. Sorting changes positions, so carry original indices when they matter\. The shown tree has no sharing or cycles\.
+
+#### Explain a solution
+
+Walk an interviewer through a small example before writing loops\.
+
+Restate the contract: valid input, returned output, mutation and endpoints\. Give a simple baseline, choose a mechanism and name its state\. Trace a tiny example, justify the safe step, derive work and room, then test empty input, duplicates and a boundary\. Explain what breaks if an assumption changes\. Local questions are original practice, not claims about employer question frequency\.
+
+### Scan and remember
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Hash complements
+
+Match two grocery prices to a budget by remembering prices already checked\.
+
+Match two grocery prices to a budget by remembering prices already checked\. Return distinct original positions adding to a target; signed integers and duplicates are allowed\.
+
+Trying every pair costs O\(n²\)\. A Map holds one earlier position for each price\.
+
+Hash complements trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| Read 3 | \{ \} | Need 6 for target 9 |
+| Read 6 | 3 → 0 | Return \[0, 1\] |
+
+Hash complements — JavaScript
+
+```
+function findPair(values, target) {
+  const seen = new Map();
+  for (let i = 0; i < values.length; i++) {
+    const need = target - values[i];
+    if (seen.has(need)) return [seen.get(need), i];
+    seen.set(values[i], i);
+  }
+  return null;
+}
+```
+
+The map contains only earlier positions, so a match uses two different items\. If no earlier complement exists, storing this item makes it available to later ones\. Ordered range queries need another structure\.
+
+Expected O\(n\) time and O\(n\) extra map storage under the hash model; the returned pair uses O\(1\)\.
+
+##### Why query before insertion?
+
+Inserting first could let one item match itself\. Two equal prices still work when the earlier occurrence is stored\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Hash complements practice
+
+Evaluate findPair\(\[4, 4\], 8\) and findPair\(\[4\], 8\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1640
+
+Solution: Hash complements practice
+
+\[0, 1\] and null\.
+
+Reference implementation
+
+```
+function findPair(values, target) {
+  const seen = new Map();
+  for (let i = 0; i < values.length; i++) {
+    const need = target - values[i];
+    if (seen.has(need)) return [seen.get(need), i];
+    seen.set(values[i], i);
+  }
+  return null;
+}
+```
+
+Why it works
+
+\[0, 1\] and null\. The map contains only earlier positions, so a match uses two different items\. If no earlier complement exists, storing this item makes it available to later ones\. Ordered range queries need another structure\.
+
+#### Two pointers
+
+Two shoppers stand at opposite ends of an ordered price shelf\.
+
+Two shoppers stand at opposite ends of an ordered price shelf\. Find a pair in an already ascending array\. Return positions or null\.
+
+Trying every pair repeats work; ordering lets a failed comparison eliminate an entire end\.
+
+Two pointers trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| \[1, 3, 6\], target 7 | left 0, right 2 | 1 \+ 6 = 7 |
+| \[1, 3, 6\], target 8 | left 0 → 1 | 7 is too small |
+| Next comparison | 3 \+ 6 = 9 | Move right; boundaries meet |
+
+Two pointers — JavaScript
+
+```
+function findSortedPair(values, target) {
+  let left = 0, right = values.length - 1;
+  while (left < right) {
+    const sum = values[left] + values[right];
+    if (sum === target) return [left, right];
+    if (sum < target) left++;
+    else right--;
+  }
+  return null;
+}
+```
+
+If the largest partner is too small with the left item, every other partner is too small too\. The symmetric argument removes the right item when the sum is too large\. Unsorted input breaks this proof\.
+
+O\(n\) scan time, O\(1\) auxiliary storage\. Sorting unsorted input adds comparison\-sort work O\(n log n\); copy value/index pairs in O\(n\) space to preserve original positions\. Sort workspace is implementation\-dependent\.
+
+##### Why is advancing left safe?
+
+Every remaining partner is no larger than the right item, so none can rescue the current left item when their sum is too small\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Two pointers practice
+
+Evaluate findSortedPair\(\[\-2, 0, 3, 5\], 3\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1084
+
+Solution: Two pointers practice
+
+\[0, 3\] is returned; \[1, 2\] would also be a valid pair\.
+
+Reference implementation
+
+```
+function findSortedPair(values, target) {
+  let left = 0, right = values.length - 1;
+  while (left < right) {
+    const sum = values[left] + values[right];
+    if (sum === target) return [left, right];
+    if (sum < target) left++;
+    else right--;
+  }
+  return null;
+}
+```
+
+Why it works
+
+\[0, 3\] is returned; \[1, 2\] would also be a valid pair\. If the largest partner is too small with the left item, every other partner is too small too\. The symmetric argument removes the right item when the sum is too large\. Unsorted input breaks this proof\.
+
+#### Sliding window
+
+Keep a row of songs on a tray, removing from the front until no song repeats\.
+
+Keep a row of songs on a tray, removing from the front until no song repeats\. Return the longest contiguous segment of distinct values, including 0 for empty input\.
+
+Restarting a set at each start can cost O\(n²\)\. Maintain the current tray instead\.
+
+Sliding window trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| Add A | \[A\] | best 1 |
+| Add B | \[A, B\] | best 2 |
+| Add A | \[B, A\] | Remove first A; best 2 |
+
+Sliding window — JavaScript
+
+```
+function longestDistinct(values) {
+  const counts = new Map();
+  let left = 0, best = 0;
+  for (let right = 0; right < values.length; right++) {
+    const x = values[right];
+    counts.set(x, (counts.get(x) ?? 0) + 1);
+    while (counts.get(x) > 1) {
+      const y = values[left++];
+      const count = counts.get(y) - 1;
+      if (count === 0) counts.delete(y);
+      else counts.set(y, count);
+    }
+    best = Math.max(best, right - left + 1);
+  }
+  return best;
+}
+```
+
+Only the newly added value can repeat; removing from the left repairs that duplicate and preserves contiguity\. Fixed windows remove exactly one item per shift\. Sum\-based shrinking needs a separate proof: \[4, \-3, 2\] with sum limit 3 loses the valid whole range if 4 is discarded immediately\.
+
+Expected O\(n\) time: each item enters and leaves at most once, despite nested loops\. O\(d\) active distinct values; deleting zero counts matters\.
+
+##### Why is the shrink loop not quadratic?
+
+The left boundary never restarts\. Its total movement across the entire run is at most n\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Sliding window practice
+
+Evaluate longestDistinct\(\[1, 2, 1, 3\]\) and longestDistinct\(\[\]\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1141
+
+Solution: Sliding window practice
+
+3 and 0\. The best segment is \[2, 1, 3\]\.
+
+Reference implementation
+
+```
+function longestDistinct(values) {
+  const counts = new Map();
+  let left = 0, best = 0;
+  for (let right = 0; right < values.length; right++) {
+    const x = values[right];
+    counts.set(x, (counts.get(x) ?? 0) + 1);
+    while (counts.get(x) > 1) {
+      const y = values[left++];
+      const count = counts.get(y) - 1;
+      if (count === 0) counts.delete(y);
+      else counts.set(y, count);
+    }
+    best = Math.max(best, right - left + 1);
+  }
+  return best;
+}
+```
+
+Why it works
+
+3 and 0\. The best segment is \[2, 1, 3\]\. Only the newly added value can repeat; removing from the left repairs that duplicate and preserves contiguity\. Fixed windows remove exactly one item per shift\. Sum\-based shrinking needs a separate proof: \[4, \-3, 2\] with sum limit 3 loses the valid whole range if 4 is discarded immediately\.
+
+#### Prefix sums
+
+Keep a running receipt total; subtract two totals to price the items between them\.
+
+Keep a running receipt total; subtract two totals to price the items between them\. Build totals before each position and query zero\-based half\-open ranges \[start, end\)\. Also count exact\-sum ranges with signed values\.
+
+Adding each queried range costs its length; saved totals reuse that work\.
+
+Prefix sums trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| Input \[2, \-1, 3\] | prefix \[0, 2, 1, 4\] | Initial zero represents no items |
+| Query \[1, 3\) | 4 \- 2 = 2 | Includes \-1 and 3 |
+| Count target 0 in \[0, 0\] | 1 \+ 2 matches | Three nonempty ranges |
+
+Prefix sums — JavaScript
+
+```
+function buildPrefix(values) {
+  const prefix = [0];
+  for (const x of values) prefix.push(prefix[prefix.length - 1] + x);
+  return prefix;
+}
+function rangeSum(prefix, start, end) {
+  return prefix[end] - prefix[start];
+}
+function countTargetRanges(values, target) {
+  const counts = new Map([[0, 1]]);
+  let sum = 0, answer = 0;
+  for (const x of values) {
+    sum += x;
+    answer += counts.get(sum - target) ?? 0;
+    counts.set(sum, (counts.get(sum) ?? 0) + 1);
+  }
+  return answer;
+}
+```
+
+Subtracting removes exactly the earlier items\. A range sums to target when its earlier prefix equals current minus target\. Query before inserting to exclude an empty range; frequencies count different starts\. Updates invalidate later totals, and subtraction cannot recover range minima\.
+
+O\(n\) build time/space and O\(1\) per range query\. Exact\-sum counting takes expected O\(n\) time and O\(n\) space with hashing\. Assume all totals, differences and counts stay safe integers\.
+
+##### Why seed the frequency of zero?
+
+It counts ranges starting at index zero, using the same difference rule as all other ranges\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Prefix sums practice
+
+Count target\-zero ranges in \[1, \-1, 0\]\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1646
+
+Solution: Prefix sums practice
+
+3: \[1, \-1\], \[0\], and \[1, \-1, 0\]\.
+
+Reference implementation
+
+```
+function buildPrefix(values) {
+  const prefix = [0];
+  for (const x of values) prefix.push(prefix[prefix.length - 1] + x);
+  return prefix;
+}
+function rangeSum(prefix, start, end) {
+  return prefix[end] - prefix[start];
+}
+function countTargetRanges(values, target) {
+  const counts = new Map([[0, 1]]);
+  let sum = 0, answer = 0;
+  for (const x of values) {
+    sum += x;
+    answer += counts.get(sum - target) ?? 0;
+    counts.set(sum, (counts.get(sum) ?? 0) + 1);
+  }
+  return answer;
+}
+```
+
+Why it works
+
+3: \[1, \-1\], \[0\], and \[1, \-1, 0\]\. Subtracting removes exactly the earlier items\. A range sums to target when its earlier prefix equals current minus target\. Query before inserting to exclude an empty range; frequencies count different starts\. Updates invalidate later totals, and subtraction cannot recover range minima\.
+
+### Search and intervals
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Binary search
+
+Find the first shelf label at least your number by repeatedly checking the middle\.
+
+Find the first shelf label at least your number by repeatedly checking the middle\. Return the first index whose value is at least target, or array length; input is ascending\.
+
+A linear scan works, but sorted comparisons can discard half the remaining region\.
+
+Binary search trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| \[2, 4, 4, 9\], target 4 | \[0, 4\), mid 2 | Keep \[0, 2\) |
+| mid 1 | 4 is large enough | Keep \[0, 1\) |
+| mid 0 | 2 is too small | Return 1 |
+
+Binary search — JavaScript
+
+```
+function lowerBound(sorted, target) {
+  let low = 0, high = sorted.length;
+  while (low < high) {
+    const mid = low + Math.floor((high - low) / 2);
+    if (sorted[mid] < target) low = mid + 1;
+    else high = mid;
+  }
+  return low;
+}
+```
+
+Indices before low are too small; indices at or beyond high are large enough\. Each comparison preserves these claims and shrinks \[low, high\)\. Nonmonotone predicates break elimination\. Answer search transfers this to first feasible production time; Factory Machines bounds may need BigInt\.
+
+O\(log\(n \+ 1\)\) time, O\(1\) extra space\. Sorting first is additional work\.
+
+##### Why keep mid on equality?
+
+An earlier equal value may exist\. Setting high to mid keeps that candidate boundary\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Binary search practice
+
+Evaluate lowerBound\(\[2, 4, 4, 9\], 4\) and lowerBound\(\[\], 4\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1620
+
+Solution: Binary search practice
+
+1 and 0\.
+
+Reference implementation
+
+```
+function lowerBound(sorted, target) {
+  let low = 0, high = sorted.length;
+  while (low < high) {
+    const mid = low + Math.floor((high - low) / 2);
+    if (sorted[mid] < target) low = mid + 1;
+    else high = mid;
+  }
+  return low;
+}
+```
+
+Why it works
+
+1 and 0\. Indices before low are too small; indices at or beyond high are large enough\. Each comparison preserves these claims and shrinks \[low, high\)\. Nonmonotone predicates break elimination\. Answer search transfers this to first feasible production time; Factory Machines bounds may need BigInt\.
+
+#### Interval sweep
+
+Count people at a party by sorting door events rather than inspecting every minute\.
+
+Count people at a party by sorting door events rather than inspecting every minute\. Return peak guests for visits \[start, end\), start \< end\.
+
+Testing every pair of times repeats occupancy work; process changes only\.
+
+Interval sweep trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| Visits \[1, 3\), \[3, 5\) | \+1 at 1 | active 1 |
+| Time 3 | \-1 then \+1 | peak remains 1 |
+
+Interval sweep — JavaScript
+
+```
+function peakGuests(visits) {
+  const events = [];
+  for (const [start, end] of visits) {
+    events.push([start, 1], [end, -1]);
+  }
+  events.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  let active = 0, best = 0;
+  for (const [, delta] of events) {
+    active += delta;
+    best = Math.max(best, active);
+  }
+  return best;
+}
+```
+
+Between events occupancy is unchanged\. Departures precede arrivals on ties because the ending guest is absent at end\. Closed endpoints need a different tie rule\. Merging computes union; selection chooses compatible visits; neither gives peak occupancy\.
+
+O\(n log n\) comparison\-sort time, O\(n\) event storage plus implementation\-dependent sort workspace; visits are untouched\.
+
+##### Why do departures win ties?
+
+Half\-open visits do not overlap solely by touching endpoints\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Interval sweep practice
+
+Evaluate peakGuests\(\[\[1, 4\], \[2, 3\], \[4, 5\]\]\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1619
+
+Solution: Interval sweep practice
+
+2\. At time 4 the first guest has left\.
+
+Reference implementation
+
+```
+function peakGuests(visits) {
+  const events = [];
+  for (const [start, end] of visits) {
+    events.push([start, 1], [end, -1]);
+  }
+  events.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  let active = 0, best = 0;
+  for (const [, delta] of events) {
+    active += delta;
+    best = Math.max(best, active);
+  }
+  return best;
+}
+```
+
+Why it works
+
+2\. At time 4 the first guest has left\. Between events occupancy is unchanged\. Departures precede arrivals on ties because the ending guest is absent at end\. Closed endpoints need a different tie rule\. Merging computes union; selection chooses compatible visits; neither gives peak occupancy\.
+
+### Useful candidates
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Monotonic stack
+
+Keep possible shorter fences in a pile; a new short fence hides taller ones forever\.
+
+Keep possible shorter fences in a pile; a new short fence hides taller ones forever\. Return the nearest strictly smaller earlier index, or \-1\.
+
+Scanning backward from every item costs O\(n²\)\. Retain useful candidates in increasing height order\.
+
+Monotonic stack trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| \[2, 2, 1\] at index 0 | stack \[0\] | answer \-1 |
+| At index 1 | pop equal 2; stack \[1\] | answer \-1 |
+| At index 2 | pop 2; stack \[2\] | answer \-1 |
+
+Monotonic stack — JavaScript
+
+```
+function previousSmaller(values) {
+  const stack = [], answer = [];
+  for (let i = 0; i < values.length; i++) {
+    while (stack.length && values[stack[stack.length - 1]] >= values[i]) stack.pop();
+    answer.push(stack.length ? stack[stack.length - 1] : -1);
+    stack.push(i);
+  }
+  return answer;
+}
+```
+
+A popped item is no smaller than this newer item, so it can never be the nearest smaller candidate for a future item\. Equal heights must be removed for strict comparison\. Changing the query changes the removal rule\. CSES uses one\-based positions and 0 for absent; this lesson uses zero\-based and \-1\.
+
+O\(n\) amortized time because each index is pushed once and popped at most once\. O\(n\) working stack and O\(n\) required output\.
+
+##### How can a while loop per item be linear?
+
+Count pushes and pops over the whole run rather than charging n pops to every item\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Monotonic stack practice
+
+Evaluate previousSmaller\(\[3, 1, 2, 2\]\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1645
+
+Solution: Monotonic stack practice
+
+\[\-1, \-1, 1, 1\]\.
+
+Reference implementation
+
+```
+function previousSmaller(values) {
+  const stack = [], answer = [];
+  for (let i = 0; i < values.length; i++) {
+    while (stack.length && values[stack[stack.length - 1]] >= values[i]) stack.pop();
+    answer.push(stack.length ? stack[stack.length - 1] : -1);
+    stack.push(i);
+  }
+  return answer;
+}
+```
+
+Why it works
+
+\[\-1, \-1, 1, 1\]\. A popped item is no smaller than this newer item, so it can never be the nearest smaller candidate for a future item\. Equal heights must be removed for strict comparison\. Changing the query changes the removal rule\. CSES uses one\-based positions and 0 for absent; this lesson uses zero\-based and \-1\.
+
+#### Top\-k heap
+
+Keep the k largest contest scores in a basket with its smallest score at the handle\.
+
+Keep the k largest contest scores in a basket with its smallest score at the handle\. Return the kth largest occurrence, counting duplicates; invalid k returns null\.
+
+Sorting a copy costs O\(n log n\); a min\-heap retains only k candidates\.
+
+Top\-k heap trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| \[5, 2, 5\], k 2 | retain 5, 2 | root 2 |
+| Insert last 5 | remove 2 | root 5 is rank 2 |
+
+Top\-k heap — JavaScript
+
+```
+class MinHeap {
+  constructor() { this.items = []; }
+  push(x) {
+    const a = this.items;
+    a.push(x);
+    let i = a.length - 1;
+    while (i > 0) {
+      const p = Math.floor((i - 1) / 2);
+      if (a[p] <= a[i]) break;
+      [a[p], a[i]] = [a[i], a[p]];
+      i = p;
+    }
+  }
+  pop() {
+    const a = this.items, first = a[0], last = a.pop();
+    if (a.length) {
+      a[0] = last;
+      let i = 0;
+      while (2 * i + 1 < a.length) {
+        let child = 2 * i + 1;
+        if (child + 1 < a.length && a[child + 1] < a[child]) child++;
+        if (a[i] <= a[child]) break;
+        [a[i], a[child]] = [a[child], a[i]];
+        i = child;
+      }
+    }
+    return first;
+  }
+}
+function kthLargest(values, k) {
+  if (!Number.isInteger(k) || k < 1 || k > values.length) return null;
+  const heap = new MinHeap();
+  for (const x of values) {
+    heap.push(x);
+    if (heap.items.length > k) heap.pop();
+  }
+  return heap.items[0];
+}
+```
+
+The helper stores a binary tree in an array: children are 2i\+1 and 2i\+2\. push bubbles upward; pop replaces the root and sinks it toward the smaller child\. The root is always smallest\. Removing it when capacity is exceeded leaves exactly the k largest occurrences seen\. This does not retain original rank positions\.
+
+O\(n log\(k \+ 1\)\) time, O\(k\) extra storage, including the helper\. Each update crosses at most the logarithmic heap height; caller input is preserved\.
+
+##### Why a min\-heap for largest scores?
+
+Its minimum is the weakest retained candidate and the next one to discard\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Top\-k heap practice
+
+Evaluate kthLargest\(\[5, 2, 5\], 2\) and kthLargest\(\[5\], 0\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://leetcode\.com/problems/kth\-largest\-element\-in\-an\-array/
+
+Solution: Top\-k heap practice
+
+5 and null\.
+
+Reference implementation
+
+```
+class MinHeap {
+  constructor() { this.items = []; }
+  push(x) {
+    const a = this.items;
+    a.push(x);
+    let i = a.length - 1;
+    while (i > 0) {
+      const p = Math.floor((i - 1) / 2);
+      if (a[p] <= a[i]) break;
+      [a[p], a[i]] = [a[i], a[p]];
+      i = p;
+    }
+  }
+  pop() {
+    const a = this.items, first = a[0], last = a.pop();
+    if (a.length) {
+      a[0] = last;
+      let i = 0;
+      while (2 * i + 1 < a.length) {
+        let child = 2 * i + 1;
+        if (child + 1 < a.length && a[child + 1] < a[child]) child++;
+        if (a[i] <= a[child]) break;
+        [a[i], a[child]] = [a[child], a[i]];
+        i = child;
+      }
+    }
+    return first;
+  }
+}
+function kthLargest(values, k) {
+  if (!Number.isInteger(k) || k < 1 || k > values.length) return null;
+  const heap = new MinHeap();
+  for (const x of values) {
+    heap.push(x);
+    if (heap.items.length > k) heap.pop();
+  }
+  return heap.items[0];
+}
+```
+
+Why it works
+
+5 and null\. The helper stores a binary tree in an array: children are 2i\+1 and 2i\+2\. push bubbles upward; pop replaces the root and sinks it toward the smaller child\. The root is always smallest\. Removing it when capacity is exceeded leaves exactly the k largest occurrences seen\. This does not retain original rank positions\.
+
+### Follow nodes
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Fast and slow
+
+Two walkers follow the same signposts, one taking twice as many steps\.
+
+Two walkers follow the same signposts, one taking twice as many steps\. Detect a cycle in nodes with value and next fields; null ends the chain\.
+
+Remembering all visited nodes works with O\(n\) storage\. Relative speed can detect repetition without that set\.
+
+Fast and slow trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| a → b → c → b | slow b, fast c | Different identities |
+| Next round | slow c, fast c | Cycle detected |
+
+Fast and slow — JavaScript
+
+```
+function hasCycle(head) {
+  let slow = head, fast = head;
+  while (fast !== null && fast.next !== null) {
+    slow = slow.next;
+    fast = fast.next.next;
+    if (slow === fast) return true;
+  }
+  return false;
+}
+```
+
+Inside a cycle the faster walker gains one position per round modulo cycle length, so they meet\. On an acyclic chain fast reaches null\. Compare node identity, not value: repeated labels do not imply a loop\. This requires one successor per node, not arbitrary graph branching\.
+
+O\(n\) time for n distinct reachable nodes and O\(1\) auxiliary space\.
+
+##### Do two equal values prove a cycle?
+
+No\. Distinct nodes can carry equal values\. The walkers must reach the same object\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Fast and slow practice
+
+Predict hasCycle\(null\), and a node whose next points to itself\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://leetcode\.com/problems/linked\-list\-cycle/
+
+Solution: Fast and slow practice
+
+false and true\.
+
+Reference implementation
+
+```
+function hasCycle(head) {
+  let slow = head, fast = head;
+  while (fast !== null && fast.next !== null) {
+    slow = slow.next;
+    fast = fast.next.next;
+    if (slow === fast) return true;
+  }
+  return false;
+}
+```
+
+Why it works
+
+false and true\. Inside a cycle the faster walker gains one position per round modulo cycle length, so they meet\. On an acyclic chain fast reaches null\. Compare node identity, not value: repeated labels do not imply a loop\. This requires one successor per node, not arbitrary graph branching\.
+
+#### Tree DFS
+
+Count everyone in a family branch by counting each child branch and adding yourself\.
+
+Count everyone in a family branch by counting each child branch and adding yourself\. Count binary\-tree nodes with value, left and right; absent children are null\. No cycles or shared children\.
+
+A tree already divides into disjoint child subtrees; their counts combine without overlap\.
+
+Tree DFS trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| Root with two leaves | left 1, right 1 | 1 \+ 1 \+ 1 = 3 |
+| Absent child | null | Contributes 0 |
+
+Tree DFS — JavaScript
+
+```
+function treeSize(root) {
+  if (root === null) return 0;
+  return 1 + treeSize(root.left) + treeSize(root.right);
+}
+function treeSizeIterative(root) {
+  const pending = root === null ? [] : [root];
+  let count = 0;
+  while (pending.length) {
+    const node = pending.pop();
+    count++;
+    if (node.right !== null) pending.push(node.right);
+    if (node.left !== null) pending.push(node.left);
+  }
+  return count;
+}
+```
+
+The recursive base counts an empty branch as zero; induction combines two correct child counts and the root\. The iterative stack holds unvisited subtree roots; every node is removed once\. Deep recursion can overflow JavaScript call stacks, so use the iterative version for deep inputs\. Shared children would be counted twice\.
+
+O\(n\) time\. Recursion uses O\(h\) call frames\. Iterative DFS uses O\(h\) pending roots as an upper bound for binary trees, O\(n\) worst case; on a single chain it keeps only one pending node\. Balance must not be assumed\.
+
+##### Why count null as zero?
+
+An absent branch has no node to add; this makes leaves evaluate to one without a special leaf case\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Tree DFS practice
+
+Count a root with only one leaf child\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1674
+
+Solution: Tree DFS practice
+
+2 in both versions\.
+
+Reference implementation
+
+```
+function treeSize(root) {
+  if (root === null) return 0;
+  return 1 + treeSize(root.left) + treeSize(root.right);
+}
+function treeSizeIterative(root) {
+  const pending = root === null ? [] : [root];
+  let count = 0;
+  while (pending.length) {
+    const node = pending.pop();
+    count++;
+    if (node.right !== null) pending.push(node.right);
+    if (node.left !== null) pending.push(node.left);
+  }
+  return count;
+}
+```
+
+Why it works
+
+2 in both versions\. The recursive base counts an empty branch as zero; induction combines two correct child counts and the root\. The iterative stack holds unvisited subtree roots; every node is removed once\. Deep recursion can overflow JavaScript call stacks, so use the iterative version for deep inputs\. Shared children would be counted twice\.
+
+### Connections
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Graph traversal
+
+Explore nearby bus stops before stops farther away; mark stops so a loop does not trap you\.
+
+Explore nearby bus stops before stops farther away; mark stops so a loop does not trap you\. Use BFS for an unweighted shortest path and DFS to count undirected components\. Vertex IDs are 0\.\.V\-1 in number\[\]\[\] adjacency lists\.
+
+Enumerating every route repeats vertices and can loop forever\. A discovered marker prevents revisits\.
+
+Graph traversal trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| adj \[\[1\], \[0, 2\], \[1\]\], start 0 | queue \[0\] | parent\[0\] = 0 |
+| Visit 0 then 1 | queue \[0, 1, 2\] | parent\[2\] = 1 |
+| Reach 2 | reverse parent chain | \[0, 1, 2\] |
+
+Graph traversal — JavaScript
+
+```
+function shortestPath(adj, start, goal) {
+  const parent = Array(adj.length).fill(-1), queue = [start];
+  parent[start] = start;
+  for (let head = 0; head < queue.length; head++) {
+    const v = queue[head];
+    if (v === goal) {
+      const path = [v];
+      while (path[path.length - 1] !== start) path.push(parent[path[path.length - 1]]);
+      return path.reverse();
+    }
+    for (const w of adj[v]) if (parent[w] === -1) {
+      parent[w] = v;
+      queue.push(w);
+    }
+  }
+  return null;
+}
+function countComponents(adj) {
+  const seen = new Set();
+  let count = 0;
+  for (let start = 0; start < adj.length; start++) {
+    if (seen.has(start)) continue;
+    count++;
+    const stack = [start];
+    seen.add(start);
+    while (stack.length) {
+      const v = stack.pop();
+      for (const w of adj[v]) if (!seen.has(w)) {
+        seen.add(w);
+        stack.push(w);
+      }
+    }
+  }
+  return count;
+}
+```
+
+BFS discovers vertices in nondecreasing edge distance; the first parent gives a shortest route\. The queue uses a head index rather than shifting\. DFS exhausts each reachable undirected region before starting another, including isolated vertices\. Weighted shortest paths need a different proof\.
+
+O\(V \+ E\) time and O\(V\) extra storage for adjacency\-list inputs; returned path adds O\(V\) output\. Constructing adjacency from edges would add O\(V \+ E\) storage\. Iterative traversal avoids deep recursive stacks\.
+
+##### Why mark when adding to the queue?
+
+It prevents multiple predecessors from enqueuing the same vertex and preserves the first shortest parent\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Graph traversal practice
+
+Use adj \[\[1\], \[0\], \[\]\]\. Find path 0 to 2 and count components\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1667
+
+Solution: Graph traversal practice
+
+null and 2\.
+
+Reference implementation
+
+```
+function shortestPath(adj, start, goal) {
+  const parent = Array(adj.length).fill(-1), queue = [start];
+  parent[start] = start;
+  for (let head = 0; head < queue.length; head++) {
+    const v = queue[head];
+    if (v === goal) {
+      const path = [v];
+      while (path[path.length - 1] !== start) path.push(parent[path[path.length - 1]]);
+      return path.reverse();
+    }
+    for (const w of adj[v]) if (parent[w] === -1) {
+      parent[w] = v;
+      queue.push(w);
+    }
+  }
+  return null;
+}
+function countComponents(adj) {
+  const seen = new Set();
+  let count = 0;
+  for (let start = 0; start < adj.length; start++) {
+    if (seen.has(start)) continue;
+    count++;
+    const stack = [start];
+    seen.add(start);
+    while (stack.length) {
+      const v = stack.pop();
+      for (const w of adj[v]) if (!seen.has(w)) {
+        seen.add(w);
+        stack.push(w);
+      }
+    }
+  }
+  return count;
+}
+```
+
+Why it works
+
+null and 2\. BFS discovers vertices in nondecreasing edge distance; the first parent gives a shortest route\. The queue uses a head index rather than shifting\. DFS exhausts each reachable undirected region before starting another, including isolated vertices\. Weighted shortest paths need a different proof\.
+
+#### Topological order
+
+Start cooking tasks whose ingredients are ready, then unlock dependent tasks\.
+
+Start cooking tasks whose ingredients are ready, then unlock dependent tasks\. Return any valid order for directed prerequisites, or null if a cycle prevents one\.
+
+Trying all permutations can work on tiny graphs, but indegrees expose ready tasks directly\.
+
+Topological order trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| Edges 0 → 2, 1 → 2 | indegree \[0, 0, 2\] | ready \[0, 1\] |
+| Remove 0 then 1 | indegree\[2\] becomes 0 | append 2 |
+| Order | \[0, 1, 2\] | Every prerequisite precedes its dependent |
+
+Topological order — JavaScript
+
+```
+function topologicalOrder(adj) {
+  const indegree = Array(adj.length).fill(0), ready = [];
+  for (const edges of adj) for (const w of edges) indegree[w]++;
+  for (let v = 0; v < adj.length; v++) if (indegree[v] === 0) ready.push(v);
+  for (let head = 0; head < ready.length; head++) {
+    for (const w of adj[ready[head]]) if (--indegree[w] === 0) ready.push(w);
+  }
+  return ready.length === adj.length ? ready : null;
+}
+```
+
+Indegree counts remaining prerequisites\. Removing a ready vertex cannot violate an edge\. If vertices remain but none is ready, following remaining incoming edges eventually repeats a vertex, exposing a cycle\. A self\-loop is a cycle\. The selected Kahn queue is not a lexicographic priority queue\.
+
+O\(V \+ E\) time and O\(V\) extra storage; every vertex enters once and each edge is removed once\.
+
+##### Why is an incomplete order evidence of a cycle?
+
+Every remaining vertex has a remaining predecessor\. A finite predecessor chain must repeat\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Topological order practice
+
+Evaluate \[\[2\], \[2\], \[\]\] and \[\[0\]\]\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1679
+
+Solution: Topological order practice
+
+\[0, 1, 2\] and null\. Other valid orders are acceptable\.
+
+Reference implementation
+
+```
+function topologicalOrder(adj) {
+  const indegree = Array(adj.length).fill(0), ready = [];
+  for (const edges of adj) for (const w of edges) indegree[w]++;
+  for (let v = 0; v < adj.length; v++) if (indegree[v] === 0) ready.push(v);
+  for (let head = 0; head < ready.length; head++) {
+    for (const w of adj[ready[head]]) if (--indegree[w] === 0) ready.push(w);
+  }
+  return ready.length === adj.length ? ready : null;
+}
+```
+
+Why it works
+
+\[0, 1, 2\] and null\. Other valid orders are acceptable\. Indegree counts remaining prerequisites\. Removing a ready vertex cannot violate an edge\. If vertices remain but none is ready, following remaining incoming edges eventually repeats a vertex, exposing a cycle\. A self\-loop is a cycle\. The selected Kahn queue is not a lexicographic priority queue\.
+
+### Choices and memory
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Backtracking
+
+Arrange letter tiles by choosing one, arranging the rest, then putting it back for the next choice\.
+
+Arrange letter tiles by choosing one, arranging the rest, then putting it back for the next choice\. Return distinct permutations of at most eight lowercase ASCII letters, including one empty arrangement for empty text\.
+
+Permuting indexed tiles then removing duplicates wastes work for repeated letters\. Choose letter frequencies instead\.
+
+Backtracking trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| aab | choose a, remaining a:1 b:1 | prefix a |
+| choose a then b | emit aab | undo b then a |
+| Other branches | aba, baa | No duplicate branches for equal tiles |
+
+Backtracking — JavaScript
+
+```
+function uniquePermutations(text) {
+  const counts = new Map();
+  for (const ch of text) counts.set(ch, (counts.get(ch) ?? 0) + 1);
+  const path = [], output = [];
+  function visit() {
+    if (path.length === text.length) { output.push(path.join('')); return; }
+    for (const [ch, count] of counts) {
+      if (count === 0) continue;
+      counts.set(ch, count - 1);
+      path.push(ch);
+      visit();
+      path.pop();
+      counts.set(ch, count);
+    }
+  }
+  visit();
+  return output;
+}
+```
+
+Each distinct output has exactly one sequence of letter choices\. Undo restores the state expected by sibling branches\. This enumerates all arrangements; it is excessive when only a count is needed\. ASCII makes text\.length agree with letter iteration\.
+
+For n letters and U distinct outputs, O\(n·U \+ 1\) time with fixed alphabet, O\(n \+ 26\) working storage including recursion/path and O\(n·U \+ 1\) output storage\. Enumeration can be factorial\.
+
+##### Why undo after recursion?
+
+The next branch must start with the same remaining tiles and prefix as the previous branch did\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Backtracking practice
+
+List uniquePermutations\("aab"\) and uniquePermutations\(""\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1622
+
+Solution: Backtracking practice
+
+aab, aba, baa; and \[""\]\. Order is immaterial\.
+
+Reference implementation
+
+```
+function uniquePermutations(text) {
+  const counts = new Map();
+  for (const ch of text) counts.set(ch, (counts.get(ch) ?? 0) + 1);
+  const path = [], output = [];
+  function visit() {
+    if (path.length === text.length) { output.push(path.join('')); return; }
+    for (const [ch, count] of counts) {
+      if (count === 0) continue;
+      counts.set(ch, count - 1);
+      path.push(ch);
+      visit();
+      path.pop();
+      counts.set(ch, count);
+    }
+  }
+  visit();
+  return output;
+}
+```
+
+Why it works
+
+aab, aba, baa; and \[""\]\. Order is immaterial\. Each distinct output has exactly one sequence of letter choices\. Undo restores the state expected by sibling branches\. This enumerates all arrangements; it is excessive when only a count is needed\. ASCII makes text\.length agree with letter iteration\.
+
+#### Dynamic programming
+
+When climbing stairs, save the answer for each landing rather than recounting every route to it\.
+
+When climbing stairs, save the answer for each landing rather than recounting every route to it\. For coin change, save a different fact: the fewest coins making each amount\. Coins are positive integers, reusable; amount is nonnegative\.
+
+Recursive coin choices recompute the same remainder\. Largest\-coin\-first is not always optimal\.
+
+Dynamic programming trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| coins \[1, 3, 4\] | dp\[0\] = 0 | Empty amount needs no coins |
+| Amounts 1\.\.4 | 1, 2, 1, 1 | Reuse smaller states |
+| Amount 6 | min via 5, 3, 2 | 2 using 3 \+ 3 |
+
+Dynamic programming — JavaScript
+
+```
+function minCoins(coins, amount) {
+  const dp = Array(amount + 1).fill(Infinity);
+  dp[0] = 0;
+  for (let x = 1; x <= amount; x++) {
+    for (const coin of coins) if (coin <= x) dp[x] = Math.min(dp[x], dp[x - coin] + 1);
+  }
+  return dp[amount] === Infinity ? -1 : dp[amount];
+}
+```
+
+In any solution remove its last coin: what remains is a smaller amount\. Trying every allowed last coin covers an optimum; induction gives correct smaller answers\. Positive denominations make bottom\-up dependencies smaller\. Stairs often counts ways; this state minimizes count, so the recurrence uses min instead of addition\.
+
+O\(cX\) time for c denominations and amount X; O\(X\) storage\. This is pseudo\-polynomial in numeric X, not polynomial in its digit count\. Input coins are preserved\.
+
+##### Why does greedy fail for \[1, 3, 4\] and 6?
+
+Greedy takes 4 \+ 1 \+ 1, three coins\. The optimum 3 \+ 3 uses two\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Dynamic programming practice
+
+Evaluate minCoins\(\[2\], 3\) and minCoins\(\[2\], 0\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1634
+
+Solution: Dynamic programming practice
+
+\-1 and 0\.
+
+Reference implementation
+
+```
+function minCoins(coins, amount) {
+  const dp = Array(amount + 1).fill(Infinity);
+  dp[0] = 0;
+  for (let x = 1; x <= amount; x++) {
+    for (const coin of coins) if (coin <= x) dp[x] = Math.min(dp[x], dp[x - coin] + 1);
+  }
+  return dp[amount] === Infinity ? -1 : dp[amount];
+}
+```
+
+Why it works
+
+\-1 and 0\. In any solution remove its last coin: what remains is a smaller amount\. Trying every allowed last coin covers an optimum; induction gives correct smaller answers\. Positive denominations make bottom\-up dependencies smaller\. Stairs often counts ways; this state minimizes count, so the recurrence uses min instead of addition\.
+
+### Defend a choice
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Greedy selection
+
+Pick a meeting that finishes soonest so the room is free for later meetings\.
+
+Pick a meeting that finishes soonest so the room is free for later meetings\. Maximize the count of positive\-duration, half\-open, unweighted intervals\.
+
+Trying every subset is exponential\. A safe exchange allows one permanent choice at a time\.
+
+Greedy selection trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| \[0, 3\), \[1, 2\), \[2, 4\) | choose \[1, 2\) | Earliest finish |
+| Next compatible | choose \[2, 4\) | Count 2 |
+
+Greedy selection — JavaScript
+
+```
+function maxCompatible(intervals) {
+  const sorted = intervals.map(pair => [...pair]).sort((a, b) => a[1] - b[1]);
+  let finish = -Infinity, count = 0;
+  for (const [start, end] of sorted) if (start >= finish) {
+    count++;
+    finish = end;
+  }
+  return count;
+}
+```
+
+Exchange the first meeting in an optimum for the earliest\-finishing meeting\. It ends no later, so every later meeting still fits\. Repeat on the remaining compatible meetings\. Rewards break this proof: \[0, 2\) worth 1 and \[0, 3\) worth 100 favor the longer meeting\. Arbitrary coin change also lacks this exchange\.
+
+O\(n log n\) comparison\-sort time and O\(n\) explicit copy storage plus implementation\-dependent sort workspace; the scan is O\(n\)\. Equal endpoints are compatible\.
+
+##### Why earliest finish instead of earliest start?
+
+An early start can occupy the room for a long time\. Finishing early leaves at least as much room as the first choice in any optimum\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Greedy selection practice
+
+Evaluate maxCompatible\(\[\[0, 3\], \[1, 2\], \[2, 4\]\]\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1629
+
+Solution: Greedy selection practice
+
+2, choosing \[1, 2\) and \[2, 4\)\.
+
+Reference implementation
+
+```
+function maxCompatible(intervals) {
+  const sorted = intervals.map(pair => [...pair]).sort((a, b) => a[1] - b[1]);
+  let finish = -Infinity, count = 0;
+  for (const [start, end] of sorted) if (start >= finish) {
+    count++;
+    finish = end;
+  }
+  return count;
+}
+```
+
+Why it works
+
+2, choosing \[1, 2\) and \[2, 4\)\. Exchange the first meeting in an optimum for the earliest\-finishing meeting\. It ends no later, so every later meeting still fits\. Repeat on the remaining compatible meetings\. Rewards break this proof: \[0, 2\) worth 1 and \[0, 3\) worth 100 favor the longer meeting\. Arbitrary coin change also lacks this exchange\.
+
+#### Mixed choice
+
+A receipt includes refunds\. Count contiguous groups with a specified total\.
+
+Choose from the task, not from a familiar loop\. Ask whether order, a contiguous range, or repeated subproblems matter\. State what information you would keep and why a discarded candidate could never help later\.
+
+##### Practice
+
+###### Mixed choice practice
+
+Receipts \[4, \-3, 2\] include refunds\. Count contiguous groups totaling 3\. Choose a mechanism and explain why discarding 4 immediately is unsafe\.
+
+Context: Original exercise; decide before revealing\.
+
+Solution: Mixed choice practice
+
+One group: the whole array\. Use prefix frequencies for exact signed\-sum counting\.
+
+Why it works
+
+One group: the whole array\. Use prefix frequencies for exact signed\-sum counting\. Trace the named state after each operation and distinguish input storage from extra working room\.
+
+Sources:
+
+Source: [Sum of Two Values](https://cses.fi/problemset/task/1640) — CSES problem set.
+
+Source: [Apartments](https://cses.fi/problemset/task/1084) — CSES problem set.
+
+Source: [Playlist](https://cses.fi/problemset/task/1141) — CSES problem set.
+
+Source: [Static Range Sum Queries](https://cses.fi/problemset/task/1646) — CSES problem set.
+
+Source: [Factory Machines](https://cses.fi/problemset/task/1620) — CSES problem set.
+
+Source: [Restaurant Customers](https://cses.fi/problemset/task/1619) — CSES problem set.
+
+Source: [Nearest Smaller Values](https://cses.fi/problemset/task/1645) — CSES problem set.
+
+Source: [Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/) — LeetCode.
+
+Source: [Linked List Cycle](https://leetcode.com/problems/linked-list-cycle/) — LeetCode.
+
+Source: [Subordinates (adapt binary children to a general hierarchy)](https://cses.fi/problemset/task/1674) — CSES problem set.
+
+Source: [Message Route](https://cses.fi/problemset/task/1667) — CSES problem set.
+
+Source: [Course Schedule](https://cses.fi/problemset/task/1679) — CSES problem set.
+
+Source: [Creating Strings](https://cses.fi/problemset/task/1622) — CSES problem set.
+
+Source: [Minimizing Coins](https://cses.fi/problemset/task/1634) — CSES problem set.
+
+Source: [Movie Festival](https://cses.fi/problemset/task/1629) — CSES problem set.
+
+Source: [Time complexity](https://usaco.guide/bronze/time-comp) — Competitive Programming Initiative.
+
+Source: [Tree introduction](https://usaco.guide/silver/intro-tree) — Competitive Programming Initiative.

@@ -18,5 +18,16 @@ test('offers the glossary and stack alongside the existing drawn and undrawn she
   expect(screen.getByRole('link', { name: /Python/ }).textContent).toContain(
     'Not drawn',
   )
-  expect(screen.getByText('26 of 30')).toBeTruthy()
+  expect(screen.getByText('27 of 31')).toBeTruthy()
+})
+
+test('discovers Algorithms and the DSA reference', () => {
+  render(<ReferencePage />)
+  expect(screen.getByText('Algorithms', { exact: true })).toBeTruthy()
+  expect(
+    screen
+      .getByText('DSA Patterns', { exact: true })
+      .closest('a')
+      ?.getAttribute('href'),
+  ).toBe('/reference/dsa-patterns')
 })
