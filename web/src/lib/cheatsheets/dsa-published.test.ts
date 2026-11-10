@@ -227,3 +227,66 @@ test('equal-height corruption disagrees with the independent strict-smaller expe
   const actual = runInNewContext(corrupted + '\npreviousSmaller([2,2])')
   expect(() => expect(actual).toEqual([-1, -1])).toThrow()
 })
+
+const treeFixtures = [
+  {
+    label: 'right-only chain',
+    root: {
+      value: 1,
+      left: null,
+      right: {
+        value: 2,
+        left: null,
+        right: { value: 3, left: null, right: null },
+      },
+    },
+    size: 3,
+  },
+  {
+    label: 'branching tree',
+    root: {
+      value: 1,
+      left: {
+        value: 2,
+        left: null,
+        right: { value: 3, left: null, right: null },
+      },
+      right: {
+        value: 4,
+        left: { value: 5, left: null, right: null },
+        right: { value: 6, left: null, right: null },
+      },
+    },
+    size: 6,
+  },
+]
+
+test.each(['treeSize', 'treeSizeIterative'])(
+  '%s counts right-only and branching trees',
+  (name) => {
+    for (const { label, root, size } of treeFixtures)
+      expect(call(name, root), label).toBe(size)
+  },
+)
+
+test.each([
+  ['treeSize', ' + treeSize(root.right)'],
+  [
+    'treeSizeIterative',
+    '    if (node.right !== null) pending.push(node.right);',
+  ],
+])(
+  '%s fixtures reject omission of right-child traversal',
+  (name, traversal) => {
+    const corrupted = code.replace(traversal, '')
+    expect(corrupted).not.toBe(code)
+    for (const { label, root, size } of treeFixtures) {
+      const result = runInNewContext(
+        `${corrupted}\n${name}(root)`,
+        { root },
+        { timeout: 2000 },
+      )
+      expect(() => expect(result, label).toBe(size)).toThrow()
+    }
+  },
+)

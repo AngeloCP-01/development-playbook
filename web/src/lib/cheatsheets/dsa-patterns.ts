@@ -119,9 +119,6 @@ export const dsaPatterns: Cheatsheet = {
         .flatMap((f) => f.sections)
         .flatMap((s) => s.rows)
         .find((r) => r.study?.activityIds.includes(activity.id))
-      const proof = row?.teaching?.find(
-        (b) => b.kind === 'paragraph' && b.id.endsWith('-proof'),
-      )
       const code = row?.teaching?.find(
         (b) =>
           b.kind === 'code' &&
@@ -135,12 +132,6 @@ export const dsaPatterns: Cheatsheet = {
             ? activity.prompt +
               ' Then close the worked example and implement the function from its contract. Compare your code and reasoning with the solution.'
             : activity.prompt,
-        explanation:
-          activity.answer +
-          ' ' +
-          (proof?.kind === 'paragraph'
-            ? proof.text
-            : 'Trace the named state after each operation and distinguish input storage from extra working room.'),
         ...(code?.kind === 'code'
           ? { solution: { label: 'Reference implementation', code: code.code } }
           : {}),

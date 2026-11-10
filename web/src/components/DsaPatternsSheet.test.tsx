@@ -105,3 +105,30 @@ test.each(studySections(cheatsheetBySlug('dsa-patterns')!)!)(
     )
   },
 )
+
+test('mixed-choice solution reveals why a later refund makes early discarding unsafe', () => {
+  window.history.replaceState(
+    null,
+    '',
+    '/reference/dsa-patterns#defend-a-choice',
+  )
+  render(<CheatsheetView sheet={cheatsheetBySlug('dsa-patterns')!} />)
+  fireEvent.click(screen.getByText('Mixed choice').closest('button')!)
+  expect(screen.queryByText(/The later refund makes the initial 4/)).toBeNull()
+  const solution = screen.getByRole('button', {
+    name: 'Solution: Mixed choice practice',
+  })
+  fireEvent.click(solution)
+  const panel = document.getElementById(
+    solution.getAttribute('aria-controls')!,
+  )!
+  expect(panel.textContent).toContain(
+    'The later refund makes the initial 4 part of a valid total.',
+  )
+  expect(panel.textContent).toContain('Positive-sum shrinking would lose it.')
+  expect(panel.textContent).toContain(
+    'Seed zero and query earlier prefixes before adding the current one.',
+  )
+  fireEvent.click(solution)
+  expect(screen.queryByText(/The later refund makes the initial 4/)).toBeNull()
+})
