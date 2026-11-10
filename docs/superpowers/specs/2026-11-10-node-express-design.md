@@ -176,15 +176,15 @@ to include Express, with observed IDs compared to declarations. Preserve other
 sheet coverage; no broad audit refactor is needed for this addition.
 
 Run the final web gate once on the completed tree and dev-console once. Obtain
-one independent final content/page/branch review with **GPT-6 Astra / Low**.
+one independent final content/page/branch review with **GPT-6.1 Sol / High**.
 Review explanatory depth and code/security contracts as well as presence/counts.
 No separate design/plan or per-task review rounds are required by D-99.
 
 ## Handoff
 
 Use the [compact plan](../plans/2026-11-10-node-express.md). Implementation uses
-a fresh user-selected **GPT-6.1 Sol / High** session under D-100. The exact start
-is this documentation branch's committed tip, recorded in KICKOFF/git; create
+a fresh user-selected **GPT-6.1 Sol / Medium** session under D-100/D-110.
+The exact start is this documentation branch's committed tip, recorded in KICKOFF/git; create
 `feat/node-express-study`. Return actual diff, checks, limits and session reference
 to coordinator **01a1bedf-bdad-7b72-ba40-9b5406807d43**, recommended
-**GPT-6 Astra / Low**. No merge/push/promotion is authorized by this feature brief.
+**GPT-6.1 Sol / High**. No merge/push/promotion is authorized by this feature brief.

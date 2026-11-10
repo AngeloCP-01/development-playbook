@@ -1,8 +1,9 @@
 # Node.js & Express implementation plan
 
 **Execution:** use `superpowers:executing-plans` in one fresh user-selected
-**GPT-6.1 Sol / High** session, following D-99/D-100. One independent final
-**GPT-6 Astra / Low** content/page/branch review; no per-task agents or reviews.
+**GPT-6.1 Sol / Medium** session, following D-99/D-100 with D-110 model assignments.
+One independent final
+**GPT-6.1 Sol / High** content/page/branch review; no per-task agents or reviews.
 
 **Goal:** fill the existing Express placeholder with a substantive Node.js and
 Express fundamentals/interview study reference, with explained examples and
@@ -154,7 +155,7 @@ and nested-state utilities should work without production/shared refactoring.
   plus `pnpm test:dev-console` once. Preserve user servers and settings; document
   port overrides and restore temporary configuration. Diagnose failures before
   changing checks. No deployed-site claim from local checks.
-- [ ] Obtain one independent final **GPT-6 Astra / Low** review of actual diff,
+- [ ] Obtain one independent final **GPT-6.1 Sol / High** review of actual diff,
   sources and live page, including depth/security/version boundaries and test
   sensitivity. Resolve blockers; rerun only checks invalidated by later edits.
 - [ ] Leave a working preview and compact handoff: feature/application/records
