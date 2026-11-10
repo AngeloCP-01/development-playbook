@@ -3,12 +3,13 @@
 **Purpose:** the log. What actually shipped, what was decided and why, and what
 debt was taken on. Scope and planning live in [task.md](task.md).
 
-**Last updated:** 2026-11-09
-**Current phase:** W-6.3v / D-108 DSA Patterns selected; design/plan ready for
-a fresh **GPT-6.1 Sol / High** implementation session.
+**Last updated:** 2026-11-10
+**Current phase:** W-6.3v DSA Patterns implemented; coordinator review of
+**49ac670** / application **0ffca35** found two P2 corrections, DSA-R1/R2.
 Findings and proposed scope live in the [source record](../reference/dsa-patterns-source-research.md).
 All fifteen core patterns and the simple analogy-first approach are selected.
-The application is unchanged; implementation has not started.
+Feature totals are **27/31** sheets and **18/18** stages. The bounded correction
+handoff is in KICKOFF; implementation recommendation is fresh Sol High.
 
 **Latest integration:** W-6.3u.1e / D-105 accepted by the user and merged locally
 into `develop` using no-ff integration, parents **ede8e1f** and **f3f376c**.
@@ -113,6 +114,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-11-10 | W-6.3v (coordinator review; correction pending) | Reviewed **b3c500c...49ac670**, application **0ffca35**. Standards reviewer `/root/dsa_standards_review`: no actionable findings. Spec reviewer `/root/dsa_spec_review`: two P2s confirmed by coordinator. **DSA-R1:** composition replaces mixed-choice's refund-specific explanation with generic advice (`dsa-patterns.ts:138-143`). **DSA-R2:** recursive/iterative tree checks only exercise left descendants; right-child-removal mutations pass existing fixtures but give 2 for a three-node branching tree. | Read implementation **01a1bf85-6807-7190-aba1-f90aff6ec680** and prior reviewer **01a1c104-1937-74b1-93ef-b21006e83010**, actual diff and raw gate logs. Session context records Sol High initially, then Sol Medium; no active setting changed by coordinator. Fresh focused unit/render/generator/ledger **20/5**, exit 0. Independent temporary reproduction intentionally failed for lost explanation; both tree mutations survived current fixtures and failed branching witness. Live isolated browser confirmed missing explanation; light/dark at 320px measured document/viewport **320/320**, dark 1440px window trace visually inspected, zero console warnings/errors. Earlier 1px reviewer observation remains a reported limit, not reproduced here. Thirty existing Markdown bodies unchanged. Identified **1689/237**, 58-page build, combined **49/49** browser and dev-console **1/1** evidence retained for unchanged application; no redundant full gate. | Fix DSA-R1/R2 in fresh user-selected Sol High session; focused coordinator recheck, separate integration approval, push/main promotion. Bounded acceptance/reproduction in KICKOFF. |
 | 2026-11-10 | W-6.3v (implementation) | **0ffca35**, `feat/dsa-patterns-reference`, from **b3c500c**. Delivered fifteen patterns, foundations/mixed choice, eight stable panels and eighteen local activities in Algorithms; 27/31 sheets, 18/18 stages. JavaScript, stories, traces, proof/cost/interview blocks and attempt-first reference solutions share canonical data. All thirty existing generated sheet bodies compared unchanged. | Fresh application-tree checks: Corepack pnpm format:check, lint, typecheck (generated routes), test --maxWorkers=1 **237 files / 1689 tests**, build **58 pages**, all exit 0. Production suite on preserved alternate preview port 3210: initial run interrupted by host scheduling/sleep; repeat **48/49**, interrupted 320px case rerun unchanged **1/1**; combined **49/49**, no weakened assertions/timeouts. DSA theme/width/history/budget/browser-code cases and all topic/solution IDs passed. test:dev-console **1/1**, all DSA IDs observed. Published-code exhaustive pair/range/graph/interval oracles, deep iterative traversal, permutations/DP and deliberate equal-height corruption check passed. Independent **GPT-6 Astra / Low**, `/root/final_review`, reviewed source and live page: blockers resolved (practice coding, mixed spoiler, selected-ID guard, source credits, deep DFS checks and theme test); focused page checks readable in both themes, keyboard scrolling and rail work. Minor: review browser reported 1px at 320px without clipping; automated default-page 320px sweep and DSA matrix passed. Hook initially lacked pnpm; rerun through Corepack shim passed. Network-restricted font build retried with network access successfully. | No merge/push/promotion. Union-find, other language sheets, runner/scoring/persistence remain deferred. Preview http://localhost:3210/reference/dsa-patterns. Coordinator return: **01a1bedf-bdad-7b72-ba40-9b5406807d43**, recommended **GPT-6 Astra / Low**. Application evidence retained for records-only follow-up; no redundant rebuild. |
 | 2026-11-09 | W-6.3v (selected scope/design/plan) | From **45ca5f8**, recorded D-108's selection of all fifteen patterns with JavaScript and everyday analogies. The committed design/compact plan define the standalone Algorithms reference, eight initial panels, eighteen-activity budget, worked function contracts, data composition, actual-code/oracle checks and fresh Sol High handoff. Exact layout/activity choices are coordinator decisions, not additional user quotas. | Inspected current route, shared study/block/activity data/rendering, registry/count/sitemap audit and example-check approach. Found dev-console's nested-state sweep is JavaScript-only; plan includes DSA observation. Opened USACO Guide's own Kahn teaching and recorded S16. Self-review/humanizer pass applied. Fresh documentation-tree checks: tracker-ledger **2/2**, **168 local links/anchors / 6 files**, `git diff --check`, all exit 0. No application/generated-output diff from **45ca5f8**; prior identified app evidence retained. | Fresh user-selected Sol High implementation, actual algorithm execution/final web/dev-console checks, one independent final review and preview, separate merge approval, push/main promotion. |
 | 2026-11-09 | W-6.3v (teaching clarification) | Follow-up to research **dbeafbf** / handoff **3919821**: recorded D-107's simple explanations and everyday analogies. Same source record now gives fifteen analogy seeds, explicit story-to-code mapping/boundaries, a plain work/storage explanation and a learning-order recommendation. | Reopened Amazon/Microsoft primary guidance and inspected HackerRank's own interview curriculum on 2026-11-09. Topic coverage supports preparation relevance; no per-pattern frequency or pass-rate inference. Humanizer/self-review applied. Fresh final working-tree checks from **3919821**: tracker-ledger **2/2**, temporary local-link checker **156 targets / 4 files**, `git diff --check`, all exit 0. Application/generated output unchanged; prior app evidence retained without new build/browser claims. | Coverage/slice selection, authored JavaScript lessons, implementation and independent delivered-page review, integration/push/promotion. |
@@ -976,9 +978,10 @@ of new work, not assumed to survive from the last `git checkout`.
 
 ## Next up
 
-**Recommended next task/model:** implement the selected DSA Patterns reference
-from the [compact plan](superpowers/plans/2026-11-09-dsa-patterns.md), fresh
-user-selected **GPT-6.1 Sol / High**. Return branch/commit/checks/session to
+**Recommended next task/model:** correct confirmed DSA-R1/R2 using the
+[KICKOFF handoff](../KICKOFF.md), fresh user-selected **GPT-6.1 Sol / High**.
+Preserve authored practice explanations and add right/branching-tree checks.
+Return correction branch/commit/checks/session to
 coordinator `01a1bedf-bdad-7b72-ba40-9b5406807d43`, recommended
 **GPT-6 Astra / Low**, for review of the actual branch and evidence.
 JavaScript correction/review/integration are complete. Integration approval,
