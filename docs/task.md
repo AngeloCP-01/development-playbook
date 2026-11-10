@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-09): DSA Patterns scope selected; design/plan prepared (W-6.3v, D-108).**
+**Current work (2026-11-10): DSA Patterns implemented and verified locally (W-6.3v); integration remains user-controlled.**
 The user selected a new reference for learning DSA patterns, interview reasoning,
 well-fitting practice problems, and time/space complexity, with JavaScript
 examples. The [research record](../reference/dsa-patterns-source-research.md)
@@ -1196,7 +1196,7 @@ into develop **ede8e1f** on 2026-11-09; the merge includes its integration recor
 Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
 other-sheet rollout, runner/scoring/persistence, push and promotion remain outside scope.
 
-**W-6.3v — DSA Patterns study reference ◐** *(scope selected; design/plan ready)*
+**W-6.3v — DSA Patterns study reference ◐** *(implemented and verified; not integrated)*
 
 **Reader outcome:** recognize the conditions that make a technique useful,
 explain its invariant or recurrence, implement it in JavaScript, test it, and
@@ -1217,7 +1217,7 @@ activity budget and the worked function contracts are design choices.
 - [x] Select all fifteen core patterns and the simple analogy-first approach.
 - [x] Prepare the relevant content/design acceptance and fresh implementation
   handoff after scope selection; preserve one web/generated-Markdown source.
-- [ ] Implement, verify actual published examples and the finished reference,
+- [x] Implement, verify actual published examples and the finished reference,
   complete appropriate web checks and one independent final review.
 - [ ] Obtain separate user approval for no-ff integration into develop.
 

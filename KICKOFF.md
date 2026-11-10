@@ -1,69 +1,51 @@
-# Kickoff: implement the selected DSA Patterns reference
+# Kickoff: review the delivered DSA Patterns reference
 
-Updated 2026-11-09. Follow [AGENTS.md](AGENTS.md), especially D-99/D-100.
+Updated 2026-11-10. Follow [AGENTS.md](AGENTS.md), especially D-99/D-100.
 
-## Selected outcome
+W-6.3v is implemented and verified on `feat/dsa-patterns-reference` from
+**b3c500ca332427a919357525a8a5fe16295317f7**. Application commit:
+**0ffca357bc514100eac79b2415bd1157739559e0**. No merge or push.
 
-The user accepted all fifteen core DSA patterns, JavaScript examples and simple
-real-life analogies with "okay lets proceed with that". D-106/D-107 record the
-brief and teaching style; D-108 records selection. Implementation is authorized
-within this scope. Integration remains a separate decision.
+Preview remains running at http://localhost:3210/reference/dsa-patterns
+(production server session 77943). The user's prior port 3100 server was preserved.
 
-Deliver a standalone DSA Patterns study reference under Algorithms. Each core
-lesson connects a familiar story, tiny trace, JavaScript solution, correctness,
-time/space reasoning, model interview answer and local attempt-first practice.
-The design starts with eight panels and eighteen activities; all fifteen core
-patterns ship together. These exact layout/activity choices are coordinator
-implementation decisions. Use existing study components and preserve all stages
-and thirty current reference bodies. Finished totals should be 27/31 sheets and
-18/18 stages; current application remains 26/30 and 18/18.
+All fifteen patterns ship together, with foundations/mixed choice, eight panels,
+eighteen activities, JavaScript reference solutions and credited practice.
+Hashes remain `foundations`, `scan-and-remember`, `search-and-intervals`,
+`useful-candidates`, `follow-nodes`, `connections`, `choices-and-memory`,
+`defend-a-choice`. Registry is 27/31 sheets and 18/18 stages. All thirty prior
+Markdown bodies compared unchanged. No new renderer, dependency or runtime runner.
 
-## Read before implementing
+Pointers:
 
-- [Design and acceptance](docs/superpowers/specs/2026-11-09-dsa-patterns-design.md).
-- [Compact implementation plan](docs/superpowers/plans/2026-11-09-dsa-patterns.md).
-- [Primary sources, problems and analogy seeds](reference/dsa-patterns-source-research.md).
-- [Existing study/render/test patterns](web/PATTERNS.md#focused-study-references--studysheet).
+- [Design](docs/superpowers/specs/2026-11-09-dsa-patterns-design.md)
+- [Plan](docs/superpowers/plans/2026-11-09-dsa-patterns.md)
+- [Primary source record](reference/dsa-patterns-source-research.md)
+- [Canonical composition](web/src/lib/cheatsheets/dsa-patterns.ts)
+- [Published-code checks](web/src/lib/cheatsheets/dsa-published.test.ts)
+- [Completion and limits](docs/tracker.md) — W-6.3v implementation row
 
-The design fixes stable topic hashes, published function contracts, interval/index
-conventions, source linking and selected Kahn ordering. The plan names content
-modules, actual-sheet render/example checks, discovery/count updates and the
-DSA addition to development-console's nested-disclosure sweep. No new renderer,
-runner/scoring/persistence, dependencies or numbered stage.
+Fresh application evidence for 0ffca35: format/lint/generated-route typecheck,
+237 test files / 1689 tests, production build (58 pages), production audit
+49 cases with passing evidence, development-console sweep including every DSA
+nested ID. Initial browser attempts suffered host scheduling/sleep timeouts;
+repeat suite passed 48/49, and the interrupted 320px case passed separately on
+the unchanged tree. Temporary port/config overrides were removed. No assertions
+or timeouts weakened. Corepack supplied pnpm in this shell.
 
-## Starting point and session settings
+One independent GPT-6 Astra / Low reviewer (`/root/final_review`) reviewed source
+and the running page. Blocking findings were fixed; review confirmed both themes,
+320/768/1024/1440 readability, keyboard rail/code scrolling and hidden solutions.
+Minor retained: review browser measured 1px overflow at 320 without clipping;
+automated page overflow sweep and DSA layout matrix passed. See tracker for limits.
 
-Documentation branch: `docs/2026-11-09-dsa-patterns-research`.
-Local develop base: **c996177d8e4fbc4c6f9b3659c10197dc7eb8fbc9**.
-Research **dbeafbf**, records **3919821**, teaching clarification **45ca5f8**.
-Planning starts from **45ca5f8**; use the documentation branch's final committed
-HEAD including this handoff, record its exact SHA, then create
-`feat/dsa-patterns-reference`. Do not start from develop without these records.
+Next task recommendation: coordinator review of actual branch/evidence using
+**GPT-6 Astra / Low**, returning to session
+**01a1bedf-bdad-7b72-ba40-9b5406807d43**. Implementation session reference is
+this Codex thread; no stable root thread ID was exposed by the runtime. Reviewer
+reference is `/root/final_review`. Read this thread before relying on its evidence.
+Records-only follow-up retains identified application checks. Integration requires
+separate user approval; the user explicitly requested no merge or push.
 
-Next task/model: implement W-6.3v in a fresh user-selected
-**GPT-6.1 Sol / High** session. Use one implementer and the scoped executing-plans
-workflow, then one independent final **GPT-6 Astra / Low** content/page/branch
-review. D-99 does not require task agents or per-task/design review rounds.
-
-Return branch/commit, actual checks, unresolved issues, preview URL and the
-implementation session reference to coordinator
-**01a1bedf-bdad-7b72-ba40-9b5406807d43**, recommended **GPT-6 Astra / Low**.
-The coordinator reads the actual diff and session before relying on the evidence.
-
-## Recovery and evidence
-
-Planning changed documentation only. The tracker completion entry holds current
-link/ledger/whitespace checks; the research record owns factual source findings.
-No new app/algorithm execution is claimed. Prior identified app evidence is
-retained for unchanged application **7975be9** / develop **c996177**.
-
-At each implementation handoff name completed families, remaining topics,
-actual published-code checks and changed section hashes. Complete the final gate
-once, the dev-console sweep once, affected theme/width/keyboard checks and one
-independent final review. Preserve a running preview for the user. Obtain
-separate approval before any no-ff develop merge; main belongs to the user.
-
-Other language sheets, broader JavaScript teaching, union-find/advanced DSA,
-push and production promotion remain separate. The old JavaScript production
-preview may still be at http://localhost:3100/reference/javascript#async;
-preserve the user's existing servers when choosing verification ports.
+Union-find, other languages, runner/scoring/persistence and main promotion remain
+outside this delivery. No remaining core pattern IDs or changed hashes.
