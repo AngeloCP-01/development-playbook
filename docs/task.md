@@ -13,13 +13,14 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-10): Node.js & Express coordinator recheck accepted; integration pending (W-6.3u.2).**
-Correction **e852170** and handoff **b2c1cdc** close NE-R1–NE-R6. The coordinator
-reviewed the actual diff, executable checks, live lessons and implementation logs;
-no remaining Standards or Spec findings. Feature totals: twelve panels, 38 topics
-and activities, 28/31 references and 18/18 stages. Local develop remains 27/31.
-[KICKOFF](../KICKOFF.md) records fresh versus retained evidence. No merge or push;
-user approval is required for integration into develop.
+**Current work (2026-11-10): strengthen Node.js fundamentals before integration (W-6.3u.2).**
+The user found the event-loop/Node fundamentals teaching too shallow after
+correction acceptance **e3dac11**. NE-R1–NE-R6 remain closed at **e852170**, but
+reader acceptance is reopened under D-111. The
+[depth audit](../reference/node-express-source-research.md#reader-feedback-node-fundamentals-depth-2026-11-10)
+identifies missing connected runtime/event-loop explanations and proposes a fuller
+Node core learning path. Existing tests remain evidence for existing behavior;
+they do not establish adequate teaching depth. No merge or push.
 
 **Previous completed work: JavaScript sheet merged locally into develop (D-105).**
 Application **7975be9** on `feat/javascript-promises-lesson` implements and verifies
@@ -77,9 +78,10 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **27 drawn / 31 registered**, including W-6.3v. W-6.4 is integrated as **b8515a0**; four language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** integration decision for accepted W-6.3u.2, coordinator
-**GPT-6.1 Sol / High**. No implementation correction remains. Merge into develop
-requires separate user approval; Python, Java and Spring Boot stay separate.
+**Next task/model:** Node core teaching reassessment/design, **GPT-6.1 Sol / High**.
+Work from the reader depth audit and existing content, then prepare a fresh
+**GPT-6.1 Sol / Medium** implementation handoff. Integration is on hold; the old
+panel/topic counts do not constrain sufficient fundamentals coverage.
 
 Two deliverables from one body of content.
 
@@ -1190,7 +1192,7 @@ into develop **ede8e1f** on 2026-11-09; the merge includes its integration recor
 Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
 other-sheet rollout, runner/scoring/persistence, push and promotion remain outside scope.
 
-**W-6.3u.2 — Node.js & Express study reference ◐** *(coordinator accepted; integration pending)*
+**W-6.3u.2 — Node.js & Express study reference ◐** *(technical corrections accepted; fundamentals depth revision required)*
 
 User direction (D-109), 2026-11-10: use the DSA review/interview approach,
 fundamentals are mandatory, give many worked examples and add subsections when
@@ -1212,6 +1214,9 @@ The requested interview-preparation goal is not a guarantee of interview success
   and SIGTERM drain/cleanup-sensitive tests.
 - [x] Coordinator accepted **fa724bb...e852170** at handoff **b2c1cdc**;
   NE-R1–NE-R6 closed, no remaining Standards/Spec findings.
+- [ ] Reassess and strengthen Node fundamentals after reader feedback (D-111),
+  including a full event-loop lesson and connected worked explanations.
+- [ ] Review the revised teaching depth before requesting integration.
 - [ ] Obtain separate user approval for integration into develop.
 
 [Sources](../reference/node-express-source-research.md),

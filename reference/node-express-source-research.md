@@ -399,3 +399,48 @@ panel initially measured **3132.55px**, exceeding the 3072px limit; replacing it
 old duplicated model/result table with a concise result paragraph preserved the
 new teaching and made the unchanged all-topic height test pass. No hash changed.
 All **30** other generated sheet bodies compare unchanged against **fa724bb**.
+
+
+## Reader feedback: Node fundamentals depth, 2026-11-10
+
+After correction acceptance at **e3dac11** (application **e852170**), the user said
+they expected topics such as the event loop and found Node.js fundamentals lacking.
+The six NE-R corrections remain closed. Their verification did not establish that
+the wider reference teaches Node foundations to the requested depth. Reader
+acceptance and integration are reopened; the next step is a teaching redesign.
+
+Coordinator inspected actual runtime/async content. The runtime starts with
+`typeof process`/`typeof document`; loop-and-pool uses a short synchronous sum
+inside async; scheduling compares a top-level nextTick and Promise. Event-loop
+phases have no worked traversal. V8/libuv/OS and worker distinctions appear as
+short descriptions, without a connected request/I/O walkthrough. A topic count,
+valid output and passing UI checks cannot establish that a learner can explain
+those mechanisms. This is a content-depth finding, not a new runtime failure.
+
+Reopened primary evidence on 2026-11-10: Node's
+[event-loop guide](https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick)
+and [blocking guide](https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop),
+Node.js/OpenJS; Context7 returned Node22.23.4 process/timers documentation and
+bundled libuv design. Sources N1/N2/N3/N6/N7/N12 already own the related claims.
+Use a versioned Node view and verify all future examples; no new examples were
+executed in this reassessment.
+
+Proposed coordinator coverage for the redesign (not a fixed topic quota):
+
+| Foundation | Required teaching improvement |
+| --- | --- |
+| Runtime architecture | Connect JavaScript/V8, call stack, Node host APIs, libuv and OS work through one small running example. |
+| Event loop | Give it a full lesson: explain phases and their purpose, distinguish internal phases, and trace work across callbacks rather than list phase names. |
+| Queues and timers | Explain nextTick, promise/queueMicrotask checkpoints, timer thresholds and setImmediate using labelled CJS/ESM and I/O-context examples. Separate guaranteed relationships from observations. |
+| Async programming | Show callbacks to promises to await, error ownership and cleanup, dependency versus overlap, and bounded concurrency through examples a learner can reconstruct. |
+| Work allocation | Compare async I/O, the libuv pool, Worker threads and separate processes. Demonstrate a blocked loop and a bounded alternative; explain costs and limits. |
+| Events, bytes and streams | Explain listener dispatch/lifetime, byte decoding/chunk boundaries and backpressure step by step, with failure and repair exercises. |
+| Process and memory lifetime | Introduce retained references, request/process scope, handle cleanup and why a process stays alive; keep deeper engine internals outside the basic explanation. |
+
+Teach each with plain definitions, a connected walkthrough, several contrasting
+small examples where needed, explained intermediate state, interview answers and
+transfer practice. Reassess all Node core families before choosing final panel
+boundaries; the previous twelve panels/38 topics are not a ceiling. Preserve the
+completed Express/security corrections and single web/Markdown content source.
+Recommend **GPT-6.1 Sol / High** for this reassessment/design, then a fresh
+user-selected **GPT-6.1 Sol / Medium** implementation session under D-110.
