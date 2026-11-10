@@ -57,7 +57,6 @@ import {
   foundationPrograms,
   foundationFragments,
   processFiles,
-  workerFiles,
   pipelineFiles,
   subscribeCheck,
   writeCheck,
@@ -123,24 +122,28 @@ test('same published queue source runs in ESM entry context; nested tick is not 
     ),
   ).toThrow(/tick must precede microtask/)
 })
-test('actual Worker parent owns early exit, deadline and a result followed by a retained handle', () => {
-  runPublishedFiles({
-    files: workerFiles,
-    entry: 'worker-main.mjs',
-    fixtures: {
-      'empty-worker.mjs': '',
-      'held-worker.mjs':
-        "import {parentPort} from 'node:worker_threads';parentPort.once('message',()=>{parentPort.postMessage({sum:1});setInterval(()=>{},60000)})",
-      'silent-worker.mjs': 'setInterval(()=>{},60000)',
-    },
-    append: `
+test.each(['worker-threads-example', 'worker-threads-practice-solution'])(
+  'published %s owns early exit, deadline and a result followed by a retained handle',
+  (id) => {
+    const program = foundationPrograms[id]
+    runPublishedFiles({
+      files: program.files,
+      entry: program.entry,
+      fixtures: {
+        'empty-worker.mjs': '',
+        'held-worker.mjs':
+          "import {parentPort} from 'node:worker_threads';parentPort.once('message',()=>{parentPort.postMessage({sum:1});setInterval(()=>{},60000)})",
+        'silent-worker.mjs': 'setInterval(()=>{},60000)',
+      },
+      append: `
 import assert from 'node:assert/strict';
 await assert.rejects(runJob([],new URL('./empty-worker.mjs',import.meta.url)),/exit before result/);
 assert.deepEqual(await runJob([],new URL('./held-worker.mjs',import.meta.url)),{sum:1});
 await assert.rejects(runJob([],new URL('./silent-worker.mjs',import.meta.url)),/worker deadline/);
 `,
-  })
-})
+    })
+  },
+)
 test('child failure rejects even if stdout contains a partial parseable result', () => {
   const result = runPublishedFiles({
     files: processFiles,
