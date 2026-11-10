@@ -13,22 +13,18 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-10): DSA Patterns reviewed and integrated locally into develop (W-6.3v).**
-The user selected a new reference for learning DSA patterns, interview reasoning,
-well-fitting practice problems, and time/space complexity, with JavaScript
-examples. The [research record](../reference/dsa-patterns-source-research.md)
-contains primary-source findings and teaching examples. The user accepted all
-fifteen core patterns with JavaScript and everyday analogies. The
-[design](superpowers/specs/2026-11-09-dsa-patterns-design.md) and
-[compact plan](superpowers/plans/2026-11-09-dsa-patterns.md) carry the delivery
-details. Delivery **49ac670**, application **0ffca35**, is implemented on
-`feat/dsa-patterns-reference`: **27/31** sheets and **18/18** stages. Coordinator
-review of the actual branch, implementation/reviewer threads and evidence found
-two P2s: lost mixed-choice explanation and tree tests blind to right subtrees.
-Correction **8dfc0fd** addresses both; focused coordinator recheck passed at
-**89436fb**. The user approved local no-ff integration into develop, with parents
-**c996177** and **89436fb**. Local develop now has **27/31** sheets and **18/18**
-stages. [KICKOFF](../KICKOFF.md) records fresh and retained checks. No push or promotion.
+**Current work (2026-11-10): Node.js & Express study reference selected; research/design handoff (W-6.3u.2).**
+The user wants review and interview preparation with mandatory fundamentals,
+worked examples throughout and subsections wherever depth needs them. The
+[source record](../reference/node-express-source-research.md),
+[design](superpowers/specs/2026-11-10-node-express-design.md) and
+[compact plan](superpowers/plans/2026-11-10-node-express.md) define the selected
+slice. Keep `/reference/express`, fill its existing placeholder and reuse study
+components. The coordinator proposes twelve panels/38 subsections; these are
+teaching choices, not user quotas. Implementation starts in a fresh user-selected
+**GPT-6.1 Sol / High** session under D-100. Current application remains **e28401e**
+on develop, **27/31** references and **18/18** stages. DSA is complete; no new
+Node/Express page is implemented by this documentation handoff.
 
 **Previous completed work: JavaScript sheet merged locally into develop (D-105).**
 Application **7975be9** on `feat/javascript-promises-lesson` implements and verifies
@@ -86,9 +82,11 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **27 drawn / 31 registered**, including W-6.3v. W-6.4 is integrated as **b8515a0**; four language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Current status:** W-6.3v is integrated locally after the approved coordinator
-recheck. Four other language sheets, broader JavaScript teaching, push and main
-promotion remain separate. No next implementation task has been selected.
+**Next task/model:** implement W-6.3u.2 Node.js & Express from the committed
+research/design/plan handoff in a fresh user-selected **GPT-6.1 Sol / High**
+session. Return branch/diff/checks/session to coordinator
+`01a1bedf-bdad-7b72-ba40-9b5406807d43`, recommended **GPT-6 Astra / Low**.
+Python, Java and Spring Boot remain separate. Integration requires new approval.
 
 Two deliverables from one body of content.
 
@@ -924,7 +922,7 @@ now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
 
-**W-6.3u — Language and framework study sheets ◐** *(JavaScript expansion selected; four sheets remain)*
+**W-6.3u — Language and framework study sheets ◐** *(JavaScript delivered; Node.js & Express selected; four placeholders remain)*
 
 **User direction, 2026-11-05 (D-101):** for JavaScript, Python, Java, Spring Boot
 and Express & Node, focus on fundamentals, important topics and concepts that
@@ -1198,6 +1196,40 @@ User accepted the preview and approved local no-ff integration of **f3f376c**
 into develop **ede8e1f** on 2026-11-09; the merge includes its integration records.
 Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
 other-sheet rollout, runner/scoring/persistence, push and promotion remain outside scope.
+
+**W-6.3u.2 — Node.js & Express study reference ◐** *(selected; implementation handoff)*
+
+User direction (D-109), 2026-11-10: use the DSA review/interview approach,
+fundamentals are mandatory, give many worked examples and add subsections when
+needed for proper coverage. Reader outcome: explain, predict, build, debug and
+test Node/Express behavior, including failures and basic production trade-offs.
+The requested interview-preparation goal is not a guarantee of interview success.
+
+- [x] Record user direction and investigate primary Node/Express/security sources.
+- [x] Define teaching depth, content families, example-verification boundaries and
+  compact implementation plan using existing study components.
+- [ ] Implement all selected families and meaningful local activities; fill
+  `/reference/express`, title Node.js & Express, without adding a backend.
+- [ ] Execute actual published Node/Express examples and failure/security paths;
+  verify the delivered page and final web/dev-console checks.
+- [ ] Obtain one independent final review and focused coordinator acceptance.
+- [ ] Obtain separate user approval for integration into develop.
+
+[Sources](../reference/node-express-source-research.md),
+[design](superpowers/specs/2026-11-10-node-express-design.md),
+[plan](superpowers/plans/2026-11-10-node-express.md). Coordinator chooses twelve
+initial panels/38 topics, with at least one worked example/local activity per core
+topic and a recurring small API. Split when measured, without reducing coverage.
+Keep slug/group and thirty other sheet bodies. Target 28/31 drawn/registered and
+18/18 stages. Node 22-compatible JavaScript, actual validation baseline 22.23.4;
+Express 5.3.0 may be an exact test-only devDependency. No Node/tooling upgrade.
+
+Documentation branch `docs/2026-11-10-node-express-study` starts at **e28401e**;
+implementation starts from its exact committed tip, creating
+`feat/node-express-study`. Use fresh user-selected **GPT-6.1 Sol / High** under
+D-100; return to coordinator `01a1bedf-bdad-7b72-ba40-9b5406807d43`, recommended
+**GPT-6 Astra / Low**. No new renderer/runner/scoring/persistence, real DB/auth
+service, other language sheet, integration, push or promotion is selected.
 
 **W-6.3v — DSA Patterns study reference ☑** *(reviewed and merged locally into develop)*
 
