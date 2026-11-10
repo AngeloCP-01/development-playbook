@@ -29,11 +29,4 @@ export const PLANNED: Cheatsheet[] = [
     blurb: 'Annotations, bean lifecycle, and where configuration comes from.',
     sections: [],
   },
-  {
-    slug: 'express',
-    title: 'Express & Node',
-    group: 'Languages',
-    blurb: 'Middleware order, routing, and what blocks the event loop.',
-    sections: [],
-  },
 ]

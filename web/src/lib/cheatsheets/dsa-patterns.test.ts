@@ -44,7 +44,7 @@ test('all fifteen mechanisms have credited practice, unique ownership and stable
     ).toBe(true)
   }
   expect(CHEATSHEETS).toHaveLength(31)
-  expect(CHEATSHEETS.filter(isDrawn)).toHaveLength(27)
+  expect(CHEATSHEETS.filter(isDrawn)).toHaveLength(28)
   expect(CHEATSHEET_GROUPS.at(-1)).toBe('Algorithms')
   expect(dsaPatterns.stage).toBeUndefined()
 })

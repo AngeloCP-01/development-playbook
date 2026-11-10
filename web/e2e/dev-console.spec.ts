@@ -68,6 +68,7 @@ test('@dev no React development warnings on any audited page, which the producti
     page.on('pageerror', onPageError)
     await page.goto(path, { waitUntil: 'networkidle' })
     if (
+      path.startsWith('/reference/express#') ||
       path.startsWith('/reference/javascript#') ||
       path.startsWith('/reference/dsa-patterns#')
     ) {

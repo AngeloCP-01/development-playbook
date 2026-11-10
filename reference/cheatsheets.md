@@ -6,7 +6,7 @@
 Look up a command or study a focused topic. Study sheets include worked
 examples and local practice; stages teach lifecycle decisions.
 
-Drawn: 27 of 31. A sheet listed as not drawn is
+Drawn: 28 of 31. A sheet listed as not drawn is
 registered on purpose — the gap is the point, so it can be seen and filled.
 
 | Sheet | Group | Stage | Status |
@@ -38,10 +38,10 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | Infrastructure Scaling | Architecture | 09 | Drawn |
 | JavaScript | Languages | — | Drawn |
 | DSA Patterns | Algorithms | — | Drawn |
+| Node.js & Express | Languages | — | Drawn |
 | Python | Languages | — | Not drawn |
 | Java | Languages | — | Not drawn |
 | Spring Boot | Languages | — | Not drawn |
-| Express & Node | Languages | — | Not drawn |
 
 ---
 
@@ -2612,6 +2612,2049 @@ Source: [Map access guarantees](https://developer.mozilla.org/en-US/docs/Web/Jav
 
 Source: [JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) — MDN contributors.
 
+## Node.js & Express
+
+Trace Node execution, repair an Express API and defend its input, identity and lifecycle boundaries.
+
+### Runtime and concurrency
+
+Choose a topic to inspect its worked example and interview answer\. Try the local exercise before revealing its reasoning\. Examples use Node 22 JavaScript \(\.mjs unless explicitly stated\) and Express 5\.3\.0\. HTTP factories do not listen until the test or startup owner calls listen\.
+
+#### Separate language, host and framework
+
+JavaScript defines language behavior\. Node supplies files, sockets and process APIs; Express adds routing over Node HTTP\. A browser supplies a different host, including the DOM\.
+
+JavaScript defines language behavior\. Node supplies files, sockets and process APIs; Express adds routing over Node HTTP\. A browser supplies a different host, including the DOM\.
+
+Separate language, host and framework — standalone \.mjs / exported factory
+
+```
+console.log(typeof process, typeof document)
+```
+
+Separate language, host and framework result
+
+| Observation | Reasoning |
+| --- | --- |
+| object undefined: a server process has no browser document\. | JavaScript defines language behavior\. Node supplies files, sockets and process APIs; Express adds routing over Node HTTP\. A browser supplies a different host, including the DOM\. |
+
+Common mistake: Importing Express does not create a listening socket\. Create an app, register routes, then explicitly listen\.
+
+##### Is Node a language?
+
+No\. V8 executes JavaScript; Node supplies host APIs and a process lifecycle\. Express is an optional library\.
+
+Follow-up: Would moving this file to a browser preserve its file access?
+
+##### Practice
+
+###### Separate language, host and framework practice
+
+Would moving this file to a browser preserve its file access?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Separate language, host and framework practice
+
+No\. Host capabilities change; use a server endpoint or a browser\-supported file API\.
+
+Why it works
+
+No\. Host capabilities change; use a server endpoint or a browser\-supported file API\. Importing Express does not create a listening socket\. Create an app, register routes, then explicitly listen\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Find what blocks other requests
+
+A callback runs JavaScript to completion on its event\-loop thread\. Network readiness usually uses OS polling; file and some crypto work uses the libuv pool\. Worker threads run JavaScript on separate threads\.
+
+A callback runs JavaScript to completion on its event\-loop thread\. Network readiness usually uses OS polling; file and some crypto work uses the libuv pool\. Worker threads run JavaScript on separate threads\.
+
+Find what blocks other requests — standalone \.mjs / exported factory
+
+```
+async function sum() { let n = 0; for (let i = 0; i < 1000; i++) n += i; return n; }
+console.log(await sum())
+```
+
+Find what blocks other requests result
+
+| Observation | Reasoning |
+| --- | --- |
+| 499500: async wraps the result in a promise but the loop still executes synchronously\. | A callback runs JavaScript to completion on its event\-loop thread\. Network readiness usually uses OS polling; file and some crypto work uses the libuv pool\. Worker threads run JavaScript on separate threads\. |
+
+Common mistake: Adding async to CPU work does not offload it\. Bound the work, split it carefully, or use a worker pool for CPU\-heavy tasks\.
+
+##### Why can an async route freeze other clients?
+
+Its synchronous segment monopolizes the event loop\. Await only yields when execution suspends; it does not move prior work to another thread\.
+
+Follow-up: A route calls a costly synchronous hash before await\. Where do you intervene?
+
+##### Practice
+
+###### Find what blocks other requests practice
+
+A route calls a costly synchronous hash before await\. Where do you intervene?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Find what blocks other requests practice
+
+Use an appropriate asynchronous password\-hashing API and bound concurrent jobs; for custom CPU work consider a bounded Worker pool\.
+
+Why it works
+
+Use an appropriate asynchronous password\-hashing API and bound concurrent jobs; for custom CPU work consider a bounded Worker pool\. Adding async to CPU work does not offload it\. Bound the work, split it carefully, or use a worker pool for CPU\-heavy tasks\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Overlap independent work deliberately
+
+Concurrency keeps several operations in flight\. Parallelism executes work simultaneously\. Start independent I/O together, but wait for a prerequisite before consuming its result\.
+
+Concurrency keeps several operations in flight\. Parallelism executes work simultaneously\. Start independent I/O together, but wait for a prerequisite before consuming its result\.
+
+Overlap independent work deliberately — standalone \.mjs / exported factory
+
+```
+const trace = [];
+async function read(id) { trace.push(id); return id; }
+console.log(await Promise.all([read('book'), read('owner')]));
+console.log(trace)
+```
+
+Overlap independent work deliberately result
+
+| Observation | Reasoning |
+| --- | --- |
+| Both calls start before Promise\.all receives their promises; results preserve input order\. | Concurrency keeps several operations in flight\. Parallelism executes work simultaneously\. Start independent I/O together, but wait for a prerequisite before consuming its result\. |
+
+Common mistake: Promise\.all neither starts work by itself nor cancels surviving operations when one fails\. Limit fan\-out for a large list\.
+
+##### When is sequential await required?
+
+When the second operation needs the first result or ordering is part of correctness\. Independent I/O can overlap, subject to capacity limits\.
+
+Follow-up: How would you fetch 10,000 records without 10,000 concurrent requests?
+
+##### Practice
+
+###### Overlap independent work deliberately practice
+
+How would you fetch 10,000 records without 10,000 concurrent requests?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Overlap independent work deliberately practice
+
+Use a fixed worker count or bounded batches; choose the limit against downstream capacity and cancellation requirements\.
+
+Why it works
+
+Use a fixed worker count or bounded batches; choose the limit against downstream capacity and cancellation requirements\. Promise\.all neither starts work by itself nor cancels surviving operations when one fails\. Limit fan\-out for a large list\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+### Async and events
+
+Choose a topic to inspect its worked example and interview answer\. Try the local exercise before revealing its reasoning\. Examples use Node 22 JavaScript \(\.mjs unless explicitly stated\) and Express 5\.3\.0\. HTTP factories do not listen until the test or startup owner calls listen\.
+
+#### Predict only guaranteed ordering
+
+At a CommonJS entry point, nextTick drains before promise microtasks\. ESM evaluation already runs as a microtask, changing this relationship\. Timer delays are thresholds, not appointments\.
+
+At a CommonJS entry point, nextTick drains before promise microtasks\. ESM evaluation already runs as a microtask, changing this relationship\. Timer delays are thresholds, not appointments\.
+
+Predict only guaranteed ordering — CJS or ESM entry point
+
+```
+console.log('sync');
+process.nextTick(() => console.log('tick'));
+Promise.resolve().then(() => console.log('promise'));
+console.log('end');
+```
+
+Predict only guaranteed ordering result
+
+| Observation | Reasoning |
+| --- | --- |
+| CJS: sync, end, tick, promise\. ESM: sync, end, promise, tick\. Neither establishes timeout versus immediate ordering\. | At a CommonJS entry point, nextTick drains before promise microtasks\. ESM evaluation already runs as a microtask, changing this relationship\. Timer delays are thresholds, not appointments\. |
+
+Common mistake: A trace observed once is not a universal ordering proof\. Recursive nextTick can starve I/O\.
+
+##### Why do module contexts change this example?
+
+ESM evaluation runs within the microtask machinery; CJS entry evaluation reaches the nextTick drain first\. State the entry context before predicting output\.
+
+Follow-up: Add queueMicrotask after the promise\. What relationship can you defend?
+
+##### Practice
+
+###### Predict only guaranteed ordering practice
+
+Add queueMicrotask after the promise\. What relationship can you defend?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Predict only guaranteed ordering practice
+
+The promise reaction and queueMicrotask preserve enqueue order within that queue\. Do not extend that claim to arbitrary timers\.
+
+Why it works
+
+The promise reaction and queueMicrotask preserve enqueue order within that queue\. Do not extend that claim to arbitrary timers\. A trace observed once is not a universal ordering proof\. Recursive nextTick can starve I/O\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Return the work whose failure matters
+
+A caller can await and catch only the promise it receives\. A detached promise needs its own failure owner\. Use finally to release acquired resources on either outcome\.
+
+A caller can await and catch only the promise it receives\. A detached promise needs its own failure owner\. Use finally to release acquired resources on either outcome\.
+
+Return the work whose failure matters — standalone \.mjs / exported factory
+
+```
+const trace = [];
+async function work() { try { return await Promise.reject(new Error('offline')); } finally { trace.push('released'); } }
+try { await work(); } catch (e) { console.log(e.message, trace[0]); }
+```
+
+Return the work whose failure matters result
+
+| Observation | Reasoning |
+| --- | --- |
+| offline released: finally runs before the rejection reaches the caller\. | A caller can await and catch only the promise it receives\. A detached promise needs its own failure owner\. Use finally to release acquired resources on either outcome\. |
+
+Common mistake: Dropping a promise disconnects its failure from the surrounding try/catch\. Return or await it; do not hide failure with an empty catch\.
+
+##### Does Promise\.all cancel on rejection?
+
+No\. It rejects its aggregate result; already\-started work continues unless the operation supports explicit cancellation\.
+
+Follow-up: One of three writes fails\. Is Promise\.all a transaction?
+
+##### Practice
+
+###### Return the work whose failure matters practice
+
+One of three writes fails\. Is Promise\.all a transaction?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Return the work whose failure matters practice
+
+No\. Some writes may already have committed\. Use a repository transaction where atomicity is required, or design explicit compensation\.
+
+Why it works
+
+No\. Some writes may already have committed\. Use a repository transaction where atomicity is required, or design explicit compensation\. Dropping a promise disconnects its failure from the surrounding try/catch\. Return or await it; do not hide failure with an empty catch\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Own listener lifetime
+
+EventEmitter calls listeners synchronously in registration order\. An unhandled error event can terminate the process\. Remove listeners when their owner ends\.
+
+EventEmitter calls listeners synchronously in registration order\. An unhandled error event can terminate the process\. Remove listeners when their owner ends\.
+
+Own listener lifetime — standalone \.mjs / exported factory
+
+```
+import { EventEmitter } from 'node:events';
+const bus = new EventEmitter();
+const seen = [];
+bus.once('book', id => seen.push(id));
+bus.emit('book', 1); bus.emit('book', 2);
+console.log(seen, bus.listenerCount('book'));
+```
+
+Own listener lifetime result
+
+| Observation | Reasoning |
+| --- | --- |
+| \[1\] and 0: once removes the listener before a later emission\. | EventEmitter calls listeners synchronously in registration order\. An unhandled error event can terminate the process\. Remove listeners when their owner ends\. |
+
+Common mistake: Registering a listener per request on a shared emitter without removing it retains closures and duplicates delivery\.
+
+##### Does an async listener make emit await it?
+
+No\. emit invokes listeners synchronously; returned promises do not make emit an asynchronous completion barrier\. Own their rejection explicitly\.
+
+Follow-up: How do you repair a subscription that outlives a disconnected client?
+
+##### Practice
+
+###### Own listener lifetime practice
+
+How do you repair a subscription that outlives a disconnected client?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Own listener lifetime practice
+
+Keep the handler reference, remove it on disconnect/abort, and make cleanup idempotent\. Also handle the emitter error channel\.
+
+Why it works
+
+Keep the handler reference, remove it on disconnect/abort, and make cleanup idempotent\. Also handle the emitter error channel\. Registering a listener per request on a shared emitter without removing it retains closures and duplicates delivery\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+### Modules and packages
+
+Choose a topic to inspect its worked example and interview answer\. Try the local exercise before revealing its reasoning\. Examples use Node 22 JavaScript \(\.mjs unless explicitly stated\) and Express 5\.3\.0\. HTTP factories do not listen until the test or startup owner calls listen\.
+
+#### Choose an explicit module contract
+
+Use \.mjs for ESM and \.cjs for CommonJS when teaching standalone files\. ESM has import/export and top\-level await; CommonJS has require/module\.exports\. Package type affects \.js\.
+
+Use \.mjs for ESM and \.cjs for CommonJS when teaching standalone files\. ESM has import/export and top\-level await; CommonJS has require/module\.exports\. Package type affects \.js\.
+
+Choose an explicit module contract — standalone \.mjs / exported factory
+
+```
+import { basename } from 'node:path';
+console.log(basename('/reading/books.json'));
+```
+
+Choose an explicit module contract result
+
+| Observation | Reasoning |
+| --- | --- |
+| books\.json: this \.mjs file imports a named built\-in export\. | Use \.mjs for ESM and \.cjs for CommonJS when teaching standalone files\. ESM has import/export and top\-level await; CommonJS has require/module\.exports\. Package type affects \.js\. |
+
+Common mistake: Do not assume every require/import interop shape is identical\. Pin the package contract; include relative ESM file extensions\. Module caches and cycles can expose partially initialized state\.
+
+##### Is module state per request?
+
+No\. A loaded module is reused within its process/module graph\. Exported mutable objects can become shared state across requests\.
+
+Follow-up: Two modules import a shared Map\. Is it shared across separate processes?
+
+##### Practice
+
+###### Choose an explicit module contract practice
+
+Two modules import a shared Map\. Is it shared across separate processes?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Choose an explicit module contract practice
+
+No\. Each process has its own memory and module cache; use an external store when cross\-process state is required\.
+
+Why it works
+
+No\. Each process has its own memory and module cache; use an external store when cross\-process state is required\. Do not assume every require/import interop shape is identical\. Pin the package contract; include relative ESM file extensions\. Module caches and cycles can expose partially initialized state\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Distinguish install and runtime dependencies
+
+Dependencies are packages needed at runtime; devDependencies support development and checks\. A lockfile records a resolved dependency graph\. Scripts are named commands, not Node module resolution rules\.
+
+Dependencies are packages needed at runtime; devDependencies support development and checks\. A lockfile records a resolved dependency graph\. Scripts are named commands, not Node module resolution rules\.
+
+Distinguish install and runtime dependencies — standalone \.mjs / exported factory
+
+```
+import { mkdtemp, writeFile, readFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+const dir = await mkdtemp(join(tmpdir(), 'package-contract-'));
+try {
+ const manifest = { type: 'module', scripts: { test: 'node --test' }, dependencies: { express: '^5.3.0' }, devDependencies: { typescript: '5.9.3' } };
+ await writeFile(join(dir, 'package.json'), JSON.stringify(manifest));
+ const installedContract = JSON.parse(await readFile(join(dir, 'package.json'), 'utf8'));
+ console.log(installedContract.type, installedContract.scripts.test, installedContract.dependencies.express);
+} finally { await rm(dir, { recursive: true, force: true }); }
+// ^5.3.0 permits >=5.3.0 <6.0.0 under normal semver rules.
+// npm ci requires a matching package-lock.json and removes existing node_modules.
+// This filesystem demo does not install packages or simulate npm's resolver.
+```
+
+Distinguish install and runtime dependencies result
+
+| Observation | Reasoning |
+| --- | --- |
+| The temporary package\.json round\-trips module, node \-\-test and ^5\.3\.0\. The caret permits compatible major\-5 updates; a committed lockfile records exact resolutions\. This example performs no install\. | Dependencies are packages needed at runtime; devDependencies support development and checks\. A lockfile records a resolved dependency graph\. Scripts are named commands, not Node module resolution rules\. |
+
+Common mistake: A caret range can resolve a newer compatible release on a fresh resolution\. Commit a lockfile; npm ci rejects package/lock disagreement and performs a clean locked install\. This repository uses pnpm\.
+
+##### Does a lockfile prevent all supply\-chain risk?
+
+No\. It makes resolution repeatable, but the locked package itself may be vulnerable or malicious\. Review updates and test the installed graph\.
+
+Follow-up: Should Express used only by example tests be a production dependency here?
+
+##### Practice
+
+###### Distinguish install and runtime dependencies practice
+
+Should Express used only by example tests be a production dependency here?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Distinguish install and runtime dependencies practice
+
+No\. This static reference imports teaching data only\. Express belongs in exact devDependencies for verification\.
+
+Why it works
+
+No\. This static reference imports teaching data only\. Express belongs in exact devDependencies for verification\. A caret range can resolve a newer compatible release on a fresh resolution\. Commit a lockfile; npm ci rejects package/lock disagreement and performs a clean locked install\. This repository uses pnpm\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Reject invalid configuration before listening
+
+Environment variables are strings or absent\. Parse and bound configuration once during startup; do not discover invalid settings after accepting requests\.
+
+Environment variables are strings or absent\. Parse and bound configuration once during startup; do not discover invalid settings after accepting requests\.
+
+Reject invalid configuration before listening — standalone \.mjs / exported factory
+
+```
+function port(value) {
+ if (typeof value !== 'string' || !/^\d+$/.test(value)) throw new Error('PORT required');
+ const n = Number(value);
+ if (!Number.isInteger(n) || n < 1 || n > 65535) throw new Error('PORT range');
+ return n;
+}
+console.log(port('3200'));
+```
+
+Reject invalid configuration before listening result
+
+| Observation | Reasoning |
+| --- | --- |
+| 3200 is a number; empty strings, decimals and out\-of\-range values are rejected\. | Environment variables are strings or absent\. Parse and bound configuration once during startup; do not discover invalid settings after accepting requests\. |
+
+Common mistake: Number\(''\) is zero and parseInt accepts trailing junk\. Validate the full representation before conversion\. Never print secret configuration values\.
+
+##### Why fail before listen?
+
+An invalid process should not advertise readiness or accept partial traffic\. Startup validation yields a clear failure rather than scattered request errors\.
+
+Follow-up: What should happen for PORT=3200oops?
+
+##### Practice
+
+###### Reject invalid configuration before listening practice
+
+What should happen for PORT=3200oops?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Reject invalid configuration before listening practice
+
+Reject startup\. Do not silently accept the numeric prefix or fall back to a surprising port\.
+
+Why it works
+
+Reject startup\. Do not silently accept the numeric prefix or fall back to a surprising port\. Number\(''\) is zero and parseInt accepts trailing junk\. Validate the full representation before conversion\. Never print secret configuration values\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+### Files and streams
+
+Choose a topic to inspect its worked example and interview answer\. Try the local exercise before revealing its reasoning\. Examples use Node 22 JavaScript \(\.mjs unless explicitly stated\) and Express 5\.3\.0\. HTTP factories do not listen until the test or startup owner calls listen\.
+
+#### Count bytes rather than letters
+
+A Buffer stores bytes\. UTF\-8 uses multiple bytes for many characters; JavaScript string length counts UTF\-16 code units\. Transport limits are generally byte limits\.
+
+A Buffer stores bytes\. UTF\-8 uses multiple bytes for many characters; JavaScript string length counts UTF\-16 code units\. Transport limits are generally byte limits\.
+
+Count bytes rather than letters — standalone \.mjs / exported factory
+
+```
+const text = 'é';
+console.log(text.length, Buffer.byteLength(text, 'utf8'));
+console.log(Buffer.from(text, 'utf8').toString('utf8'));
+```
+
+Count bytes rather than letters result
+
+| Observation | Reasoning |
+| --- | --- |
+| 1 2 then é: one code unit becomes two UTF\-8 bytes\. | A Buffer stores bytes\. UTF\-8 uses multiple bytes for many characters; JavaScript string length counts UTF\-16 code units\. Transport limits are generally byte limits\. |
+
+Common mistake: Do not size Content\-Length from string\.length\. Use Buffer\.byteLength or let the HTTP library calculate it\. Buffer\.alloc initializes memory; unsafe allocation requires complete overwrite\.
+
+##### Can you decode each arbitrary stream chunk independently?
+
+A multi\-byte character may span chunks\. Use an incremental decoder or stream encoding support that preserves incomplete sequences\.
+
+Follow-up: What byte limit should accept exactly two copies of é?
+
+##### Practice
+
+###### Count bytes rather than letters practice
+
+What byte limit should accept exactly two copies of é?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Count bytes rather than letters practice
+
+Four UTF\-8 bytes\. A character\-count limit and a byte\-count limit are different contracts\.
+
+Why it works
+
+Four UTF\-8 bytes\. A character\-count limit and a byte\-count limit are different contracts\. Do not size Content\-Length from string\.length\. Use Buffer\.byteLength or let the HTTP library calculate it\. Buffer\.alloc initializes memory; unsafe allocation requires complete overwrite\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Clean up files even on failure
+
+Use asynchronous fs APIs and explicit paths\. Temporary directories isolate examples; finally removes them\. URL\-to\-path conversion needs fileURLToPath when starting from import\.meta\.url\.
+
+Use asynchronous fs APIs and explicit paths\. Temporary directories isolate examples; finally removes them\. URL\-to\-path conversion needs fileURLToPath when starting from import\.meta\.url\.
+
+Clean up files even on failure — standalone \.mjs / exported factory
+
+```
+import { mkdtemp, writeFile, readFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+const dir = await mkdtemp(join(tmpdir(), 'reading-'));
+try { const file = join(dir, 'books.txt'); await writeFile(file, 'one'); console.log(await readFile(file, 'utf8')); }
+finally { await rm(dir, { recursive: true, force: true }); }
+```
+
+Clean up files even on failure result
+
+| Observation | Reasoning |
+| --- | --- |
+| one: the write completes before the read and the temporary tree is removed afterwards\. | Use asynchronous fs APIs and explicit paths\. Temporary directories isolate examples; finally removes them\. URL\-to\-path conversion needs fileURLToPath when starting from import\.meta\.url\. |
+
+Common mistake: path\.normalize is lexical cleanup, not permission checking\. Prefer a server\-side ID\-to\-path allowlist; symlinks and filesystem races complicate containment checks\.
+
+##### Does async fs mean no threads?
+
+Many filesystem operations use the libuv pool\. Await releases the JavaScript continuation while native work proceeds, but pool capacity is still finite\.
+
+Follow-up: Should a download route join an arbitrary user path to a root?
+
+##### Practice
+
+###### Clean up files even on failure practice
+
+Should a download route join an arbitrary user path to a root?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Clean up files even on failure practice
+
+Prefer an allowlisted resource ID resolved on the server, then enforce authorization\. Joining a path alone does not establish access rights\.
+
+Why it works
+
+Prefer an allowlisted resource ID resolved on the server, then enforce authorization\. Joining a path alone does not establish access rights\. path\.normalize is lexical cleanup, not permission checking\. Prefer a server\-side ID\-to\-path allowlist; symlinks and filesystem races complicate containment checks\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Let a slow receiver limit production
+
+Streams move chunks without loading the entire body\. When write returns false, pause production until drain\. pipeline coordinates backpressure, completion and error cleanup\.
+
+Streams move chunks without loading the entire body\. When write returns false, pause production until drain\. pipeline coordinates backpressure, completion and error cleanup\.
+
+Let a slow receiver limit production — standalone \.mjs / exported factory
+
+```
+import { Readable, Writable } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
+const chunks = [];
+await pipeline(Readable.from(['book', 'list']), new Writable({
+ highWaterMark: 1,
+ write(chunk, encoding, done) { chunks.push(chunk.toString()); setImmediate(done); }
+}));
+console.log(chunks.join('-'));
+```
+
+Let a slow receiver limit production result
+
+| Observation | Reasoning |
+| --- | --- |
+| book\-list appears after both writes finish\. The low threshold makes the producer wait for the receiver\. | Streams move chunks without loading the entire body\. When write returns false, pause production until drain\. pipeline coordinates backpressure, completion and error cleanup\. |
+
+Common mistake: Ignoring write\(false\) can grow memory\. highWaterMark is a pressure threshold, not a hard global memory cap; handle pipeline rejection and client aborts\.
+
+##### Why prefer pipeline to manually chaining data events?
+
+It handles flow control and propagates failures across the chain\. Manual data listeners often ignore backpressure and leak resources on errors\.
+
+Follow-up: A destination fails after the first chunk\. What must the caller observe?
+
+##### Practice
+
+###### Let a slow receiver limit production practice
+
+A destination fails after the first chunk\. What must the caller observe?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Let a slow receiver limit production practice
+
+The pipeline promise rejects and the chain is destroyed\. Catch the error at the owning boundary; do not report a successful complete export\.
+
+Why it works
+
+The pipeline promise rejects and the chain is destroyed\. Catch the error at the owning boundary; do not report a successful complete export\. Ignoring write\(false\) can grow memory\. highWaterMark is a pressure threshold, not a hard global memory cap; handle pipeline rejection and client aborts\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+### HTTP foundations
+
+Choose a topic to inspect its worked example and interview answer\. Try the local exercise before revealing its reasoning\. Examples use Node 22 JavaScript \(\.mjs unless explicitly stated\) and Express 5\.3\.0\. HTTP factories do not listen until the test or startup owner calls listen\.
+
+#### See the server beneath Express
+
+A native HTTP request is a readable stream and its response is writable\. Headers describe the representation; end terminates the message\. This example exposes a factory so tests choose loopback port 0\.
+
+A native HTTP request is a readable stream and its response is writable\. Headers describe the representation; end terminates the message\. This example exposes a factory so tests choose loopback port 0\.
+
+See the server beneath Express — standalone \.mjs / exported factory
+
+```
+import { createServer } from 'node:http';
+export function makeServer() { return createServer((req, res) => {
+ res.writeHead(200, { 'Content-Type': 'application/json' });
+ res.end(JSON.stringify({ method: req.method }));
+}); }
+```
+
+See the server beneath Express result
+
+| Observation | Reasoning |
+| --- | --- |
+| GET produces 200 with a JSON object containing method GET\. No socket is opened until listen is called\. | A native HTTP request is a readable stream and its response is writable\. Headers describe the representation; end terminates the message\. This example exposes a factory so tests choose loopback port 0\. |
+
+Common mistake: Receiving request headers does not imply the entire body has arrived\. Bound and validate streamed input before using it\.
+
+##### What does Express add here?
+
+Routing, middleware composition and request/response conveniences over the same HTTP lifecycle\. It does not remove streaming or disconnect concerns\.
+
+Follow-up: Who closes a server created by an integration test?
+
+##### Practice
+
+###### See the server beneath Express practice
+
+Who closes a server created by an integration test?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: See the server beneath Express practice
+
+The fixture owner, in finally, including connections that could otherwise keep the process alive\.
+
+Why it works
+
+The fixture owner, in finally, including connections that could otherwise keep the process alive\. Receiving request headers does not imply the entire body has arrived\. Bound and validate streamed input before using it\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Choose the intended HTTP effect
+
+GET is safe: it requests retrieval\. PUT and DELETE are idempotent in intended effect; repeating DELETE may return a different status\. POST generally needs an explicit deduplication contract for retries\.
+
+GET is safe: it requests retrieval\. PUT and DELETE are idempotent in intended effect; repeating DELETE may return a different status\. POST generally needs an explicit deduplication contract for retries\.
+
+Choose the intended HTTP effect — standalone \.mjs / exported factory
+
+```
+import express from 'express';
+export function makeApp() { const app = express();
+ app.get('/books', (req, res) => res.json([{ id: 'b1' }]));
+ app.delete('/books/:id', (req, res) => res.status(204).end());
+ return app;
+}
+```
+
+Choose the intended HTTP effect result
+
+| Observation | Reasoning |
+| --- | --- |
+| GET returns JSON; DELETE ends with 204 and no body\. Express HEAD on the GET route sends headers without the response body\. | GET is safe: it requests retrieval\. PUT and DELETE are idempotent in intended effect; repeating DELETE may return a different status\. POST generally needs an explicit deduplication contract for retries\. |
+
+Common mistake: Do not send JSON with 204 or assume status\(200\) ends a response\. PATCH is not inherently idempotent; it depends on the operation\.
+
+##### Does idempotent mean identical responses?
+
+No\. It describes the intended server effect across repeated identical requests, not identical status codes, timestamps or logs\.
+
+Follow-up: A retry increments a counter twice\. Can you call that operation idempotent?
+
+##### Practice
+
+###### Choose the intended HTTP effect practice
+
+A retry increments a counter twice\. Can you call that operation idempotent?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Choose the intended HTTP effect practice
+
+No\. Replace with an explicit target state or define a durable idempotency key and result contract\.
+
+Why it works
+
+No\. Replace with an explicit target state or define a durable idempotency key and result contract\. Do not send JSON with 204 or assume status\(200\) ends a response\. PATCH is not inherently idempotent; it depends on the operation\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Cancel the operation that owns the work
+
+An outbound deadline should signal cancellation to fetch, and the owner must catch failure\. An incoming response timeout does not automatically cancel downstream work\.
+
+An outbound deadline should signal cancellation to fetch, and the owner must catch failure\. An incoming response timeout does not automatically cancel downstream work\.
+
+Cancel the operation that owns the work — standalone \.mjs / exported factory
+
+```
+import { createServer } from 'node:http';
+const server = createServer((req, res) => {
+ // Deliberately never respond: the caller must bound its wait.
+ res.on('close', () => {});
+});
+await new Promise((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
+const controller = new AbortController();
+const deadline = setTimeout(() => controller.abort(new Error('deadline')), 50);
+try {
+ await fetch('http://127.0.0.1:' + server.address().port, { signal: controller.signal });
+ throw new Error('unexpected completion');
+} catch (error) {
+ console.log(controller.signal.aborted, error.message);
+} finally {
+ clearTimeout(deadline); server.closeAllConnections();
+ await new Promise(resolve => server.close(resolve));
+}
+```
+
+Cancel the operation that owns the work result
+
+| Observation | Reasoning |
+| --- | --- |
+| true deadline: the local server deliberately leaves the response pending\. The deadline aborts the fetch; finally clears the timer and closes the server\. The check depends on cancellation, never on exact elapsed milliseconds\. | An outbound deadline should signal cancellation to fetch, and the owner must catch failure\. An incoming response timeout does not automatically cancel downstream work\. |
+
+Common mistake: A Promise\.race timeout only stops waiting\. It does not terminate the losing operation\. Clear timers in finally and propagate cancellation to APIs that support it\.
+
+##### Is client disconnect the same as server timeout?
+
+No\. A disconnect means the peer is gone; a server timeout is a local deadline policy\. Either may require cancelling owned work and releasing resources\.
+
+Follow-up: A timed\-out report continues using database capacity\. What is missing?
+
+##### Practice
+
+###### Cancel the operation that owns the work practice
+
+A timed\-out report continues using database capacity\. What is missing?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Cancel the operation that owns the work practice
+
+Cancellation or a bounded downstream operation\. A response status alone cannot reclaim unrelated ongoing work\.
+
+Why it works
+
+Cancellation or a bounded downstream operation\. A response status alone cannot reclaim unrelated ongoing work\. A Promise\.race timeout only stops waiting\. It does not terminate the losing operation\. Clear timers in finally and propagate cancellation to APIs that support it\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+### Express flow
+
+Choose a topic to inspect its worked example and interview answer\. Try the local exercise before revealing its reasoning\. Examples use Node 22 JavaScript \(\.mjs unless explicitly stated\) and Express 5\.3\.0\. HTTP factories do not listen until the test or startup owner calls listen\.
+
+#### Mount a small API without starting it
+
+An app factory registers behavior and returns an app\. The listener belongs to startup\. Routers group paths; a mount prefix combines with their local route paths\.
+
+An app factory registers behavior and returns an app\. The listener belongs to startup\. Routers group paths; a mount prefix combines with their local route paths\.
+
+Mount a small API without starting it — standalone \.mjs / exported factory
+
+```
+import express from 'express';
+export function makeApp() { const app = express(); const router = express.Router();
+ router.get('/:id', (req, res) => res.json({ id: req.params.id, base: req.baseUrl }));
+ app.use('/books', router); return app;
+}
+```
+
+Mount a small API without starting it result
+
+| Observation | Reasoning |
+| --- | --- |
+| /books/b1 returns id b1 and base /books\. The router route sees its local /:id path\. | An app factory registers behavior and returns an app\. The listener belongs to startup\. Routers group paths; a mount prefix combines with their local route paths\. |
+
+Common mistake: Calling listen during import makes tests contend for ports and creates hidden lifecycle ownership\.
+
+##### Why inject services into a factory?
+
+Tests can supply deterministic dependencies, while production startup wires real ones\. Route code stays separate from connection and shutdown ownership\.
+
+Follow-up: How do two tests use this API without sharing a port?
+
+##### Practice
+
+###### Mount a small API without starting it practice
+
+How do two tests use this API without sharing a port?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Mount a small API without starting it practice
+
+Each creates its own app and listens on loopback port 0; each closes its listener in finally\.
+
+Why it works
+
+Each creates its own app and listens on loopback port 0; each closes its listener in finally\. Calling listen during import makes tests contend for ports and creates hidden lifecycle ownership\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Trace enter, next and response
+
+Middleware runs in registration order\. next hands control to the next matching layer; it does not end the current JavaScript function\. Returning prevents fall\-through in your function\.
+
+Middleware runs in registration order\. next hands control to the next matching layer; it does not end the current JavaScript function\. Returning prevents fall\-through in your function\.
+
+Trace enter, next and response — standalone \.mjs / exported factory
+
+```
+import express from 'express';
+export function makeApp() { const app = express();
+ app.use((req, res, next) => { res.locals.trace = ['enter']; next(); res.locals.trace.push('exit'); });
+ app.get('/books', (req, res) => { res.locals.trace.push('route'); return res.json(res.locals.trace); });
+ return app;
+}
+```
+
+Trace enter, next and response result
+
+| Observation | Reasoning |
+| --- | --- |
+| The serialized body is \[enter, route\]\. The exit entry is added after the downstream handler returns, after serialization\. | Middleware runs in registration order\. next hands control to the next matching layer; it does not end the current JavaScript function\. Returning prevents fall\-through in your function\. |
+
+Common mistake: Sending a response and then calling next can reach another sender\. A fulfilled async middleware promise does not automatically call next\.
+
+##### Does return res\.json call the next middleware?
+
+No\. json ends the response; return exits that function\. A middleware that neither responds nor calls next leaves the request pending\.
+
+Follow-up: Put a JSON parser after a body\-reading route\. Why does input disappear?
+
+##### Practice
+
+###### Trace enter, next and response practice
+
+Put a JSON parser after a body\-reading route\. Why does input disappear?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Trace enter, next and response practice
+
+The route runs before parsing\. Register parsing before consumers; then validate the parsed value separately\.
+
+Why it works
+
+The route runs before parsing\. Register parsing before consumers; then validate the parsed value separately\. Sending a response and then calling next can reach another sender\. A fulfilled async middleware promise does not automatically call next\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Use Express 5 path and query rules
+
+Path params, query parameters and body are separate inputs\. Set the query parser explicitly to simple\. Express 5 wildcard names are required; braces express optional path portions\.
+
+Path params, query parameters and body are separate inputs\. Set the query parser explicitly to simple\. Express 5 wildcard names are required; braces express optional path portions\.
+
+Use Express 5 path and query rules — standalone \.mjs / exported factory
+
+```
+import express from 'express';
+export function makeApp() { const app = express(); app.set('query parser', 'simple');
+ app.get('/files/:file{.:ext}', (req, res) => res.json(req.params));
+ app.get('/{*rest}', (req, res) => res.status(404).json({ missing: true }));
+ return app;
+}
+```
+
+Use Express 5 path and query rules result
+
+| Observation | Reasoning |
+| --- | --- |
+| /files/notes\.txt yields file notes and ext txt\. /files/notes also matches\. The final wildcard includes the root\. | Path params, query parameters and body are separate inputs\. Set the query parser explicitly to simple\. Express 5 wildcard names are required; braces express optional path portions\. |
+
+Common mistake: A broad route registered first can swallow a specific route\. Express 4 path syntax is not a safe copy into Express 5\.
+
+##### Is req\.query\.page always a string?
+
+No\. Repeated keys can produce arrays; nested\-looking keys remain parser\-dependent\. Validate the actual shape and reject ambiguous input\.
+
+Follow-up: What should ?page=1\&page=2 do in a bounded list API?
+
+##### Practice
+
+###### Use Express 5 path and query rules practice
+
+What should ?page=1\&page=2 do in a bounded list API?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Use Express 5 path and query rules practice
+
+Reject ambiguity rather than picking a hidden first/last policy\. Document any different policy explicitly\.
+
+Why it works
+
+Reject ambiguity rather than picking a hidden first/last policy\. Document any different policy explicitly\. A broad route registered first can swallow a specific route\. Express 4 path syntax is not a safe copy into Express 5\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+### Input and responses
+
+Choose a topic to inspect its worked example and interview answer\. Try the local exercise before revealing its reasoning\. Examples use Node 22 JavaScript \(\.mjs unless explicitly stated\) and Express 5\.3\.0\. HTTP factories do not listen until the test or startup owner calls listen\.
+
+#### Reject malformed and unexpected input
+
+Parsing turns bytes into values\. Validation decides whether those values meet the API contract\. Authorization is a later permission decision\. Restrict media type, body size, object shape, keys and value ranges\.
+
+Parsing turns bytes into values\. Validation decides whether those values meet the API contract\. Authorization is a later permission decision\. Restrict media type, body size, object shape, keys and value ranges\.
+
+Reject malformed and unexpected input — standalone \.mjs / exported factory
+
+```
+import express from 'express';
+export function makeApp() { const app = express(); app.use(express.json({ limit: '1kb' }));
+ app.post('/books', (req, res) => { const b = req.body;
+ if (!b || Array.isArray(b) || typeof b.title !== 'string' || !b.title.trim() || b.title.length > 100 || Object.keys(b).some(k => k !== 'title')) return res.status(400).json({ error: 'invalid book' });
+ return res.status(201).json({ id: 'b1', title: b.title.trim() });
+ }); app.use((err, req, res, next) => { if (res.headersSent) return next(err); res.status(err.type === 'entity.too.large' ? 413 : 400).json({ error: 'invalid body' }); }); return app;
+}
+```
+
+Reject malformed and unexpected input result
+
+| Observation | Reasoning |
+| --- | --- |
+| A valid title produces 201; missing body, arrays, unknown keys and bad types produce 400\. Malformed JSON fails in the parser before the route\. | Parsing turns bytes into values\. Validation decides whether those values meet the API contract\. Authorization is a later permission decision\. Restrict media type, body size, object shape, keys and value ranges\. |
+
+Common mistake: Never spread req\.body into a privileged record\. Explicitly select allowed properties; a parser is not a schema validator\.
+
+##### Why reject unknown keys?
+
+It prevents accidental mass assignment and makes the input contract explicit\. Whether to reject or ignore is a deliberate API policy\.
+
+Follow-up: Try title=42 and an ownerId field\. What happens?
+
+##### Practice
+
+###### Reject malformed and unexpected input practice
+
+Try title=42 and an ownerId field\. What happens?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Reject malformed and unexpected input practice
+
+Both are rejected\. The server must derive ownership from trusted identity rather than accepting a caller\-selected owner\.
+
+Why it works
+
+Both are rejected\. The server must derive ownership from trusted identity rather than accepting a caller\-selected owner\. Never spread req\.body into a privileged record\. Explicitly select allowed properties; a parser is not a schema validator\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Send exactly one response
+
+Set status and headers before writing the body\. json serializes and ends; end terminates without requiring a body\. A JavaScript return only exits the current function\.
+
+Set status and headers before writing the body\. json serializes and ends; end terminates without requiring a body\. A JavaScript return only exits the current function\.
+
+Send exactly one response — standalone \.mjs / exported factory
+
+```
+import express from 'express';
+export function makeApp() { const app = express();
+ app.get('/books/:id', (req, res) => {
+ if (req.params.id !== 'b1') return res.status(404).json({ error: 'missing' });
+ return res.status(200).json({ id: 'b1' });
+ }); return app;
+}
+```
+
+Send exactly one response result
+
+| Observation | Reasoning |
+| --- | --- |
+| b1 returns 200; another ID returns one 404 response and never reaches the success sender\. | Set status and headers before writing the body\. json serializes and ends; end terminates without requiring a body\. A JavaScript return only exits the current function\. |
+
+Common mistake: Without the first return, execution reaches the success branch and attempts a second response\. headersSent means headers are committed, not that delivery succeeded\.
+
+##### Can changing status after write repair a partial response?
+
+No\. Once headers are committed, delegate errors to the appropriate close/error path; do not append a new JSON error document\.
+
+Follow-up: A route only calls res\.status\(202\)\. Is it finished?
+
+##### Practice
+
+###### Send exactly one response practice
+
+A route only calls res\.status\(202\)\. Is it finished?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Send exactly one response practice
+
+No\. It must send or end the response, or explicitly continue to a handler that does\.
+
+Why it works
+
+No\. It must send or end the response, or explicitly continue to a handler that does\. Without the first return, execution reaches the success branch and attempts a second response\. headersSent means headers are committed, not that delivery succeeded\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Bound and order list queries
+
+Choose defaults for absent input, reject repeats and malformed shapes, then bound the page size\. Stable ordering prevents arbitrary reshuffling; concurrent dataset changes may still require cursor/snapshot semantics\.
+
+Choose defaults for absent input, reject repeats and malformed shapes, then bound the page size\. Stable ordering prevents arbitrary reshuffling; concurrent dataset changes may still require cursor/snapshot semantics\.
+
+Bound and order list queries — standalone \.mjs / exported factory
+
+```
+import express from 'express';
+export function makeApp() { const app = express(); app.set('query parser', 'simple');
+ const books = [{ id: 'b2' }, { id: 'b1' }];
+ app.get('/books', (req, res) => { const value = req.query.limit;
+ if (value !== undefined && (typeof value !== 'string' || !/^[1-9]\d*$/.test(value) || Number(value) > 2)) return res.status(400).end();
+ return res.json([...books].sort((a,b) => a.id.localeCompare(b.id)).slice(0, value === undefined ? 2 : Number(value)));
+ }); return app;
+}
+```
+
+Bound and order list queries result
+
+| Observation | Reasoning |
+| --- | --- |
+| Absent limit returns b1,b2; limit=1 returns b1\. Repeated keys, zero, decimals and values above two fail\. | Choose defaults for absent input, reject repeats and malformed shapes, then bound the page size\. Stable ordering prevents arbitrary reshuffling; concurrent dataset changes may still require cursor/snapshot semantics\. |
+
+Common mistake: Sorting the shared array in place mutates process state\. Copy before sorting; bound work as well as output size for real large collections\.
+
+##### Does offset pagination guarantee no duplicates during writes?
+
+No\. Insertions and deletions can shift offsets\. Use a defined stable cursor and ordering key when that matters\.
+
+Follow-up: What does limit\[bad\]=1 mean with simple parsing?
+
+##### Practice
+
+###### Bound and order list queries practice
+
+What does limit\[bad\]=1 mean with simple parsing?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Bound and order list queries practice
+
+It is a different literal key, not limit\. This example ignores unknown query keys; a stricter API can explicitly reject them\.
+
+Why it works
+
+It is a different literal key, not limit\. This example ignores unknown query keys; a stricter API can explicitly reject them\. Sorting the shared array in place mutates process state\. Copy before sorting; bound work as well as output size for real large collections\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+### Errors and boundaries
+
+Choose a topic to inspect its worked example and interview answer\. Try the local exercise before revealing its reasoning\. Examples use Node 22 JavaScript \(\.mjs unless explicitly stated\) and Express 5\.3\.0\. HTTP factories do not listen until the test or startup owner calls listen\.
+
+#### Forward the promise you return
+
+Express 5 forwards rejected promises returned by handlers\. Awaiting a failing dependency inside an async handler connects its rejection to the request error boundary\.
+
+Express 5 forwards rejected promises returned by handlers\. Awaiting a failing dependency inside an async handler connects its rejection to the request error boundary\.
+
+Forward the promise you return — standalone \.mjs / exported factory
+
+```
+import express from 'express';
+export function makeApp() { const app = express();
+ app.get('/books', async () => { await Promise.reject(new Error('private database detail')); });
+ app.use((err, req, res, next) => { if (res.headersSent) return next(err); res.status(500).json({ error: 'internal' }); });
+ return app;
+}
+```
+
+Forward the promise you return result
+
+| Observation | Reasoning |
+| --- | --- |
+| GET /books produces a generic 500 without leaking the dependency error message\. | Express 5 forwards rejected promises returned by handlers\. Awaiting a failing dependency inside an async handler connects its rejection to the request error boundary\. |
+
+Common mistake: Starting a promise without returning or awaiting it detaches the failure\. Do not both call next\(err\) and rethrow the same error\.
+
+##### Does a fulfilled async handler advance automatically?
+
+No\. It must respond or call next\. Promise rejection forwarding only supplies the error path\.
+
+Follow-up: A dependency rejects after a route has responded\. Can Express replace the response?
+
+##### Practice
+
+###### Forward the promise you return practice
+
+A dependency rejects after a route has responded\. Can Express replace the response?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Forward the promise you return practice
+
+No\. Own detached work outside the response lifecycle, or await it before responding\. Log safely and never attempt a second send\.
+
+Why it works
+
+No\. Own detached work outside the response lifecycle, or await it before responding\. Log safely and never attempt a second send\. Starting a promise without returning or awaiting it detaches the failure\. Do not both call next\(err\) and rethrow the same error\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Bridge callbacks explicitly
+
+A future callback runs after the surrounding handler stack has returned\. A try/catch around scheduling does not catch a later throw; pass callback errors to next\.
+
+A future callback runs after the surrounding handler stack has returned\. A try/catch around scheduling does not catch a later throw; pass callback errors to next\.
+
+Bridge callbacks explicitly — standalone \.mjs / exported factory
+
+```
+import express from 'express';
+export function makeApp() { const app = express();
+ app.get('/books', (req, res, next) => { setImmediate(() => { next(new Error('offline')); }); });
+ app.use((err, req, res, next) => { if (res.headersSent) return next(err); res.status(500).json({ error: 'internal' }); });
+ return app;
+}
+```
+
+Bridge callbacks explicitly result
+
+| Observation | Reasoning |
+| --- | --- |
+| The scheduled error reaches the four\-argument handler and returns 500\. | A future callback runs after the surrounding handler stack has returned\. A try/catch around scheduling does not catch a later throw; pass callback errors to next\. |
+
+Common mistake: Throwing inside setImmediate bypasses the original handler try/catch and can crash the process\. Bridge once, or use a promise adapter and await it\.
+
+##### Which error channel should a callback API use?
+
+Its documented callback error argument\. Convert or forward that error at the boundary; do not assume Express can see arbitrary future throws\.
+
+Follow-up: How would you repair readFile\(path, callback\) in a route?
+
+##### Practice
+
+###### Bridge callbacks explicitly practice
+
+How would you repair readFile\(path, callback\) in a route?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Bridge callbacks explicitly practice
+
+Check err and return next\(err\); otherwise send once\. Alternatively await the fs/promises API in an async handler\.
+
+Why it works
+
+Check err and return next\(err\); otherwise send once\. Alternatively await the fs/promises API in an async handler\. Throwing inside setImmediate bypasses the original handler try/catch and can crash the process\. Bridge once, or use a promise adapter and await it\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Separate missing routes from failures
+
+No matching route is an ordinary 404, not an exception\. Install a 404 fallback after routes, then a four\-argument final error handler\. Expose only explicitly trusted error types\.
+
+No matching route is an ordinary 404, not an exception\. Install a 404 fallback after routes, then a four\-argument final error handler\. Expose only explicitly trusted error types\.
+
+Separate missing routes from failures — standalone \.mjs / exported factory
+
+```
+import express from 'express';
+export function makeApp() { const app = express();
+ app.get('/fail', () => { throw Object.assign(new Error('secret'), { status: 401 }); });
+ app.use((req, res) => res.status(404).json({ error: 'missing' }));
+ app.use((err, req, res, next) => { if (res.headersSent) return next(err); return res.status(500).json({ error: 'internal' }); });
+ return app;
+}
+```
+
+Separate missing routes from failures result
+
+| Observation | Reasoning |
+| --- | --- |
+| /unknown returns 404; /fail returns 500 even though an arbitrary error object carries status 401\. | No matching route is an ordinary 404, not an exception\. Install a 404 fallback after routes, then a four\-argument final error handler\. Expose only explicitly trusted error types\. |
+
+Common mistake: Blindly trusting err\.status or exposing err\.message can leak implementation details or misclassify failures\. Use a controlled application error class when deliberate exposure is needed\.
+
+##### Why does the handler need four parameters?
+
+Express identifies error middleware by its error\-handling signature\. Keep err, req, res and next even if some are used only in delegation\.
+
+Follow-up: What if a streamed response fails after headers are sent?
+
+##### Practice
+
+###### Separate missing routes from failures practice
+
+What if a streamed response fails after headers are sent?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Separate missing routes from failures practice
+
+Delegate with next\(err\); the default error handler may close the connection\. A new JSON 500 cannot replace bytes already sent\.
+
+Why it works
+
+Delegate with next\(err\); the default error handler may close the connection\. A new JSON 500 cannot replace bytes already sent\. Blindly trusting err\.status or exposing err\.message can leak implementation details or misclassify failures\. Use a controlled application error class when deliberate exposure is needed\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+### Data and state
+
+Choose a topic to inspect its worked example and interview answer\. Try the local exercise before revealing its reasoning\. Examples use Node 22 JavaScript \(\.mjs unless explicitly stated\) and Express 5\.3\.0\. HTTP factories do not listen until the test or startup owner calls listen\.
+
+#### Inject the reading\-list repository
+
+Routes translate HTTP\. Services enforce application rules\. Repositories own storage access\. This fixture is a single\-process Map, not a database or a durable store\.
+
+Routes translate HTTP\. Services enforce application rules\. Repositories own storage access\. This fixture is a single\-process Map, not a database or a durable store\.
+
+Inject the reading\-list repository — standalone \.mjs / exported factory
+
+```
+export function service(repository) { return {
+ async read(id) { const book = await repository.find(id); return book ?? null; }
+}; }
+const fixture = new Map([['b1', { id: 'b1', ownerId: 'u1' }]]);
+console.log(await service({ find: async id => fixture.get(id) }).read('b1'));
+```
+
+Inject the reading\-list repository result
+
+| Observation | Reasoning |
+| --- | --- |
+| The service returns b1 from the injected fixture\. A missing lookup returns null rather than inventing an HTTP status\. | Routes translate HTTP\. Services enforce application rules\. Repositories own storage access\. This fixture is a single\-process Map, not a database or a durable store\. |
+
+Common mistake: Importing a global connection into every route hides dependencies and couples tests to production startup\. Keep wiring at the application boundary\.
+
+##### Where does a database error become HTTP 500?
+
+At the HTTP error boundary\. The repository reports storage failure; the route/service must not disguise failure as a successful empty list\.
+
+Follow-up: How do you test dependency failure without a live database?
+
+##### Practice
+
+###### Inject the reading\-list repository practice
+
+How do you test dependency failure without a live database?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Inject the reading\-list repository practice
+
+Inject a repository whose method rejects, send a real local request, then assert generic 500 and resource cleanup\.
+
+Why it works
+
+Inject a repository whose method rejects, send a real local request, then assert generic 500 and resource cleanup\. Importing a global connection into every route hides dependencies and couples tests to production startup\. Keep wiring at the application boundary\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Reproduce an await race
+
+A single JavaScript thread can still race across await\. Each continuation can act on a stale read\. Module state is process\-local and disappears on restart\.
+
+A single JavaScript thread can still race across await\. Each continuation can act on a stale read\. Module state is process\-local and disappears on restart\.
+
+Reproduce an await race — standalone \.mjs / exported factory
+
+```
+let count = 0;
+async function increment() { const previous = count; await Promise.resolve(); count = previous + 1; }
+await Promise.all([increment(), increment()]);
+console.log(count);
+```
+
+Reproduce an await race result
+
+| Observation | Reasoning |
+| --- | --- |
+| 1 rather than 2: both operations read zero before either resumed to write\. | A single JavaScript thread can still race across await\. Each continuation can act on a stale read\. Module state is process\-local and disappears on restart\. |
+
+Common mistake: Assuming single\-threaded means race\-free loses updates\. Local locks do not coordinate independent processes or provide durability\.
+
+##### Can moving the Map to another module fix the race?
+
+No\. Module organization does not make read\-modify\-write atomic\. Use an appropriate atomic storage operation or transaction for shared durable state\.
+
+Follow-up: Four workers each enforce a local limit of ten\. Is the global limit ten?
+
+##### Practice
+
+###### Reproduce an await race practice
+
+Four workers each enforce a local limit of ten\. Is the global limit ten?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Reproduce an await race practice
+
+No\. Independent memory can permit forty aggregate operations; use coordinated state for a global policy\.
+
+Why it works
+
+No\. Independent memory can permit forty aggregate operations; use coordinated state for a global policy\. Assuming single\-threaded means race\-free loses updates\. Local locks do not coordinate independent processes or provide durability\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Define a durable deduplication contract
+
+A transaction groups writes so they commit together\. A uniqueness constraint arbitrates duplicate keys under concurrency\. An idempotency record must bind the key to the request and committed result\.
+
+A transaction groups writes so they commit together\. A uniqueness constraint arbitrates duplicate keys under concurrency\. An idempotency record must bind the key to the request and committed result\.
+
+Define a durable deduplication contract — standalone \.mjs / exported factory
+
+```
+// Interface-only repository sketch; no database driver is implied.
+// transaction(async tx => {
+//   const existing = await tx.lookupKey(ownerId, key);
+//   if (existing) return tx.sameRequestOrConflict(existing, input);
+//   const book = await tx.insertBook(input);
+//   await tx.saveKeyAndResult(ownerId, key, input, book);
+//   return book;
+// });
+```
+
+Define a durable deduplication contract result
+
+| Observation | Reasoning |
+| --- | --- |
+| The repository must enforce a unique owner/key and atomically commit the book with its result record\. A conflicting concurrent transaction retries or reads the committed result\. | A transaction groups writes so they commit together\. A uniqueness constraint arbitrates duplicate keys under concurrency\. An idempotency record must bind the key to the request and committed result\. |
+
+Common mistake: A Map cache before a write can lose keys on crash or diverge across workers\. It cannot provide distributed exactly\-once effects\.
+
+##### Why store a request fingerprint with an idempotency key?
+
+Reusing a key for different input must conflict rather than silently returning an unrelated result\. Define retention and retry behavior too\.
+
+Follow-up: A payment provider is outside your DB transaction\. What remains unresolved?
+
+##### Practice
+
+###### Define a durable deduplication contract practice
+
+A payment provider is outside your DB transaction\. What remains unresolved?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Define a durable deduplication contract practice
+
+Atomicity across the external effect and local record\. Use provider idempotency plus a durable workflow/outbox and reconciliation; do not promise exactly\-once from this sketch\.
+
+Why it works
+
+Atomicity across the external effect and local record\. Use provider idempotency plus a durable workflow/outbox and reconciliation; do not promise exactly\-once from this sketch\. A Map cache before a write can lose keys on crash or diverge across workers\. It cannot provide distributed exactly\-once effects\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+### Security
+
+Choose a topic to inspect its worked example and interview answer\. Try the local exercise before revealing its reasoning\. Examples use Node 22 JavaScript \(\.mjs unless explicitly stated\) and Express 5\.3\.0\. HTTP factories do not listen until the test or startup owner calls listen\.
+
+#### Check ownership after trusted identity
+
+Authentication establishes identity; authorization decides whether that identity may access this book\. The principal below is injected by the test fixture, never read from an arbitrary caller header\. The fixture models a Bearer\-verifier boundary: production middleware must verify the credential before injecting its principal\.
+
+Authentication establishes identity; authorization decides whether that identity may access this book\. The principal below is injected by the test fixture, never read from an arbitrary caller header\. The fixture models a Bearer\-verifier boundary: production middleware must verify the credential before injecting its principal\.
+
+Check ownership after trusted identity — standalone \.mjs / exported factory
+
+```
+import express from 'express';
+export function makeApp(principal = null) { const app = express();
+ const books = new Map([['b1', { id: 'b1', ownerId: 'u1' }]]);
+ app.get('/books/:id', (req, res) => {
+ if (!principal) return res.set('WWW-Authenticate', 'Bearer').status(401).end();
+ const book = books.get(req.params.id);
+ if (!book) return res.status(404).end();
+ if (book.ownerId !== principal.id) return res.status(403).end();
+ return res.json(book);
+ }); return app;
+}
+```
+
+Check ownership after trusted identity result
+
+| Observation | Reasoning |
+| --- | --- |
+| No principal gives 401; u2 requesting b1 gives 403; u1 gets b1; an authenticated lookup of an absent ID gives 404\. | Authentication establishes identity; authorization decides whether that identity may access this book\. The principal below is injected by the test fixture, never read from an arbitrary caller header\. The fixture models a Bearer\-verifier boundary: production middleware must verify the credential before injecting its principal\. |
+
+Common mistake: An X\-User\-ID header is caller input, not proof of identity\. Production needs a shown trusted verifier/session boundary\. Consider a consistent 404 policy if hiding existence is required\.
+
+##### Is knowing an object ID sufficient permission?
+
+No\. Check the authenticated principal against the object policy on every request\. Unpredictable IDs do not replace authorization\.
+
+Follow-up: Add a list route\. Can you filter only after returning data?
+
+##### Practice
+
+###### Check ownership after trusted identity practice
+
+Add a list route\. Can you filter only after returning data?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Check ownership after trusted identity practice
+
+No\. Scope the query to authorized objects on the server before returning any data; test both permitted and denied principals\.
+
+Why it works
+
+No\. Scope the query to authorized objects on the server before returning any data; test both permitted and denied principals\. An X\-User\-ID header is caller input, not proof of identity\. Production needs a shown trusted verifier/session boundary\. Consider a consistent 404 policy if hiding existence is required\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Describe credentials without inventing authentication
+
+A session cookie typically carries an opaque session ID; server storage holds session state\. Signed tokens carry claims but signatures do not hide them\. Decoding a JWT does not verify it\.
+
+A session cookie typically carries an opaque session ID; server storage holds session state\. Signed tokens carry claims but signatures do not hide them\. Decoding a JWT does not verify it\.
+
+Describe credentials without inventing authentication — standalone \.mjs / exported factory
+
+```
+import express from 'express';
+export function makeApp() { const app = express();
+ app.get('/cookie-demo', (req, res) => { res.cookie('demo', 'fixture-only', { httpOnly: true, secure: true, sameSite: 'lax', maxAge: 60000 }); res.status(204).end(); });
+ return app;
+}
+```
+
+Describe credentials without inventing authentication result
+
+| Observation | Reasoning |
+| --- | --- |
+| The Set\-Cookie header includes HttpOnly, Secure, SameSite=Lax and an expiry\. This is a header demonstration, not a working login or browser acceptance test\. | A session cookie typically carries an opaque session ID; server storage holds session state\. Signed tokens carry claims but signatures do not hide them\. Decoding a JWT does not verify it\. |
+
+Common mistake: Do not put secrets in signed\-but\-readable claims\. Passwords need purpose\-built password hashing\. Session revocation, token expiry, key rotation and TLS are separate responsibilities\.
+
+##### What is the token revocation tradeoff?
+
+Stateless verification is convenient, but short lifetimes bound exposure; immediate revocation needs coordinated state such as a denylist/session version\. Sessions also need a durable shared store when scaled\.
+
+Follow-up: Does HttpOnly prevent all CSRF?
+
+##### Practice
+
+###### Describe credentials without inventing authentication practice
+
+Does HttpOnly prevent all CSRF?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Describe credentials without inventing authentication practice
+
+No\. It prevents script access to the cookie, while browsers may still attach it to requests\. CSRF defenses address that separate boundary\.
+
+Why it works
+
+No\. It prevents script access to the cookie, while browsers may still attach it to requests\. CSRF defenses address that separate boundary\. Do not put secrets in signed\-but\-readable claims\. Passwords need purpose\-built password hashing\. Session revocation, token expiry, key rotation and TLS are separate responsibilities\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Separate browser sharing from permission
+
+CORS tells browsers which origins may read responses\. It is not API authentication\. Cookie\-authenticated mutations also need CSRF defenses because a request may be sent even when response reading is blocked\.
+
+CORS tells browsers which origins may read responses\. It is not API authentication\. Cookie\-authenticated mutations also need CSRF defenses because a request may be sent even when response reading is blocked\.
+
+Separate browser sharing from permission — standalone \.mjs / exported factory
+
+```
+import express from 'express';
+export function makeApp() { const app = express();
+ app.get('/books', (req, res) => { res.vary('Origin');
+ if (req.get('Origin') === 'https://reader.example') res.set('Access-Control-Allow-Origin', 'https://reader.example');
+ res.json([]); }); return app;
+}
+```
+
+Separate browser sharing from permission result
+
+| Observation | Reasoning |
+| --- | --- |
+| Only the allowlisted origin receives the sharing header\. Node fetch still reads the response for a denied origin: it does not enforce browser CORS\. | CORS tells browsers which origins may read responses\. It is not API authentication\. Cookie\-authenticated mutations also need CSRF defenses because a request may be sent even when response reading is blocked\. |
+
+Common mistake: Reflecting every Origin with credentials grants untrusted sites access\. This GET\-only header demo does not implement preflight, credential policy or CSRF validation\.
+
+##### Can curl bypass CORS?
+
+CORS constrains browser script response access, not all HTTP clients\. The server must authenticate and authorize requests independently\.
+
+Follow-up: What would you add for a cookie\-authenticated mutation?
+
+##### Practice
+
+###### Separate browser sharing from permission practice
+
+What would you add for a cookie\-authenticated mutation?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Separate browser sharing from permission practice
+
+A defined CSRF token/origin\-check policy, appropriate SameSite cookies and authorization\. Test actual browser cross\-origin behavior before claiming browser enforcement\.
+
+Why it works
+
+A defined CSRF token/origin\-check policy, appropriate SameSite cookies and authorization\. Test actual browser cross\-origin behavior before claiming browser enforcement\. Reflecting every Origin with credentials grants untrusted sites access\. This GET\-only header demo does not implement preflight, credential policy or CSRF validation\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Trust only the deployment boundary
+
+Forwarded headers are untrusted unless a known proxy rewrites them\. Configure trust for the actual topology; avoid blanket trust\. Parameterized queries separate values from SQL structure; dynamic identifiers need allowlists\.
+
+Forwarded headers are untrusted unless a known proxy rewrites them\. Configure trust for the actual topology; avoid blanket trust\. Parameterized queries separate values from SQL structure; dynamic identifiers need allowlists\.
+
+Trust only the deployment boundary — standalone \.mjs / exported factory
+
+```
+import express from 'express';
+export function makeApp() { const app = express(); app.set('trust proxy', false);
+ app.get('/ip', (req, res) => res.json({ ip: req.ip })); return app;
+}
+```
+
+Trust only the deployment boundary result
+
+| Observation | Reasoning |
+| --- | --- |
+| A forged X\-Forwarded\-For does not replace the socket peer IP with trust proxy false\. Production behind a proxy needs an explicit, topology\-specific trust policy\. | Forwarded headers are untrusted unless a known proxy rewrites them\. Configure trust for the actual topology; avoid blanket trust\. Parameterized queries separate values from SQL structure; dynamic identifiers need allowlists\. |
+
+Common mistake: Trusting any forwarded header lets callers forge rate\-limit identity or scheme\. Path normalization and SQL string escaping are not general authorization boundaries\.
+
+##### Can you parameterize a table name like a value?
+
+Usually not\. Use an explicit server\-side allowlist for identifiers and the chosen driver parameter API for values; do not build SQL by concatenating user text\.
+
+Follow-up: Your service has both direct and proxied paths\. Is trust one hop always safe?
+
+##### Practice
+
+###### Trust only the deployment boundary practice
+
+Your service has both direct and proxied paths\. Is trust one hop always safe?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Trust only the deployment boundary practice
+
+No\. Unequal path lengths may let clients control a trusted position\. Restrict network paths and configure trusted proxy addresses/topology\.
+
+Why it works
+
+No\. Unequal path lengths may let clients control a trusted position\. Restrict network paths and configure trusted proxy addresses/topology\. Trusting any forwarded header lets callers forge rate\-limit identity or scheme\. Path normalization and SQL string escaping are not general authorization boundaries\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+### Test and debug
+
+Choose a topic to inspect its worked example and interview answer\. Try the local exercise before revealing its reasoning\. Examples use Node 22 JavaScript \(\.mjs unless explicitly stated\) and Express 5\.3\.0\. HTTP factories do not listen until the test or startup owner calls listen\.
+
+#### Test functions and protocol separately
+
+A pure function test isolates rules\. A real HTTP test catches parser, route and response wiring\. Give each test its own app, listener and fixture state, then close them in finally\.
+
+A pure function test isolates rules\. A real HTTP test catches parser, route and response wiring\. Give each test its own app, listener and fixture state, then close them in finally\.
+
+Test functions and protocol separately — standalone \.mjs / exported factory
+
+```
+import assert from 'node:assert/strict';
+import { createServer } from 'node:http';
+function validTitle(value) { return typeof value === 'string' && value.trim().length > 0; }
+assert.equal(validTitle('book'), true);
+assert.equal(validTitle('  '), false);
+assert.equal(validTitle(12), false);
+const server = createServer((req, res) => {
+ res.writeHead(200, { 'Content-Type': 'application/json' });
+ res.end(JSON.stringify({ title: 'book' }));
+});
+await new Promise((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
+try {
+ const response = await fetch('http://127.0.0.1:' + server.address().port);
+ assert.equal(response.status, 200);
+ assert.match(response.headers.get('content-type'), /application\/json/);
+ assert.deepEqual(await response.json(), { title: 'book' });
+ console.log('rules pass; HTTP passes');
+} finally { server.closeAllConnections(); await new Promise(resolve => server.close(resolve)); }
+```
+
+Test functions and protocol separately result
+
+| Observation | Reasoning |
+| --- | --- |
+| rules pass; HTTP passes: independent assertions check the pure validator and a real loopback status, JSON content type and response body\. The finally block closes all connections and the server\. | A pure function test isolates rules\. A real HTTP test catches parser, route and response wiring\. Give each test its own app, listener and fixture state, then close them in finally\. |
+
+Common mistake: Mocking res\.json everywhere can leave a broken route untested\. Combine focused unit checks with real loopback request assertions\.
+
+##### Why await the test request?
+
+The test must observe completion and failure before cleanup\. A floating promise can make a test pass before its assertion runs\.
+
+Follow-up: What does a parser\-after\-route mutation expose?
+
+##### Practice
+
+###### Test functions and protocol separately practice
+
+What does a parser\-after\-route mutation expose?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Test functions and protocol separately practice
+
+A real POST should stop returning 201\. A pure validator test alone cannot detect the wiring defect\.
+
+Why it works
+
+A real POST should stop returning 201\. A pure validator test alone cannot detect the wiring defect\. Mocking res\.json everywhere can leave a broken route untested\. Combine focused unit checks with real loopback request assertions\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Choose failures at each boundary
+
+Test malformed bytes, oversized bodies, valid JSON with wrong shape, missing identity, wrong owner, absent resource and rejected dependencies separately\. Each exercises a different boundary\.
+
+Test malformed bytes, oversized bodies, valid JSON with wrong shape, missing identity, wrong owner, absent resource and rejected dependencies separately\. Each exercises a different boundary\.
+
+Choose failures at each boundary — standalone \.mjs / exported factory
+
+```
+const cases = [
+ ['malformed JSON', 400], ['oversized JSON', 413],
+ ['wrong owner', 403], ['missing book', 404], ['dependency failure', 500]
+];
+console.log(cases.map(([name, status]) => `${name}:${status}`).join('|'));
+```
+
+Choose failures at each boundary result
+
+| Observation | Reasoning |
+| --- | --- |
+| The matrix distinguishes client syntax, capacity, permission, absence and server failure\. Expected statuses are an API policy, not evidence until real requests assert them\. | Test malformed bytes, oversized bodies, valid JSON with wrong shape, missing identity, wrong owner, absent resource and rejected dependencies separately\. Each exercises a different boundary\. |
+
+Common mistake: Checking only successful responses leaves the data\-leak branch and cleanup paths untested\. Assert response bodies do not expose secrets on failures\.
+
+##### Should every error become 400?
+
+No\. That hides server failures and destroys operational meaning\. Classify trusted validation errors; keep unknown failures generic 500\.
+
+Follow-up: Which mutation should your ownership test catch?
+
+##### Practice
+
+###### Choose failures at each boundary practice
+
+Which mutation should your ownership test catch?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Choose failures at each boundary practice
+
+Removing or reversing the owner comparison must let a forbidden test fail\. Include both allowed and denied branches so deny\-all also fails\.
+
+Why it works
+
+Removing or reversing the owner comparison must let a forbidden test fail\. Include both allowed and denied branches so deny\-all also fails\. Checking only successful responses leaves the data\-leak branch and cleanup paths untested\. Assert response bodies do not expose secrets on failures\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Correlate work without leaking credentials
+
+Measure event\-loop delay, CPU and downstream timings together\. A slow dependency can produce latency without blocking JavaScript\. Growing listeners or retained request objects can cause leaks\.
+
+Measure event\-loop delay, CPU and downstream timings together\. A slow dependency can produce latency without blocking JavaScript\. Growing listeners or retained request objects can cause leaks\.
+
+Correlate work without leaking credentials — standalone \.mjs / exported factory
+
+```
+import { AsyncLocalStorage } from 'node:async_hooks';
+const context = new AsyncLocalStorage();
+await context.run({ requestId: 'r1' }, async () => {
+ await Promise.resolve(); console.log(context.getStore().requestId);
+});
+console.log(context.getStore());
+```
+
+Correlate work without leaking credentials result
+
+| Observation | Reasoning |
+| --- | --- |
+| r1 then undefined: the async continuation carries its context, while the outer scope has no store\. | Measure event\-loop delay, CPU and downstream timings together\. A slow dependency can produce latency without blocking JavaScript\. Growing listeners or retained request objects can cause leaks\. |
+
+Common mistake: AsyncLocalStorage propagates context; it does not redact secrets\. Log allowlisted fields, avoid credentials/full bodies, and compare heap/listener trends under repeatable load\.
+
+##### How do you distinguish CPU blocking from slow I/O?
+
+Correlate event\-loop delay and CPU profiles with request/dependency spans\. Latency alone cannot identify the cause\.
+
+Follow-up: A shared emitter gains one listener per request\. What evidence helps?
+
+##### Practice
+
+###### Correlate work without leaking credentials practice
+
+A shared emitter gains one listener per request\. What evidence helps?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Correlate work without leaking credentials practice
+
+Track listener count after completion and take heap snapshots under controlled load\. Confirm cleanup rather than only raising the listener\-warning threshold\.
+
+Why it works
+
+Track listener count after completion and take heap snapshots under controlled load\. Confirm cleanup rather than only raising the listener\-warning threshold\. AsyncLocalStorage propagates context; it does not redact secrets\. Log allowlisted fields, avoid credentials/full bodies, and compare heap/listener trends under repeatable load\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+### Operate and explain
+
+Choose a topic to inspect its worked example and interview answer\. Try the local exercise before revealing its reasoning\. Examples use Node 22 JavaScript \(\.mjs unless explicitly stated\) and Express 5\.3\.0\. HTTP factories do not listen until the test or startup owner calls listen\.
+
+#### Give lifecycle one owner
+
+Validate configuration and initialize dependencies before readiness\. On SIGTERM stop admitting new work, drain current requests, close dependencies and enforce a final deadline\. Liveness and readiness answer different questions\.
+
+Validate configuration and initialize dependencies before readiness\. On SIGTERM stop admitting new work, drain current requests, close dependencies and enforce a final deadline\. Liveness and readiness answer different questions\.
+
+Give lifecycle one owner — standalone \.mjs / exported factory
+
+```
+import { createServer } from 'node:http';
+export function makeLifecycle(closeDependencies = async () => {}, budget = 1000) {
+ let ready = false, stopping;
+ const server = createServer((req, res) => {
+  res.statusCode = ready ? 200 : 503; res.end(ready ? 'ready' : 'draining');
+ });
+ async function start(port = 0) {
+  try {
+   await new Promise((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', resolve); });
+   ready = true;
+  } catch (error) { await closeDependencies(); throw error; }
+ }
+ function stop() {
+  if (stopping) return stopping;
+  ready = false;
+  stopping = (async () => {
+   let deadline;
+   try {
+    await Promise.race([
+     (async () => { await new Promise((resolve, reject) => server.close(error => error ? reject(error) : resolve())); await closeDependencies(); })(),
+     new Promise((resolve, reject) => { deadline = setTimeout(() => { server.closeAllConnections(); reject(new Error('shutdown deadline')); }, budget); })
+    ]);
+   } finally { clearTimeout(deadline); }
+  })();
+  return stopping;
+ }
+ function installSignals() {
+  const terminate = () => { stop().then(() => process.exit(0), () => process.exit(1)); };
+  process.once('SIGTERM', terminate);
+  return () => process.off('SIGTERM', terminate);
+ }
+ return { server, start, stop, installSignals, isReady: () => ready };
+}
+// Startup owner: initialize dependencies, await start(), then installSignals().
+// Final process exit bounds handles the application does not own explicitly.
+// Upgraded sockets need separate tracking; closeAllConnections covers HTTP.
+```
+
+Give lifecycle one owner result
+
+| Observation | Reasoning |
+| --- | --- |
+| start marks readiness only after listening\. stop clears readiness immediately and returns the same promise on repeat calls\. Draining plus dependency cleanup has one total budget; timeout rejects and the signal owner exits unsuccessfully\. HTTP and upgraded connections have different cleanup needs\. | Validate configuration and initialize dependencies before readiness\. On SIGTERM stop admitting new work, drain current requests, close dependencies and enforce a final deadline\. Liveness and readiness answer different questions\. |
+
+Common mistake: A real process also owns dependency handles and upgraded connections\. Bound their cleanup and exit on a final process deadline\. Do not continue normal service after a fatal uncaught exception\.
+
+##### When should readiness turn false?
+
+Before draining, so routing stops admitting new work\. A process can still be alive while not ready to accept traffic\.
+
+Follow-up: What if the listener fails with EADDRINUSE?
+
+##### Practice
+
+###### Give lifecycle one owner practice
+
+What if the listener fails with EADDRINUSE?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Give lifecycle one owner practice
+
+Treat startup as failed, close initialized dependencies and exit unsuccessfully\. Never report readiness after listen failure\.
+
+Why it works
+
+Treat startup as failed, close initialized dependencies and exit unsuccessfully\. Never report readiness after listen failure\. A real process also owns dependency handles and upgraded connections\. Bound their cleanup and exit on a final process deadline\. Do not continue normal service after a fatal uncaught exception\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Budget capacity across processes
+
+Processes isolate JavaScript heaps\. Workers can parallelize CPU work; more processes also multiply connection pools and local caches\. Shared durable state belongs outside a single process\.
+
+Processes isolate JavaScript heaps\. Workers can parallelize CPU work; more processes also multiply connection pools and local caches\. Shared durable state belongs outside a single process\.
+
+Budget capacity across processes — standalone \.mjs / exported factory
+
+```
+const processes = 4; const poolPerProcess = 5;
+console.log(processes * poolPerProcess);
+```
+
+Budget capacity across processes result
+
+| Observation | Reasoning |
+| --- | --- |
+| 20 potential connections: a per\-process pool limit is multiplied by the process count\. | Processes isolate JavaScript heaps\. Workers can parallelize CPU work; more processes also multiply connection pools and local caches\. Shared durable state belongs outside a single process\. |
+
+Common mistake: Scaling replicas without a dependency budget can overload the database\. Retries multiply load too; use bounded attempts, backoff/jitter and an explicit retryable\-error policy\.
+
+##### Will more workers fix a slow database?
+
+Not necessarily\. They may increase pressure on the bottleneck\. Measure saturation, limit concurrency and tune the whole dependency budget\.
+
+Follow-up: Four replicas each retry three times\. Why can an outage worsen?
+
+##### Practice
+
+###### Budget capacity across processes practice
+
+Four replicas each retry three times\. Why can an outage worsen?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Budget capacity across processes practice
+
+They amplify failing work and compete for exhausted capacity\. Bound retries and use idempotent effects, backoff and admission control\.
+
+Why it works
+
+They amplify failing work and compete for exhausted capacity\. Bound retries and use idempotent effects, backoff and admission control\. Scaling replicas without a dependency budget can overload the database\. Retries multiply load too; use bounded attempts, backoff/jitter and an explicit retryable\-error policy\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Bound memory and work explicitly
+
+Payload size, concurrent work and request rate are different limits\. A process\-local counter demonstrates admission control but cannot enforce a global distributed quota\.
+
+Payload size, concurrent work and request rate are different limits\. A process\-local counter demonstrates admission control but cannot enforce a global distributed quota\.
+
+Bound memory and work explicitly — standalone \.mjs / exported factory
+
+```
+export function gate(limit) { let active = 0;
+ return async function run(work) {
+ if (active >= limit) throw new Error('busy');
+ active++; try { return await work(); } finally { active--; }
+ };
+}
+const run = gate(1); console.log(await run(async () => 'done'));
+```
+
+Bound memory and work explicitly result
+
+| Observation | Reasoning |
+| --- | --- |
+| done: the slot is released on success or rejection\. A second overlapping operation is rejected while one is active\. | Payload size, concurrent work and request rate are different limits\. A process\-local counter demonstrates admission control but cannot enforce a global distributed quota\. |
+
+Common mistake: A concurrency gate is not requests\-per\-minute rate limiting\. Local counters reset on restart and diverge across replicas; queues need bounded capacity too\.
+
+##### Why release in finally?
+
+Both rejected and successful work must release their slot, or capacity leaks until all future requests are rejected\.
+
+Follow-up: A job never resolves\. Does finally guarantee a bounded lifetime?
+
+##### Practice
+
+###### Bound memory and work explicitly practice
+
+A job never resolves\. Does finally guarantee a bounded lifetime?
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Bound memory and work explicitly practice
+
+No\. The operation needs its own cancellation/deadline contract\. finally runs only when control leaves the try block\.
+
+Why it works
+
+No\. The operation needs its own cancellation/deadline contract\. finally runs only when control leaves the try block\. A concurrency gate is not requests\-per\-minute rate limiting\. Local counters reset on restart and diverge across replicas; queues need bounded capacity too\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+#### Explain, repair and defend a reading\-list API
+
+Review the API as a chain: trusted identity, bounded parsing, shape validation, ownership, awaited service, one response and a safe error boundary\. Keep each boundary visible when constraints change\.
+
+Review the API as a chain: trusted identity, bounded parsing, shape validation, ownership, awaited service, one response and a safe error boundary\. Keep each boundary visible when constraints change\.
+
+Explain, repair and defend a reading\-list API — standalone \.mjs / exported factory
+
+```
+// Deliberately broken interface sketch; do not run as an API.
+// app.post('/books', async (req, res) => {
+//   const ownerId = req.get('X-User-ID');
+//   repository.save({ ...req.body, ownerId });
+//   res.status(201);
+// });
+```
+
+##### Practice
+
+###### Explain, repair and defend a reading\-list API practice
+
+Repair the sketch, name tests, then change the constraint to retries after a timeout\.
+
+Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+
+Solution: Explain, repair and defend a reading\-list API practice
+
+Use trusted verifier middleware and JSON size limits before the route; derive ownerId from verified identity, select title only, await save, and return status\(201\)\.json\(book\)\. Test missing identity, malformed/oversized input, wrong types, denied access, rejected save and success\. For retries define durable idempotency keys tied to principal/input and atomic result storage; a Map is insufficient\.
+
+Reference repair — \.mjs factory with trusted injected test identity
+
+```
+import express from 'express';
+export function makeApp(principal, repository) {
+ const app = express(); app.use(express.json({ limit: '1kb' }));
+ app.use((err, req, res, next) => { if (res.headersSent) return next(err); return res.status(err.type === 'entity.too.large' ? 413 : 400).json({error:'invalid body'}); });
+ app.post('/books', async (req, res) => {
+  if (!principal) return res.set('WWW-Authenticate', 'Bearer').status(401).end();
+  const b = req.body;
+  if (!b || Array.isArray(b) || typeof b.title !== 'string' || !b.title.trim() || b.title.length > 100 || Object.keys(b).some(k => k !== 'title')) return res.status(400).end();
+  const book = await repository.save({ title: b.title.trim(), ownerId: principal.id });
+  return res.status(201).json(book);
+ });
+ app.use((err, req, res, next) => { if (res.headersSent) return next(err); return res.status(500).json({error:'internal'}); });
+ return app;
+}
+```
+
+Why it works
+
+Use trusted verifier middleware and JSON size limits before the route; derive ownerId from verified identity, select title only, await save, and return status\(201\)\.json\(book\)\. Test missing identity, malformed/oversized input, wrong types, denied access, rejected save and success\. For retries define durable idempotency keys tied to principal/input and atomic result storage; a Map is insufficient\. Fixing only the missing send still leaves authorization and persistence failures\. Review the entire request lifecycle, not the first visible symptom\.
+
+Follow-up
+
+Which test would fail if this boundary were removed?
+
+Sources:
+
+Source: [Node 22 documentation](https://nodejs.org/docs/latest-v22.x/api/) — Node.js contributors / OpenJS.
+
+Source: [Express 5 error handling](https://expressjs.com/en/guide/error-handling/) — Express contributors / OpenJS.
+
+Source: [Authorization](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html) — OWASP.
+
 ## Python
 
 Data structures, comprehensions, and the standard library worth knowing.
@@ -2627,12 +4670,6 @@ Collections, streams, and how the JVM spends memory.
 ## Spring Boot
 
 Annotations, bean lifecycle, and where configuration comes from.
-
-*Not drawn yet.*
-
-## Express & Node
-
-Middleware order, routing, and what blocks the event loop.
 
 *Not drawn yet.*
 
