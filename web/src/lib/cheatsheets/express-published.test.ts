@@ -1,3 +1,8 @@
+import {
+  foundationPrograms,
+  foundationFragments,
+} from './express-foundations-cases'
+import { collectPublishedLocations } from './express-published-checks'
 import { mkdtempSync, writeFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -41,17 +46,8 @@ const moduleFiles: Record<
   },
 }
 const output: Record<string, string> = {
-  'node-runtime': 'object undefined',
-  'loop-and-pool': '499500',
-  'parallel-work': "[ 'book', 'owner' ]",
-  scheduling: 'sync\nend\npromise\ntick',
-  'promise-control': 'offline released',
-  'events-and-cleanup': '[ 1 ] 0',
   'package-contracts': 'module node --test ^5.3.0',
   configuration: '3200',
-  'buffers-and-encoding': '1 2\né',
-  'paths-and-files': 'one',
-  'stream-backpressure': 'book-list',
   'deadlines-and-aborts': 'true deadline',
   'service-boundaries': "{ id: 'b1', ownerId: 'u1' }",
   'process-state': '1',
@@ -117,67 +113,56 @@ const examples = nodeExpress.sections.flatMap((s) =>
       .map((b) => ({ topic: r.study!.id, id: b.id, code: b.code })),
   ),
 )
-test('every displayed code location is classified by stable ID', () => {
-  const ids = nodeExpress.sections
-    .flatMap((s) => [
-      ...(s.introduction ?? [])
-        .filter((b) => b.kind === 'code')
-        .map((b) => b.id),
-      ...s.rows.flatMap((r) => [
-        ...(r.teaching ?? []).filter((b) => b.kind === 'code').map((b) => b.id),
-        ...(r.example ?? []).map((_, i) => r.study!.id + '-row-example-' + i),
-      ]),
-    ])
-    .concat(
-      (nodeExpress.activities ?? []).flatMap((a) => [
-        ...(a.starter ? [a.id + '-starter'] : []),
-        ...(a.solution ? [a.id + '-solution'] : []),
-      ]),
-    )
+const legacyIds = [
+  ...Object.keys(output),
+  ...Object.keys(requests),
+  ...Object.keys(sketches),
+  'startup-and-shutdown',
+]
+  .map((id) => id + '-example')
+  .concat(Object.keys(moduleFiles), 'interview-capstone-practice-solution')
+test('every displayed code location has exactly one legacy or foundations owner', () => {
+  const ids = collectPublishedLocations(nodeExpress).map((b) => b.id)
   const classified = [
-    ...Object.keys(output),
-    ...Object.keys(requests),
-    ...Object.keys(sketches),
-    'startup-and-shutdown',
+    ...legacyIds,
+    ...Object.keys(foundationPrograms),
+    ...Object.keys(foundationFragments),
   ]
-    .map((id) => id + '-example')
-    .concat(Object.keys(moduleFiles), 'interview-capstone-practice-solution')
-  expect(ids.sort()).toEqual(classified.sort())
+  expect(new Set(classified).size).toBe(classified.length)
   expect(new Set(ids).size).toBe(ids.length)
+  expect(ids.sort()).toEqual(classified.sort())
 })
-test.each(examples)('published $id example', ({ topic, id, code }) => {
-  if (id in moduleFiles) {
-    runModuleFiles(id)
-    return
-  }
-  if (topic in sketches) {
-    expect(code.startsWith('//')).toBe(true)
-    return
-  }
-  if (topic in output) {
-    expect(run(code)).toContain(output[topic])
-    return
-  }
-  if (topic === 'startup-and-shutdown') {
+test.each(examples.filter((example) => legacyIds.includes(example.id)))(
+  'published $id example',
+  ({ topic, id, code }) => {
+    if (id in moduleFiles) {
+      runModuleFiles(id)
+      return
+    }
+    if (topic in sketches) {
+      expect(code.startsWith('//')).toBe(true)
+      return
+    }
+    if (topic in output) {
+      expect(run(code)).toContain(output[topic])
+      return
+    }
+    if (topic === 'startup-and-shutdown') {
+      run(
+        code +
+          `\nimport assert from 'node:assert/strict'; const {server,start,stop,isReady}=makeLifecycle(); await start(); assert.equal(isReady(),true); const a=stop(); assert.equal(a,stop()); await a; assert.equal(server.listening,false);`,
+      )
+      return
+    }
     run(
       code +
-        `\nimport assert from 'node:assert/strict'; const {server,start,stop,isReady}=makeLifecycle(); await start(); assert.equal(isReady(),true); const a=stop(); assert.equal(a,stop()); await a; assert.equal(server.listening,false);`,
+        `\nimport assert from 'node:assert/strict'; const app=${topic === 'raw-http' ? 'makeServer()' : 'makeApp()'}; const server=${topic === 'raw-http' ? 'app' : 'app.listen(0,"127.0.0.1")'}; ${topic === 'raw-http' ? 'server.listen(0,"127.0.0.1");' : ''} await new Promise(r=>server.once('listening',r)); const base='http://127.0.0.1:'+server.address().port; try { ${requests[topic]} } finally { server.closeAllConnections(); await new Promise(r=>server.close(r)); }`,
     )
-    return
-  }
-  run(
-    code +
-      `\nimport assert from 'node:assert/strict'; const app=${topic === 'raw-http' ? 'makeServer()' : 'makeApp()'}; const server=${topic === 'raw-http' ? 'app' : 'app.listen(0,"127.0.0.1")'}; ${topic === 'raw-http' ? 'server.listen(0,"127.0.0.1");' : ''} await new Promise(r=>server.once('listening',r)); const base='http://127.0.0.1:'+server.address().port; try { ${requests[topic]} } finally { server.closeAllConnections(); await new Promise(r=>server.close(r)); }`,
-  )
-})
+  },
+)
 function codeFor(id: string) {
   return examples.find((e) => e.topic === id)!.code
 }
-test('CJS ordering is verified in its separate module context', () => {
-  expect(run(codeFor('scheduling'), 'commonjs')).toBe(
-    'sync\nend\ntick\npromise',
-  )
-})
 test('configuration rejects malformed and out-of-range values', () => {
   run(
     codeFor('configuration') +
@@ -196,21 +181,6 @@ test('ownership covers allowed, forbidden and absent records and detects a remov
       ) + checks,
     ),
   ).toThrow()
-})
-test('streams reject destination failure', () => {
-  run(
-    codeFor('stream-backpressure')
-      .replace(
-        'setImmediate(done)',
-        'setImmediate(() => done(new Error("sink failed")))',
-      )
-      .replace('await pipeline(', 'await assert.rejects(pipeline(')
-      .replace('}));', '})), /sink failed/);')
-      .replace(
-        'import { Readable',
-        "import assert from 'node:assert/strict';\nimport { Readable",
-      ),
-  )
 })
 test('concurrency slot is released after failure and rejects overlapping work', () => {
   run(

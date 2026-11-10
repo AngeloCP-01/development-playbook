@@ -12,56 +12,74 @@ export const http: { sections: Section[]; activities: SheetActivity[] } = {
         {
           id: 'http-foundations-intro',
           kind: 'paragraph',
-          text: 'Choose a topic to inspect its worked example and interview answer. Try the local exercise before revealing its reasoning. Examples use Node 22 JavaScript (.mjs unless explicitly stated) and Express 5.3.0. HTTP factories do not listen until the test or startup owner calls listen.',
+          text: 'Apply the Node model to network messages: headers, streamed bytes, one response and a separately owned cancellation/deadline. The native factory remains a testable static example, not a backend added to this site.',
         },
       ],
       rows: [
         {
           term: 'See the server beneath Express',
-          what: 'A native HTTP request is a readable stream and its response is writable. Headers describe the representation; end terminates the message. This example exposes a factory so tests choose loopback port 0.',
+          what: 'Follow headers, body chunks, end and response completion through one native HTTP request.',
           study: {
             id: 'raw-http',
             summary:
-              'A native HTTP request is a readable stream and its response is writable. Headers describe the representation; end terminates the message. This example exposes a factory so tests choose loopback port 0.',
+              'Follow headers, body chunks, end and response completion through one native HTTP request.',
             activityIds: ['raw-http-practice'],
           },
           teaching: [
             {
               id: 'raw-http-model',
               kind: 'paragraph',
-              text: 'A native HTTP request is a readable stream and its response is writable. Headers describe the representation; end terminates the message. This example exposes a factory so tests choose loopback port 0.',
+              text: 'Node calls the server handler when request headers are available, before the whole body necessarily arrives. req is a readable stream; its data/end/error events reach listeners on the loop. res is writable: status and headers must precede the body, and end finishes the response message. A chunk is neither a character boundary nor a whole request record.',
             },
             {
               id: 'raw-http-example',
               kind: 'code',
               label:
-                'See the server beneath Express — standalone .mjs / exported factory',
-              code: "import { createServer } from 'node:http';\nexport function makeServer() { return createServer((req, res) => {\n res.writeHead(200, { 'Content-Type': 'application/json' });\n res.end(JSON.stringify({ method: req.method }));\n}); }",
+                'http.mjs — bounded-retention request fixture; startup owns listen',
+              code: "import { createServer } from 'node:http';\nexport function makeServer() { return createServer((req, res) => {\n const chunks = []; let size = 0, oversized = false;\n req.on('data', chunk => { size += chunk.length; if (size > 1024) oversized = true; if (!oversized) chunks.push(chunk); });\n req.on('aborted', () => { chunks.length = 0; });\n req.on('error', () => { chunks.length = 0; if (!res.headersSent) res.writeHead(400).end(); else res.destroy(); });\n req.on('end', () => {\n  if (res.writableEnded || res.destroyed) return;\n  if (oversized) return res.writeHead(413).end();\n  const body = Buffer.concat(chunks).toString('utf8');\n  res.writeHead(200, { 'Content-Type': 'application/json' });\n  res.end(JSON.stringify({ method: req.method, bytes: size, body }));\n });\n}); }",
             },
             {
               id: 'raw-http-trace',
               kind: 'table',
-              label: 'See the server beneath Express result',
-              columns: ['Observation', 'Reasoning'],
+              label: 'From request headers to response end',
+              columns: ['Moment', 'JavaScript / resource state', 'Result'],
               rows: [
                 [
-                  'GET produces 200 with a JSON object containing method GET. No socket is opened until listen is called.',
-                  'A native HTTP request is a readable stream and its response is writable. Headers describe the representation; end terminates the message. This example exposes a factory so tests choose loopback port 0.',
+                  'Headers available',
+                  'Server handler registers readable listeners; socket/body can still be outstanding',
+                  'No full body is assumed yet.',
+                ],
+                [
+                  'Body chunks',
+                  'Callbacks accumulate at most 1024 bytes of retained chunks',
+                  'POST é uses two UTF-8 bytes; decode after concatenating, not per arbitrary chunk.',
+                ],
+                [
+                  'end',
+                  'All retained body bytes can form the fixture response',
+                  'GET has empty body; POST reports method, byte count and decoded text.',
+                ],
+                [
+                  'res.end',
+                  'Headers are already committed; writable message ends',
+                  'Returning from JavaScript alone would not complete the response.',
                 ],
               ],
             },
             {
-              id: 'raw-http-mistake',
+              id: 'raw-http-boundary',
               kind: 'paragraph',
-              text: 'Common mistake: Receiving request headers does not imply the entire body has arrived. Bound and validate streamed input before using it.',
+              text: 'The fixture stops retaining chunks above its limit but drains the request until end before returning 413; it does not bound an adversary’s total connection lifetime. A service also needs request deadlines, admission limits and cancellation. An aborted request is not a successful completed body; a partially sent response cannot be replaced with a fresh JSON error. Express parsers later add convenience, not a replacement execution model.',
             },
             {
               id: 'raw-http-interview',
               kind: 'interview',
-              question: 'What does Express add here?',
+              question:
+                'Is the body complete when the server request handler begins?',
               answer:
-                'Routing, middleware composition and request/response conveniences over the same HTTP lifecycle. It does not remove streaming or disconnect concerns.',
-              followUp: 'Who closes a server created by an integration test?',
+                'No. Headers can arrive before body completion. Own readable data/end/error/abort and response lifetime separately. Native network readiness makes callbacks eligible; it does not run them in parallel with your current JavaScript stack.',
+              followUp:
+                'Why should a CPU-heavy body transform be bounded or offloaded?',
             },
           ],
         },

@@ -182,3 +182,95 @@ test('CSRF lesson distinguishes an unreadable mutation from rejected session-tok
     screen.getByText(/SameSite=Lax normally withholds this cookie/),
   ).toBeTruthy()
 })
+
+test('event-loop lesson connects phase purposes to the active stack and ready queues', () => {
+  window.history.replaceState(null, '', '/reference/express#event-loop')
+  render(<CheatsheetView sheet={cheatsheetBySlug('express')!} />)
+  fireEvent.click(screen.getByRole('tab', { name: /Event loop/ }))
+  fireEvent.click(
+    screen
+      .getByText('Walk a file callback through the loop')
+      .closest('button')!,
+  )
+  const phases = screen.getByRole('table', {
+    name: 'Phase purposes in Node 22',
+  })
+  expect(within(phases).getByRole('cell', { name: 'Poll' })).toBeTruthy()
+  expect(
+    screen.getByText(
+      /Completion of the read does not interrupt the current JavaScript stack/,
+    ),
+  ).toBeTruthy()
+  expect(
+    screen.getByRole('cell', { name: 'tick → promise → microtask' }),
+  ).toBeTruthy()
+})
+
+test.each([
+  [
+    'work-and-workers',
+    'Send a bounded job to a Worker',
+    'Worker message and resource ownership',
+    'Owns a Worker handle and deadline; posts a cloned array',
+  ],
+  [
+    'process-and-memory',
+    'Find what keeps the process alive',
+    'Result state and resource state',
+    'None created by the ordinary pending Promise',
+  ],
+  [
+    'files-and-streams',
+    'Repair a split character before framing records',
+    'Bytes, decoded text and record state',
+    'Two leading bytes of the four-byte owl are retained by the decoder.',
+  ],
+  [
+    'runtime-and-concurrency',
+    'Find what blocks other requests',
+    'CPU work and the waiting heartbeat',
+    'No await has suspended it; the loop is ordinary synchronous work.',
+  ],
+  [
+    'async-and-events',
+    'Bridge one operation across three interfaces',
+    'Same file, different continuation interface',
+    'The callback must check error before using value.',
+  ],
+])(
+  'the %s panel renders an independently expected intermediate mechanism',
+  (hash, topic, caption, cell) => {
+    window.history.replaceState(null, '', '/reference/express#' + hash)
+    render(<CheatsheetView sheet={cheatsheetBySlug('express')!} />)
+    fireEvent.click(screen.getByText(topic).closest('button')!)
+    expect(
+      within(screen.getByRole('table', { name: caption })).getByRole('cell', {
+        name: cell,
+      }),
+    ).toBeTruthy()
+  },
+)
+test('a coding repair stays hidden and resets across new foundations panels', () => {
+  window.history.replaceState(null, '', '/reference/express#work-and-workers')
+  render(<CheatsheetView sheet={cheatsheetBySlug('express')!} />)
+  const open = () =>
+    fireEvent.click(
+      screen.getByText('Send a bounded job to a Worker').closest('button')!,
+    )
+  open()
+  const name = 'Solution: Send a bounded job to a Worker practice'
+  const control = screen.getByRole('button', { name })
+  expect(control.getAttribute('aria-expanded')).toBe('false')
+  fireEvent.click(control)
+  expect(
+    document
+      .getElementById(control.getAttribute('aria-controls')!)!
+      .querySelector('code')!.textContent,
+  ).toContain('await worker.terminate()')
+  fireEvent.click(screen.getByRole('tab', { name: /Process and memory/ }))
+  fireEvent.click(screen.getByRole('tab', { name: /Work and workers/ }))
+  open()
+  expect(
+    screen.getByRole('button', { name }).getAttribute('aria-expanded'),
+  ).toBe('false')
+})
