@@ -38,6 +38,16 @@ export const nodeExpress: Cheatsheet = {
   },
   additionalSources: [
     {
+      title: 'CommonJS caching and cycles (Node 22)',
+      author: 'Node.js contributors / OpenJS',
+      url: 'https://nodejs.org/docs/latest-v22.x/api/modules.html',
+    },
+    {
+      title: 'CSRF prevention: synchronizer tokens and SameSite',
+      author: 'OWASP',
+      url: 'https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html',
+    },
+    {
       title: 'Express 5 error handling',
       author: 'Express contributors / OpenJS',
       url: 'https://expressjs.com/en/guide/error-handling/',

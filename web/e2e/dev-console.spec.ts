@@ -1,4 +1,6 @@
 import { expect, test } from '@playwright/test'
+import { nodeExpress } from '../src/lib/cheatsheets/express'
+import { assertStudyDisclosures } from './study-disclosures'
 import { dsaPatterns } from '../src/lib/cheatsheets/dsa-patterns'
 import { auditPages } from './audit-pages'
 import { forEachPanelState } from './panel-states'
@@ -73,23 +75,12 @@ test('@dev no React development warnings on any audited page, which the producti
       path.startsWith('/reference/dsa-patterns#')
     ) {
       const { observed } = await forEachPanelState(page, async () => {})
-      if (path.startsWith('/reference/dsa-patterns#')) {
-        const id = path.split('#')[1]
-        const section = dsaPatterns.sections.find((s) => s.study!.id === id)!
-        expect(observed.sort()).toEqual(
-          [
-            ...section.rows.map(
-              (r) =>
-                `sheet-dsa-patterns-section-${id}-subsection-${r.study!.id}`,
-            ),
-            ...section.rows.flatMap((r) =>
-              r.study!.activityIds.map(
-                (a) => `sheet-dsa-patterns-activity-${a}`,
-              ),
-            ),
-          ].sort(),
-        )
-      }
+      const sheet = path.startsWith('/reference/express#')
+        ? nodeExpress
+        : path.startsWith('/reference/dsa-patterns#')
+          ? dsaPatterns
+          : undefined
+      if (sheet) assertStudyDisclosures(sheet, path.split('#')[1], observed)
     }
     await page.waitForTimeout(250)
     page.off('console', onConsole)

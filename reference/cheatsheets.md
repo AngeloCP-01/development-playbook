@@ -2920,50 +2920,96 @@ Choose a topic to inspect its worked example and interview answer\. Try the loca
 
 #### Choose an explicit module contract
 
-Use \.mjs for ESM and \.cjs for CommonJS when teaching standalone files\. ESM has import/export and top\-level await; CommonJS has require/module\.exports\. Package type affects \.js\.
+Load small ESM and CommonJS files twice, then trace an unfinished CommonJS export through a cycle\.
 
-Use \.mjs for ESM and \.cjs for CommonJS when teaching standalone files\. ESM has import/export and top\-level await; CommonJS has require/module\.exports\. Package type affects \.js\.
+Save each labelled block as its own file in one directory\. Run node main\.mjs, node main\.cjs and node a\.cjs separately in Node 22\. Explicit extensions select the module system regardless of package type\. Each entry runs in a fresh process; caching below is inside one process, not shared storage\.
 
-Choose an explicit module contract — standalone \.mjs / exported factory
+counter\.mjs — named ESM exports
 
 ```
-import { basename } from 'node:path';
-console.log(basename('/reading/books.json'));
+export let count = 0;
+export function next() { return ++count; }
 ```
 
-Choose an explicit module contract result
+main\.mjs — two imports of the same module URL
 
-| Observation | Reasoning |
-| --- | --- |
-| books\.json: this \.mjs file imports a named built\-in export\. | Use \.mjs for ESM and \.cjs for CommonJS when teaching standalone files\. ESM has import/export and top\-level await; CommonJS has require/module\.exports\. Package type affects \.js\. |
+```
+import { count, next } from './counter.mjs';
+import { count as again } from './counter.mjs';
+next();
+console.log('esm', count, again);
+```
 
-Common mistake: Do not assume every require/import interop shape is identical\. Pin the package contract; include relative ESM file extensions\. Module caches and cycles can expose partially initialized state\.
+Output: esm 1 1\. The two imports resolve to the same module URL, so its initializer runs once\. count and again are live views of the same exported binding: next changes the value seen through both\. Imports cannot be assigned by the consumer; the exporting module owns the update\. Include \.mjs on these relative imports\.
 
-##### Is module state per request?
+counter\.cjs — replace module\.exports with the public object
 
-No\. A loaded module is reused within its process/module graph\. Exported mutable objects can become shared state across requests\.
+```
+let count = 0;
+module.exports = { next() { return ++count; } };
+```
 
-Follow-up: Two modules import a shared Map\. Is it shared across separate processes?
+main\.cjs — require uses its resolved\-filename cache
+
+```
+const first = require('./counter.cjs');
+const second = require('./counter.cjs');
+console.log('cjs', first.next(), second.next(), first === second);
+```
+
+Output: cjs 1 2 true\. Both requires resolve to the same filename and return the cached object, including its closure over count\. This is why mutable module state can be shared by requests\. A separate process starts its own counter; another resolved filename can also create a different module instance\. ESM and CommonJS have different loading/cache machinery; this example does not assume interchangeable require/import interop\.
+
+a\.cjs — publishes an initial value before requiring b
+
+```
+exports.ready = false;
+const b = require('./b.cjs');
+exports.ready = true;
+console.log('cycle', b.sawReady, exports.ready);
+```
+
+b\.cjs — observes a before a finishes
+
+```
+const a = require('./a.cjs');
+exports.sawReady = a.ready;
+```
+
+CommonJS cycle trace: node a\.cjs
+
+| Moment | State | Consequence |
+| --- | --- | --- |
+| a begins | a\.ready = false | a enters the cache before its evaluation finishes\. |
+| a requires b; b requires a | b receives unfinished a exports | b snapshots false into sawReady\. |
+| b returns; a resumes | a\.ready = true | Output is cycle false true; the snapshot does not update\. |
+
+Common mistake: exports = \{ next \} only rebinds the local shortcut; it does not replace module\.exports\. Use exports\.next = next to add a property, or module\.exports = \{ next \} to replace the public object\. Avoid depending on partially initialized cycles: move shared initialization into a third module or pass dependencies explicitly\. ESM cycles use live bindings and can throw on access before initialization, so do not transfer this CommonJS snapshot trace to ESM\.
+
+##### Why do two requests sometimes see the same module counter?
+
+Within a process, loading the same resolved module can reuse its state\. The ESM example reuses a module URL and exposes live bindings; the CommonJS example returns the same cached exports object\. Neither cache makes that state durable or shared across processes\.
+
+Follow-up: Which value did b snapshot before a finished, and what dependency change would remove the cycle?
 
 ##### Practice
 
 ###### Choose an explicit module contract practice
 
-Two modules import a shared Map\. Is it shared across separate processes?
+Predict main\.cjs after adding a third require and calling its next once\. In a\.cjs, move exports\.ready = true before require\('\./b\.cjs'\): what changes? Explain what breaks if counter\.cjs assigns exports = \{ next\(\) \{ return \+\+count; \} \} instead\.
 
-Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+Context: Use the six visible files\. Each command starts a fresh process\. Predict the cache and cycle states before opening the explanation\.
 
 Solution: Choose an explicit module contract practice
 
-No\. Each process has its own memory and module cache; use an external store when cross\-process state is required\.
+A third require of the same counter\.cjs returns the cached object; its next call returns 3\. Moving ready = true before loading b makes node a\.cjs print cycle true true\. Assigning a new object to exports alone leaves module\.exports unchanged, so the consumer receives an object without next\.
 
 Why it works
 
-No\. Each process has its own memory and module cache; use an external store when cross\-process state is required\. Do not assume every require/import interop shape is identical\. Pin the package contract; include relative ESM file extensions\. Module caches and cycles can expose partially initialized state\.
+Require caches by resolved filename, not by the local variable name\. The cycle exposes the value already published at the moment b reads it\. Fix the broken public assignment with module\.exports = \{ next\(\) \{ return \+\+count; \} \}, or attach next to the existing exports object\. Refactoring shared initialization out of the cycle is safer than relying on load order\.
 
 Follow-up
 
-Which test would fail if this boundary were removed?
+Would a second OS process continue at 4? Why does the ESM alias count update while the CommonJS sawReady snapshot stays false?
 
 #### Distinguish install and runtime dependencies
 
@@ -3664,52 +3710,69 @@ Which test would fail if this boundary were removed?
 
 #### Bound and order list queries
 
-Choose defaults for absent input, reject repeats and malformed shapes, then bound the page size\. Stable ordering prevents arbitrary reshuffling; concurrent dataset changes may still require cursor/snapshot semantics\.
+Filter a small reading list, then request stable, bounded pages without mutating its shared fixture\.
 
-Choose defaults for absent input, reject repeats and malformed shapes, then bound the page size\. Stable ordering prevents arbitrary reshuffling; concurrent dataset changes may still require cursor/snapshot semantics\.
+This single\-process fixture accepts only limit \(1–2, default 2\), offset \(0–1000, default 0\) and tag \(node or web, absent means all\)\. All supplied values must be single strings\. Reject repeated, unknown and nested\-looking keys with 400\. Filter first, copy and sort by unique ID, then slice; an offset past the end returns an empty array\. This bounds the demonstration input/output, not the cost of a production database query\.
 
 Bound and order list queries — standalone \.mjs / exported factory
 
 ```
 import express from 'express';
-export function makeApp() { const app = express(); app.set('query parser', 'simple');
- const books = [{ id: 'b2' }, { id: 'b1' }];
- app.get('/books', (req, res) => { const value = req.query.limit;
- if (value !== undefined && (typeof value !== 'string' || !/^[1-9]\d*$/.test(value) || Number(value) > 2)) return res.status(400).end();
- return res.json([...books].sort((a,b) => a.id.localeCompare(b.id)).slice(0, value === undefined ? 2 : Number(value)));
+export function makeApp(books = [
+ { id: 'b2', tag: 'node' }, { id: 'b1', tag: 'node' }, { id: 'b3', tag: 'web' }
+]) {
+ const app = express(); app.set('query parser', 'simple');
+ app.get('/books', (req, res) => {
+  const q = req.query;
+  if (Object.keys(q).some(k => !['limit', 'offset', 'tag'].includes(k))) return res.status(400).end();
+  const integer = (value, fallback, min, max) => {
+   if (value === undefined) return fallback;
+   if (typeof value !== 'string' || !/^(0|[1-9]\d*)$/.test(value)) return null;
+   const n = Number(value); return Number.isSafeInteger(n) && n >= min && n <= max ? n : null;
+  };
+  const limit = integer(q.limit, 2, 1, 2), offset = integer(q.offset, 0, 0, 1000);
+  if (limit === null || offset === null || (q.tag !== undefined && (typeof q.tag !== 'string' || !['node', 'web'].includes(q.tag)))) return res.status(400).end();
+  const selected = books.filter(b => q.tag === undefined || b.tag === q.tag);
+  selected.sort((a, b) => a.id.localeCompare(b.id));
+  return res.json(selected.slice(offset, offset + limit));
  }); return app;
 }
 ```
 
 Bound and order list queries result
 
-| Observation | Reasoning |
-| --- | --- |
-| Absent limit returns b1,b2; limit=1 returns b1\. Repeated keys, zero, decimals and values above two fail\. | Choose defaults for absent input, reject repeats and malformed shapes, then bound the page size\. Stable ordering prevents arbitrary reshuffling; concurrent dataset changes may still require cursor/snapshot semantics\. |
+| Request | Result IDs | Why |
+| --- | --- | --- |
+| GET /books | b1, b2 | Default page: sort the three records and take two\. |
+| GET /books?limit=1\&offset=1 | b2 | Skip b1, then take one; the next offset of 2 returns b3\. |
+| GET /books?tag=web\&limit=1 | b3 | Filter before paginating; slicing before filtering would incorrectly hide this book\. |
+| GET /books?tag=web\&offset=1 | \[\] | The filtered list has only one entry; offset 1 is its end\. |
+| GET /books?limit\[value\]=1 | 400 | simple parsing retains the literal unknown key limit\[value\]; the allowlist rejects it\. |
+| GET /books?offset=1\&offset=2 | 400 | Repeated scalars are ambiguous arrays, not a chosen first or last value\. |
 
-Common mistake: Sorting the shared array in place mutates process state\. Copy before sorting; bound work as well as output size for real large collections\.
+Common mistake: Slice before filtering and a matching book can disappear from the first filtered page\. Sorting the original books array also changes process state; filter creates the copy sorted here\. Even stable offset ordering cannot prevent shifts when concurrent inserts/deletes change the dataset\. A real API may need cursor/snapshot semantics\.
 
 ##### Does offset pagination guarantee no duplicates during writes?
 
 No\. Insertions and deletions can shift offsets\. Use a defined stable cursor and ordering key when that matters\.
 
-Follow-up: What does limit\[bad\]=1 mean with simple parsing?
+Follow-up: For tag=node, limit=1 and offset=1, which book is returned? Why would slicing before filtering fail for tag=web?
 
 ##### Practice
 
 ###### Bound and order list queries practice
 
-What does limit\[bad\]=1 mean with simple parsing?
+Predict GET /books?tag=node\&limit=1\&offset=1, then change offset to 2\. Repair an implementation that slices the full list before filtering\. What happens for ?offset\[value\]=1?
 
 Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
 
 Solution: Bound and order list queries practice
 
-It is a different literal key, not limit\. This example ignores unknown query keys; a stricter API can explicitly reject them\.
+The responses contain b2, then \[\]\. Filter to b1,b2 before taking the requested slice\. Apply the tag filter before pagination; otherwise the web book at position 2 can be lost from page zero\. The nested\-looking offset\[value\] key is unknown and is rejected with 400\.
 
 Why it works
 
-It is a different literal key, not limit\. This example ignores unknown query keys; a stricter API can explicitly reject them\. Sorting the shared array in place mutates process state\. Copy before sorting; bound work as well as output size for real large collections\.
+The offset counts records in the filtered, ID\-sorted list\. Each request derives a fresh selected array, so paging does not reorder or consume shared data\. Repeated or nested input never silently chooses a scalar\. Independent requests still do not give a snapshot across concurrent writes\.
 
 Follow-up
 
@@ -4156,13 +4219,24 @@ export function makeApp() { const app = express();
 }
 ```
 
-Separate browser sharing from permission result
+GET header result: only the allowlisted origin receives Access\-Control\-Allow\-Origin\. Node fetch still reads the response for a denied origin; it does not enforce browser CORS\.
 
-| Observation | Reasoning |
-| --- | --- |
-| Only the allowlisted origin receives the sharing header\. Node fetch still reads the response for a denied origin: it does not enforce browser CORS\. | CORS tells browsers which origins may read responses\. It is not API authentication\. Cookie\-authenticated mutations also need CSRF defenses because a request may be sent even when response reading is blocked\. |
+Illustrative browser scenario, separate from the executable GET header demo: the victim is signed in to https://api\.reader\.example as owner u1 of book b1\. Its session cookie is Secure; HttpOnly; SameSite=None\. Assume the browser permits this cross\-site cookie; third\-party\-cookie restrictions can change that condition\. A page at https://attacker\.test submits a plain HTML form POST to /books/b1/delete with application/x\-www\-form\-urlencoded body confirm=yes\. Such a form does not need a CORS preflight\. If the cookie is attached, the server authenticates u1 and can delete b1 even when it sends no Access\-Control\-Allow\-Origin header for the attacker\. Blocking script access to the response does not undo the mutation\.
 
-Common mistake: Reflecting every Origin with credentials grants untrusted sites access\. This GET\-only header demo does not implement preflight, credential policy or CSRF validation\.
+Selected defense: a synchronizer token tied to the verified server session\. The legitimate UI obtains an unpredictable token from a trusted server\-rendered form or authorized response, then sends it in a hidden form field or request header\. Before deletion, the server requires an active session and a token matching that session\. The attacker cannot obtain that token through the permitted response\-sharing policy\. The token must be protected from disclosure; never put it in a URL or rely on a second cookie that the browser attaches automatically\. Use the framework CSRF implementation rather than generating authentication or cryptography in this lesson\. T\_u1 and T\_u2 below are explanatory labels, not usable fixed secrets\.
+
+Cookie\-authenticated mutation: each row starts with b1 present
+
+| Request and attached state | CORS\-only endpoint | Endpoint requiring session token |
+| --- | --- | --- |
+| Victim UI sends session u1 \+ matching T\_u1 | 204; b1 deleted | 204; b1 deleted: session and intent token match\. |
+| Attacker form sends session u1, no token | 204; b1 deleted; attacker script cannot read the response | 403; b1 remains: automatic cookie attachment is insufficient\. |
+| Attacker sends session u1 \+ wrong token or T\_u2 | 204; b1 deleted | 403; b1 remains: a token for another session is not valid\. |
+| Any request without an active session | Reject before deletion | Reject before deletion; a token alone is not identity\. |
+
+SameSite=Lax normally withholds this cookie on a cross\-site form POST; Strict is more restrictive\. SameSite is about sites, while CORS is about origins, so same\-site sibling origins are a different case\. These flags are defense in depth, not proof of user intent for every deployment\. Keep GET free of mutations, retain ownership authorization, and choose a documented CSRF policy\. XSS in a trusted origin can undermine token defenses\. This table explains protocol conditions; Node fetch tests only the GET response headers and do not establish browser cookie/CORS enforcement\.
+
+Common mistake: Treating a missing CORS allow\-origin header as a server\-side rejection\. The request may already have changed state\. Likewise, putting the CSRF token only in an automatically attached cookie does not show that the submitting page knew it\. The visible GET factory remains a header\-only demonstration; the mutation table is a separate, sourced scenario\.
 
 ##### Can curl bypass CORS?
 
@@ -4174,21 +4248,21 @@ Follow-up: What would you add for a cookie\-authenticated mutation?
 
 ###### Separate browser sharing from permission practice
 
-What would you add for a cookie\-authenticated mutation?
+A hostile form POST carries the victim session cookie but cannot read the API response\. It supplies a valid\-looking token belonging to another session\. Predict b1’s state with CORS alone and with the synchronizer\-token check\. What changes if this browser withholds the cookie because of SameSite=Lax?
 
-Context: Original reading\-list API exercise\. State the assumption and explain the failure boundary before revealing the answer\.
+Context: Use the request/state table\. Each case starts with b1 present; the victim owns b1\. A missing response\-sharing header blocks reads, not necessarily submission\.
 
 Solution: Separate browser sharing from permission practice
 
-A defined CSRF token/origin\-check policy, appropriate SameSite cookies and authorization\. Test actual browser cross\-origin behavior before claiming browser enforcement\.
+With CORS alone and the victim cookie attached, the vulnerable endpoint deletes b1\. The synchronizer\-token endpoint rejects the other\-session token with 403 and leaves b1 present\. If SameSite=Lax withholds the cookie on this cross\-site POST, the request has no authenticated victim session and must not delete b1\.
 
 Why it works
 
-A defined CSRF token/origin\-check policy, appropriate SameSite cookies and authorization\. Test actual browser cross\-origin behavior before claiming browser enforcement\. Reflecting every Origin with credentials grants untrusted sites access\. This GET\-only header demo does not implement preflight, credential policy or CSRF validation\.
+Authorization can correctly recognize the victim as owner while CSRF still tricks their browser into an unintended operation\. The session\-bound token adds evidence unavailable to the attacking page\. Cookie sending, response reading and permission to mutate are separate boundaries; state each condition instead of claiming that CORS or SameSite universally solves CSRF\.
 
 Follow-up
 
-Which test would fail if this boundary were removed?
+Why is copying the token into a URL unsafe, and why does a state\-changing GET undermine the SameSite=Lax argument?
 
 #### Trust only the deployment boundary
 
@@ -4650,6 +4724,10 @@ Which test would fail if this boundary were removed?
 Sources:
 
 Source: [Node 22 documentation](https://nodejs.org/docs/latest-v22.x/api/) — Node.js contributors / OpenJS.
+
+Source: [CommonJS caching and cycles (Node 22)](https://nodejs.org/docs/latest-v22.x/api/modules.html) — Node.js contributors / OpenJS.
+
+Source: [CSRF prevention: synchronizer tokens and SameSite](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html) — OWASP.
 
 Source: [Express 5 error handling](https://expressjs.com/en/guide/error-handling/) — Express contributors / OpenJS.
 

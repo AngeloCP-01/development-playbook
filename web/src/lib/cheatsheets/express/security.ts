@@ -140,20 +140,61 @@ export const security: { sections: Section[]; activities: SheetActivity[] } = {
             },
             {
               id: 'cors-and-csrf-trace',
+              kind: 'paragraph',
+              text: 'GET header result: only the allowlisted origin receives Access-Control-Allow-Origin. Node fetch still reads the response for a denied origin; it does not enforce browser CORS.',
+            },
+            {
+              id: 'csrf-request-model',
+              kind: 'paragraph',
+              text: 'Illustrative browser scenario, separate from the executable GET header demo: the victim is signed in to https://api.reader.example as owner u1 of book b1. Its session cookie is Secure; HttpOnly; SameSite=None. Assume the browser permits this cross-site cookie; third-party-cookie restrictions can change that condition. A page at https://attacker.test submits a plain HTML form POST to /books/b1/delete with application/x-www-form-urlencoded body confirm=yes. Such a form does not need a CORS preflight. If the cookie is attached, the server authenticates u1 and can delete b1 even when it sends no Access-Control-Allow-Origin header for the attacker. Blocking script access to the response does not undo the mutation.',
+            },
+            {
+              id: 'csrf-token-contract',
+              kind: 'paragraph',
+              text: 'Selected defense: a synchronizer token tied to the verified server session. The legitimate UI obtains an unpredictable token from a trusted server-rendered form or authorized response, then sends it in a hidden form field or request header. Before deletion, the server requires an active session and a token matching that session. The attacker cannot obtain that token through the permitted response-sharing policy. The token must be protected from disclosure; never put it in a URL or rely on a second cookie that the browser attaches automatically. Use the framework CSRF implementation rather than generating authentication or cryptography in this lesson. T_u1 and T_u2 below are explanatory labels, not usable fixed secrets.',
+            },
+            {
+              id: 'csrf-mutation-trace',
               kind: 'table',
-              label: 'Separate browser sharing from permission result',
-              columns: ['Observation', 'Reasoning'],
+              label:
+                'Cookie-authenticated mutation: each row starts with b1 present',
+              columns: [
+                'Request and attached state',
+                'CORS-only endpoint',
+                'Endpoint requiring session token',
+              ],
               rows: [
                 [
-                  'Only the allowlisted origin receives the sharing header. Node fetch still reads the response for a denied origin: it does not enforce browser CORS.',
-                  'CORS tells browsers which origins may read responses. It is not API authentication. Cookie-authenticated mutations also need CSRF defenses because a request may be sent even when response reading is blocked.',
+                  'Victim UI sends session u1 + matching T_u1',
+                  '204; b1 deleted',
+                  '204; b1 deleted: session and intent token match.',
+                ],
+                [
+                  'Attacker form sends session u1, no token',
+                  '204; b1 deleted; attacker script cannot read the response',
+                  '403; b1 remains: automatic cookie attachment is insufficient.',
+                ],
+                [
+                  'Attacker sends session u1 + wrong token or T_u2',
+                  '204; b1 deleted',
+                  '403; b1 remains: a token for another session is not valid.',
+                ],
+                [
+                  'Any request without an active session',
+                  'Reject before deletion',
+                  'Reject before deletion; a token alone is not identity.',
                 ],
               ],
             },
             {
+              id: 'csrf-samesite-boundary',
+              kind: 'paragraph',
+              text: 'SameSite=Lax normally withholds this cookie on a cross-site form POST; Strict is more restrictive. SameSite is about sites, while CORS is about origins, so same-site sibling origins are a different case. These flags are defense in depth, not proof of user intent for every deployment. Keep GET free of mutations, retain ownership authorization, and choose a documented CSRF policy. XSS in a trusted origin can undermine token defenses. This table explains protocol conditions; Node fetch tests only the GET response headers and do not establish browser cookie/CORS enforcement.',
+            },
+            {
               id: 'cors-and-csrf-mistake',
               kind: 'paragraph',
-              text: 'Common mistake: Reflecting every Origin with credentials grants untrusted sites access. This GET-only header demo does not implement preflight, credential policy or CSRF validation.',
+              text: 'Common mistake: Treating a missing CORS allow-origin header as a server-side rejection. The request may already have changed state. Likewise, putting the CSRF token only in an automatically attached cookie does not show that the submitting page knew it. The visible GET factory remains a header-only demonstration; the mutation table is a separate, sourced scenario.',
             },
             {
               id: 'cors-and-csrf-interview',
@@ -247,14 +288,16 @@ export const security: { sections: Section[]; activities: SheetActivity[] } = {
     {
       id: 'cors-and-csrf-practice',
       title: 'Separate browser sharing from permission practice',
-      prompt: 'What would you add for a cookie-authenticated mutation?',
+      prompt:
+        'A hostile form POST carries the victim session cookie but cannot read the API response. It supplies a valid-looking token belonging to another session. Predict b1’s state with CORS alone and with the synchronizer-token check. What changes if this browser withholds the cookie because of SameSite=Lax?',
       context:
-        'Original reading-list API exercise. State the assumption and explain the failure boundary before revealing the answer.',
+        'Use the request/state table. Each case starts with b1 present; the victim owns b1. A missing response-sharing header blocks reads, not necessarily submission.',
       answer:
-        'A defined CSRF token/origin-check policy, appropriate SameSite cookies and authorization. Test actual browser cross-origin behavior before claiming browser enforcement.',
+        'With CORS alone and the victim cookie attached, the vulnerable endpoint deletes b1. The synchronizer-token endpoint rejects the other-session token with 403 and leaves b1 present. If SameSite=Lax withholds the cookie on this cross-site POST, the request has no authenticated victim session and must not delete b1.',
       explanation:
-        'A defined CSRF token/origin-check policy, appropriate SameSite cookies and authorization. Test actual browser cross-origin behavior before claiming browser enforcement. Reflecting every Origin with credentials grants untrusted sites access. This GET-only header demo does not implement preflight, credential policy or CSRF validation.',
-      followUp: 'Which test would fail if this boundary were removed?',
+        'Authorization can correctly recognize the victim as owner while CSRF still tricks their browser into an unintended operation. The session-bound token adds evidence unavailable to the attacking page. Cookie sending, response reading and permission to mutate are separate boundaries; state each condition instead of claiming that CORS or SameSite universally solves CSRF.',
+      followUp:
+        'Why is copying the token into a URL unsafe, and why does a state-changing GET undermine the SameSite=Lax argument?',
     },
     {
       id: 'proxy-and-input-defense-practice',

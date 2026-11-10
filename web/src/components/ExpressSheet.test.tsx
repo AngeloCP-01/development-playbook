@@ -156,3 +156,29 @@ test('errors stay generic and state race reasoning renders independently; panel 
       .getAttribute('aria-expanded'),
   ).toBe('false')
 })
+
+test('CSRF lesson distinguishes an unreadable mutation from rejected session-token intent', () => {
+  window.history.replaceState(null, '', '/reference/express#security')
+  render(<CheatsheetView sheet={cheatsheetBySlug('express')!} />)
+  fireEvent.click(
+    screen
+      .getByText('Separate browser sharing from permission')
+      .closest('button')!,
+  )
+  const table = screen.getByRole('table', {
+    name: 'Cookie-authenticated mutation: each row starts with b1 present',
+  })
+  expect(
+    within(table).getByRole('cell', {
+      name: '204; b1 deleted; attacker script cannot read the response',
+    }),
+  ).toBeTruthy()
+  expect(
+    within(table).getByRole('cell', {
+      name: '403; b1 remains: a token for another session is not valid.',
+    }),
+  ).toBeTruthy()
+  expect(
+    screen.getByText(/SameSite=Lax normally withholds this cookie/),
+  ).toBeTruthy()
+})
