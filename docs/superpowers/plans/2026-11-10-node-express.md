@@ -1,5 +1,10 @@
 # Node.js & Express implementation plan
 
+**Active extension (D-111, 2026-11-10):** use the [Node fundamentals depth plan](2026-11-10-node-fundamentals-depth.md)
+for the reader-requested teaching revision. It supersedes the old panel/topic
+ceiling and expands Node mechanisms; retain this document for the existing
+Express scope and historical implementation evidence.
+
 **Execution:** use `superpowers:executing-plans` in one fresh user-selected
 **GPT-6.1 Sol / Medium** session, following D-99/D-100 with D-110 model assignments.
 One independent final

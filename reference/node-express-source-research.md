@@ -444,3 +444,200 @@ boundaries; the previous twelve panels/38 topics are not a ceiling. Preserve the
 completed Express/security corrections and single web/Markdown content source.
 Recommend **GPT-6.1 Sol / High** for this reassessment/design, then a fresh
 user-selected **GPT-6.1 Sol / Medium** implementation session under D-110.
+
+## Node fundamentals teaching expansion — primary evidence, 2026-11-10
+
+Scope checked: runtime layers, loop traversal/checkpoints, work allocation,
+events, bytes/streams, process lifetime and retained references. This supplements
+the existing Node22 research; it does not reopen the accepted Express repairs.
+The proposed examples below are original teaching designs, **not executed**.
+Their contracts are predictions from the cited APIs, pending Node **22.23.4**
+child-process verification. No runtime/dependency upgrade is proposed.
+
+All sources accessed **2026-11-10**. Node API/source rows refer to tag
+**v22.23.4**, maintained by Node.js contributors/OpenJS; Learn pages are living
+Node.js/OpenJS guidance, checked against that tag. Context7 resolved
+`/nodejs/node/v22.23.4` and returned process, bundled-libuv and stream/decoder
+documentation. Versioned source is used where the public API page did not load.
+
+| ID | Primary source and owner/version | Finding and teaching caveat |
+| --- | --- | --- |
+| NF1 | [V8 engine](https://nodejs.org/en/learn/getting-started/the-v8-javascript-engine), Node.js Learn | V8 executes JavaScript. File/network/process APIs belong to the Node host; Express adds application routing. Do not draw V8 as the file-reading component. |
+| NF2 | [Bundled libuv design](https://raw.githubusercontent.com/nodejs/node/v22.23.4/deps/uv/docs/src/design.rst), libuv contributors, Node22 tag | Each loop belongs to a thread. Nonblocking sockets use platform polling/completion facilities; asynchronous file work uses the pool. Handles describe ongoing resources; requests describe individual operations. Platform mechanisms differ; not every asynchronous call is a pool job. |
+| NF3 | [Event-loop guide](https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick), Node.js Learn | Pending callbacks cover deferred I/O callbacks; poll waits for/processes I/O; check runs immediates; some close notifications use close callbacks. Idle/prepare are internal. Timer/immediate order at top level is not fixed; scheduling both within an I/O callback gives immediate first. |
+| NF4 | [Bundled Unix loop](https://raw.githubusercontent.com/nodejs/node/v22.23.4/deps/uv/src/unix/core.c), libuv contributors, Node22 tag | `uv_run` runs pending/idle/prepare, polls, performs bounded pending work, then check, closing handles and due timers. Its `UV_RUN_DEFAULT` compatibility path also runs timers before entering the loop. This is implementation evidence, not a portable JavaScript phase-observation API. |
+| NF5 | [Process API](https://raw.githubusercontent.com/nodejs/node/v22.23.4/doc/api/process.md), Node22 | nextTick and promise/queueMicrotask are separate queues; ticks drain before the following microtask drain. ESM entry evaluation already runs in microtasks, changing top-level order. nextTick is Legacy since 22.7; prefer queueMicrotask for most userland deferral. An unsettled top-level await can exit with 13. Memory counters describe different allocations; arrayBuffers includes Buffer memory and is included in external. |
+| NF6 | [Timers API](https://raw.githubusercontent.com/nodejs/node/v22.23.4/doc/api/timers.md), Node22 | Delay is a threshold, with no exact firing-time guarantee; zero/negative delays become 1ms. Immediates created during an immediate callback wait for another iteration. Timers/immediates are referenced by default; unref changes liveness, not cancellation. |
+| NF7 | [Blocking/pool guide](https://nodejs.org/en/learn/asynchronous-work/dont-block-the-event-loop), Node.js Learn | Long JavaScript callbacks block other loop work. Async filesystem APIs, dns.lookup/lookupService and selected crypto/zlib APIs use the pool; expensive jobs can congest that pool too. Adding async/await does not move CPU work to it. |
+| NF8 | [Worker threads](https://raw.githubusercontent.com/nodejs/node/v22.23.4/doc/api/worker_threads.md), Node22 | Workers execute JavaScript in parallel; useful for CPU work, generally unnecessary for built-in async I/O. Memory can be transferred/shared under explicit rules. Prefer a pool over one Worker per small job; account for startup, messaging, failures and capacity. |
+| NF9 | [Child processes](https://raw.githubusercontent.com/nodejs/node/v22.23.4/doc/api/child_process.md), Node22 | A forked Node process has independent memory/V8 and communicates through IPC. It costs additional resources. Async spawn differs from blocking synchronous child-process methods. |
+| NF10 | [Events API](https://nodejs.org/docs/latest-v22.x/api/events.html), Node22 **22.23.4** page header checked | Ordinary listeners run synchronously in registration order; their return values are discarded. once unregisters before invocation. An unhandled error emission throws and normally terminates the process. Async listeners need rejection ownership; emit is not an await barrier. Listener-count warnings are diagnostic, not a hard limit. |
+| NF11 | [Buffer API](https://raw.githubusercontent.com/nodejs/node/v22.23.4/doc/api/buffer.md), Node22 | Buffer is a byte sequence/Uint8Array subclass. Encoding interprets bytes; UTF-8 byte length differs from JavaScript string length. subarray shares storage; retained views can keep backing memory alive. |
+| NF12 | [StringDecoder API](https://github.com/nodejs/node/blob/v22.23.4/doc/api/string_decoder.md), Node22, retrieved through Context7 | StringDecoder retains incomplete multibyte sequences across writes; end handles the final bytes. Decoding each transport chunk independently can corrupt a split character. Text decoding does not establish application-message boundaries. |
+| NF13 | [Streams API](https://nodejs.org/docs/latest-v22.x/api/stream.html), Node22 **22.23.4** page header checked | write(false) means pause production until drain, not retry that accepted chunk. highWaterMark is a buffering threshold, not a hard memory cap. pipeline coordinates completion/error destruction, but can leave listeners after failure; use fresh streams. With HTTP, destruction can close the socket before an error response is sent. |
+| NF14 | [Memory guide](https://nodejs.org/en/learn/diagnostics/memory/understanding-and-tuning-memory) and [heap snapshots](https://nodejs.org/en/learn/diagnostics/memory/using-heap-snapshot), Node.js Learn | V8 manages heap reclamation; snapshot comparison/retainer inspection helps investigate growth. Taking a snapshot blocks the main thread, can need substantial extra memory and can crash the process. A counter before/after cleanup does not prove collection or absence of leaks. |
+| NF15 | [Callback scope](https://raw.githubusercontent.com/nodejs/node/v22.23.4/src/api/callback.cc) and [task queues](https://github.com/nodejs/node/blob/v22.23.4/lib/internal/process/task_queues.js), Node22 | Node drains task queues at callback boundaries, with nested-scope/skip guards; tick draining and V8 microtask checkpoints are distinct. A nextTick scheduled inside a promise reaction does not interrupt the current microtask drain. Do not promise a checkpoint after every ordinary function call. |
+
+Bundled [version.h](https://raw.githubusercontent.com/nodejs/node/v22.23.4/deps/uv/include/uv/version.h)
+identifies libuv **1.51.0**. NF3 dates the timer placement change to libuv
+**1.45.0 / Node20**. Teach “after poll in each iteration, with a compatibility
+pass before entering the loop,” not “timers can never run before the first poll.”
+
+### A connected runtime and phase walkthrough
+
+Use one reading-list file request to connect the layers: JavaScript calls a
+Node filesystem API; Node/libuv submits native work; the OS performs the file
+operation through a pool worker; completion eventually lets the loop invoke the
+JavaScript callback. A promise wrapper changes result delivery, not who reads
+the file. For sockets, show OS readiness/completion rather than a worker waiting
+on every connection (NF1/NF2/NF7). Trace rows should record the active callback,
+scheduled work, eligibility and resources still open.
+
+Draw pending → internal idle/prepare → poll → check → close → timers as a
+conceptual Node22 cycle, with the startup-timer caveat. Explain that pending can
+also be serviced after poll in the bundled Unix implementation (NF4). A phase
+diagram is not a promise that every phase has a public callback every turn.
+For close, distinguish native handle cleanup from an arbitrary user event named
+close; NF3 notes that some close events instead use nextTick. Do not manufacture
+a platform-specific TCP error just to claim that a trace covered pending.
+
+### Original candidate traces and expected contracts (all unexecuted)
+
+**A. I/O callback, then deferred work (.cjs).** The current script must exist.
+
+```js
+const { readFile } = require('node:fs');
+const mark = label => console.log(label);
+mark('request');
+readFile(__filename, error => {
+  if (error) throw error;
+  mark('io:begin');
+  setTimeout(() => mark('timer'), 0);
+  setImmediate(() => mark('immediate'));
+  process.nextTick(() => mark('tick'));
+  Promise.resolve().then(() => mark('promise'));
+  queueMicrotask(() => mark('micro'));
+  mark('io:end');
+});
+mark('entry:return');
+```
+
+Contract: request < entry:return < io:begin < io:end; io:end < tick < promise
+< micro < immediate < timer (NF3/NF5/NF15). The file completion cannot interrupt
+the entry stack. Explain each intermediate queue state. Do not assign a precise
+disk duration or infer that every internal readFile operation is one poll event.
+Transfer exercise: move the two scheduling calls to top level. Contract becomes
+only entry completion before their callbacks; timer versus immediate is open.
+
+**B. Same source, explicit .cjs and .mjs entry contexts.**
+
+```js
+console.log('entry');
+process.nextTick(() => console.log('tick'));
+Promise.resolve().then(() => {
+  console.log('promise');
+  process.nextTick(() => console.log('tick-from-promise'));
+});
+queueMicrotask(() => console.log('micro'));
+console.log('tail');
+```
+
+Contracts: entry < tail; promise < micro < tick-from-promise in both files.
+For this CJS entry, tick < promise; for this ESM entry, micro < tick (NF5/NF15).
+These are entry-context claims; file extension does not override an already
+running microtask checkpoint. Add a finite nested tick/microtask exercise;
+explain starvation from recursive scheduling without publishing an infinite loop.
+There is no universal FIFO across ticks, microtasks, timers and I/O callbacks.
+
+**C. CPU work with an async label.** Schedule an immediate heartbeat; invoke an
+async function that logs cpu:start, performs a bounded checksum loop, logs
+cpu:end and returns its result. Log caller:return immediately after invocation.
+Contract: cpu:start < cpu:end < caller:return < heartbeat. Trace proves
+synchronous execution before suspension, not a latency benchmark (NF7).
+Contrast a real async filesystem call, a selected pool crypto API and a two-file
+Worker job; Worker results follow submission, but heartbeat/result order is
+open. Bound job count, own error/exit cleanup and never claim Worker use improves
+every workload. Compare a child process by memory/IPC boundary (NF8/NF9).
+
+**D. Dispatch and listener ownership.** Register a named persistent book handler
+and a once handler; emit book, log after:emit, remove the persistent handler,
+emit book again. Contract: both first-emission handlers run before after:emit;
+the second emission reaches neither; listenerCount(book) ends at zero (NF10).
+Then defer work from a listener to show that emit returns before that work.
+Handle an error emission in one fixture and isolate the unhandled case in its
+own child. Test duplicate cleanup without removeAllListeners on a shared bus.
+
+**E. Decode bytes before parsing records (.mjs).**
+
+```js
+import { Buffer } from 'node:buffer';
+import { StringDecoder } from 'node:string_decoder';
+const bytes = Buffer.from('book:🦉\n');
+const parts = [bytes.subarray(0, 7), bytes.subarray(7)];
+const decoder = new StringDecoder('utf8');
+console.log(parts.map(part => part.toString('utf8')).join(''));
+console.log(parts.map(part => decoder.write(part)).join('') + decoder.end());
+```
+
+Contract: independent chunk decoding differs from the original text; decoder
+output equals book:🦉 plus newline (NF11/NF12). The split is inside the emoji,
+not at a record boundary. Follow with two newline-delimited records split at
+several offsets: carry incomplete text, parse complete records, bound pending
+bytes and define truncated-final-record behavior. Decoding alone is not framing.
+
+**F. Backpressure with a controlled sink.** Construct a Writable with
+highWaterMark: 1 and hold its first _write callback. Write a nonempty Buffer,
+record false, attach drain/error owners and release that callback through an
+immediate. Only after drain may the producer submit its second chunk. Contract:
+first accepted < false observed < release < drain < second submission (NF13).
+Assert each chunk appears once. Do not retry the first chunk or equate drain
+with remote receipt/durability. Compare fresh pipeline success, source failure
+and destination failure; await completion/rejection and check destruction.
+
+**G. Liveness and retention are separate.** In isolated children compare a
+pending ordinary Promise, a referenced timer, and an unref timer; do not use
+top-level await for the ordinary-Promise case. An unresolved Promise alone
+does not keep the loop alive; a referenced timer does; unref permits exit before
+callback execution and does not cancel it (NF2/NF5/NF6). Test an unref timer's
+eventual callback only with an independently held/released referenced handle.
+Separately keep a request object in a Map and capture it in a bus listener.
+Clear the Map and remove that handler; assert Map size/listener count and absent
+future delivery. This proves removal of those ownership paths, not GC timing.
+No assertion should require RSS/heapUsed to drop or a finalizer to run (NF14).
+
+### Verification and remaining limits
+
+Read official source/API bodies and checked cited page identity/version where
+available; some rendered Node API/GitHub URLs failed through the web fetcher.
+NF12 was available in Context7; versioned raw/API alternatives supplied the other
+facts. No original candidate was executed and no browser/OS matrix was run.
+Implementation must classify every published snippet, verify complete runnable
+fixtures under Node22.23.4 and assert the stated partial orders, not elapsed
+milliseconds or one captured total order. Keep platform/entry assumptions visible.
+The humanizer editing pass kept claims and caveats direct. No image is reused,
+and no internals diagram is copied from a source.
+
+
+### Coordinator design-probe verification, 2026-11-10
+
+After the unexecuted candidate research above, the coordinator executed five
+separate small design probes with local **Node22.23.4**. These validate draft
+teaching traces; they are not verification of a newly implemented page.
+The specimen in the new depth design contains the exact file-I/O program.
+Temporary `.cjs`/`.mjs` files were executed through `process.execPath` in bounded
+children and removed in finally; parent command `node` with inline fixture driver
+exited0. Each child exited0 with empty stderr and the asserted output below.
+
+| Probe | Stated context | Observed/asserted order |
+| --- | --- | --- |
+| `walkthrough.cjs` | Read own actual file; schedule tick, Promise/microtask, immediate and timer within its callback | start, end, file, tick, promise, microtask, immediate, timer |
+| `queue.cjs` | Top-level log, nextTick, Promise reaction and queueMicrotask in that registration order | sync, tick, promise, microtask |
+| `queue.mjs` | Identical top-level queue program as ESM | sync, promise, microtask, tick |
+| `nested.cjs` | Top-level sync log; Promise reaction logs reaction and registers nextTick followed by queueMicrotask | sync, reaction, microtask, tick |
+| `pending.mjs` | Create an unresolved ordinary Promise without awaiting it; log done; no user-created active handle | done, then successful natural exit |
+
+No elapsed-time assertion, pool benchmark, GC claim or platform-wide ordering
+study was made. The five probe contracts passed. They support the teaching
+specimen and context distinctions; source/API guarantees still own the general
+claims. Implementation must execute the actual published code, solutions and
+changed-case fixtures, including Worker/stream/error paths not exercised here.

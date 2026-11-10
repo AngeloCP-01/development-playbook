@@ -1,5 +1,10 @@
 # Node.js & Express study reference
 
+**Active extension (D-111, 2026-11-10):** use the [Node fundamentals depth design](2026-11-10-node-fundamentals-depth-design.md)
+for the reader-requested teaching revision. It supersedes the old panel/topic
+ceiling and expands Node mechanisms; retain this document for the existing
+Express scope and historical implementation evidence.
+
 Selected 2026-11-10. The user requested the same review/interview approach as
 DSA, mandatory fundamentals, many examples and enough subsections to cover the
 subject properly. D-109 records that direction. The structure, version baseline
