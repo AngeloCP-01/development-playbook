@@ -310,3 +310,36 @@ web tool. Working current Node pages and explicit Node22 pages are cited above.
 Coordinator follow-up resolved the split Express API pages through the index
 links (E10–E12); earlier guessed URLs were not used as evidence. Verify final
 snippets against Node22 rather than copying newer Node26 API examples.
+
+## Implementation evidence — 2026-11-10
+
+Application commit **972edf9** implements the selected twelve panels and 38 topics.
+The proposal sections above describe the research-stage examples; the canonical
+published examples now live in `web/src/lib/cheatsheets/express/` and the generated
+`reference/cheatsheets.md`. Original scenarios and prompts remain illustrative.
+
+Verification used Node **22.23.4** and exact test-only Express **5.3.0**.
+`express-published.test.ts` classifies all displayed code locations by stable ID:
+36 topic examples and the capstone repair execute, while the transaction contract
+and deliberately broken capstone are explicitly commented interface sketches.
+The harness has 47 checks, including separate CJS/ESM scheduling, real loopback
+HTTP, malformed/oversized JSON, repeated query input, allowed/denied/missing
+ownership, stream failure, cancellation, startup failure, SIGTERM and bounded
+shutdown. Ownership and duplicate-send mutations are detected. Child runs reject
+unexpected stderr; Express's test environment suppresses default error logging,
+so these children deliberately use development mode. No package-install command,
+real database, credential verifier or external service is exercised by lessons.
+
+Cookie, CORS and proxy assertions establish server headers/configuration only.
+They do not establish browser enforcement or complete production authentication.
+The trusted principal is an injected fixture; the 401 response declares a Bearer
+challenge, but the page does not implement token verification. Short token expiry
+bounds exposure; immediate revocation needs a coordinated verification policy.
+
+Independent Sol High review `/root/final_review` found capstone spoilers/missing
+repair code, incomplete code-location coverage, a missing 401 challenge, imprecise
+revocation wording and missing independent error/state/reset rendering checks.
+Those findings were corrected and covered by focused checks. The final capstone
+parser-boundary correction was followed by **90 passing focused tests** across
+five files. All thirty other generated sheet bodies compare unchanged against
+**976198b**. No new factual source or image was introduced during implementation.

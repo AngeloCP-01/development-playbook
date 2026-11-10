@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-10): Node.js & Express study reference selected; research/design handoff (W-6.3u.2).**
+**Current work (2026-11-10): Node.js & Express implemented; final verification and coordinator handoff (W-6.3u.2).**
 The user wants review and interview preparation with mandatory fundamentals,
 worked examples throughout and subsections wherever depth needs them. The
 [source record](../reference/node-express-source-research.md),
@@ -1197,7 +1197,7 @@ into develop **ede8e1f** on 2026-11-09; the merge includes its integration recor
 Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
 other-sheet rollout, runner/scoring/persistence, push and promotion remain outside scope.
 
-**W-6.3u.2 — Node.js & Express study reference ◐** *(selected; implementation handoff)*
+**W-6.3u.2 — Node.js & Express study reference ◐** *(implemented and verified; coordinator acceptance pending)*
 
 User direction (D-109), 2026-11-10: use the DSA review/interview approach,
 fundamentals are mandatory, give many worked examples and add subsections when
@@ -1208,11 +1208,12 @@ The requested interview-preparation goal is not a guarantee of interview success
 - [x] Record user direction and investigate primary Node/Express/security sources.
 - [x] Define teaching depth, content families, example-verification boundaries and
   compact implementation plan using existing study components.
-- [ ] Implement all selected families and meaningful local activities; fill
+- [x] Implement all selected families and meaningful local activities; fill
   `/reference/express`, title Node.js & Express, without adding a backend.
-- [ ] Execute actual published Node/Express examples and failure/security paths;
+- [x] Execute actual published Node/Express examples and failure/security paths;
   verify the delivered page and final web/dev-console checks.
-- [ ] Obtain one independent final review and focused coordinator acceptance.
+- [x] Obtain one independent final review; findings fixed with focused regressions.
+- [ ] Obtain focused coordinator acceptance of branch/evidence.
 - [ ] Obtain separate user approval for integration into develop.
 
 [Sources](../reference/node-express-source-research.md),
