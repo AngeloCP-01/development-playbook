@@ -103,7 +103,7 @@ test('ordinary lookup and native resources retain their routes and presentation'
   page,
 }) => {
   await page.goto('/reference')
-  await expect(page.getByText('27 of 31', { exact: true })).toBeVisible()
+  await expect(page.getByText('28 of 31', { exact: true })).toBeVisible()
   await page
     .getByRole('link', { name: /^JavaScript/ })
     .last()
