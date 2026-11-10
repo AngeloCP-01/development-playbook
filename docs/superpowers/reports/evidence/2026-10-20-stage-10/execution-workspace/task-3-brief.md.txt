@@ -1,0 +1,43 @@
+### Task 3: Prove the guards and classify the example fences
+
+**Files:**
+- Append: `docs/superpowers/reports/2026-10-20-stage-10-execution.md`.
+- Temporary mutations only: `docs/10-documentation.md`, `web/src/lib/terms.ts`.
+
+**Interfaces:**
+- Consumes: committed GREEN Tasks 1 and 2. Test names are the exact strings above.
+- Produces: actual mutation diffs, raw failing output and restoration verification; a fence inventory with evidence type for every code block. No surviving mutation or new application file.
+
+- [ ] **Step 1: Check the baseline.** Record `git status --porcelain`; chapter, term and regression-test files must match committed HEAD. Enumerate any authorized evidence/checklist edits separately. Save the committed chapter/term bytes to task-specific temporary files. Run the targeted group from Task 2 Step 4 once. If it fails, resolve that before any mutation; do not mistake a baseline failure for teeth.
+- [ ] **Step 2: Test the research-only false pass.** In a temporary mutation, cut the whole `### Choose the document for the reader’s task` section out of `## The work` and append it after a new outside-fence `## Research findings for chapter review`. Leave its text intact. Confirm the diff. Run only `pnpm exec vitest run src/lib/stage-10-structure.test.ts -t '^reader needs choose a small useful set'`. Expected: that test fails for a missing active heading despite the original words still existing in the file. Restore saved chapter bytes and verify the diff disappears.
+- [ ] **Step 3: Reintroduce false enforcement.** Add the exact sentence `A configuration example means the app stops booting when it drifts.` within the update/verify section. Confirm the diff. Run only `pnpm exec vitest run src/lib/stage-10-structure.test.ts -t '^documentation checks include configuration'`. Expected: the negative assertion fails. Restore and verify the diff disappears.
+- [ ] **Step 4: Break only old-to-new discovery.** In the earlier ADR specimen, replace `[ADR 005](005-generated-contract-reference.md)` with plain `ADR 005`. Leave the new-to-old link intact. Confirm the diff. Run only `pnpm exec vitest run src/lib/stage-10-structure.test.ts -t '^replaced ADRs expose current status'`. Expected: that test fails on the missing replacement link. Restore and verify the diff disappears.
+- [ ] **Step 5: Reintroduce the old term.** Temporarily restore the old ADR full definition from `ac30cf7` in the term source only. Confirm the diff. Run only `pnpm exec vitest run src/lib/terms.test.ts -t '^ADR history stays intact'`. Expected: that semantic test fails. Do not regenerate the glossary during this mutation. The separate sync test would also fail if included; report the selected test boundary honestly. Restore and verify no term diff remains.
+- [ ] **Step 6: Inventory and check fences.** Record language and purpose for every fenced block in the corrected chapter. Markdown outlines/specimens and the text relationship view are illustrative, not executable instructions. Each TypeScript block is comment-only. From `web/`, use this check and preserve its output:
+
+```bash
+stage10_fence_dir=$(mktemp -d "${TMPDIR:-/tmp}/stage10-fences.XXXXXX")
+export STAGE10_FENCE_DIR="$stage10_fence_dir"
+python3 - <<'PY'
+from pathlib import Path
+import os, re
+text = Path('../docs/10-documentation.md').read_text()
+blocks = re.findall(r'^```ts\n(.*?)^```\s*$', text, re.M | re.S)
+assert blocks, 'No TypeScript comment examples found'
+for block in blocks:
+    assert all(not line.strip() or line.lstrip().startswith('//')
+               for line in block.splitlines()), 'Executable content needs a runtime check'
+out = Path(os.environ['STAGE10_FENCE_DIR']) / 'comments.ts'
+out.write_text('\n\n'.join(blocks))
+print(f'Extracted {len(blocks)} comment-only TypeScript fences to {out}')
+PY
+pnpm exec tsc --noEmit --skipLibCheck --target ES2022 --types node "$stage10_fence_dir/comments.ts"
+```
+
+Expected: extraction reports only comment blocks and `tsc` exits 0. There is no
+executable runtime path in these blocks; do not claim a runtime behavior test.
+Any later fix that adds executable TypeScript must add literal and, where
+appropriate, explicitly completed compilation plus an actual behavior check
+under D-68.
+- [ ] **Step 7: Restore GREEN and review.** Rerun the targeted group. Verify chapter/term bytes match the saved committed bytes; only authorized evidence/checklist edits may remain. A read-only reviewer checks the mutation diffs, selected failures, restorations and fence claims. The appendix mutation can also trigger order/appendix-removal guards in a full-file run; record that scope rather than claiming only one full-suite test would fail. For the narrower enforcement/link mutations, run the full structure file too and record any additional failures. Commit the report as `docs(test): record stage 10 guard sensitivity and fence checks`; commit any checklist progress separately from source changes.
+

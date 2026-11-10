@@ -57,13 +57,24 @@ const AI_SECTION_STAGES = [
   '07-code-review',
   '08-security-audit',
   '09-performance-optimization',
+  '10-documentation',
   '11-ci-cd',
   '12-staging',
   '13-production-deployment',
   '14-post-deployment-verification',
   '15-observability',
   '16-incident-management',
+  '17-maintenance',
+  '18-continuous-improvement',
 ]
+
+test('every ready stage is covered by the chapter AI-section guard', () => {
+  expect(
+    STAGES.filter((stage) => stage.ready)
+      .map((stage) => stage.slug)
+      .filter((slug) => !AI_SECTION_STAGES.includes(slug)),
+  ).toEqual([])
+})
 
 test.each(AI_SECTION_STAGES)(
   '%s: the doc carries an AI plays section',

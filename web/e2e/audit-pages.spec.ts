@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { auditPages, readStepIds } from './audit-pages'
+import { auditPages, readStepIds, readStudyIds } from './audit-pages'
 import { CHEATSHEETS } from '../src/lib/cheatsheets'
 import { STEP_IDS_BY_SLUG } from '../src/features/step-ids'
 
@@ -59,7 +59,7 @@ test('the sweep reaches every step every built stage declares, since a selector 
   expect([...swept].sort()).toEqual([...declared].sort())
 })
 
-test('appends the reference index and every registered sheet, so a sheet added later cannot slip out of the sweep', async ({
+test('appends the reference index, native resources and every registered sheet, so a sheet added later cannot slip out of the sweep', async ({
   page,
 }) => {
   const derived = await auditPages(page)
@@ -67,27 +67,76 @@ test('appends the reference index and every registered sheet, so a sheet added l
 
   expect(referencePages).toEqual([
     '/reference',
-    ...CHEATSHEETS.map((sheet) => `/reference/${sheet.slug}`),
+    '/reference/glossary',
+    '/reference/stack',
+    ...CHEATSHEETS.flatMap((sheet) => [
+      `/reference/${sheet.slug}`,
+      ...sheet.sections
+        .filter((section) => section.study)
+        .map((section) => `/reference/${sheet.slug}#${section.study!.id}`),
+    ]),
   ])
+})
+
+test('study discovery rejects an empty rail and ignores nested teaching tabs', async ({
+  page,
+}) => {
+  const sheet = { slug: 'study-rail-fixture', title: 'Fixture' }
+  const path = '**/reference/study-rail-fixture'
+  await page.route(path, (route) =>
+    route.fulfill({
+      contentType: 'text/html',
+      body: '<main><div role="tablist" aria-label="Fixture sections"></div></main>',
+    }),
+  )
+  await expect(readStudyIds(page, sheet)).rejects.toThrow(/renders no sections/)
+  await page.unroute(path)
+  await page.route(path, (route) =>
+    route.fulfill({
+      contentType: 'text/html',
+      body: '<main><div role="tablist" aria-label="Fixture sections"><button role="tab" id="tab-real">Real</button><div role="tablist" aria-label="Inner"><button role="tab" id="tab-phantom">Inner</button></div></div></main>',
+    }),
+  )
+  expect(await readStudyIds(page, sheet)).toEqual(['real'])
 })
 
 test('refuses to sweep a stage that is ready but renders no steps, since silence there is the failure TD-12 describes', async ({
   page,
 }) => {
-  // Any stage that is `ready: false` and absent from `STAGE_CONTENT` renders
-  // the "sheet not drawn" placeholder with no rail, which is the shape of the
-  // bug: a stage flipped live before its content exists. `readStepIds` is
-  // exported separately from `auditPages` so this can exercise the guard
-  // against one stage without flipping a real `ready` flag.
-  //
-  // This used to name `04-project-setup`, then `05-development`, then
-  // `06-testing`, then `07-code-review`, then `08-security-audit`, then
-  // `09-performance-optimization`. Porting each stage gave it a full rail,
-  // turning a stage that must render nothing into one that renders steps, so
-  // the test went red having found no defect and moved rather than being
-  // deleted. It names `10-documentation` because that stage is still unbuilt;
-  // when 10 is ported, move this again rather than deleting it.
-  await expect(readStepIds(page, '10-documentation')).rejects.toThrow(
+  // All eighteen stages now have rails. Keep the missing-content condition
+  // controlled so completing another page cannot silently remove the guard.
+  // The real readStepIds still navigates and inspects the DOM; only this
+  // fixture's HTML is supplied by the test.
+  await page.route('**/stages/empty-rail-fixture', (route) =>
+    route.fulfill({
+      contentType: 'text/html',
+      body: '<!doctype html><html><head><title>Empty stage fixture</title></head><body><main><h1>Sheet not drawn</h1></main></body></html>',
+    }),
+  )
+  await expect(readStepIds(page, 'empty-rail-fixture')).rejects.toThrow(
     /renders no steps/,
   )
 })
+
+for (const [path, title] of [
+  ['/reference/glossary', 'Glossary'],
+  ['/reference/stack', 'The Default Stack'],
+]) {
+  test(`native resource ${path} is swept and actually built`, async ({
+    page,
+  }) => {
+    expect(await auditPages(page)).toContain(path)
+    const response = await page.goto(path)
+    expect(response?.status()).toBe(200)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
+    await expect(
+      page.getByText('Sheet not drawn', { exact: true }),
+    ).toHaveCount(0)
+    const ids = await page
+      .locator('main [id]')
+      .evaluateAll((elements) => elements.map((element) => element.id))
+    expect(new Set(ids).size).toBe(ids.length)
+    const sitemap = await page.request.get('/sitemap.xml')
+    expect(await sitemap.text()).toContain(path)
+  })
+}

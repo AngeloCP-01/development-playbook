@@ -13,25 +13,82 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current checkpoint (2026-10-14): Stage 09's caching/scaling companions are
-implemented and verified on `feat/stage-09-reference-companions`. All four tasks
-are approved. Whole-branch review returned Ready to merge at `bddf51d`;
-its citation-text finding is fixed in `35161b0` and independently reverified.** Branch W-6 is 22/27;
-local develop remains 20/25 and W-3 remains 15/18. Stage 08's corrected chapter and ten-step port merged as
-`a03e190`; its `security` lookup sheet and original diagram followed as
-`739c8ed`. The latter's merged tree passed 1406 tests across 184 files, lint,
-typecheck and format. Stage 09's chapter revision and W-6 source research
-merged locally as `ad283ce`; the merged tree passed 1416 tests across 185
-files. Stage 09's twelve-panel port passed whole-branch review and the merged-tree
-gate: 1459 tests across 198 files, format, lint, typecheck and a fresh 50-page
-build. Its local feature branch and worktree were removed after verification.
-No push or production promotion occurred.
+**Current work (2026-11-10): DSA Patterns reviewed and integrated locally into develop (W-6.3v).**
+The user selected a new reference for learning DSA patterns, interview reasoning,
+well-fitting practice problems, and time/space complexity, with JavaScript
+examples. The [research record](../reference/dsa-patterns-source-research.md)
+contains primary-source findings and teaching examples. The user accepted all
+fifteen core patterns with JavaScript and everyday analogies. The
+[design](superpowers/specs/2026-11-09-dsa-patterns-design.md) and
+[compact plan](superpowers/plans/2026-11-09-dsa-patterns.md) carry the delivery
+details. Delivery **49ac670**, application **0ffca35**, is implemented on
+`feat/dsa-patterns-reference`: **27/31** sheets and **18/18** stages. Coordinator
+review of the actual branch, implementation/reviewer threads and evidence found
+two P2s: lost mixed-choice explanation and tree tests blind to right subtrees.
+Correction **8dfc0fd** addresses both; focused coordinator recheck passed at
+**89436fb**. The user approved local no-ff integration into develop, with parents
+**c996177** and **89436fb**. Local develop now has **27/31** sheets and **18/18**
+stages. [KICKOFF](../KICKOFF.md) records fresh and retained checks. No push or promotion.
 
-Stage 08 was chosen after the Stage 16 round. Its source review preceded the
-port; `docs/superpowers/specs/2026-10-02-stage-08-security-audit-design.md`
-records the scope. Stages 10, 17 and 18 remain. The user selected W-6 for Stage 09
-on 2026-10-13; W-6.3q below records the next scope. W-6.4 glossary/stack surfacing
-is a separate task.
+**Previous completed work: JavaScript sheet merged locally into develop (D-105).**
+Application **7975be9** on `feat/javascript-promises-lesson` implements and verifies
+the connected #async lesson, visible introduction, ordered teaching blocks and
+JavaScript-wide context cleanup. The eight hashes, fourteen activities and original
+four exercises remain. The [production preview](http://localhost:3100/reference/javascript#async)
+is running; independent final review and coordinator review of **86ec79a** /
+app **7975be9** have no actionable findings. Fresh coordinator checks are **59/7**
+focused tests, **118** example assertions and **4/4** production browser tests.
+Evidence and limits live in tracker; KICKOFF carries the review handoff.
+The user accepted the pilot and authorized local no-ff integration of reviewed
+feature **f3f376c** into develop **ede8e1f**. Local develop now has **26/30** sheets
+and **18/18** stages; the merged application is identical to **7975be9**.
+Push, main promotion and broader teaching rollout remain separate.
+
+**Previously accepted application:**
+Application **4ff8f8e** on `feat/javascript-fundamentals-subsections` implements
+all six additions in eight main sections, with 25 topic subsections and 14 local
+activities. The seven existing hashes and original four activities remain intact.
+[Source/design and example evidence](../reference/javascript-source-research.md#all-six-additions-and-subsections-selected-2026-11-06),
+[completed plan](superpowers/plans/2026-11-06-javascript-fundamentals-subsections.md)
+and KICKOFF carry the handoff. Final unit/DOM **1,653/234**, production **43/43**
+and retained dev-console **1/1** pass. Coordinator reviewed **973df70** /
+application **4ff8f8e**, with no actionable Standards or Spec findings. Fresh
+focused tests **37/7**, production browser **3/3** and published checks
+**93 assertions** pass; narrow/middle/wide page inspection also passed.
+Separate user integration approval remains. No merge, push or promotion.
+
+**Earlier accepted implementation:**
+On `feat/javascript-study-sections`, correction **322c873** starts at
+**b3b790e**. `StudySheet` and `SheetActivities` scrolling code now has explicit
+keyboard tab stops. Two render regressions failed before the fix; focused render
+**6/6** and narrow browser scrolling/focus **2/2** pass. Fresh full gate:
+**1,637 tests / 233 files**, 57-page build, production **42/42**,
+dev-console **1/1**, plus 36 revealed-body toggles without warnings/errors.
+See the tracker for exact commands, the worker-start failure/retry and isolated-dev limit.
+
+Coordinator's review of **73414a8** / application **3d4b140** found this one P2;
+content/spec had no findings. The user explicitly requested "proceed here" after
+the D-100 notice; that instruction applies to this correction only. The bounded
+correction was reviewed at **0aa3764**, application **322c873**. The P2
+is resolved; Standards and Spec recheck found no new findings. Fresh coordinator
+render checks **6/6** and both-theme keyboard-scroll browser checks **2/2** pass.
+[KICKOFF](../KICKOFF.md) identifies the application commit and fresh evidence.
+Selected content remains seven sections, eleven worked examples and nine local
+activities; **26/30** feature sheets and **18/18** stages. No merge, push or promotion.
+
+**Workflow update (approved 2026-10-26, D-99):** Follow the scoped [development workflow](../AGENTS.md#development-workflow): source/content checks for research, a short checklist and inline work for routine pages, and stronger planning/TDD/review for shared or consequential behavior. Policy commits `7fc8cf7` and `af9854d` are integrated into local develop after separate user approval. Existing CI, accessibility and Git safeguards stay.
+
+**Previous checkpoint (2026-10-23): Stage 10's corrected chapter and twelve-panel interactive port are merged locally into develop as `7819457` (`--no-ff`).** All nine plan tasks and independent reviews are complete; final fixes `bd90a05` / `2e3ccc8` cleared the three Minor findings. Fresh merged-tree format/lint/typecheck, **1,559 tests / 218 files** with one worker and unchanged limits, and a **52-page build** pass. The merge tree equals reviewed feature tip `81935a6`; retained final-source browser **3/3**, development-console **1/1** and **28 affected-panel states** were not rerun after merge. Earlier full **27/27** and **1,358-state** checks remain pre-cue evidence. [Integration report](superpowers/reports/2026-10-23-stage-10-integration.md). Local develop W-3 is **16/18**; W-6 **22/27**. Tracked origin/develop remains `79f9e31`; no push or main promotion occurred.
+Stage 09's chapter merged as `ad283ce`, its
+interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
+The single-example width repair followed as `79f9e31`. That width repair was the pre-Stage-10 baseline. Tracked `origin/develop` remains
+`79f9e31`; the current local develop merge is recorded above.
+
+On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **27 drawn / 31 registered**, including W-6.3v. W-6.4 is integrated as **b8515a0**; four language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
+
+**Current status:** W-6.3v is integrated locally after the approved coordinator
+recheck. Four other language sheets, broader JavaScript teaching, push and main
+promotion remain separate. No next implementation task has been selected.
 
 Two deliverables from one body of content.
 
@@ -80,10 +137,10 @@ response — so the app has to introduce concepts, not only remind.
 | **W-0** | Scaffold — Next 16, TS, Tailwind 4, routing, 18 stage routes | ☑ |
 | **W-1** | Design system — whiteprint/cyanotype tokens, type roles, primitives | ☑ |
 | **W-2** | Stage 01 interactive — stepper, 9 figures, 5 exercises, worksheet, 10 terms; polished + patterns documented | ☑ |
-| **W-3** | Stages 02–18 interactive | ◐ *(15/18 merged to local `develop`; three remain: 10, 17 and 18. Stage 09 landed as `7a5576a`.)* |
+| **W-3** | Stages 02–18 interactive | ☑ *(18/18 merged to local `develop`; Stage 18 landed as `c9e5d07`.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(20 of 25 registered sheets drawn on `develop` — `security` merged as `739c8ed`. Stage 09 caching/scaling companions are next, gathered but unregistered. Five language sheets and W-6.4 glossary/stack surfacing remain.)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(25 of 30 registered sheets drawn; native glossary/stack integrated as `b8515a0`. Five language placeholders remain.)* |
 
 ### Dependency map
 
@@ -108,25 +165,25 @@ P-8 (done) is the source P-6 folds into the stage docs.
 
 ### P-6 — Fold the real working conventions into the stage docs ☐
 
-`CLAUDE.md` now records how this project actually works — conventions ported from
-`SmartJobSearchCRM` and verified against ~500 commits. The stage docs still describe a
-generic version of the same ground. Close the gap so the playbook documents the practice
-rather than an idealised one.
+`AGENTS.md` records current project practice, including the scoped workflow approved
+in D-99. Earlier conventions came from `SmartJobSearchCRM`; adopt the parts that
+fit this research/static-site project. The rows below describe the current target
+for this still-open task, rather than the superseded blanket process.
 
 Map of what lands where:
 
 | Convention | Stage |
 |---|---|
 | Conventional commits, scopes, branch naming, `--no-ff` merges, the TEMP idiom | 05 Development · 07 Code Review |
-| Spec → plan → TDD → per-task review → whole-branch review | 02 Planning · 05 Development |
+| Risk-based workflow: checklist for content/pages; design/compact plan for consequential behavior | 02 Planning · 05 Development |
 | Review severity (`Critical`/`Important`/`Minor`), finding IDs, provenance tags | 07 Code Review |
 | Reviewer must disprove as well as confirm, including its own claims | 07 Code Review |
-| TDD evidence: RED and GREEN output, failure "for the right reason", teeth check | 06 Testing |
+| Behavioral TDD: meaningful RED/GREEN; selective regression-sensitivity checks | 06 Testing |
 | Test names that encode rationale, not mechanic | 06 Testing |
 | TASKS/TRACKER conventions: evidence over adjectives, standing `Deferred` field | 02 Planning · 10 Documentation |
 | Kickoff prompt files for cold-starting a session with full context | 10 Documentation |
 | Which skill/MCP/agent for which job | 01 (done) · extend per stage |
-| Skills as the process: TDD iron law, brainstorm-before-code, systematic-debugging, verification-before-completion | 05 Development · 06 Testing · 07 Code Review |
+| Relevant skills, one implementer by default, escalation for shared/consequential behavior | 05 Development · 06 Testing · 07 Code Review |
 | Learning guides written for future-you (`docs/learnings/`) | 10 Documentation · 18 Continuous Improvement |
 | Run `humanizer:humanizer` over prose before it is done | 10 Documentation |
 
@@ -137,13 +194,13 @@ Map of what lands where:
       tracker conventions + kickoff files → 02/10, skills-per-stage → all.)*
 - [ ] Mirror into the interactive stage as each is built under W-3
 - [ ] Record any convention deliberately *not* adopted, and why
-- [ ] Pass every touched doc through `humanizer:humanizer`
+- [ ] Give substantive new prose one `humanizer:humanizer` pass
 
-### W-3 — Stages 02–18 interactive ◐ *(15/18 merged to local `develop`; three remain: 10, 17 and 18. Stage 09 merged as `7a5576a`.)*
+### W-3 — Stages 02–18 interactive ☑ *(18/18 merged to local `develop`; Stage 18 merged as `c9e5d07`.)*
 
 Each stage repeats the same shape. Stage 01 is the reference implementation.
 
-**Latest completed round:** Stage 09 interactive port. The user approved the eight-task
+**Earlier merged stage round:** Stage 09 interactive port. The user approved the eight-task
 plan and selected Subagent-Driven execution on 2026-10-09. All eight tasks are
 implemented and independently reviewed before the approved no-ff merge
 `7a5576a` into local `develop` on 2026-10-12. Stage 09 is registered and ready.
@@ -154,7 +211,199 @@ returned Ready to merge, with no new findings. The merged tree then passed
 format, lint, typecheck, 1459 tests across 198 files and a fresh 50-page build.
 The browser results apply to the identical application tree; those suites were
 not rerun after merge. The local feature branch and worktree were removed.
-**Next selected round:** W-6.3q, Stage 09 caching/scaling companions.
+**Latest merged stage round:** W-3.19, Stage 18 Continuous Improvement,
+integrated locally as **c9e5d07** after separate user approval. All eighteen
+stages are interactive; retained app checks apply to tested **679470f** inputs.
+
+### W-3.19 — Stage 18 Continuous Improvement ☑ *(merged locally as `c9e5d07`)*
+
+**Integration:** user-approved no-ff merge **c9e5d07**, parents **621cbdc / 254797d**.
+Merge tree equals reviewed **254797d**; application inputs equal tested **679470f**.
+All eighteen stages are now interactive on local develop. Retain the checks below
+for identical application inputs; closing-record checks are in KICKOFF.
+
+**Research checkpoint:** **30006f6**, branch `docs/2026-10-30-stage-18-research`,
+starting develop **621cbdcff63dd23f5bcff5b650c1eb4484511492**.
+Reader task: distinguish product outcomes from delivery/process signals and
+choose the next improvement from evidence. Stage numbers remain filing codes.
+
+- [x] Assess the existing chapter against primary sources; label illustrative
+  examples and unknown project facts.
+- [x] Gather useful visual references with source/permission records and assess
+  possible later W-6 value in one research record (three link-only candidates).
+- [x] Include `AI in continuous improvement` and require the later AI Plays step.
+- [x] Apply D-99 prose/content checks and refresh the model-aware handoff.
+
+Sources and original-claim assessment live in
+[one research record](../reference/stage-18-source-research.md). The
+[revised chapter](18-continuous-improvement.md) separates observations from
+interpretations, adds a PDSA-based record and inconclusive worked result, and
+replaces universal fix/delete/automation rules with contextual decisions.
+Independent final content review found no actionable issues. Fresh checkpoint
+checks: metadata/citations/ledger **41/41**, changed local links **11/11** and
+whitespace, all exit 0. No app behavior changed; no app gate or browser claim.
+
+**Implementation:** **679470f** on `feat/continuous-improvement`, from research
+handoff **141c1e293d045f77798d55286f510694d067a94e**. The chapter stayed stable;
+chapter and page were integrated together under D-51. **dc62d9f** replaces
+the audit's obsolete Stage 18 placeholder assumption with a controlled empty-rail
+fixture, retaining the real navigation/DOM check and rejection assertion.
+Recommended implementation setting was `gpt-6.1-sol`, effort `high`; this does not
+assert an environment-confirmed active model.
+Return to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad** with the branch,
+commits, checks and implementation session **01a18acc-4d44-72f0-9e32-92b73a0b7a9f**.
+
+**Page scope and acceptance checklist:**
+
+- [x] Read `web/PATTERNS.md` and `web/DESIGN.md`; use existing interactions.
+  Start with six content judgments: distinguish measures; investigate a signal;
+  choose the next action; plan/study a change; improve delivery conditions;
+  update guidance or pause feature work. Split only where panel weight needs it.
+- [x] Teach through classification/reveal, observation inspectors, bounded
+  decision exercises and an annotated improvement record. Carry the fictional
+  invoice example through its inconclusive result. Keep denominators, minority
+  needs, alternate explanations and harm checks visible.
+- [x] Add a dedicated AI Plays step with the four chapter plays, supplied inputs,
+  source/count checks and limits. No synthetic feedback presented as user evidence.
+- [x] Port artifacts, done checks, team notes, traps and source links. Preserve
+  recurring cadence and product-versus-delivery distinctions. Follow existing
+  front-matter conventions; this adds the established chapter/page duplication.
+- [x] Build under `web/src/features/continuous-improvement/`, register in
+  `web/src/features/stage-content.ts`, then set ready in `web/src/lib/stages.ts`.
+  Extend the chapter AI guard in `web/src/lib/stage-metadata.test.ts` to Stage 18;
+  the chapter heading already exists and is now covered by that explicit list.
+- [x] Add meaningful render coverage for data-derived output and exercises;
+  reuse existing hash, disclosure and keyboard behavior. New shared behavior
+  requires D-99's stronger path and behavior TDD; static content does not.
+- [x] Run the completed web gate once: format, lint, generated-route typecheck,
+  unit/DOM tests, production build and audit. Run dev-console once. Check affected
+  panels/material states in both themes at narrow/middle/wide widths, keyboard,
+  hash/Back/reload, contrast, touch targets, overflow and console.
+- [x] Obtain one independent final content/page review of the actual final diff.
+  Report reviewed commit and evidence; keep later changes visible.
+
+**Final verification:** application **679470f** passed format/lint/typecheck,
+**1,586 tests / 222 files**, a **54-route** production build and focused both-theme
+browser checks. The full audit run passed **26/27**; its sole failure was the
+obsolete assumption that Stage 18 had no rail. After **dc62d9f**, the corrected
+audit-page suite passed **3/3** against the same build; the other 26 results are
+retained for unchanged inputs. Development-console **1/1** used an identical
+source copy with an isolated dev lock. Independent Astra Low content and live-page
+review found no actionable issues. [Tracker](tracker.md) records commands and
+limits; [KICKOFF](../KICKOFF.md) carries the coordinator return handoff.
+
+Deferred: W-6 companion selection/implementation and image publication, shared
+refactors, real analytics/research collection, push and promotion.
+No external artwork is cleared for publication. W-3 is **18/18** on local develop;
+W-6 remains **24/29**. Main promotion belongs to the user.
+
+### W-3.18 — Stage 17 Maintenance ☑ *(merged locally into develop as `6b78fcf`, 2026-10-30)*
+
+**Integration:** user-approved no-ff merge **6b78fcf**, with W-6.3s and D-100.
+The merge tree equals **f86541c**; application inputs equal tested **5ea8cb2**.
+Earlier implementation recommendation:
+`gpt-6.1-sol`, `high`. For this correction the user explicitly selected continuation
+of session `01a1850c-d865-7d02-a3c0-23916ced0f66`.
+Use [KICKOFF.md](../KICKOFF.md) for starting commits and handoff requirements.
+
+Reader task: choose and safely complete the next maintenance action, with evidence,
+an owner and a follow-up date. Maintenance runs continuously; stage 17 is a filing
+code, not a prerequisite after incidents.
+
+**Original interactive scope approved 2026-10-29:** six panels: triage, updates, expiry,
+data and recovery, debt and retirement, review record. Start branch
+`feat/maintenance-page` from workflow handoff **23f481e**. Use existing `Stepper`,
+`Drill`, `RevealList`, `Figure`, `Term` and team-note patterns; keep state local to
+the existing components. The corrected chapter and its source record govern the
+teaching content. The fictional queue and record must remain labelled; no live
+maintenance operation or new reference sheet is included.
+
+Acceptance: meaningful render coverage for scoring, explanations and conditional
+output; rail/ready registration; useful first-use definitions and generated glossary;
+all chapter topics and traps represented. Run the final web gate once, the
+development-console sweep, and focused keyboard/layout/state checks in both themes
+at narrow, middle and wide widths. One independent final content/page review is required.
+Recommended implementation setting remains `gpt-6.1-sol`, `high`; the environment
+does not confirm the active model. Integration requires separate approval.
+
+- [x] Verify primary sources for dependency updates, debt/refactoring, retirement,
+  expiry, retention and recovery; distinguish provider facts from playbook advice.
+- [x] Gather useful visual references with original source and reuse terms; assess
+  later W-6 lookup value without registering a sheet yet.
+- [x] Update `17-maintenance.md`, including one clearly illustrative maintenance
+  record; avoid unverified destructive commands and universal capacity targets.
+- [x] Humanizer editing pass, one independent final content review, relevant
+  chapter/title/ledger guards and changed local links/anchors.
+- [x] Six panels, three scored exercises, review record, all seven traps, five
+  generated glossary definitions and stage/rail registration; nine meaningful render tests.
+- [x] Final application gate, both-theme keyboard/state/layout checks and development-console
+  sweep; independent final content/page review with no actionable findings.
+
+**D-35 correction:** the six-panel completion above is an earlier checkpoint,
+not evidence that the required AI Plays section existed. Coordinator handoff
+**345c972** confirmed the gap and governs this correction.
+
+- [x] Add `### AI in maintenance` and the seventh `#ai` step, with four grounded
+  assistance plays and visible evidence, privacy and authorization limits.
+- [x] Demonstrate failing chapter/rail/render checks before fixing the omission;
+  extend the chapter guard to Stage 17 and require coverage of every ready stage.
+- [x] Humanizer pass, focused **64/64**, full **1,573/1,573 across 220 files**,
+  format/lint/typecheck and **53-page build**; six affected theme/width cases.
+- [x] Final production audit **27/27** in one run, development-console **1/1**,
+  and scoped correction review PASS. Handoff ready for main coordinator review
+  of **345c972..HEAD**, the actual evidence and this implementation session.
+
+Correction checks apply to **28d4410** (app unchanged from **01b8dc2**).
+Earlier **ebcb0ba** results below remain historical; the correction's completion
+row in the tracker supersedes the earlier feature-complete claim. Main coordinator
+review completed at **98688ec** with no actionable findings and fresh **48/48**
+focused checks. The review covered the correction; separate merge approval
+was granted for merge **6b78fcf**.
+
+Chapter/source commit **8ee4efc**, based on develop `4f965e8`.
+Sources: [Stage 17 research](../reference/stage-17-source-research.md). The chapter
+uses an attributed original image with author permission. Focused guards pass
+**50/50 across three files**, local links/anchors and formatting pass, and the
+independent content review returned PASS with no actionable findings. These were
+the chapter-only checks; the later app verification follows.
+
+App commit **ebcb0ba**, acceptance **c507a7a**, from handoff **23f481e**:
+format/lint/typecheck, **1,570 tests / 220 files**, **53-page build** pass.
+Production audit: **25 passing checks retained plus two passing isolated timeout
+reruns**, unchanged app and limits. Focused browser sweep: **36 combinations**
+(six panels, both themes, 320/768/1440px), expanded/answered states, keyboard,
+definitions and console pass. Development-console **1/1** passes using a temporary
+config against the preserved 3200 server. Independent final review PASS; humanizer
+pass complete. See the tracker completion row for commands and failure context.
+Session: `01a1850c-d865-7d02-a3c0-23916ced0f66`.
+
+Stage 17 and its W-6 companion are integrated as **6b78fcf**. Deferred: unrelated
+shared behavior, live dependency/database operations, push and production promotion.
+
+### W-3.17 — Stage 10 Documentation ☑ *(merged locally into develop as `7819457`, 2026-10-23)*
+
+The [approved chapter design](superpowers/specs/2026-10-20-stage-10-documentation-design.md) and [five-task plan](superpowers/plans/2026-10-20-stage-10-documentation.md) were committed before implementation. The user’s “proceed up to implementation” authorized the recommended inline execution, retaining independent reviews and cold readers.
+
+The [corrected chapter](10-documentation.md) now teaches the smallest useful document set, runnable-setup evidence, ADR supersession, current architecture/contracts, explicit drift checks/owners and grounded AI review. The shared ADR definition and generated glossary agree. Two Stage 03 inbound anchors were corrected after the full suite exposed a plan-authored dependency omission.
+
+[Execution evidence](superpowers/reports/2026-10-20-stage-10-execution.md) retains raw RED/GREEN and actual mutation diffs/restorations. The [same-case recheck](superpowers/reports/2026-10-20-stage-10-correction-rerun.md) returned **5 HIT**, compared with **0 HIT / 3 PARTIAL / 2 MISS** at baseline; completeness found no remaining teaching defect in Toolshare. Missing project facts remain explicit. All four completed tasks have independent clean reviews, with the link and report-format findings resolved.
+
+[Primary-source notes](../reference/stage-10-source-research.md) and [image provenance](../reference/cheatsheet-sources.md#stage-10-gathering-round--2026-10-15) remain. Research capture `e30c9a4` preserves three original diagrams and the user JPEG; none is published in the web app. The research appendix is replaced by active teaching and retained provenance.
+
+- [x] Explore scope and commit chapter spec/plan before corrections
+- [x] Review the plan and authorize inline execution through implementation
+- [x] Correct confirmed findings through RED/GREEN, independent reviews and sensitivity checks
+- [x] Rerun the exact held-out completeness/consultability instruments
+- [x] Complete chapter verification and final whole-branch/fix reviews; integration still requires a fresh decision
+- [x] Write and builder-check the separate [interactive-port spec](superpowers/specs/2026-10-20-stage-10-interactive-port-design.md); no important planning questions remain
+- [x] Approve the port spec (`3165b62`) and write/self-review the [implementation plan](superpowers/plans/2026-10-20-stage-10-interactive-port.md)
+- [x] Review the plan and select subagent-driven execution (user “proceed”, 2026-10-22)
+- [x] Implement the port through TDD, per-task review and whole-branch review; verify both themes, responsive layout and both console modes
+- [x] Register the port on the feature branch (`7f803bc`); final fixes `bd90a05` / `2e3ccc8` pass the clean scoped review
+- [x] Refresh the final handoff and hash-verify the full execution archive
+- [x] Record separately approved local integration (`7819457`) and fresh merged-tree verification
+
+Local develop now has Stage 10 `ready: true` and W-3 is **16/18**. The merge tree equals the reviewed feature tip; fresh merged-tree verification is recorded in the integration report. W-6 stays **22/27**. Deferred: stages 17/18, W-6.4, five language sheets, unrelated repairs, new reference companions and promotion. Stage numbers remain filing codes, not a sequence.
 
 ### W-3.16 — Stage 09 interactive port ☑ *(merged locally into `develop` as `7a5576a`, 2026-10-12)*
 
@@ -542,67 +791,526 @@ the feature branch was deleted. Evidence and
 deferrals are in the W-6.3p tracker row, source ledger, and
 `docs/superpowers/reports/2026-10-05-security-reference-sheet.md`.
 
-**W-6.3q — Stage 09 caching/scaling lookup companions ◐ (implementation branch,
-2026-10-14; reviewed and verified, integration pending)**
+**W-6.3q — Stage 09 caching/scaling lookup companions ☑** *(merged locally
+into `develop` as `9de6c99`, 2026-10-14)*
 
-The user approved the [written spec](superpowers/specs/2026-10-13-stage-09-reference-design.md)
-on 2026-10-13 (`a9fb4e0`) and continued after the
-[four-task plan](superpowers/plans/2026-10-13-stage-09-reference.md) was presented.
-Subagent-Driven execution uses `.worktrees/stage-09-reference` on
-`feat/stage-09-reference-companions`, descended from local `develop` `597fe0b`.
+The approved [spec](superpowers/specs/2026-10-13-stage-09-reference-design.md)
+and [four-task plan](superpowers/plans/2026-10-13-stage-09-reference.md) delivered
+shared supporting citations, a five-section caching guide and a four-section
+infrastructure-scaling guide. All four task reviews, the whole-branch review
+and the final scoped rereview are complete. M1's runner noise and M2's
+Markdown citation-text gap were addressed. The
+[execution report](superpowers/reports/2026-10-13-stage-09-reference.md)
+retains raw TDD, teeth, source, lookup and review evidence.
 
-Tasks 1–4 are implemented and independently approved: supporting citation
-rendering (`13f0cb6`), caching (`f1bb218`) and infrastructure scaling (`b39d9e0`).
-Task 4 (`fa9bb40`) registers both sheets, regenerates Markdown/highlighting and
-appends the source ledger. The generator also keeps empty snippet lines empty, a pre-existing
-whitespace behavior exposed by the approved caching example. After its test-first
-repair, the affected suite passed 33/33 across six files. The registration run
-retains genuine stale-snapshot RED and isolated full-file tether teeth evidence.
-The full suite
-passed 1494/1494 across 207 files. The
-[execution report](superpowers/reports/2026-10-13-stage-09-reference.md) retains
-raw RED/GREEN/teeth evidence, gate exits, source checks and lookup outcomes.
-Production browser checks passed 24/24; development validation passed 1/1.
-The controller's 28-observation matrix checked both sheets across seven widths
-and two themes, with 378 pair measurements, AA minimum 5.2555:1, no overflow,
-source links at least 44px and no visual defect. The fresh blind lookup returned
-4 passes/0 misses. Task 4 review found no blocking issue; M1 records inherited
-Node color warnings, removed in the clean development runner retry. Whole-branch
-review at `bddf51d` returned Ready to merge with no blocking findings. Its M2
-plan-authored Markdown citation-text gap is fixed test-first in `35161b0`: RED
-and isolated teeth each fail only the new guard; restored coverage passes 55/55,
-and the final suite passes **1495/1495 across 207 files**. Format, lint and
-typecheck pass; a fresh network-enabled build generates **52 pages**. Generated
-snapshots remain unchanged. M1 retains the historical warning logs and uses
-`env -u NO_COLOR` for future captures. The final scoped rereview closed M1
-and M2 with no new breakage; the branch is Ready to merge.
+The approved no-ff merge has parents `597fe0b` and `4e5532f`; its tree matches the
+reviewed tip. Post-merge format, lint, generated-route typecheck, **1495/1495 tests
+across 207 files** and a fresh **52-page build** passed. The feature branch and
+worktree were removed after verification, with all 224 archived evidence files
+preserved. W-6 is **22/27** on develop; W-3 remains **15/18**.
 
-The implementation branch has **22 drawn / 27 registered**. Local `develop`
-remains **20 drawn / 25 registered**; W-3 remains **15/18**. The five language
-placeholders are unchanged. No integration, push or deployment has occurred.
+The later [single-example width repair](superpowers/reports/2026-10-15-reference-example-width.md)
+merged as `79f9e31` on 2026-10-15. Its merged tree passed **1496/1496 across 207
+files**, format, lint and typecheck; the identical reviewed tree passed
+**24/24 production browser checks**, **1/1 development-console check** and
+**28 geometry observations** across both themes and seven widths. Its feature
+branch was deleted. Raw post-merge evidence is in
+`.superpowers/sdd/2026-10-15-reference-example-width/merged-state.json`.
 
-- [x] Recheck the gathered first-party sources and agree the sheet boundaries
-      through brainstorming before writing a spec or implementation plan
-- [x] Define caching guidance that separates application-cache lifetime and
-      invalidation from CDN freshness and response status
-- [x] Define scaling guidance around healthy-target routing, workload-dependent
-      algorithm choice, capacity limits and overload behavior
-- [x] Write and approve the bounded spec/plan, then implement through TDD and
-      per-task review using the existing reference renderer and design system
-- [x] Verify both themes, responsive layout, accessible content and production/
-      development consoles; complete whole-branch review before integration
-- [ ] Record actual registry/drawn counts and merge evidence after separately
-      approved integration; refresh the next-session handoff before use
+- [x] Recheck first-party sources and agree sheet boundaries
+- [x] Implement caching, scaling, supporting citations and generated artifacts
+      through the approved plan, TDD and per-task review
+- [x] Complete whole-branch/scoped reviews and browser verification
+- [x] Record actual registry counts and approved merge evidence; refresh the
+      next-session handoff
 
-Deferred: W-3 stages 10, 17 and 18; W-6.4 glossary/stack surfacing; the five
-language sheets; diagrams/image republication; runtime infrastructure; chapter/port
-edits; real order benchmarks; shared-drill/storage repairs; push and production
-promotion. Every merge into develop needs a separate user decision.
+Deferred from this slice: stages 10/17/18, W-6.4, five language sheets,
+diagrams/image republication, runtime infrastructure, real order benchmarks,
+shared-drill/storage repairs and production promotion. Stage 10 is now selected
+as its own next round. Every future merge remains a separate user decision.
 
-**W-6.4 — Glossary and stack surfaced in the hub ☐**
+**W-6.3r — Stage 10 Documentation change-check companion ☑** *(merged locally into develop as `8eb294c`, 2026-10-27)*
 
-The reason `/reference` beat `/cheatsheets` as a section name. Closes the original
-gap rather than adding a parallel one.
+The finished stage teaches the decisions across twelve panels. This bounded
+round adds one all-visible reference card at `/reference/documentation`: choose
+a form, adapt record fields, trace changed facts and qualify publishing claims.
+It uses the existing renderer and citations, with no new state or components.
+The compact summaries are an intentional additional view of the chapter; the
+sheet module remains the single source for its generated Markdown.
+
+- [x] Compare gathered candidates with the stage and recheck primary sources
+- [x] Add the text-only sheet, registration, generated Markdown and render coverage
+- [x] Run the final web gate once, check the affected page in both themes and obtain one final review
+- [x] Record actual counts, verification and deferred work
+- [x] Integrate after separate user approval (`8eb294c`); retain identified unchanged-app checks
+
+No image plate is needed for the four-form lookup. The gathered JPEG's reuse
+permission remains unconfirmed; all source images stay research assets. Deferred:
+new interaction patterns, copy/export controls, shared refactors, other sheets,
+W-6.4, stages 17/18, push/main promotion and deployment.
+
+**W-6.3s — Stage 17 Technical Debt Review ☑** *(merged locally as `6b78fcf`, 2026-10-30)*
+
+- [x] Compare gathered candidates with Stage 17 and the reference renderer.
+- [x] Recheck selected primary sources and image reuse permission; record one
+  bounded recommendation in the existing source record.
+- [x] User selected the recommended four-section/fourteen-row scope with "proceed".
+- [x] Implement from scope handoff **0532af2** in session
+  **01a1860d-161c-7b71-972a-dba429ec0499**; recommended **Sol High**, active setting
+  unconfirmed. Implementation **5ea8cb2**.
+- [x] Register the sheet, preserve the unchanged attributed image, provide its
+  full textual equivalent, render coverage and generated Markdown.
+- [x] Final web gate, focused image/theme/width/keyboard checks and one final
+  independent content/page review; integration needs separate approval.
+- [x] User-approved no-ff integration into develop as **6b78fcf**; retain the
+  identified final gate for unchanged application inputs.
+
+Approved slug `technical-debt`, Standards group, tether `17-maintenance`.
+Four sections/fourteen rows: four debt categories, four evidence prompts, three
+response choices and three retirement checks. The quadrant classifies debt; it
+is not a priority score. Keep the original credit/link and unchanged-image
+statement in the existing source area. Defer the broad Maintenance checklist,
+package-manager command card, new controls, shared renderer work and live actions.
+See the [assessment and acceptance scope](../reference/stage-17-source-research.md#w-6-assessment-technical-debt-review-2026-10-29).
+Local develop W-6 is **24/29** after approved merge **6b78fcf**.
+Implementation, final gate (**1,576/221**, **54 routes**, **27/27**) and independent
+content/page review are complete at **5ea8cb2**. Coordinator reviewed
+**0532af2..e358608**, no actionable findings; fresh **31/31** focused checks.
+The user approved integration as **6b78fcf**; app checks are retained for the
+identical tree. Push and main promotion remain separate.
+
+**W-6.3t — Stage 18 Improvement Review ☑** *(merged locally as `2cc7d5d`)*
+
+- [x] Compare the finished stage and neighbouring sheets with the candidate.
+- [x] Recheck primary sources and existing visual reuse limits; record one
+  bounded recommendation in the existing Stage 18 research record.
+- [x] Prepare implementation acceptance and model/session handoff.
+- [x] User selected the recommended scope with "proceed" on 2026-11-04.
+- [x] Implement the static sheet, stage tether, citations, generated Markdown
+  and meaningful render coverage in the fresh implementation session
+  (recommended Sol High; active setting not independently confirmed).
+- [x] Complete the final web gate, focused both-theme/width/keyboard checks and
+  one independent final content/page review.
+- [x] Record branch/commit, actual checks and session reference in KICKOFF for
+  coordinator review; direct posting to another Codex session is unavailable.
+- [x] Coordinator reviewed **41c0f2f...75f028c**, including actual code/data,
+  generated Markdown, render tests and raw results; no blocking findings.
+- [x] User approved no-ff integration into develop as **2cc7d5d**, parents
+  **ff6ce06 / 0e801ca**. Merge tree equals the reviewed feature tip; retain the
+  identified verification for unchanged **04e3623** application inputs.
+
+Assessment **a30f5e5**, branch `docs/2026-11-04-stage-18-reference-assessment`, from
+local develop **ff6ce06ee082fea743be122dc976e666dec45cb8**. Approved slug
+`improvement-review`, title **Improvement Review**, Standards group, tether
+`18-continuous-improvement`. Four sections/fourteen rows: frame the problem (3),
+plan the change (4), study the result (3), decide and follow up (4). Before/after
+movement does not establish causality; inconclusive is an evidence status that
+may accompany a temporary keep or another action. The record is adaptable
+playbook guidance, not a prescribed template or automatic score.
+
+The [assessment and acceptance scope](../reference/stage-18-source-research.md#w-6-assessment-improvement-review-2026-11-04)
+names sources, implementation files and checks. All-visible prompts add a compact
+retrieval view of teaching currently behind disclosures and a drill; the
+anticipated benefit has not been measured with readers. Intentional chapter/sheet
+overlap must stay consistent. No image plate, new controls, full DORA/SPACE card,
+AI panel, chapter rewrite or shared renderer changes are proposed.
+
+Recommended implementation: **GPT-6.1 Sol / High**, fresh user-selected session
+after the recorded scope approval, from this assessment branch's committed tip; create
+`feat/improvement-review-reference` and record the exact starting SHA. Return to
+coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**. Implementation **8b83bfd**
+and guard correction **04e3623** are integrated as **2cc7d5d**; local develop
+now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-f7d7e1fa352c**.
+Five language sheets, W-6.4, actual product research, push and main promotion
+remain separate. No companion is registered or published by this assessment.
+
+**W-6.3u — Language and framework study sheets ◐** *(JavaScript expansion selected; four sheets remain)*
+
+**User direction, 2026-11-05 (D-101):** for JavaScript, Python, Java, Spring Boot
+and Express & Node, focus on fundamentals, important topics and concepts that
+support technical interviews. Add activities inside each sheet. Keep the coverage
+selective and substantially shorter than a general tutorial site.
+
+**Reader outcome:** recall a concept, explain how it behaves or why a choice fits,
+and apply it to a small piece of code. Each sheet should support both review and
+practice; the goal is not a comprehensive course or an API inventory.
+
+**Common content brief:**
+
+- Select foundational concepts with practical and interview relevance. Explain
+  the mechanism and consequence concisely; include a small example or useful
+  contrast where it helps. Put common mistakes close to the concept they affect.
+- Add representative interview prompts that ask the reader to explain, predict,
+  debug or choose between approaches. Avoid claiming universal employer coverage
+  or frequency rankings without suitable evidence. Label illustrative prompts.
+- Put short activities inside each sheet, with a prompt, expected result or
+  reference solution, reasoning and a useful mistake/variation. Readers should
+  be able to attempt an activity before revealing its explanation.
+- Mix reasoning and small coding tasks where they fit the topic. Proposed
+  starting budget: **6–10 selected topics and 3–4 activities per sheet**, to be
+  adjusted after source/scope assessment. These numbers and formats are the
+  coordinator's recommendation, not additional user-specified requirements.
+- State the language/framework version and relevant execution context. Verify
+  executable examples and reference solutions in that context; browser and Node
+  behavior must be distinguished where it changes the answer. Do not replace
+  missing checks with invented output or tool results.
+- Use original concise teaching grounded in primary documentation. Keep one
+  structured content source for web and generated Markdown, including activity
+  prompts, solutions and reasoning. The Markdown must remain useful for study.
+
+**Delivery and acceptance:**
+
+- [x] Record the user's content/practice direction and its scoped extension of
+  the earlier pure-lookup contract (D-101).
+- [x] Assess JavaScript first: bounded topic list, primary sources, interview
+  relevance, activities and executable-example checks. Keep findings in one
+  research record; no broad five-language course is selected by this brief.
+- [x] Propose the smallest optional activity representation and rendering needed
+  for the first sheet, using existing disclosure/exercise patterns when suitable.
+  JavaScript now uses optional shared activity support on its feature branch,
+  following the approved compact plan, behavior TDD and independent review.
+- [x] Implement JavaScript and reusable activity support after scope selection;
+  application commit **0dcfe2d**, with completion evidence in W-6.3u.1.
+- [ ] Assess/deliver Python, Java, Spring Boot and Express & Node as bounded slices.
+- [x] Verify the JavaScript/shared attempt/reveal/reset behavior, accessible
+  controls, rendered data/generated prompts, static-sheet compatibility,
+  native resources/counts/audit, final gate/dev-console and affected
+  theme/width/keyboard states; see W-6.3u.1 for evidence and limits.
+
+No widget, scoring model, browser code runner, persistent progress, runtime
+provisioning or exact topic list is selected here. Prefer a small activity format
+before adding controls that need another behavior contract. Research/coordination
+uses **GPT-6 Astra / Low**; implementation uses a fresh user-selected
+**GPT-6.1 Sol / High** session under D-100. The earlier inline override applied to
+W-6.4 only. Coordinator remains **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
+
+This brief applies to the five pending language/framework sheets; it does not
+redesign the completed native Default Stack page or retroactively change the
+existing sheets. Keep the eighteen-stage filing model. Integration still needs
+separate approval; main promotion belongs to the user.
+
+**W-6.3u.1 — JavaScript study sheet ◐** *(initial implementation verified; expansion required before integration)*
+
+**Later user direction (D-102):** the original delivery below is too short for
+the intended study task. The user selected 6–8 focused sections with worked
+examples and 1–2 activities per section. The original evidence remains attached
+to its tree; W-6.3u.1a is the current delivery target. Do not merge the shorter
+version as a prerequisite.
+
+Checkpoint **cd724c4** on `docs/2026-11-05-javascript-reference-assessment`, based
+on D-101 brief **6f1f67e6dadefe890d9869100ebdbfff4525d386**. Research/model
+recommendation **GPT-6 Astra / Low**. The user authorized assessment with
+"proceed", then selected the nine-topic/four-activity/shared behavior scope
+with "lets go with that" on 2026-11-05.
+
+- [x] Check primary language/platform and employer-preparation sources; keep
+  interview relevance distinct from unsupported frequency rankings.
+- [x] Propose nine topics/four groups and four original activities.
+- [x] Preserve a reproducible checker: **4 activities / 15 assertions**, Node
+  **22.23.4**, strict CommonJS, exit 0; declare fixture and scheduling limits.
+- [x] Record the small optional activity contract, interaction and Markdown
+  design, compact plan, acceptance and model/session handoff.
+- [x] User selected the JavaScript/shared activity scope with "lets go with that".
+- [x] Implement in the requested fresh session, recommended **GPT-6.1 Sol / High**,
+  with behavior TDD and actual-sheet render checks. Branch starts at **8ff159f**;
+  application commit **0dcfe2d**. Session **01a1a908-ddb6-7f91-bb4d-7834839b62e8**.
+- [x] Verify published examples, generated content, final web gate/dev-console,
+  affected closed/open/re-collapsed states in both themes and one independent
+  final content/page/branch review; return package in KICKOFF. Production **36
+  passed + 1/1 isolated timeout retry**, dev **1/1**, additional dev toggles **16**;
+  actual limits and reviewed commit are recorded in the tracker.
+- [ ] Obtain separate user approval before no-ff integration into develop.
+
+The [source/design/compact plan](../reference/javascript-source-research.md#proposed-scope-selection-and-compact-design)
+proposes Values and bindings (equality/coercion, lexical scope/TDZ), Functions
+and objects (closures, this/arrows, shallow copying, prototypes/classes), Arrays
+(method choice and mutation), and Async work (promises/errors, scheduling).
+Activities: closure counter, nested-copy repair, async iteration repair and a
+bounded sync/promise/queueMicrotask/timer trace. Nine topics remain concise
+lookups; this is not a complete course or claimed interview-frequency ranking.
+
+Implemented `Cheatsheet.activities?` stores stable IDs, prompt/context, optional
+labelled code, answer/solution, explanation and optional follow-up in one source.
+Compose prompt-visible/answer-hidden cards with existing disclosure behavior;
+no score, runner, persistence or new highlighting pipeline. Extend generated
+Markdown with the same prompts/solutions, leaving no-activity sheets unchanged.
+The plan names type/generator, composer, JavaScript module, example/artifact
+validation and final shared-behavior verification. This is D-99 consequential
+work; static copy/data still uses its normal exception.
+
+Retained slug `javascript`, Languages group and no stage tether; only its
+placeholder moved. Feature-branch counts are **26/30** drawn with four other
+placeholders and **18/18** stages. Local develop remains **25/30** references.
+No image selected. The published checker reads actual structured snippets:
+**4 activities / 20 assertions**, Node **22.23.4**, strict CommonJS, exit 0.
+Historical assessment evidence remains distinct from implementation evidence.
+
+Return the completed branch/diff and actual checks to coordinator
+**01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended **GPT-6 Astra / Low**;
+[KICKOFF](../KICKOFF.md) names the implementation session and application commit.
+D-100's fresh-session policy applies. Other four sheets, algorithm catalogues,
+DOM/Node I/O puzzles, modules/generators/workers, new controls beyond disclosure,
+diagrams/upgrades, push and promotion are deferred.
+
+**W-6.3u.1a — Sectioned JavaScript expansion ◐** *(verified; coordinator review and integration pending)*
+
+- [x] Inspect original feature **bd72e70** / application **0dcfe2d** and read
+  implementation session **01a1a908-ddb6-7f91-bb4d-7834839b62e8** before using
+  its handoff. Identify compressed rows and end-only practice as the depth gap.
+- [x] Record the selected 6–8-section range and recommend seven sections/nine
+  activities, with primary sources, worked examples and local practice in the
+  [existing source record](../reference/javascript-source-research.md#sectioned-expansion-selected-2026-11-05).
+- [x] Prepare the [compact implementation plan](superpowers/plans/2026-11-05-javascript-study-expansion.md)
+  for optional study metadata, reusable section composition, local Markdown
+  ordering and rendered reference-hash audit discovery.
+- [x] Implement on `feat/javascript-study-sections`, from exact **17c4808**;
+  application **be5cf77**, reviewed corrections **3d4b140**. The user asked
+  "continue" after this thread's fresh-session notice, so work continued here.
+  This task-specific continuation does not change D-100 for future work;
+  recommended implementation setting remains **GPT-6.1 Sol / High**.
+- [x] Validate actual expanded examples, all section/theme/keyboard states,
+  unchanged ordinary sheets, final gate/dev-console and independent final review.
+  Exact commits, retained/fresh checks and limits are in [KICKOFF](../KICKOFF.md).
+- [x] Prepare branch/commit, actual checks, deferred scope and session reference
+  for coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad** in KICKOFF and the
+  implementation response.
+- [x] Coordinator reviewed **73414a8** / application **3d4b140**, including
+  independent Standards and Spec axes and focused production-page inspection.
+  One P2 keyboard-scroll finding required correction; content/spec has no findings.
+- [x] Add explicit tab stops to worked-example and activity code containers,
+  with RED/GREEN render coverage and both-theme 320px keyboard scrolling/focus.
+  Correction **322c873**, from **b3b790e**; latest user instruction
+  "proceed here" authorizes this task in the existing implementation thread.
+- [x] Prepare the verified correction diff/checks and session reference in
+  KICKOFF and the implementation response for coordinator confirmation.
+- [x] Coordinator confirmed **0aa3764** / correction **322c873**, no new findings;
+  fresh render **6/6** and both-theme keyboard-scroll browser **2/2** pass.
+- [ ] Obtain separate user approval before no-ff integration into develop.
+
+No nineteenth stage, comprehensive course, runner/grading/persistence, broad
+redesign of other references, or work on the remaining four sheets is selected.
+
+**W-6.3u.1b — Fundamentals and interview-content research ☑** *(all six areas subsequently selected in D-103)*
+
+Research authorized by the user on 2026-11-06, after acceptance of **322c873**.
+Docs branch `docs/2026-11-06-javascript-content-research` starts from
+**d0ae353dd63667fa0e76199d50681cfd254e1d6e**. The earlier implementation remains
+accepted against its selected scope; this asks whether that scope teaches enough.
+
+- [x] Compare the actual seven sections/fourteen teaching entries/nine activities
+  with primary language documentation and employer preparation guidance.
+- [x] Record absent versus shallow versus already-covered topics, activity
+  candidates, source provenance and interview-evidence limits in the
+  [existing research record](../reference/javascript-source-research.md#fundamentals-and-interview-content-reassessment-2026-11-06).
+- [x] Recommend control flow/text and Map/Set, plus a small coding problem with
+  requirement clarification, edge tests and complexity reasoning. Follow with
+  defaults/rest/destructuring/optional access and error/promise composition.
+- [x] Keep introductory modules as a scoped follow-up with explicit ESM context;
+  preserve the current CommonJS execution boundary. Further timer/coercion puzzles,
+  framework questions and large algorithm catalogues remain deferred.
+- [x] User selected all six recommendations and sections with subsections.
+  D-103 and W-6.3u.1c carry the new delivery; the phased recommendation above
+  remains historical research rather than a continuing module deferral.
+- [x] Prepare compact design/acceptance and a fresh **GPT-6.1 Sol / High** handoff.
+  Coordination remains **GPT-6 Astra / Low**, **01a18acc-3b54-7202-92f3-404cc94fd0ad**.
+
+The assessment itself changed no app/generated inputs and authorized no merge,
+push, promotion or five-sheet curriculum expansion. The later all-six JavaScript
+selection is recorded in W-6.3u.1c below.
+
+**W-6.3u.1c — All JavaScript additions with subsections ☑** *(verified and accepted; integration pending)*
+
+- [x] Record user selection of all six additions and section/subsection hierarchy,
+  D-103. Eight main sections fit the earlier 6–8 range; preserve the seven main
+  IDs and add modules. The implementation design proposes fourteen activities,
+  1–2 per main section; the user did not specify this exact count.
+- [x] Define additive row metadata, exclusive section/subsection activity
+  assignment modes, accessible nested headings and single-source Markdown
+  traversal in the [source/design record](../reference/javascript-source-research.md#all-six-additions-and-subsections-selected-2026-11-06).
+- [x] Prepare the [compact implementation plan](superpowers/plans/2026-11-06-javascript-fundamentals-subsections.md)
+  and KICKOFF. Start from the committed documentation tip descended from
+  **76119c2**, creating `feat/javascript-fundamentals-subsections` in a fresh
+  **GPT-6.1 Sol / High** session.
+- [x] Implement all six areas using existing Stepper/RevealList/activities;
+  retain ordinary/legacy rendering and the original four exercises.
+- [x] Validate actual CJS and two-file ESM snippets, nested Markdown order,
+  every nested disclosure, heading/focus/history behavior, panel budget and
+  both-theme layouts; run final gate/dev-console and one independent final review.
+- [x] Return exact branch/commit, actual checks, limits and session reference
+  to coordinator **01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended
+  **GPT-6 Astra / Low**, before separate user integration approval.
+- [x] Coordinator accepted **973df70** / app **4ff8f8e**, no actionable findings;
+  fresh focused tests **37/7**, production browser **3/3**, published checks
+  **93 assertions** and three inspected page states pass.
+- [ ] Obtain separate user approval for no-ff integration into develop.
+
+No new stage, browser execution, scoring/persistence, dependencies, broad
+framework/algorithm catalogue or work on the other four sheets is selected.
+
+**W-6.3u.1d — Promises mini-lesson teaching prototype ☑** *(draft complete; reader depth feedback pending)*
+
+- [x] User selected one representative mini-lesson as the quality prototype
+  after finding the broader page lacking; use Promises/errors and one connected
+  story. D-104 scopes this separately from the accepted implementation review.
+- [x] Write the [learner-facing draft](superpowers/specs/2026-11-06-javascript-promises-mini-lesson.md):
+  prerequisite/outcome, callback problem, promise mental model, supplied executor
+  functions, chains and await, both failure paths, cleanup, aggregation,
+  model answers/follow-ups and actionable transfer tasks.
+- [x] Record nine primary-source findings and prototype evidence in the
+  [existing source record](../reference/javascript-source-research.md#promise-mini-lesson-source-check-2026-11-06).
+  The [checker](../reference/examples/javascript-promises-lesson-checks.cjs)
+  reads literal draft examples and the existing transfer activity; Node
+  **22.23.4**, strict CJS, **9 examples / 51 assertions**, exit 0.
+- [x] Complete one independent editorial reader pass focused on reconstructing
+  producer-to-caller behavior, rather than topic counts. Three material gaps
+  were corrected and confirmed resolved; self-review/humanizer pass applied.
+- [x] User selected the draft for a bounded page pilot, preferring to judge the
+  result on the page. That does not claim final acceptance of teaching depth;
+  the implementation/evaluation scope is W-6.3u.1e / D-105 below.
+- [x] Prepare the pilot's single-source teaching/presentation plan. Shared
+  behavior uses D-99's stronger path; D-100 workflow choice is pending. A
+  whole-page rewrite is not automatically selected.
+
+Docs branch `docs/2026-11-06-promises-mini-lesson` starts from **e991ab5**;
+accepted app **4ff8f8e** is unchanged. This draft is an editorial prototype, not
+a second maintained published lesson. Existing content authority, original
+activities, main hashes and accessibility contracts remain.
+
+**W-6.3u.1e — Runtime-neutral Promises page pilot ☑** *(user accepted; merged locally into develop)*
+
+- [x] User selected the prototype for on-page evaluation and requested no
+  Node-version coupling in JavaScript teaching (D-105).
+- [x] Prepare the [compact implementation plan](superpowers/plans/2026-11-06-javascript-promises-pilot.md)
+  for ordered teaching blocks, a visible opening, generator parity, runtime-neutral
+  examples/copy, actual browser example checks and a reviewable preview.
+- [x] User selected a fresh **GPT-6.1 Sol / High** implementation session, confirmed
+  by session metadata. Started from **a92a495** on `feat/javascript-promises-lesson`.
+- [x] Implement #async and context cleanup with behavior TDD; preserve the other
+  seven sections, original exercise implementations, activity IDs and main hashes.
+- [x] Verify actual published code in the command-line runtime and browser,
+  generated parity, visible introduction, all topic states, keyboard/table/code
+  access and final gate/dev-console. Leave a running preview for the user.
+- [x] Obtain independent final teaching/content/branch/page review and return
+  actual branch/commit/checks/session to coordinator
+  **01a18acc-3b54-7202-92f3-404cc94fd0ad**, recommended **GPT-6 Astra / Low**.
+
+User accepted the preview and approved local no-ff integration of **f3f376c**
+into develop **ede8e1f** on 2026-11-09; the merge includes its integration records.
+Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
+other-sheet rollout, runner/scoring/persistence, push and promotion remain outside scope.
+
+**W-6.3v — DSA Patterns study reference ☑** *(reviewed and merged locally into develop)*
+
+**Reader outcome:** recognize the conditions that make a technique useful,
+explain its invariant or recurrence, implement it in JavaScript, test it, and
+justify time and auxiliary/output space. Practice problems must show why the
+pattern fits and what changed conditions would require another approach.
+User clarification (D-107): explain as simply as possible through everyday
+analogies, tiny traces and plain work/storage reasoning before technical terms
+and JavaScript. The research distinguishes preparation relevance from measured
+question frequency. The user selected all fifteen core patterns with "okay lets
+proceed with that" (D-108). Algorithms grouping, eight initial panels, eighteen
+activity budget and the worked function contracts are design choices.
+
+- [x] Record the user's teaching/interview/problem/complexity direction and
+  JavaScript choice (D-106).
+- [x] Research primary algorithm teaching, original problem statements,
+  employer interview guidance, and JavaScript implementation assumptions in
+  [one source record](../reference/dsa-patterns-source-research.md).
+- [x] Select all fifteen core patterns and the simple analogy-first approach.
+- [x] Prepare the relevant content/design acceptance and fresh implementation
+  handoff after scope selection; preserve one web/generated-Markdown source.
+- [x] Implement, verify actual published examples and the finished reference,
+  complete appropriate web checks and one independent final review.
+- [x] Coordinator review **b3c500c...49ac670**, actual sessions and raw evidence;
+  Standards: no actionable findings. Spec: two confirmed P2s, DSA-R1/R2.
+- [x] Preserve authored mixed-choice explanation through composition, rendered
+  solution and generated Markdown, with a meaningful failing regression first.
+- [x] Check recursive and iterative published tree functions on right-only and
+  branching shapes; confirm both right-child-removal mutations are detected.
+- [x] Return correction **8dfc0fd**, actual checks and implementation session
+  **01a1bf85-6807-7190-aba1-f90aff6ec680** for focused coordinator recheck.
+- [x] Focused coordinator recheck of **8dfc0fd** at **89436fb**; both P2s resolved.
+- [x] User approved local no-ff integration into develop; parents **c996177**
+  and **89436fb**. No push or main promotion.
+
+Research branch `docs/2026-11-09-dsa-patterns-research` starts at local develop
+**c996177**; source findings are committed as **dbeafbf**.
+Research/coordination recommendation: **GPT-6 Astra / Low**.
+Implementation recommendation: fresh user-selected **GPT-6.1 Sol / High**.
+Current coordinator: **01a1bedf-bdad-7b72-ba40-9b5406807d43**.
+The [design](superpowers/specs/2026-11-09-dsa-patterns-design.md) and
+[plan](superpowers/plans/2026-11-09-dsa-patterns.md) select a standalone reference
+under Algorithms, using current study components; all fifteen ship together.
+Application **0ffca35** delivers the untethered reference under Algorithms with
+eight hashes and eighteen activities. Feature totals are **27/31** sheets and
+**18/18** stages, now integrated locally into develop.
+Other language sheets, broader JavaScript
+rollout, code execution/scoring/persistence, push and promotion are separate.
+
+**W-6.4 — Glossary and stack surfaced in the hub ☑** *(merged locally as `b8515a0`)*
+
+Assessment **8f722f7** found that the hub, Sidebar, sitemap and audit listed only
+sheets, while inline terms offered no full glossary lookup. That gap is closed
+on local develop as **b8515a0**. Assessment branch
+`docs/2026-11-04-reference-hub-assessment` started from develop
+**097fdd0f6aea2c4f18ffb7dcd712607915c64590**.
+
+- [x] Inspect current routes, discovery, glossary authority and stack content.
+- [x] Recheck high-impact stack claims against primary sources and compare
+  source strategies; record the local runtime support mismatch as TD-47.
+- [x] Record a proposed compact design/plan, acceptance and model/session handoff.
+- [x] User selected the native pages, stack source migration and TD-47 runtime
+  prerequisite with "proceed" on 2026-11-04, following handoff **a0f40f5**.
+- [x] Use a supported runtime and repair the explicit Node 22 patch contract
+  (TD-47), with meaningful support/alignment checks.
+- [x] Implement the approved data/generator, pages and shared discovery/coverage
+  using D-99's consequential-change path and behavior TDD.
+- [x] Complete the final web gate, dev-console sweep, affected theme/width/keyboard
+  checks and one independent final content/page/branch review.
+- [x] Record implementation session, branch/commit and actual verification in
+  KICKOFF for coordinator review.
+- [x] Coordinator reviewed **131c303...52e703e**, read the implementation thread,
+  checked raw results and scoped independent standards/scope findings; no blockers.
+- [x] User approved no-ff integration into develop as **b8515a0**, parents
+  **097fdd0 / 14ca2da**. Merge tree equals the reviewed tip; retain the identified
+  fresh/retained checks for unchanged **9231dc9** application inputs.
+
+Approved routes `/reference/glossary` and `/reference/stack` are reference
+resources, not cheatsheets or stages: counts remain **25/30** sheets and **18/18**
+stages. Glossary consumes `terms.ts` directly, renders full definitions in name
+order with stable key fragments and optional stage links, and leaves its Markdown
+generator and inline popover unchanged. No search/filter state is proposed.
+
+The stack now lives in canonical `web/src/lib/stack.ts`, consumed by its page
+and a new pure Markdown generator. `reference/stack.md` remains at its existing
+path as a generated snapshot. The user explicitly approved this authority change
+in the scope selection above. Preserve its four groups,
+22 choices, deviation/upkeep guidance and links, with the recorded factual
+corrections and narrow matching Stage 04 prose alignment. Keep chosen product
+families and distinguish starter defaults from this static app's installed tools.
+
+The [source/design/compact plan](../reference/w6-4-source-research.md#w-64-assessment-and-proposed-compact-design)
+names interfaces, files, tests, source limits and five dependent steps: runtime,
+stack generation, pages, shared discovery/SEO/audit, final verification. New routing,
+Sidebar behavior and generator contracts require TDD; static copy/data uses the
+normal exception. Read installed framework guides before API changes. No MDX
+pipeline, duplicate hand-port, broader framework abstraction or dependency upgrade.
+
+Implementation **da18fd7 / 191e947 / 7b4967a / 567991e**, review corrections
+**1ee672e**, touch-target correction **9231dc9**. Final build **57 routes** and
+production audit **29/29** pass on **9231dc9**. Full format/lint/typecheck and
+**1,609 tests / 228 files** pass on **1ee672e**; retain them for the one-class
+minimum-width correction, with fresh affected-file lint/format and glossary
+render **3/3**, final build and browser verification. Development-console **1/1**
+passes on an isolated **1ee672e** source copy; only minimum width differs from
+final React output. Independent final **Astra Low** review of **9231dc9** and six
+rendered captures has no blocker. [KICKOFF](../KICKOFF.md) records limits and
+commands. Implementation session **01a1a51d-8cb1-7983-8e51-1c3e48ecf142**;
+the user explicitly selected implementation here as a D-100 exception.
+
+Five language sheets, broader search, stage-to-sheet backlinks, term-popover
+changes, real infrastructure, push and main promotion remain separate.
 
 **Deferred beyond W-6:** the figure registry and the six architecture diagrams;
 stage→sheet backlinks, since the tether is one-directional today; search; and

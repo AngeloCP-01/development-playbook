@@ -1,3 +1,4 @@
+import { dsaPatterns } from './dsa-patterns'
 import { apiDesign } from './api-design'
 import { awsDeployment } from './aws-deployment'
 import { caching } from './caching'
@@ -8,12 +9,15 @@ import { ciCd } from './ci-cd'
 import { cleanCode } from './clean-code'
 import { codingStandards } from './coding-standards'
 import { deploymentEnvironments } from './deployment-environments'
+import { documentation } from './documentation'
 import { designPatterns } from './design-patterns'
 import { gitBranching } from './git-branching'
 import { gitCheatsheet } from './git-cheatsheet'
 import { gitCommands } from './git-commands'
 import { githubActions } from './github-actions'
 import { incidentManagement } from './incident-management'
+import { improvementReview } from './improvement-review'
+import { javascript } from './javascript'
 import { PLANNED } from './planned'
 import { postDeployVerification } from './post-deploy-verification'
 import { playwright } from './playwright'
@@ -21,6 +25,7 @@ import { sdlc } from './sdlc'
 import { security } from './security'
 import { solidPrinciples } from './solid-principles'
 import { testing } from './testing'
+import { technicalDebt } from './technical-debt'
 import type { Cheatsheet, CheatsheetGroup } from './types'
 
 export type {
@@ -29,6 +34,7 @@ export type {
   Row,
   RowExample,
   Section,
+  SheetActivity,
   Source,
   SourceCitation,
   SourceImage,
@@ -45,6 +51,9 @@ export const CHEATSHEETS: Cheatsheet[] = [
   gitCommands,
   gitBranching,
   codingStandards,
+  documentation,
+  technicalDebt,
+  improvementReview,
   sdlc,
   testing,
   playwright,
@@ -58,6 +67,8 @@ export const CHEATSHEETS: Cheatsheet[] = [
   security,
   caching,
   scaling,
+  javascript,
+  dsaPatterns,
   ...PLANNED,
 ]
 

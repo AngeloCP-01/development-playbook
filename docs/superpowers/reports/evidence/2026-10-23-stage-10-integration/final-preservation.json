@@ -1,0 +1,19 @@
+{
+  "verifiedAt": "2026-10-23T07:47:12.793316+00:00",
+  "merge": "7819457dc34258479f2df64f27fda81aeff8e2a2",
+  "freshGateCommands": 5,
+  "freshTests": 1559,
+  "freshTestFiles": 218,
+  "freshBuildPages": 52,
+  "buildId": "QFJ51CuOeJgPWACQrRRqf",
+  "applicationHashesUnchanged": 567,
+  "applicationSourceIdentity": "912cb2864b5b6602ac539b8d7e88aae44de92cbd91c19aa8733d463ea4604c79",
+  "parentHashesUnchanged": 12,
+  "parentHeadUnchanged": "9b2391bf61fb94d6277c035930edb8be72eb4d3d",
+  "parentBranchUnchanged": "docs/2026-10-15-stage-10-kickoff",
+  "parentServer": "COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME\nnode    93201 angelito   17u  IPv6 0xa77f2c2a309a2d27      0t0  TCP *:3200 (LISTEN)\n",
+  "portableArchiveUnchanged": true,
+  "externalArchiveCopyVerified": "/Users/angelito/personal/Development-Playbook/.superpowers/sdd/2026-10-20-stage-10-interactive-port-external-sources/external-source-snapshots.tar.gz",
+  "onlyDocumentationChangedAfterGate": true,
+  "plannedCleanup": "After committing records, remove only the merged feature branch and its temporary worktree. Preserve chapter branch and dirty parent checkout."
+}

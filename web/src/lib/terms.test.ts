@@ -129,3 +129,12 @@ test('incident vocabulary resolves to the stage that teaches each artifact', () 
     expect(TERMS[id]?.see).toBe('16-incident-management')
   }
 })
+
+test('ADR history stays intact while a linked supersession notice reveals the current decision', () => {
+  const term = getTerm('adr')
+  expect(term?.full).toContain('historical reasoning')
+  expect(term?.full).toContain('new ADR')
+  expect(term?.full).toContain('dated supersession notice')
+  expect(term?.full).not.toContain('never edited afterward')
+  expect(term?.see).toBe('03-architecture')
+})

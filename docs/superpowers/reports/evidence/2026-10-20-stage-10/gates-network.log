@@ -1,0 +1,48 @@
+Starting build
+{'command': 'pnpm build', 'exit': 0, 'seconds': 10.75, 'log': 'gate-build.log'}
+│ ├ /reference/api-design
+│ └ [+24 more paths]
+├ ○ /robots.txt
+├ ○ /sitemap.xml
+└ ● /stages/[slug]
+  ├ /stages/01-product-discovery
+  ├ /stages/02-planning
+  ├ /stages/03-architecture
+  └ [+15 more paths]
+
+
+○  (Static)  prerendered as static content
+●  (SSG)     prerendered as static HTML (uses generateStaticParams)
+
+Starting test:e2e
+{'command': 'pnpm test:e2e', 'exit': 0, 'seconds': 534.37, 'log': 'gate-test-e2e.log'}
+  ✓  15 e2e/audit.spec.ts:65:5 › interactive elements are at least 44px tall below lg (1.3m)
+  ✓  16 e2e/audit.spec.ts:158:7 › every text/background pair passes WCAG AA in light mode (1.2m)
+  ✓  17 e2e/audit.spec.ts:158:7 › every text/background pair passes WCAG AA in dark mode (1.2m)
+  ✓  18 e2e/audit.spec.ts:337:5 › the sweep observes every disclosure open at least once, since a sweep that quietly stops opening things is indistinguishable from a clean pass (1.1m)
+  ✓  19 e2e/audit.spec.ts:401:5 › zero console errors across every page and step (27.4s)
+  ✓  20 e2e/audit.spec.ts:426:5 › the interrogation still explains itself after a wrong answer, since the reasoning is the lesson and not the reward (853ms)
+  ✓  21 e2e/audit.spec.ts:463:5 › the locking exercise explains itself after a wrong answer too, since its wrong answer is the one the step was built for (731ms)
+  ✓  22 e2e/audit.spec.ts:494:5 › reset clears the uncommitted draft as well as the committed answers, since a group that presents itself as unanswered must not have boxes ticked (866ms)
+  ✓  23 e2e/audit.spec.ts:546:5 › every listed step hash lands on the step it names, since a dead hash falls back and audits step one twice (10.0s)
+  ✓  24 e2e/audit.spec.ts:599:5 › no step panel exceeds four screens, because a step that is a scroll is two steps (10.5s)
+
+  Slow test file: e2e/audit.spec.ts (8.6m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  24 passed (8.9m)
+Starting test:dev-console
+{'command': 'pnpm test:dev-console', 'exit': 0, 'seconds': 104.23, 'log': 'gate-test-dev-console.log'}
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:29991) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:29996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30077) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30078) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:30154) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 e2e/dev-console.spec.ts:29:5 › @dev no React development warnings on any audited page, which the production audit cannot see at all (1.7m)
+
+  1 passed (1.7m)

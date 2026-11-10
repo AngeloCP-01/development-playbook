@@ -1,0 +1,16 @@
+Starting build
+{'command': 'pnpm build', 'exit': 1, 'seconds': 21.22, 'log': 'gate-build.log'}
+
+
+[next]/internal/font/google/jetbrains_mono_f8290d5a.module.css
+next/font: error:
+Failed to fetch `JetBrains Mono` from Google Fonts.
+
+
+[next]/internal/font/google/newsreader_8524af2f.module.css
+next/font: error:
+Failed to fetch `Newsreader` from Google Fonts.
+
+
+    at ignore-listed frames
+ ELIFECYCLE  Command failed with exit code 1.

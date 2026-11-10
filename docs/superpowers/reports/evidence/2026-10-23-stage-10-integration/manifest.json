@@ -1,0 +1,75 @@
+{
+  "entries": [
+    {
+      "path": "README.md",
+      "bytes": 1305,
+      "sha256": "f7162f307a768287c98fca3f268eb4140af2060a0eb8ecb475ff730fcb6c49bf"
+    },
+    {
+      "path": "build.log",
+      "bytes": 1144,
+      "sha256": "a053abf6f59aeed8cd8eb29b2363ab824ed8258631a0a72ac56ac2e4b6884b2b"
+    },
+    {
+      "path": "final-preservation.json",
+      "bytes": 1159,
+      "sha256": "8e6a1239244cc68ed1b314e4060f2ebb61cc10ad57c616c1ecad4825b0d3af7a"
+    },
+    {
+      "path": "format.log",
+      "bytes": 191,
+      "sha256": "29b11bdf158c0a22f7dbbab10029f7614069f50217528a09937081fb8633fd77"
+    },
+    {
+      "path": "gate-results.json",
+      "bytes": 1377,
+      "sha256": "5b326fc38cc58f870f983030ce277f66f6ef4f3a00dfb2293b77cc75f69c0815"
+    },
+    {
+      "path": "lint.log",
+      "bytes": 122,
+      "sha256": "fdf0fd3a161c428f3b18e01a4fc537b5ca9dbb9bb1ca1f4b1677a14d1af174ef"
+    },
+    {
+      "path": "merge-provenance.json",
+      "bytes": 1291,
+      "sha256": "82d822494d43c5f2c52b4e2e0aa1187d5a119f39c5a0c75974f26b88c56fe839"
+    },
+    {
+      "path": "merge.log",
+      "bytes": 44394,
+      "sha256": "d729044659f4a45a94fbeb40433247b9503a5a601d464c3595c9b7450f4f1632"
+    },
+    {
+      "path": "prose-review.md",
+      "bytes": 808,
+      "sha256": "1688dd6c0a7791b2c0f118a63457399b250ad65c833fb0790fbcf241e2b1c6f9"
+    },
+    {
+      "path": "record-checks.json",
+      "bytes": 1856,
+      "sha256": "f105ab69187eef91025c27bca50e81994720a890ff7ea13fb340b9dd2c520e33"
+    },
+    {
+      "path": "run-checks.py",
+      "bytes": 1059,
+      "sha256": "b76ba436b75f11c8afa14ad9ca0f35ae99871ac12439bedf6d235bc5bb9df991"
+    },
+    {
+      "path": "server-ownership-before-build.json",
+      "bytes": 661,
+      "sha256": "7ea00c6b3007e26f8cd28af1e76f7b1c39962f699c2035b39132d01dd7c25015"
+    },
+    {
+      "path": "test.log",
+      "bytes": 402,
+      "sha256": "f2bf0b7168ba38c03e4319fb5c6d841dac8d814414fd27d1f403dac810fe18f7"
+    },
+    {
+      "path": "typecheck.log",
+      "bytes": 191,
+      "sha256": "3869b5bbf046919bcdcb309bfcd6ff57e6b20e777ad9f289b7e178f2ac35d34a"
+    }
+  ],
+  "files": 14
+}

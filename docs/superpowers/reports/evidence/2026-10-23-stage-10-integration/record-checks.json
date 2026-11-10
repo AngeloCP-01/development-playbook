@@ -1,0 +1,35 @@
+[
+  {
+    "command": "pnpm test src/lib/tracker-ledger.test.ts",
+    "status": "fulfilled",
+    "value": {
+      "chunk_id": "dd69d0",
+      "wall_time_seconds": 1.216125125,
+      "exit_code": 0,
+      "original_token_count": 100,
+      "output": "\n> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web\n> vitest run src/lib/tracker-ledger.test.ts\n\n\n RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web\n\n\n Test Files  1 passed (1)\n      Tests  2 passed (2)\n   Start at  15:46:27\n   Duration  182ms (transform 33ms, setup 0ms, import 45ms, tests 5ms, environment 0ms)\n\n"
+    }
+  },
+  {
+    "command": "python3 docs/superpowers/reports/evidence/2026-10-20-stage-10/check-doc-links.py",
+    "status": "fulfilled",
+    "value": {
+      "chunk_id": "b85eb6",
+      "wall_time_seconds": 0.4547845,
+      "exit_code": 0,
+      "original_token_count": 17,
+      "output": "{\n  \"files\": 33,\n  \"local_targets_checked\": 385,\n  \"failures\": []\n}\n"
+    }
+  },
+  {
+    "command": "git diff --check -- KICKOFF.md docs/task.md docs/tracker.md docs/stage-10-status.md docs/superpowers/reports/2026-10-20-stage-10-port-execution.md docs/superpowers/reports/evidence/2026-10-20-stage-10-port/README.md; git status --short",
+    "status": "fulfilled",
+    "value": {
+      "chunk_id": "271a3b",
+      "wall_time_seconds": 0.3788215,
+      "exit_code": 0,
+      "original_token_count": 87,
+      "output": " M KICKOFF.md\n M docs/stage-10-status.md\n M docs/superpowers/reports/2026-10-20-stage-10-port-execution.md\n M docs/superpowers/reports/evidence/2026-10-20-stage-10-port/README.md\n M docs/task.md\n M docs/tracker.md\n?? docs/superpowers/reports/2026-10-23-stage-10-integration.md\n?? docs/superpowers/reports/evidence/2026-10-23-stage-10-integration/\n"
+    }
+  }
+]

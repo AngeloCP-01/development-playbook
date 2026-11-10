@@ -1,0 +1,13 @@
+Parent server was identified before gates as PID93201, cwd /Users/angelito/personal/Development-Playbook/web, port3200; preserve it.
+COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    66169 angelito   12u  IPv6 0x17831f9fb50972b4      0t0  TCP *:3100 (LISTEN)
+node    93201 angelito   17u  IPv6 0xa77f2c2a309a2d27      0t0  TCP *:3200 (LISTEN)
+
+COMMAND   PID     USER   FD   TYPE DEVICE SIZE/OFF     NODE NAME
+node    66169 angelito  cwd    DIR   1,13     1056 52720982 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+COMMAND   PID     USER   FD   TYPE DEVICE SIZE/OFF     NODE NAME
+node    93201 angelito  cwd    DIR   1,13     1088 36427056 /Users/angelito/personal/Development-Playbook/web
+
+COMMAND   PID     USER   FD   TYPE DEVICE SIZE/OFF     NODE NAME
+node    24106 angelito  cwd    DIR   1,13     1056 52720982 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web

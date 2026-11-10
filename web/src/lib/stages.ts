@@ -116,10 +116,11 @@ export const STAGES: Stage[] = [
     cadence: 'Continuous',
     slug: '10-documentation',
     title: 'Documentation',
-    blurb: 'Write down what code cannot say: why.',
+    blurb:
+      'Help the next person use the system, and preserve the reasons behind it.',
     group: 'Building',
     timing: 'Continuously, a little with every change.',
-    ready: false,
+    ready: true,
   },
   {
     num: '11',
@@ -187,10 +188,10 @@ export const STAGES: Stage[] = [
     cadence: 'Weekly, small doses',
     slug: '17-maintenance',
     title: 'Maintenance',
-    blurb: 'Keep the software healthy so that changing it stays cheap.',
+    blurb: 'Keep the software healthy so that changing it stays affordable.',
     group: 'Running',
     timing: 'Continuously, in small amounts.',
-    ready: false,
+    ready: true,
   },
   {
     num: '18',
@@ -200,7 +201,7 @@ export const STAGES: Stage[] = [
     blurb: 'Decide what to build next using evidence rather than enthusiasm.',
     group: 'Running',
     timing: 'Continuously, with a deliberate look every few weeks.',
-    ready: false,
+    ready: true,
   },
 ]
 

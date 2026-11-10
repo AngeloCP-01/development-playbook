@@ -1,3 +1,4 @@
+import { REFERENCE_RESOURCES } from '../reference-resources'
 import { expect, test } from 'vitest'
 import { STAGES } from '@/lib/stages'
 import {
@@ -7,10 +8,16 @@ import {
   cheatsheetsForStage,
 } from './index'
 import { CHEATSHEET_GROUPS, isDrawn } from './types'
+import { studySections } from './study-sections'
 
 test('every slug is unique, since two sheets on one route is a silent overwrite', () => {
   const slugs = CHEATSHEETS.map((s) => s.slug)
   expect(new Set(slugs).size).toBe(slugs.length)
+})
+
+test('study sheets have complete metadata, unique hashes and exactly one owner for every activity', () => {
+  for (const sheet of CHEATSHEETS)
+    expect(() => studySections(sheet), sheet.slug).not.toThrow()
 })
 
 // The tether is the whole point of the section living beside the stages rather
@@ -115,17 +122,22 @@ test('isDrawn distinguishes a sheet with content from a registered placeholder',
     'coding-standards',
     'deployment-environments',
     'design-patterns',
+    'documentation',
+    'dsa-patterns',
     'git-branching',
     'git-cheatsheet',
     'git-commands',
     'github-actions',
+    'improvement-review',
     'incident-management',
+    'javascript',
     'playwright',
     'post-deploy-verification',
     'scaling',
     'sdlc',
     'security',
     'solid-principles',
+    'technical-debt',
     'testing',
   ])
 })
@@ -184,6 +196,14 @@ test('stage 16 exposes its incident lookup sheet as drawn reference material', (
   const sheets = cheatsheetsForStage('16-incident-management')
   expect(sheets.map((sheet) => sheet.slug)).toEqual(['incident-management'])
   expect(sheets.every(isDrawn)).toBe(true)
+})
+
+test('stage 18 exposes its drawn improvement review in Standards', () => {
+  const sheets = cheatsheetsForStage('18-continuous-improvement')
+  expect(sheets.map((sheet) => sheet.slug)).toEqual(['improvement-review'])
+  expect(sheets.every(isDrawn)).toBe(true)
+  expect(cheatsheetsByGroup('Standards')).toContain(sheets[0])
+  expect(cheatsheetBySlug('improvement-review')).toBe(sheets[0])
 })
 
 test('stage 08 exposes a drawn security lookup with the cross-user invoice audit and its original diagram', () => {
@@ -253,5 +273,38 @@ test('every registered source image carries alt text, since on an undrawn sheet 
     const image = sheet.source?.image
     if (!image) continue
     expect(image.alt.trim().length, sheet.slug).toBeGreaterThan(0)
+  }
+})
+
+test('native resource paths cannot collide with sheet routes', () => {
+  const sheetPaths = CHEATSHEETS.map((sheet) => `/reference/${sheet.slug}`)
+  for (const resource of REFERENCE_RESOURCES)
+    expect(sheetPaths).not.toContain(resource.href)
+  expect(
+    new Set(REFERENCE_RESOURCES.map((resource) => resource.href)).size,
+  ).toBe(REFERENCE_RESOURCES.length)
+})
+
+test('activities have stable unique IDs and belong to drawn sheets with ordinary sections', () => {
+  for (const sheet of CHEATSHEETS) {
+    if (!sheet.activities?.length) continue
+    expect(isDrawn(sheet), sheet.slug).toBe(true)
+    const ids = sheet.activities.map((activity) => activity.id)
+    expect(new Set(ids).size, sheet.slug).toBe(ids.length)
+    for (const activity of sheet.activities) {
+      expect(activity.id, sheet.slug).toMatch(/^[a-z][a-z0-9-]*$/)
+      for (const field of [
+        'title',
+        'prompt',
+        'context',
+        'answer',
+        'explanation',
+      ] as const) {
+        expect(
+          activity[field].trim().length,
+          `${sheet.slug}/${activity.id}/${field}`,
+        ).toBeGreaterThan(0)
+      }
+    }
   }
 })

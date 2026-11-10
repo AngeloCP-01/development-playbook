@@ -8,13 +8,6 @@ import type { Cheatsheet } from './types'
  */
 export const PLANNED: Cheatsheet[] = [
   {
-    slug: 'javascript',
-    title: 'JavaScript',
-    group: 'Languages',
-    blurb: 'Array methods, async semantics, and the event loop.',
-    sections: [],
-  },
-  {
     slug: 'python',
     title: 'Python',
     group: 'Languages',

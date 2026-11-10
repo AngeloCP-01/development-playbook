@@ -1,0 +1,55 @@
+task-3-baseline exit 0 
+ Test Files  4 passed (4)
+      Tests  65 passed (65)
+   Start at  08:59:24
+   Duration  180ms (transform 160ms, setup 0ms, import 222ms, tests 38ms, environment 0ms)
+
+task-3-appendix exit 1      46|   const start = list[index]
+     47|   const next = list
+ ❯ src/lib/stage-10-structure.test.ts:138:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+task-3-enforcement exit 1        |                     ^
+    228|   expect(doc()).not.toContain('The best documentation cannot drift')
+    229| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+task-3-enforcement-full exit 1        |                     ^
+    228|   expect(doc()).not.toContain('The best documentation cannot drift')
+    229| })
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+task-3-link exit 1        |                ^
+    181|   expect(text).toContain('[ADR 004](004-manual-field-reference.md)')
+    182|   expect(text).toContain('2026-10-20')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+task-3-link-full exit 1        |                ^
+    181|   expect(text).toContain('[ADR 004](004-manual-field-reference.md)')
+    182|   expect(text).toContain('2026-10-20')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+task-3-term exit 1        |                      ^
+    136|   expect(term?.full).toContain('new ADR')
+    137|   expect(term?.full).toContain('dated supersession notice')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+task-3-anchor exit 1        |     ^
+    151| })
+    152|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+task-3-restored-green exit 0 
+ Test Files  4 passed (4)
+      Tests  65 passed (65)
+   Start at  08:59:29
+   Duration  238ms (transform 146ms, setup 0ms, import 223ms, tests 43ms, environment 0ms)
+
+All mutation source bytes restored and targeted group GREEN

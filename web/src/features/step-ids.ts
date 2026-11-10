@@ -1,3 +1,4 @@
+import { STEP_IDS as DOCUMENTATION } from './documentation/steps'
 import { STEP_IDS as DISCOVERY } from './discovery/steps'
 import { STEP_IDS as PLANNING } from './planning/steps'
 import { STEP_IDS as ARCHITECTURE } from './architecture/steps'
@@ -13,6 +14,8 @@ import { STEP_IDS as PRODUCTION_DEPLOYMENT } from './production-deployment/steps
 import { STEP_IDS as POST_DEPLOYMENT_VERIFICATION } from './post-deployment-verification/steps'
 import { STEP_IDS as OBSERVABILITY } from './observability/steps'
 import { STEP_IDS as INCIDENT_MANAGEMENT } from './incident-management/steps'
+import { STEP_IDS as MAINTENANCE } from './maintenance/steps'
+import { STEP_IDS as CONTINUOUS_IMPROVEMENT } from './continuous-improvement/steps'
 
 /**
  * Every built stage's rail, keyed by slug — the *declaration* of what each
@@ -41,10 +44,13 @@ export const STEP_IDS_BY_SLUG: Record<string, readonly string[]> = {
   '07-code-review': CODE_REVIEW,
   '08-security-audit': SECURITY_AUDIT,
   '09-performance-optimization': PERFORMANCE,
+  '10-documentation': DOCUMENTATION,
   '11-ci-cd': CI_CD,
   '12-staging': STAGING,
   '13-production-deployment': PRODUCTION_DEPLOYMENT,
   '14-post-deployment-verification': POST_DEPLOYMENT_VERIFICATION,
   '15-observability': OBSERVABILITY,
   '16-incident-management': INCIDENT_MANAGEMENT,
+  '17-maintenance': MAINTENANCE,
+  '18-continuous-improvement': CONTINUOUS_IMPROVEMENT,
 }

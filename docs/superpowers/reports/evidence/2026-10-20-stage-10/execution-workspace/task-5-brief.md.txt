@@ -1,0 +1,99 @@
+### Task 5: Verify the shared surfaces and prepare whole-branch review
+
+**Files:**
+- Append: `docs/superpowers/reports/2026-10-20-stage-10-execution.md`.
+- Modify: `reference/stage-10-source-research.md`, `reference/cheatsheet-sources.md`, `docs/task.md`, `docs/tracker.md`, `KICKOFF.md`.
+- Create: `docs/superpowers/reports/2026-10-20-stage-10-whole-branch-review.md`.
+
+**Interfaces:**
+- Consumes: reviewed Tasks 1–4, test/mutation evidence and source provenance.
+- Produces: actual gate results and limitations, whole-branch verdict, current handoff and explicit deferred port/W-6 work. This task does not merge, push or deploy.
+
+- [ ] **Step 1: Run the checks in the verification section below.** Capture raw results in the execution report and actual counts, not planned numbers. Check the current worktree/server identity before trusting an existing process.
+- [ ] **Step 2: Update source use and records.** Retain source authors, original URLs, licenses and uncertainty. Mark which findings entered the chapter; preserve earlier dated research statements as history. Point task/tracker/handoff to the corrected chapter and evidence, with the interactive port still pending. W-3.17 stays open, W-3 remains 15/18 and W-6 remains 22/27 because their registries did not change.
+- [ ] **Step 3: Review the prose.** Apply `humanizer:humanizer` to the corrected chapter and new prose reports; keep precise technical conditions and literal terminal output. Use `writing-for-agents` when refreshing the handoff. Verify new/changed local destinations and source links; ignore example paths inside fenced specimen text as real files.
+- [ ] **Step 4: Obtain final whole-branch review.** Commit the source-use and records updates from Steps 2–3 before review, so the reviewer gets a fixed, clean tip. Use an independent reviewer with develop `79f9e31` as the fixed base and that actual tip. Include research/source capture commit `e30c9a4`, not just implementation commits. Require checked acceptance criteria, evidence for findings, severity/ID/provenance and a Ready to merge / Ready with fixes verdict. The spec builder check does not cover this implementation.
+- [ ] **Step 5: Address confirmed review findings.** Reproduce a real defect with RED before correcting it, rerun affected checks, and get the fix diff independently reviewed. Broaden gates only when the fix's scope or new evidence warrants it. Record deferred findings as the user's decision, never a silent author waiver.
+- [ ] **Step 6: Close the records commit.** Record actual reviewed commit range, test/build/browser outcomes and remaining work. Commit final evidence separately as `docs(tracker): record stage 10 chapter verification`. Verify the chapter, `web/` and `reference/` match the reviewed implementation tip; if they changed, review/reverify that diff. Have the reviewer check the final records diff without calling it a new implementation. Follow `superpowers:finishing-a-development-branch`; ask before every merge and preserve the user's ownership of push/main promotion.
+
+## Verification (after all tasks)
+
+Run commands from `web/`, sequentially and with exit codes recorded:
+
+```bash
+pnpm format:check
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+pnpm test:e2e
+pnpm test:dev-console
+```
+
+Expected: each exits 0, tests report no failures, and browser audits show no
+console, accessibility or responsive failures for their covered pages. The
+production e2e config performs its own build on startup; that repetition is the
+existing freshness gate, not a reason to silently skip it. Do not run production
+and development checks concurrently against the same worktree's `.next` state.
+
+Before browser checks, inspect listeners and identify the workspace behind any
+server on 3100/3101/3200. Keep user-owned servers running. Prefer the isolated
+worktree's fresh 3100 production and 3101 development processes. The current dev
+config has `reuseExistingServer: false`. If its lock/port is busy, diagnose it;
+do not silently change config, kill a user's process or substitute the production
+console check. A temporary, explicitly documented alternate config is acceptable
+only when it preserves the test suite and targets a verified server for this
+worktree. Record exact command, URL, revision and limitation.
+
+The ADR glossary text is rendered on existing pages. In addition to the normal
+audit, inspect the ADR term popover on Stage 03 and its glossary entry at 320px
+and a desktop width, in both themes. Confirm replacement wording is readable
+and the Stage 03 link resolves. Identify the actual route/hash from the running
+app or existing tests rather than assuming a glossary URL.
+
+Also require:
+
+- All accepted findings traced to teaching and targeted guards; no unsupported provider/validation claim remains in closing sections.
+- Same Toolshare scenario and exact five questions rerun with fresh readers; any fix wave independently rechecked.
+- Real mutation diffs, selected failing outputs and restored GREEN; no temporary changes in the committed tree.
+- Generated glossary sync; stage readiness and reference counts unchanged; source captures retained with accurate provenance.
+- New local links/anchors resolve, fenced specimens are not counted as navigation headings, and the parent checkout's original file hashes/state are preserved.
+- Raw RED/GREEN and gate output is stored or linked by the execution report. A prose statement that a check passed is not its evidence.
+- The final review covers the complete branch and reports the actual commit range. No main/develop integration happens without a fresh user approval.
+
+`pnpm test:prod` checks the deployed site and is deliberately outside this
+branch's evidence. A successful build/audit here makes no deployment claim.
+
+## Plan coverage and self-review
+
+| Approved requirement / finding | Owning task and evidence |
+| --- | --- |
+| Reader needs, minimum set, README lookup; X2/S1/S3 | 1: scoped selection/README tests and full chapter source; 4: same lookup questions |
+| ADR lifecycle and history/current conflict; X1/S2 | 1: old/new specimens, reciprocal-link guard, closing historical/current guard; 3: link mutation; 4: artifact attempt |
+| Contracts, defaults, configuration, ownership; C1/C2/S4 | 1: real reference table, update matrix and enforcement negative assertion; 3: false-enforcement mutation |
+| Safe examples; C3 | 1: synthetic-data guidance and AI guard; 4: held-out publication constraints |
+| Source-grounded AI evidence; S5/D-35 | 1: metadata RED, evidence-level table and scoped guard; 4: exact validation-claim question |
+| Stripe claims and contextual ORM example | 1: verified metadata limit, removal of invented truncation/diagnosis and replacement of the ORM specimen; 5: source checks |
+| Shared ADR glossary; D-47 | 2: semantic RED/GREEN, generator output and ready-stage link; 3: semantic mutation; 5: visible surface checks |
+| Appendix/fenced-heading false positives | 1: two parser fixtures and active-only helper; 3: appendix mutation |
+| Executable content and fix wave; D-68/D-48 | 3: printed-fence inventory/check; 4: new behavior checks if corrections introduce executable content |
+| Independent reviews, evidence and deferred port | Each task's review; 5: full branch review, gate and records |
+
+Self-review must recount task references and actual test declarations, check
+fixture/extraction types and all source blocks, and compare the plan with the
+approved spec. Source bodies are included to honor this repository's explicit
+task-slice requirement; generated glossary output remains the generator's job.
+Read an authoritative source after drafting as a separate check of the plan's
+assumptions; record any correction without inventing a green implementation run.
+
+## Execution handoff
+
+This plan awaits user review and execution-method selection.
+
+- **Subagent-driven:** fresh implementer and reviewer per task, plus the whole-branch review.
+- **Inline:** the main agent executes the sequential tasks, retaining independent per-task reviews, fresh cold readers and the final whole-branch review required here.
+
+Recommended: **Inline**. There are two substantive editing tasks, their meaning
+is tightly coupled, and the remaining three tasks verify that same teaching.
+Independent reviews and cold readers still provide separate judgment without
+handing the shared chapter between multiple implementers.

@@ -1,0 +1,9 @@
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+
+ Test Files  4 passed (4)
+      Tests  65 passed (65)
+   Start at  08:59:18
+   Duration  364ms (transform 219ms, setup 0ms, import 326ms, tests 74ms, environment 0ms)
+

@@ -1,0 +1,27 @@
+{
+  "parent_original_files": 12,
+  "all_hashes_unchanged": true,
+  "files": {
+    "AGENTS.md": true,
+    "KICKOFF.md": true,
+    "docs/10-documentation.md": true,
+    "docs/task.md": true,
+    "docs/tracker.md": true,
+    "reference/cheatsheet-sources.md": true,
+    "image.png": true,
+    "reference/doc-templates-dev-team.jpeg": true,
+    "reference/stage-10-source-research.md": true,
+    "reference/stage10-c4-system-context-key.png": true,
+    "reference/stage10-c4-system-context.png": true,
+    "reference/stage10-diataxis-map.png": true
+  }
+}
+Parent branch: docs/2026-10-15-stage-10-kickoff
+develop 79f9e31
+main d659d32
+origin/develop 79f9e31
+origin/main bd6c837
+ready true: 15
+ready false: 3
+Readiness, stage-content registry and reference registrations diff:
+(empty)

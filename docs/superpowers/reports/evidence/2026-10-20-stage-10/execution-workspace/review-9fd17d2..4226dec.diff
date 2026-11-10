@@ -1,0 +1,757 @@
+# Review package: 9fd17d2..HEAD
+
+## Commits
+4226dec test(documentation): guard validation and historical ADR status
+
+## Files changed
+ .../reports/2026-10-20-stage-10-execution.md       | 39 ++++++++++
+ .../2026-10-20-stage-10-whole-branch-review.md     | 57 +++++++++++++++
+ .../final-both-guards-green.log                    |  9 +++
+ .../2026-10-20-stage-10/final-check-results.json   | 22 ++++++
+ .../2026-10-20-stage-10/final-format-check.log     |  6 ++
+ .../2026-10-20-stage-10/final-guard-fix.log        | 82 ++++++++++++++++++++++
+ .../2026-10-20-stage-10/final-guard-fix.py         | 51 ++++++++++++++
+ .../evidence/2026-10-20-stage-10/final-lint.log    |  4 ++
+ .../final-old-status-mutation.diff                 | 12 ++++
+ .../final-old-status-old-guard-green.log           |  9 +++
+ .../2026-10-20-stage-10/final-old-status-red.log   | 46 ++++++++++++
+ .../final-old-status-teeth.diff                    | 12 ++++
+ .../2026-10-20-stage-10/final-old-status-teeth.log | 46 ++++++++++++
+ .../2026-10-20-stage-10/final-restored-green.log   |  9 +++
+ .../evidence/2026-10-20-stage-10/final-test.log    | 13 ++++
+ .../2026-10-20-stage-10/final-typecheck.log        |  6 ++
+ .../2026-10-20-stage-10/final-validator-green.log  |  9 +++
+ .../final-validator-mutation.diff                  | 14 ++++
+ .../final-validator-old-guard-green.log            |  9 +++
+ .../2026-10-20-stage-10/final-validator-red.log    | 30 ++++++++
+ .../2026-10-20-stage-10/final-validator-teeth.diff | 14 ++++
+ .../2026-10-20-stage-10/final-validator-teeth.log  | 30 ++++++++
+ web/src/lib/stage-10-structure.test.ts             |  9 ++-
+ 23 files changed, 537 insertions(+), 1 deletion(-)
+
+## Diff
+diff --git a/docs/superpowers/reports/2026-10-20-stage-10-execution.md b/docs/superpowers/reports/2026-10-20-stage-10-execution.md
+index 754ac8c..97d2a40 100644
+--- a/docs/superpowers/reports/2026-10-20-stage-10-execution.md
++++ b/docs/superpowers/reports/2026-10-20-stage-10-execution.md
+@@ -165,10 +165,49 @@ The updated records/source-citation guard group also passed **5/5 across two fil
+ - Ruling: retain independent per-task reviews required by AGENTS.md and the approved plan, overriding the inline skill's default omission — cost is review context/time.
+ - Ruling: retain the approved semantic chapter guards despite generic writing-good-tests guidance against prose tests; pair them with cold-reader behavior checks — cost is text-guard maintenance and no claim that strings prove teaching quality.
+ - Ruling: repair both inbound Stage 03 links to the renamed ADR heading — full suite exposed a PLAN-AUTHORED missing dependency (1 failed /1510 passed), reproduced by source-citations before edit; cost is a two-link scope extension, no teaching change.
+ - Ruling: start sequential final gates while Task 4 read-only evidence review runs — both blind readers returned no source defect and app/chapter/term bytes are frozen; no mutation overlaps the gate. Cost: rerun affected checks if the evidence review later identifies a source defect.
+ - Ruling: replace worktree node_modules symlink with a local copied dependency tree — Next 16 Turbopack filesystem root rejects external symlinks; preserve failed build log and retry ordinary build without application config or dependency version changes. Cost: 597 MB copied disk usage. Parent dependencies untouched.
+ - Ruling: verify the generated Markdown glossary entry and live Stage 03 inline definition, without inventing a glossary route — src/app has no glossary page; PATTERNS.md:94–102 says see is the generated Markdown cross-link, Term.tsx has no see link. Check Markdown destination and HTTP Stage 03 response; measure actual term panel at 320/1440 in both themes. Cost: no responsive claim about a nonexistent glossary webpage.
+ - Ruling: retry ordinary build/browser commands with network-capable execution — local-dependency copy resolved the filesystem root failure; restricted runner then failed fetching Google Fonts. No font substitutions/config edits; retain both failure logs. Cost: external read requests and local browser/server processes for the authorized gate.
+ 
+ 
+ Task 5 records/evidence review addendum: **review clean after 2 minor fixes**. M1 corrected joined words in the narrative rulings; M2 replaced stale browser-pending wording with historical framing and made the master checkpoint the remaining whole-branch review. Neither changed teaching or application source. The reviewer independently checked all four screenshots, actual gate outputs, retained runner/build failures, provenance, preservation and the latest link result: **324 destinations / 18 files / 0 failures**. No Critical, Important or Minor finding remains in this slice. The complete branch still awaits its separate fixed-tip review.
++
++
++## Whole-branch review and bounded guard correction
++
++The independent [whole-branch review](2026-10-20-stage-10-whole-branch-review.md) examined all eight commits from `79f9e31` through `9fd17d2`. Initial verdict: **Ready with fixes**. It found two Minor, PLAN-AUTHORED missing positive guards, without a current teaching defect. The controller treated both as blocking acceptance corrections because the plan explicitly promises protection of these central conditions; the reviewer’s original grades remain recorded. This is a test-only correction, not a claim that the correct chapter needed repair.
++
++The first review turn hit a usage limit; a briefly started fallback was interrupted after the clock showed the original reviewer’s reset had passed. The original reviewer resumed and completed the full pass. Incomplete review turns supplied no approval.
++
++The reviewer’s in-memory probes were explicitly **not Vitest**. The controller reproduced each gap with actual Vitest before strengthening its guard:
++
++1. Remove only the invocation prerequisite. All 14 old chapter tests still pass. Add a positive assertion scoped to **Update and verify documentation with the change**, while that mutation is still present. RED fails for the expected missing invocation condition. Restore the already-correct chapter; GREEN passes.
++2. Remove only the old ADR’s dated current-status line. All 14 tests still pass with the earlier ADR guard. Extract the earlier fenced specimen and require its appended notice and dated Superseded status. RED fails for the expected missing notice line. Restore the already-correct chapter; GREEN passes.
++
++Both strengthened guards then underwent separate full-file teeth checks. Each mutation failed **only its intended test**, with the other 13 passing. `finally` restored the saved canonical chapter bytes after every mutation, and `git diff` confirmed no chapter change survived.
++
++```text
++Invocation condition removed, old guard: Tests 14 passed (14)
++Invocation RED: Tests 1 failed | 13 passed (14)
++Invocation GREEN: Tests 14 passed (14)
++Old status line removed, old ADR guard: Tests 14 passed (14)
++Old status RED: Tests 1 failed | 13 passed (14)
++Both corrected guards GREEN: Tests 14 passed (14)
++Invocation teeth: Tests 1 failed | 13 passed (14)
++Old-status teeth: Tests 1 failed | 13 passed (14)
++Restored covering GREEN: Test Files 5 passed (5); Tests 68 passed (68)
++```
++
++[Actual runner](evidence/2026-10-20-stage-10/final-guard-fix.py), [raw sequence](evidence/2026-10-20-stage-10/final-guard-fix.log), [invocation RED](evidence/2026-10-20-stage-10/final-validator-red.log), [old-status RED](evidence/2026-10-20-stage-10/final-old-status-red.log) and [restored GREEN](evidence/2026-10-20-stage-10/final-restored-green.log) preserve the evidence. Actual mutation diffs and separate teeth logs share the `final-` prefix.
++
++Only `stage-10-structure.test.ts` changes under `web/`; canonical chapters, generated glossary, reference assets and all runtime application files remain identical to the reviewed tip. The already-passed 52-page build, 24 production checks, development sweep and four ADR views remain evidence for that same runtime implementation. No teaching fix wave or new executable example was introduced, so no new cold-reader scenario or browser run is claimed for this guard-only correction.
++
++Fresh post-correction format, lint and generated-route typecheck all exit 0. The [full suite](evidence/2026-10-20-stage-10/final-test.log) also exits 0:
++
++```text
++ Test Files  208 passed (208)
++      Tests  1512 passed (1512)
++```
++
++[Command results](evidence/2026-10-20-stage-10/final-check-results.json) retain actual exit codes. Independent scoped fix review remains pending at this commit.
+diff --git a/docs/superpowers/reports/2026-10-20-stage-10-whole-branch-review.md b/docs/superpowers/reports/2026-10-20-stage-10-whole-branch-review.md
+new file mode 100644
+index 0000000..1c3ce6d
+--- /dev/null
++++ b/docs/superpowers/reports/2026-10-20-stage-10-whole-branch-review.md
+@@ -0,0 +1,57 @@
++# Stage 10 whole-branch review
++
++Independent reviewer: gpt-6-astra. Fixed range: `79f9e31..9fd17d2afba98c484daaceb02ae25aa6f8820927`, eight commits, including source capture `e30c9a4`. Initial verdict: **Ready with fixes**. No current chapter/glossary correctness defect, Critical or Important implementation defect was confirmed. The reviewer found two **Minor, PLAN-AUTHORED verification gaps**, retained below without changing its grades.
++
++The first review turn stopped at a usage limit without a verdict. After the stated reset passed, the original reviewer resumed and completed this pass. A briefly started fallback was interrupted and supplied no verdict. Neither incomplete turn counts as approval.
++
++## Findings and controller disposition
++
++**M1 — Minor, PLAN-AUTHORED ERROR:** `web/src/lib/stage-10-structure.test.ts:209` does not protect the invoked-validator prerequisite promised in the plan’s fourth Review Focus item. It checks matrix vocabulary and forbidden historical sentences, while deleting the actual invocation condition remains undetected. The chapter’s **Update and verify documentation with the change** correctly teaches the condition.
++
++**M2 — Minor, PLAN-AUTHORED ERROR:** the ADR guard at `web/src/lib/stage-10-structure.test.ts:164` finds status names and the date anywhere in the lifecycle section. The status table and replacement record can satisfy those checks after the old record’s dated current-status notice is removed. The actual chapter’s **Record decisions and supersede them visibly** contains the correct notice and both links.
++
++The reviewer evaluated the actual 14 test callbacks in memory with a small `node:assert` adapter. It explicitly identified these as **read-only assertion probes, not Vitest execution**:
++
++```text
++Unmodified chapter: {"passed":14,"failed":[]}
++Invoked-validator condition removed in memory: {"passed":14,"failed":[]}
++Remove old ADR dated current-status line: {"passed":14,"failures":[]}
++```
++
++Controller disposition: both are **Important (blocking) acceptance corrections** for closing this plan, while the original reviewer grades remain Minor. The effect is false verification assurance: the approved Review Focus promises guards for two central corrections that the green suite does not protect. This regrading does not claim a current user-facing teaching defect. Add scoped positive guards and prove both with real Vitest mutations before claiming the verification contract is complete. Cost: added wording-guard maintenance. The correct chapter needs no rewrite.
++
++## Acceptance coverage retained from the independent review
++
++| Requirement | Evidence and initial review result |
++| --- | --- |
++| Continuous cadence, six house sections, nine teaching sections | Canonical chapter plus cadence/order guards; pass |
++| Smallest useful set, four reader needs, optional artifacts | Selection table, scoped guard, Toolshare artifact attempt and S3 HIT; pass |
++| README content and colocated verification | Prerequisites/access/configuration/commands/result/help and fresh-clone evidence; guard and S1 HIT; pass |
++| ADR anatomy, reasoning and reciprocal links | Old/new specimens, lifecycle table, preservation instructions and Toolshare attempt; pass |
++| Old record’s dated current-status discovery | Correct teaching and S2 HIT; positive automated coverage incomplete under M2 |
++| Historical records versus current instructions | Archive section, Definition of done and Traps agree; closing guard; pass |
++| Architecture scope, relationships, owner and trigger | Current-view specimen plus manual review; pass |
++| Contract defaults, range and optional-field absence | BOOKING_WINDOW_DAYS 1–365/default 30, waitlistPosition omission; scoped guard; pass |
++| Change/fact/document/check/owner mapping | Six matrix rows and S4 HIT; pass |
++| Configuration documentation versus enforcement | Correct teaching, C1 disposition and old false-enforcement teeth; positive invocation coverage incomplete under M1 |
++| Comments/provider claims | Four categories; unsupported truncation, incident and universal-attempt claims removed; guard/source inspection; pass |
++| AI evidence and privacy | Named reviewer, sources/version, synthetic examples, Read/Compile/Execute and S5 HIT; pass |
++| Research-only desired text cannot pass | Fixture and actual appendix mutation fail on missing active heading; pass |
++| Fenced headings cannot delimit sections | Four-backtick/shorter-fence fixture and actual corpus; pass |
++| Shared glossary single source | ADR full definition only; generated sync, semantic RED/GREEN/teeth and ready Stage 03 destination; pass |
++| Printed examples honestly classified | Eight fences, four comment-only TypeScript; literal compile without runtime claim; pass |
++| Same held-out instruments | Exact scenario/questions, frozen pre-body choices, matching snapshot hash, supported five HIT answers; pass |
++| Sources/images/historical framing | Preserved authors/URLs/dimensions/licenses/uncertainty and gathering-only images; pass within recorded limits |
++| Scope/authorization | Readiness, registrations, dependencies and lockfile unchanged; no port, W-6 implementation or integration authority implied; pass |
++
++The reviewer inspected raw RED/GREEN, actual mutation diffs and restoration hashes, not just count summaries. It confirmed 1512/208 tests, 52 pages, production 24/24, development 1/1, formatting/lint/typecheck, and all four ADR screenshots. It independently reopened Diátaxis, Nygard, Stripe metadata and Docuwiz guidance; relevant attributions agree. Raw logs/diff context contain literal whitespace; authored files pass whitespace checks when raw evidence is excluded.
++
++## Suspected defects disproved
++
++Historical Accepted status is explicitly superseded by the dated notice. Missing fictional application commands/results are labeled unknown facts. There is no omitted standalone web glossary route. Both known Stage 03 anchors target the corrected heading. Earlier embedded-image descriptions are explicitly dated research history. The separate development sweep supplies the React validation that production strips.
++
++## Behaviors declined and controller rulings
++
++Deployment/remote health and integration stay outside this implementation. Fictional application execution and recovery remain unproved. Future port/W-6 accessibility needs its own checks. Graphic authorship/reuse permission remains unknown. The private heading scanner is tested for this corpus, not offered as a general parser. Semantic guards are supplemented by reader assessment. The read-only reviewer relies on retained suite logs rather than claiming fresh execution. Historical preservation observations rely on their contemporaneous logs, with current hashes/listeners rechecked. Each disposition and its cost is recorded in the execution ledger; none silently expands the scope or grants integration authority.
++
++Initial reviewed state: eight commits after develop baseline; clean tree at `9fd17d2`. Not merged, pushed or deployed. Bounded fix review and final records addendum remain required.
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-both-guards-green.log b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-both-guards-green.log
+new file mode 100644
+index 0000000..c82f200
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-both-guards-green.log
+@@ -0,0 +1,9 @@
++
++ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++
++
++ Test Files  1 passed (1)
++      Tests  14 passed (14)
++   Start at  13:08:45
++   Duration  145ms (transform 22ms, setup 0ms, import 29ms, tests 13ms, environment 0ms)
++
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-check-results.json b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-check-results.json
+new file mode 100644
+index 0000000..5ddcafb
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-check-results.json
+@@ -0,0 +1,22 @@
++[
++  {
++    "command": "pnpm format:check",
++    "exit": 0,
++    "log": "final-format-check.log"
++  },
++  {
++    "command": "pnpm lint",
++    "exit": 0,
++    "log": "final-lint.log"
++  },
++  {
++    "command": "pnpm typecheck",
++    "exit": 0,
++    "log": "final-typecheck.log"
++  },
++  {
++    "command": "pnpm test",
++    "exit": 0,
++    "log": "final-test.log"
++  }
++]
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-format-check.log b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-format-check.log
+new file mode 100644
+index 0000000..6b47a68
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-format-check.log
+@@ -0,0 +1,6 @@
++
++> web@0.1.0 format:check /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++> prettier --check .
++
++Checking formatting...
++All matched files use Prettier code style!
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-guard-fix.log b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-guard-fix.log
+new file mode 100644
+index 0000000..060433a
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-guard-fix.log
+@@ -0,0 +1,82 @@
++final-validator-old-guard-green exit 0 
++ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++
++
++ Test Files  1 passed (1)
++      Tests  14 passed (14)
++   Start at  13:08:42
++   Duration  161ms (transform 21ms, setup 0ms, import 29ms, tests 9ms, environment 0ms)
++
++final-validator-red exit 1     225|   }
++    226|   expect(text).toMatch(/alone[\s\S]+owner/i)
++    227|   expect(text).toContain('only if the application actually invokes it')
++       |                ^
++    228|   expect(doc()).not.toContain('the app stops booting when it drifts')
++    229|   expect(doc()).not.toContain('The best documentation cannot drift')
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
++
++final-validator-green exit 0 
++ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++
++
++ Test Files  1 passed (1)
++      Tests  14 passed (14)
++   Start at  13:08:44
++   Duration  160ms (transform 33ms, setup 0ms, import 44ms, tests 10ms, environment 0ms)
++
++final-old-status-old-guard-green exit 0 
++ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++
++
++ Test Files  1 passed (1)
++      Tests  14 passed (14)
++   Start at  13:08:44
++   Duration  124ms (transform 18ms, setup 0ms, import 24ms, tests 9ms, environment 0ms)
++
++final-old-status-red exit 1     186|   expect(previous).toBeDefined()
++    187|   expect(previous).toContain('## Supersession notice (appended)')
++    188|   expect(previous).toMatch(/\d{4}-\d{2}-\d{2} — Current status: Supers…
++       |                    ^
++    189|   expect(text).toMatch(/append[\s\S]+supersession/i)
++    190|   expect(text).toMatch(/preserve[\s\S]+historical/i)
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
++
++final-both-guards-green exit 0 
++ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++
++
++ Test Files  1 passed (1)
++      Tests  14 passed (14)
++   Start at  13:08:45
++   Duration  145ms (transform 22ms, setup 0ms, import 29ms, tests 13ms, environment 0ms)
++
++final-validator-teeth exit 1     231|   }
++    232|   expect(text).toMatch(/alone[\s\S]+owner/i)
++    233|   expect(text).toContain('only if the application actually invokes it')
++       |                ^
++    234|   expect(doc()).not.toContain('the app stops booting when it drifts')
++    235|   expect(doc()).not.toContain('The best documentation cannot drift')
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
++
++final-old-status-teeth exit 1     186|   expect(previous).toBeDefined()
++    187|   expect(previous).toContain('## Supersession notice (appended)')
++    188|   expect(previous).toMatch(/\d{4}-\d{2}-\d{2} — Current status: Supers…
++       |                    ^
++    189|   expect(text).toMatch(/append[\s\S]+supersession/i)
++    190|   expect(text).toMatch(/preserve[\s\S]+historical/i)
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
++
++final-restored-green exit 0 
++ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++
++
++ Test Files  5 passed (5)
++      Tests  68 passed (68)
++   Start at  13:08:47
++   Duration  232ms (transform 141ms, setup 0ms, import 294ms, tests 72ms, environment 0ms)
++
++Canonical chapter exactly restored; only semantic guards changed
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-guard-fix.py b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-guard-fix.py
+new file mode 100644
+index 0000000..767da0e
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-guard-fix.py
+@@ -0,0 +1,51 @@
++from pathlib import Path
++import subprocess
++root=Path.cwd();w=root/'.superpowers/sdd/2026-10-20-stage-10-documentation'
++chapter=root/'docs/10-documentation.md';test=root/'web/src/lib/stage-10-structure.test.ts'
++nl=chr(10)
++validator_needle=' only'+nl+'if the application actually invokes it'
++status_needle='2026-10-20 — Current status: Superseded.'+nl
++saved=chapter.read_bytes();assert saved==subprocess.check_output(['git','show','9fd17d2:docs/10-documentation.md'])
++def run(name,args,expected):
++ p=subprocess.run(['pnpm','exec','vitest','run',*args],cwd=root/'web',capture_output=True,text=True)
++ (w/(name+'.log')).write_text(p.stdout+p.stderr)
++ print(name, 'exit',p.returncode, nl.join((p.stdout+p.stderr).splitlines()[-9:]),flush=True)
++ assert p.returncode==expected,(name,p.returncode)
++def mutate(name,needle):
++ s=saved.decode();assert s.count(needle)==1;chapter.write_text(s.replace(needle,''))
++ (w/(name+'.diff')).write_bytes(subprocess.check_output(['git','diff','--','docs/10-documentation.md']))
++def restore():
++ chapter.write_bytes(saved);assert not subprocess.check_output(['git','diff','--','docs/10-documentation.md'])
++try:
++ mutate('final-validator-mutation',validator_needle)
++ run('final-validator-old-guard-green',['src/lib/stage-10-structure.test.ts'],0)
++ s=test.read_text();needle=r'  expect(text).toMatch(/alone[\s\S]+owner/i)'+nl
++ assert s.count(needle)==1
++ s=s.replace(needle,needle+"  expect(text).toContain('only if the application actually invokes it')"+nl)
++ test.write_text(s)
++ run('final-validator-red',['src/lib/stage-10-structure.test.ts'],1)
++finally:restore()
++run('final-validator-green',['src/lib/stage-10-structure.test.ts'],0)
++try:
++ mutate('final-old-status-mutation',status_needle)
++ run('final-old-status-old-guard-green',['src/lib/stage-10-structure.test.ts'],0)
++ s=test.read_text();needle="  expect(text).toContain('2026-10-20')"
++ assert s.count(needle)==1
++ replacement=r'''  const previous = section(
++    doc(),
++    'Record decisions and supersede them visibly',
++  ).match(/```markdown\n(# ADR 004:[\s\S]*?)\n```/)?.[1]
++  expect(previous).toBeDefined()
++  expect(previous).toContain('## Supersession notice (appended)')
++  expect(previous).toMatch(/\d{4}-\d{2}-\d{2} — Current status: Superseded\./)'''
++ s=s.replace(needle,replacement);test.write_text(s)
++ run('final-old-status-red',['src/lib/stage-10-structure.test.ts'],1)
++finally:restore()
++run('final-both-guards-green',['src/lib/stage-10-structure.test.ts'],0)
++for name,needle in [('validator',validator_needle),('old-status',status_needle)]:
++ try:
++  mutate('final-'+name+'-teeth',needle)
++  run('final-'+name+'-teeth',['src/lib/stage-10-structure.test.ts'],1)
++ finally:restore()
++run('final-restored-green',['src/lib/stage-10-structure.test.ts','src/lib/stage-metadata.test.ts','src/lib/terms.test.ts','src/lib/glossary.test.ts','src/lib/source-citations.test.ts'],0)
++print('Canonical chapter exactly restored; only semantic guards changed',flush=True)
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-lint.log b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-lint.log
+new file mode 100644
+index 0000000..63026f3
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-lint.log
+@@ -0,0 +1,4 @@
++
++> web@0.1.0 lint /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++> eslint --max-warnings 0
++
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-old-status-mutation.diff b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-old-status-mutation.diff
+new file mode 100644
+index 0000000..91db731
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-old-status-mutation.diff
+@@ -0,0 +1,12 @@
++diff --git a/docs/10-documentation.md b/docs/10-documentation.md
++index c886b9f..adcab32 100644
++--- a/docs/10-documentation.md
+++++ b/docs/10-documentation.md
++@@ -129,7 +129,6 @@ Maintain the initial field reference beside the contract.
++ Every contract change requires a separate reference edit and review.
++ 
++ ## Supersession notice (appended)
++-2026-10-20 — Current status: Superseded.
++ [ADR 005](005-generated-contract-reference.md) replaces this decision.
++ The original context, date and reasoning above are preserved.
++ ```
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-old-status-old-guard-green.log b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-old-status-old-guard-green.log
+new file mode 100644
+index 0000000..77ac9ee
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-old-status-old-guard-green.log
+@@ -0,0 +1,9 @@
++
++ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++
++
++ Test Files  1 passed (1)
++      Tests  14 passed (14)
++   Start at  13:08:44
++   Duration  124ms (transform 18ms, setup 0ms, import 24ms, tests 9ms, environment 0ms)
++
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-old-status-red.log b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-old-status-red.log
+new file mode 100644
+index 0000000..4f857df
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-old-status-red.log
+@@ -0,0 +1,46 @@
++
++ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++
++ ❯ |unit| src/lib/stage-10-structure.test.ts (14 tests | 1 failed) 12ms
++   × replaced ADRs expose current status while preserving their historical reasoning 4ms
++
++ Test Files  1 failed (1)
++      Tests  1 failed | 13 passed (14)
++   Start at  13:08:45
++   Duration  117ms (transform 18ms, setup 0ms, import 24ms, tests 12ms, environment 0ms)
++
++
++⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
++
++ FAIL  |unit| src/lib/stage-10-structure.test.ts > replaced ADRs expose current status while preserving their historical reasoning
++AssertionError: expected '# ADR 004: maintain the initial field…' to match /\d{4}-\d{2}-\d{2} — Current status: S…/
++
++- Expected:
++/\d{4}-\d{2}-\d{2} — Current status: Superseded\./
++
+++ Received:
++"# ADR 004: maintain the initial field reference by hand
++Date: 2026-09-01
++Status: Accepted
++
++## Context
++The initial contract is small. The team has no reference generator.
++## Decision
++Maintain the initial field reference beside the contract.
++## Consequences
++Every contract change requires a separate reference edit and review.
++
++## Supersession notice (appended)
++[ADR 005](005-generated-contract-reference.md) replaces this decision.
++The original context, date and reasoning above are preserved."
++
++ ❯ src/lib/stage-10-structure.test.ts:188:20
++    186|   expect(previous).toBeDefined()
++    187|   expect(previous).toContain('## Supersession notice (appended)')
++    188|   expect(previous).toMatch(/\d{4}-\d{2}-\d{2} — Current status: Supers…
++       |                    ^
++    189|   expect(text).toMatch(/append[\s\S]+supersession/i)
++    190|   expect(text).toMatch(/preserve[\s\S]+historical/i)
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
++
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-old-status-teeth.diff b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-old-status-teeth.diff
+new file mode 100644
+index 0000000..91db731
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-old-status-teeth.diff
+@@ -0,0 +1,12 @@
++diff --git a/docs/10-documentation.md b/docs/10-documentation.md
++index c886b9f..adcab32 100644
++--- a/docs/10-documentation.md
+++++ b/docs/10-documentation.md
++@@ -129,7 +129,6 @@ Maintain the initial field reference beside the contract.
++ Every contract change requires a separate reference edit and review.
++ 
++ ## Supersession notice (appended)
++-2026-10-20 — Current status: Superseded.
++ [ADR 005](005-generated-contract-reference.md) replaces this decision.
++ The original context, date and reasoning above are preserved.
++ ```
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-old-status-teeth.log b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-old-status-teeth.log
+new file mode 100644
+index 0000000..206953f
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-old-status-teeth.log
+@@ -0,0 +1,46 @@
++
++ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++
++ ❯ |unit| src/lib/stage-10-structure.test.ts (14 tests | 1 failed) 17ms
++   × replaced ADRs expose current status while preserving their historical reasoning 4ms
++
++ Test Files  1 failed (1)
++      Tests  1 failed | 13 passed (14)
++   Start at  13:08:47
++   Duration  134ms (transform 18ms, setup 0ms, import 25ms, tests 17ms, environment 0ms)
++
++
++⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
++
++ FAIL  |unit| src/lib/stage-10-structure.test.ts > replaced ADRs expose current status while preserving their historical reasoning
++AssertionError: expected '# ADR 004: maintain the initial field…' to match /\d{4}-\d{2}-\d{2} — Current status: S…/
++
++- Expected:
++/\d{4}-\d{2}-\d{2} — Current status: Superseded\./
++
+++ Received:
++"# ADR 004: maintain the initial field reference by hand
++Date: 2026-09-01
++Status: Accepted
++
++## Context
++The initial contract is small. The team has no reference generator.
++## Decision
++Maintain the initial field reference beside the contract.
++## Consequences
++Every contract change requires a separate reference edit and review.
++
++## Supersession notice (appended)
++[ADR 005](005-generated-contract-reference.md) replaces this decision.
++The original context, date and reasoning above are preserved."
++
++ ❯ src/lib/stage-10-structure.test.ts:188:20
++    186|   expect(previous).toBeDefined()
++    187|   expect(previous).toContain('## Supersession notice (appended)')
++    188|   expect(previous).toMatch(/\d{4}-\d{2}-\d{2} — Current status: Supers…
++       |                    ^
++    189|   expect(text).toMatch(/append[\s\S]+supersession/i)
++    190|   expect(text).toMatch(/preserve[\s\S]+historical/i)
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
++
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-restored-green.log b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-restored-green.log
+new file mode 100644
+index 0000000..e625721
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-restored-green.log
+@@ -0,0 +1,9 @@
++
++ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++
++
++ Test Files  5 passed (5)
++      Tests  68 passed (68)
++   Start at  13:08:47
++   Duration  232ms (transform 141ms, setup 0ms, import 294ms, tests 72ms, environment 0ms)
++
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-test.log b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-test.log
+new file mode 100644
+index 0000000..d64c35d
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-test.log
+@@ -0,0 +1,13 @@
++
++> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++> vitest run
++
++
++ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++
++
++ Test Files  208 passed (208)
++      Tests  1512 passed (1512)
++   Start at  13:09:20
++   Duration  30.85s (transform 16.20s, setup 12.97s, import 40.11s, tests 43.57s, environment 79.82s)
++
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-typecheck.log b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-typecheck.log
+new file mode 100644
+index 0000000..69aa88a
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-typecheck.log
+@@ -0,0 +1,6 @@
++
++> web@0.1.0 typecheck /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++> next typegen && tsc --noEmit
++
++Generating route types...
++✓ Types generated successfully
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-green.log b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-green.log
+new file mode 100644
+index 0000000..71f1fe3
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-green.log
+@@ -0,0 +1,9 @@
++
++ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++
++
++ Test Files  1 passed (1)
++      Tests  14 passed (14)
++   Start at  13:08:44
++   Duration  160ms (transform 33ms, setup 0ms, import 44ms, tests 10ms, environment 0ms)
++
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-mutation.diff b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-mutation.diff
+new file mode 100644
+index 0000000..cff0de7
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-mutation.diff
+@@ -0,0 +1,14 @@
++diff --git a/docs/10-documentation.md b/docs/10-documentation.md
++index c886b9f..a00db1c 100644
++--- a/docs/10-documentation.md
+++++ b/docs/10-documentation.md
++@@ -257,8 +257,7 @@ changed command, configuration schema, contract or boundary.
++ | Setup or release steps change | Actual commands, access and environment | README and linked procedures | Follow the documented path in a safe environment and record the result | Maintainer / procedure change |
++ | A known failure or release changes | Diagnosed behavior and release record | Troubleshooting, changelog or release notes as needed | Verify the check/workaround and publish only supported impact claims | Maintainer / confirmed fix or release |
++ 
++-`.env.example` lists configuration; a validator enforces accepted values only
++-if the application actually invokes it. Safe placeholders and harmless defaults
+++`.env.example` lists configuration; a validator enforces accepted values. Safe placeholders and harmless defaults
++ are useful examples. Real credentials are not. This static playbook requires no
++ environment variables; configuration artifacts here illustrate applications
++ that do need them.
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-old-guard-green.log b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-old-guard-green.log
+new file mode 100644
+index 0000000..de6489b
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-old-guard-green.log
+@@ -0,0 +1,9 @@
++
++ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++
++
++ Test Files  1 passed (1)
++      Tests  14 passed (14)
++   Start at  13:08:42
++   Duration  161ms (transform 21ms, setup 0ms, import 29ms, tests 9ms, environment 0ms)
++
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-red.log b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-red.log
+new file mode 100644
+index 0000000..7de48fc
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-red.log
+@@ -0,0 +1,30 @@
++
++ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++
++ ❯ |unit| src/lib/stage-10-structure.test.ts (14 tests | 1 failed) 17ms
++   × documentation checks include configuration and response contracts with an owner 8ms
++
++ Test Files  1 failed (1)
++      Tests  1 failed | 13 passed (14)
++   Start at  13:08:43
++   Duration  126ms (transform 19ms, setup 0ms, import 25ms, tests 17ms, environment 0ms)
++
++
++⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
++
++ FAIL  |unit| src/lib/stage-10-structure.test.ts > documentation checks include configuration and response contracts with an owner
++AssertionError: expected ' For each change, trace the authorita…' to contain 'only if the application actually invo…'
++
++Expected: "only if the application actually invokes it"
++Received: " For each change, trace the authoritative fact to the documents that describe it. When working alone, you are the owner; adding a team does not create ownership for the first time. Give each living document a review trigger, such as a changed command, configuration schema, contract or boundary. | Change | Authoritative fact | Affected document | Check | Owner / review trigger | | --- | --- | --- | --- | --- | | Workshop adds BOOKING_WINDOW_DAYS | Startup validator and its unset/invalid behavior | Configuration reference, `.env.example`, setup guide | Compare the documented 1–365 range and default 30 with validation; test missing/invalid values | Maintainer / validator change | | Workshop adds a response field | Response schema and serializer behavior | Generated reference and example response | Run generation; inspect the expected diff and verify optional-field omission | Contract owner / response change | | A default or allowed value changes | Implementation and behavioral test | Existing reference and relevant how-to | Find old values and check the new behavior, not only matching strings | Maintainer / option change | | A boundary or dependency changes | Current system and decision record | Architecture view, ADR and affected runbook | Trace the affected relationships and replacement links | Area owner / boundary change | | Setup or release steps change | Actual commands, access and environment | README and linked procedures | Follow the documented path in a safe environment and record the result | Maintainer / procedure change | | A known failure or release changes | Diagnosed behavior and release record | Troubleshooting, changelog or release notes as needed | Verify the check/workaround and publish only supported impact claims | Maintainer / confirmed fix or release | `.env.example` lists configuration; a validator enforces accepted values. Safe placeholders and harmless defaults are useful examples. Real credentials are not. This static playbook requires no environment variables; configuration artifacts here illustrate applications that do need them. Types check some shapes. Tests check the behavior their assertions cover. Generated reference follows its input. Choose an explicit check for the claim you need to trust. [Docs as code](https://www.writethedocs.org/guide/docs-as-code/) puts documentation through version control, review and automation; it does not make accuracy automatic. Stage [06](06-testing.md) owns test design. "
++
++ ❯ src/lib/stage-10-structure.test.ts:227:16
++    225|   }
++    226|   expect(text).toMatch(/alone[\s\S]+owner/i)
++    227|   expect(text).toContain('only if the application actually invokes it')
++       |                ^
++    228|   expect(doc()).not.toContain('the app stops booting when it drifts')
++    229|   expect(doc()).not.toContain('The best documentation cannot drift')
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
++
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-teeth.diff b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-teeth.diff
+new file mode 100644
+index 0000000..cff0de7
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-teeth.diff
+@@ -0,0 +1,14 @@
++diff --git a/docs/10-documentation.md b/docs/10-documentation.md
++index c886b9f..a00db1c 100644
++--- a/docs/10-documentation.md
+++++ b/docs/10-documentation.md
++@@ -257,8 +257,7 @@ changed command, configuration schema, contract or boundary.
++ | Setup or release steps change | Actual commands, access and environment | README and linked procedures | Follow the documented path in a safe environment and record the result | Maintainer / procedure change |
++ | A known failure or release changes | Diagnosed behavior and release record | Troubleshooting, changelog or release notes as needed | Verify the check/workaround and publish only supported impact claims | Maintainer / confirmed fix or release |
++ 
++-`.env.example` lists configuration; a validator enforces accepted values only
++-if the application actually invokes it. Safe placeholders and harmless defaults
+++`.env.example` lists configuration; a validator enforces accepted values. Safe placeholders and harmless defaults
++ are useful examples. Real credentials are not. This static playbook requires no
++ environment variables; configuration artifacts here illustrate applications
++ that do need them.
+diff --git a/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-teeth.log b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-teeth.log
+new file mode 100644
+index 0000000..4a2a3d7
+--- /dev/null
++++ b/docs/superpowers/reports/evidence/2026-10-20-stage-10/final-validator-teeth.log
+@@ -0,0 +1,30 @@
++
++ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
++
++ ❯ |unit| src/lib/stage-10-structure.test.ts (14 tests | 1 failed) 17ms
++   × documentation checks include configuration and response contracts with an owner 7ms
++
++ Test Files  1 failed (1)
++      Tests  1 failed | 13 passed (14)
++   Start at  13:08:46
++   Duration  119ms (transform 18ms, setup 0ms, import 24ms, tests 17ms, environment 0ms)
++
++
++⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
++
++ FAIL  |unit| src/lib/stage-10-structure.test.ts > documentation checks include configuration and response contracts with an owner
++AssertionError: expected ' For each change, trace the authorita…' to contain 'only if the application actually invo…'
++
++Expected: "only if the application actually invokes it"
++Received: " For each change, trace the authoritative fact to the documents that describe it. When working alone, you are the owner; adding a team does not create ownership for the first time. Give each living document a review trigger, such as a changed command, configuration schema, contract or boundary. | Change | Authoritative fact | Affected document | Check | Owner / review trigger | | --- | --- | --- | --- | --- | | Workshop adds BOOKING_WINDOW_DAYS | Startup validator and its unset/invalid behavior | Configuration reference, `.env.example`, setup guide | Compare the documented 1–365 range and default 30 with validation; test missing/invalid values | Maintainer / validator change | | Workshop adds a response field | Response schema and serializer behavior | Generated reference and example response | Run generation; inspect the expected diff and verify optional-field omission | Contract owner / response change | | A default or allowed value changes | Implementation and behavioral test | Existing reference and relevant how-to | Find old values and check the new behavior, not only matching strings | Maintainer / option change | | A boundary or dependency changes | Current system and decision record | Architecture view, ADR and affected runbook | Trace the affected relationships and replacement links | Area owner / boundary change | | Setup or release steps change | Actual commands, access and environment | README and linked procedures | Follow the documented path in a safe environment and record the result | Maintainer / procedure change | | A known failure or release changes | Diagnosed behavior and release record | Troubleshooting, changelog or release notes as needed | Verify the check/workaround and publish only supported impact claims | Maintainer / confirmed fix or release | `.env.example` lists configuration; a validator enforces accepted values. Safe placeholders and harmless defaults are useful examples. Real credentials are not. This static playbook requires no environment variables; configuration artifacts here illustrate applications that do need them. Types check some shapes. Tests check the behavior their assertions cover. Generated reference follows its input. Choose an explicit check for the claim you need to trust. [Docs as code](https://www.writethedocs.org/guide/docs-as-code/) puts documentation through version control, review and automation; it does not make accuracy automatic. Stage [06](06-testing.md) owns test design. "
++
++ ❯ src/lib/stage-10-structure.test.ts:233:16
++    231|   }
++    232|   expect(text).toMatch(/alone[\s\S]+owner/i)
++    233|   expect(text).toContain('only if the application actually invokes it')
++       |                ^
++    234|   expect(doc()).not.toContain('the app stops booting when it drifts')
++    235|   expect(doc()).not.toContain('The best documentation cannot drift')
++
++⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
++
+diff --git a/web/src/lib/stage-10-structure.test.ts b/web/src/lib/stage-10-structure.test.ts
+index cf2ee07..f270ab5 100644
+--- a/web/src/lib/stage-10-structure.test.ts
++++ b/web/src/lib/stage-10-structure.test.ts
+@@ -172,21 +172,27 @@ test('replaced ADRs expose current status while preserving their historical reas
+     'Alternatives',
+     'Proposed',
+     'Rejected',
+     'Accepted',
+     'Superseded',
+   ]) {
+     expect(text).toContain(phrase)
+   }
+   expect(text).toContain('[ADR 005](005-generated-contract-reference.md)')
+   expect(text).toContain('[ADR 004](004-manual-field-reference.md)')
+-  expect(text).toContain('2026-10-20')
++  const previous = section(
++    doc(),
++    'Record decisions and supersede them visibly',
++  ).match(/```markdown\n(# ADR 004:[\s\S]*?)\n```/)?.[1]
++  expect(previous).toBeDefined()
++  expect(previous).toContain('## Supersession notice (appended)')
++  expect(previous).toMatch(/\d{4}-\d{2}-\d{2} — Current status: Superseded\./)
+   expect(text).toMatch(/append[\s\S]+supersession/i)
+   expect(text).toMatch(/preserve[\s\S]+historical/i)
+   expect(text).toContain('docs/adr/NNN-title.md')
+   expect(doc()).not.toMatch(/Never edit an accepted ADR/i)
+ })
+ 
+ test('a current contract reference states defaults and optional-field absence explicitly', () => {
+   const text = section(
+     doc(),
+     'Keep architecture and contract references current',
+@@ -217,20 +223,21 @@ test('documentation checks include configuration and response contracts with an
+     'Owner',
+     '.env.example',
+     'response',
+     'validator',
+     'generation',
+     'review trigger',
+   ]) {
+     expect(text).toContain(phrase)
+   }
+   expect(text).toMatch(/alone[\s\S]+owner/i)
++  expect(text).toContain('only if the application actually invokes it')
+   expect(doc()).not.toContain('the app stops booting when it drifts')
+   expect(doc()).not.toContain('The best documentation cannot drift')
+ })
+ 
+ test('provider comments teach a documented limit without inventing truncation or diagnosis', () => {
+   const text = section(doc(), 'Write comments for non-obvious reasons')
+   expect(text).toContain('500')
+   expect(text).toMatch(/external[\s\S]+ID/)
+   expect(doc()).not.toMatch(
+     /silently truncated|past 5 attempts|means our handler is broken/i,

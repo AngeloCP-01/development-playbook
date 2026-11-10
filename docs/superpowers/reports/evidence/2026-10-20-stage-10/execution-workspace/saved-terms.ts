@@ -1,0 +1,1070 @@
+/**
+ * Jargon defined once, at the point of use.
+ *
+ * The playbook doubles as a primer, so a term you have never met should never
+ * be a dead end. Definitions are written for someone encountering the idea for
+ * the first time — plain language, no forward references, and a note on why it
+ * matters rather than only what it is.
+ */
+export type Term = {
+  /** Display heading for the generated glossary, e.g. 'ADR (Architecture Decision Record)'. */
+  name: string
+  short: string
+  full: string
+  /** Why a practitioner should care — the part a dictionary would omit. */
+  soWhat?: string
+  /** A stage slug this term is most associated with, for the glossary's "See" link. */
+  see?: string
+}
+
+export const TERMS: Record<string, Term> = {
+  lcp: {
+    name: 'LCP (Largest Contentful Paint)',
+    see: '09-performance-optimization',
+    short: 'The time until the largest visible content element is painted.',
+    full: 'A Core Web Vital for loading experience. It records when the largest eligible content element in the viewport is painted. The good threshold is 2.5 seconds or less at p75, assessed separately for mobile and desktop.',
+    soWhat:
+      'A slow hero image or delayed server response can affect LCP. It does not measure the whole checkout or payment operation.',
+  },
+  inp: {
+    name: 'INP (Interaction to Next Paint)',
+    see: '09-performance-optimization',
+    short: 'A measure of how promptly a page paints after user interaction.',
+    full: 'A Core Web Vital for responsiveness across qualifying interactions during a page visit. It includes time waiting for handlers, their processing, and the next paint. The good threshold is 200 milliseconds or less at p75, assessed separately for mobile and desktop.',
+    soWhat:
+      'A button can feel unresponsive even when its network request is fast. Measure interaction response separately from the entire business operation.',
+  },
+  cls: {
+    name: 'CLS (Cumulative Layout Shift)',
+    see: '09-performance-optimization',
+    short: 'A score describing unexpected movement of visible page content.',
+    full: 'A Core Web Vital for visual stability, based on qualifying unexpected layout shifts. It is a score, not a duration. The good threshold is 0.1 or less at p75, assessed separately for mobile and desktop.',
+    soWhat:
+      'Faster loading should not make controls jump while a reader tries to use them. Reserve space for content such as images.',
+  },
+  'n-plus-one': {
+    name: 'N+1 queries',
+    see: '09-performance-optimization',
+    short:
+      'One initial query followed by another query for each returned item.',
+    full: 'A data-access pattern in which a list lookup triggers repeated per-item queries. A 20-item list can then require 21 queries. Trace or query-log evidence establishes whether those round trips matter for the selected outcome.',
+    soWhat:
+      'Batching or joining may reduce round trips, but the stock or authorization decision and the user-visible result must stay correct.',
+  },
+  'query-plan': {
+    name: 'Query plan',
+    see: '09-performance-optimization',
+    short: 'The database operations chosen to execute a query.',
+    full: 'A plan describes scans, joins, filters and other operations. PostgreSQL EXPLAIN shows estimates; ANALYZE executes the query and adds actual observations. Compare estimates, actual rows, filtering, buffers and time. Planner cost is not milliseconds.',
+    soWhat:
+      'A sequential scan can be an appropriate choice. Read the plan and workload before assuming an index will help.',
+  },
+  'cache-invalidation': {
+    name: 'Cache invalidation',
+    see: '09-performance-optimization',
+    short:
+      'A rule for expiring or refreshing cached data when it stops being valid.',
+    full: 'A cached read needs a freshness rule, such as a lifetime or an update-triggered invalidation. APIs differ: Next.js updateTag is limited to Server Actions and makes the next read wait for fresh tagged data.',
+    soWhat:
+      'A fast response containing stale stock or pricing can harm correctness. Test freshness and authorization alongside latency.',
+  },
+  'product-discovery': {
+    name: 'Product discovery',
+    see: '01-product-discovery',
+    short:
+      'Finding out whether something is worth building before you build it.',
+    full: 'The work of testing whether a problem is real, whose it is, and how badly it hurts — before any code exists. It is deliberately cheap, because its main output is often the decision not to build.',
+    soWhat:
+      'Skipping it is the most expensive mistake available to a developer: months spent building something correct that nobody needed.',
+  },
+  'opportunity-solution-tree': {
+    name: 'Opportunity solution tree',
+    see: '01-product-discovery',
+    short:
+      'A map linking one outcome to problems, then to candidate solutions.',
+    full: 'A diagram by Teresa Torres with four levels: the outcome you want to move, the customer opportunities (problems, needs, desires) that could move it, the solutions that address each opportunity, and the experiments that test each solution.',
+    soWhat:
+      'It enforces one rule that is hard to keep otherwise: no solution may exist without an opportunity above it, and no opportunity without evidence someone actually said it.',
+  },
+  'jobs-to-be-done': {
+    name: 'Jobs to be done (JTBD)',
+    short: 'The progress a person is trying to make, not their demographics.',
+    full: 'A framing that describes users by the job they are "hiring" a product to do — "help me look organised to my clients" — rather than by who they are. Two people with nothing demographically in common can share a job.',
+    soWhat:
+      'It stops you designing for a persona and starts you designing for a situation, which is what actually predicts whether someone switches tools.',
+  },
+  'concierge-test': {
+    name: 'Concierge test',
+    short: 'Deliver the outcome by hand before building anything.',
+    full: 'You do the work manually for a handful of real users — spreadsheets, emails, your own labour — while they experience the result as if it were a product.',
+    soWhat:
+      'It reveals where the genuine difficulty sits, which is almost never where you assumed. Many products are worth running by hand for a month first.',
+  },
+  'fake-door-test': {
+    name: 'Fake-door test',
+    short: 'A landing page for a product that does not exist yet.',
+    full: 'A page describing the product with a real signup or purchase button. Clicking it reaches a "coming soon" message. You measure how many people click.',
+    soWhat:
+      'It measures behaviour rather than politeness. Saying "that sounds useful" is free; handing over an email address is not.',
+  },
+  'survivorship-bias': {
+    name: 'Survivorship bias',
+    short: 'Only hearing from the people who stayed.',
+    full: 'Drawing conclusions from the visible survivors of a process while the failures are silent. In discovery: interviewing current users tells you why people stay, never why the larger group left or never arrived.',
+    soWhat:
+      'Your happiest users are the worst guide to why nobody else is signing up.',
+  },
+  'leading-question': {
+    name: 'Leading question',
+    short: 'A question whose wording suggests the answer you want.',
+    full: '"Would this save you time?" contains its own answer. The polite response is yes, it costs the respondent nothing, and you learn only that they are agreeable.',
+    soWhat:
+      'It is the single most common way interviews produce confident, false evidence — and the same failure appears when you ask an AI whether your idea is good.',
+  },
+  tam: {
+    name: 'TAM (Total Addressable Market)',
+    short: 'The total size of a market, before any competition.',
+    full: 'Total Addressable Market — every person or business who could conceivably buy this, if you had no competitors and perfect reach. Usually paired with SAM (the slice you could realistically serve) and SOM (the slice you could realistically win).',
+    soWhat:
+      'On its own it is close to meaningless and easy to inflate. It is useful only for telling a hobby apart from a business.',
+  },
+  npm: {
+    name: 'npm',
+    see: '04-project-setup',
+    short: 'The package manager that ships with Node.js.',
+    full: 'Reads your package.json, downloads every package it names (and everything those packages need) from the npm registry, and copies the whole tree into the project\u2019s node_modules folder. Every project gets its own full copy, hoisted into one flat pile.',
+    soWhat:
+      'The flat pile means your code can import packages you never declared \u2014 phantom dependencies \u2014 which work until the package that dragged them in stops doing so. Zero setup is why it remains the default everywhere.',
+  },
+  pnpm: {
+    name: 'pnpm',
+    see: '04-project-setup',
+    short:
+      'A faster npm replacement that stores each package once per machine.',
+    full: 'Same registry and same package.json as npm, but packages live in one content-addressable store on your machine and get hard-linked into each project. Its node_modules layout is strict: only dependencies you actually declared are importable.',
+    soWhat:
+      'Repeat installs take seconds and undeclared imports fail on your machine today rather than in production later. The trade: it does not ship with Node, so it is one corepack step away from a fresh machine.',
+  },
+  'problem-interview': {
+    name: 'Problem interview',
+    see: '01-product-discovery',
+    short:
+      'A conversation about what someone actually did, not what they would do.',
+    full: 'A short interview — 20 to 30 minutes — focused entirely on past behaviour around a problem. No pitch, no product, no hypotheticals.',
+    soWhat:
+      'Predictions about future behaviour are unreliable. What someone did last Tuesday is evidence.',
+  },
+  'switching-cost': {
+    name: 'Switching cost',
+    short: 'Everything it costs someone to move off what they use now.',
+    full: 'Learning a new tool, migrating data, changing habits, and the risk that the new thing is worse. It is paid by the user, not by you, and it is usually larger than builders estimate.',
+    soWhat:
+      'This is why "annoying" problems never convert. The pain you remove has to exceed the cost of moving.',
+  },
+  mvp: {
+    name: 'MVP (Minimum Viable Product)',
+    see: '02-planning',
+    short:
+      'The smallest version that delivers the outcome you defined as done.',
+    full: 'Minimum viable product: the least you can build that still achieves the result you wrote down, so that real usage can tell you what to build next. It is defined by the outcome, not by a feature count.',
+    soWhat:
+      'The phrase is usually misused to mean "v1 with the hard parts removed", which produces something nobody can use and teaches you nothing. If your MVP cannot deliver the outcome, it is not minimum — it is unfinished.',
+  },
+  'product-roadmap': {
+    name: 'Product roadmap',
+    see: '02-planning',
+    short: 'What you plan to build, in order, without dates.',
+    full: 'An ordered statement of intent — usually now, next and later — saying what is being built and what is waiting. The good ones name what has to be true before an item moves up, rather than naming a month.',
+    soWhat:
+      'The moment a roadmap carries dates it becomes a promise, and replanning turns political. Horizons give you the sequence without the commitment.',
+  },
+  'product-vision': {
+    name: 'Product vision',
+    see: '02-planning',
+    short: 'Where the product is going, written as a state of the world.',
+    full: 'A short description of what the product becomes if it works — not a feature list, and not a slogan. One paragraph is the right length.',
+    soWhat:
+      'Without one, an MVP reads as a list of things you cut. With one, it reads as a first step, and every "not now" decision has something to be judged against.',
+  },
+  appetite: {
+    name: 'Appetite',
+    see: '02-planning',
+    short: 'How much time something is worth, decided before the design.',
+    full: 'A fixed budget of time you are willing to spend, which the solution is then shaped to fit. An estimate starts with a design and ends with a number; an appetite starts with a number and ends with a design.',
+    soWhat:
+      'It reverses who is in charge. An estimate lets the design dictate the schedule; an appetite lets the schedule dictate the design — which, solo, is almost always the trade you want.',
+  },
+  'vertical-slice': {
+    name: 'Vertical slice',
+    see: '02-planning',
+    short:
+      'A piece of work that touches every layer and produces something usable.',
+    full: 'Work sequenced so each step goes through storage, logic and interface at once, rather than building each layer across the whole product before starting the next.',
+    soWhat:
+      'Layer-first work means nothing functions until everything does, and you learn nothing until the end. A vertical slice is demonstrable the day it lands, which is also what makes it possible to change your mind cheaply.',
+  },
+  spike: {
+    name: 'Spike',
+    see: '02-planning',
+    short: 'A timeboxed investigation whose output is a decision, not code.',
+    full: 'A short, deliberately bounded piece of exploration answering one specific question — can this integration do what we need, is this approach fast enough — with a hard stop and a written answer.',
+    soWhat:
+      'The discipline is throwing the code away. If you keep it, you have not run a spike; you have merged untested, unreviewed work through the side door.',
+  },
+  'feasibility-risk': {
+    name: 'Feasibility risk',
+    see: '02-planning',
+    short: 'The risk that the thing cannot be built as imagined.',
+    full: 'One of the standard product risks, alongside whether people want it and whether it makes business sense. It asks whether the technology, data, budget and time actually permit the solution.',
+    soWhat:
+      'Discovery tests whether anyone wants it; this tests whether you can make it. They fail differently and at different costs, so finding feasibility problems late is the more expensive of the two.',
+  },
+  adr: {
+    name: 'ADR (Architecture Decision Record)',
+    short:
+      'A short document capturing one decision: context, choice, consequences.',
+    full: 'A short record of one architecture decision, including context, choice and consequences. Preserve the historical reasoning; a changed decision gets a new ADR, with a dated supersession notice linking the old and new records.',
+    soWhat:
+      'The value is the record of what was believed at the time. Months later, "why did we do it this way?" has an answer instead of a reconstruction.',
+    see: '03-architecture',
+  },
+  'blast-radius': {
+    name: 'Blast radius',
+    short: 'How much breaks when this breaks.',
+    full: 'The reach of a change or a failure: how much of the system is affected when this one piece goes wrong.',
+    soWhat:
+      'It sets how carefully you ship. A small blast radius can go out casually; a large one needs a gate, a canary, and a rollback plan.',
+    see: '03-architecture',
+  },
+  canary: {
+    name: 'Canary',
+    short: 'Releasing to a small fraction of traffic before everyone.',
+    full: 'Releasing a change to a small slice of traffic first, watching it, then widening. On Vercel it is approximated with skew protection and staged rollouts rather than true traffic splitting.',
+    soWhat:
+      'It turns a deploy into an experiment with an escape hatch: a failure shows up on 1% of users, not 100%.',
+    see: '13-production-deployment',
+  },
+  'definition-of-done': {
+    name: 'Definition of done',
+    short:
+      'The checkable state that separates "works on my machine" from "this stage is complete."',
+    full: 'A specific, checkable statement of what "done" means for a piece of work — a state you can hold the running product up against and confirm, yes or no. Every stage doc has one.',
+    soWhat:
+      'Without it, "done" is an opinion and scope stays arguable forever. With it, a feature request has a boundary to be judged against.',
+  },
+  'error-budget': {
+    name: 'Error budget',
+    short: 'The amount of failure you have decided is acceptable in a period.',
+    full: 'The failure you have decided is acceptable over a window. For a request-based SLO, 99.9% success leaves 0.1% of requests available to fail. For a time-based 99.9% uptime SLO, the budget is 43.2 minutes in 30 days. Spending it is allowed; exceeding it means stop shipping features and fix reliability.',
+    soWhat:
+      'It turns "is it reliable enough?" from an argument into arithmetic, and gives the feature-versus-reliability call a rule instead of a mood.',
+    see: '15-observability',
+  },
+  'golden-signals': {
+    name: 'Golden signals',
+    short:
+      'Latency, traffic, errors, saturation — the four things to instrument first.',
+    full: 'The four measurements to instrument before any others: latency, traffic, errors, and saturation. If you watch only four things, watch these.',
+    soWhat:
+      'They cover most of what actually pages you, so you get the bulk of observability value for a small, fixed amount of instrumentation.',
+    see: '15-observability',
+  },
+  'merge-gate': {
+    name: 'Merge gate',
+    short: 'The automated checks that must pass before code reaches main.',
+    full: 'The set of automated checks that must pass before code merges to the main branch. Distinct from deployment: the gate protects the branch, the deploy ships it.',
+    soWhat:
+      'It is where "works on my machine" stops being anyone’s problem. Added late it is a fight; wired on day one it is invisible.',
+    see: '11-ci-cd',
+  },
+  percentile: {
+    name: 'Percentile',
+    short:
+      'The threshold at or below which a given share of measurements fall, such as p95 or p99.',
+    full: 'A ranking rather than an average. A p95 latency of 400ms means at least 95 of every hundred measurements are at or below 400ms. A p99 is a threshold, not a maximum; the slowest request can be higher. Percentiles do not average: the p95 across three servers is not the mean of their three p95s.',
+    soWhat:
+      'An average can stay comfortable while a growing minority of users wait. Percentiles expose that slow tail.',
+    see: '15-observability',
+  },
+  'phantom-dependency': {
+    name: 'Phantom dependency',
+    short: 'A package you import but never declared, working only by accident.',
+    full: 'A package your code imports but never listed in package.json. It resolves only because some other dependency happened to pull it into a flat node_modules, and it breaks mysteriously when that package updates or drops it.',
+    soWhat:
+      'It is why this playbook picks pnpm: the strict layout makes a phantom import fail on your machine today instead of in CI next month.',
+    see: '04-project-setup',
+  },
+  'preview-deployment': {
+    name: 'Preview deployment',
+    short: 'A full, isolated deployment of a branch, with its own URL.',
+    full: 'A complete, isolated deployment of a single branch at its own URL — automatic per pull request on Vercel. Not the same as staging.',
+    soWhat:
+      'It lets anyone see the change running as a real build before it merges, which catches what a local dev server cannot.',
+    see: '12-staging',
+  },
+  'staging-environment': {
+    name: 'Staging environment',
+    short: 'A single long-lived deployment tracking a shared branch.',
+    full: 'A persistent deployment at a stable URL, usually tracking a shared branch like staging or develop. Unlike a preview deployment, it is not per-branch or ephemeral.',
+    soWhat:
+      'Solo, you usually do not need one. Preview deployments cover the need. Add staging only when something concrete demands a stable URL — a third-party integration, a stakeholder demo, or a sandbox account with an external provider.',
+    see: '12-staging',
+  },
+  'database-branching': {
+    name: 'Database branching',
+    short: 'A copy-on-write database clone created per preview deployment.',
+    full: 'An isolated database branch (e.g. via Neon) that starts as a copy of the production schema and data. Changes in the branch do not touch the parent. Created automatically per preview deployment and cleaned up when the Git branch is deleted.',
+    soWhat:
+      'It lets you run destructive migrations, seed hostile data, and delete everything with a production-shaped dataset and no risk to production. The single highest-value technique in the staging stage.',
+    see: '12-staging',
+  },
+  'deployment-protection': {
+    name: 'Deployment protection',
+    short:
+      'Authentication on preview URLs so they are not publicly accessible.',
+    full: 'A setting (e.g. Vercel Deployment Protection) that requires authentication before a preview URL loads. Preview URLs are unlisted, not secret — they end up in Slack, issue trackers, and occasionally search indexes.',
+    soWhat:
+      'If the product is not public yet or previews touch anything sensitive, protection keeps casual visitors out. For CI, a bypass secret lets Playwright reach the page without a login.',
+    see: '12-staging',
+  },
+  'production-grade': {
+    name: 'Production-grade',
+    short: 'Someone other than you depends on it working.',
+    full: 'The state where someone other than you depends on the software working. It is about consequences, not scale: ten paying users make software production-grade; ten thousand on a toy do not.',
+    soWhat:
+      'It is the baseline assumption of the whole playbook — solo, but with something real depending on the result — and it is what separates rigor from ceremony.',
+  },
+  rollback: {
+    name: 'Rollback',
+    short: 'Returning production to the previous known-good state.',
+    full: 'Returning production to the last known-good state. On Vercel it is promoting a prior deployment, which takes seconds — but it is not automatic for database migrations, which is why migrations get careful, separate treatment.',
+    soWhat:
+      'A deploy you can undo in seconds is a deploy you can make casually. The asymmetry with database changes is the whole reason migrations are handled apart.',
+    see: '13-production-deployment',
+  },
+  'skew-protection': {
+    name: 'Skew protection',
+    short:
+      'Letting a browser on old client JS still talk to the server after a deploy.',
+    full: 'Ensuring a browser still running the previous client JavaScript can talk to the server after a new deploy. Without it, users mid-session hit errors every time you ship.',
+    soWhat:
+      'It is the difference between deploying whenever you like and only deploying when nobody is using the app.',
+    see: '13-production-deployment',
+  },
+  'smoke-test': {
+    name: 'Smoke test',
+    short:
+      'A small set of checks confirming the critical paths work after a deploy.',
+    full: 'A small set of checks confirming the critical paths still work after a deploy. Not comprehensive by design; it answers "is this catastrophically broken?" in under a minute.',
+    soWhat:
+      'It is the cheapest insurance in shipping: a minute of checks between "deployed" and "walked away" catches the failures that otherwise page you at night.',
+    see: '14-post-deployment-verification',
+  },
+  slo: {
+    name: 'SLO (Service Level Objective)',
+    short:
+      'The reliability target you commit to, e.g. "99.9% of requests succeed."',
+    full: 'The reliability target you commit to — for example, "99.9% of requests succeed." Meaningful only if you have decided in advance what happens when you miss it.',
+    soWhat:
+      'An SLO without a consequence is a wish. Paired with an error budget, it becomes the rule that governs when you ship and when you stop.',
+    see: '15-observability',
+  },
+  traps: {
+    name: 'Traps',
+    short: 'The last section of every stage doc: failure modes worth naming.',
+    full: 'The closing section of every stage doc — the failure modes worth naming. They accumulate from real experience and become the most valuable part of the playbook over time.',
+    soWhat:
+      'Generic advice ages; the specific traps you actually hit do not. Adding to them is what turns a borrowed playbook into your own.',
+  },
+  yagni: {
+    name: 'YAGNI (You Aren’t Gonna Need It)',
+    short:
+      'Do not build for requirements you have imagined rather than encountered.',
+    full: 'You Aren’t Gonna Need It: do not build for requirements you have imagined rather than met. The most common cause of accidental complexity.',
+    soWhat:
+      'Half the advice in this playbook is a specific application of it — the "not now" list, the MVP cut, deferring architecture. When in doubt, do less.',
+  },
+  'domain-model': {
+    name: 'Domain model',
+    see: '03-architecture',
+    short:
+      'The nouns your system holds and how they relate, before any table exists.',
+    full: 'A description of the system in entities and relationships — a user has many clients, a client has many invoices — written in the language of the problem rather than the language of the database. Tables come after, as one way of storing it.',
+    soWhat:
+      'It is the decision that outlives every framework choice, because migrating code is easy and migrating data is not. Getting it wrong is the most expensive kind of wrong available before you have users.',
+  },
+  'deployment-circuit-breaker': {
+    name: 'Deployment circuit breaker',
+    short: 'Auto-rollback when new tasks repeatedly fail health checks.',
+    full: 'An ECS feature that monitors new tasks during a rolling deployment. If they repeatedly fail to reach a healthy state, ECS stops the deployment and rolls back to the last successful revision. Without it, a bad image loops through start-crash-restart indefinitely.',
+    soWhat:
+      'A safety net that turns a silent failure into an automatic recovery. Enable it on every ECS service with rollback: true.',
+    see: '13-production-deployment',
+  },
+  'derived-state': {
+    name: 'Derived state',
+    see: '03-architecture',
+    short:
+      'A value that could be calculated from others, but is stored anyway.',
+    full: 'Anything you could work out on demand — whether an invoice is overdue, how many items are in a cart, a running total — that is written into a column instead. Storing it means something has to keep it up to date.',
+    soWhat:
+      'Stored derived state drifts. The job that updates it misses a run, or a script writes around it, and now two fields in your database disagree about the same fact with no way to tell which is right.',
+  },
+  'soft-delete': {
+    name: 'Soft delete',
+    see: '03-architecture',
+    short: 'Marking a row deleted instead of removing it.',
+    full: 'A deleted_at timestamp or a boolean flag, set instead of issuing a DELETE. The row stays; every query that should not see it has to filter it out.',
+    soWhat:
+      'It is the trade the stage asks you to make deliberately: a permanently more complex query set, in exchange for being able to answer “where did that invoice go”. For financial or audited records, the complexity is usually worth it, and the decision cannot be revisited after the rows are gone.',
+  },
+  'join-table': {
+    name: 'Join table',
+    see: '03-architecture',
+    short: 'A table whose job is to connect two other tables.',
+    full: 'When a client can belong to several users and a user to several clients, neither table can hold the relationship in a column. A third table holds pairs of ids instead — one row per connection.',
+    soWhat:
+      'Starting with a foreign key and discovering later that you needed a join table is a migration plus a rewrite of every query that touched the relationship. The asymmetry is the reason to think about it now rather than when it bites.',
+  },
+  monolith: {
+    name: 'Monolith',
+    see: '03-architecture',
+    short: 'One application, one deployment, one process.',
+    full: 'A system where all the code runs together rather than being split across services that talk over a network. Internal structure can still be strict; the distinction is about deployment and process boundaries, not tidiness.',
+    soWhat:
+      'For one developer it is the correct default rather than a compromise. The benefits of splitting — independent deploys, independent team scaling — are organisational, and you cannot collect them alone, but you pay every cost from day one.',
+  },
+  authorization: {
+    name: 'Authorization',
+    see: '03-architecture',
+    short: 'Deciding what a known user is allowed to do.',
+    full: 'Distinct from authentication, which establishes who the caller is: authentication gets you a user id, authorization decides whether that user id may read invoice 42. Three patterns: ownership — the row carries the caller’s id and you compare them; role — the caller holds a role that grants the action, whoever owns the row; membership — the caller and the row belong to the same group. They combine, and one entity often needs two of them joined by an “and”: a manager may approve a claim only if they hold the manager role and the shift belongs to a team they belong to.',
+    soWhat:
+      'Authentication is the part people buy or borrow and mostly get right. Authorization is written by hand in every route, and it is where other people’s data leaks when one route forgets. Two ways it goes wrong quietly: ownership is the dangerous default, right often enough to feel general and then failing on the first product where one person acts on another person’s record; and a rule that needs two patterns and gets one does not error, it grants — a manager checked for role but not team approves another team’s work.',
+  },
+  'database-constraint': {
+    name: 'Database constraint',
+    see: '03-architecture',
+    short:
+      'A rule the database enforces itself, regardless of what the code does.',
+    full: 'NOT NULL, UNIQUE, CHECK, and foreign keys with their delete behaviour. Declared in the schema, so the database refuses to store a row that breaks them.',
+    soWhat:
+      'Application code has bugs, gets bypassed by migration scripts and one-off fixes, and races with itself under concurrency. The database does not get bypassed, which makes it the only place a rule genuinely holds.',
+  },
+  'event-sourcing': {
+    name: 'Event sourcing',
+    see: '03-architecture',
+    short:
+      'Storing the sequence of changes as the source of truth, not the current state.',
+    full: 'Instead of a row holding the current value, you store every change that ever happened and derive the current value by replaying them. The log is the database; the table you query is a projection built from it.',
+    soWhat:
+      'The distinction people get wrong: keeping an audit table alongside normal rows is not event sourcing. It is event sourcing only when the log is the truth and the current state is derived. That is a much larger commitment, and it is why the answer here is almost always no.',
+  },
+  cqrs: {
+    name: 'CQRS (Command Query Responsibility Segregation)',
+    see: '03-architecture',
+    short: 'Separate models for writing data and for reading it.',
+    full: 'Splitting the write path and the read path so each can be shaped for its own job — writes validated against one model, reads served from another built for the queries the screens make. Often paired with event sourcing, though neither requires the other.',
+    soWhat:
+      'It buys read performance and independent evolution of the two paths, at the cost of two models to keep aligned and reads that lag writes. For a system where one Postgres query answers the screen, it is complexity with nothing on the other side.',
+  },
+  normalisation: {
+    name: 'Normalisation',
+    see: '03-architecture',
+    short: 'Arranging tables so each fact is stored in exactly one place.',
+    full: 'A series of increasingly strict forms — first, second and third normal form are the ones that matter in practice — describing how far a schema has removed duplicated facts. Third normal form roughly means every column depends on the key, the whole key, and nothing but the key.',
+    soWhat:
+      'The practical test is shorter than the theory: if changing one fact means updating two rows, the model is wrong and will eventually disagree with itself. Denormalising on purpose to make a slow query fast is fine; denormalising by accident is how data rots.',
+  },
+  'partial-unique-index': {
+    name: 'Partial unique index',
+    see: '03-architecture',
+    short: 'Uniqueness enforced over only the rows that match a condition.',
+    full: "A unique index with a WHERE clause, so the constraint applies to a subset of the table. `CREATE UNIQUE INDEX ... ON claims (shift_id) WHERE status = 'approved'` permits many rejected claims per shift and exactly one approved one.",
+    soWhat:
+      'It is the tool for rules of the form "at most one active X per Y", which plain UNIQUE cannot express and application code cannot enforce against a race. Without it, the usual workaround is a check-then-insert that two concurrent requests both pass.',
+  },
+  'c4-model': {
+    name: 'C4 model',
+    see: '03-architecture',
+    short:
+      'Four zoom levels for diagramming a system: context, container, component, code.',
+    full: 'Simon Brown’s convention for architecture diagrams. Context shows your system and the outside world it talks to. Container shows the deployable things inside it — the application, the database, the worker. Component shows the pieces inside one container. Code is classes and functions.',
+    soWhat:
+      'It answers the question that stops most people drawing anything: what goes in the diagram, and at what altitude. For one person the first two levels do nearly all the work, and the code level is what an editor already draws for free.',
+  },
+  idempotency: {
+    name: 'Idempotency',
+    see: '03-architecture',
+    short: 'Doing it twice has the same effect as doing it once.',
+    full: 'A property of an operation: running it repeatedly with the same input leaves the system in the same state as running it once. Usually achieved by having the caller supply a key, and recording which keys have already been processed.',
+    soWhat:
+      'Anything that can be retried will eventually be retried, and anything delivered over a network will eventually arrive twice. Without it, a payment webhook that fires twice charges twice — and the second delivery is not a bug you can fix on your side.',
+  },
+  'blue-green-deployment': {
+    name: 'Blue/green deployment',
+    short:
+      'Running two identical environments and switching traffic between them.',
+    full: 'A deployment strategy where two complete environments (blue and green) run in parallel. The new version deploys to the idle environment, gets verified, then traffic switches from the active to the idle. Rollback is switching back.',
+    soWhat:
+      'The trade-off is infrastructure cost — you need capacity for both environments during the switch — in exchange for instant, zero-downtime rollback during the bake window.',
+    see: '13-production-deployment',
+  },
+  'bounded-context': {
+    name: 'Bounded context',
+    see: '03-architecture',
+    short: 'A boundary inside which one word means exactly one thing.',
+    full: 'From domain-driven design: a section of the system with its own model, where the terms have a single agreed meaning. "Invoice" in billing and "invoice" in a customer-support view are often not the same object, and a bounded context is the admission that forcing them together costs more than keeping them apart.',
+    soWhat:
+      'It gives you a reason to put a boundary somewhere specific rather than wherever the folders ended up. Fowler’s argument is that unifying the model across a whole large system is not cost-effective, so boundaries should follow the lines where people already use words differently.',
+  },
+  'ubiquitous-language': {
+    name: 'Ubiquitous language',
+    see: '03-architecture',
+    short:
+      'One vocabulary shared by the code and the people describing the problem.',
+    full: 'The practice of using the domain’s own words in the code — the table is called `claims` because the people who use the system say "claim". Not a translation layer between business terms and technical ones, but the deliberate absence of one.',
+    soWhat:
+      'Where the words diverge, bugs live in the gap: someone says "cancelled" meaning withdrawn-by-the-user and the code means rejected-by-a-manager. It also tells you where a bounded context boundary belongs — the point where the same word starts meaning something else.',
+  },
+  'modular-monolith': {
+    name: 'Modular monolith',
+    see: '03-architecture',
+    short:
+      'One deployable, with internal boundaries strict enough to split later.',
+    full: 'A monolith whose features own their data and talk to each other through published functions rather than by reaching into each other’s tables. One process and one deploy, but the seams are real and maintained.',
+    soWhat:
+      'It is what most solo and small-team projects should be, and it is frequently built without anyone using the name. Its cost is honest: the boundaries are held by discipline, because nothing in a single codebase enforces them for you.',
+  },
+  microservices: {
+    name: 'Microservices',
+    see: '03-architecture',
+    short:
+      'Separate deployables, each owning its data, talking over a network.',
+    full: 'An architecture where services are deployed and scaled independently and communicate over the network. Each owns its own storage; sharing a database between services undoes most of what the split was for.',
+    soWhat:
+      'What it buys is organisational — teams shipping without coordinating. What it costs is technical and arrives immediately: network failure modes, distributed debugging, and consistency problems that a single database solved for free. One person collects none of the benefit and all of the cost.',
+  },
+  'event-driven-architecture': {
+    name: 'Event-driven architecture',
+    see: '03-architecture',
+    short: 'Components react to events rather than calling each other.',
+    full: 'A style where a component announces that something happened and others respond, instead of one calling the next directly. It is a communication choice rather than a deployment shape — a single application can be event-driven inside.',
+    soWhat:
+      'It decouples the sender from who listens, which is exactly what makes it hard to follow: no call stack shows you the consequences of an event. Worth it where the consequences genuinely are open-ended, expensive where they are three known steps.',
+  },
+  serverless: {
+    name: 'Serverless',
+    see: '03-architecture',
+    short: 'Functions that run on demand, with no server you keep alive.',
+    full: 'Code deployed as individual functions the platform starts when a request arrives and stops afterwards, billed per invocation rather than per hour. Vercel’s deployment model for a Next.js application is this.',
+    soWhat:
+      'Scaling to zero is real and useful when load is spiky or near nothing. The costs are cold starts, execution time limits, and work that does not fit the request-response shape — which is why the stage’s split triggers name execution limits first.',
+  },
+  'hexagonal-architecture': {
+    name: 'Hexagonal architecture (ports and adapters)',
+    see: '03-architecture',
+    short:
+      'Domain logic in the middle, with everything external behind an interface.',
+    full: 'An organising principle where the core logic defines interfaces — ports — and the database, HTTP layer and third-party services are adapters plugged into them. The core depends on nothing outside itself.',
+    soWhat:
+      'It describes how a codebase is arranged inside, not how it deploys, so a hexagonal monolith is an ordinary thing. Confusing the two axes is what makes "monolith or microservices" sound like one question when it is two.',
+  },
+  'fitness-function': {
+    name: 'Fitness function',
+    see: '03-architecture',
+    short:
+      'An automated check that an architecture characteristic still holds.',
+    full: 'From evolutionary architecture: a test asserting a property of the system rather than a behaviour of a function. A rule that no module imports across a feature boundary, a build-size budget that fails the pipeline, an assertion that a page issues one query rather than forty.',
+    soWhat:
+      'It is the difference between a characteristic you chose and one you are hoping for. Boundaries, budgets and conventions decay silently because nothing tells you the day they stop being true — a fitness function is what turns "we agreed to" into "the build fails".',
+  },
+  statelessness: {
+    name: 'Statelessness',
+    see: '03-architecture',
+    short: 'The application keeps no request state in its own memory.',
+    full: 'Every request carries or looks up whatever it needs, and anything that must persist between requests lives in a cookie, a database or a shared store rather than a local variable. Any instance can serve any request.',
+    soWhat:
+      'It is the precondition for running more than one copy, which makes it the precondition for horizontal scaling and for serverless, where the platform starts and stops instances whenever it likes. An in-memory session cache works perfectly on one machine and breaks the moment there are two.',
+  },
+  'horizontal-scaling': {
+    name: 'Horizontal scaling',
+    see: '03-architecture',
+    short: 'More machines, rather than a bigger one.',
+    full: 'Adding instances behind a load balancer so work spreads across them. The alternative, vertical scaling, is moving to a larger machine: simpler, requiring no statelessness, and eventually running out of machine.',
+    soWhat:
+      'Vertical is the right first answer and has a ceiling; horizontal has effectively none and demands statelessness before it works at all. Knowing which one you are set up for is worth more than knowing you might need to scale.',
+  },
+  'read-replica': {
+    name: 'Read replica',
+    see: '03-architecture',
+    short: 'A copy of the database that serves reads but takes no writes.',
+    full: 'A secondary instance kept up to date from the primary, used to spread read load. Writes still go to one place, so replicas scale reads and do nothing for write throughput.',
+    soWhat:
+      'The catch is lag: a replica is behind the primary by some amount, so a read straight after a write can return the old value. That is eventual consistency arriving in your own product, which is why reads that must reflect a just-finished write go to the primary.',
+  },
+  'connection-pooling': {
+    name: 'Connection pooling',
+    see: '03-architecture',
+    short: 'Sharing a small set of database connections across many callers.',
+    full: 'A pooler sits between the application and the database, holding a limited number of real connections and multiplexing client requests onto them, instead of each caller opening its own.',
+    soWhat:
+      'It is the sharp edge of serverless plus Postgres, which is the stack this playbook prescribes. Functions scale by starting more instances and each one wants its own connection, so moderate traffic exhausts the database’s connection limit and requests start failing on connect rather than on anything you wrote.',
+  },
+  'isolation-level': {
+    name: 'Isolation level',
+    see: '03-architecture',
+    short: 'How much one in-flight transaction can see of another.',
+    full: 'A per-transaction setting trading strictness against concurrency. Postgres defaults to read committed: you never see uncommitted rows, but you do see rows others commit while you are still running. Serializable behaves as though transactions ran one at a time, and aborts one when it cannot guarantee that.',
+    soWhat:
+      'Read committed is enough for almost everything and does not prevent a lost update — two transactions reading the same row and both writing. Serializable does, at the cost of transactions that fail on conflict, which means your code needs a retry path it did not need before.',
+  },
+  'optimistic-locking': {
+    name: 'Optimistic locking',
+    see: '03-architecture',
+    short:
+      'Let both writers proceed, and reject the second one that arrives stale.',
+    full: 'Keep a version number on the row. Read it, and include it in the update: `WHERE id = $1 AND version = $2`. Zero rows updated means somebody committed between your read and your write, so you retry or tell the user.',
+    soWhat:
+      'It is the standard fix for the lost update, and it needs no locks held across user think-time — which is why it suits anything with a human in the loop. The version column is stored data, so by this stage’s own axis it is decide-now rather than a later addition.',
+  },
+  'pessimistic-locking': {
+    name: 'Pessimistic locking',
+    see: '03-architecture',
+    short: 'Lock the row on read, so the second writer waits.',
+    full: '`SELECT … FOR UPDATE` inside a transaction takes a row lock, and any other transaction wanting that row blocks until yours commits or rolls back.',
+    soWhat:
+      'Right when conflict is expected and the work between read and write is short. Wrong when the work is long or waits on a person, because you are holding a lock the whole time and inviting deadlocks between transactions that grab rows in different orders.',
+  },
+  'eventual-consistency': {
+    name: 'Eventual consistency',
+    see: '03-architecture',
+    short: 'Copies agree in the end, not immediately.',
+    full: 'A guarantee that replicas converge on the same data given time, without saying when. A read from a replica may return a value the primary has already changed.',
+    soWhat:
+      'Its practical face is the read-after-write anomaly: a user saves, is redirected, reads from a replica, and does not see their own change. It looks like a bug and is not one, which is why reads that must reflect a just-finished write go to the primary.',
+  },
+  'cap-theorem': {
+    name: 'CAP theorem',
+    see: '03-architecture',
+    short:
+      'When the network splits, you can keep consistency or availability, not both.',
+    full: 'For a system spread across nodes: during a network partition you may either refuse requests to stay consistent, or serve them and let copies disagree. Consistency and availability are only jointly achievable when nothing is partitioned.',
+    soWhat:
+      'It is quoted far more often than it applies. With one database there is no partition to survive and CAP is theory; it becomes a real decision the moment you add a replica or a second service that owns data.',
+  },
+  timeout: {
+    name: 'Timeout',
+    see: '03-architecture',
+    short: 'A deadline on a call, after which you stop waiting and decide.',
+    full: 'An explicit limit on how long you will wait for a network call before treating it as failed. Most HTTP clients and database drivers default to waiting indefinitely.',
+    soWhat:
+      'Without one, somebody else’s slow afternoon becomes your outage: requests pile up holding connections and memory until nothing works. The specific number matters far less than having one at all.',
+  },
+  'exponential-backoff': {
+    name: 'Exponential backoff (with jitter)',
+    see: '03-architecture',
+    short: 'Waiting longer between each retry, plus a random offset.',
+    full: 'Retry after 1s, then 2s, then 4s, rather than immediately and repeatedly. Jitter adds a random amount to each delay so that many clients retrying the same failed service do not do it in unison.',
+    soWhat:
+      'A service that just failed is usually recovering, and retrying hard prevents that — you become the reason it stays down. Without jitter, every client that failed at the same moment retries at the same moment, which is a thundering herd rebuilt out of your own retry logic.',
+  },
+  'circuit-breaker': {
+    name: 'Circuit breaker',
+    see: '03-architecture',
+    short:
+      'After repeated failures, stop calling for a while and fail immediately.',
+    full: 'A wrapper that counts consecutive failures, and once past a threshold stops attempting the call at all for a cooldown period, failing fast instead. After the cooldown it lets one request through to test whether the dependency recovered.',
+    soWhat:
+      'It is the pattern you reach for once your retries have made you part of the outage rather than a victim of it. Failing fast is also kinder to the caller than a timeout: an instant error can be handled, a thirty-second hang cannot.',
+  },
+  'graceful-degradation': {
+    name: 'Graceful degradation',
+    see: '03-architecture',
+    short: 'Deciding, per feature, what still works when a dependency is down.',
+    full: 'Designing so that the loss of one component removes one capability rather than the whole system. Search goes down and browsing still works; the PDF renderer goes down and the invoice still sends.',
+    soWhat:
+      'It is a design decision, not a fallback you add later, because it determines what the system needs to be able to do without each of its dependencies. Answering it per dependency is what makes an architecture diagram worth drawing.',
+  },
+  'expand-contract': {
+    name: 'Expand-contract (parallel change)',
+    see: '03-architecture',
+    short:
+      'Changing stored data in steps, each of which is safe to deploy alone.',
+    full: 'A sequence for altering a schema without downtime: add the new shape, write to both, backfill the old rows, move reads across, stop writing the old shape, then remove it. Six deploys rather than one.',
+    soWhat:
+      'It is what makes "stored data is expensive to change" a cost rather than a wall. The property that matters is that every step is independently deployable, so a failure at any point rolls back as a code rollback — and a dropped column does not roll back.',
+  },
+  'strangler-fig': {
+    name: 'Strangler fig',
+    see: '03-architecture',
+    short: 'Replacing a system incrementally while it keeps serving traffic.',
+    full: 'Put something in front of the existing system, route one path at a time to the replacement, and delete the old code once nothing reaches it. Named after the vine that grows around a tree and eventually stands without it.',
+    soWhat:
+      'It is why "we will split that out later" can be a plan instead of a hope. The alternative — a rewrite that has to reach parity before anyone can use it — is the failure mode it exists to avoid.',
+  },
+  'system-design': {
+    name: 'System design',
+    see: '03-architecture',
+    short:
+      'Deciding what the pieces are, how they talk, and what the data looks like.',
+    full: 'The activity between knowing what a product must do and writing the code that does it: choose the qualities the system has to have, model the data, pick a deployment shape, draw what depends on what, and settle the interfaces and access rules. The phrase is most often heard as the name of an interview format, which follows roughly that sequence.',
+    soWhat:
+      'It is the same work this stage calls architecture, so a reader searching for one and finding the other has not taken a wrong turn. Worth knowing that the interview version usually adds capacity estimation, and that this stage deliberately keeps that light — sizing a system you cannot describe yet is the trap it spends a section refusing.',
+  },
+  'architecture-characteristic': {
+    name: 'Architecture characteristic (non-functional requirement)',
+    see: '03-architecture',
+    short: 'What a system has to be good at, as opposed to what it does.',
+    full: 'Availability, correctness, auditability, latency, security, cost to run — the qualities a design has to satisfy, separate from the features it delivers. Richards and Ford call them architecture characteristics; most job descriptions and specifications call the same thing non-functional requirements. One idea, two vocabularies.',
+    soWhat:
+      'They trade against each other, so a list of twenty is a list of none — high availability costs money, strong auditability costs write throughput, and cheap-to-run costs both. Three or four chosen deliberately are what turn a structural decision into something you can defend; without them, picking an architecture is picking a preference.',
+  },
+  'server-component': {
+    name: 'Server Component',
+    see: '05-development',
+    short:
+      'The default kind of component under the App Router — it renders on the server and never ships its own code to the browser.',
+    full: 'A component that runs during the request, with direct access to whatever the server can reach — a database, a filesystem, a secret. It sends the browser only the HTML it produced; its own source never becomes part of the JavaScript bundle.',
+    soWhat:
+      'It is why a page can query a database with no API route in between: the component and the data live on the same side of the network, so there is nothing to call across.',
+  },
+  'client-component': {
+    name: 'Client Component',
+    see: '05-development',
+    short:
+      'A component whose file opens with the ‘use client’ directive, so it can hold state and respond to clicks.',
+    full: 'A component marked ‘use client’. It still renders once on the server to produce the page’s first HTML, then ships its own code to the browser and takes over there — which is what lets it hold state, run event handlers, and read something like window.',
+    soWhat:
+      'The directive marks a boundary, not a location: everything the marked file imports and renders is pulled into the client bundle along with it, so where the boundary sits decides how much JavaScript the page ships — not whether the page is blank before that JavaScript arrives.',
+  },
+  'server-action': {
+    name: 'Server Action',
+    see: '05-development',
+    short:
+      'A function marked ‘use server’ that runs on the server but is called like an ordinary function from the client.',
+    full: 'A function whose file or body opens with the ‘use server’ directive. Next.js turns it into a public HTTP endpoint behind the scenes, wires it to a form’s action or a plain click handler, and lets the calling code write it as though it were an ordinary async function.',
+    soWhat:
+      'The resemblance to a normal function call is exactly what makes it risky: anyone who can reach the endpoint can call it, so it owes every caller the same authenticate–validate–authorize sequence a route handler would, however innocent the call site looks.',
+  },
+  'feature-flag': {
+    name: 'Feature flag',
+    see: '05-development',
+    short:
+      'A boolean your code checks before running a piece of work, defaulting to off.',
+    full: 'A boolean your code reads before doing something, set to off by default. Code sitting behind one can merge to the main branch without being reachable by anyone. An environment variable is enough to start; a dedicated flag service earns its keep only once you need to flip one without a deploy.',
+    soWhat:
+      'It is what keeps “smallest shippable slice” honest when a feature genuinely takes longer than two days end to end — the alternative is a long-lived branch, and those diverge, conflict, and stop being reviewable.',
+  },
+  zod: {
+    name: 'Zod',
+    see: '05-development',
+    short:
+      'A schema library that parses unknown input into a typed value, or fails.',
+    full: 'A TypeScript schema library used to parse data whose shape you cannot trust — an HTTP request body, an environment variable, a third-party API response — into a value the compiler can rely on. `schema.safeParse(input)` returns either the typed data or a list of what did not match, and nothing downstream sees the input until it has passed.',
+    soWhat:
+      'It is the difference between a type and a check. A TypeScript type disappears at runtime, so annotating unparsed input as a type only names a hope; Zod is the part that actually looks at the value before anything trusts it.',
+  },
+  'error-boundary': {
+    name: 'Error boundary',
+    see: '05-development',
+    short:
+      'A boundary that catches what throws below it and renders a fallback instead of a blank page.',
+    full: 'A segment marked by a file like `error.tsx` in the App Router. It catches an unhandled throw from anything it wraps and renders a fallback in place of the crashed subtree, rather than taking the whole page down. It has to be a Client Component — one of the few places the directive is not a choice.',
+    soWhat:
+      'It is for the unexpected only. A failure you can already name — an invalid amount, a record that is not the caller’s — belongs in a Server Action’s return value instead, because the reader needs the actual message, not a generic retry button.',
+  },
+  rebase: {
+    name: 'Rebase',
+    see: '05-development',
+    short:
+      'Replay a branch’s commits on top of the latest target branch, so history reads in a straight line.',
+    full: 'Move a branch’s commits so they start from the current tip of the branch it will merge into, rather than from wherever it happened to fork. Run before opening the pull request, so the diff a reviewer sees is the diff that will actually land.',
+    soWhat:
+      'A merge without it still works, but the history it leaves behind interleaves two branches’ commits by timestamp instead of by intent — exactly the record `git log` exists to be.',
+  },
+  mock: {
+    name: 'Mock',
+    see: '06-testing',
+    short: 'A stand-in for a real dependency that returns what you told it to.',
+    full: 'A stand-in for a real dependency — a database, an API — that returns exactly what you told it to, rather than what a real one would.',
+    soWhat:
+      'Mocking the database means your test asserts against your own instructions — it cannot see a constraint violation, a transaction bug, or a malformed query.',
+  },
+  'test-fixture': {
+    name: 'Test fixture',
+    see: '06-testing',
+    short: 'The known starting state a test runs against.',
+    full: 'The known starting state a test runs against — seeded rows, a database reset to a clean slate before the run starts.',
+    soWhat:
+      'Without a reset between tests, tests pass in one order and fail in another, and the failure looks like a bug in the code rather than in the setup.',
+  },
+  'regression-test': {
+    name: 'Regression test',
+    see: '06-testing',
+    short: 'A test written to reproduce a specific bug.',
+    full: 'A test written to reproduce a specific bug, which must fail before the fix lands and pass after.',
+    soWhat:
+      'Skipping it means you cannot prove the fix works, and nothing stops the same bug coming back.',
+  },
+  'invariant-test': {
+    name: 'Invariant test',
+    see: '06-testing',
+    short: 'A test asserting the shape of data rather than its values.',
+    full: 'A test asserting the shape of data rather than its values — counts, uniqueness, cross-references between files, rather than what any one field contains.',
+    soWhat:
+      'It fires exactly when a human is hand-editing a config or data file, which is the moment reviews are at their weakest.',
+  },
+  'teeth-check': {
+    name: 'Teeth check',
+    see: '06-testing',
+    short:
+      'Deliberately breaking the implementation to confirm a test fails, then restoring it.',
+    full: 'Deliberately breaking the implementation a test covers to confirm the test actually fails, then restoring the code.',
+    soWhat:
+      'A test written after the code it covers has never been red, so a green result proves nothing until you have seen it bite.',
+  },
+  'code-coverage': {
+    name: 'Code coverage',
+    see: '06-testing',
+    short: 'The percentage of lines or branches a test suite executes.',
+    full: 'The percentage of lines or branches a test suite executes when it runs.',
+    soWhat:
+      'Useful as a diagnostic, useless as a target — a blanket threshold is satisfied by testing whatever is easiest, which is rarely whatever is riskiest.',
+  },
+  'flaky-test': {
+    name: 'Flaky test',
+    see: '06-testing',
+    short: 'A test that passes and fails on the same code.',
+    full: 'A test that passes and fails on the same code, with nothing about the code itself changing between runs.',
+    soWhat:
+      'On a team it gets tolerated because everyone assumes someone else owns it, and once a suite is known to be unreliable a real failure stops being believed.',
+  },
+  'accessible-name': {
+    name: 'Accessible name',
+    see: '06-testing',
+    short: 'The name assistive technology reports for an element.',
+    full: 'The name assistive technology reports for an element — usually its visible text or its label.',
+    soWhat:
+      'Selecting by it in an E2E test means the test breaks when what the user sees changes and not when the styling does, and it makes an inaccessible UI produce failing tests.',
+  },
+  'rolling-deployment': {
+    name: 'Rolling deployment',
+    short: 'Replacing instances of the old version one at a time.',
+    full: 'A deployment strategy where new tasks start alongside old tasks, pass health checks, and then old tasks drain. On ECS, governed by minimumHealthyPercent and maximumPercent.',
+    soWhat:
+      'The simplest strategy and the ECS default. No extra infrastructure, but rollback means deploying the previous version forward — there is no instant switch back.',
+    see: '13-production-deployment',
+  },
+  'rubber-stamping': {
+    name: 'Rubber-stamping',
+    short: 'Approving a change without genuine review.',
+    full: 'Approving code changes without reading them carefully — clicking "approve" based on green CI, a clean-looking diff, or trust in the author rather than on what the code actually does.',
+    soWhat:
+      'The merge gate exists to catch what the author missed. Bypassing it means defects reach production with two names on them.',
+    see: '07-code-review',
+  },
+  provenance: {
+    name: 'Provenance (review)',
+    short:
+      'Tracking whether a finding was introduced, pre-existing, or plan-authored.',
+    full: 'A tag on a review finding that says where the defect came from: new in this PR, already present in the codebase (PRE-EXISTING), or introduced by the plan itself (PLAN-AUTHORED ERROR). The distinction changes who fixes it and whether it blocks this merge.',
+    see: '07-code-review',
+  },
+  'finding-severity': {
+    name: 'Finding severity',
+    short:
+      'Critical / Important / Minor / Nit classification for review comments.',
+    full: 'A label on every review comment that tells the author what blocks the merge and what does not. Critical means data loss or security breach. Important means a bug the user will hit. Minor is real but non-blocking. Nit is polish.',
+    soWhat:
+      'Without labels, every comment reads as a same-weight demand and reviews turn adversarial.',
+    see: '07-code-review',
+  },
+  'self-review': {
+    name: 'Self-review',
+    short: 'Reviewing your own code with techniques to defeat cognitive bias.',
+    full: 'Deliberately breaking the state that makes reviewing your own code useless — you are still holding the intent, so you read what you meant rather than what you wrote. Three techniques: create distance, read the diff not the code, and explain it out loud.',
+    see: '07-code-review',
+  },
+  baseline: {
+    name: 'Baseline',
+    short:
+      'The normal error rate and latency before a deploy, used to judge whether a change made things worse.',
+    full: 'The normal error rate, latency, and traffic volume before a deploy. Without one, post-deploy numbers are unreadable — 12 errors in the last hour could be a catastrophe or a Tuesday.',
+    soWhat:
+      'A deploy without a baseline is a deploy you cannot verify. You will either panic at nothing or ignore something real.',
+    see: '14-post-deployment-verification',
+  },
+  'bake-time': {
+    name: 'Bake time',
+    short:
+      'A waiting period after deployment during which CloudWatch alarms are monitored before the deploy is marked complete.',
+    full: 'A period after new ECS tasks go healthy during which CloudWatch alarms are monitored. If an alarm fires during the bake window, the deployment is marked FAILED and can auto-rollback. If no alarm fires, the deployment is marked COMPLETED.',
+    soWhat:
+      'Too short a bake time means slow-onset problems — memory leaks, cache expiration bugs — slip through and the deployment is marked healthy with a live defect.',
+    see: '14-post-deployment-verification',
+  },
+  'deployment-alarm': {
+    name: 'Deployment alarm',
+    short:
+      'A CloudWatch alarm wired to an ECS deployment that can trigger automatic rollback.',
+    full: 'A CloudWatch alarm attached to an ECS deployment configuration. ECS polls these alarms during the bake period after new tasks go healthy. Key metrics: HTTPCode_ELB_5XX_Count, TargetResponseTime, CPUUtilization, MemoryUtilization.',
+    soWhat:
+      'Without deployment alarms, ECS reports success based on task health checks alone. A service can be healthy (tasks running, health checks passing) while throwing 5XX errors to users.',
+    see: '14-post-deployment-verification',
+  },
+  'branch-protection': {
+    name: 'Branch protection',
+    short:
+      'Repository rules that enforce who can push to a branch and what checks must pass first.',
+    full: 'A set of rules applied to a branch (typically main) requiring status checks to pass, reviews to be approved, and branches to be current before a merge is allowed. Without it, a CI pipeline is advisory — anyone can merge regardless of what the checks say.',
+    soWhat:
+      'The pipeline is decoration until merging is actually blocked. Enforcement is the difference between a gate and a suggestion.',
+    see: '11-ci-cd',
+  },
+  'concurrency-group': {
+    name: 'Concurrency group',
+    short:
+      'A GitHub Actions key that groups workflow runs so only one runs at a time per group.',
+    full: 'A string key (typically including the branch ref) that tells GitHub Actions to cancel in-progress runs when a new one starts for the same group. Without it, pushing three times to a branch queues three full CI runs.',
+    soWhat:
+      'Three pushes cost one run instead of three. Free savings on both minutes and queue time.',
+    see: '11-ci-cd',
+  },
+  'deployment-status': {
+    name: 'Deployment status event',
+    short:
+      'A GitHub webhook event fired when a deployment (like a Vercel preview) finishes.',
+    full: 'The `deployment_status` event fires after an external deployment platform reports success or failure. Using it as a workflow trigger means E2E tests run against the real deployed URL — a real build, real edge network, real database — rather than a dev server.',
+    soWhat:
+      'Tests the thing you actually ship, not a local approximation of it.',
+    see: '11-ci-cd',
+  },
+  'frozen-lockfile': {
+    name: 'Frozen lockfile',
+    short:
+      'An install flag that fails if the lockfile disagrees with package.json.',
+    full: '`pnpm install --frozen-lockfile` (or `npm ci`) refuses to resolve dependencies and fails if the lockfile is out of sync with package.json. Without it, CI silently resolves different versions than you tested with locally.',
+    soWhat:
+      'A green CI build means the exact same versions you tested. Without it, you get a green build for code that may not run.',
+    see: '11-ci-cd',
+  },
+  'merge-queue': {
+    name: 'Merge queue',
+    short:
+      'A GitHub feature that tests each PR against the actual post-merge state before merging.',
+    full: 'When multiple PRs target the same branch, a merge queue serialises them: each PR is tested against a temporary merge of everything ahead of it, not just its own branch point. This catches conflicts between PRs that are each green on their own.',
+    soWhat:
+      'Two PRs that each pass independently can still break when merged together. The queue catches that before it reaches main.',
+    see: '11-ci-cd',
+  },
+  oidc: {
+    name: 'OIDC',
+    short:
+      'A protocol for exchanging short-lived identity tokens, used in CI to avoid storing long-lived secrets.',
+    full: 'OpenID Connect lets a CI runner (like GitHub Actions) mint a short-lived JWT proving its identity. A cloud provider (like AWS) exchanges that JWT for temporary credentials scoped to one run. No long-lived access key sits in a config file waiting to be leaked.',
+    soWhat:
+      'Short-lived credentials minted per run cannot leak from a config file that no longer holds them.',
+    see: '11-ci-cd',
+  },
+  heartbeat: {
+    name: "Heartbeat (dead man's switch)",
+    short:
+      'A ping a job sends on success; the monitor pages when the ping stops arriving.',
+    full: 'A scheduled job calls a URL when it finishes successfully, and a monitor pages you when the call does not arrive inside the window you set. It is the only monitor that alerts on silence rather than on an event, which is why it goes on the success path and never in a `finally`.',
+    soWhat:
+      'A job that never ran produces no exception, no log line and no request — every other mechanism reports healthy. This is the one that does not.',
+    see: '15-observability',
+  },
+  liveness: {
+    name: 'Liveness check',
+    short:
+      'Is this process wedged? — the check a platform uses to decide whether to restart it.',
+    full: 'An endpoint that returns 200 whenever the process is running and checks nothing else. Platforms that restart on a failed check (Fly, ECS, Cloud Run, a Kubernetes liveness probe) read this one.',
+    soWhat:
+      'A restart cannot fix a database. Wire the restart trigger to a check that depends on one and a thirty-second blip restarts every instance you have, at once.',
+    see: '15-observability',
+  },
+  readiness: {
+    name: 'Readiness check',
+    short:
+      'Should traffic come here right now? — the check a load balancer uses to route around an instance.',
+    full: "An endpoint that verifies real dependencies (the database, with a timeout) and returns 503 when one is unreachable. Routing decisions — a load balancer's health check, a Kubernetes readiness probe — read this one and pull the instance out of rotation without restarting it.",
+    soWhat:
+      'It is what your uptime monitor should point at. It is not what your restart trigger should point at; that is the liveness check.',
+    see: '15-observability',
+  },
+  saturation: {
+    name: 'Saturation',
+    short:
+      'How close a resource is to its ceiling — connections, concurrency, disk.',
+    full: 'The fourth golden signal: how full the resource with a hard limit is. Database connections, function concurrency, storage. Unlike CPU, a saturated resource with a hard ceiling does not recover on its own, so it is worth alerting on before it becomes a symptom.',
+    soWhat:
+      'On a small deployment it is the signal most likely to be the actual incident — a connection pool exhausted by a batch job running alongside daytime traffic — and the one most often left off the dashboard.',
+    see: '15-observability',
+  },
+  cardinality: {
+    name: 'Cardinality',
+    short:
+      'How many distinct values a field takes. Fine in logs, expensive as a metric label.',
+    full: 'A high-cardinality field — a user id, an invoice id, a request id — has as many distinct values as there are users, invoices or requests. In logs, that is what makes a particular event findable. As a metric label, every combination of label values creates another time series.',
+    soWhat:
+      'Keep identifiers in log lines and out of metric labels. A bounded event name is a fine label; a unique id is not.',
+    see: '15-observability',
+  },
+  'structured-logging': {
+    name: 'Structured logging',
+    short: 'Logging objects — one JSON line per event — instead of sentences.',
+    full: 'Each log call emits a JSON object with named fields (`event`, `userId`, `requestId`, `reason`) rather than a formatted sentence. `pino` writes one object per line to stdout, which every platform collects; the shape is what matters, not the library.',
+    soWhat:
+      'Sentences are unsearchable at volume. "How many card_declined events this week, by amount?" is a query against objects and impossible against prose.',
+    see: '15-observability',
+  },
+  'request-id': {
+    name: 'Request id',
+    short:
+      'One id shared by every log line and error report from the same request.',
+    full: "A per-request identifier — the incoming `x-request-id` if there is one, else a fresh UUID — stored in `AsyncLocalStorage` and attached to every log line by the logger's `mixin`, and to the error report with `Sentry.setTag`. Not distributed tracing: it is one field, and it costs nothing.",
+    soWhat:
+      'Without it, "work out why" fails at two log lines: you can see the error and the logs and cannot connect them.',
+    see: '15-observability',
+  },
+  'alert-fatigue': {
+    name: 'Alert fatigue',
+    short:
+      'The state where you dismiss alerts without reading them, because most have not needed action.',
+    full: 'Not a discipline failure; the predictable result of noisy alerts. An alert that has woken you four times without once needing action has taught you to ignore it, and the fifth time is the real one.',
+    soWhat:
+      'Every alert must be actionable. The cure for a noisy alert is to raise its threshold, lengthen its window, or delete it — not to try harder to read it.',
+    see: '15-observability',
+  },
+  'incident-commander': {
+    name: 'Incident commander',
+    short: 'The person accountable for coordinating an incident response.',
+    full: 'Keeps ownership, decisions, communication and handoffs clear while responders limit impact. A solo developer can hold this role alongside technical work.',
+    soWhat: 'Someone still owns the response when a backup does not answer.',
+    see: '16-incident-management',
+  },
+  postmortem: {
+    name: 'Postmortem',
+    short:
+      'An evidence-based record of an incident and what changes afterward.',
+    full: 'Records customer impact, the response timeline, contributing conditions, detection gaps and follow-up actions with owners and dates. Unknowns remain explicit rather than becoming blame or invented certainty.',
+    soWhat:
+      'Recovery ends the immediate impact; tracked actions address recurrence.',
+    see: '16-incident-management',
+  },
+  runbook: {
+    name: 'Runbook',
+    short:
+      'A rehearsed procedure for operating or recovering a specific service.',
+    full: 'Names the required access, evidence, safe actions, stop conditions, escalation path and recovery checks. It stays accessible when the affected application is down.',
+    soWhat:
+      'A contact list or untested command is not enough during an incident.',
+    see: '16-incident-management',
+  },
+}
+
+export function getTerm(key: string): Term | undefined {
+  return TERMS[key]
+}

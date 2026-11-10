@@ -39,12 +39,15 @@ export function RevealList({
   idPrefix,
   header,
   footer,
+  headingLevel = 3,
 }: {
   rows: RevealRow[]
   idPrefix: string
   header?: ReactNode
   footer?: ReactNode
+  headingLevel?: 3 | 5
 }) {
+  const Heading = headingLevel === 5 ? 'h5' : 'h3'
   const [openIds, setOpenIds] = useState<Set<string>>(new Set())
 
   const toggle = (id: string) =>
@@ -78,7 +81,7 @@ export function RevealList({
           const panelId = `${idPrefix}-${row.id}`
           return (
             <li key={row.id}>
-              <h3>
+              <Heading>
                 <button
                   type="button"
                   onClick={() => toggle(row.id)}
@@ -141,7 +144,7 @@ export function RevealList({
                     aria-hidden
                   />
                 </button>
-              </h3>
+              </Heading>
 
               {open && (
                 <div

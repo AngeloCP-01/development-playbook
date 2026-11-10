@@ -1,0 +1,56 @@
+[
+  {
+    "command": "pnpm format:check",
+    "exit": 0,
+    "seconds": 2.74,
+    "log": "gate-format-check.log"
+  },
+  {
+    "command": "pnpm lint",
+    "exit": 0,
+    "seconds": 10.69,
+    "log": "gate-lint.log"
+  },
+  {
+    "command": "pnpm typecheck",
+    "exit": 0,
+    "seconds": 5.95,
+    "log": "gate-typecheck.log"
+  },
+  {
+    "command": "pnpm test",
+    "exit": 0,
+    "seconds": 28.83,
+    "log": "gate-test.log"
+  },
+  {
+    "command": "pnpm build",
+    "exit": 1,
+    "seconds": 1.89,
+    "log": "gate-build-symlink.log"
+  },
+  {
+    "command": "pnpm build",
+    "exit": 1,
+    "seconds": 21.22,
+    "log": "gate-build-font-fetch.log"
+  },
+  {
+    "command": "pnpm build",
+    "exit": 0,
+    "seconds": 10.75,
+    "log": "gate-build.log"
+  },
+  {
+    "command": "pnpm test:e2e",
+    "exit": 0,
+    "seconds": 534.37,
+    "log": "gate-test-e2e.log"
+  },
+  {
+    "command": "pnpm test:dev-console",
+    "exit": 0,
+    "seconds": 104.23,
+    "log": "gate-test-dev-console.log"
+  }
+]

@@ -1,0 +1,13 @@
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+> vitest run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+
+ Test Files  208 passed (208)
+      Tests  1511 passed (1511)
+   Start at  08:56:52
+   Duration  33.84s (transform 13.25s, setup 17.62s, import 34.04s, tests 50.58s, environment 95.35s)
+

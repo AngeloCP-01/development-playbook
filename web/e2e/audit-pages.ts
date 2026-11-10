@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test'
 import { STAGES } from '../src/lib/stages'
-import { CHEATSHEETS } from '../src/lib/cheatsheets'
+import { REFERENCE_RESOURCES } from '../src/lib/reference-resources'
+import { CHEATSHEETS, type Cheatsheet } from '../src/lib/cheatsheets'
 
 /**
  * The URLs the audit sweeps, derived rather than listed (TD-12).
@@ -81,6 +82,20 @@ export async function readStepIds(page: Page, slug: string): Promise<string[]> {
 
 let cached: string[] | null = null
 
+/** Read the rendered reference rail, not nested tabs or the data's ID list. */
+export async function readStudyIds(
+  page: Page,
+  sheet: Pick<Cheatsheet, 'slug' | 'title'>,
+): Promise<string[]> {
+  await page.goto(`/reference/${sheet.slug}`, { waitUntil: 'networkidle' })
+  const ids = await page
+    .getByRole('tablist', { name: `${sheet.title} sections`, exact: true })
+    .locator(':scope > [role="tab"][id^="tab-"]')
+    .evaluateAll((tabs) => tabs.map((tab) => tab.id.slice(4)))
+  if (!ids.length) throw new Error(`${sheet.slug} study renders no sections`)
+  return ids
+}
+
 /**
  * Every URL the audit sweeps: the home page, then one hash per step of every
  * ready stage.
@@ -99,12 +114,18 @@ export async function auditPages(page: Page): Promise<string[]> {
     paths.push(...ids.map((id) => `/stages/${stage.slug}#${id}`))
   }
 
-  // Derived for the same reason the stage sweep is (TD-12): a sheet registered
-  // later must not be able to slip out of the audit in silence. Unlike the
-  // stage steps above, this needs no page load — the registry is a plain array,
-  // so the only cost is the sweep itself.
+  // Ordinary sheets need one URL. A study sheet also needs every rendered hash;
+  // checking only its base URL would silently leave later teaching unaudited.
   paths.push('/reference')
-  paths.push(...CHEATSHEETS.map((sheet) => `/reference/${sheet.slug}`))
+  paths.push(...REFERENCE_RESOURCES.map((resource) => resource.href))
+  for (const sheet of CHEATSHEETS) {
+    const base = `/reference/${sheet.slug}`
+    paths.push(base)
+    if (sheet.sections.some((section) => section.study)) {
+      const ids = await readStudyIds(page, sheet)
+      paths.push(...ids.map((id) => `${base}#${id}`))
+    }
+  }
 
   cached = paths
   return paths

@@ -1,0 +1,36 @@
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+ ❯ |unit| src/lib/source-citations.test.ts (3 tests | 1 failed | 2 skipped) 10ms
+   × every cross-document anchor link resolves to a real heading 9ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 2 skipped (3)
+   Start at  08:59:28
+   Duration  265ms (transform 25ms, setup 0ms, import 129ms, tests 10ms, environment 0ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/lib/source-citations.test.ts > every cross-document anchor link resolves to a real heading
+AssertionError: anchor links pointing at headings that do not exist: expected [ …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "03-architecture.md -> 10-documentation.md#document-decisions-not-descriptions",
++   "03-architecture.md -> 10-documentation.md#document-decisions-not-descriptions",
++ ]
+
+ ❯ src/lib/source-citations.test.ts:150:5
+    148|     broken.map((b) => `${b.from} -> ${b.target}#${b.anchor}`),
+    149|     'anchor links pointing at headings that do not exist',
+    150|   ).toEqual([])
+       |     ^
+    151| })
+    152|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

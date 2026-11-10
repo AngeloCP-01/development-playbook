@@ -1,0 +1,43 @@
+
+> web@0.1.0 build /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+> next build
+
+▲ Next.js 16.2.10 (Turbopack)
+
+  Creating an optimized production build ...
+Turbopack build encountered 3 warnings:
+[next]/internal/font/google/archivo_d462d458.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap
+
+
+[next]/internal/font/google/jetbrains_mono_f8290d5a.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&display=swap
+
+
+[next]/internal/font/google/newsreader_8524af2f.module.css
+Error while requesting resource
+There was an issue establishing a connection while requesting https://fonts.googleapis.com/css2?family=Newsreader:wght@200..800&display=swap
+
+
+
+> Build error occurred
+Error: Turbopack build failed with 3 errors:
+[next]/internal/font/google/archivo_d462d458.module.css
+next/font: error:
+Failed to fetch `Archivo` from Google Fonts.
+
+
+[next]/internal/font/google/jetbrains_mono_f8290d5a.module.css
+next/font: error:
+Failed to fetch `JetBrains Mono` from Google Fonts.
+
+
+[next]/internal/font/google/newsreader_8524af2f.module.css
+next/font: error:
+Failed to fetch `Newsreader` from Google Fonts.
+
+
+    at ignore-listed frames
+ ELIFECYCLE  Command failed with exit code 1.

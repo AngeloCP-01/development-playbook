@@ -1,0 +1,53 @@
+Starting format:check
+{'command': 'pnpm format:check', 'exit': 0, 'seconds': 2.74, 'log': 'gate-format-check.log'}
+
+> web@0.1.0 format:check /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+Starting lint
+{'command': 'pnpm lint', 'exit': 0, 'seconds': 10.69, 'log': 'gate-lint.log'}
+
+> web@0.1.0 lint /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+> eslint --max-warnings 0
+
+Starting typecheck
+{'command': 'pnpm typecheck', 'exit': 0, 'seconds': 5.95, 'log': 'gate-typecheck.log'}
+
+> web@0.1.0 typecheck /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+> next typegen && tsc --noEmit
+
+Generating route types...
+✓ Types generated successfully
+Starting test
+{'command': 'pnpm test', 'exit': 0, 'seconds': 28.83, 'log': 'gate-test.log'}
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+> vitest run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+
+ Test Files  208 passed (208)
+      Tests  1512 passed (1512)
+   Start at  09:04:12
+   Duration  27.99s (transform 13.57s, setup 14.20s, import 32.31s, tests 45.11s, environment 69.74s)
+
+Starting build
+{'command': 'pnpm build', 'exit': 1, 'seconds': 1.89, 'log': 'gate-build.log'}
+- Execution of AppProject::routes_with_filter failed
+- Execution of directory_tree_to_entrypoints_internal failed
+- Execution of directory_tree_to_loader_tree failed
+- Execution of try_get_next_package failed
+- Execution of *ResolveResult::first_source failed
+- Execution of resolve failed
+- Execution of resolve_internal failed
+- Execution of find_package failed
+- Symlink [project]/node_modules is invalid, it points out of the filesystem root
+    at ignore-listed frames {
+  type: 'TurbopackInternalError',
+  location: undefined
+}
+ ELIFECYCLE  Command failed with exit code 1.

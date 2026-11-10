@@ -47,3 +47,18 @@ test('switching steps and returning starts a fresh local judgment even when both
   fireEvent.click(screen.getByRole('tab', { name: /First judgment/ }))
   expect((screen.getByRole('textbox') as HTMLInputElement).value).toBe('')
 })
+
+test('reference rails may label themselves without changing the stage default', () => {
+  window.history.replaceState(null, '', '/reference/test')
+  const steps: Step[] = [
+    { id: 'only', label: 'Only', hint: 'Topic', content: <p>Teaching</p> },
+  ]
+  const { rerender } = render(
+    <Stepper steps={steps} ariaLabel="JavaScript sections" />,
+  )
+  expect(
+    screen.getByRole('tablist', { name: 'JavaScript sections' }),
+  ).toBeTruthy()
+  rerender(<Stepper steps={steps} />)
+  expect(screen.getByRole('tablist', { name: 'Stage steps' })).toBeTruthy()
+})

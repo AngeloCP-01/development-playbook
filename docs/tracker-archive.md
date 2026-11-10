@@ -1474,3 +1474,38 @@ that makes the rest incoherent, and a false negative there sent this session dow
 branch. `Stepper`'s own JSX is otherwise exhausted — nav, tablist, panel header and content
 were each removed individually and each still warned, while removing the whole return went
 clean.
+
+---
+
+### TD-47 — Node 22 policy admits patches below jsdom's engine floor · **Medium** · **Closed 2026-11-04**
+
+Found during W-6.4 assessment on 2026-11-04. `node --version` in this shell is
+**v22.19.0**. Installed `web/node_modules/jsdom/package.json` is **30.0.1** and
+requires **`^22.22.2 || ^24.15.0 || >=26.0.0`**. `web/.nvmrc` contains `22`,
+`web/package.json` permits `22.x`, and CI reads that nvmrc. The project contract
+therefore admits a Node 22 patch outside the installed DOM dependency's support
+range. The current local shell demonstrates that mismatch.
+
+This is a declared-support gap, not a reproduced application failure or proof
+that CI uses an unsupported runtime. Existing passing checks remain historical
+results; they do not widen jsdom's engine range. No runtime/package upgrade or
+configuration change was made during assessment.
+
+**Where it lives:** `web/.nvmrc`, `web/package.json`, CI runtime selection and the
+major-only expectations in `web/src/app/deploy-config.test.ts`. The primary
+release and local inspection evidence are in the
+[W-6.4 source record](../reference/w6-4-source-research.md#local-runtime-observation-td-47).
+
+**What closes it:** choose and use a supported Node 22 patch, make its support
+floor explicit across local/CI/package metadata, and add a meaningful regression
+check for the supported/aligned contract. Run relevant final checks on the actual
+supported runtime and record it. Keep the chosen major unless separately changed;
+this does not authorize a dependency upgrade. The user approved the repair as
+W-6.4's first implementation step on 2026-11-04; it remains open until verified.
+
+**Closure on feature branch `9231dc9`:** prerequisite **da18fd7** selects
+`.nvmrc` **22.23.4** and `engines.node` **^22.22.2**, with a support/alignment guard
+that failed on the old **22.x** declaration and then passed **3/3**. Final
+verification used Node **22.23.4**. CI consumption is checked as configuration;
+no executed CI, hosted patch or deployment result is claimed. The assessment
+above is preserved; W-6.4 completion evidence is in the live tracker/KICKOFF.

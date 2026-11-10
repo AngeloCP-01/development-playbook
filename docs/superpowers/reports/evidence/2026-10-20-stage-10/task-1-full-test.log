@@ -1,0 +1,41 @@
+
+> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+> vitest run
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+ ❯ |unit| src/lib/source-citations.test.ts (3 tests | 1 failed) 42ms
+   × every cross-document anchor link resolves to a real heading 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/lib/source-citations.test.ts > every cross-document anchor link resolves to a real heading
+AssertionError: anchor links pointing at headings that do not exist: expected [ …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "03-architecture.md -> 10-documentation.md#document-decisions-not-descriptions",
++   "03-architecture.md -> 10-documentation.md#document-decisions-not-descriptions",
++ ]
+
+ ❯ src/lib/source-citations.test.ts:150:5
+    148|     broken.map((b) => `${b.from} -> ${b.target}#${b.anchor}`),
+    149|     'anchor links pointing at headings that do not exist',
+    150|   ).toEqual([])
+       |     ^
+    151| })
+    152|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 207 passed (208)
+      Tests  1 failed | 1510 passed (1511)
+   Start at  08:55:35
+   Duration  40.92s (transform 23.78s, setup 28.37s, import 50.06s, tests 67.77s, environment 101.86s)
+
+ ELIFECYCLE  Test failed. See above for more details.

@@ -1,0 +1,32 @@
+[
+  {
+    "file": "KICKOFF.md",
+    "resolution": "retain reviewed develop version",
+    "sha256": "fc185942ffe6f606bad1ebd8a413ce6967396212a7e9c90b7174d7ff94cdc0d9"
+  },
+  {
+    "file": "docs/10-documentation.md",
+    "resolution": "retain reviewed develop version",
+    "sha256": "46fa547445dcc3bd94967a8bfa86ba0b0564f5e1bdde4726257750c8bc7eaac3"
+  },
+  {
+    "file": "docs/task.md",
+    "resolution": "retain reviewed develop version",
+    "sha256": "cb46f0306f6f24a4e6e796aa54df41324372a8130d6725e6e47e134b7bc027fd"
+  },
+  {
+    "file": "docs/tracker.md",
+    "resolution": "retain reviewed develop version",
+    "sha256": "b67cab49915a164bf064b3857fa8a79e12bb1a550c37355ff02d77a987157769"
+  },
+  {
+    "file": "reference/cheatsheet-sources.md",
+    "resolution": "retain reviewed develop version",
+    "sha256": "af011010aa6e295f8bbc1b0eb248a6b3ec78d4df24830e522ff528354ab9134c"
+  },
+  {
+    "file": "reference/stage-10-source-research.md",
+    "resolution": "retain reviewed develop version",
+    "sha256": "b6fef2bb19532162f4b256bcef81aaccfb33e6ae5729ae3642075011b1e63686"
+  }
+]

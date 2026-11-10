@@ -31,7 +31,13 @@ export function stepNumber(i: number): string {
  * step numbering as the visual treatment. The URL hash carries the active step
  * so a step is linkable and the browser back button walks the history.
  */
-export function Stepper({ steps }: { steps: Step[] }) {
+export function Stepper({
+  steps,
+  ariaLabel = 'Stage steps',
+}: {
+  steps: Step[]
+  ariaLabel?: string
+}) {
   const [active, setActive] = useState(0)
   const [seen, setSeen] = useState<Set<string>>(new Set([steps[0].id]))
   const tabsRef = useRef<HTMLDivElement>(null)
@@ -109,7 +115,7 @@ export function Stepper({ steps }: { steps: Step[] }) {
         <div
           ref={tabsRef}
           role="tablist"
-          aria-label="Stage steps"
+          aria-label={ariaLabel}
           onKeyDown={onKeyDown}
           className="flex overflow-x-auto"
         >

@@ -18,6 +18,47 @@ export type Term = {
 }
 
 export const TERMS: Record<string, Term> = {
+  semver: {
+    name: 'Semantic Versioning',
+    short: 'A versioning convention for changes to a declared public API.',
+    full: 'For releases after 1.0.0, a patch declares a compatible fix, a minor release a compatible addition and a major release an incompatible public-API change. Versions below 1.0.0 have weaker stability expectations.',
+    soWhat:
+      'A publisher’s version label guides review; it cannot prove compatibility with your application.',
+    see: '17-maintenance',
+  },
+  'technical-debt': {
+    name: 'Technical debt',
+    short: 'A design choice or limitation that makes later work more costly.',
+    full: 'Debt may be accepted deliberately or discovered through experience. Record the concrete recurring cost, the smallest useful change and how to verify its effect before choosing repayment work.',
+    soWhat:
+      'Repeated edits or slow changes provide evidence; disliking a file does not establish a repayment priority.',
+    see: '17-maintenance',
+  },
+  'credential-rotation': {
+    name: 'Credential rotation',
+    short: 'Replacing an access credential and retiring the previous one.',
+    full: 'For a planned change, identify consumers, distribute the replacement securely, verify they work and revoke the old credential. Provider capabilities determine whether overlap is possible; exposure may require immediate revocation.',
+    soWhat:
+      'Issuing a new secret alone does not establish that consumers switched or that old access ended.',
+    see: '17-maintenance',
+  },
+  'retention-policy': {
+    name: 'Retention policy',
+    short: 'An approved rule for what data is kept, why and for how long.',
+    full: 'Names the data, duration, approval authority and exclusions before removal. Different records need different policies, and recovery copies must be accounted for separately.',
+    soWhat:
+      'A cleanup job implements a policy; it does not decide which records you are allowed to remove.',
+    see: '17-maintenance',
+  },
+  'restore-drill': {
+    name: 'Restore drill',
+    short:
+      'An isolated rehearsal of restoring and validating a service’s data.',
+    full: 'Tests a chosen recovery point against agreed data-loss and recovery-time targets. Restrict copied-data access, disable outbound side effects, validate records and application access, and measure through reconnection.',
+    soWhat:
+      'A provider’s successful restore operation is only one part of proving the application can recover.',
+    see: '17-maintenance',
+  },
   lcp: {
     name: 'LCP (Largest Contentful Paint)',
     see: '09-performance-optimization',
@@ -223,7 +264,7 @@ export const TERMS: Record<string, Term> = {
     name: 'ADR (Architecture Decision Record)',
     short:
       'A short document capturing one decision: context, choice, consequences.',
-    full: 'A short record of a single architecture decision — the context, the choice, and the consequences — written when the decision is made and never edited afterward. Superseded by a new ADR rather than revised.',
+    full: 'A short record of one architecture decision, including context, choice and consequences. Preserve the historical reasoning; a changed decision gets a new ADR, with a dated supersession notice linking the old and new records.',
     soWhat:
       'The value is the record of what was believed at the time. Months later, "why did we do it this way?" has an answer instead of a reconstruction.',
     see: '03-architecture',
@@ -894,6 +935,23 @@ export const TERMS: Record<string, Term> = {
     soWhat:
       'A deploy without a baseline is a deploy you cannot verify. You will either panic at nothing or ignore something real.',
     see: '14-post-deployment-verification',
+  },
+  denominator: {
+    name: 'Denominator',
+    short: 'The eligible opportunities counted underneath a rate.',
+    full: 'For 18 saved drafts out of 30 eligible attempts, 18 is the numerator and 30 is the denominator. State who qualifies, the date window and how retries are counted so the rate can be interpreted.',
+    soWhat:
+      'A changing population or missing attempts can make a rate look better without improving the task.',
+    see: '18-continuous-improvement',
+  },
+  pdsa: {
+    name: 'Plan-Do-Study-Act (PDSA)',
+    short:
+      'A learning cycle: predict, try a change, study the result and adjust.',
+    full: 'Plan a change with a prediction, try it, study the evidence against that prediction, then act on what you learned. The Deming Institute describes Study as learning about the underlying theory, rather than merely checking whether a task was completed.',
+    soWhat:
+      'A completed action still needs a result review; an inconclusive result can guide the next investigation.',
+    see: '18-continuous-improvement',
   },
   'bake-time': {
     name: 'Bake time',

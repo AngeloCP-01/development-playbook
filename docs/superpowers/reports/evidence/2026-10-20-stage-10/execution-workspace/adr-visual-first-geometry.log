@@ -1,0 +1,5 @@
+{"url":"http://localhost:3100/stages/03-architecture#record","theme":"light","width":272,"left":31.578125,"right":303.578125,"overflow":0,"contrast":14.83,"errors":[],"screenshot":"adr-light-320.png"}
+{"url":"http://localhost:3100/stages/03-architecture#record","theme":"light","width":352,"left":467.578125,"right":819.578125,"overflow":0,"contrast":14.83,"errors":[],"screenshot":"adr-light-1440.png"}
+{"url":"http://localhost:3100/stages/03-architecture#record","theme":"dark","width":272,"left":31.578125,"right":303.578125,"overflow":0,"contrast":13.21,"errors":[],"screenshot":"adr-dark-320.png"}
+{"url":"http://localhost:3100/stages/03-architecture#record","theme":"dark","width":352,"left":467.578125,"right":819.578125,"overflow":0,"contrast":13.21,"errors":[],"screenshot":"adr-dark-1440.png"}
+Generated Markdown ADR entry and Stage03 destination verified. No standalone web glossary route or see link in Term component exists.

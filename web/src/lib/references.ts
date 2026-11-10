@@ -15,6 +15,71 @@ export type Reference = {
 }
 
 export const REFERENCES: Record<string, Reference[]> = {
+  '18-continuous-improvement': [
+    {
+      title: 'PDSA Cycle',
+      source: 'The W. Edwards Deming Institute',
+      url: 'https://deming.org/explore/pdsa/',
+      adds: 'The distinction between studying a prediction and checking task completion, with the learning cycle behind this stage’s adapted record.',
+    },
+    {
+      title: 'Measuring the User Experience on a Large Scale',
+      source: 'Rodden, Hutchinson and Fu · Google · CHI 2010',
+      url: 'https://research.google/pubs/measuring-the-user-experience-on-a-large-scale-user-centered-metrics-for-web-applications/',
+      adds: 'The HEART framework and Goals-Signals-Metrics approach for choosing user-centered measures beyond activity counts.',
+    },
+    {
+      title: 'DORA’s software delivery performance metrics',
+      source: 'DORA · Google',
+      url: 'https://dora.dev/guides/dora-metrics/',
+      adds: 'Definitions and interpretation of the five delivery measures, including recovery scope and deployment rework.',
+    },
+    {
+      title: 'Patterns of Trustworthy Experimentation: During-Experiment Stage',
+      source: 'Microsoft Experimentation Platform · 2021',
+      url: 'https://www.microsoft.com/en-us/research/articles/patterns-of-trustworthy-experimentation-during-experiment-stage/',
+      adds: 'Data-quality checks, guardrails and early-peeking risks when a randomized comparison is appropriate.',
+    },
+    {
+      title: 'The SPACE of Developer Productivity',
+      source: 'Forsgren and colleagues · Microsoft Research · 2021',
+      url: 'https://www.microsoft.com/en-us/research/publication/the-space-of-developer-productivity-theres-more-to-it-than-you-think/',
+      adds: 'Several perspectives on developer productivity and why individual activity counts cannot stand in for useful outcomes.',
+    },
+  ],
+  '10-documentation': [
+    {
+      title: 'Diátaxis',
+      source: 'Diátaxis',
+      url: 'https://diataxis.fr/start-here/',
+      adds: 'The four reader needs and how to separate guidance that serves incompatible tasks.',
+    },
+    {
+      title: 'About READMEs',
+      source: 'GitHub Docs',
+      url: 'https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes',
+      adds: 'Repository entry-point guidance for purpose, getting started, help and maintainers.',
+    },
+    {
+      title: 'Documenting Architecture Decisions',
+      source: 'Michael Nygard · Cognitect',
+      url: 'https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions',
+      adds: 'The original rationale for small decision records and preserving superseded decisions.',
+    },
+    {
+      title: 'C4 diagram review checklist',
+      source: 'C4 model',
+      url: 'https://c4model.com/diagrams/checklist',
+      adds: 'Specific review questions for scope, notation, elements and labeled relationships.',
+    },
+    {
+      title: 'Docs as code',
+      source: 'Write the Docs',
+      url: 'https://www.writethedocs.org/guide/docs-as-code/',
+      adds: 'How version control, review and automation support a documentation workflow.',
+    },
+  ],
+
   '09-performance-optimization': [
     {
       title: 'Web Vitals',
@@ -381,6 +446,26 @@ export const REFERENCES: Record<string, Reference[]> = {
       source: 'Sentry documentation',
       url: 'https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/filtering/',
       adds: "The event shape `beforeSend` receives and which fields Sentry populates by default, so the scrubber step's three surfaces can be checked against the real payload.",
+    },
+  ],
+  '17-maintenance': [
+    {
+      title: 'Workflows of Refactoring',
+      source: 'Martin Fowler',
+      url: 'https://martinfowler.com/articles/workflowsOfRefactoring/',
+      adds: 'Distinguishes opportunistic refactoring during feature work from planned and longer-running approaches, with examples for choosing the scope.',
+    },
+    {
+      title: 'Deprecation',
+      source: 'Software Engineering at Google',
+      url: 'https://abseil.io/resources/swe-book/html/ch15.html',
+      adds: 'Team-scale retirement guidance for finding consumers, managing migrations and removing obsolete systems and their dependencies.',
+    },
+    {
+      title: 'Data Integrity: What You Read Is What You Wrote',
+      source: 'Google SRE Book',
+      url: 'https://sre.google/sre-book/data-integrity/',
+      adds: 'Broader data-integrity and recovery practices, including the need to test restoration rather than rely on the existence of backups.',
     },
   ],
   '16-incident-management': [

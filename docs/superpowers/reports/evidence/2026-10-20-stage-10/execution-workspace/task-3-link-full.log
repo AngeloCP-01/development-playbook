@@ -1,0 +1,30 @@
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+ ❯ |unit| src/lib/stage-10-structure.test.ts (14 tests | 1 failed) 15ms
+   × replaced ADRs expose current status while preserving their historical reasoning 7ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  08:59:27
+   Duration  126ms (transform 18ms, setup 0ms, import 24ms, tests 15ms, environment 0ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/lib/stage-10-structure.test.ts > replaced ADRs expose current status while preserving their historical reasoning
+AssertionError: expected ' Write an ADR for a significant decis…' to contain '[ADR 005](005-generated-contract-refe…'
+
+Expected: "[ADR 005](005-generated-contract-reference.md)"
+Received: " Write an ADR for a significant decision whose context, alternatives or reversal cost matters: a boundary, dependency, interface or deployment choice. One page is a useful starting size, not a completeness limit. In this playbook the naming convention is `docs/adr/NNN-title.md`, numbered sequentially without reuse. Use Context, Decision, Reasoning, Consequences and Alternatives. Include a date and enough status information for the reader to distinguish a proposal from an adopted choice. Proposed records can change during review. | Status | Meaning | | --- | --- | | Proposed | A choice is being considered | | Rejected | The proposal was declined; preserve the reason | | Accepted | The choice was reviewed and adopted | | Superseded | A later decision replaced it; link to that record | **Illustrative worked case: Workshop**, a fictional workshop-booking app. The team previously maintained a field list by hand. A change adds a booking-window setting and an optional waitlist position. They choose to generate the field reference from their contract to avoid a second independently edited list. These are teaching inputs, not measured facts about this static playbook. Earlier record, `docs/adr/004-manual-field-reference.md`: ```markdown # ADR 004: maintain the initial field reference by hand Date: 2026-09-01 Status: Accepted ## Context The initial contract is small. The team has no reference generator. ## Decision Maintain the initial field reference beside the contract. ## Consequences Every contract change requires a separate reference edit and review. ## Supersession notice (appended) 2026-10-20 — Current status: Superseded. ADR 005 replaces this decision. The original context, date and reasoning above are preserved. ``` Replacement, `docs/adr/005-generated-contract-reference.md`: ```markdown # ADR 005: generate the factual contract reference Date: 2026-10-20 Status: Accepted Supersedes: [ADR 004](004-manual-field-reference.md) ## Context New settings and response fields make two edited field lists easy to disagree. ## Decision Generate the factual reference from the versioned contract. ## Reasoning Keep names, types and defaults tied to one source. ## Consequences We must run generation and inspect its result when the contract changes. Explanations and examples still need human review. ## Alternatives Keep editing the field list by hand, accepting the duplicate review work. ``` Preserve the historical decision text. Append a dated supersession notice to the old record, link it to the replacement, and link back from the new one. The old acceptance status is historical; the later notice makes its current status clear. Update an existing decision index too. A new decision must not rewrite an earlier choice to make the team look prescient. This extends the small-record approach in [Nygard’s ADR guidance](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) with an explicit append-only notice for this playbook’s preservation convention. "
+
+ ❯ src/lib/stage-10-structure.test.ts:180:16
+    178|     expect(text).toContain(phrase)
+    179|   }
+    180|   expect(text).toContain('[ADR 005](005-generated-contract-reference.m…
+       |                ^
+    181|   expect(text).toContain('[ADR 004](004-manual-field-reference.md)')
+    182|   expect(text).toContain('2026-10-20')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

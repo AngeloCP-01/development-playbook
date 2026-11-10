@@ -1,0 +1,4 @@
+COMMAND   PID     USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+node    93201 angelito   17u  IPv6 0xa77f2c2a309a2d27      0t0  TCP *:3200 (LISTEN)
+
+lsof exit 1

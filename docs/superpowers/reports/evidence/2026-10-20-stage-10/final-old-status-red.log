@@ -1,0 +1,46 @@
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+ ❯ |unit| src/lib/stage-10-structure.test.ts (14 tests | 1 failed) 12ms
+   × replaced ADRs expose current status while preserving their historical reasoning 4ms
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 13 passed (14)
+   Start at  13:08:45
+   Duration  117ms (transform 18ms, setup 0ms, import 24ms, tests 12ms, environment 0ms)
+
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/lib/stage-10-structure.test.ts > replaced ADRs expose current status while preserving their historical reasoning
+AssertionError: expected '# ADR 004: maintain the initial field…' to match /\d{4}-\d{2}-\d{2} — Current status: S…/
+
+- Expected:
+/\d{4}-\d{2}-\d{2} — Current status: Superseded\./
+
++ Received:
+"# ADR 004: maintain the initial field reference by hand
+Date: 2026-09-01
+Status: Accepted
+
+## Context
+The initial contract is small. The team has no reference generator.
+## Decision
+Maintain the initial field reference beside the contract.
+## Consequences
+Every contract change requires a separate reference edit and review.
+
+## Supersession notice (appended)
+[ADR 005](005-generated-contract-reference.md) replaces this decision.
+The original context, date and reasoning above are preserved."
+
+ ❯ src/lib/stage-10-structure.test.ts:188:20
+    186|   expect(previous).toBeDefined()
+    187|   expect(previous).toContain('## Supersession notice (appended)')
+    188|   expect(previous).toMatch(/\d{4}-\d{2}-\d{2} — Current status: Supers…
+       |                    ^
+    189|   expect(text).toMatch(/append[\s\S]+supersession/i)
+    190|   expect(text).toMatch(/preserve[\s\S]+historical/i)
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

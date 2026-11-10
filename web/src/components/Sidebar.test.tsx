@@ -1,12 +1,16 @@
-import { render, screen, within } from '@testing-library/react'
-import { expect, test, vi } from 'vitest'
+import { fireEvent, render, screen, within } from '@testing-library/react'
+import { beforeEach, expect, test, vi } from 'vitest'
 import { STAGES } from '@/lib/stages'
 import { CHEATSHEETS } from '@/lib/cheatsheets'
 import { Sidebar } from './Sidebar'
 
-vi.mock('next/navigation', () => ({
-  usePathname: () => '/reference/architecture-patterns',
+const location = vi.hoisted(() => ({
+  pathname: '/reference/architecture-patterns',
 }))
+vi.mock('next/navigation', () => ({ usePathname: () => location.pathname }))
+beforeEach(() => {
+  location.pathname = '/reference/architecture-patterns'
+})
 
 test('keeps the stage index intact, since this change edits a file nothing was guarding', () => {
   render(<Sidebar />)
@@ -47,3 +51,30 @@ test('flags a not-drawn sheet in the rail, which is how the gap stays visible wi
   const link = within(refNav).getByRole('link', { name: /Python/ })
   expect(within(link).getByText('WIP')).toBeTruthy()
 })
+
+test.each([
+  ['Glossary', '/reference/glossary'],
+  ['Default Stack', '/reference/stack'],
+])(
+  'marks %s current and closes the mobile drawer when its link is chosen',
+  (name, href) => {
+    location.pathname = href
+    render(<Sidebar />)
+    const refNav = screen.getByRole('navigation', { name: 'Reference index' })
+    const link = within(refNav).getByRole('link', { name })
+    expect(link.getAttribute('href')).toBe(href)
+    expect(link.getAttribute('aria-current')).toBe('page')
+    expect(within(refNav).getAllByRole('link', { current: 'page' })).toEqual([
+      link,
+    ])
+    const open = screen.getByRole('button', { name: 'Open navigation' })
+    fireEvent.click(open)
+    expect(open.getAttribute('aria-expanded')).toBe('true')
+    expect(document.body.style.overflow).toBe('hidden')
+    // jsdom cannot navigate; retain the real click handler and test the drawer.
+    link.addEventListener('click', (event) => event.preventDefault())
+    fireEvent.click(link)
+    expect(open.getAttribute('aria-expanded')).toBe('false')
+    expect(document.body.style.overflow).not.toBe('hidden')
+  },
+)

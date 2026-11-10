@@ -38,7 +38,7 @@ dozen config files.
 Pin the Node version in both places, because no single file reaches every environment:
 
 ```bash
-echo "22" > .nvmrc
+echo "22.23.4" > .nvmrc
 ```
 
 `.nvmrc` is what `nvm` and `fnm` read locally, and what GitHub Actions reads through
@@ -48,27 +48,29 @@ Add the constraint to `package.json` as well:
 
 ```json
 {
-  "engines": { "node": "22.x" },
+  "engines": { "node": "^22.22.2" },
   "packageManager": "pnpm@<current>"
 }
 ```
 
-Write it as a major, `"22.x"`, not a range. `22.x` is the form Vercel's own docs show and
-the form this project's own `web/package.json` uses; a range is not documented as
-supported, and this field is the one thing the host actually reads, so it is not the place
-to improvise a format.
+Use a semver constraint that includes the supported dependency floor while keeping
+one Node major. This example uses `^22.22.2` because jsdom 30 requires at least
+that patch on Node 22. The exact `.nvmrc` patch selects the local and CI runtime.
+Vercel reads `engines.node` to select a supported major and manages minor/patch
+updates itself; verify the actual build runtime rather than treating `.nvmrc`
+as a hosted patch pin. See the [supported-version contract](https://vercel.com/docs/functions/runtimes/node-js/node-js-versions).
 
 `engines.node` does two jobs. It is what Vercel reads, overriding the Node version set in
 the project's own dashboard — the job that matters in production. And it makes pnpm
-complain on the wrong major, though only if you ask it to:
+complain outside the declared support range, though only if you ask it to:
 
 ```bash
 echo "engine-strict=true" >> .npmrc
 ```
 
 Without that line pnpm prints `WARN Unsupported engine` and installs anyway, exit 0 — a
-warning in CI log noise is not a gate. With it, the install fails on the wrong major,
-which is what you wanted when you wrote the constraint.
+warning in CI log noise is not a gate. With it, the install fails outside the declared support range, including an unsupported
+patch. That is the constraint you intended to enforce.
 
 The general rule is worth more than either file: **for each environment that runs your
 code, find the file that environment reads.** A version file being popular does not make
@@ -76,10 +78,11 @@ it universal, and the environment nothing pins is usually the one serving users.
 
 `corepack use pnpm@latest` resolves the current release and writes it into
 `packageManager` with a hash, which is the pin you want.
-[reference/stack.md](../reference/stack.md) names a floor, not a pin — the playbook
-assumes "this major or later" — so if `latest` hands you a newer major than that file
-lists, you are where you should be and the file is what needs re-reading. Do not pin
-backwards to match it.
+[reference/stack.md](../reference/stack.md) records reviewed version families,
+not compatibility with every later major. Check the resolved package-manager
+release against framework, tooling and CI requirements before adopting it.
+Choose and pin a supported release deliberately; `latest` alone is not evidence
+that the combination works.
 
 **Then give it a remote.** `create-next-app` has already run `git init` and made the first
 commit, on `main` — that branch name comes from the scaffold, not from your git config,

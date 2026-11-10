@@ -1,0 +1,14 @@
+
+> web@0.1.0 gen:glossary /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+> vitest run src/lib/glossary.test.ts --update
+
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+
+  Snapshots  1 updated 
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  08:58:12
+   Duration  173ms (transform 45ms, setup 0ms, import 55ms, tests 10ms, environment 0ms)
+

@@ -1,3 +1,4 @@
+import { Documentation } from './documentation/Documentation'
 import type { ComponentType } from 'react'
 import { ProductDiscovery } from './discovery/ProductDiscovery'
 import { Planning } from './planning/Planning'
@@ -14,6 +15,8 @@ import { ProductionDeployment } from './production-deployment/ProductionDeployme
 import { PostDeploymentVerification } from './post-deployment-verification/PostDeploymentVerification'
 import { Observability } from './observability/Observability'
 import { IncidentManagement } from './incident-management/IncidentManagement'
+import { Maintenance } from './maintenance/Maintenance'
+import { ContinuousImprovement } from './continuous-improvement/ContinuousImprovement'
 
 /**
  * Stage slug → interactive page body. A stage missing from this map renders the
@@ -29,10 +32,13 @@ export const STAGE_CONTENT: Record<string, ComponentType> = {
   '07-code-review': CodeReview,
   '08-security-audit': SecurityAudit,
   '09-performance-optimization': PerformanceOptimization,
+  '10-documentation': Documentation,
   '11-ci-cd': CiCd,
   '12-staging': Staging,
   '13-production-deployment': ProductionDeployment,
   '14-post-deployment-verification': PostDeploymentVerification,
   '15-observability': Observability,
   '16-incident-management': IncidentManagement,
+  '17-maintenance': Maintenance,
+  '18-continuous-improvement': ContinuousImprovement,
 }

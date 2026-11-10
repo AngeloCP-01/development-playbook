@@ -1,0 +1,35 @@
+[
+  {
+    "command": "pnpm test src/lib/tracker-ledger.test.ts",
+    "status": "fulfilled",
+    "value": {
+      "chunk_id": "7cf13f",
+      "wall_time_seconds": 1.724239709,
+      "exit_code": 0,
+      "original_token_count": 101,
+      "output": "\n> web@0.1.0 test /Users/angelito/personal/Development-Playbook/.worktrees/stage10-leftovers/web\n> vitest run src/lib/tracker-ledger.test.ts\n\n\n RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-leftovers/web\n\n\n Test Files  1 passed (1)\n      Tests  2 passed (2)\n   Start at  17:00:06\n   Duration  138ms (transform 24ms, setup 0ms, import 33ms, tests 10ms, environment 0ms)\n\n"
+    }
+  },
+  {
+    "command": "python3 docs/superpowers/reports/evidence/2026-10-20-stage-10/check-doc-links.py",
+    "status": "fulfilled",
+    "value": {
+      "chunk_id": "b5c096",
+      "wall_time_seconds": 0.988584583,
+      "exit_code": 0,
+      "original_token_count": 17,
+      "output": "{\n  \"files\": 37,\n  \"local_targets_checked\": 393,\n  \"failures\": []\n}\n"
+    }
+  },
+  {
+    "command": "git diff --check -- AGENTS.md KICKOFF.md docs/tracker.md; git diff --cached --check -- AGENTS.md KICKOFF.md docs/tracker.md",
+    "status": "fulfilled",
+    "value": {
+      "chunk_id": "addb2b",
+      "wall_time_seconds": 0.806619042,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    }
+  }
+]

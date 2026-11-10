@@ -1,0 +1,30 @@
+
+ RUN  v4.1.10 /Users/angelito/personal/Development-Playbook/.worktrees/stage10-chapter/web
+
+ ❯ |unit| src/lib/terms.test.ts (16 tests | 1 failed | 15 skipped) 7ms
+   × ADR history stays intact while a linked supersession notice reveals the current decision 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| src/lib/terms.test.ts > ADR history stays intact while a linked supersession notice reveals the current decision
+AssertionError: expected 'A short record of a single architectu…' to contain 'historical reasoning'
+
+Expected: "historical reasoning"
+Received: "A short record of a single architecture decision — the context, the choice, and the consequences — written when the decision is made and never edited afterward. Superseded by a new ADR rather than revised."
+
+ ❯ src/lib/terms.test.ts:135:22
+    133| test('ADR history stays intact while a linked supersession notice reve…
+    134|   const term = getTerm('adr')
+    135|   expect(term?.full).toContain('historical reasoning')
+       |                      ^
+    136|   expect(term?.full).toContain('new ADR')
+    137|   expect(term?.full).toContain('dated supersession notice')
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 skipped (16)
+   Start at  08:58:00
+   Duration  151ms (transform 47ms, setup 0ms, import 64ms, tests 7ms, environment 0ms)
+

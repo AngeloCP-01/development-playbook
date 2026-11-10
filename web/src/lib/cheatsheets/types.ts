@@ -1,6 +1,6 @@
 /**
- * A cheatsheet is lookup material, not a stage. Stages teach a decision; a sheet
- * answers "what was that command again" in one screen.
+ * Sheets provide lookup material or focused study sections. They remain
+ * references, without a stage number or lifecycle cadence.
  *
  * Sheets are structured data rather than components so the markdown in
  * reference/ can be generated from them, the same arrangement terms.ts has with
@@ -8,7 +8,12 @@
  * later — a diagram of the same content would not be.
  */
 export type CheatsheetGroup =
-  'Architecture' | 'Design Principles' | 'Git' | 'Standards' | 'Languages'
+  | 'Architecture'
+  | 'Design Principles'
+  | 'Git'
+  | 'Standards'
+  | 'Languages'
+  | 'Algorithms'
 
 export const CHEATSHEET_GROUPS: CheatsheetGroup[] = [
   'Architecture',
@@ -16,6 +21,7 @@ export const CHEATSHEET_GROUPS: CheatsheetGroup[] = [
   'Git',
   'Standards',
   'Languages',
+  'Algorithms',
 ]
 
 /**
@@ -36,7 +42,25 @@ export type RowExample = {
   html?: string
 }
 
+/** Ordered, plain-text teaching shared by study pages and portable Markdown. */
+export type TeachingBlock = { id: string } & (
+  | { kind: 'paragraph'; text: string }
+  | { kind: 'code'; label: string; code: string }
+  | { kind: 'table'; label: string; columns: string[]; rows: string[][] }
+  | {
+      kind: 'interview'
+      question: string
+      answer: string
+      weakAnswer?: string
+      followUp?: string
+    }
+)
+
 export type Row = {
+  /** Replaces legacy what/example/when output when present. */
+  teaching?: TeachingBlock[]
+  /** Topic disclosure and exclusive local activity assignment on study sheets. */
+  study?: { id: string; summary: string; activityIds: string[] }
   /** Set in mono when present — a command, signature, or literal. */
   code?: string
   /** The left column when the thing being named is not code. */
@@ -50,9 +74,13 @@ export type Row = {
 }
 
 export type Section = {
+  /** Visible before topic disclosures on study sheets. */
+  introduction?: TeachingBlock[]
   title: string
   note?: string
   rows: Row[]
+  /** All sections on a study sheet opt in; activity IDs are assigned once. */
+  study?: { id: string; label: string; hint: string; activityIds?: string[] }
 }
 
 /**
@@ -85,6 +113,21 @@ export type Source = SourceCitation & {
   image?: SourceImage
 }
 
+/** Original practice content shared by the page and generated Markdown.
+ * Code is literal text; activities never execute in the reader's browser. */
+export type SheetActivity = {
+  /** Stable and unique within the owning sheet. */
+  id: string
+  title: string
+  prompt: string
+  context: string
+  starter?: Pick<RowExample, 'label' | 'code'>
+  answer: string
+  solution?: Pick<RowExample, 'label' | 'code'>
+  explanation: string
+  followUp?: string
+}
+
 export type Cheatsheet = {
   slug: string
   title: string
@@ -96,6 +139,8 @@ export type Cheatsheet = {
   /** Supporting text references in authored order, after the primary source. */
   additionalSources?: SourceCitation[]
   /** Empty is legal and means "registered, not yet written" (D5). */
+  /** Optional practice for drawn sheets; ordinary sections remain required. */
+  activities?: SheetActivity[]
   sections: Section[]
 }
 

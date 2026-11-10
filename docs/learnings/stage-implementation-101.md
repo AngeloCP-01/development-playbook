@@ -1,5 +1,7 @@
 # Stage implementation 101
 
+For current scope and review frequency, follow [D-99](../../AGENTS.md#development-workflow). Use the relevant lessons below for the changed page or shared behavior; the historical investigation methods are not a checklist to repeat in full for every edit.
+
 What building stage 01 taught, written down so stages 02–18 do not relearn it. These are
 the things that cost real time and are not obvious from reading the code afterward.
 

@@ -1,0 +1,94 @@
+diff --git a/docs/10-documentation.md b/docs/10-documentation.md
+index c886b9f..5f6f6cc 100644
+--- a/docs/10-documentation.md
++++ b/docs/10-documentation.md
+@@ -16,44 +16,6 @@ question they need answered.
+ 
+ ## The work
+ 
+-### Choose the document for the reader’s task
+-
+-Documentation can teach a skill, give instructions, supply exact facts or explain
+-a choice. The useful distinction is what the reader needs now.
+-
+-| Reader needs to… | Form | Example |
+-| --- | --- | --- |
+-| Learn through a guided exercise | Tutorial | Make a first booking in a safe sample environment |
+-| Complete a known task | How-to guide | Roll back a deployment |
+-| Look up precise facts | Reference | Find a field’s type, default and allowed values |
+-| Understand a concept or choice | Explanation | Understand why a contract is generated |
+-
+-This distinction comes from [Diátaxis](https://diataxis.fr/start-here/). It does
+-not require four folders. A README can orient a reader and link to the right page.
+-
+-Start with a README, significant decision records and the configuration facts
+-the application actually needs. Other artifacts are optional until a reader has
+-a use for them:
+-
+-| Artifact | Reach for it when… |
+-| --- | --- |
+-| README / getting started | Someone needs a first working setup and a route to more detail |
+-| Architecture overview | A reader needs boundaries, responsibilities and relationships |
+-| ADR | A significant choice and its alternatives need a lasting explanation |
+-| Conventions / contributing guide | Contributors need consistent rules and a way to handle exceptions |
+-| Troubleshooting | A known symptom needs checks, likely causes and a safe next action |
+-| Changelog | Readers need notable changes organized by version |
+-| Release notes | A release needs an audience-focused account of impact and required actions |
+-
+-A changelog is curated version history, not a raw commit dump. Release notes can
+-select and explain those changes for a particular audience. A small patch may
+-need only one entry. See [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
+-and [GitHub releases](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases).
+-
+-The user-gathered nine-template graphic and its verified starter kit are useful
+-menus, not a requirement to produce nine documents. Sources and provenance are
+-preserved in the [research notes](../reference/stage-10-source-research.md).
+-
+ ### Keep the README usable
+ 
+ The README is the entry point. Give it a purpose statement and direct routes to
+@@ -381,3 +343,44 @@ Periodically:
+ **Publishing realistic private examples.** Use synthetic data and review the result before publication.
+ 
+ **Trusting a successful-looking draft.** Find the evidence behind each operational claim; record what remains unknown.
++
++## Research findings for chapter review
++
++### Choose the document for the reader’s task
++
++Documentation can teach a skill, give instructions, supply exact facts or explain
++a choice. The useful distinction is what the reader needs now.
++
++| Reader needs to… | Form | Example |
++| --- | --- | --- |
++| Learn through a guided exercise | Tutorial | Make a first booking in a safe sample environment |
++| Complete a known task | How-to guide | Roll back a deployment |
++| Look up precise facts | Reference | Find a field’s type, default and allowed values |
++| Understand a concept or choice | Explanation | Understand why a contract is generated |
++
++This distinction comes from [Diátaxis](https://diataxis.fr/start-here/). It does
++not require four folders. A README can orient a reader and link to the right page.
++
++Start with a README, significant decision records and the configuration facts
++the application actually needs. Other artifacts are optional until a reader has
++a use for them:
++
++| Artifact | Reach for it when… |
++| --- | --- |
++| README / getting started | Someone needs a first working setup and a route to more detail |
++| Architecture overview | A reader needs boundaries, responsibilities and relationships |
++| ADR | A significant choice and its alternatives need a lasting explanation |
++| Conventions / contributing guide | Contributors need consistent rules and a way to handle exceptions |
++| Troubleshooting | A known symptom needs checks, likely causes and a safe next action |
++| Changelog | Readers need notable changes organized by version |
++| Release notes | A release needs an audience-focused account of impact and required actions |
++
++A changelog is curated version history, not a raw commit dump. Release notes can
++select and explain those changes for a particular audience. A small patch may
++need only one entry. See [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
++and [GitHub releases](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases).
++
++The user-gathered nine-template graphic and its verified starter kit are useful
++menus, not a requirement to produce nine documents. Sources and provenance are
++preserved in the [research notes](../reference/stage-10-source-research.md).
++

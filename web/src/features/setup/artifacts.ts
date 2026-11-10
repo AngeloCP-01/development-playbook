@@ -32,7 +32,7 @@ export const ARTIFACTS: Record<string, Artifact> = {
     language: 'bash',
     lines: [
       {
-        text: 'echo "22" > .nvmrc',
+        text: 'echo "22.23.4" > .nvmrc',
         note: 'What `nvm` and `fnm` read locally, and what GitHub Actions reads through `node-version-file`. It stops there — your host does not read it.',
         pivot: true,
       },
@@ -45,13 +45,13 @@ export const ARTIFACTS: Record<string, Artifact> = {
     lines: [
       { text: '{' },
       {
-        text: '  "engines": { "node": "22.x" },',
-        note: 'A major, not a range. `22.x` is the form Vercel\u2019s own docs show and the form this project uses; a range is not documented as supported, and this field is the one thing the host actually reads, so it is not the place to improvise a format.',
+        text: '  "engines": { "node": "^22.22.2" },',
+        note: 'A semver constraint keeps Node 22 while enforcing the jsdom 30 floor of 22.22.2. Vercel selects a supported major and manages its patches; .nvmrc controls the local/CI selection, not the hosted patch.',
         pivot: true,
       },
       {
         text: '  "packageManager": "pnpm@<current>"',
-        note: '`corepack use pnpm@latest` resolves the current release and writes it here with a hash, which is the pin you want. `reference/stack.md` names a floor, not a pin — if `latest` hands you a newer major than that file lists, you are where you should be. Do not pin backwards to match it.',
+        note: '`corepack use pnpm@latest` resolves a release and writes a pin here. Check that release against framework, tooling and CI requirements first. The stack reference names reviewed version families; a newer major still needs compatibility review.',
       },
       { text: '}' },
     ],
@@ -63,7 +63,7 @@ export const ARTIFACTS: Record<string, Artifact> = {
     lines: [
       {
         text: 'echo "engine-strict=true" >> .npmrc',
-        note: 'Without this line pnpm prints `WARN Unsupported engine` and installs anyway, exit 0 — a warning in CI log noise is not a gate. With it, the install fails on the wrong major, which is what you wanted when you wrote the constraint.',
+        note: 'Without this line pnpm prints `WARN Unsupported engine` and installs anyway, exit 0 — a warning in CI log noise is not a gate. With it, the install fails outside the declared support range, including an unsupported patch, which is what you wanted when you wrote the constraint.',
         pivot: true,
       },
     ],

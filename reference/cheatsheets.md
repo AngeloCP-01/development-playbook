@@ -3,10 +3,10 @@
 <!-- Generated from web/src/lib/cheatsheets/. Do not edit by hand.
      Edit the sheet there and run `pnpm gen:cheatsheets` (from web/) to regenerate. -->
 
-Lookup material rather than reading material. A stage teaches a decision; a
-sheet answers what that command was.
+Look up a command or study a focused topic. Study sheets include worked
+examples and local practice; stages teach lifecycle decisions.
 
-Drawn: 22 of 27. A sheet listed as not drawn is
+Drawn: 27 of 31. A sheet listed as not drawn is
 registered on purpose — the gap is the point, so it can be seen and filled.
 
 | Sheet | Group | Stage | Status |
@@ -20,6 +20,9 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | Git Commands | Git | 04 | Drawn |
 | Git Branching & Conventions | Git | 04 | Drawn |
 | Coding Standards | Standards | 05 | Drawn |
+| Documentation Change Check | Standards | 10 | Drawn |
+| Technical Debt Review | Standards | 17 | Drawn |
+| Improvement Review | Standards | 18 | Drawn |
 | Software Development Life Cycle | Standards | — | Drawn |
 | Testing | Standards | 06 | Drawn |
 | Playwright | Standards | 06 | Drawn |
@@ -33,7 +36,8 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | Security Audit | Standards | 08 | Drawn |
 | Caching | Architecture | 09 | Drawn |
 | Infrastructure Scaling | Architecture | 09 | Drawn |
-| JavaScript | Languages | — | Not drawn |
+| JavaScript | Languages | — | Drawn |
+| DSA Patterns | Algorithms | — | Drawn |
 | Python | Languages | — | Not drawn |
 | Java | Languages | — | Not drawn |
 | Spring Boot | Languages | — | Not drawn |
@@ -684,6 +688,157 @@ From Refactoring.Guru’s taxonomy, condensed to five categories. Not bugs — s
 
 Source: [Code Smell](https://refactoring.guru/refactoring/smells) — AIAI LAB, citing Refactoring.Guru.
 
+## Documentation Change Check
+
+Choose the document, record the facts, and check what a change makes stale.
+
+Belongs to [10 — Documentation](../docs/10-documentation.md).
+
+### Choose a form for the reader
+
+Choose for the task; four reader needs do not require four files. Open Stage 10 for worked examples and practice.
+
+- **Tutorial** — A guided learning exercise with a safe starting point and an achievable result. — The reader needs to learn a skill by doing it.
+- **How-to guide** — Steps for a known task, with prerequisites and an observable completion condition. — The reader needs to get work done.
+- **Reference** — Exact names, types, allowed values, defaults and absence behavior for the applicable version. — The reader needs a fact, such as a retry option or response field.
+- **Explanation** — Concepts, reasons and tradeoffs that help the reader understand a choice. — The reader needs context rather than a procedure.
+
+### Adapt the record prompts
+
+These are playbook prompts, not a mandatory document inventory or fixed template. MADR metadata and confirmation are optional; use the detail the decision needs.
+
+- **README entry point** — Purpose and reader; actual prerequisites, safe configuration/access, tested setup commands, expected result and a help route. — Follow the setup from a fresh clone without private instructions; record the first gap.
+- **Decision record** — Significant choice, context, decision, reasons, alternatives, consequences and current status/date. — Include costs and obligations, not only benefits. Link the source or revision the choice applies to.
+- **Factual reference** — Name/type, allowed values, default or absence, applicable version, authoritative source and review trigger. — Distinguish missing, null and empty according to the actual contract.
+- **Change/check record** — Reader/task, changed fact, affected documents, source/revision, check, expected/observed result, owner and review trigger. — Keep this in the change or review record; a separate document is optional.
+
+### Trace the changed fact
+
+Checks and owner/review prompts are this playbook’s application guidance. Generation or a checked box does not establish that a source is correct.
+
+- **Configuration** — Update the configuration reference, safe example and affected setup instructions. Compare missing/invalid/default behavior with the actual validator. — Name the maintainer and validator-change trigger.
+- **Response contract** — Update reference and example responses. Run the applicable generator, inspect the expected diff and verify serializer behavior, including optional-field omission. — Name the contract owner and response-change trigger.
+- **Replaced decision** — Write the replacement ADR. Preserve the old reasoning, expose its current superseded status and date, and link old and new records in both directions. — Follow the old entry point and confirm the replacement is discoverable.
+- **Setup or release procedure** — Update the README and linked procedure when commands, access or environment change. Follow the documented path safely and record its result and limits. — Name the responsible maintainer and procedure-change trigger.
+
+### Publish only supported claims
+
+- **Label the evidence** — Record revision, check, expected and observed result, and limits. Reading is not execution; compiling does not establish runtime behavior or recovery.
+- **Review an AI draft** — Ground it in supplied sources and have a reviewer check facts, versions, examples and privacy. Claim validation only when the corresponding evidence exists.
+- **Use safe examples** — Use synthetic data and safe placeholders. Keep real credentials and private records out; do not invent project commands, provider guarantees or incident outcomes.
+
+Sources:
+
+Source: [Diátaxis primer](https://diataxis.fr/start-here/) — Daniele Procida.
+
+Source: [Documenting Architecture Decisions](https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions) — Michael Nygard / Cognitect.
+
+Source: [MADR 4.0.0 template](https://github.com/adr/madr/blob/4.0.0/template/adr-template.md) — MADR contributors.
+
+Source: [About READMEs](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes) — GitHub.
+
+Source: [What to look for in a code review: Documentation](https://google.github.io/eng-practices/review/reviewer/looking-for.html#documentation) — Google Engineering Practices.
+
+## Technical Debt Review
+
+Recognize a design cost, choose a response from evidence, and check what retirement affects.
+
+Belongs to [17 — Maintenance](../docs/17-maintenance.md).
+
+### Recognize the debt
+
+Fowler’s two axes describe care in the decision (reckless or prudent) and awareness of taking on debt (deliberate or inadvertent). The four cases below paraphrase the gathered illustration. A category does not determine repayment urgency, blame or whether a change is worthwhile.
+
+- **Reckless / deliberate** — The team knowingly skips design work without weighing the future cost.
+- **Prudent / deliberate** — The team weighs the consequences and accepts a design compromise to gain an earlier release.
+- **Reckless / inadvertent** — The team lacks design knowledge and creates a costly structure without recognizing the debt.
+- **Prudent / inadvertent** — A capable team learns through building and later sees a better design than it could see at the start.
+
+### Decide from evidence
+
+These review prompts are the playbook’s application guidance, not a scoring system prescribed by Fowler. Open Stage 17 for exercises and fuller operational context.
+
+- **Observed recurring cost** — Link repeated edits, defects or delayed changes to the affected behavior and investigate the cause. — Repeated bugs alone do not establish that the design needs replacing.
+- **Impact and deadline** — Record who is affected, the cost or risk of waiting, and any real deadline. Keep unknown exposure explicit.
+- **Smallest useful change** — Identify a bounded improvement, its likely next touch and the future work it could make cheaper. Compare the expected benefit with the effort.
+- **Owner and review date** — Name an owner, link the evidence, and set a review date and a trigger for reconsidering the decision.
+
+### Choose a response
+
+Establish checks for current behavior before restructuring fragile code, then rerun them after each small change. Keep feature changes separate enough to review; tests provide evidence within their coverage.
+
+- **Nearby refactor** — Improve the area you are already changing when the cleanup helps that task. Keep the structural change small and check affected callers.
+- **Planned incremental change** — Give a larger restructuring an owner, compatibility steps and checkpoints. Make small changes while keeping the system usable.
+- **Deliberate deferral** — Record why carrying the cost is acceptable for now, the owner and the review trigger. A rarely touched area may not repay the effort to change it.
+
+### Retire with evidence
+
+Retirement changes behavior. These playbook checks apply the deprecation guidance to a removal decision.
+
+- **Discover consumers** — Check callers, jobs, integrations, runtime usage and support knowledge. Check telemetry coverage and the relevant usage cycle before treating low counts as evidence of disuse. — Missing telemetry leaves usage unknown; rare recovery or administrative paths may still matter.
+- **Migration and communication** — Identify affected owners, communicate the change and provide a migration route where needed. Prefer a reversible disable step where practical, with a way to detect trouble and recover.
+- **Verify removal and effects** — Check remaining behavior and remove stale flags, configuration, dependencies, tests and docs. Account separately for stored data, subscriptions and external effects. — Version control can restore tracked code; it cannot restore deleted production data or undo notifications, billing or broken external contracts.
+
+Sources:
+
+Source: [Technical Debt Quadrant](https://martinfowler.com/bliki/TechnicalDebtQuadrant.html) — Martin Fowler (2009); unchanged illustration.
+
+Source: [Workflows of Refactoring](https://martinfowler.com/articles/workflowsOfRefactoring/fallback.html) — Martin Fowler.
+
+Source: [Software Engineering at Google: Deprecation](https://abseil.io/resources/swe-book/html/ch15.html) — Hyrum Wright / Google; edited by Tom Manshreck.
+
+Source: [Illustration reuse policy](https://martinfowler.com/faq.html) — Martin Fowler.
+
+## Improvement Review
+
+Record a prediction, compare the evidence, and decide what to keep, adapt, revert or investigate.
+
+Belongs to [18 — Continuous Improvement](../docs/18-continuous-improvement.md).
+
+### Frame the problem
+
+These prompts adapt the sources for this playbook. Adjust the record to the change; the sources do not prescribe these fields or a fixed review cadence. Open Stage 18 for worked examples and exercises.
+
+- **Task and outcome type** — Name the affected task and audience. Separate product outcomes, such as task success, from delivery/process signals, such as delivery time. — Faster delivery does not prove user benefit. Individual activity counts do not measure productivity.
+- **Observations and sources** — Record what people did or said, with source links or IDs. Keep interpretation separate and retain contrary cases and serious minority needs. — Check AI-assisted analysis against original sources. Synthetic feedback is not evidence from users.
+- **Alternatives and unknowns** — Compare a small repair, a new capability, further research and doing nothing. Record gaps, likely effort, maintenance cost and reversibility.
+
+### Plan the change
+
+Write the prediction and review method before acting. Fit the measure to the task; a delivery-time measure need not be a completion rate.
+
+- **Hypothesis and bounded action** — State why a small change might help, who will encounter it and the effort or exposure limit.
+- **Baseline and expected result** — Record the population, date window, event meanings, numerator/denominator where applicable, comparison method and desired change. — Distinguish users, sessions and repeated attempts. A target is a decision aid, not a universal sample size or significance threshold.
+- **Guardrails and recovery** — Define what must remain acceptable, harm/stop conditions, how to detect them and how to contain harm or roll back. — Route active incidents and urgent security issues immediately; do not wait for the routine review.
+- **Owner and review** — Name the action owner and decision maker. Set an actual review date, measurement method and who monitors guardrails before then.
+
+### Study the result
+
+Record the evidence and its limits even when the action is complete. A better-looking rate or a before/after change alone does not establish useful or causal improvement.
+
+- **Actual outcome** — Compare observed results with the prediction using the recorded population, window and measure. Link counts, observations and contrary cases; state what remains inconclusive.
+- **Data quality and comparability** — Check missing events, retries, changed definitions or audiences, seasonality and concurrent changes before interpreting movement. — For randomized experiments, check assignment and telemetry quality and account for repeated looks; a convenient early result cannot choose the winner.
+- **Harm and tradeoffs** — Inspect guardrails, affected groups and unintended costs. Record whether the benefit justifies the tradeoffs and contain harm when stop conditions are met.
+
+### Decide and follow up
+
+For any decision, record reasons, remaining uncertainty, an owner and the next check. Inconclusive is an evidence status: it may accompany a temporary keep or another action without implying success.
+
+- **Keep** — Retain the change when the evidence and tradeoffs justify it. If keeping it temporarily with inconclusive evidence, explain why and what would trigger reconsideration.
+- **Adapt** — Revise the hypothesis or bounded action in light of the result. Write a new prediction and review method before trying the revision.
+- **Revert** — Reverse or disable the change when harm or unacceptable tradeoffs warrant it. Verify recovery and check for effects that rollback cannot undo.
+- **Investigate further** — Name the uncertainty and the observation or data-quality check that could resolve it. Limit further exposure and set the next review; do not force a positive conclusion.
+
+Sources:
+
+Source: [PDSA Cycle](https://deming.org/explore/pdsa/) — The W. Edwards Deming Institute.
+
+Source: [Measuring the User Experience on a Large Scale: User-Centered Metrics for Web Applications](https://research.google/pubs/measuring-the-user-experience-on-a-large-scale-user-centered-metrics-for-web-applications/) — Kerry Rodden, Hilary Hutchinson and Xin Fu / Google; CHI 2010.
+
+Source: [Patterns of Trustworthy Experimentation: During-Experiment Stage](https://www.microsoft.com/en-us/research/articles/patterns-of-trustworthy-experimentation-during-experiment-stage/) — Widad Machmouchi, Somit Gupta and Ruhan Zhang / Microsoft; 2021.
+
+Source: [Analyse a research session](https://www.gov.uk/service-manual/user-research/analyse-a-research-session) — User research community / GOV.UK.
+
 ## Software Development Life Cycle
 
 The seven phases every stage in this playbook is a close-up of.
@@ -1159,9 +1314,1303 @@ Source: [Insecure Direct Object References testing](https://wstg.owasp.org/lates
 
 ## JavaScript
 
-Array methods, async semantics, and the event loop.
+Write, debug and explain JavaScript through eight focused sections. Open a topic for worked examples and local practice, then compare your reasoning with the solution.
 
-*Not drawn yet.*
+### Fundamentals
+
+Keep valid input while distinguishing values, identity and conversion. Examples use modern JavaScript; run independent blocks as strict scripts (add "use strict") or as ECMAScript modules. Explain it: when should zero count as a supplied value?
+
+#### Values and references
+
+Compare values, types and shared object identity\.
+
+A primitive, such as a number, boolean or string, is an immutable value\. An object can be mutated\. Assigning an object value to another binding gives both bindings access to the same object; making a new object creates a different identity even if its fields look equal\. Strict equality \(===\) compares without type conversion: 0 and the string "0" have different types, so they are not strictly equal\. Loose equality \(==\) applies defined conversions; in this example the string becomes a number, producing true\. Number\("0"\) makes that conversion explicit\.
+
+Trace identity and conversion
+
+```
+const original = { count: 0 };
+const alias = original;
+alias.count = 1;
+console.log(original.count);          // 1
+console.log(alias === original);      // true
+console.log({ count: 1 } === alias);  // false
+console.log(0 === '0', 0 == '0');      // false, true
+console.log(Number('0'));             // 0
+```
+
+Common mistake: treating equal\-looking objects as equal references\. JavaScript passes argument values; an object argument is not a new copy of its contents\.
+
+#### Absence, defaults and equality
+
+Choose absence rules without discarding valid falsy values\.
+
+undefined often marks a missing value; null is an explicit absence by convention\. Both are nullish\. The ?? operator falls back only for those two values\. The \|\| operator instead falls back for every falsy value, including 0, false and empty text\. Both short\-circuit, so the right expression runs only when a fallback is needed\.
+
+Common mistake: using a default as validation\. ?? preserves NaN, and Number\(''\) is 0\. Validate the allowed type and range separately\. NaN === NaN is false; Number\.isNaN detects it\. Object\.is treats NaN as equal to itself and distinguishes signed zero, so it is not a universal replacement for ===\.
+
+##### Practice
+
+###### Preserve valid defaults
+
+Repair fallback so 0, false and empty text stay supplied values, while null and undefined become missing\. Predict the full output before revealing the repair\. Does your operator also validate numeric input?
+
+Context: Modern JavaScript in strict mode\. Run independent blocks as strict scripts \(add "use strict"\) or ECMAScript modules\. Inputs are supplied in the snippet\.
+
+Bug: valid values disappear
+
+```
+function fallback(value) { return value || 'missing'; }
+console.log([0, false, '', null, undefined].map(fallback));
+```
+
+Solution: Preserve valid defaults
+
+The bug returns five missing strings\. The repair returns \[0, false, "", "missing", "missing"\]\.
+
+Repair: default only for absence
+
+```
+function fallback(value) { return value ?? 'missing'; }
+console.log([0, false, '', null, undefined].map(fallback));
+```
+
+Why it works
+
+?? chooses the right value only for null or undefined\. It preserves the other inputs even though they are falsy\. This is an absence policy, not validation: NaN would remain NaN\.
+
+Follow-up
+
+Choose a separate validation rule for a nonnegative finite quantity\. Explain why defaulting and validating answer different questions\.
+
+#### Decisions, operators and loops
+
+Write branches and stop at the first inclusive match\.
+
+if/else selects a branch\. Comparisons such as \>= produce booleans; \&\& and \|\| short\-circuit and return an operand, not necessarily a boolean\. A conditional expression test ? yes : no selects one value\. Use for\.\.\.of for array values, an indexed for when the position matters, and while while a condition remains true\. break exits a loop; continue skips to its next iteration\. return exits the function\. Here the first eligible value includes the minimum itself\.
+
+First eligible age: boundary and empty input
+
+```
+function firstEligibleAge(ages, minimum) {
+  for (const age of ages) {
+    if (age >= minimum) return age;
+  }
+  return null;
+}
+console.log(firstEligibleAge([15, 18, 21], 18)); // 18
+console.log(firstEligibleAge([], 18));           // null
+```
+
+Common mistake: using \> when the boundary is inclusive, forgetting a return after the loop, or using for\.\.\.in \(property keys\) when you need array values\. Explain it: why does the empty case reach null?
+
+#### Process simple label text
+
+Split, trim and normalize labels without changing their order\.
+
+Strings are immutable: trim, toLowerCase and slice return values rather than changing the original string\. split separates text at a delimiter\. For simple comma\-delimited labels, trim each part, lowercase it, and skip empty results\. Keep order and duplicates; this task is not deduplication\.
+
+String operations return new values
+
+```
+const text = ' JavaScript ';
+console.log(text.trim().toLowerCase()); // javascript
+console.log(text);                      // unchanged
+console.log('JavaScript'.slice(0, 4));   // Java
+```
+
+Common mistake: forgetting to use a string method’s return value, or treating split as a full CSV parser\. Inputs here are strings with simple commas; quoted CSV and Unicode normalization are outside the contract\. Explain it: what should consecutive commas produce?
+
+##### Practice
+
+###### Normalize simple labels
+
+Write normalizeLabels\(text\) for a string of simple comma\-delimited labels\. Trim and lowercase each part; discard empty parts, keeping order and duplicates\. Check " JS, css , JS, ", "" and " , "\. Quoted CSV and Unicode normalization are outside this contract\.
+
+Context: Modern JavaScript in strict mode\. Run this block as a strict script \(add "use strict"\) or an ECMAScript module\.
+
+Solution: Normalize simple labels
+
+The results are \["js", "css", "js"\], \[\] and \[\]\.
+
+Reference solution
+
+```
+function normalizeLabels(text) {
+  const labels = [];
+  for (const part of text.split(',')) {
+    const label = part.trim().toLowerCase();
+    if (label !== '') labels.push(label);
+  }
+  return labels;
+}
+```
+
+Why it works
+
+Iteration visits each split part in order\. The explicit condition skips empty strings after trimming; it never removes a repeated nonempty label\.
+
+Follow-up
+
+Compare a filter/map pipeline with the loop\. Where should the empty check happen?
+
+### Scope and closures
+
+Modern JavaScript; run each block separately with "use strict". Locate the binding a function reads, then track when it becomes usable. Explain it: why can a name be in scope but still throw when read?
+
+#### Blocks, functions and initialization
+
+Find the binding and the moment it becomes usable\.
+
+let and const belong to their enclosing block\. var belongs to the containing function; top\-level behavior depends on script, module and host context\. A plain nested block does not contain it\. An inner let or const shadows an outer name throughout its block\. Before its declaration initializes that binding, reads throw ReferenceError: this interval is the temporal dead zone\.
+
+Two different block behaviors
+
+```
+let label = 'outer';
+{
+  let label = 'inner';
+  var escaped = 7;
+  console.log(label); // inner
+}
+console.log(label, escaped); // outer, 7
+```
+
+Common mistake: saying let does not exist until its line runs\. The binding already shadows the outer name\. typeof an undeclared name can return "undefined", but typeof a binding in its temporal dead zone throws\. const prevents reassignment, not property mutation\.
+
+##### Practice
+
+###### Shadowing and initialization
+
+Predict the log sequence\. Explain why the inner read cannot use the outer value, even though the inner initialization appears later\. What changes if the inner declaration becomes var?
+
+Context: Modern JavaScript in strict mode\. Run independent blocks as strict scripts \(add "use strict"\) or ECMAScript modules\. Inputs are supplied in the snippet\. The explicit function keeps the var follow\-up function\-scoped rather than host\-global\.
+
+Trace the inner name
+
+```
+function inspect() {
+  let value = 'outer';
+  try {
+    console.log(value);
+    { console.log(value); let value = 'inner'; }
+  } catch (error) { console.log(error.name); }
+  console.log(value);
+}
+inspect();
+```
+
+Solution: Shadowing and initialization
+
+The logs are outer, ReferenceError, outer\. The inner initialization is never reached\.
+
+Why it works
+
+The inner lexical binding shadows the outer binding throughout the nested block, but is uninitialized at the read\. The catch observes its temporal\-dead\-zone error; execution then continues after the try/catch\. Replacing inner let with var is a SyntaxError here, because var would conflict with the function’s existing let value\.
+
+Follow-up
+
+Read typeof value in the inner block before initialization\. It still throws; typeof only avoids an error for an undeclared name\.
+
+#### Declaration availability and function values
+
+Distinguish an early callable declaration from an uninitialized const\.
+
+An ordinary function declaration in a function body is available before its textual declaration\. A const\-held function expression cannot be read until the const initialization runs\. The runtime initializes the binding before execution reaches the declaration; it does not move source lines\. Both forms produce callable values once initialized\.
+
+Keep the comparison inside an explicit function
+
+```
+function inspectFunctions() {
+  console.log(declared()); // ready
+  function declared() { return 'ready'; }
+  try { held(); }
+  catch (error) { console.log(error.name); } // ReferenceError
+  const held = () => 'ready';
+  console.log(held()); // ready
+}
+inspectFunctions();
+```
+
+Common mistake: assuming every way to write a function has identical early\-call behavior\. Explain it: is the second failure caused by calling the function or by reading its uninitialized binding?
+
+#### A closure keeps access to a binding
+
+Read live lexical state after the creating call returns\.
+
+A function carries access to the lexical environment in which it was created, even after the surrounding call returns\. It reads the current binding rather than a frozen snapshot\. In the example, set changes the same value that read later observes\. A separate makeReader call would create another value binding\.
+
+Read after the creating call returns
+
+```
+function makeReader() {
+  let value = 1;
+  return {
+    read: () => value,
+    set: (next) => { value = next; },
+  };
+}
+const reader = makeReader();
+reader.set(2);
+console.log(reader.read()); // 2
+```
+
+Common mistake: putting private state outside a factory when instances need independent state\. Calls through one returned function share that factory invocation’s bindings; separate factory calls can keep separate bindings\.
+
+##### Practice
+
+###### Closure factory
+
+Implement makeCounter so each factory call starts at zero and returns a function that increments before returning\. Predict the three logged values, then explain which invocation owns each count binding\.
+
+Context: Modern JavaScript in strict mode\. The starter intentionally leaves the factory body for you to write\. Run the reference as a strict script \(add "use strict"\) or an ECMAScript module\.
+
+Starter: complete the factory
+
+```
+function makeCounter() {
+  // Return an incrementing counter.
+}
+const first = makeCounter();
+const second = makeCounter();
+console.log(first(), first(), second());
+```
+
+Solution: Closure factory
+
+The reference logs 1, 2, 1\. Further calls through first and second return 3 and 2\.
+
+Reference solution
+
+```
+function makeCounter() {
+  let count = 0;
+  return () => ++count;
+}
+const first = makeCounter();
+const second = makeCounter();
+console.log(first(), first(), second());
+```
+
+Why it works
+
+Each makeCounter call creates its own count binding\. The function returned as first keeps access to the first binding and changes it on each call\. second retains the other binding\. Both functions access live bindings\.
+
+Follow-up
+
+Move count outside makeCounter\. Predict the same calls when both returned functions now share one binding\.
+
+### Functions and this
+
+Modern JavaScript; run each block separately with "use strict". Follow arguments, return values and the call site. Explain it: what information disappears when a method is passed as a callback?
+
+#### Default parameters and rest arguments
+
+Define missing arguments and collect a numeric rest list\.
+
+A default parameter is used for an omitted argument or undefined, not null or zero\. A rest parameter collects remaining arguments into an array; it must be last\. Spread at a call does the reverse, supplying values from an iterable as separate arguments\. Use a numeric contract here instead of silently accepting strings\.
+
+Defaults are undefined\-only
+
+```
+function choose(value = 20) { return value; }
+console.log(choose(), choose(undefined), choose(null), choose(0));
+// 20, 20, null, 0
+```
+
+Common mistake: using a default as validation or confusing \.\.\.values in a declaration with \.\.\.values at a call\. Explain it: why do both total\(\) and total\(\.\.\.\[\]\) return zero?
+
+##### Practice
+
+###### Total numeric rest arguments
+
+Write total\(\.\.\.values\) for numeric arguments only\. Return their sum, including zero and negatives; no arguments must produce 0\. Try total\(2, 3\), total\(\), total\(0, \-2, 2\) and total\(\.\.\.\[2, 3\]\)\.
+
+Context: Modern JavaScript in strict mode\. Run this block as a strict script \(add "use strict"\) or an ECMAScript module\.
+
+Solution: Total numeric rest arguments
+
+The four results are 5, 0, 0 and 5\.
+
+Reference solution
+
+```
+function total(...values) {
+  return values.reduce((sum, value) => sum + value, 0);
+}
+```
+
+Why it works
+
+Rest collects arguments into an array\. The initial zero makes the empty reduction defined\. Spreading an array at the call supplies the same separate numeric arguments\.
+
+Follow-up
+
+What would change if strings were allowed? Choose a validation policy before broadening this numeric contract\.
+
+#### Functions as values and callbacks
+
+Pass a callable value and return the result you intend\.
+
+A function declaration names a callable value; an expression or arrow can produce a function value too\. Parameters receive arguments, and return supplies the result\. Falling through without returning produces undefined\. Passing a callback passes the function itself; the receiving code decides when and how to call it\.
+
+An expression returns; a block needs return
+
+```
+const double = (value) => value * 2;
+const forgot = (value) => { value * 2; };
+console.log(double(3)); // 6
+console.log(forgot(3)); // undefined
+```
+
+Common mistake: writing a block\-bodied arrow without return when a result is required\. Do not call a callback while registering it unless you mean to pass its result\.
+
+#### Ordinary receivers and lexical arrows
+
+Keep the ordinary receiver or retain lexical this\.
+
+For an ordinary function, the receiver follows the call\. meter\.read\(\) supplies meter as this\. A detached strict call supplies undefined, so reading this\.value throws\. bind creates a new function that preserves the receiver; it neither calls nor changes the original function\. An arrow instead retains the surrounding this binding\.
+
+An arrow retains the explicit method boundary
+
+```
+const meter = {
+  value: 7,
+  makeReader() { return () => this.value; },
+};
+const read = meter.makeReader();
+console.log(read());                         // 7
+console.log(read.bind({ value: 99 })());     // 7
+```
+
+Common mistake: expecting an object literal to bind an arrow to that object\. Create an arrow inside an ordinary method when it should retain that method call’s receiver\. Calling bind on that arrow cannot replace its lexical this; avoid host\-dependent top\-level this puzzles\.
+
+##### Practice
+
+###### Repair a detached receiver
+
+The detached function below throws in strict mode\. Supply a callback named read that returns 7 when invoked without a receiver\. Explain both bind and a wrapper alternative; could binding an arrow replace its captured this?
+
+Context: Modern JavaScript in strict mode\. Run independent blocks as strict scripts \(add "use strict"\) or ECMAScript modules\. Inputs are supplied in the snippet\.
+
+Bug: the method loses its receiver
+
+```
+const meter = { value: 7, read() { return this.value; } };
+const read = meter.read;
+console.log(read());
+```
+
+Solution: Repair a detached receiver
+
+The bug throws TypeError\. The bound callback in the repair logs 7\.
+
+Repair: carry the receiver with the function
+
+```
+const meter = { value: 7, read() { return this.value; } };
+const read = meter.read.bind(meter);
+console.log(read());
+```
+
+Why it works
+
+Detachment keeps the function value but loses the method call’s receiver\. bind creates a new function that carries meter\. A wrapper, \(\) =\> meter\.read\(\), also works by making a method call when invoked; it looks up the current method at that time\. An arrow already has lexical this, so bind cannot replace it\.
+
+Follow-up
+
+Replace meter\.read after creating each callback\. The bound callback keeps the original function; the wrapper looks up the replacement when called\.
+
+### Objects and data
+
+Modern JavaScript; run each block separately with "use strict". Trace property lookup and a changed object path. Explain it: what does an instance own, and what can it find through its prototype?
+
+#### Destructure and read optional data
+
+Extract fields and preserve zero when optional settings are absent\.
+
+Dot access uses a known property name; brackets allow a computed key\. Destructuring extracts properties and can rename them\. A destructuring default applies only to undefined\. Optional chaining stops at null or undefined and returns undefined; combine it with ?? when nullish data should use a fallback\. These examples assume an absent setting or a plain object, not arbitrary validation inputs\.
+
+Renaming and defaults have their own rules
+
+```
+const { pageSize: size = 20 } = { pageSize: null };
+const { pageSize: missing = 20 } = {};
+const key = 'pageSize';
+console.log(size, missing, { pageSize: 0 }[key]); // null, 20, 0
+```
+
+Common mistake: describing a destructuring default as a null fallback\. An existing null stays null until you apply a separate nullish policy\. Explain it: how does optional access differ from validating pageSize?
+
+##### Practice
+
+###### Read optional settings
+
+Write readPageSize\(settings\)\. An absent setting, absent pageSize, undefined or null pageSize yields 20; preserve 0\. Assume an absent setting or a plain object\. Explain why destructuring defaults alone do not satisfy the null case\.
+
+Context: Modern JavaScript in strict mode\. Run this block as a strict script \(add "use strict"\) or an ECMAScript module\.
+
+Solution: Read optional settings
+
+Missing or nullish data gives 20; \{ pageSize: 0 \} gives 0\.
+
+Reference solution
+
+```
+function readPageSize(settings) {
+  return settings?.pageSize ?? 20;
+}
+```
+
+Why it works
+
+Optional chaining handles an absent settings object; ?? handles a nullish property\. A destructuring default handles undefined but preserves a supplied null\. Neither form validates a type or range\.
+
+Follow-up
+
+Check null, undefined, \{\}, \{pageSize: undefined\}, \{pageSize: null\} and \{pageSize: 0\}\.
+
+#### Own properties and inherited methods
+
+Follow own properties and shared prototype methods\.
+
+Read a property with dot notation for a known name or brackets for a computed key\. Lookup checks the object’s own properties, then follows its prototype chain until a match or null\. An own property can shadow an inherited one\. Class syntax uses this mechanism: ordinary instance methods live on the class prototype, while this\.name below creates an own field\.
+
+An instance owns its name, not its method
+
+```
+class Account {
+  constructor(name) { this.name = name; }
+  label() { return this.name; }
+}
+const account = new Account('Ada');
+console.log(Object.hasOwn(account, 'name'));  // true
+console.log(Object.hasOwn(account, 'label')); // false
+console.log(account['label']());             // Ada
+```
+
+Common mistake: assuming every constructor call copies the method into the instance\. Instances share the prototype method; their own state can differ\.
+
+#### A new outer object can still share nested state
+
+Copy the changed path while keeping the original intact\.
+
+Object spread copies own enumerable properties into a new outer object\. If a property holds an object, the copied property still refers to that nested object\. Copy every object on the path you intend to change when the original must remain untouched; untouched sibling objects may deliberately stay shared\.
+
+Common mistake: calling spread a deep clone\. It does not copy the source prototype or non\-enumerable properties either\. The repair below concerns plain data objects; it is not a general cloning algorithm\.
+
+##### Practice
+
+###### Nested\-copy repair
+
+The spread copy below unexpectedly changes original\. Explain why, then repair the update so original stays light and the updated settings object is distinct\. Start the repair from fresh input\.
+
+Context: Modern JavaScript in strict mode\. Each block starts with a fresh plain object\. Use a strict script \(add "use strict"\) or an ECMAScript module\.
+
+Bug: one level copied
+
+```
+const original = { name: 'Ada', settings: { theme: 'light' } };
+const copy = { ...original };
+copy.settings.theme = 'dark';
+console.log(original.settings.theme);
+console.log(copy.settings === original.settings);
+```
+
+Solution: Nested\-copy repair
+
+The bug logs dark and true\. The repaired block logs light, dark and false\. Running a repair after the bug without fresh input would not undo the earlier mutation\.
+
+Repair: copy the changed path
+
+```
+const original = { name: 'Ada', settings: { theme: 'light' } };
+const updated = {
+  ...original,
+  settings: { ...original.settings, theme: 'dark' },
+};
+console.log(original.settings.theme, updated.settings.theme);
+console.log(updated.settings === original.settings);
+```
+
+Why it works
+
+The first spread creates a different outer object but copies the settings reference\. The repair creates a new settings object before changing theme, leaving the fresh original untouched\. Only the changed path needs copying here\.
+
+Follow-up
+
+Add an untouched sibling object named profile\. It can deliberately stay shared; explain why that does not make the settings repair fail\.
+
+### Collections and problem solving
+
+Modern JavaScript; run each block separately with "use strict". Transform, select, aggregate and order values without surprising the caller. Explain it: which method expresses the result you need, and what happens on empty input?
+
+#### Choose by the result you need
+
+Select a result shape before choosing an array method\.
+
+map produces a transformed array; filter keeps all matches; find returns the first matching value or undefined\. some asks whether at least one item matches, while every asks whether all do\. Iteration fits side effects when no transformed result is needed\. Array copies remain shallow, and callbacks can mutate the objects inside them\. The worked doubledAboveTwo example uses filter then map: numbers greater than 2 become doubled values, with \[\] for empty input and no change to the numeric input\.
+
+Different questions, different result shapes
+
+```
+const values = [1, 2, 3];
+console.log(values.map(n => n * 2));    // [2, 4, 6]
+console.log(values.filter(n => n > 1)); // [2, 3]
+console.log(values.find(n => n > 5));   // undefined
+console.log(values.some(n => n > 5));   // false
+console.log([].every(n => n > 5));      // true
+```
+
+Select, then transform: unchanged input
+
+```
+function doubledAboveTwo(values) {
+  return values.filter(n => n > 2).map(n => n * 2);
+}
+console.log(doubledAboveTwo([1, 3, 2, 4]));
+console.log(doubledAboveTwo([]));
+```
+
+Common mistake: confusing no matches with an empty result of the same type\. On an empty array, some is false, every is true, find is undefined, and map/filter return empty arrays\.
+
+#### Aggregate explicitly; sort deliberately
+
+Define the empty total and avoid changing a caller’s order\.
+
+reduce passes the returned accumulator into the next callback\. An explicit starting value explains the result for an empty collection\. For sorting, sort changes its input array, whereas toSorted creates a sorted copy\. Default ordering compares strings; an ascending numeric comparator returns a \- b\.
+
+A total with a defined empty case
+
+```
+const sum = values => values.reduce((total, n) => total + n, 0);
+console.log(sum([2, 3]), sum([])); // 5, 0
+```
+
+Common mistake: omitting the initial accumulator and then failing on an empty array, or mutating a caller’s input with sort\. A loop may be clearer than reduce for complicated logic\.
+
+##### Practice
+
+###### Sort without mutating input
+
+Repair sorted so it returns ascending numbers while leaving the caller’s array unchanged\. Predict the default sort result and the original array after the buggy call\. Include empty input in your check\.
+
+Context: Modern JavaScript in strict mode\. Run independent blocks as strict scripts \(add "use strict"\) or ECMAScript modules\. Inputs are supplied in the snippet\.
+
+Bug: default ordering and mutation
+
+```
+function sorted(values) { return values.sort(); }
+const values = [10, 2, 1];
+console.log(sorted(values));
+console.log(values);
+```
+
+Solution: Sort without mutating input
+
+The bug logs \[1, 10, 2\] twice\. The repair logs \[1, 2, 10\] and then the unchanged \[10, 2, 1\]\. It returns a distinct empty array for empty input\.
+
+Repair: copying numeric sort
+
+```
+function sorted(values) { return values.toSorted((a, b) => a - b); }
+const values = [10, 2, 1];
+console.log(sorted(values));
+console.log(values);
+```
+
+Why it works
+
+sort orders string forms by default and mutates the array it receives\. toSorted copies the array and uses the numeric comparator\. Its copy is shallow: sorting objects would still preserve their identities\.
+
+Follow-up
+
+Compare \[\.\.\.values\]\.sort\(\(a, b\) =\> a \- b\) with this repair\. Both copy the outer array before returning the sorted result\.
+
+#### Map, Set and a key policy
+
+Count values and choose whether identity or a field defines a duplicate\.
+
+Map associates keys with values; use get/set/has/delete and size rather than object\-property access\. Set stores unique values with add/has/delete and size\. Both iterate in insertion order\. A frequency Map can count labels without object\-prototype key collisions\. Primitive keys use SameValueZero equality \(including NaN with itself\); object keys compare by identity\. Two records with equal fields remain distinct unless you choose a field as their deduplication key\.
+
+Counts, first\-seen order and object identity
+
+```
+const labels = ['js', 'css', 'js'];
+const counts = new Map();
+for (const label of labels) counts.set(label, (counts.get(label) ?? 0) + 1);
+console.log([...counts]); // [['js', 2], ['css', 1]]
+console.log([...new Set(labels)]); // ['js', 'css']
+const records = [{ id: 1 }, { id: 1 }];
+const keyed = new Map(records.map(record => [record.id, record]));
+console.log(new Set(records).size, keyed.size); // 2, 1
+console.log(keyed.get(1) === records[1]);        // true
+```
+
+Common mistake: assuming new Set\(records\) deduplicates equal\-looking records\. Decide which key identifies a record and which duplicate wins\. The example uses id and keeps the last record for a repeated id, in first\-seen key order\. Explain it: why is the Set size different from the keyed Map size?
+
+#### Plan, test and explain a small algorithm
+
+Plan two passes, test edges and state the cost assumptions\.
+
+Clarify the contract first: case\-sensitive string labels, unchanged input, first value appearing exactly once, null when none exists\. Plan two passes: count each label in a Map, then scan original order for a count of one\. Two sequential passes still make a linear number of visits; they are not a nested loop\. Counting each candidate by scanning the array again can take quadratic comparisons\.
+
+Tests should include an empty list, one label, all repeated labels, mixed case, and an empty\-string label\. Under expected constant\-time Map access and unit\-cost key operations, the plan takes expected O\(n\) time and O\(k\) auxiliary entries for k distinct labels \(at most n\)\. JavaScript requires average sublinear Map access, not universal O\(1\); long string\-key costs depend on the representation\. Explain it: why does the second pass preserve the requested order?
+
+##### Practice
+
+###### Find the first unique label
+
+Given a case\-sensitive string array, return its first label that occurs exactly once, or null if none exists\. Keep input unchanged\. State a plan, implement firstUniqueLabel\(labels\), test edges and compare its cost with repeated scanning\. \["js", "css", "js", "html"\] must return "css"\.
+
+Context: Modern JavaScript in strict mode\. Run this block as a strict script \(add "use strict"\) or an ECMAScript module\.
+
+Solution: Find the first unique label
+
+Count labels, then scan original order\. \[\] and \["js", "js"\] yield null; \[""\] yields "" and \["JS", "js"\] yields "JS"\.
+
+Reference solution
+
+```
+function firstUniqueLabel(labels) {
+  const counts = new Map();
+  for (const label of labels) counts.set(label, (counts.get(label) ?? 0) + 1);
+  for (const label of labels) {
+    if (counts.get(label) === 1) return label;
+  }
+  return null;
+}
+```
+
+Why it works
+
+The first pass counts without modifying input\. The second returns the earliest label with count one, including an empty string\. With expected constant\-time Map operations and unit\-cost keys, two passes take expected O\(n\) time and O\(k\) auxiliary storage\. Repeated scanning can take O\(n²\)\. Map access is only specified to be average sublinear; string\-key costs need separate assumptions\.
+
+Follow-up
+
+Test empty input, one label, all repeated, mixed case, empty text and a unique label at the end\. Why is testing the returned label’s truthiness wrong?
+
+### Promises and errors
+
+Modern JavaScript. Run independent demonstrations separately; combine the shared lookup fixture with the definitions and caller named by each example. The optional fixture implementation follows its contract and adapter.
+
+Imagine a screen needs a person’s display name\. A profile lookup supplies the record later, but its caller continues now\. How can that caller observe success, failure and cleanup? Follow one lookup from an error\-first callback through a returned promise, a transformation and an awaited caller\.
+
+Start with functions, callbacks, basic loops and try/catch\. By the end, trace what returns immediately, what becomes available later and who owns each failure\. Open the topics in order for the connected walkthrough, then explain the model and apply it to two different tasks\.
+
+#### The function returns before its result arrives
+
+Separate the callback’s return from the caller’s completion\.
+
+Our simulated readProfile\(id, done\) lookup calls done once, after the current synchronous code finishes\. It passes either an error or a profile\. ID 1 supplies \{ name: 'Ada' \}; ID 99 reports “Profile 99 was not found”\. There is no network request or timer\-duration assumption\. Treat this contract as given; its optional implementation appears after the promise adapter\.
+
+A caller using the callback directly
+
+```
+readProfile(1, (error, profile) => {
+  if (error) {
+    console.log(`caught: ${error.message}`);
+    return;
+  }
+  console.log(profile.name);
+});
+console.log('request started');
+```
+
+With the lookup fixture, this prints request started, then Ada\. Registering a callback does not wait for it to run\. The caller continues; later, the lookup invokes the callback\.
+
+A return from the wrong function
+
+```
+function wrongName(id) {
+  readProfile(id, (error, profile) => {
+    if (error) return 'Guest';
+    return profile.name;
+  });
+}
+console.log(wrongName(1)); // undefined
+```
+
+There are two functions here\. return profile\.name returns from the callback\. wrongName has already reached its end without returning a value, and readProfile ignores the callback’s return value\. A longer lookup cannot change which function a return belongs to\. The caller needs a completion contract\.
+
+#### Return a promise now, observe its outcome later
+
+Distinguish the promise object from its eventual value\.
+
+A promise is an object representing an eventual outcome\. The caller can receive that object immediately and attach work to its outcome\. The lookup still decides when its result becomes available; creating a promise does not move work onto another JavaScript thread\.
+
+Promise states in the lookup
+
+| State | Meaning here | What the caller has |
+| --- | --- | --- |
+| Pending | The callback has not supplied an outcome yet\. | The promise object\. |
+| Fulfilled | The lookup supplied a profile\. | A fulfillment handler can receive that profile\. |
+| Rejected | The lookup supplied an error\. | A rejection handler can receive that reason\. |
+
+Fulfilled and rejected are the two settled states\. Once settled, a promise cannot switch to the other result\. Resolved is a different term: a promise can adopt another promise that is still pending\. The adapter below resolves with a plain profile object, so that particular resolution fulfills it\.
+
+#### Connect the callback to a returned promise
+
+Identify the executor and the two functions supplied to it\.
+
+Wrap this callback boundary once\. The function passed to new Promise is its executor\. The constructor calls it immediately and supplies resolve and reject, two functions tied to that new promise\. We do not define these arguments ourselves\.
+
+The lookup adapter
+
+```
+function loadProfile(id) {
+  return new Promise((resolve, reject) => {
+    readProfile(id, (error, profile) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(profile);
+    });
+  });
+}
+```
+
+The constructor invokes the executor now; readProfile invokes \(error, profile\) =\> \.\.\. later\. That later callback retains access to resolve and reject\. Calling resolve\(profile\) supplies the promise’s outcome; it does not return the profile from loadProfile\.
+
+From call to reaction
+
+| Moment | What happens | What has returned? |
+| --- | --- | --- |
+| Call loadProfile\(1\)\. | The constructor creates a promise and runs its executor\. | loadProfile is still running\. |
+| Call readProfile\. | The lookup registers its later callback\. | readProfile returns; the executor reaches its end\. |
+| Return from loadProfile\. | The caller can attach handlers\. | The pending promise, before the profile\. |
+| Invoke the lookup callback\. | Call resolve\(profile\) or reject\(error\)\. | The callback finishes\. |
+| Run a registered reaction\. | Receive the value or reason\. | Its return determines a derived promise’s outcome\. |
+
+A synchronous executor throw can reject the promise\. A throw from a later callback does not travel backward into the finished executor\. This adapter explicitly passes reported callback errors to reject\. Keep transformations in the promise chain so their throws become chain rejections\.
+
+#### Optional: the simulated lookup implementation
+
+Use this shared fixture when trying the demonstrations\.
+
+This fixture uses standard JavaScript promises to schedule its callback after current synchronous work\. Promise\.resolve\(\) supplies a fulfilled promise; then schedules its handler\. This is an implementation detail of the simulation, not a requirement for callback APIs in general\. The Scheduling section covers queue ordering\.
+
+Shared lookup fixture
+
+```
+const profiles = new Map([
+  [1, { name: 'Ada' }],
+  [2, { name: 'Lin' }],
+]);
+
+function readProfile(id, done) {
+  Promise.resolve().then(() => {
+    const profile = profiles.get(id);
+    if (!profile) {
+      done(new Error(`Profile ${id} was not found`));
+      return;
+    }
+    done(null, profile);
+  });
+}
+```
+
+Combine this fixture with the adapter and the definitions needed by the caller you want to try\. Run each demonstration independently so its output is clear\. The fixture ignores the callback’s return\. If that callback throws, then rejects its own derived promise, which this callback\-style API does not return; avoid throwing from it\. The adapter reports errors explicitly and leaves transformations to the returned chain\.
+
+#### Transform the result and return the chain
+
+Give the caller ownership of the complete display\-name operation\.
+
+The screen needs an uppercase display name and a completion message on either outcome\. With the fixture and adapter defined, this version uses promise methods:
+
+Display name with then
+
+```
+function displayNameWithThen(id) {
+  return loadProfile(id)
+    .then(profile => profile.name.toUpperCase())
+    .finally(() => console.log(`finished ${id}`));
+}
+```
+
+Each then creates a new promise\. It does not replace the value inside the original promise\.
+
+Which promise carries which value?
+
+| Expression | Eventual fulfillment value |
+| --- | --- |
+| loadProfile\(id\) | A profile such as \{ name: 'Ada' \}\. |
+| \.then\(profile =\> profile\.name\.toUpperCase\(\)\) | The string 'ADA'\. |
+| \.finally\(\.\.\.\), when cleanup succeeds | The same 'ADA'\. |
+
+Returning the chain lets the caller observe the whole operation\. Omitting the outer return makes this ordinary function return undefined while the lookup continues\. Omitting the return inside a block\-bodied handler instead fulfills its derived promise with undefined\. Identify which function lost its return\. A handler throw rejects the promise returned by then; returning another promise makes that link follow its outcome\.
+
+#### Trace a failed lookup through cleanup
+
+Follow id 99 without inventing a profile to transform\.
+
+For displayNameWithThen\(99\), the lookup fails before there is any profile to uppercase\. Trace the same operation’s rejection:
+
+A rejection from lookup to caller
+
+| Boundary | What happens |
+| --- | --- |
+| Callback → adapter | The callback supplies an error; reject\(error\) rejects the lookup promise\. |
+| Lookup promise → then | The success handler is skipped\. With no rejection handler here, the derived promise rejects with the same reason\. |
+| Derived promise → finally | Cleanup prints finished 99\. Successful cleanup preserves the rejection\. |
+| Returned promise → awaited caller | Await throws that reason; the caller’s surrounding catch can handle it\. |
+
+Successful cleanup does not turn a failed lookup into success\. A throwing cleanup can replace the original outcome\. Promise\.finally ignores an ordinary returned value, but waits for a returned promise; a rejected cleanup promise replaces the outcome too\. A return statement in a JavaScript finally block can override an earlier return or throw\. Keep cleanup separate from choosing a result\.
+
+#### Express the same operation with async and await
+
+Compare the two forms, then trace the awaited caller\.
+
+Display name with await
+
+```
+async function displayNameWithAwait(id) {
+  try {
+    const profile = await loadProfile(id);
+    return profile.name.toUpperCase();
+  } finally {
+    console.log(`finished ${id}`);
+  }
+}
+```
+
+An async function returns a promise\. At await, this invocation pauses until the awaited outcome is available; other JavaScript work can run\. Fulfillment supplies profile\. Rejection throws at that expression and travels through finally before this function’s returned promise rejects\. A transformation error, such as uppercasing a non\-string name, also propagates\.
+
+There is no recovery in either display\-name version\. The caller decides whether to show a fallback, retry or report the error\. Adding a catch that only logs and returns normally would turn rejection into fulfillment, possibly with undefined\.
+
+Caller: fixture, adapter and await version
+
+```
+async function demo() {
+  for (const id of [1, 99]) {
+    try {
+      console.log(await displayNameWithAwait(id));
+    } catch (error) {
+      console.log(`caught: ${error.message}`);
+    }
+  }
+}
+demo().catch(error => console.error(error));
+```
+
+Caller output
+
+```
+finished 1
+ADA
+finished 99
+caught: Profile 99 was not found
+```
+
+Cleanup runs before the display\-name promise settles\. Only then does the caller’s await resume to print the name or catch the rejection\. The loop awaits each call, so request 99 starts after the first result is handled\. Replace displayNameWithAwait\(id\) with displayNameWithThen\(id\) for the same observable outcomes here\.
+
+#### Validation, recovery and cleanup
+
+Validate known inputs, recover selectively and always run cleanup\.
+
+throw transfers control to the nearest matching catch\. Handle an expected invalid input at the boundary that owns its recovery; rethrow unexpected failures\. finally runs on success, a return, or a thrown error, so it is a place for cleanup\. Keep cleanup from overriding the result or failure: do not return from finally\. Here work and cleanup are synchronous injected functions, and cleanup is assumed not to throw\.
+
+Run cleanup without swallowing the work failure
+
+```
+class InvalidInput extends Error {}
+function runChecked(value, work, cleanup) {
+  try {
+    if (!Number.isFinite(value)) throw new InvalidInput('finite number required');
+    return work(value);
+  } finally {
+    cleanup();
+  }
+}
+function recoverInput(value, work, cleanup) {
+  try { return runChecked(value, work, cleanup); }
+  catch (error) {
+    if (error instanceof InvalidInput) return null;
+    throw error;
+  }
+}
+console.log(runChecked(2, n => n + 5, () => console.log('cleanup')));
+// cleanup, then 7
+```
+
+Common mistake: catching every failure and reporting success, or returning from finally and hiding an earlier error\. The wrapper runs cleanup once after success or failure, including failed validation\. InvalidInput marks the validation failure this boundary owns; other errors propagate\. Explain it: which boundary decides whether an invalid input can be recovered?
+
+#### Choose what completes a batch
+
+Compare an all\-success result with a partial\-results report\.
+
+A report can still be useful when one profile is missing\. With the fixture and adapter defined, give allSettled the lookup promises and inspect every outcome:
+
+A report retaining both outcomes
+
+```
+async function profileReport() {
+  const outcomes = await Promise.allSettled([
+    loadProfile(1),
+    loadProfile(99),
+  ]);
+  for (const outcome of outcomes) {
+    if (outcome.status === 'fulfilled') {
+      console.log(`ok: ${outcome.value.name}`);
+    } else {
+      console.log(`failed: ${outcome.reason.message}`);
+    }
+  }
+}
+profileReport().catch(error => console.error(error));
+```
+
+This prints ok: Ada, then failed: Profile 99 was not found\. allSettled waits for every input to settle, then fulfills with records in input order\. Fulfilled records have value; rejected records have reason\. profileReport prints the records and returns no value, so its own promise fulfills with undefined\. It calls loadProfile directly, without display\-name cleanup messages\.
+
+Choose the completion contract
+
+| Requirement | Method and result |
+| --- | --- |
+| Every lookup must succeed\. | Promise\.all fulfills with values or rejects when an input rejection reaches it\. It does not give a full outcome report\. |
+| Keep each success and failure\. | Promise\.allSettled fulfills with status records after every input settles, including an empty input\. |
+| First fulfillment / first settlement\. | Promise\.any / Promise\.race\. any rejects if all inputs reject; race follows the first settlement\. |
+
+Calling the lookup functions initiates work; the join does not call them for you\. Neither all nor allSettled cancels work already started\. Concurrent initiation does not guarantee parallel JavaScript execution\. Choose the caller’s contract before choosing the method\.
+
+#### Explain promises and chaining in an interview
+
+Give a model answer, then test the boundary with a follow\-up\.
+
+##### What does loadProfile\(1\) return before the callback runs?
+
+A promise representing the lookup\. Its executor has already registered the callback, but the profile is not available to the caller yet\. The caller observes its outcome through a handler or await\.
+
+Weak answer: The profile itself\.
+
+Follow-up: Returning a profile from the executor does not fulfill the promise; the executor’s return value is ignored\.
+
+##### Does then change the original promise?
+
+It returns a new promise\. Returning a normal value fulfills that derived promise; throwing rejects it; returning another promise makes it follow that outcome\.
+
+Weak answer: It updates the promise\.
+
+Follow-up: A handler returning nothing supplies undefined to the derived promise\.
+
+#### Explain awaiting and batch ownership
+
+Identify who observes rejection and what keeps running\.
+
+##### Does await block JavaScript? When does local try/catch need it?
+
+Await suspends this async invocation while the operation is pending\. Await inside a local try makes a rejection throw at that boundary\. Simply returning a pending promise forwards its eventual rejection to the caller without that local catch seeing it\.
+
+Follow-up: Use await when local error handling or cleanup must span the operation\. Direct forwarding is useful when the caller owns those responsibilities\.
+
+##### Would Promise\.all cancel the remaining lookups after one fails?
+
+No\. It joins the promises and rejects its aggregate when an input rejection reaches it; started work can continue\. Use all when partial success is unusable, and allSettled when the caller needs each outcome\.
+
+Follow-up: Calling the lookup functions initiates work\. Promise\.all does not call those functions for you\.
+
+#### Transfer: save a batch in order
+
+Make the caller observe each save, and stop initiation on failure\.
+
+The caller must observe every save; item 3 must not start if item 2 fails\. Identify the returned promise\. forEach discards callback results, so awaiting it cannot join those promises\. Use for\.\.\.of with await when one save must finish before the next starts\.
+
+Try Async iteration repair below, then check your saveAll with this fixture\. The executor stores its supplied resolving function in releaseFirst so you can finish the first save manually\.
+
+Check the repaired saveAll initiation order
+
+```
+let releaseFirst;
+const firstSave = new Promise(resolve => { releaseFirst = resolve; });
+const started = [];
+const save = item => {
+  started.push(item);
+  return item === 1 ? firstSave : Promise.resolve();
+};
+const done = saveAll([1, 2], save);
+console.log(started.join(','));
+releaseFirst();
+done.then(result => console.log(result)).catch(error => console.error(error));
+```
+
+The repair prints 1, then complete\. At the first log, item 1 is still pending and item 2 has not started\. The original bug prints 1,2 at that point\. Naming for\.\.\.of alone is not an explanation: show how rejection reaches the awaited caller\.
+
+Test these contracts separately
+
+| Input and save behavior | Required outcome |
+| --- | --- |
+| Empty items | Fulfill with complete; never call save\. |
+| \[1, 2\], both fulfill | Start in order and fulfill only after both saves\. |
+| \[1, 2, 3\], save 2 rejects | Reject saveAll with that error; save 3 never starts\. |
+
+##### Practice
+
+###### Async iteration repair
+
+save returns a promise\. Repair saveAll so saves finish one at a time in input order, complete is reported only after the last save, and a rejection reaches the awaited caller\. What happens to item 3 if saving item 2 fails?
+
+Context: Modern JavaScript in strict mode\. Function definitions below take items and an injected save\(item\); no top\-level await is needed\. To try them, call report\(items, save\) from your async harness\. Saves in the completion check are deliberately held pending\.
+
+Bug: completion before saves finish
+
+```
+async function saveAll(items, save) {
+  await items.forEach(async (item) => {
+    await save(item);
+  });
+  return 'complete';
+}
+```
+
+Solution: Async iteration repair
+
+The bug can return complete while saves are pending\. The repair finishes saving 1 before starting 2\. If save 2 rejects, saveAll rejects with that error and item 3 never starts; report catches the error from its awaited call\.
+
+Repair and awaited caller
+
+```
+async function saveAll(items, save) {
+  for (const item of items) {
+    await save(item);
+  }
+  return 'complete';
+}
+
+async function report(items, save) {
+  try {
+    console.log(await saveAll(items, save));
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+```
+
+Why it works
+
+forEach returns undefined and discards the promises returned by its async callbacks\. Awaiting that return value cannot join them\. The for\.\.\.of repair awaits each save and propagates failure\. With successful saves the caller logs complete only after all saves finish\.
+
+Follow-up
+
+If saves are independent and may start together, await Promise\.all\(items\.map\(save\)\) can join them instead\. It rejects when an input rejects, but does not cancel saves already started\. Choose this only when sequential completion is not required\.
+
+#### Transfer: produce a partial\-results report
+
+Retain each result and explain its correspondence to the input\.
+
+Attempt Retain partial results below with one fulfillment, one rejection and empty input\. Distinguish an outcome record from a recovered value\. State input order versus completion order, and say what continues after failure\. Choosing allSettled should follow from the report’s requirements\.
+
+Then trace id 1 and id 99 through the producer, adapter, transformation, cleanup and caller without rereading\. At each boundary, say what returns immediately, what arrives later and who owns an error\. Explain what changes if the transformation throws\. Return to the unclear boundary’s walkthrough and reconstruct the behavior\.
+
+##### Practice
+
+###### Retain partial results
+
+Write collectOutcomes\(promises\) to return every fulfillment/rejection record in input order\. Test Promise\.resolve\(2\), Promise\.reject\("offline"\) and empty input\. Use an awaited caller so the resulting records stay observable\.
+
+Context: Modern JavaScript in strict mode\. Run this block as a strict script \(add "use strict"\) or an ECMAScript module\.
+
+Solution: Retain partial results
+
+The records are \{status: "fulfilled", value: 2\} and \{status: "rejected", reason: "offline"\}; empty input gives \[\]\.
+
+Reference solution
+
+```
+async function collectOutcomes(promises) {
+  return await Promise.allSettled(promises);
+}
+```
+
+Why it works
+
+allSettled observes every input and keeps failures as records rather than rejecting for them\. Result order follows input order, even if completion order differs\. Promise\.all instead rejects on an input failure; neither operation cancels started work\.
+
+Follow-up
+
+Hold the first promise pending and settle the second first\. Does the result array change order?
+
+### Scheduling
+
+Modern JavaScript; run each block separately with "use strict". Predict one isolated callback before making broader claims about a runtime. Explain it: does a zero-delay timer get to interrupt current synchronous code?
+
+#### Finish current code before queued callbacks
+
+Finish synchronous work before processing the isolated queue\.
+
+Current synchronous statements run to completion\. A fulfilled promise can enqueue a reaction; queueMicrotask explicitly enqueues another microtask\. In the worked example, queued waits for both synchronous lines\. Microtasks added in this isolated context run in enqueue order before the later timer in the practice trace\.
+
+Run together inside one fresh timer callback
+
+```
+console.log('current');
+queueMicrotask(() => console.log('queued'));
+console.log('still current');
+// current, still current, queued
+```
+
+Common mistake: reading the position of a callback’s function body in the source as its execution time\. Enqueuing it and running it are separate events\.
+
+##### Practice
+
+###### Scheduling trace
+
+Predict the five log lines and explain why the zero\-delay timer cannot run between the two synchronous lines\. Account for both the promise reaction and queueMicrotask registration\.
+
+Context: Modern JavaScript in strict mode\. Execute these statements together inside one fresh timer callback, with no unrelated work\. This isolates the trace from earlier async continuations; it is an order check, not a timer\-duration check\.
+
+Predict this isolated trace
+
+```
+console.log('sync 1');
+Promise.resolve().then(() => console.log('promise'));
+queueMicrotask(() => console.log('microtask'));
+setTimeout(() => console.log('timer'), 0);
+console.log('sync 2');
+```
+
+Solution: Scheduling trace
+
+sync 1, sync 2, promise, microtask, timer\.
+
+Why it works
+
+The current synchronous statements finish first\. The fulfilled promise queues its reaction before queueMicrotask queues the next callback, so those run in that order before the timer\. A timer delay is a threshold, not an appointment\. This trace establishes no browser rendering, Node I/O\-phase race, nextTick/setImmediate or ES\-module ordering claim\.
+
+Follow-up
+
+Move the queueMicrotask statement above Promise\.resolve\. Predict sync 1, sync 2, microtask, promise, timer: the synchronous lines still finish first, but the enqueue order changes\.
+
+#### Keep the host boundary visible
+
+Keep timer thresholds and runtime\-specific claims separate\.
+
+A zero\-delay timer cannot interrupt the current callback, and its delay is a threshold rather than an exact execution time\. Browser tasks and microtask checkpoints are a browser host model\. Node has event\-loop phases; the terms are not interchangeable\. The examples deliberately avoid unrelated work\.
+
+Common mistake: turning this trace into a browser paint rule or a timer\-versus\-I/O prediction\. It establishes no nextTick/setImmediate, ES\-module evaluation or I/O\-phase ordering claim\. Moving an enqueue can change microtask order without changing which lines are synchronous\.
+
+### Modules
+
+These examples are ECMAScript modules, which are automatically strict. Treat the labelled files as separate modules; import/export requires module loading by the host. Explain it: which names are exported, and which are local?
+
+#### Named exports, a default and local scope
+
+Supply a module with one named value and one default function\.
+
+An ES module exposes only what it exports; other top\-level names stay module\-local\. A named import must match an exported name \(it may be renamed locally with as\)\. A default import does not use braces and may choose a local name\. This totals\.js supplies one named currency and one default function; total is the function’s local name, not an additional named export\.
+
+totals\.js — ECMAScript module
+
+```
+export const currency = 'USD';
+const initial = 0; // module-local
+export default function total(values) {
+  return values.reduce((sum, value) => sum + value, initial);
+}
+```
+
+Common mistake: assuming a function’s name makes a default export into a named export\. Explain it: why can another file import currency but not the local name initial?
+
+#### Run two real module files
+
+Repair main\.js, then run it alongside the supplied module\.
+
+Save the supplied source as totals\.js and the importing file as main\.js in the same directory\. Load main\.js as an ECMAScript module in a host with module support\. The relative import includes the \.js extension\. The starter imports a name totals\.js does not export, so module linking fails before its logs run\. Repair main\.js against that supplied file; the solution produces USD 5 0\.
+
+Common mistake: treating import/export as ordinary script syntax\. Use the labelled ECMAScript module files here\. Explain it: why can a default import use a local name different from total?
+
+##### Practice
+
+###### Repair a module boundary
+
+Using the supplied totals\.js above, repair only main\.js so it imports the default total function and named currency\. Load main\.js as an ECMAScript module; \[2, 3\] and \[\] must produce USD 5 0\. Explain why the original import fails before logging\.
+
+Context: ECMAScript modules, automatically strict\. Save the exact supplied totals\.js from Named exports, a default and local scope beside main\.js\. This starter and solution are main\.js only; load them as modules rather than ordinary scripts\.
+
+main\.js — broken named import
+
+```
+import { total, currency } from './totals.js';
+console.log(currency, total([2, 3]), total([]));
+```
+
+Solution: Repair a module boundary
+
+Use a default import without braces for total, plus the named import currency\. The repaired program logs USD 5 0\.
+
+main\.js — repaired imports
+
+```
+import total, { currency } from './totals.js';
+console.log(currency, total([2, 3]), total([]));
+```
+
+Why it works
+
+totals\.js has no named export total\. Its default export may be given the local name total by the importer; currency must match the named export\. The helper initial remains local to totals\.js\.
+
+Follow-up
+
+Rename the default import to sum and update its calls\. Why would importing \{ initial \} still fail?
+
+Sources:
+
+Source: [JavaScript Guide](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide) — MDN contributors.
+
+Source: [Promise constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise) — MDN contributors.
+
+Source: [Promise.then](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/then) — MDN contributors.
+
+Source: [Promise.finally](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/finally) — MDN contributors.
+
+Source: [Equality comparisons and sameness](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Equality_comparisons_and_sameness) — MDN contributors.
+
+Source: [let: scope and temporal dead zone](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/let) — MDN contributors.
+
+Source: [Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Closures) — MDN contributors.
+
+Source: [this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/this) — MDN contributors.
+
+Source: [Spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax) — MDN contributors.
+
+Source: [Inheritance and the prototype chain](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Inheritance_and_the_prototype_chain) — MDN contributors.
+
+Source: [Array: choosing methods and avoiding mutation](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array) — MDN contributors.
+
+Source: [forEach: callback results and promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach) — MDN contributors.
+
+Source: [Using promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises) — MDN contributors.
+
+Source: [Event loops (browser host)](https://html.spec.whatwg.org/multipage/webappapis.html#event-loops) — WHATWG HTML Living Standard.
+
+Source: [The Node.js event loop](https://nodejs.org/learn/asynchronous-work/event-loop-timers-and-nexttick) — Node.js project.
+
+Source: [Data types and data structures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Data_structures) — MDN contributors.
+
+Source: [Nullish coalescing](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) — MDN contributors.
+
+Source: [Function bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) — MDN contributors.
+
+Source: [Array reduce](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce) — MDN contributors.
+
+Source: [Control flow and error handling](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Control_flow_and_error_handling) — MDN contributors.
+
+Source: [Loops and iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration) — MDN contributors.
+
+Source: [Text formatting](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Text_formatting) — MDN contributors.
+
+Source: [Keyed collections](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Keyed_collections) — MDN contributors.
+
+Source: [Default and rest parameters](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Functions) — MDN contributors.
+
+Source: [Destructuring](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring) — MDN contributors.
+
+Source: [Optional chaining](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Optional_chaining) — MDN contributors.
+
+Source: [Promise.allSettled](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled) — MDN contributors.
+
+Source: [Map access guarantees](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) — MDN contributors.
+
+Source: [JavaScript modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules) — MDN contributors.
 
 ## Python
 
@@ -1186,3 +2635,1432 @@ Annotations, bean lifecycle, and where configuration comes from.
 Middleware order, routing, and what blocks the event loop.
 
 *Not drawn yet.*
+
+## DSA Patterns
+
+Learn fifteen problem-solving patterns through everyday stories, tiny traces, JavaScript and attempt-first practice.
+
+### Foundations
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Count work and room
+
+Compare checking every pair of socks with checking each sock once\.
+
+Compare checking every pair of socks with checking each sock once\. Describe growth rather than guessing elapsed seconds\.
+
+For n items a scan makes n visits; all unordered pairs make n\(n\-1\)/2 comparisons\.
+
+Count work and room trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| n = 4 | scan 4; pairs 6 | Small inputs hide growth |
+| n = 8 | scan 8; pairs 28 | Pair work grows faster |
+
+Count work and room — JavaScript
+
+```
+// A single scan: n additions, one running total.
+function total(values) {
+  let sum = 0;
+  for (const x of values) sum += x;
+  return sum;
+}
+```
+
+O is an upper growth bound; Θ gives matching upper/lower growth\. Expected cost averages over the stated randomness/model; amortized cost spreads work over a sequence\. Neither promises a fast individual operation\.
+
+Use fixed\-cost indexed access, comparison and arithmetic here\. Numbers and intermediate sums/counts must remain finite safe integers\. Hash claims assume expected constant\-time operations; JavaScript Map does not guarantee that bound\. Sorting claims use a comparison\-sort model, not a language guarantee\. Count copies, recursion and required output separately\.
+
+##### Does a nested loop always mean quadratic?
+
+No\. Count total work; a moving boundary or stack may make only n removals across all iterations\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Count work and room practice
+
+Compare a scan and all unordered pairs for n = 10\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://usaco\.guide/bronze/time\-comp
+
+Solution: Count work and room practice
+
+10 visits versus 45 pairs\.
+
+Why it works
+
+No\. Count total work; a moving boundary or stack may make only n removals across all iterations\. O is an upper growth bound; Θ gives matching upper/lower growth\. Expected cost averages over the stated randomness/model; amortized cost spreads work over a sequence\. Neither promises a fast individual operation\.
+
+#### Choose a container
+
+Use a row of labelled boxes, a lookup notebook, a plate stack or a waiting line depending on what comes next\.
+
+Use a row of labelled boxes, a lookup notebook, a plate stack or a waiting line depending on what comes next\. Arrays index boxes; Maps associate keys with values; stacks take the newest; queues take the oldest\.
+
+Searching a notebook page by page repeats work; indexed and keyed access organize it\.
+
+Choose a container trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| Array | values\[0\] | First indexed slot |
+| Stack | push then pop | Last in, first out |
+| Queue | append, advance head | First in, first out |
+
+Choose a container — JavaScript
+
+```
+const leaf = { value: 2, left: null, right: null };
+const root = { value: 1, left: leaf, right: null };
+const end = { value: 2, next: null };
+const head = { value: 1, next: end };
+const adj = [[1], [0], []];
+const sorted = [3, 1, 2].slice().sort((a, b) => a - b);
+```
+
+Objects are connected by references: two variables can point at the same node\. Recursion pauses one call while child calls run; each paused call consumes storage\. Sorting changes positions, so carry original indices when they matter\. The shown tree has no sharing or cycles\.
+
+A copied array costs O\(n\) storage\. Stack/queue storage depends on how many pending items remain; a head\-index queue retains its visited prefix until discarded\. Sort workspace depends on the engine\.
+
+##### Why avoid shift for a BFS queue?
+
+A head index avoids repeated removal from the front and supports the linear traversal model\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Choose a container practice
+
+In adj \[\[1\], \[0\], \[\]\], which vertex is isolated? Are two \{value: 2\} objects identical?
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://usaco\.guide/silver/intro\-tree
+
+Solution: Choose a container practice
+
+Vertex 2 is isolated\. Separately created objects have different identities\.
+
+Why it works
+
+A head index avoids repeated removal from the front and supports the linear traversal model\. Objects are connected by references: two variables can point at the same node\. Recursion pauses one call while child calls run; each paused call consumes storage\. Sorting changes positions, so carry original indices when they matter\. The shown tree has no sharing or cycles\.
+
+#### Explain a solution
+
+Walk an interviewer through a small example before writing loops\.
+
+Restate the contract: valid input, returned output, mutation and endpoints\. Give a simple baseline, choose a mechanism and name its state\. Trace a tiny example, justify the safe step, derive work and room, then test empty input, duplicates and a boundary\. Explain what breaks if an assumption changes\. Local questions are original practice, not claims about employer question frequency\.
+
+### Scan and remember
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Hash complements
+
+Match two grocery prices to a budget by remembering prices already checked\.
+
+Match two grocery prices to a budget by remembering prices already checked\. Return distinct original positions adding to a target; signed integers and duplicates are allowed\.
+
+Trying every pair costs O\(n²\)\. A Map holds one earlier position for each price\.
+
+Hash complements trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| Read 3 | \{ \} | Need 6 for target 9 |
+| Read 6 | 3 → 0 | Return \[0, 1\] |
+
+Hash complements — JavaScript
+
+```
+function findPair(values, target) {
+  const seen = new Map();
+  for (let i = 0; i < values.length; i++) {
+    const need = target - values[i];
+    if (seen.has(need)) return [seen.get(need), i];
+    seen.set(values[i], i);
+  }
+  return null;
+}
+```
+
+The map contains only earlier positions, so a match uses two different items\. If no earlier complement exists, storing this item makes it available to later ones\. Ordered range queries need another structure\.
+
+Expected O\(n\) time and O\(n\) extra map storage under the hash model; the returned pair uses O\(1\)\.
+
+##### Why query before insertion?
+
+Inserting first could let one item match itself\. Two equal prices still work when the earlier occurrence is stored\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Hash complements practice
+
+Evaluate findPair\(\[4, 4\], 8\) and findPair\(\[4\], 8\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1640
+
+Solution: Hash complements practice
+
+\[0, 1\] and null\.
+
+Reference implementation
+
+```
+function findPair(values, target) {
+  const seen = new Map();
+  for (let i = 0; i < values.length; i++) {
+    const need = target - values[i];
+    if (seen.has(need)) return [seen.get(need), i];
+    seen.set(values[i], i);
+  }
+  return null;
+}
+```
+
+Why it works
+
+Inserting first could let one item match itself\. Two equal prices still work when the earlier occurrence is stored\. The map contains only earlier positions, so a match uses two different items\. If no earlier complement exists, storing this item makes it available to later ones\. Ordered range queries need another structure\.
+
+#### Two pointers
+
+Two shoppers stand at opposite ends of an ordered price shelf\.
+
+Two shoppers stand at opposite ends of an ordered price shelf\. Find a pair in an already ascending array\. Return positions or null\.
+
+Trying every pair repeats work; ordering lets a failed comparison eliminate an entire end\.
+
+Two pointers trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| \[1, 3, 6\], target 7 | left 0, right 2 | 1 \+ 6 = 7 |
+| \[1, 3, 6\], target 8 | left 0 → 1 | 7 is too small |
+| Next comparison | 3 \+ 6 = 9 | Move right; boundaries meet |
+
+Two pointers — JavaScript
+
+```
+function findSortedPair(values, target) {
+  let left = 0, right = values.length - 1;
+  while (left < right) {
+    const sum = values[left] + values[right];
+    if (sum === target) return [left, right];
+    if (sum < target) left++;
+    else right--;
+  }
+  return null;
+}
+```
+
+If the largest partner is too small with the left item, every other partner is too small too\. The symmetric argument removes the right item when the sum is too large\. Unsorted input breaks this proof\.
+
+O\(n\) scan time, O\(1\) auxiliary storage\. Sorting unsorted input adds comparison\-sort work O\(n log n\); copy value/index pairs in O\(n\) space to preserve original positions\. Sort workspace is implementation\-dependent\.
+
+##### Why is advancing left safe?
+
+Every remaining partner is no larger than the right item, so none can rescue the current left item when their sum is too small\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Two pointers practice
+
+Evaluate findSortedPair\(\[\-2, 0, 3, 5\], 3\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1084
+
+Solution: Two pointers practice
+
+\[0, 3\] is returned; \[1, 2\] would also be a valid pair\.
+
+Reference implementation
+
+```
+function findSortedPair(values, target) {
+  let left = 0, right = values.length - 1;
+  while (left < right) {
+    const sum = values[left] + values[right];
+    if (sum === target) return [left, right];
+    if (sum < target) left++;
+    else right--;
+  }
+  return null;
+}
+```
+
+Why it works
+
+Every remaining partner is no larger than the right item, so none can rescue the current left item when their sum is too small\. If the largest partner is too small with the left item, every other partner is too small too\. The symmetric argument removes the right item when the sum is too large\. Unsorted input breaks this proof\.
+
+#### Sliding window
+
+Keep a row of songs on a tray, removing from the front until no song repeats\.
+
+Keep a row of songs on a tray, removing from the front until no song repeats\. Return the longest contiguous segment of distinct values, including 0 for empty input\.
+
+Restarting a set at each start can cost O\(n²\)\. Maintain the current tray instead\.
+
+Sliding window trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| Add A | \[A\] | best 1 |
+| Add B | \[A, B\] | best 2 |
+| Add A | \[B, A\] | Remove first A; best 2 |
+
+Sliding window — JavaScript
+
+```
+function longestDistinct(values) {
+  const counts = new Map();
+  let left = 0, best = 0;
+  for (let right = 0; right < values.length; right++) {
+    const x = values[right];
+    counts.set(x, (counts.get(x) ?? 0) + 1);
+    while (counts.get(x) > 1) {
+      const y = values[left++];
+      const count = counts.get(y) - 1;
+      if (count === 0) counts.delete(y);
+      else counts.set(y, count);
+    }
+    best = Math.max(best, right - left + 1);
+  }
+  return best;
+}
+```
+
+Only the newly added value can repeat; removing from the left repairs that duplicate and preserves contiguity\. Fixed windows remove exactly one item per shift\. Sum\-based shrinking needs a separate proof: \[4, \-3, 2\] with sum limit 3 loses the valid whole range if 4 is discarded immediately\.
+
+Expected O\(n\) time: each item enters and leaves at most once, despite nested loops\. O\(d\) active distinct values; deleting zero counts matters\.
+
+##### Why is the shrink loop not quadratic?
+
+The left boundary never restarts\. Its total movement across the entire run is at most n\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Sliding window practice
+
+Evaluate longestDistinct\(\[1, 2, 1, 3\]\) and longestDistinct\(\[\]\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1141
+
+Solution: Sliding window practice
+
+3 and 0\. The best segment is \[2, 1, 3\]\.
+
+Reference implementation
+
+```
+function longestDistinct(values) {
+  const counts = new Map();
+  let left = 0, best = 0;
+  for (let right = 0; right < values.length; right++) {
+    const x = values[right];
+    counts.set(x, (counts.get(x) ?? 0) + 1);
+    while (counts.get(x) > 1) {
+      const y = values[left++];
+      const count = counts.get(y) - 1;
+      if (count === 0) counts.delete(y);
+      else counts.set(y, count);
+    }
+    best = Math.max(best, right - left + 1);
+  }
+  return best;
+}
+```
+
+Why it works
+
+The left boundary never restarts\. Its total movement across the entire run is at most n\. Only the newly added value can repeat; removing from the left repairs that duplicate and preserves contiguity\. Fixed windows remove exactly one item per shift\. Sum\-based shrinking needs a separate proof: \[4, \-3, 2\] with sum limit 3 loses the valid whole range if 4 is discarded immediately\.
+
+#### Prefix sums
+
+Keep a running receipt total; subtract two totals to price the items between them\.
+
+Keep a running receipt total; subtract two totals to price the items between them\. Build totals before each position and query zero\-based half\-open ranges \[start, end\)\. Also count exact\-sum ranges with signed values\.
+
+Adding each queried range costs its length; saved totals reuse that work\.
+
+Prefix sums trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| Input \[2, \-1, 3\] | prefix \[0, 2, 1, 4\] | Initial zero represents no items |
+| Query \[1, 3\) | 4 \- 2 = 2 | Includes \-1 and 3 |
+| Count target 0 in \[0, 0\] | 1 \+ 2 matches | Three nonempty ranges |
+
+Prefix sums — JavaScript
+
+```
+function buildPrefix(values) {
+  const prefix = [0];
+  for (const x of values) prefix.push(prefix[prefix.length - 1] + x);
+  return prefix;
+}
+function rangeSum(prefix, start, end) {
+  return prefix[end] - prefix[start];
+}
+function countTargetRanges(values, target) {
+  const counts = new Map([[0, 1]]);
+  let sum = 0, answer = 0;
+  for (const x of values) {
+    sum += x;
+    answer += counts.get(sum - target) ?? 0;
+    counts.set(sum, (counts.get(sum) ?? 0) + 1);
+  }
+  return answer;
+}
+```
+
+Subtracting removes exactly the earlier items\. A range sums to target when its earlier prefix equals current minus target\. Query before inserting to exclude an empty range; frequencies count different starts\. Updates invalidate later totals, and subtraction cannot recover range minima\.
+
+O\(n\) build time/space and O\(1\) per range query\. Exact\-sum counting takes expected O\(n\) time and O\(n\) space with hashing\. Assume all totals, differences and counts stay safe integers\.
+
+##### Why seed the frequency of zero?
+
+It counts ranges starting at index zero, using the same difference rule as all other ranges\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Prefix sums practice
+
+Count target\-zero ranges in \[1, \-1, 0\]\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1646
+
+Solution: Prefix sums practice
+
+3: \[1, \-1\], \[0\], and \[1, \-1, 0\]\.
+
+Reference implementation
+
+```
+function buildPrefix(values) {
+  const prefix = [0];
+  for (const x of values) prefix.push(prefix[prefix.length - 1] + x);
+  return prefix;
+}
+function rangeSum(prefix, start, end) {
+  return prefix[end] - prefix[start];
+}
+function countTargetRanges(values, target) {
+  const counts = new Map([[0, 1]]);
+  let sum = 0, answer = 0;
+  for (const x of values) {
+    sum += x;
+    answer += counts.get(sum - target) ?? 0;
+    counts.set(sum, (counts.get(sum) ?? 0) + 1);
+  }
+  return answer;
+}
+```
+
+Why it works
+
+It counts ranges starting at index zero, using the same difference rule as all other ranges\. Subtracting removes exactly the earlier items\. A range sums to target when its earlier prefix equals current minus target\. Query before inserting to exclude an empty range; frequencies count different starts\. Updates invalidate later totals, and subtraction cannot recover range minima\.
+
+### Search and intervals
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Binary search
+
+Find the first shelf label at least your number by repeatedly checking the middle\.
+
+Find the first shelf label at least your number by repeatedly checking the middle\. Return the first index whose value is at least target, or array length; input is ascending\.
+
+A linear scan works, but sorted comparisons can discard half the remaining region\.
+
+Binary search trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| \[2, 4, 4, 9\], target 4 | \[0, 4\), mid 2 | Keep \[0, 2\) |
+| mid 1 | 4 is large enough | Keep \[0, 1\) |
+| mid 0 | 2 is too small | Return 1 |
+
+Binary search — JavaScript
+
+```
+function lowerBound(sorted, target) {
+  let low = 0, high = sorted.length;
+  while (low < high) {
+    const mid = low + Math.floor((high - low) / 2);
+    if (sorted[mid] < target) low = mid + 1;
+    else high = mid;
+  }
+  return low;
+}
+```
+
+Indices before low are too small; indices at or beyond high are large enough\. Each comparison preserves these claims and shrinks \[low, high\)\. Nonmonotone predicates break elimination\. Answer search transfers this to first feasible production time; Factory Machines bounds may need BigInt\.
+
+O\(log\(n \+ 1\)\) time, O\(1\) extra space\. Sorting first is additional work\.
+
+##### Why keep mid on equality?
+
+An earlier equal value may exist\. Setting high to mid keeps that candidate boundary\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Binary search practice
+
+Evaluate lowerBound\(\[2, 4, 4, 9\], 4\) and lowerBound\(\[\], 4\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1620
+
+Solution: Binary search practice
+
+1 and 0\.
+
+Reference implementation
+
+```
+function lowerBound(sorted, target) {
+  let low = 0, high = sorted.length;
+  while (low < high) {
+    const mid = low + Math.floor((high - low) / 2);
+    if (sorted[mid] < target) low = mid + 1;
+    else high = mid;
+  }
+  return low;
+}
+```
+
+Why it works
+
+An earlier equal value may exist\. Setting high to mid keeps that candidate boundary\. Indices before low are too small; indices at or beyond high are large enough\. Each comparison preserves these claims and shrinks \[low, high\)\. Nonmonotone predicates break elimination\. Answer search transfers this to first feasible production time; Factory Machines bounds may need BigInt\.
+
+#### Interval sweep
+
+Count people at a party by sorting door events rather than inspecting every minute\.
+
+Count people at a party by sorting door events rather than inspecting every minute\. Return peak guests for visits \[start, end\), start \< end\.
+
+Testing every pair of times repeats occupancy work; process changes only\.
+
+Interval sweep trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| Visits \[1, 3\), \[3, 5\) | \+1 at 1 | active 1 |
+| Time 3 | \-1 then \+1 | peak remains 1 |
+
+Interval sweep — JavaScript
+
+```
+function peakGuests(visits) {
+  const events = [];
+  for (const [start, end] of visits) {
+    events.push([start, 1], [end, -1]);
+  }
+  events.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  let active = 0, best = 0;
+  for (const [, delta] of events) {
+    active += delta;
+    best = Math.max(best, active);
+  }
+  return best;
+}
+```
+
+Between events occupancy is unchanged\. Departures precede arrivals on ties because the ending guest is absent at end\. Closed endpoints need a different tie rule\. Merging computes union; selection chooses compatible visits; neither gives peak occupancy\.
+
+O\(n log n\) comparison\-sort time, O\(n\) event storage plus implementation\-dependent sort workspace; visits are untouched\.
+
+##### Why do departures win ties?
+
+Half\-open visits do not overlap solely by touching endpoints\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Interval sweep practice
+
+Evaluate peakGuests\(\[\[1, 4\], \[2, 3\], \[4, 5\]\]\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1619
+
+Solution: Interval sweep practice
+
+2\. At time 4 the first guest has left\.
+
+Reference implementation
+
+```
+function peakGuests(visits) {
+  const events = [];
+  for (const [start, end] of visits) {
+    events.push([start, 1], [end, -1]);
+  }
+  events.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  let active = 0, best = 0;
+  for (const [, delta] of events) {
+    active += delta;
+    best = Math.max(best, active);
+  }
+  return best;
+}
+```
+
+Why it works
+
+Half\-open visits do not overlap solely by touching endpoints\. Between events occupancy is unchanged\. Departures precede arrivals on ties because the ending guest is absent at end\. Closed endpoints need a different tie rule\. Merging computes union; selection chooses compatible visits; neither gives peak occupancy\.
+
+### Useful candidates
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Monotonic stack
+
+Keep possible shorter fences in a pile; a new short fence hides taller ones forever\.
+
+Keep possible shorter fences in a pile; a new short fence hides taller ones forever\. Return the nearest strictly smaller earlier index, or \-1\.
+
+Scanning backward from every item costs O\(n²\)\. Retain useful candidates in increasing height order\.
+
+Monotonic stack trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| \[2, 2, 1\] at index 0 | stack \[0\] | answer \-1 |
+| At index 1 | pop equal 2; stack \[1\] | answer \-1 |
+| At index 2 | pop 2; stack \[2\] | answer \-1 |
+
+Monotonic stack — JavaScript
+
+```
+function previousSmaller(values) {
+  const stack = [], answer = [];
+  for (let i = 0; i < values.length; i++) {
+    while (stack.length && values[stack[stack.length - 1]] >= values[i]) stack.pop();
+    answer.push(stack.length ? stack[stack.length - 1] : -1);
+    stack.push(i);
+  }
+  return answer;
+}
+```
+
+A popped item is no smaller than this newer item, so it can never be the nearest smaller candidate for a future item\. Equal heights must be removed for strict comparison\. Changing the query changes the removal rule\. CSES uses one\-based positions and 0 for absent; this lesson uses zero\-based and \-1\.
+
+O\(n\) amortized time because each index is pushed once and popped at most once\. O\(n\) working stack and O\(n\) required output\.
+
+##### How can a while loop per item be linear?
+
+Count pushes and pops over the whole run rather than charging n pops to every item\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Monotonic stack practice
+
+Evaluate previousSmaller\(\[3, 1, 2, 2\]\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1645
+
+Solution: Monotonic stack practice
+
+\[\-1, \-1, 1, 1\]\.
+
+Reference implementation
+
+```
+function previousSmaller(values) {
+  const stack = [], answer = [];
+  for (let i = 0; i < values.length; i++) {
+    while (stack.length && values[stack[stack.length - 1]] >= values[i]) stack.pop();
+    answer.push(stack.length ? stack[stack.length - 1] : -1);
+    stack.push(i);
+  }
+  return answer;
+}
+```
+
+Why it works
+
+Count pushes and pops over the whole run rather than charging n pops to every item\. A popped item is no smaller than this newer item, so it can never be the nearest smaller candidate for a future item\. Equal heights must be removed for strict comparison\. Changing the query changes the removal rule\. CSES uses one\-based positions and 0 for absent; this lesson uses zero\-based and \-1\.
+
+#### Top\-k heap
+
+Keep the k largest contest scores in a basket with its smallest score at the handle\.
+
+Keep the k largest contest scores in a basket with its smallest score at the handle\. Return the kth largest occurrence, counting duplicates; invalid k returns null\.
+
+Sorting a copy costs O\(n log n\); a min\-heap retains only k candidates\.
+
+Top\-k heap trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| \[5, 2, 5\], k 2 | retain 5, 2 | root 2 |
+| Insert last 5 | remove 2 | root 5 is rank 2 |
+
+Top\-k heap — JavaScript
+
+```
+class MinHeap {
+  constructor() { this.items = []; }
+  push(x) {
+    const a = this.items;
+    a.push(x);
+    let i = a.length - 1;
+    while (i > 0) {
+      const p = Math.floor((i - 1) / 2);
+      if (a[p] <= a[i]) break;
+      [a[p], a[i]] = [a[i], a[p]];
+      i = p;
+    }
+  }
+  pop() {
+    const a = this.items, first = a[0], last = a.pop();
+    if (a.length) {
+      a[0] = last;
+      let i = 0;
+      while (2 * i + 1 < a.length) {
+        let child = 2 * i + 1;
+        if (child + 1 < a.length && a[child + 1] < a[child]) child++;
+        if (a[i] <= a[child]) break;
+        [a[i], a[child]] = [a[child], a[i]];
+        i = child;
+      }
+    }
+    return first;
+  }
+}
+function kthLargest(values, k) {
+  if (!Number.isInteger(k) || k < 1 || k > values.length) return null;
+  const heap = new MinHeap();
+  for (const x of values) {
+    heap.push(x);
+    if (heap.items.length > k) heap.pop();
+  }
+  return heap.items[0];
+}
+```
+
+The helper stores a binary tree in an array: children are 2i\+1 and 2i\+2\. push bubbles upward; pop replaces the root and sinks it toward the smaller child\. The root is always smallest\. Removing it when capacity is exceeded leaves exactly the k largest occurrences seen\. This does not retain original rank positions\.
+
+O\(n log\(k \+ 1\)\) time, O\(k\) extra storage, including the helper\. Each update crosses at most the logarithmic heap height; caller input is preserved\.
+
+##### Why a min\-heap for largest scores?
+
+Its minimum is the weakest retained candidate and the next one to discard\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Top\-k heap practice
+
+Evaluate kthLargest\(\[5, 2, 5\], 2\) and kthLargest\(\[5\], 0\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://leetcode\.com/problems/kth\-largest\-element\-in\-an\-array/
+
+Solution: Top\-k heap practice
+
+5 and null\.
+
+Reference implementation
+
+```
+class MinHeap {
+  constructor() { this.items = []; }
+  push(x) {
+    const a = this.items;
+    a.push(x);
+    let i = a.length - 1;
+    while (i > 0) {
+      const p = Math.floor((i - 1) / 2);
+      if (a[p] <= a[i]) break;
+      [a[p], a[i]] = [a[i], a[p]];
+      i = p;
+    }
+  }
+  pop() {
+    const a = this.items, first = a[0], last = a.pop();
+    if (a.length) {
+      a[0] = last;
+      let i = 0;
+      while (2 * i + 1 < a.length) {
+        let child = 2 * i + 1;
+        if (child + 1 < a.length && a[child + 1] < a[child]) child++;
+        if (a[i] <= a[child]) break;
+        [a[i], a[child]] = [a[child], a[i]];
+        i = child;
+      }
+    }
+    return first;
+  }
+}
+function kthLargest(values, k) {
+  if (!Number.isInteger(k) || k < 1 || k > values.length) return null;
+  const heap = new MinHeap();
+  for (const x of values) {
+    heap.push(x);
+    if (heap.items.length > k) heap.pop();
+  }
+  return heap.items[0];
+}
+```
+
+Why it works
+
+Its minimum is the weakest retained candidate and the next one to discard\. The helper stores a binary tree in an array: children are 2i\+1 and 2i\+2\. push bubbles upward; pop replaces the root and sinks it toward the smaller child\. The root is always smallest\. Removing it when capacity is exceeded leaves exactly the k largest occurrences seen\. This does not retain original rank positions\.
+
+### Follow nodes
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Fast and slow
+
+Two walkers follow the same signposts, one taking twice as many steps\.
+
+Two walkers follow the same signposts, one taking twice as many steps\. Detect a cycle in nodes with value and next fields; null ends the chain\.
+
+Remembering all visited nodes works with O\(n\) storage\. Relative speed can detect repetition without that set\.
+
+Fast and slow trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| a → b → c → b | slow b, fast c | Different identities |
+| Next round | slow c, fast c | Cycle detected |
+
+Fast and slow — JavaScript
+
+```
+function hasCycle(head) {
+  let slow = head, fast = head;
+  while (fast !== null && fast.next !== null) {
+    slow = slow.next;
+    fast = fast.next.next;
+    if (slow === fast) return true;
+  }
+  return false;
+}
+```
+
+Inside a cycle the faster walker gains one position per round modulo cycle length, so they meet\. On an acyclic chain fast reaches null\. Compare node identity, not value: repeated labels do not imply a loop\. This requires one successor per node, not arbitrary graph branching\.
+
+O\(n\) time for n distinct reachable nodes and O\(1\) auxiliary space\.
+
+##### Do two equal values prove a cycle?
+
+No\. Distinct nodes can carry equal values\. The walkers must reach the same object\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Fast and slow practice
+
+Predict hasCycle\(null\), and a node whose next points to itself\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://leetcode\.com/problems/linked\-list\-cycle/
+
+Solution: Fast and slow practice
+
+false and true\.
+
+Reference implementation
+
+```
+function hasCycle(head) {
+  let slow = head, fast = head;
+  while (fast !== null && fast.next !== null) {
+    slow = slow.next;
+    fast = fast.next.next;
+    if (slow === fast) return true;
+  }
+  return false;
+}
+```
+
+Why it works
+
+No\. Distinct nodes can carry equal values\. The walkers must reach the same object\. Inside a cycle the faster walker gains one position per round modulo cycle length, so they meet\. On an acyclic chain fast reaches null\. Compare node identity, not value: repeated labels do not imply a loop\. This requires one successor per node, not arbitrary graph branching\.
+
+#### Tree DFS
+
+Count everyone in a family branch by counting each child branch and adding yourself\.
+
+Count everyone in a family branch by counting each child branch and adding yourself\. Count binary\-tree nodes with value, left and right; absent children are null\. No cycles or shared children\.
+
+A tree already divides into disjoint child subtrees; their counts combine without overlap\.
+
+Tree DFS trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| Root with two leaves | left 1, right 1 | 1 \+ 1 \+ 1 = 3 |
+| Absent child | null | Contributes 0 |
+
+Tree DFS — JavaScript
+
+```
+function treeSize(root) {
+  if (root === null) return 0;
+  return 1 + treeSize(root.left) + treeSize(root.right);
+}
+function treeSizeIterative(root) {
+  const pending = root === null ? [] : [root];
+  let count = 0;
+  while (pending.length) {
+    const node = pending.pop();
+    count++;
+    if (node.right !== null) pending.push(node.right);
+    if (node.left !== null) pending.push(node.left);
+  }
+  return count;
+}
+```
+
+The recursive base counts an empty branch as zero; induction combines two correct child counts and the root\. The iterative stack holds unvisited subtree roots; every node is removed once\. Deep recursion can overflow JavaScript call stacks, so use the iterative version for deep inputs\. Shared children would be counted twice\.
+
+O\(n\) time\. Recursion uses O\(h\) call frames\. Iterative DFS uses O\(h\) pending roots as an upper bound for binary trees, O\(n\) worst case; on a single chain it keeps only one pending node\. Balance must not be assumed\.
+
+##### Why count null as zero?
+
+An absent branch has no node to add; this makes leaves evaluate to one without a special leaf case\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Tree DFS practice
+
+Count a root with only one leaf child\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1674
+
+Solution: Tree DFS practice
+
+2 in both versions\.
+
+Reference implementation
+
+```
+function treeSize(root) {
+  if (root === null) return 0;
+  return 1 + treeSize(root.left) + treeSize(root.right);
+}
+function treeSizeIterative(root) {
+  const pending = root === null ? [] : [root];
+  let count = 0;
+  while (pending.length) {
+    const node = pending.pop();
+    count++;
+    if (node.right !== null) pending.push(node.right);
+    if (node.left !== null) pending.push(node.left);
+  }
+  return count;
+}
+```
+
+Why it works
+
+An absent branch has no node to add; this makes leaves evaluate to one without a special leaf case\. The recursive base counts an empty branch as zero; induction combines two correct child counts and the root\. The iterative stack holds unvisited subtree roots; every node is removed once\. Deep recursion can overflow JavaScript call stacks, so use the iterative version for deep inputs\. Shared children would be counted twice\.
+
+### Connections
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Graph traversal
+
+Explore nearby bus stops before stops farther away; mark stops so a loop does not trap you\.
+
+Explore nearby bus stops before stops farther away; mark stops so a loop does not trap you\. Use BFS for an unweighted shortest path and DFS to count undirected components\. Vertex IDs are 0\.\.V\-1 in number\[\]\[\] adjacency lists\.
+
+Enumerating every route repeats vertices and can loop forever\. A discovered marker prevents revisits\.
+
+Graph traversal trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| adj \[\[1\], \[0, 2\], \[1\]\], start 0 | queue \[0\] | parent\[0\] = 0 |
+| Visit 0 then 1 | queue \[0, 1, 2\] | parent\[2\] = 1 |
+| Reach 2 | reverse parent chain | \[0, 1, 2\] |
+
+Graph traversal — JavaScript
+
+```
+function shortestPath(adj, start, goal) {
+  const parent = Array(adj.length).fill(-1), queue = [start];
+  parent[start] = start;
+  for (let head = 0; head < queue.length; head++) {
+    const v = queue[head];
+    if (v === goal) {
+      const path = [v];
+      while (path[path.length - 1] !== start) path.push(parent[path[path.length - 1]]);
+      return path.reverse();
+    }
+    for (const w of adj[v]) if (parent[w] === -1) {
+      parent[w] = v;
+      queue.push(w);
+    }
+  }
+  return null;
+}
+function countComponents(adj) {
+  const seen = new Set();
+  let count = 0;
+  for (let start = 0; start < adj.length; start++) {
+    if (seen.has(start)) continue;
+    count++;
+    const stack = [start];
+    seen.add(start);
+    while (stack.length) {
+      const v = stack.pop();
+      for (const w of adj[v]) if (!seen.has(w)) {
+        seen.add(w);
+        stack.push(w);
+      }
+    }
+  }
+  return count;
+}
+```
+
+BFS discovers vertices in nondecreasing edge distance; the first parent gives a shortest route\. The queue uses a head index rather than shifting\. DFS exhausts each reachable undirected region before starting another, including isolated vertices\. Weighted shortest paths need a different proof\.
+
+O\(V \+ E\) time and O\(V\) extra storage for adjacency\-list inputs; returned path adds O\(V\) output\. Constructing adjacency from edges would add O\(V \+ E\) storage\. Iterative traversal avoids deep recursive stacks\.
+
+##### Why mark when adding to the queue?
+
+It prevents multiple predecessors from enqueuing the same vertex and preserves the first shortest parent\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Graph traversal practice
+
+Use adj \[\[1\], \[0\], \[\]\]\. Find path 0 to 2 and count components\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1667
+
+Solution: Graph traversal practice
+
+null and 2\.
+
+Reference implementation
+
+```
+function shortestPath(adj, start, goal) {
+  const parent = Array(adj.length).fill(-1), queue = [start];
+  parent[start] = start;
+  for (let head = 0; head < queue.length; head++) {
+    const v = queue[head];
+    if (v === goal) {
+      const path = [v];
+      while (path[path.length - 1] !== start) path.push(parent[path[path.length - 1]]);
+      return path.reverse();
+    }
+    for (const w of adj[v]) if (parent[w] === -1) {
+      parent[w] = v;
+      queue.push(w);
+    }
+  }
+  return null;
+}
+function countComponents(adj) {
+  const seen = new Set();
+  let count = 0;
+  for (let start = 0; start < adj.length; start++) {
+    if (seen.has(start)) continue;
+    count++;
+    const stack = [start];
+    seen.add(start);
+    while (stack.length) {
+      const v = stack.pop();
+      for (const w of adj[v]) if (!seen.has(w)) {
+        seen.add(w);
+        stack.push(w);
+      }
+    }
+  }
+  return count;
+}
+```
+
+Why it works
+
+It prevents multiple predecessors from enqueuing the same vertex and preserves the first shortest parent\. BFS discovers vertices in nondecreasing edge distance; the first parent gives a shortest route\. The queue uses a head index rather than shifting\. DFS exhausts each reachable undirected region before starting another, including isolated vertices\. Weighted shortest paths need a different proof\.
+
+#### Topological order
+
+Start cooking tasks whose ingredients are ready, then unlock dependent tasks\.
+
+Start cooking tasks whose ingredients are ready, then unlock dependent tasks\. Return any valid order for directed prerequisites, or null if a cycle prevents one\.
+
+Trying all permutations can work on tiny graphs, but indegrees expose ready tasks directly\.
+
+Topological order trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| Edges 0 → 2, 1 → 2 | indegree \[0, 0, 2\] | ready \[0, 1\] |
+| Remove 0 then 1 | indegree\[2\] becomes 0 | append 2 |
+| Order | \[0, 1, 2\] | Every prerequisite precedes its dependent |
+
+Topological order — JavaScript
+
+```
+function topologicalOrder(adj) {
+  const indegree = Array(adj.length).fill(0), ready = [];
+  for (const edges of adj) for (const w of edges) indegree[w]++;
+  for (let v = 0; v < adj.length; v++) if (indegree[v] === 0) ready.push(v);
+  for (let head = 0; head < ready.length; head++) {
+    for (const w of adj[ready[head]]) if (--indegree[w] === 0) ready.push(w);
+  }
+  return ready.length === adj.length ? ready : null;
+}
+```
+
+Indegree counts remaining prerequisites\. Removing a ready vertex cannot violate an edge\. If vertices remain but none is ready, following remaining incoming edges eventually repeats a vertex, exposing a cycle\. A self\-loop is a cycle\. The selected Kahn queue is not a lexicographic priority queue\.
+
+O\(V \+ E\) time and O\(V\) extra storage; every vertex enters once and each edge is removed once\.
+
+##### Why is an incomplete order evidence of a cycle?
+
+Every remaining vertex has a remaining predecessor\. A finite predecessor chain must repeat\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Topological order practice
+
+Evaluate \[\[2\], \[2\], \[\]\] and \[\[0\]\]\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1679
+
+Solution: Topological order practice
+
+\[0, 1, 2\] and null\. Other valid orders are acceptable\.
+
+Reference implementation
+
+```
+function topologicalOrder(adj) {
+  const indegree = Array(adj.length).fill(0), ready = [];
+  for (const edges of adj) for (const w of edges) indegree[w]++;
+  for (let v = 0; v < adj.length; v++) if (indegree[v] === 0) ready.push(v);
+  for (let head = 0; head < ready.length; head++) {
+    for (const w of adj[ready[head]]) if (--indegree[w] === 0) ready.push(w);
+  }
+  return ready.length === adj.length ? ready : null;
+}
+```
+
+Why it works
+
+Every remaining vertex has a remaining predecessor\. A finite predecessor chain must repeat\. Indegree counts remaining prerequisites\. Removing a ready vertex cannot violate an edge\. If vertices remain but none is ready, following remaining incoming edges eventually repeats a vertex, exposing a cycle\. A self\-loop is a cycle\. The selected Kahn queue is not a lexicographic priority queue\.
+
+### Choices and memory
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Backtracking
+
+Arrange letter tiles by choosing one, arranging the rest, then putting it back for the next choice\.
+
+Arrange letter tiles by choosing one, arranging the rest, then putting it back for the next choice\. Return distinct permutations of at most eight lowercase ASCII letters, including one empty arrangement for empty text\.
+
+Permuting indexed tiles then removing duplicates wastes work for repeated letters\. Choose letter frequencies instead\.
+
+Backtracking trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| aab | choose a, remaining a:1 b:1 | prefix a |
+| choose a then b | emit aab | undo b then a |
+| Other branches | aba, baa | No duplicate branches for equal tiles |
+
+Backtracking — JavaScript
+
+```
+function uniquePermutations(text) {
+  const counts = new Map();
+  for (const ch of text) counts.set(ch, (counts.get(ch) ?? 0) + 1);
+  const path = [], output = [];
+  function visit() {
+    if (path.length === text.length) { output.push(path.join('')); return; }
+    for (const [ch, count] of counts) {
+      if (count === 0) continue;
+      counts.set(ch, count - 1);
+      path.push(ch);
+      visit();
+      path.pop();
+      counts.set(ch, count);
+    }
+  }
+  visit();
+  return output;
+}
+```
+
+Each distinct output has exactly one sequence of letter choices\. Undo restores the state expected by sibling branches\. This enumerates all arrangements; it is excessive when only a count is needed\. ASCII makes text\.length agree with letter iteration\.
+
+For n letters and U distinct outputs, O\(n·U \+ 1\) time with fixed alphabet, O\(n \+ 26\) working storage including recursion/path and O\(n·U \+ 1\) output storage\. Enumeration can be factorial\.
+
+##### Why undo after recursion?
+
+The next branch must start with the same remaining tiles and prefix as the previous branch did\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Backtracking practice
+
+List uniquePermutations\("aab"\) and uniquePermutations\(""\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1622
+
+Solution: Backtracking practice
+
+aab, aba, baa; and \[""\]\. Order is immaterial\.
+
+Reference implementation
+
+```
+function uniquePermutations(text) {
+  const counts = new Map();
+  for (const ch of text) counts.set(ch, (counts.get(ch) ?? 0) + 1);
+  const path = [], output = [];
+  function visit() {
+    if (path.length === text.length) { output.push(path.join('')); return; }
+    for (const [ch, count] of counts) {
+      if (count === 0) continue;
+      counts.set(ch, count - 1);
+      path.push(ch);
+      visit();
+      path.pop();
+      counts.set(ch, count);
+    }
+  }
+  visit();
+  return output;
+}
+```
+
+Why it works
+
+The next branch must start with the same remaining tiles and prefix as the previous branch did\. Each distinct output has exactly one sequence of letter choices\. Undo restores the state expected by sibling branches\. This enumerates all arrangements; it is excessive when only a count is needed\. ASCII makes text\.length agree with letter iteration\.
+
+#### Dynamic programming
+
+When climbing stairs, save the answer for each landing rather than recounting every route to it\.
+
+When climbing stairs, save the answer for each landing rather than recounting every route to it\. For coin change, save a different fact: the fewest coins making each amount\. Coins are positive integers, reusable; amount is nonnegative\.
+
+Recursive coin choices recompute the same remainder\. Largest\-coin\-first is not always optimal\.
+
+Dynamic programming trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| coins \[1, 3, 4\] | dp\[0\] = 0 | Empty amount needs no coins |
+| Amounts 1\.\.4 | 1, 2, 1, 1 | Reuse smaller states |
+| Amount 6 | min via 5, 3, 2 | 2 using 3 \+ 3 |
+
+Dynamic programming — JavaScript
+
+```
+function minCoins(coins, amount) {
+  const dp = Array(amount + 1).fill(Infinity);
+  dp[0] = 0;
+  for (let x = 1; x <= amount; x++) {
+    for (const coin of coins) if (coin <= x) dp[x] = Math.min(dp[x], dp[x - coin] + 1);
+  }
+  return dp[amount] === Infinity ? -1 : dp[amount];
+}
+```
+
+In any solution remove its last coin: what remains is a smaller amount\. Trying every allowed last coin covers an optimum; induction gives correct smaller answers\. Positive denominations make bottom\-up dependencies smaller\. Stairs often counts ways; this state minimizes count, so the recurrence uses min instead of addition\.
+
+O\(cX\) time for c denominations and amount X; O\(X\) storage\. This is pseudo\-polynomial in numeric X, not polynomial in its digit count\. Input coins are preserved\.
+
+##### Why does greedy fail for \[1, 3, 4\] and 6?
+
+Greedy takes 4 \+ 1 \+ 1, three coins\. The optimum 3 \+ 3 uses two\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Dynamic programming practice
+
+Evaluate minCoins\(\[2\], 3\) and minCoins\(\[2\], 0\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1634
+
+Solution: Dynamic programming practice
+
+\-1 and 0\.
+
+Reference implementation
+
+```
+function minCoins(coins, amount) {
+  const dp = Array(amount + 1).fill(Infinity);
+  dp[0] = 0;
+  for (let x = 1; x <= amount; x++) {
+    for (const coin of coins) if (coin <= x) dp[x] = Math.min(dp[x], dp[x - coin] + 1);
+  }
+  return dp[amount] === Infinity ? -1 : dp[amount];
+}
+```
+
+Why it works
+
+Greedy takes 4 \+ 1 \+ 1, three coins\. The optimum 3 \+ 3 uses two\. In any solution remove its last coin: what remains is a smaller amount\. Trying every allowed last coin covers an optimum; induction gives correct smaller answers\. Positive denominations make bottom\-up dependencies smaller\. Stairs often counts ways; this state minimizes count, so the recurrence uses min instead of addition\.
+
+### Defend a choice
+
+Choose a topic, follow its small example, then try the local problem before opening the solution\.
+
+#### Greedy selection
+
+Pick a meeting that finishes soonest so the room is free for later meetings\.
+
+Pick a meeting that finishes soonest so the room is free for later meetings\. Maximize the count of positive\-duration, half\-open, unweighted intervals\.
+
+Trying every subset is exponential\. A safe exchange allows one permanent choice at a time\.
+
+Greedy selection trace
+
+| Moment | State | Meaning |
+| --- | --- | --- |
+| \[0, 3\), \[1, 2\), \[2, 4\) | choose \[1, 2\) | Earliest finish |
+| Next compatible | choose \[2, 4\) | Count 2 |
+
+Greedy selection — JavaScript
+
+```
+function maxCompatible(intervals) {
+  const sorted = intervals.map(pair => [...pair]).sort((a, b) => a[1] - b[1]);
+  let finish = -Infinity, count = 0;
+  for (const [start, end] of sorted) if (start >= finish) {
+    count++;
+    finish = end;
+  }
+  return count;
+}
+```
+
+Exchange the first meeting in an optimum for the earliest\-finishing meeting\. It ends no later, so every later meeting still fits\. Repeat on the remaining compatible meetings\. Rewards break this proof: \[0, 2\) worth 1 and \[0, 3\) worth 100 favor the longer meeting\. Arbitrary coin change also lacks this exchange\.
+
+O\(n log n\) comparison\-sort time and O\(n\) explicit copy storage plus implementation\-dependent sort workspace; the scan is O\(n\)\. Equal endpoints are compatible\.
+
+##### Why earliest finish instead of earliest start?
+
+An early start can occupy the room for a long time\. Finishing early leaves at least as much room as the first choice in any optimum\.
+
+Follow-up: Which input assumption does your argument need? Give a counterexample when it is removed\.
+
+##### Practice
+
+###### Greedy selection practice
+
+Evaluate maxCompatible\(\[\[0, 3\], \[1, 2\], \[2, 4\]\]\)\. Then close the worked example and implement the function from its contract\. Compare your code and reasoning with the solution\.
+
+Context: Original local exercise\. Use the published function and input contract; predict the result and explain it before revealing\. External transfer practice: https://cses\.fi/problemset/task/1629
+
+Solution: Greedy selection practice
+
+2, choosing \[1, 2\) and \[2, 4\)\.
+
+Reference implementation
+
+```
+function maxCompatible(intervals) {
+  const sorted = intervals.map(pair => [...pair]).sort((a, b) => a[1] - b[1]);
+  let finish = -Infinity, count = 0;
+  for (const [start, end] of sorted) if (start >= finish) {
+    count++;
+    finish = end;
+  }
+  return count;
+}
+```
+
+Why it works
+
+An early start can occupy the room for a long time\. Finishing early leaves at least as much room as the first choice in any optimum\. Exchange the first meeting in an optimum for the earliest\-finishing meeting\. It ends no later, so every later meeting still fits\. Repeat on the remaining compatible meetings\. Rewards break this proof: \[0, 2\) worth 1 and \[0, 3\) worth 100 favor the longer meeting\. Arbitrary coin change also lacks this exchange\.
+
+#### Mixed choice
+
+A receipt includes refunds\. Count contiguous groups with a specified total\.
+
+Choose from the task, not from a familiar loop\. Ask whether order, a contiguous range, or repeated subproblems matter\. State what information you would keep and why a discarded candidate could never help later\.
+
+##### Practice
+
+###### Mixed choice practice
+
+Receipts \[4, \-3, 2\] include refunds\. Count contiguous groups totaling 3\. Choose a mechanism and explain why discarding 4 immediately is unsafe\.
+
+Context: Original exercise; decide before revealing\.
+
+Solution: Mixed choice practice
+
+One group: the whole array\. Use prefix frequencies for exact signed\-sum counting\.
+
+Why it works
+
+The later refund makes the initial 4 part of a valid total\. Positive\-sum shrinking would lose it\. Seed zero and query earlier prefixes before adding the current one\.
+
+Sources:
+
+Source: [Sum of Two Values](https://cses.fi/problemset/task/1640) — CSES problem set.
+
+Source: [Apartments](https://cses.fi/problemset/task/1084) — CSES problem set.
+
+Source: [Playlist](https://cses.fi/problemset/task/1141) — CSES problem set.
+
+Source: [Static Range Sum Queries](https://cses.fi/problemset/task/1646) — CSES problem set.
+
+Source: [Factory Machines](https://cses.fi/problemset/task/1620) — CSES problem set.
+
+Source: [Restaurant Customers](https://cses.fi/problemset/task/1619) — CSES problem set.
+
+Source: [Nearest Smaller Values](https://cses.fi/problemset/task/1645) — CSES problem set.
+
+Source: [Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/) — LeetCode.
+
+Source: [Linked List Cycle](https://leetcode.com/problems/linked-list-cycle/) — LeetCode.
+
+Source: [Subordinates (adapt binary children to a general hierarchy)](https://cses.fi/problemset/task/1674) — CSES problem set.
+
+Source: [Message Route](https://cses.fi/problemset/task/1667) — CSES problem set.
+
+Source: [Course Schedule](https://cses.fi/problemset/task/1679) — CSES problem set.
+
+Source: [Creating Strings](https://cses.fi/problemset/task/1622) — CSES problem set.
+
+Source: [Minimizing Coins](https://cses.fi/problemset/task/1634) — CSES problem set.
+
+Source: [Movie Festival](https://cses.fi/problemset/task/1629) — CSES problem set.
+
+Source: [Time complexity](https://usaco.guide/bronze/time-comp) — Competitive Programming Initiative.
+
+Source: [Tree introduction](https://usaco.guide/silver/intro-tree) — Competitive Programming Initiative.

@@ -1267,7 +1267,7 @@ stage 05's, in
 ### Write the ADRs
 
 For each expensive decision: context, choice, reasoning, consequences, alternatives.
-Format and rationale in [10 — Documentation](10-documentation.md#document-decisions-not-descriptions).
+Format and rationale in [10 — Documentation](10-documentation.md#record-decisions-and-supersede-them-visibly).
 
 Write them now, while the alternatives are fresh. Reconstructing why you chose something
 eight months later produces a plausible story rather than the actual reasons.
@@ -1279,7 +1279,7 @@ framework. "Auth.js with a Postgres adapter" is one, because unpicking either ha
 redoing both.
 
 What an ADR looks like — length, status field, naming, where the files live — belongs to
-[10 — Documentation](10-documentation.md#document-decisions-not-descriptions), deliberately.
+[10 — Documentation](10-documentation.md#record-decisions-and-supersede-them-visibly), deliberately.
 This stage decides *that* a decision needs recording and *what counts as one*; the format is
 owned in one place so it stays consistent across all eighteen stages.
 
