@@ -13,12 +13,13 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-10): Node.js & Express corrections verified; coordinator recheck pending (W-6.3u.2).**
-Correction application **e852170**, from **fa724bb**, addresses NE-R1–NE-R6.
-Twelve panels, 38 topics/activities, 28/31 references and 18/18 stages remain.
-The user explicitly authorized correction in the existing implementation session.
-[KICKOFF](../KICKOFF.md) records the actual checks and coordinator return.
-No merge or push.
+**Current work (2026-11-10): Node.js & Express coordinator recheck accepted; integration pending (W-6.3u.2).**
+Correction **e852170** and handoff **b2c1cdc** close NE-R1–NE-R6. The coordinator
+reviewed the actual diff, executable checks, live lessons and implementation logs;
+no remaining Standards or Spec findings. Feature totals: twelve panels, 38 topics
+and activities, 28/31 references and 18/18 stages. Local develop remains 27/31.
+[KICKOFF](../KICKOFF.md) records fresh versus retained evidence. No merge or push;
+user approval is required for integration into develop.
 
 **Previous completed work: JavaScript sheet merged locally into develop (D-105).**
 Application **7975be9** on `feat/javascript-promises-lesson` implements and verifies
@@ -76,10 +77,9 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **27 drawn / 31 registered**, including W-6.3v. W-6.4 is integrated as **b8515a0**; four language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** focused coordinator recheck of NE-R1–NE-R6 at **e852170**,
-recommended **GPT-6.1 Sol / High**, in coordinator
-`01a1bedf-bdad-7b72-ba40-9b5406807d43`. Return the actual diff/checks/session;
-other language sheets and integration stay separate.
+**Next task/model:** integration decision for accepted W-6.3u.2, coordinator
+**GPT-6.1 Sol / High**. No implementation correction remains. Merge into develop
+requires separate user approval; Python, Java and Spring Boot stay separate.
 
 Two deliverables from one body of content.
 
@@ -1190,7 +1190,7 @@ into develop **ede8e1f** on 2026-11-09; the merge includes its integration recor
 Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
 other-sheet rollout, runner/scoring/persistence, push and promotion remain outside scope.
 
-**W-6.3u.2 — Node.js & Express study reference ◐** *(corrections implemented and verified; coordinator acceptance pending)*
+**W-6.3u.2 — Node.js & Express study reference ◐** *(coordinator accepted; integration pending)*
 
 User direction (D-109), 2026-11-10: use the DSA review/interview approach,
 fundamentals are mandatory, give many worked examples and add subsections when
@@ -1210,7 +1210,8 @@ The requested interview-preparation goal is not a guarantee of interview success
   explained CSRF-defense contrast.
 - [x] Correct NE-R4/R5/R6: complete Express dev-console IDs, nested-query contract
   and SIGTERM drain/cleanup-sensitive tests.
-- [ ] Obtain focused coordinator acceptance of the correction diff/evidence.
+- [x] Coordinator accepted **fa724bb...e852170** at handoff **b2c1cdc**;
+  NE-R1–NE-R6 closed, no remaining Standards/Spec findings.
 - [ ] Obtain separate user approval for integration into develop.
 
 [Sources](../reference/node-express-source-research.md),
@@ -1234,7 +1235,10 @@ module mechanisms, incomplete filtering/pagination, no explained CSRF-defense
 contrast, missing Express dev-console ID completeness assertion, no nested-query
 contract check and a SIGTERM test insensitive to skipped cleanup. See KICKOFF
 for exact evidence and acceptance. Fresh focused checks **66/5** pass but do not
-establish those missing requirements. Correction/recheck remain before integration.
+establish those missing requirements. Correction/recheck are now complete at
+**e852170** / **b2c1cdc**; the original findings above remain historical evidence. Fresh focused **87/5** and live corrected
+lesson checks pass; full **1779/241**, production **52/52** and dev-console **1/1**
+evidence verified in the implementation thread/logs. Integration needs user approval.
 
 **W-6.3v — DSA Patterns study reference ☑** *(reviewed and merged locally into develop)*
 

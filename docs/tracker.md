@@ -4,10 +4,10 @@
 debt was taken on. Scope and planning live in [task.md](task.md).
 
 **Last updated:** 2026-11-10
-**Current phase:** W-6.3u.2 Node.js & Express coordinator review found six P2
-corrections at **67b8cb6**: three teaching gaps and three verification gaps.
-See [KICKOFF](../KICKOFF.md). Application **972edf9** remains on the feature branch;
-no integration or push. D-110 model assignments are restored from **1757d11**.
+**Current phase:** W-6.3u.2 Node.js & Express coordinator recheck accepted
+**e852170** / **b2c1cdc**. All six review findings are closed; no remaining review
+blockers. Feature totals: 28/31 references, 18/18 stages. Integration into develop
+awaits separate user approval; no merge/push. See [KICKOFF](../KICKOFF.md).
 
 **Latest integration:** W-6.3v, local no-ff merge with parents **c996177** and
 **89436fb**, including these integration records. Application/generated output
@@ -116,6 +116,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-11-10 | W-6.3u.2 (coordinator correction acceptance) | Reviewed **fa724bb...e852170**, handoff **b2c1cdc**. NE-R1/R2/R3: actual ESM/CJS files/cache/cycle traces, filter-before-pagination and successive/empty pages, sourced session-bound CSRF contrast. NE-R4/R5/R6: complete observed Express IDs, nested-query/parser mutation, in-flight SIGTERM drain plus acknowledged dependency cleanup and immediate-exit rejection. Standards/Spec: no remaining findings. | Fresh focused Vitest **87 tests / 5 files**, exit 0, including published code/mutations, semantic render and ID omissions. Thirty other generated bodies unchanged. Live light320 modules, dark768 CSRF and light1440 list: keyboard opening/code focus, solution reveal/collapse, correct themes, no overflow/warnings/page errors. Read implementation **01a1c38c-5adb-7540-b46d-9638153021bc** and raw correction logs: retained **e852170** format/lint/typecheck/build, full **1779/241**, full production **52/52**, dev-console **1/1**; no redundant gate for records-only review. CSRF remains a sourced illustrative trace, not browser enforcement proof. | Separate user-approved no-ff merge into develop; no merge/push/promotion. Product unchanged by acceptance records; unrelated untracked `.pnpm-store/` preserved. Other language sheets/advanced follow-ons deferred. |
 | 2026-11-10 | W-6.3u.2 (NE-R1–NE-R6 corrections) | **e852170**, from **fa724bb** on `feat/node-express-study`. Six executable ESM/CJS module files and cache/cycle practice; bounded filtering/offset pagination; sourced accepted/rejected CSRF mutation trace; exact Express dev-console ID guard; nested-parser mutation detection; SIGTERM in-flight drain and acknowledged dependency cleanup before exit. Same 12 hashes/38 topics/activities, 28/31 references and 18/18 stages. | Node **22.23.4**, unchanged exact dev-only Express **5.3.0**. Fresh format/lint/route types exit 0, **1779 tests / 241 files** passed; focused **87/87**. Dev-console **1/1** passed via temporary config on preserved **3200**; production build passed, full browser **52/52 passed, exit 0**. Preview themes/320–1440px/nested states **2/2**; unchanged 1024×768 height/history test **1/1**, after replacing a duplicated CORS result table (3132.55px initially) with its result paragraph. Missing-ID, old pagination/module, and immediate-exit failures observed before completion; mutations detected. Other 30 generated bodies unchanged. Sources, assumptions and detailed evidence in [research](../reference/node-express-source-research.md); compact [handoff](../KICKOFF.md). Humanizer pass applied; self-reviewed actual correction diff. | User authorized corrections here; no new review round. Focused coordinator **Sol High** acceptance pending (**01a1bedf-bdad-7b72-ba40-9b5406807d43**); implementation **01a1c38c-5adb-7540-b46d-9638153021bc**. No merge/push/promotion or browser-CSRF enforcement claim. Existing startup-failure/repeat-stop/deadline guards retained. Initial lint/typegen artifact races rerun successfully after build settled. Keep preview http://localhost:3200/reference/express; unrelated `.pnpm-store/` untouched. |
 | 2026-11-10 | D-110 (model policy update) | From **976198b**, updated AGENTS model assignments and active Node.js & Express task/design/plan/KICKOFF: Sol High for research, brainstorming, planning, coordination and review; Sol Medium for implementation, tests and debugging. Historical D-100/model evidence is preserved. | User explicitly selected both assignments, including review. Fresh tracker-ledger **2/2** and `git diff --check`, exit 0; inspected active handoff roles against the new policy. Application/generated content unchanged; no app suite or runtime model switch claimed. | Fresh user-selected Sol Medium implementation session; no merge/push. |
 | 2026-11-10 | W-6.3u.2 (coordinator review; corrections pending) | Reviewed **976198b...67b8cb6**, application **972edf9**, test fixes **4489cd5/aaed08e**. Standards reviewer `/root/express_standards_review`: three P2 verification gaps (NE-R4/R5/R6). Spec reviewer `/root/express_spec_review`: three P2 content gaps (NE-R1/R2/R3). Coordinator confirmed missing module mechanisms, first-slice-only pagination/filtering and absent concrete CSRF defense; reproduced nested-query and SIGTERM mutation witnesses. Restored D-110 policy/active handoff from preserved **1757d11**, which this branch did not inherit. | Fresh focused Vitest **66 tests / 5 files**, exit 0, actual published-code/data/render/generator/ledger. Thirty other generated bodies unchanged. Isolated live inspection: light320 modules, dark768 security, light1440 list; correct themes, keyboard disclosure opening, hidden solutions, no overflow/warnings/page errors. Read implementation thread **01a1c38c-5adb-7540-b46d-9638153021bc** and raw logs: initial Sol High then Sol Medium; recorded full **1756/240**, later **90** focused, dev-console **1/1**, broad **50/52** with two exact-count failures corrected, final **22/22** affected browser tests. Exact 28/31 assertions retained. No new full gate claimed; product unchanged by review records. | Correct six P2s via KICKOFF in fresh Sol Medium session; targeted coordinator recheck with Sol High. No merge/push; unrelated untracked `.pnpm-store/` preserved. |
@@ -989,11 +990,10 @@ of new work, not assumed to survive from the last `git checkout`.
 
 ## Next up
 
-**Recommended next task/model:** correct W-6.3u.2 findings NE-R1–NE-R6 using
-[KICKOFF](../KICKOFF.md), fresh user-selected **GPT-6.1 Sol / Medium**.
-Return actual correction diff/checks/session to coordinator
-`01a1bedf-bdad-7b72-ba40-9b5406807d43`, recommended **GPT-6.1 Sol / High**.
-Integration requires separate approval. Python, Java and Spring Boot remain separate.
+**Recommended next task/model:** integration decision for accepted W-6.3u.2,
+coordinator **GPT-6.1 Sol / High**. All six corrections are closed at **e852170**;
+separate user approval is required before merging into develop. No implementation
+correction remains. Python, Java and Spring Boot stay separate.
 
 **2026-10-30 integration complete:** user-approved merge **6b78fcf** includes Stage 17, Technical Debt Review, source/assessment records and D-100. Its tree equals reviewed feature **f86541c**, application identical to tested **5ea8cb2**. Develop W-3 **17/18**, references **24/29**. Five merged local work branches were deleted; no push or main promotion. The full final gate is retained for unchanged inputs; review scope is recorded in completion rows. New Stage 18 work has not started. Languages and W-6.4 remain separate.
 
