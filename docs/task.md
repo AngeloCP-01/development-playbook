@@ -13,14 +13,17 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-10): strengthen Node.js fundamentals before integration (W-6.3u.2).**
-The user found the event-loop/Node fundamentals teaching too shallow after
-correction acceptance **e3dac11**. NE-R1–NE-R6 remain closed at **e852170**, but
-reader acceptance is reopened under D-111. The
-[depth audit](../reference/node-express-source-research.md#reader-feedback-node-fundamentals-depth-2026-11-10)
-identifies missing connected runtime/event-loop explanations and proposes a fuller
-Node core learning path. Existing tests remain evidence for existing behavior;
-they do not establish adequate teaching depth. No merge or push.
+**Current work (2026-11-10): Node fundamentals depth design/plan ready for implementation (W-6.3u.2).**
+The user accepted the deeper Node-foundations direction after finding runtime/
+event-loop teaching too shallow. [Depth design](superpowers/specs/2026-11-10-node-fundamentals-depth-design.md)
+and [compact plan](superpowers/plans/2026-11-10-node-fundamentals-depth.md) define
+the revision: runtime layers, full event-loop walkthrough, queues/timers, async
+control, work/worker/process choices, bytes/streams and process/memory lifetime.
+The coordinator selects 15 initial panels/49 topics and at least six actual coding/
+repair activities; counts are not a ceiling. Application remains **e852170**;
+NE-R1–NE-R6 stay closed. Integration remains on hold until revised teaching review.
+Fresh user-selected **GPT-6.1 Sol / Medium** implementation starts from the exact
+committed handoff tip; see [KICKOFF](../KICKOFF.md). No merge or push.
 
 **Previous completed work: JavaScript sheet merged locally into develop (D-105).**
 Application **7975be9** on `feat/javascript-promises-lesson` implements and verifies
@@ -78,10 +81,11 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **27 drawn / 31 registered**, including W-6.3v. W-6.4 is integrated as **b8515a0**; four language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** Node core teaching reassessment/design, **GPT-6.1 Sol / High**.
-Work from the reader depth audit and existing content, then prepare a fresh
-**GPT-6.1 Sol / Medium** implementation handoff. Integration is on hold; the old
-panel/topic counts do not constrain sufficient fundamentals coverage.
+**Next task/model:** implement the Node fundamentals depth plan in a fresh
+user-selected **GPT-6.1 Sol / Medium** session. Return actual diff/checks/session
+and a live event-loop lesson to coordinator `01a1bedf-bdad-7b72-ba40-9b5406807d43`,
+recommended **GPT-6.1 Sol / High**, for review including teaching depth.
+Integration remains on hold; the old twelve-panel/38-topic limit is superseded.
 
 Two deliverables from one body of content.
 
@@ -1192,7 +1196,7 @@ into develop **ede8e1f** on 2026-11-09; the merge includes its integration recor
 Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
 other-sheet rollout, runner/scoring/persistence, push and promotion remain outside scope.
 
-**W-6.3u.2 — Node.js & Express study reference ◐** *(technical corrections accepted; fundamentals depth revision required)*
+**W-6.3u.2 — Node.js & Express study reference ◐** *(technical corrections accepted; fundamentals depth implementation next)*
 
 User direction (D-109), 2026-11-10: use the DSA review/interview approach,
 fundamentals are mandatory, give many worked examples and add subsections when
@@ -1214,16 +1218,17 @@ The requested interview-preparation goal is not a guarantee of interview success
   and SIGTERM drain/cleanup-sensitive tests.
 - [x] Coordinator accepted **fa724bb...e852170** at handoff **b2c1cdc**;
   NE-R1–NE-R6 closed, no remaining Standards/Spec findings.
-- [ ] Reassess and strengthen Node fundamentals after reader feedback (D-111),
+- [x] Reassess and design deeper Node fundamentals after reader feedback (D-111/112),
   including a full event-loop lesson and connected worked explanations.
+- [ ] Implement the depth plan, executable changed-case examples and coding repairs.
 - [ ] Review the revised teaching depth before requesting integration.
 - [ ] Obtain separate user approval for integration into develop.
 
 [Sources](../reference/node-express-source-research.md),
 [design](superpowers/specs/2026-11-10-node-express-design.md),
-[plan](superpowers/plans/2026-11-10-node-express.md). Coordinator chooses twelve
-initial panels/38 topics, with at least one worked example/local activity per core
-topic and a recurring small API. Split when measured, without reducing coverage.
+[plan](superpowers/plans/2026-11-10-node-express.md). The original delivery used twelve
+panels/38 topics and a recurring small API. The Node fundamentals extension below
+now governs depth and composition; split when measured without reducing coverage.
 Keep slug/group and thirty other sheet bodies. Target 28/31 drawn/registered and
 18/18 stages. Node 22-compatible JavaScript, actual validation baseline 22.23.4;
 Express 5.3.0 may be an exact test-only devDependency. No Node/tooling upgrade.
@@ -1244,6 +1249,14 @@ establish those missing requirements. Correction/recheck are now complete at
 **e852170** / **b2c1cdc**; the original findings above remain historical evidence. Fresh focused **87/5** and live corrected
 lesson checks pass; full **1779/241**, production **52/52** and dev-console **1/1**
 evidence verified in the implementation thread/logs. Integration needs user approval.
+
+The [Node fundamentals extension](superpowers/specs/2026-11-10-node-fundamentals-depth-design.md)
+and its [plan](superpowers/plans/2026-11-10-node-fundamentals-depth.md) now govern
+this revision. Initial composition is 15 panels/49 topics, preserving twelve
+existing hashes and 38 existing topic IDs; scheduling moves into the new event-loop
+panel. Five coordinator draft trace probes passed on Node22.23.4. New Worker,
+stream and lifetime examples still require implementation-time actual-code checks.
+Return the actual event-loop lesson for reader assessment before integration.
 
 **W-6.3v — DSA Patterns study reference ☑** *(reviewed and merged locally into develop)*
 
