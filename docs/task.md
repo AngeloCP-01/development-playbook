@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-10): DSA Patterns coordinator review found two P2 corrections (W-6.3v).**
+**Current work (2026-11-10): DSA Patterns P2 corrections verified; coordinator recheck pending (W-6.3v).**
 The user selected a new reference for learning DSA patterns, interview reasoning,
 well-fitting practice problems, and time/space complexity, with JavaScript
 examples. The [research record](../reference/dsa-patterns-source-research.md)
@@ -25,6 +25,7 @@ details. Delivery **49ac670**, application **0ffca35**, is implemented on
 `feat/dsa-patterns-reference`: **27/31** sheets and **18/18** stages. Coordinator
 review of the actual branch, implementation/reviewer threads and evidence found
 two P2s: lost mixed-choice explanation and tree tests blind to right subtrees.
+Correction **8dfc0fd** addresses both; focused coordinator recheck is pending.
 [KICKOFF](../KICKOFF.md) contains the reproduction and correction acceptance.
 Local develop remains **26/30** sheets; nothing is merged or pushed.
 
@@ -84,11 +85,10 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **25 drawn / 30 registered**, through **2cc7d5d**. W-6.4 is integrated as **b8515a0**; five language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** correct DSA-R1/R2 in a fresh user-selected
-**GPT-6.1 Sol / High** session using the bounded KICKOFF handoff. Preserve authored
-practice explanations and add meaningful right/branching tree coverage. Return
-the exact correction diff and actual checks to coordinator
-`01a1bedf-bdad-7b72-ba40-9b5406807d43`, recommended **GPT-6 Astra / Low**.
+**Next task/model:** focused coordinator recheck of correction **8dfc0fd** using
+**GPT-6 Astra / Low**, returning to session
+`01a1bedf-bdad-7b72-ba40-9b5406807d43`. Both DSA-R1/R2 have regression evidence;
+see KICKOFF for fresh versus retained checks. Integration remains separate.
 The JavaScript correction/review/integration are complete; remaining language
 sheets and broader JavaScript teaching are separate.
 
@@ -1201,7 +1201,7 @@ into develop **ede8e1f** on 2026-11-09; the merge includes its integration recor
 Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
 other-sheet rollout, runner/scoring/persistence, push and promotion remain outside scope.
 
-**W-6.3v — DSA Patterns study reference ◐** *(implemented; coordinator corrections pending)*
+**W-6.3v — DSA Patterns study reference ◐** *(P2 corrections verified; coordinator recheck pending)*
 
 **Reader outcome:** recognize the conditions that make a technique useful,
 explain its invariant or recurrence, implement it in JavaScript, test it, and
@@ -1226,11 +1226,12 @@ activity budget and the worked function contracts are design choices.
   complete appropriate web checks and one independent final review.
 - [x] Coordinator review **b3c500c...49ac670**, actual sessions and raw evidence;
   Standards: no actionable findings. Spec: two confirmed P2s, DSA-R1/R2.
-- [ ] Preserve authored mixed-choice explanation through composition, rendered
+- [x] Preserve authored mixed-choice explanation through composition, rendered
   solution and generated Markdown, with a meaningful failing regression first.
-- [ ] Check recursive and iterative published tree functions on right-only and
+- [x] Check recursive and iterative published tree functions on right-only and
   branching shapes; confirm both right-child-removal mutations are detected.
-- [ ] Return correction commit/checks/session for focused coordinator recheck.
+- [x] Return correction **8dfc0fd**, actual checks and implementation session
+  **01a1bf85-6807-7190-aba1-f90aff6ec680** for focused coordinator recheck.
 - [ ] Obtain separate user approval for no-ff integration into develop.
 
 Research branch `docs/2026-11-09-dsa-patterns-research` starts at local develop
