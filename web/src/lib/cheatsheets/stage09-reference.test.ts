@@ -10,8 +10,8 @@ test('stage 09 retains both drawn companion sheets alongside the language sheets
     'scaling',
   ])
   expect(sheets.every(isDrawn)).toBe(true)
-  expect(CHEATSHEETS.filter(isDrawn)).toHaveLength(26)
-  expect(CHEATSHEETS).toHaveLength(30)
+  expect(CHEATSHEETS.filter(isDrawn)).toHaveLength(27)
+  expect(CHEATSHEETS).toHaveLength(31)
   expect(
     CHEATSHEETS.filter((sheet) => !isDrawn(sheet))
       .map((sheet) => sheet.slug)

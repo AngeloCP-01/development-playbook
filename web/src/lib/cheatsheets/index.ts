@@ -1,3 +1,4 @@
+import { dsaPatterns } from './dsa-patterns'
 import { apiDesign } from './api-design'
 import { awsDeployment } from './aws-deployment'
 import { caching } from './caching'
@@ -67,6 +68,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   caching,
   scaling,
   javascript,
+  dsaPatterns,
   ...PLANNED,
 ]
 

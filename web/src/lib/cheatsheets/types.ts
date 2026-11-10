@@ -8,7 +8,12 @@
  * later — a diagram of the same content would not be.
  */
 export type CheatsheetGroup =
-  'Architecture' | 'Design Principles' | 'Git' | 'Standards' | 'Languages'
+  | 'Architecture'
+  | 'Design Principles'
+  | 'Git'
+  | 'Standards'
+  | 'Languages'
+  | 'Algorithms'
 
 export const CHEATSHEET_GROUPS: CheatsheetGroup[] = [
   'Architecture',
@@ -16,6 +21,7 @@ export const CHEATSHEET_GROUPS: CheatsheetGroup[] = [
   'Git',
   'Standards',
   'Languages',
+  'Algorithms',
 ]
 
 /**

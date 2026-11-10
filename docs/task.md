@@ -13,7 +13,24 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-09): JavaScript sheet merged locally into develop (D-105).**
+**Current work (2026-11-10): DSA Patterns reviewed and integrated locally into develop (W-6.3v).**
+The user selected a new reference for learning DSA patterns, interview reasoning,
+well-fitting practice problems, and time/space complexity, with JavaScript
+examples. The [research record](../reference/dsa-patterns-source-research.md)
+contains primary-source findings and teaching examples. The user accepted all
+fifteen core patterns with JavaScript and everyday analogies. The
+[design](superpowers/specs/2026-11-09-dsa-patterns-design.md) and
+[compact plan](superpowers/plans/2026-11-09-dsa-patterns.md) carry the delivery
+details. Delivery **49ac670**, application **0ffca35**, is implemented on
+`feat/dsa-patterns-reference`: **27/31** sheets and **18/18** stages. Coordinator
+review of the actual branch, implementation/reviewer threads and evidence found
+two P2s: lost mixed-choice explanation and tree tests blind to right subtrees.
+Correction **8dfc0fd** addresses both; focused coordinator recheck passed at
+**89436fb**. The user approved local no-ff integration into develop, with parents
+**c996177** and **89436fb**. Local develop now has **27/31** sheets and **18/18**
+stages. [KICKOFF](../KICKOFF.md) records fresh and retained checks. No push or promotion.
+
+**Previous completed work: JavaScript sheet merged locally into develop (D-105).**
 Application **7975be9** on `feat/javascript-promises-lesson` implements and verifies
 the connected #async lesson, visible introduction, ordered teaching blocks and
 JavaScript-wide context cleanup. The eight hashes, fourteen activities and original
@@ -67,13 +84,11 @@ interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. That width repair was the pre-Stage-10 baseline. Tracked `origin/develop` remains
 `79f9e31`; the current local develop merge is recorded above.
 
-On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **25 drawn / 30 registered**, through **2cc7d5d**. W-6.4 is integrated as **b8515a0**; five language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
+On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **27 drawn / 31 registered**, including W-6.3v. W-6.4 is integrated as **b8515a0**; four language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** coordinator confirmation of W-6.3u.1a's keyboard-scroll correction,
-recommended **GPT-6 Astra / Low** in coordinator session
-`01a18acc-3b54-7202-92f3-404cc94fd0ad`. Integration into develop requires
-separate user approval. Remaining language sheets need their own assessment
-before any new implementation session.
+**Current status:** W-6.3v is integrated locally after the approved coordinator
+recheck. Four other language sheets, broader JavaScript teaching, push and main
+promotion remain separate. No next implementation task has been selected.
 
 Two deliverables from one body of content.
 
@@ -1183,6 +1198,55 @@ User accepted the preview and approved local no-ff integration of **f3f376c**
 into develop **ede8e1f** on 2026-11-09; the merge includes its integration records.
 Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
 other-sheet rollout, runner/scoring/persistence, push and promotion remain outside scope.
+
+**W-6.3v — DSA Patterns study reference ☑** *(reviewed and merged locally into develop)*
+
+**Reader outcome:** recognize the conditions that make a technique useful,
+explain its invariant or recurrence, implement it in JavaScript, test it, and
+justify time and auxiliary/output space. Practice problems must show why the
+pattern fits and what changed conditions would require another approach.
+User clarification (D-107): explain as simply as possible through everyday
+analogies, tiny traces and plain work/storage reasoning before technical terms
+and JavaScript. The research distinguishes preparation relevance from measured
+question frequency. The user selected all fifteen core patterns with "okay lets
+proceed with that" (D-108). Algorithms grouping, eight initial panels, eighteen
+activity budget and the worked function contracts are design choices.
+
+- [x] Record the user's teaching/interview/problem/complexity direction and
+  JavaScript choice (D-106).
+- [x] Research primary algorithm teaching, original problem statements,
+  employer interview guidance, and JavaScript implementation assumptions in
+  [one source record](../reference/dsa-patterns-source-research.md).
+- [x] Select all fifteen core patterns and the simple analogy-first approach.
+- [x] Prepare the relevant content/design acceptance and fresh implementation
+  handoff after scope selection; preserve one web/generated-Markdown source.
+- [x] Implement, verify actual published examples and the finished reference,
+  complete appropriate web checks and one independent final review.
+- [x] Coordinator review **b3c500c...49ac670**, actual sessions and raw evidence;
+  Standards: no actionable findings. Spec: two confirmed P2s, DSA-R1/R2.
+- [x] Preserve authored mixed-choice explanation through composition, rendered
+  solution and generated Markdown, with a meaningful failing regression first.
+- [x] Check recursive and iterative published tree functions on right-only and
+  branching shapes; confirm both right-child-removal mutations are detected.
+- [x] Return correction **8dfc0fd**, actual checks and implementation session
+  **01a1bf85-6807-7190-aba1-f90aff6ec680** for focused coordinator recheck.
+- [x] Focused coordinator recheck of **8dfc0fd** at **89436fb**; both P2s resolved.
+- [x] User approved local no-ff integration into develop; parents **c996177**
+  and **89436fb**. No push or main promotion.
+
+Research branch `docs/2026-11-09-dsa-patterns-research` starts at local develop
+**c996177**; source findings are committed as **dbeafbf**.
+Research/coordination recommendation: **GPT-6 Astra / Low**.
+Implementation recommendation: fresh user-selected **GPT-6.1 Sol / High**.
+Current coordinator: **01a1bedf-bdad-7b72-ba40-9b5406807d43**.
+The [design](superpowers/specs/2026-11-09-dsa-patterns-design.md) and
+[plan](superpowers/plans/2026-11-09-dsa-patterns.md) select a standalone reference
+under Algorithms, using current study components; all fifteen ship together.
+Application **0ffca35** delivers the untethered reference under Algorithms with
+eight hashes and eighteen activities. Feature totals are **27/31** sheets and
+**18/18** stages, now integrated locally into develop.
+Other language sheets, broader JavaScript
+rollout, code execution/scoring/persistence, push and promotion are separate.
 
 **W-6.4 — Glossary and stack surfaced in the hub ☑** *(merged locally as `b8515a0`)*
 
