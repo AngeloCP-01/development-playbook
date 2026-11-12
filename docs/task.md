@@ -13,17 +13,16 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-10): Node fundamentals depth design/plan ready for implementation (W-6.3u.2).**
-The user accepted the deeper Node-foundations direction after finding runtime/
-event-loop teaching too shallow. [Depth design](superpowers/specs/2026-11-10-node-fundamentals-depth-design.md)
-and [compact plan](superpowers/plans/2026-11-10-node-fundamentals-depth.md) define
-the revision: runtime layers, full event-loop walkthrough, queues/timers, async
-control, work/worker/process choices, bytes/streams and process/memory lifetime.
-The coordinator selects 15 initial panels/49 topics and at least six actual coding/
-repair activities; counts are not a ceiling. Application remains **e852170**;
-NE-R1–NE-R6 stay closed. Integration remains on hold until revised teaching review.
-Fresh user-selected **GPT-6.1 Sol / Medium** implementation starts from the exact
-committed handoff tip; see [KICKOFF](../KICKOFF.md). No merge or push.
+**Current work (2026-11-10): Node fundamentals depth revision verified; reader/coordinator acceptance pending (W-6.3u.2).**
+Application **7ee4b54**, test extension **d122175**, from **ad81030**.
+The live sheet has fifteen panels, 49 topics/activities and six executable coding
+repairs. NE-R1–NE-R6 remain closed; twelve original hashes and all 38 original
+IDs are preserved. Independent Sol High review found all six transfer tasks
+supported on the actual page, with one deferred prerequisite-navigation minor.
+Full unit/DOM **1841/242**, format/lint/typecheck/build and dev-console **1/1** pass;
+production audit has 53 retained passes plus a fresh unchanged-limit dark sweep
+(1/1) on 2026-11-12. See [KICKOFF](../KICKOFF.md) and the live event-loop lesson.
+Integration remains on hold for the user's revised-depth assessment. No merge/push.
 
 **Previous completed work: JavaScript sheet merged locally into develop (D-105).**
 Application **7975be9** on `feat/javascript-promises-lesson` implements and verifies
@@ -81,11 +80,11 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **27 drawn / 31 registered**, including W-6.3v. W-6.4 is integrated as **b8515a0**; four language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** implement the Node fundamentals depth plan in a fresh
-user-selected **GPT-6.1 Sol / Medium** session. Return actual diff/checks/session
-and a live event-loop lesson to coordinator `01a1bedf-bdad-7b72-ba40-9b5406807d43`,
-recommended **GPT-6.1 Sol / High**, for review including teaching depth.
-Integration remains on hold; the old twelve-panel/38-topic limit is superseded.
+**Next task/model:** coordinator depth/evidence acceptance and the user's live
+lesson feedback, recommended **GPT-6.1 Sol / High**, coordinator
+`01a1bedf-bdad-7b72-ba40-9b5406807d43`. Review the actual revision and event-loop
+page; independent review is not a learner study. Integration remains a separate
+user decision.
 
 Two deliverables from one body of content.
 
@@ -1196,7 +1195,7 @@ into develop **ede8e1f** on 2026-11-09; the merge includes its integration recor
 Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
 other-sheet rollout, runner/scoring/persistence, push and promotion remain outside scope.
 
-**W-6.3u.2 — Node.js & Express study reference ◐** *(technical corrections accepted; fundamentals depth implementation next)*
+**W-6.3u.2 — Node.js & Express study reference ◐** *(depth revision verified; reader/coordinator acceptance pending)*
 
 User direction (D-109), 2026-11-10: use the DSA review/interview approach,
 fundamentals are mandatory, give many worked examples and add subsections when
@@ -1220,8 +1219,9 @@ The requested interview-preparation goal is not a guarantee of interview success
   NE-R1–NE-R6 closed, no remaining Standards/Spec findings.
 - [x] Reassess and design deeper Node fundamentals after reader feedback (D-111/112),
   including a full event-loop lesson and connected worked explanations.
-- [ ] Implement the depth plan, executable changed-case examples and coding repairs.
-- [ ] Review the revised teaching depth before requesting integration.
+- [x] Implement the depth plan, executable changed-case examples and six coding repairs (**7ee4b54**, **d122175**).
+- [x] Independent Sol High review of the revised page/branch supports all six transfer tasks; one prerequisite-link minor deferred.
+- [ ] Obtain coordinator acceptance and user feedback on the revised live lesson before integration.
 - [ ] Obtain separate user approval for integration into develop.
 
 [Sources](../reference/node-express-source-research.md),

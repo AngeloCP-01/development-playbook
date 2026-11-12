@@ -1,67 +1,99 @@
-# Kickoff: implement deeper Node fundamentals
+# Kickoff: assess the revised Node fundamentals lesson
 
-Updated 2026-11-10. Follow [AGENTS.md](AGENTS.md), D-99/D-100/D-110/D-111/D-112.
-User accepted the deeper Node-foundations direction with "okay proceed".
-Integration remains on hold until the revised teaching is reviewed.
+Updated 2026-11-12. Follow [AGENTS.md](AGENTS.md), D-99/D-100/D-110/D-111/D-112.
+Branch **feat/node-express-study**; implementation starts at **ad81030**.
+Application **7ee4b54**; test-only Worker repair lifecycle extension **d122175**.
+No merge, push or promotion. Integration remains on hold for the user's revised
+teaching-depth assessment and separate approval.
 
-Keep branch **feat/node-express-study**. Start from this documentation handoff's
-exact committed tip (confirm git); design/plan **2b33da2**, docs start **49a101b**,
-application baseline
-**e852170**. Earlier six corrections were accepted at **e3dac11** and stay closed.
-The unrelated untracked `.pnpm-store/` stays untouched and out of commits.
+## Delivered reader outcome
+
+The reader can locate JavaScript versus native work, follow callback eligibility,
+reason about queues/timers, select bounded work/Worker/process boundaries, repair
+async/decoder/stream failures and explain resource lifetime. The canonical sheet
+has **15 panels / 49 topics / 49 owned activities**, with six actual coding repairs:
+bounded work, callback adapter, listener cleanup, Worker parent, incremental
+newline framing and a backpressured producer. The repairs execute from displayed
+code, including their visible helper/file prerequisites.
+
+All twelve old hashes and 38 topic IDs remain. Added hashes: **event-loop**,
+**work-and-workers**, **process-and-memory**. `scheduling` moves from
+`async-and-events` into `event-loop`; its DOM prefix is now
+`sheet-express-section-event-loop-subsection-scheduling`, while section-hash
+routing remains the contract. No measured split beyond the planned 15/49 was
+needed. NE-R1–NE-R6 stay closed. Totals remain **28/31 references**, **18/18 stages**;
+other **30 generated sheet bodies** compare unchanged against ad81030.
 
 Read:
 
-- [Depth design and concrete event-loop specimen](docs/superpowers/specs/2026-11-10-node-fundamentals-depth-design.md)
-- [Compact depth implementation plan](docs/superpowers/plans/2026-11-10-node-fundamentals-depth.md)
-- [One source record](reference/node-express-source-research.md), including NF1–NF15
-  and the coordinator's five executed design-probe contracts
-- [Existing study/render/test patterns](web/PATTERNS.md)
-- [Task](docs/task.md), W-6.3u.2; [tracker](docs/tracker.md), D-111/D-112
+- [Depth design](docs/superpowers/specs/2026-11-10-node-fundamentals-depth-design.md)
+- [Depth plan](docs/superpowers/plans/2026-11-10-node-fundamentals-depth.md)
+- [Source and executable evidence](reference/node-express-source-research.md)
+- [Task](docs/task.md), [completion evidence](docs/tracker.md)
 
-Reader outcome: explain where JavaScript/native work runs, walk the event loop,
-reason about queues/timers, distinguish I/O/CPU/worker/process work, repair async/
-stream failures and explain resource lifetime. Teach mechanisms before terminology.
-The design's complete I/O walkthrough is the required depth, not an output-only
-snippet. At least six activities require actual code/repair with executable,
-explained solutions. Preserve the existing Express/security/lifecycle corrections.
+## Verification and retained evidence
 
-Initial design: **15 panels / 49 topics**, with at least one owned activity per
-topic. Preserve all twelve existing hashes and 38 topic IDs. Add event-loop,
-work-and-workers and process-and-memory; scheduling moves from async-and-events
-into event-loop (changed DOM prefix, existing section links retained). Rewrite/
-deepen runtime, async/events and files/streams, and connect raw HTTP to the model.
-Counts are not a ceiling; split at a measured teaching seam rather than cut depth.
-Reference totals stay **28/31**, stages **18/18**; other thirty bodies unchanged.
+Actual runtime **Node22.23.4**, unchanged exact dev-only **Express5.3.0**. No new
+dependency, renderer, backend or reader runner. Worked files/solutions use an exact
+legacy/foundations code-location ownership guard. File groups execute literal
+`.cjs`/`.mjs`; natural-exit fixtures have no harness IPC. Timing assertions use
+only guaranteed relations; no both-orders sampling requirement, speedup claim,
+GC timing or forced memory-drop assertion.
 
-Use Node **22.23.4**, existing exact dev-only Express **5.3.0**; no new dependency,
-runtime upgrade, renderer, backend or reader runner. Every displayed file/helper/
-solution belongs to the actual-code classification guard. Execute changed cases
-and clean up workers/children/files/streams. Assert guaranteed relations, not
-elapsed time, global FIFO, GC timing or both nondeterministic orders appearing.
-Keep process-exit tests free of harness-owned active handles that alter the lesson.
+Application checks completed on **2026-11-10**, retained for unchanged
+**7ee4b54 + d122175** on resume **2026-11-12**:
 
-Execute in one fresh user-selected **GPT-6.1 Sol / Medium** session. Use the
-compact plan inline; no per-task agents/review rounds. Run focused checks while
-editing, the final web gate once and development-console once. Preserve servers.
-One independent final **GPT-6.1 Sol / High** content/page/branch review must assess
-the design's six transfer tasks using actual page evidence. Green counts alone
-cannot establish teaching depth. Leave a live event-loop lesson for reader feedback.
+- `pnpm format:check`, `pnpm lint`, `pnpm typecheck`: exit0.
+- `pnpm test --maxWorkers=1`: **1841 tests / 242 files**, exit0.
+- `pnpm build`: exit0. Original full production audit: **53/54 passed**; dark
+  contrast timed out during a logged 15.8-minute case despite a 120s test limit,
+  consistent with suspension/interruption rather than a reported contrast failure.
+  On **2026-11-12**, unchanged-limit rerun of that exact dark case passed **1/1**
+  in 1.8 minutes, exit0. The other 53 passing cases are retained. All 54 checks now
+  have passing evidence; no assertion/timeout/configuration was weakened.
+- `pnpm test:dev-console --config=/tmp/nf-dev.config.ts`: **1/1**, exit0. Temporary
+  config targeted the preserved **3200** dev server and isolated output under
+  `/tmp/nf-dev-results`; checked-in config unchanged. Temporary preview/dev configs
+  were removed after verification. The live preview on port 3200 was restored on resume.
+- Focused actual-code/data/render/disclosure/Markdown: **148/6** at 7ee4b54, exit0;
+  the two Worker lifecycle cases directly covering both displayed parents passed
+  after d122175. Full 1841-test run includes that extension.
+- Preview browser **5/5**, exit0: every old/new hash and nested topic/solution,
+  both themes, 320/768/1440 widths, exact rail IDs, keyboard code/table focus and
+  scrolling, solution reset/history and all default/single-topic 1024×768 panels.
 
-Return branch/application/records commits, old/new hashes, actual checks/exits,
-limits/review results and root session reference to coordinator
-**01a1bedf-bdad-7b72-ba40-9b5406807d43**, recommended **GPT-6.1 Sol / High**.
-Read referenced implementation/reviewer threads before relying on their evidence.
-Existing implementation thread: **01a1c38c-5adb-7540-b46d-9638153021bc**.
-Prior preview: http://localhost:3200/reference/express; verify availability at start.
+Observed corrections: absent phase render RED→GREEN; old manifest rejected new
+unclassified code before ownership was extended. Decoder test append initially
+had a template newline syntax error (fixture fixed, real framing assertions kept).
+Testing Library types rejected an unsupported exact role option (removed; exact
+string-name match retained). A cold load-only preview sweep missed solution
+controls; matching the existing network-idle audit navigation passed the same ID
+assertions. No timeout, height budget or semantic assertion was weakened.
 
-This handoff changes documentation only. Five design probes passed under Node22;
-Worker/stream/lifetime expansion and the actual revised page are not implemented
-or verified yet. Retain identified **e852170** evidence for unchanged inputs;
-no new full app gate is claimed. No merge/push/promotion. Other language sheets
-and deep engine/distributed-system internals remain separate.
+## Independent depth review and limits
 
-Closing documentation checks: tracker-ledger **2/2**, local links/anchors and
-15-panel/49-topic scope validation, whitespace, all exit 0. Coordinator self-review
-and humanizer pass applied to the source/spec/plan/handoff. Proposed examples
-not covered by the five probes remain unexecuted; preserve that distinction.
+**GPT-6.1 Sol / High**, `/root/node_depth_final_review`, reviewed
+**ad81030..7ee4b54**, test delta **d122175**, and the actual page/repairs. All six
+transfer tasks had visible prerequisite mechanisms and changed-case reasoning;
+no critical/important finding. Independently measured panels **1931–2485px**,
+full event-loop walkthrough **2930px**, below **3072px**; narrow views in both
+themes had no overflow, table keyboard focus/scroll worked, console clean.
+This is a source/page review, not a learner study or interview guarantee.
+
+**Deferred minor:** the async introduction names the JavaScript companion without
+a direct `/reference/javascript#async` link or explicit syntax prerequisite list.
+The six transfer mechanisms are taught locally; the reviewer classed this as a
+navigation refinement. No behavior was declined for review. Humanizer pass kept
+introductions task-specific and traces explanatory; no mechanism was cut for a count.
+
+## Reader/coordinator return
+
+Live lesson: **http://localhost:3200/reference/express#event-loop**.
+Recommended next task: revised-depth/evidence acceptance and user feedback,
+**GPT-6.1 Sol / High**, coordinator **01a1bedf-bdad-7b72-ba40-9b5406807d43**.
+Implementation thread **01a1c38c-5adb-7540-b46d-9638153021bc**; read it before
+relying on referenced evidence. Return the actual branch/application/records SHAs.
+Retain identified application checks for later records-only edits; do not repeat
+the completed gate without invalidating changes. Preserve the untracked
+`.pnpm-store/` and user servers. Other language sheets and engine/distributed
+internals remain deferred. No merge/push/promotion.

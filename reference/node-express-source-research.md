@@ -641,3 +641,66 @@ study was made. The five probe contracts passed. They support the teaching
 specimen and context distinctions; source/API guarantees still own the general
 claims. Implementation must execute the actual published code, solutions and
 changed-case fixtures, including Worker/stream/error paths not exercised here.
+
+## Node depth implementation evidence — 2026-11-10
+
+Application **7ee4b54**, from handoff **ad81030**, ports the depth design into the
+canonical sheet. Test-only **d122175** extends Worker lifecycle checks directly
+to the activity repair. The revised sheet has **15 panels / 49 topics / 49 owned
+activities**. All twelve existing hashes and 38 topic IDs remain. New hashes are
+`event-loop`, `work-and-workers` and `process-and-memory`; `scheduling` keeps its
+ID but moves from `async-and-events` into `event-loop`, changing its disclosure
+prefix. Section hash routing is unchanged. No measured split was needed.
+
+The NF1–NF15 sources and design probes above informed the lesson; those probe
+results were not reused as proof that the new page works. The new checks execute
+the actual displayed `.cjs`/`.mjs` files and six coding repairs with **Node22.23.4**.
+They cover the following contexts and observations:
+
+| Published mechanism | New execution evidence and boundary |
+| --- | --- |
+| Runtime and full I/O walkthrough | Actual-file async/sync reads, CPU-before-suspension trace, native file/crypto jobs, and the complete `start → end → file → tick → promise → microtask → immediate → timer` CJS callback trace. Native allocation is sourced; no elapsed-time/pool-internals inference. |
+| Queue contexts | Same queue program in separate CJS/ESM entry files, plus a nextTick created inside a Promise checkpoint. A partial-order oracle accepts both permitted entry timeout/immediate orders and rejects violated guaranteed edges. No test requires observing both orders. Finite tick work demonstrates delayed loop progress. |
+| Coding repairs | Bounded mapper checks max in-flight work/input ordering/settled failures; callback adapter checks callback errors, falsy success and synchronous throw; per-owner listener repair preserves other subscriptions and removes its own path. |
+| Workers and children | Both displayed Worker parents own result/error/early exit/deadline/termination, including a result followed by a retained handle. The child-process example uses explicit arguments, independent state and successful pipe close; failure after partial output is rejected. No speedup is claimed. |
+| Bytes, records and streams | Split-byte decoding and all two-part cuts of a newline-record input, byte bounds/truncation, controlled false/release/drain, sink error/close, fresh pipeline source/destination failure and abort. Literal helper/solution files are included. Duplicate-write and skipped-listener-removal mutations fail independent observations. |
+| Process resources | Ordinary pending Promise, referenced/unreferenced timers and a separate held-loop contrast run without harness IPC. Unsettled top-level await is tested separately with exit13. Retention checks assert Map/listener paths and future delivery, not GC/RSS timing. Callback/emitter fatal mistakes run in bounded children. |
+| Native HTTP | Headers precede complete body, bytes are accumulated before decoding, UTF-8 POST reports two bytes for é, oversized fixture input returns413, and listener/socket cleanup is owned. The fixture explicitly limits retention rather than claiming a complete hostile-client lifetime policy. |
+
+The code-location collector includes introductions, teaching blocks, row examples,
+starters and solutions. Its exact legacy/foundations union rejects unclassified or
+doubly owned locations; the old guard failed on the new blocks before registration.
+The six incomplete starter interfaces are explicitly labelled fragments, and each
+reference repair executes. A missing displayed prerequisite or entry file fails
+with a specific fixture error. No parallel maintained backend was introduced.
+The six-file module lesson and the remaining NE-R1–NE-R6 guards remain intact.
+
+Focused application checks at **7ee4b54**: **148 tests / 6 files**, exit0. Fresh
+Worker extension: **2/2**, exit0. Actual-sheet tests assert phase/queue/byte and
+work/resource intermediate states independently, literal code, hidden repairs and
+panel reset. Preview browser checks **5/5** cover all topics/solutions, both themes,
+320/768/1440 widths, exact rail IDs, keyboard code/table scrolling and 1024×768
+panel budgets. A cold initial preview sweep missed solution controls before its
+navigation settled; matching the existing audit's network-idle navigation made
+those same exact ID assertions pass. No timeout or assertion was weakened.
+An early test-only decoder assertion contained an escaped-newline template error;
+its fixture was corrected while preserving actual newline/framing assertions.
+Typechecking caught an unsupported Testing Library role option; the invalid test
+option was removed, retaining exact string-name matching.
+
+Independent **GPT-6.1 Sol / High**, `/root/node_depth_final_review`, reviewed
+**ad81030..7ee4b54** and **d122175**, read the actual page and all six coding repairs,
+and found no critical/important issue. All six required transfer tasks had local
+mechanism explanations and changed-case reasoning. Independent single-topic
+measurements were **1931–2485px**, with the full event-loop walkthrough **2930px**,
+under3072px. Narrow views in both themes had no document overflow, table keyboard
+focus/scroll worked and the inspected console was clean. This is a source/page
+review, not a learner study or interview-performance guarantee.
+
+One minor is deferred: the async introduction names a companion JavaScript
+reference without a direct `/reference/javascript#async` link or explicit syntax
+prerequisite list. The review found the six transfer mechanisms locally taught;
+the remaining issue is prerequisite navigation. The humanizer editing pass kept
+introductions task-specific, summaries concrete and traces explanatory. Other
+thirty generated sheet bodies compare unchanged against **ad81030**. Completed-tree
+full-gate results are recorded in the tracker/handoff rather than inferred here.
