@@ -1,3 +1,4 @@
+import { nodeExpress } from './express'
 import { dsaPatterns } from './dsa-patterns'
 import { apiDesign } from './api-design'
 import { awsDeployment } from './aws-deployment'
@@ -69,6 +70,7 @@ export const CHEATSHEETS: Cheatsheet[] = [
   scaling,
   javascript,
   dsaPatterns,
+  nodeExpress,
   ...PLANNED,
 ]
 

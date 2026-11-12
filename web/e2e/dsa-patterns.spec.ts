@@ -61,7 +61,7 @@ test('DSA discovery, navigation, themes, width and panel budget', async ({
   page,
 }) => {
   await page.goto('/reference')
-  await expect(page.getByText('27 of 31', { exact: true })).toBeVisible()
+  await expect(page.getByText('28 of 31', { exact: true })).toBeVisible()
   await page
     .locator('main')
     .getByRole('link', { name: /DSA Patterns/ })

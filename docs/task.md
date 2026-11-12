@@ -13,22 +13,13 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-10): DSA Patterns reviewed and integrated locally into develop (W-6.3v).**
-The user selected a new reference for learning DSA patterns, interview reasoning,
-well-fitting practice problems, and time/space complexity, with JavaScript
-examples. The [research record](../reference/dsa-patterns-source-research.md)
-contains primary-source findings and teaching examples. The user accepted all
-fifteen core patterns with JavaScript and everyday analogies. The
-[design](superpowers/specs/2026-11-09-dsa-patterns-design.md) and
-[compact plan](superpowers/plans/2026-11-09-dsa-patterns.md) carry the delivery
-details. Delivery **49ac670**, application **0ffca35**, is implemented on
-`feat/dsa-patterns-reference`: **27/31** sheets and **18/18** stages. Coordinator
-review of the actual branch, implementation/reviewer threads and evidence found
-two P2s: lost mixed-choice explanation and tree tests blind to right subtrees.
-Correction **8dfc0fd** addresses both; focused coordinator recheck passed at
-**89436fb**. The user approved local no-ff integration into develop, with parents
-**c996177** and **89436fb**. Local develop now has **27/31** sheets and **18/18**
-stages. [KICKOFF](../KICKOFF.md) records fresh and retained checks. No push or promotion.
+**Current state (2026-11-12): W-6.3u.2 Node.js & Express merged locally into develop.**
+The user approved local no-ff integration of feature tip **1a4cad0** after the
+verified depth revision (**7ee4b54**, test extension **d122175**). The merged
+application tree is identical to that tested tree: 15 panels, 49 topics/activities,
+six coding repairs, 28/31 drawn references and 18/18 stages. NE-R1–NE-R6 stay
+closed. One prerequisite-navigation minor remains deferred. No push/main promotion.
+See [KICKOFF](../KICKOFF.md) and [tracker](tracker.md) for retained evidence.
 
 **Previous completed work: JavaScript sheet merged locally into develop (D-105).**
 Application **7975be9** on `feat/javascript-promises-lesson` implements and verifies
@@ -84,11 +75,11 @@ interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. That width repair was the pre-Stage-10 baseline. Tracked `origin/develop` remains
 `79f9e31`; the current local develop merge is recorded above.
 
-On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **27 drawn / 31 registered**, including W-6.3v. W-6.4 is integrated as **b8515a0**; four language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
+On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **28 drawn / 31 registered**, including W-6.3v and W-6.3u.2. W-6.4 is integrated as **b8515a0**; three language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Current status:** W-6.3v is integrated locally after the approved coordinator
-recheck. Four other language sheets, broader JavaScript teaching, push and main
-promotion remain separate. No next implementation task has been selected.
+**Next task/model:** select the next playbook/reference priority, recommended
+**GPT-6.1 Sol / High** for coordination. Python, Java and Spring Boot remain
+undrawn; no next implementation is selected. Main promotion remains the user's.
 
 Two deliverables from one body of content.
 
@@ -924,7 +915,7 @@ now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
 
-**W-6.3u — Language and framework study sheets ◐** *(JavaScript expansion selected; four sheets remain)*
+**W-6.3u — Language and framework study sheets ◐** *(JavaScript delivered; Node.js & Express selected; four placeholders remain)*
 
 **User direction, 2026-11-05 (D-101):** for JavaScript, Python, Java, Spring Boot
 and Express & Node, focus on fundamentals, important topics and concepts that
@@ -1198,6 +1189,69 @@ User accepted the preview and approved local no-ff integration of **f3f376c**
 into develop **ede8e1f** on 2026-11-09; the merge includes its integration records.
 Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
 other-sheet rollout, runner/scoring/persistence, push and promotion remain outside scope.
+
+**W-6.3u.2 — Node.js & Express study reference ☑** *(merged locally into develop)*
+
+User direction (D-109), 2026-11-10: use the DSA review/interview approach,
+fundamentals are mandatory, give many worked examples and add subsections when
+needed for proper coverage. Reader outcome: explain, predict, build, debug and
+test Node/Express behavior, including failures and basic production trade-offs.
+The requested interview-preparation goal is not a guarantee of interview success.
+
+- [x] Record user direction and investigate primary Node/Express/security sources.
+- [x] Define teaching depth, content families, example-verification boundaries and
+  compact implementation plan using existing study components.
+- [x] Implement all selected families and meaningful local activities; fill
+  `/reference/express`, title Node.js & Express, without adding a backend.
+- [x] Execute actual published Node/Express examples and failure/security paths;
+  verify the delivered page and final web/dev-console checks.
+- [x] Obtain one independent final review; findings fixed with focused regressions.
+- [x] Correct NE-R1/R2/R3: worked modules, real filtering/pagination and a concrete
+  explained CSRF-defense contrast.
+- [x] Correct NE-R4/R5/R6: complete Express dev-console IDs, nested-query contract
+  and SIGTERM drain/cleanup-sensitive tests.
+- [x] Coordinator accepted **fa724bb...e852170** at handoff **b2c1cdc**;
+  NE-R1–NE-R6 closed, no remaining Standards/Spec findings.
+- [x] Reassess and design deeper Node fundamentals after reader feedback (D-111/112),
+  including a full event-loop lesson and connected worked explanations.
+- [x] Implement the depth plan, executable changed-case examples and six coding repairs (**7ee4b54**, **d122175**).
+- [x] Independent Sol High review of the revised page/branch supports all six transfer tasks; one prerequisite-link minor deferred.
+- [x] User authorized local integration of verified **1a4cad0** on 2026-11-12 after the independent depth review. Further reader feedback remains welcome.
+- [x] Obtain separate user approval and integrate into develop with a no-ff merge (2026-11-12).
+
+[Sources](../reference/node-express-source-research.md),
+[design](superpowers/specs/2026-11-10-node-express-design.md),
+[plan](superpowers/plans/2026-11-10-node-express.md). The original delivery used twelve
+panels/38 topics and a recurring small API. The Node fundamentals extension below
+now governs depth and composition; split when measured without reducing coverage.
+Keep slug/group and thirty other sheet bodies. Target 28/31 drawn/registered and
+18/18 stages. Node 22-compatible JavaScript, actual validation baseline 22.23.4;
+Express 5.3.0 may be an exact test-only devDependency. No Node/tooling upgrade.
+
+Documentation branch `docs/2026-11-10-node-express-study` starts at **e28401e**;
+implementation starts from its exact committed tip, creating
+`feat/node-express-study`. Use fresh user-selected **GPT-6.1 Sol / Medium** under
+D-100/D-110; return to coordinator `01a1bedf-bdad-7b72-ba40-9b5406807d43`, recommended
+**GPT-6.1 Sol / High**. No new renderer/runner/scoring/persistence, real DB/auth
+service, other language sheet, integration, push or promotion is selected.
+
+Coordinator reviewed **976198b...67b8cb6** and found six P2s: missing worked
+module mechanisms, incomplete filtering/pagination, no explained CSRF-defense
+contrast, missing Express dev-console ID completeness assertion, no nested-query
+contract check and a SIGTERM test insensitive to skipped cleanup. See KICKOFF
+for exact evidence and acceptance. Fresh focused checks **66/5** pass but do not
+establish those missing requirements. Correction/recheck are now complete at
+**e852170** / **b2c1cdc**; the original findings above remain historical evidence. Fresh focused **87/5** and live corrected
+lesson checks pass; full **1779/241**, production **52/52** and dev-console **1/1**
+evidence verified in the implementation thread/logs. Integration needs user approval.
+
+The [Node fundamentals extension](superpowers/specs/2026-11-10-node-fundamentals-depth-design.md)
+and its [plan](superpowers/plans/2026-11-10-node-fundamentals-depth.md) now govern
+this revision. Initial composition is 15 panels/49 topics, preserving twelve
+existing hashes and 38 existing topic IDs; scheduling moves into the new event-loop
+panel. Five coordinator draft trace probes passed on Node22.23.4. New Worker,
+stream and lifetime examples still require implementation-time actual-code checks.
+Return the actual event-loop lesson for reader assessment before integration.
 
 **W-6.3v — DSA Patterns study reference ☑** *(reviewed and merged locally into develop)*
 

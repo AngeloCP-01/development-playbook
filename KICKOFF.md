@@ -1,37 +1,48 @@
-# Kickoff: DSA Patterns integrated locally
+# Kickoff: Node.js & Express integrated into develop
 
-Updated 2026-11-10. Follow [AGENTS.md](AGENTS.md), especially D-99/D-100.
+Updated 2026-11-12. Follow [AGENTS.md](AGENTS.md), especially merge/promotion rules.
 
-W-6.3v is reviewed and merged locally into `develop` with user approval and
-`--no-ff`. Merge parents are **c996177** and **89436fb**. The merge includes
-integration records; application/generated output matches correction **8dfc0fd**.
-Nothing pushed or promoted to main. Feature branch is deleted after the merge.
-Local totals: **27/31** sheets, **18/18** stages, all fifteen DSA patterns,
-eight stable hashes and eighteen local activities.
+W-6.3u.2 is complete and merged locally into **develop** after the user's explicit
+approval. This no-ff merge integrates feature tip **1a4cad0** from local develop
+**e28401e** and includes these records. Application **7ee4b54**; direct Worker-repair
+lifecycle checks **d122175**. No push or main promotion. The feature branch is
+removed after successful merge verification; commits remain in history.
 
-Both review findings are closed. Composition retains the authored mixed-choice
-refund explanation; render coverage checks hidden/revealed/re-collapsed reasoning.
-Both tree functions have right-only and branching fixtures, with mutation checks
-that reject omission of either right-child traversal. Algorithms are unchanged.
+The sheet at `/reference/express` has **15 panels / 49 topics / 49 owned activities**
+and six executable coding repairs. All twelve original section hashes and 38
+original topic IDs remain. New hashes: `event-loop`, `work-and-workers`,
+`process-and-memory`. Scheduling keeps its topic ID and now belongs to event-loop.
+NE-R1–NE-R6 remain closed. Totals: **28/31** references drawn, **18/18** stages.
+Other thirty generated sheet bodies were unchanged by the revision.
 
-Fresh coordinator checks on the corrected tree: **25 tests / 5 files**, all pass;
-thirty prior generated sheet bodies unchanged; live refund solution reveal and
-re-collapse pass with zero page errors. `git diff --check` passes.
-Retained **8dfc0fd** evidence, verified in the implementation thread/raw logs:
-format/lint/generated-route typecheck, **1694 tests / 237 files**, **58-page build**,
-DSA production browser **2/2**. Retained original **0ffca35** broad audit combined
-**49/49** and development-console **1/1** cover unchanged shared behavior.
-No redundant full gate for integration records; application tree is unchanged.
+The merged application is byte-identical to **1a4cad0** / tested **d122175**.
+Retained verification: **1841 tests / 242 files**, format/lint/route typecheck/build,
+dev-console **1/1**, focused preview **5/5**, and all **54** production checks with
+passing evidence. The original full audit passed 53/54; the dark sweep timed out
+with a logged 15.8-minute duration under 120s, consistent with suspension. Its
+unchanged-limit Nov12 rerun passed **1/1** in 1.8 minutes; the other 53 results remain
+retained. No assertion/timeout was weakened. Records-only integration checks are
+fresh; no unnecessary full-suite/build repeat.
 
-See [tracker](docs/tracker.md), W-6.3v coordinator recheck/integration row, and
-[task](docs/task.md). [Design](docs/superpowers/specs/2026-11-09-dsa-patterns-design.md),
-[plan](docs/superpowers/plans/2026-11-09-dsa-patterns.md) and
-[source record](reference/dsa-patterns-source-research.md) retain scope and sources.
-Implementation thread: **01a1bf85-6807-7190-aba1-f90aff6ec680**.
-Coordinator return: **01a1bedf-bdad-7b72-ba40-9b5406807d43**.
+Independent **GPT-6.1 Sol / High**, `/root/node_depth_final_review`, reviewed the
+actual source/page, all six transfer tasks and coding repairs. No blockers;
+measured full event-loop lesson 2930px under 3072px, keyboard/narrow/theme checks
+clean. This is a source/page review, not a learner study.
 
-Preview: http://localhost:3210/reference/dsa-patterns. Other servers preserved.
-The earlier 1px narrow overflow observation was not reproduced by the coordinator;
-DSA layout checks pass. Four other language sheets, broader JavaScript teaching,
-union-find and runner/scoring/persistence remain deferred. No next task selected.
-Main promotion remains the user's; this merge did not authorize a push.
+**Deferred minor:** add a direct `/reference/javascript#async` prerequisite link
+and explicit syntax prerequisite list; the companion is currently named in prose.
+The user may provide further depth feedback on the live lesson.
+
+- [Depth design](docs/superpowers/specs/2026-11-10-node-fundamentals-depth-design.md)
+- [Plan](docs/superpowers/plans/2026-11-10-node-fundamentals-depth.md)
+- [Source/executable evidence](reference/node-express-source-research.md)
+- [Task](docs/task.md), [tracker](docs/tracker.md)
+
+Preview: **http://localhost:3200/reference/express#event-loop**.
+Implementation thread **01a1c38c-5adb-7540-b46d-9638153021bc**; coordinator
+**01a1bedf-bdad-7b72-ba40-9b5406807d43**. Read referenced threads before relying
+on evidence. Recommended next task: select the next priority, **GPT-6.1 Sol / High**
+for coordination. Python, Java and Spring Boot remain undrawn; no next implementation
+is selected. Main promotion is the user's. Preserve the unrelated `.pnpm-store/`
+and user servers. Ignored progress/review scratch remains intact following the
+previous automatic-review rejection of its deletion.

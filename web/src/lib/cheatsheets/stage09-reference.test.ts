@@ -10,13 +10,13 @@ test('stage 09 retains both drawn companion sheets alongside the language sheets
     'scaling',
   ])
   expect(sheets.every(isDrawn)).toBe(true)
-  expect(CHEATSHEETS.filter(isDrawn)).toHaveLength(27)
+  expect(CHEATSHEETS.filter(isDrawn)).toHaveLength(28)
   expect(CHEATSHEETS).toHaveLength(31)
   expect(
     CHEATSHEETS.filter((sheet) => !isDrawn(sheet))
       .map((sheet) => sheet.slug)
       .sort(),
-  ).toEqual(['express', 'java', 'python', 'spring-boot'])
+  ).toEqual(['java', 'python', 'spring-boot'])
 })
 test('generated Markdown includes each companion, its load-bearing caveats and every supporting source', () => {
   const markdown = renderCheatsheets()
