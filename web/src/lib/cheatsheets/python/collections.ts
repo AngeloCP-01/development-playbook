@@ -149,7 +149,7 @@ export const collections = family(
       summary:
         'Compare scans, hash lookups and copies with size and key-cost assumptions.',
       model:
-        'Cost depends on the representation and operation, not just the syntax. In conventional CPython a list stores indexed references: indexing is constant-time with respect to list length, scanning membership may inspect every element, and slicing k items copies k references. Dict/set hash tables usually provide expected constant-time lookup under suitable hashing and bounded key costs; collisions and expensive equality can change that. These are qualified implementation expectations, not universal language complexity guarantees.',
+        'Cost depends on the representation and the operation performed. In conventional CPython a list stores indexed references: indexing is constant-time with respect to list length, scanning membership may inspect every element, and slicing k items copies k references. Dict/set hash tables usually provide expected constant-time lookup under suitable hashing and bounded key costs; collisions and expensive equality can change that. These are qualified implementation expectations, not universal language complexity guarantees.',
       code: 'titles = ["River", "Hill", "Lake"]\nindex = {title: position for position, title in enumerate(titles)}\nchecks = 0\nfor title in titles:\n    checks += 1\n    if title == "Lake":\n        break\nprint(checks, index["Lake"])\ncopy = titles[:2]\ncopy.append("Sea")\nprint(titles, copy)',
       trace: {
         label: 'Where work and storage are spent',

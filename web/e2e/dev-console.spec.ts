@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { nodeExpress } from '../src/lib/cheatsheets/express'
+import { python } from '../src/lib/cheatsheets/python'
 import { assertStudyDisclosures } from './study-disclosures'
 import { dsaPatterns } from '../src/lib/cheatsheets/dsa-patterns'
 import { auditPages } from './audit-pages'
@@ -71,15 +72,18 @@ test('@dev no React development warnings on any audited page, which the producti
     await page.goto(path, { waitUntil: 'networkidle' })
     if (
       path.startsWith('/reference/express#') ||
+      path.startsWith('/reference/python#') ||
       path.startsWith('/reference/javascript#') ||
       path.startsWith('/reference/dsa-patterns#')
     ) {
       const { observed } = await forEachPanelState(page, async () => {})
       const sheet = path.startsWith('/reference/express#')
         ? nodeExpress
-        : path.startsWith('/reference/dsa-patterns#')
-          ? dsaPatterns
-          : undefined
+        : path.startsWith('/reference/python#')
+          ? python
+          : path.startsWith('/reference/dsa-patterns#')
+            ? dsaPatterns
+            : undefined
       if (sheet) assertStudyDisclosures(sheet, path.split('#')[1], observed)
     }
     await page.waitForTimeout(250)

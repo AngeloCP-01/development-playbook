@@ -118,7 +118,7 @@ export const programCases: PublishedCase[] = [
     entry: 'cycle_a.py',
     exit: 1,
     stderr:
-      /ImportError: cannot import name 'label' from partially initialized module 'cycle_b'/,
+      /ImportError: cannot import name 'label' from (?:partially initialized module )?'cycle_b'/,
   },
   {
     name: 'environments-and-dependencies',

@@ -5688,7 +5688,7 @@ Call and return boundary
 | label\(raw\) | title names "  River  "; cleaned is "River" | strip returns a new string\. |
 | return / print | RIVER then the original padded title | Returning does not rebind raw in the caller\. |
 
-Change return cleaned\.upper\(\) to print\(cleaned\.upper\(\)\)\. The inner print still displays RIVER, but result becomes None and the outer print displays None\. Indentation defines the body: moving return outside the function is a SyntaxError\. For an exception, read the traceback from the final exception type/message back through the listed calls; it describes the failing execution path, not just the last line of your file\.
+Change return cleaned\.upper\(\) to print\(cleaned\.upper\(\)\)\. The inner print still displays RIVER, but result becomes None and the outer print displays None\. Indentation defines the body: moving return outside the function is a SyntaxError\. For an exception, read the traceback from the final exception type/message back through the listed calls; the listed frames show the failing call path\.
 
 ##### What runs when a function is defined, and what runs when it is called?
 
@@ -6224,7 +6224,7 @@ Hashability makes storage possible; only the domain decides whether the equality
 
 Compare scans, hash lookups and copies with size and key\-cost assumptions\.
 
-Cost depends on the representation and operation, not just the syntax\. In conventional CPython a list stores indexed references: indexing is constant\-time with respect to list length, scanning membership may inspect every element, and slicing k items copies k references\. Dict/set hash tables usually provide expected constant\-time lookup under suitable hashing and bounded key costs; collisions and expensive equality can change that\. These are qualified implementation expectations, not universal language complexity guarantees\.
+Cost depends on the representation and the operation performed\. In conventional CPython a list stores indexed references: indexing is constant\-time with respect to list length, scanning membership may inspect every element, and slicing k items copies k references\. Dict/set hash tables usually provide expected constant\-time lookup under suitable hashing and bounded key costs; collisions and expensive equality can change that\. These are qualified implementation expectations, not universal language complexity guarantees\.
 
 collection\-costs\.py — run with python3 \(CPython 3\.12\+\)
 
@@ -7942,7 +7942,7 @@ from common import name
 label = name.upper()
 ```
 
-A bare pip command can refer to a different interpreter on PATH\. A project\-local json\.py can shadow the standard library even in a venv; isolation is not a sandbox or a cure for module names\. These lessons use only the standard library and install nothing during verification\. Production compatibility depends on the actual Python implementation, patch and build, not just a requirement string\.
+A bare pip command can refer to a different interpreter on PATH\. A project\-local json\.py can shadow the standard library even in a venv; isolation is not a sandbox or a cure for module names\. These lessons use only the standard library and install nothing during verification\. Check compatibility against the actual Python implementation, patch and build\.
 
 ##### What would you record to reproduce a Python example failure?
 
@@ -8157,6 +8157,796 @@ Reject index == len\(values\); otherwise compare values\[index\] to target\. For
 Why it works
 
 An insertion point is not proof of presence\. Empty and after\-end cases catch unchecked indexing\.
+
+### Asyncio
+
+Prerequisites: Functions and scope \(\#functions\-and\-scope\), Iteration and generators \(\#iteration\-and\-generators\), Errors and cleanup \(\#errors\-and\-cleanup\)\. Start with coroutine creation, then task ownership and bounded admission\. These programs coordinate with events rather than asserting a particular timer speed or scheduler race\.
+
+#### Distinguish creating, awaiting and scheduling
+
+Calling async def creates a coroutine object; task creation schedules owned work\.
+
+async def defines a coroutine function\. Calling it returns a coroutine object whose body has not run\. await runs or joins awaitable work and may suspend the current coroutine; it does not necessarily suspend when the result is already available\. A Task schedules a coroutine on the running event loop\. The loop runs cooperative tasks on its thread, so a blocking call or CPU loop inside async code blocks that thread\. This Event starts unset, making gate\.wait an actual suspension boundary until the owner sets it\.
+
+coroutine\-and\-task\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+import asyncio
+
+async def report(gate, started, events):
+    events.append("start")
+    started.set()
+    await gate.wait()
+    events.append("finish")
+    return 2
+
+async def main():
+    gate, started = asyncio.Event(), asyncio.Event()
+    events = []
+    coroutine = report(gate, started, events)
+    print("created", events)
+    async with asyncio.TaskGroup() as group:
+        task = group.create_task(coroutine)
+        await started.wait()
+        print("waiting", events, task.done())
+        gate.set()
+    print("joined", events, task.result())
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+Coroutine and task lifecycle
+
+| Owner action | Coroutine / task state | Observation |
+| --- | --- | --- |
+| Call report | Coroutine object created; body untouched | created \[\] |
+| create\_task then wait started | Task starts, sets started, waits on unset gate | waiting \[start\] False |
+| Set gate | Task becomes eligible to resume | Owner does not promise instant execution\. |
+| Leave TaskGroup | Task finished and joined | joined \[start,finish\] 2 |
+
+Sequentially await report and only then set gate would deadlock: nobody releases the gate\. Starting work without retaining/owning its task risks unobserved failures and abandoned work\. time\.sleep blocks the loop; await asyncio\.sleep can suspend\. await on an already\-set Event may return immediately, so count explicit dependencies rather than claiming every await yields fairly\.
+
+##### Does an async call run concurrently with its caller?
+
+The call alone creates a coroutine object\. Awaiting it in the current task runs it as part of that task’s control flow; scheduling it as an owned Task allows overlap at suspension points\. Neither operation moves CPU\-bound Python work to another core or thread automatically\.
+
+##### Practice
+
+###### Predict the missing start
+
+A function calls report\(\.\.\.\) but never awaits or schedules the result\. Why is events empty? How do you overlap two independent operations and still own their failures?
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Predict the missing start
+
+The body has not executed\. Create both tasks within TaskGroup and leave the group only after joining them; use results after successful exit\.
+
+Why it works
+
+A bare coroutine is a description of pending execution\. Ownership must include how work starts, how it is joined and what happens on failure\.
+
+#### Join cancellation before leaving the owner
+
+TaskGroup cancels siblings on failure and waits for their cleanup before raising an ExceptionGroup\.
+
+TaskGroup is a structured owner of child tasks: its exit waits for them\. When an ordinary child exception occurs, the group requests cancellation of remaining siblings, joins them and raises an ExceptionGroup containing failures\. except\* ValueError handles matching leaves without discarding unrelated errors\. CancelledError inherits BaseException; normally allow it to propagate after finally cleanup\. Cancellation is delivered at a suspension opportunity; it is a request, not rollback of completed side effects or arbitrary preemption\.
+
+taskgroups\-and\-cancellation\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+import asyncio
+
+async def sibling(started, events):
+    try:
+        events.append("sibling:start")
+        started.set()
+        await asyncio.Event().wait()
+    finally:
+        events.append("sibling:closed")
+
+async def fail(started):
+    await started.wait()
+    raise ValueError("bad record")
+
+async def main():
+    events = []
+    started = asyncio.Event()
+    try:
+        async with asyncio.TaskGroup() as group:
+            child = group.create_task(sibling(started, events))
+            group.create_task(fail(started))
+    except* ValueError:
+        events.append("owner:caught")
+    print(events)
+    print(child.done(), child.cancelled())
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+TaskGroup owns sibling cleanup
+
+| Dependency | State | What the owner can conclude |
+| --- | --- | --- |
+| started event | Sibling has entered its try and is waiting | Failure cannot race ahead of resource setup\. |
+| ValueError child | Group requests sibling cancellation | Cancellation still needs delivery and cleanup\. |
+| Group exit / handler | Sibling finally has run before the caller handles the group error\. | No owned child remains running\. |
+| External side effect | Already\-written bytes may remain | Cancellation does not imply rollback\. |
+
+gather’s default first\-error propagation does not provide the same sibling\-cancellation/join contract\. Calling task\.cancel\(\) alone does not establish task completion; await the task and handle its CancelledError at the owner\. A child that swallows cancellation can delay or defeat structured shutdown\. Cleanup should release owned resources, then normally re\-raise cancellation\.
+
+##### What does TaskGroup guarantee when one child fails?
+
+It requests cancellation of siblings, waits for their termination and raises grouped failures after cleanup\. The guarantee depends on cooperative children that reach cancellation points and do not suppress shutdown indefinitely\. It does not reverse remote operations or stop an already\-running worker thread\.
+
+##### Practice
+
+###### Cancel and join a held child
+
+Implement cancel\_join\(child\) so it requests cancellation and waits until the child’s finally ran before returning\. Catch only the cancellation the owner expects; demonstrate with a child held on an Event\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Incomplete interface — implement the TODO
+
+```
+async def cancel_join(child):
+    # TODO: request, join, handle expected child cancellation
+    pass
+```
+
+Solution: Cancel and join a held child
+
+Request cancellation and await the task\. Handle expected child cancellation at its owner while propagating cancellation of the owner itself\.
+
+taskgroups\-and\-cancellation\-repair\.py — executable reference solution
+
+```
+import asyncio
+
+async def cancel_join(child):
+    child.cancel()
+    try:
+        await child
+    except asyncio.CancelledError:
+        # This small owner is not itself being cancelled.
+        if asyncio.current_task().cancelling():
+            raise
+
+async def demo():
+    started = asyncio.Event()
+    events = []
+    async def held():
+        try:
+            started.set()
+            await asyncio.Event().wait()
+        finally:
+            events.append("closed")
+    child = asyncio.create_task(held())
+    await started.wait()
+    await cancel_join(child)
+    assert child.done() and child.cancelled()
+    assert events == ["closed"]
+
+if __name__ == "__main__":
+    asyncio.run(demo())
+```
+
+Why it works
+
+The started handshake establishes that the child entered its cleanup scope\. done/cancelled and the finally event prove joining, unlike checking cancel\(\)’s return alone\.
+
+Follow-up
+
+If the owner is also cancelled during the join, which scope will continue owning cleanup?
+
+#### Bound admission with fixed workers and a queue
+
+A semaphore around unlimited created tasks does not bound task allocation\.
+
+A fixed worker pool limits scheduled worker tasks\. A bounded asyncio\.Queue limits queued items and makes the producer await capacity: backpressure\. put suspends only when full; get suspends only when empty\. The producer below enumerates lazily, so at most workers \+ capacity items are claimed/queued plus one producer\-held item waiting to put\. Results retain all outputs in input order, so total result memory still grows with input size\. work is an async callable; every child belongs to the TaskGroup\.
+
+bounded\-async\-work\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+import asyncio
+
+async def map_bounded(values, work, workers=2, capacity=2, state=None):
+    if type(workers) is not int or workers < 1:
+        raise ValueError("positive workers required")
+    if type(capacity) is not int or capacity < 1:
+        raise ValueError("positive capacity required")
+    queue = asyncio.Queue(maxsize=capacity)
+    results = {}
+    state = {} if state is None else state
+    state.update(workers=0, max_queued=0)
+    async def produce():
+        for index, value in enumerate(values):
+            await queue.put((index, value))
+            state["max_queued"] = max(state["max_queued"], queue.qsize())
+        for _ in range(workers):
+            await queue.put(None)
+    async def consume():
+        state["workers"] += 1
+        while True:
+            item = await queue.get()
+            try:
+                if item is None:
+                    return
+                index, value = item
+                results[index] = await work(value)
+            finally:
+                queue.task_done()
+    async with asyncio.TaskGroup() as group:
+        group.create_task(produce())
+        for _ in range(workers):
+            group.create_task(consume())
+    return [results[i] for i in range(len(results))]
+
+async def double(value):
+    return value * 2
+
+async def main():
+    state = {}
+    print(await map_bounded(range(4), double, state=state))
+    print(state)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+Work capacity versus retained results
+
+| Resource | Bound / owner | Failure behavior |
+| --- | --- | --- |
+| Worker tasks | Exactly workers consumers plus one producer | TaskGroup joins all children\. |
+| Queued inputs | At most capacity; one additional producer\-held item | Full queue suspends producer\. |
+| Active work calls | At most workers | A failed call cancels siblings and producer\. |
+| Results | One stored result per successful input | O\(n\) retained output; not a constant\-memory map\. |
+
+Creating one task per input and guarding only work with a semaphore bounds active work but can allocate millions of waiting tasks\. This design bounds tasks and pending inputs\. To stream output with a strict total\-memory limit, add a bounded output channel and an owner for ordering/backpressure; preserving arbitrary completion reordering may need its own buffer policy\. Per\-call limits are not global limits across processes\.
+
+##### What remains unbounded in this bounded mapper?
+
+The result dictionary/list grows with input count, and each input/result may itself be large\. The fixed task count and queue capacity bound scheduling state and pending input references\. State every resource bound separately, and include failure cancellation and join behavior in the capacity contract\.
+
+##### Practice
+
+###### Change the output memory requirement
+
+A million results cannot fit in memory\. Explain how to change the mapper’s API and which tradeoff preserves input order\. Then predict what happens if work fails while the producer waits on a full queue\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Change the output memory requirement
+
+Use a bounded output channel consumed incrementally, with an explicit ordering/reorder\-buffer policy\. TaskGroup cancellation interrupts the blocked producer and joins workers on failure\.
+
+Why it works
+
+A bounded input queue alone does not bound stored output\. Strict order can require buffering slow earlier items; bound that window or accept completion\-order output\.
+
+### Threads and processes
+
+Prerequisites: Asyncio \(\#asyncio\), Errors and cleanup \(\#errors\-and\-cleanup\), Modules and environments \(\#modules\-and\-environments\)\. Choose work placement by waiting, shared state and CPU needs\. The baseline is conventional GIL\-enabled CPython; build and platform qualifications are part of every choice\.
+
+#### Own a blocking thread beyond its async wrapper
+
+to\_thread can move blocking I/O off the loop; cancelling its await does not stop running thread code\.
+
+Concurrency means operations overlap in lifetime; parallelism means execution at the same time\. Async tasks cooperate on a loop thread, OS threads share process memory, and processes have separate memory\. Conventional GIL\-enabled CPython limits simultaneous Python bytecode execution within one interpreter, though native extensions/I/O can release the GIL\. Optional free\-threaded CPython builds began in 3\.13; build capability, actual GIL state and extension compatibility differ\. Neither mode prevents compound\-state races\. Use threads for suitable blocking I/O and processes for measured pure\-Python CPU workloads when startup/serialization costs are justified\.
+
+concurrency\-and\-parallelism\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+import asyncio
+import threading
+
+def blocking(started, stop, finished):
+    try:
+        started.set()
+        stop.wait()
+    finally:
+        finished.set()
+
+async def main():
+    started, stop, finished = (threading.Event() for _ in range(3))
+    task = asyncio.create_task(asyncio.to_thread(blocking, started, stop, finished))
+    try:
+        await asyncio.to_thread(started.wait)
+        task.cancel()
+        try:
+            await task
+        except asyncio.CancelledError:
+            print("wrapper cancelled", finished.is_set())
+    finally:
+        stop.set()
+        await asyncio.to_thread(finished.wait)
+    print("thread stopped", finished.is_set())
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+Wrapper state and thread state differ
+
+| Owner action | Async wrapper | Running thread |
+| --- | --- | --- |
+| started handshake | Task awaiting thread result | Inside blocking; waiting on stop\. |
+| task\.cancel and await | CancelledError observed | Still waiting; finished is False\. |
+| stop\.set in finally | Owner requests cooperative thread stop | Thread exits and sets finished\. |
+| finished wait / runner exit | Owner has observed completion | No reliance on cancelling the wrapper to kill a thread\. |
+
+A running thread Future cannot generally be forcibly cancelled safely\. A cooperative stop signal must reach the thread’s own blocking API or loop, with bounded waits where needed\. to\_thread is not a general speedup for pure\-Python CPU work on a conventional GIL build\. A process can isolate CPU work, but crossing its boundary needs serialization, startup and explicit failure ownership\.
+
+##### Why can a cancelled request still have a running thread?
+
+Cancellation changed the asyncio task waiting for the result\. It did not preempt code already executing in an OS thread\. Keep a thread\-side stop/deadline contract and observe completion\. If the external API cannot stop, account for that work in capacity and shutdown instead of reporting that cancellation terminated it\.
+
+##### Practice
+
+###### Choose placement after the workload changes
+
+Choose between async tasks, threads and processes for many async socket waits, a legacy blocking file API and a CPU\-heavy pure\-Python transform\. What changes under a free\-threaded build?
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Choose placement after the workload changes
+
+Use bounded async tasks for native async waits, bounded threads for appropriate blocking I/O, and consider bounded processes for CPU work on conventional CPython\. Free\-threaded builds may permit Python thread parallelism but need actual build/GIL/extension verification and synchronization\.
+
+Why it works
+
+Choose from the work and ownership contracts, then measure realistic costs\. A tiny example does not establish throughput or universal CPU speedup\.
+
+#### Reproduce a lost update before locking it
+
+A compound read/modify/write needs one synchronization boundary across the invariant\.
+
+Threads share objects, but an application invariant can span several steps\. The GIL is not a transaction around arbitrary Python code\. A Barrier lets two workers both read the same old value before either writes, exposing a lost update deterministically\. A Lock defines mutual exclusion around the entire read/modify/write operation\. Every participant that changes the invariant must use the same lock\. Avoid waiting on another worker while holding a lock it also needs\.
+
+shared\-state\-and\-locks\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+from threading import Barrier, Lock, Thread
+
+count = 0
+barrier = Barrier(2)
+def lost():
+    global count
+    old = count
+    barrier.wait()
+    count = old + 1
+threads = [Thread(target=lost) for _ in range(2)]
+for thread in threads:
+    thread.start()
+for thread in threads:
+    thread.join()
+print("lost", count)
+
+count = 0
+lock = Lock()
+def safe():
+    global count
+    with lock:
+        count += 1
+threads = [Thread(target=safe) for _ in range(2)]
+for thread in threads:
+    thread.start()
+for thread in threads:
+    thread.join()
+print("locked", count)
+```
+
+One update can overwrite another
+
+| Phase | Worker state | Shared count |
+| --- | --- | --- |
+| Both reads before barrier release | Both old values are 0 | 0 |
+| Both writes after release | Each stores old \+ 1 = 1 | 1; one update lost\. |
+| Locked repair first worker | Exclusive read/modify/write | 0 → 1 |
+| Locked repair second worker | Reads after first completed update | 1 → 2 |
+
+Locking only the write leaves the stale reads outside the boundary and does not repair this invariant\. Putting the two\-worker barrier inside the same lock deadlocks because the second worker cannot arrive\. The locked program’s correctness does not require a particular worker order\. Prefer ownership/message passing when it makes shared mutable state unnecessary; locks are local to their process\.
+
+##### Why is count \+= 1 not a sufficient thread\-safety argument?
+
+The application needs an atomic compound update under all supported execution paths and builds\. A GIL or one observed bytecode sequence is not that contract\. Protect the whole invariant with a shared lock, or move updates to one owner\. The deterministic stale\-read witness demonstrates the actual failure without scheduler luck\.
+
+##### Practice
+
+###### Repair a shared counter as one invariant
+
+Implement Counter\.add\(amount\) with a shared lock and a snapshot method using the same lock\. Run two threads with 100 additions each and include a negative amount\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Incomplete interface — implement the TODO
+
+```
+class Counter:
+    # TODO: lock the compound update and observation
+    pass
+```
+
+Solution: Repair a shared counter as one invariant
+
+One object owns the value and the lock; all access uses that boundary\.
+
+shared\-state\-and\-locks\-repair\.py — executable reference solution
+
+```
+from threading import Lock, Thread
+
+class Counter:
+    def __init__(self):
+        self._value = 0
+        self._lock = Lock()
+    def add(self, amount):
+        with self._lock:
+            self._value += amount
+    def snapshot(self):
+        with self._lock:
+            return self._value
+
+def demo():
+    counter = Counter()
+    def add_many():
+        for _ in range(100):
+            counter.add(1)
+    threads = [Thread(target=add_many) for _ in range(2)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    counter.add(-1)
+    assert counter.snapshot() == 199
+
+if __name__ == "__main__":
+    demo()
+```
+
+Why it works
+
+Joining establishes completion before the final observation\. The separately displayed barrier witness explains the lost\-update mechanism; repeated successful unsynchronized increments alone would not prove safety\.
+
+#### Run importable work through an explicit spawn boundary
+
+Processes serialize input/results and need guarded startup plus joined failure cleanup\.
+
+A spawned process starts a fresh interpreter and imports definitions\. Worker functions must be importable at module top level; startup belongs behind a main guard\. ProcessPoolExecutor uses serialized arguments/results and has bounded worker processes\. Its context manager waits for running work on exit; an observed failed Future does not imply other jobs were cancelled\. Explicit get\_context\("spawn"\) avoids relying on platform/version defaults, which changed in Python 3\.14\. Objects are not shared just because their parent binding has the same name in another process\.
+
+process\_main\.py — beside process\_work\.py; run python3 process\_main\.py
+
+```
+from concurrent.futures import ProcessPoolExecutor
+from multiprocessing import get_context, active_children
+from process_work import transform
+
+def main():
+    source = [2, 3]
+    with ProcessPoolExecutor(max_workers=2, mp_context=get_context("spawn")) as pool:
+        good = pool.submit(transform, source)
+        bad = pool.submit(transform, [-1])
+        print("result", good.result())
+        try:
+            bad.result()
+        except ValueError as error:
+            print("failure", error)
+    print("parent", source)
+    print("children", len(active_children()))
+
+if __name__ == "__main__":
+    main()
+```
+
+Parent state, child state and failure
+
+| Boundary | Owner / state | Result |
+| --- | --- | --- |
+| submit source | Child receives serialized \[2,3\] | Child append does not mutate parent list\. |
+| good\.result | Waits for worker result | 29 |
+| bad\.result | Raises worker ValueError at caller | failure negative input |
+| Executor exit | Waits for owned processes to finish | Parent \[2,3\]; no active child in this isolated program\. |
+
+process\_work\.py — complete importable worker
+
+```
+def transform(values):
+    if any(value < 0 for value in values):
+        raise ValueError("negative input")
+    values.append(4)
+    return sum(value * value for value in values)
+```
+
+A lambda or nested closure may not be picklable for spawn; a REPL definition can also lack an importable module context\. This is why verification writes real files\. Separate memory avoids one class of shared\-state race but adds transfer/startup costs and external side effects still need idempotency or rollback policy\. A failed Future does not kill a running peer; define deadlines and recovery for work that may hang\.
+
+##### Why explicitly select spawn instead of relying on the default?
+
+Defaults differ by platform and changed in 3\.14\. Spawn gives the example a clear import/startup model and tests portable entry discipline\. It also makes costs visible: data serialization, fresh interpreter startup, import\-safe definitions and separate memory\. Measure enough realistic work to justify that boundary\.
+
+##### Practice
+
+###### Change a CPU transform to bounded processes
+
+A pure\-Python transform now takes substantial CPU time\. State what must change from a nested in\-request function, how to bound capacity, and what happens to a peer when one Future fails\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Change a CPU transform to bounded processes
+
+Move the worker to an importable top\-level module, guard entry, use explicit spawn with a fixed worker count and bound queued admission for a large input\. Join executor lifecycle; one failed Future does not automatically stop peers\.
+
+Why it works
+
+max\_workers bounds processes, not an arbitrary number of submitted Futures\. For large streams, keep a bounded submission window and account for serialized input and output memory\.
+
+### Testing and diagnosis
+
+Prerequisites: Files and data \(\#files\-and\-data\), Standard library \(\#standard\-library\), Asyncio \(\#asyncio\) and Threads and processes \(\#threads\-and\-processes\)\. Test observable boundaries, then implement the complete local JSON\-lines report\. The capstone deliberately uses no framework, network or hidden helper\.
+
+#### Write tests that distinguish the failure paths
+
+Arrange fresh input, exercise the real function and assert values plus intended exceptions\.
+
+unittest discovers TestCase methods whose names start with test\. assertEqual compares an observed result with an independently chosen expectation; assertRaises establishes an intended failure type\. A fresh fixture prevents accidental state sharing between tests\. addCleanup and context managers own fixture resources even when assertions fail\. Prefer running real small parsers and local files to mocking their core behavior\. For async code, IsolatedAsyncioTestCase provides an isolated loop for async test methods; events make ordering assertions deterministic\.
+
+unit\-and\-boundary\-tests\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+import unittest
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
+def count(text):
+    value = int(text)
+    if value < 0:
+        raise ValueError("negative count")
+    return value
+
+class CountTests(unittest.TestCase):
+    def test_zero(self):
+        self.assertEqual(count("0"), 0)
+    def test_failures(self):
+        for bad in ["", "bad", "-1"]:
+            with self.subTest(bad=bad):
+                with self.assertRaises(ValueError):
+                    count(bad)
+    def test_file(self):
+        temporary = TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        path = Path(temporary.name) / "count.txt"
+        path.write_text("2", encoding="utf-8")
+        self.assertEqual(count(path.read_text(encoding="utf-8")), 2)
+
+if __name__ == "__main__":
+    unittest.main()
+```
+
+What each test can catch
+
+| Case | Independent expectation | Break it detects |
+| --- | --- | --- |
+| Zero | 0, not a fallback | Falsey\-value replacement\. |
+| Blank / bad / negative | ValueError | Missing conversion or domain rejection\. |
+| Temporary local file | 2 after decoding | Wrong fixture/path/read boundary\. |
+| Cleanup registration | Temporary directory removed even on assertion failure | Fixture lifetime independent of test success\. |
+
+A test that computes expected output by calling the same production helper can agree with its own bug\. Checking only “did not throw” misses wrong results; checking only any nonzero exit misses the reason for failure\. Add cases around the contract: empty inputs, duplicates, nested sharing, late iterator failure and cancellation cleanup\. Use a targeted mutation when uncertain whether an oracle can catch its intended defect\.
+
+##### What makes a regression test meaningful?
+
+It distinguishes a real broken behavior from the intended result, using a controlled fixture and independently chosen expectation\. Observe it fail for the defect, then pass after the repair\. For cleanup or concurrency, assert completion/state at defined ownership boundaries instead of relying on elapsed speed or scheduler order\.
+
+##### Practice
+
+###### Find a weak test’s blind spot
+
+A test only asserts summarize\(path\) returns a dict\. Name a plausible wrong implementation that passes, and replace that check with normal, empty, malformed and duplicate fixtures\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Find a weak test’s blind spot
+
+Returning \{\} for every input passes\. Assert exact aggregate counts for normal/duplicate data, \{\} only for empty input, and the specified error with line context for malformed records\.
+
+Why it works
+
+The result type is a useful invariant but cannot prove computation or rejection behavior\. The capstone’s actual\-code checks exercise those paths\.
+
+#### Diagnose the mechanism before optimizing
+
+Use traceback state and qualified measurements to separate wrong results from expensive work\.
+
+A traceback identifies the active call chain at failure; inspect the final exception and the inputs at the first boundary you own\. breakpoint\(\) enters a debugger in an interactive run, while logging can record bounded diagnostic context without pausing\. timeit repeats a small operation for timing; cProfile attributes calls and time\. Instrumentation changes cost and tiny inputs do not establish production throughput\. Complexity analysis describes growth under assumptions; measurements describe one workload/runtime/build\.
+
+debug\-and\-measure\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+import cProfile
+import pstats
+from timeit import repeat
+
+def aggregate(values):
+    total = 0
+    for value in values:
+        total += value
+    return total
+
+values = list(range(100))
+assert aggregate(values) == 4950
+measurements = repeat(lambda: aggregate(values), number=10, repeat=3)
+profiler = cProfile.Profile()
+profiler.runcall(aggregate, values)
+stats = pstats.Stats(profiler)
+print("measured", len(measurements), all(t >= 0 for t in measurements))
+print("profiled", stats.total_calls > 0)
+```
+
+Correctness evidence and cost evidence
+
+| Step | Evidence | Limit |
+| --- | --- | --- |
+| Hand\-derived sum | 4950 | Establishes this result, not scaling\. |
+| Three timing samples | Elapsed costs for ten calls per sample | No fixed speed claim or pass threshold\. |
+| Profile | Observed call attribution | Profiler overhead affects time\. |
+| Changed workload | Requires new representative measurement | Do not extrapolate tiny timing to all inputs\. |
+
+Optimizing an invalid parser can make wrong results faster\. First reproduce a failing input and protect its behavior; then measure the cost under realistic sizes\. Avoid logging full untrusted records or sensitive data when a line number and error kind suffice\. If a measured hotspot is blocking a loop thread, the repair might be capacity or work placement rather than a micro\-optimization\.
+
+##### How would you investigate a slow report without guessing?
+
+Establish a correct reproducible input and runtime, separate I/O waiting from CPU and retained\-memory costs, then profile representative workloads\. Compare alternatives with construction and cleanup included\. Report sample sizes/build/input and limits; do not treat one fast local run as a universal performance guarantee\.
+
+##### Practice
+
+###### Change one variable in a performance investigation
+
+A report grows from 100 to a million records and slows sharply\. Which inputs and measurements distinguish repeated rescanning, distinct\-key growth and slow I/O?
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Change one variable in a performance investigation
+
+Vary total records and distinct\-key count separately, profile call counts/CPU, observe retained data and measure I/O independently\. Include parsing and index construction in the workload when the real request pays for them\.
+
+Why it works
+
+The three hypotheses predict different cost changes\. A controlled comparison narrows the mechanism before choosing an index, streaming rewrite or worker model\.
+
+### Report capstone
+
+Prerequisites: Files and data \(\#files\-and\-data\), Standard library \(\#standard\-library\), Testing and diagnosis \(\#testing\-and\-capstone\)\. Use the complete local files below to implement and test a JSON\-lines report, then explain its memory and concurrency limits\.
+
+#### Build and defend a validated streaming report
+
+Own decoding, validation, duplicate aggregation, deterministic display and retained\-memory limits\.
+
+The input is UTF\-8 JSON lines: each nonblank line contains an object with title and count, using the earlier Files and data contract\. Blank lines are ignored; duplicate normalized titles add counts, including zero\. The file owner streams lines limited to 1024 decoded characters including the newline, rejecting a longer line before parsing it\. The validator below is a complete companion file\. A Counter retains one total per distinct normalized title; sorted display makes output deterministic\. Any invalid record fails the report with a line number and chained cause; no partial result is returned\.
+
+report\.py — beside report\_record\.py; run python3 report\.py books\.jsonl
+
+```
+import json
+import sys
+from collections import Counter
+from pathlib import Path
+from report_record import validate
+
+def summarize(path):
+    totals = Counter()
+    with path.open(encoding="utf-8") as handle:
+        line_number = 0
+        while True:
+            line = handle.readline(1025)
+            if not line:
+                return dict(totals)
+            line_number += 1
+            if len(line) > 1024:
+                raise ValueError(f"line {line_number}: too long")
+            if not line.strip():
+                continue
+            try:
+                title, count = validate(json.loads(line))
+            except ValueError as error:
+                raise ValueError(f"line {line_number}: invalid record") from error
+            totals[title] += count
+
+def display(totals):
+    return "\n".join(f"{title}: {totals[title]}" for title in sorted(totals))
+
+if __name__ == "__main__":
+    output = display(summarize(Path(sys.argv[1])))
+    if output:
+        print(output)
+```
+
+Report state across input boundaries
+
+| Input / phase | Intermediate totals | Outcome |
+| --- | --- | --- |
+| River:2 then Hill:0 records | \{river:2, hill:0\} | Zero is accepted and retained\. |
+| river:3 duplicate | \{river:5, hill:0\} | Normalized identity aggregates counts\. |
+| EOF | Owner exits with | Display: hill: 0 then river: 5\. |
+| Malformed third record | Earlier internal totals discarded | Line 3 error; with closes; no result returned\. |
+| Empty / blank file | \{\} | Empty display; no fabricated record\. |
+
+report\_record\.py — complete boundary validator
+
+```
+def validate(value):
+    if not isinstance(value, dict):
+        raise ValueError("object required")
+    title, count = value.get("title"), value.get("count")
+    if not isinstance(title, str) or not title.strip():
+        raise ValueError("title required")
+    if type(count) is not int or count < 0:
+        raise ValueError("count required")
+    return title.strip().casefold(), count
+```
+
+Streaming avoids retaining all source records but the number of distinct titles remains unbounded\. If distinct\-key memory must be fixed, use a bounded external aggregation strategy or reject beyond an explicit capacity; a lazy generator alone cannot solve it\. If the work becomes CPU\-heavy, consider bounded process submission with importable workers and an owner for errors\. File output would need a separate commit/replace policy to provide all\-or\-nothing publication; this function only returns on success\.
+
+##### How would you defend this report under changed input, memory and concurrency requirements?
+
+Start with the boundary contracts: UTF\-8, line size, record validation, normalized duplicate identity, failure policy and deterministic output\. Test normal/empty/invalid/duplicate input and closure\. Memory grows with distinct titles; change that design for a strict memory bound\. Concurrency is useful only for a measured workload and must include admission, ordering, cancellation and resource ownership\.
+
+##### Practice
+
+###### Implement and test the report
+
+Reimplement summarize\(path\) with the visible validator: accept blank/empty input and zero, aggregate duplicate normalized titles, reject oversized or malformed/domain\-invalid lines with line context, and close on failure\. Use display for deterministic output\. Then change the requirement to fixed memory\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Incomplete interface — implement the TODO
+
+```
+def summarize(path):
+    # TODO: own the file, validate each bounded line, aggregate duplicates
+    pass
+```
+
+Solution: Implement and test the report
+
+One with\-owned traversal performs explicit decoding/validation and aggregation, returning only after EOF\. Counts grow only by validated nonnegative integers\.
+
+interview\-capstone\-repair\.py — executable reference solution
+
+```
+import json
+from collections import Counter
+from report_record import validate
+
+def summarize(path):
+    totals = Counter()
+    with path.open(encoding="utf-8") as handle:
+        number = 0
+        while True:
+            line = handle.readline(1025)
+            if not line:
+                return dict(totals)
+            number += 1
+            if len(line) > 1024:
+                raise ValueError(f"line {number}: too long")
+            if not line.strip():
+                continue
+            try:
+                title, count = validate(json.loads(line))
+            except ValueError as error:
+                raise ValueError(f"line {number}: invalid record") from error
+            totals[title] += count
+```
+
+Why it works
+
+Tests must observe exact aggregates, errors and cleanup for the actual solution\. The retained map is O\(distinct titles\); fixed\-memory acceptance requires changing storage or capacity, not merely replacing the loop with a generator\.
+
+Follow-up
+
+If two passes must observe the same input, how will you obtain a stable snapshot or detect that the source changed?
 
 Sources:
 

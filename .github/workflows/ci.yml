@@ -42,6 +42,33 @@ jobs:
           PLAYBOOK_PYTHON: ${{ steps.python.outputs.python-path }}
       - run: pnpm build
 
+  python-examples:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.12', '3.15']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: web/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: web/.nvmrc
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - uses: actions/setup-python@v7
+        id: python
+        with:
+          python-version: ${{ matrix.python }}
+          check-latest: true
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec vitest run src/lib/cheatsheets/python-published-checks.test.ts src/lib/cheatsheets/python-published.test.ts
+        env:
+          PLAYBOOK_PYTHON: ${{ steps.python.outputs.python-path }}
+
   audit:
     needs: verify
     runs-on: ubuntu-latest

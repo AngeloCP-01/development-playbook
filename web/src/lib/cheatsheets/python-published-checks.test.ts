@@ -1,4 +1,11 @@
-import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import {
+  chmodSync,
+  existsSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { expect, test } from 'vitest'
@@ -10,10 +17,18 @@ import {
   assertPythonCoverage,
 } from './python-published-checks'
 
+test('captures UTF-8 split across separate pipe writes without replacement characters', async () => {
+  const result = await run(
+    'import os, time\nos.write(1, b"\\xc3")\ntime.sleep(0.1)\nos.write(1, b"\\xa9")',
+  )
+  expect(result.stdout).toBe('é')
+})
+
 function sheet(code = 'print("ok")'): Cheatsheet {
   return {
     slug: 'fixture',
     title: 'Fixture',
+    blurb: 'Synthetic checker fixture.',
     group: 'Languages',
     sections: [
       {
@@ -76,6 +91,39 @@ test('missing or incompatible runtime fails actionably', async () => {
     /PLAYBOOK_PYTHON/,
   )
   await expect(probePython('/usr/bin/true')).rejects.toThrow(/CPython/)
+})
+test.each([
+  { version: '3.11.9', implementation: 'CPython', gil: true },
+  { version: '3.12.16', implementation: 'PyPy', gil: true },
+  { version: '3.15.2', implementation: 'CPython', gil: false },
+])('rejects unsupported runtime metadata %j', async (metadata) => {
+  const dir = mkdtempSync(join(tmpdir(), 'python-probe-'))
+  const executable = join(dir, 'synthetic-runtime')
+  // Real child process, synthetic probe metadata: exercises our acceptance policy.
+  writeFileSync(
+    executable,
+    "#!/bin/sh\nprintf '%s' '" + JSON.stringify(metadata) + "'\n",
+  )
+  chmodSync(executable, 0o700)
+  try {
+    await expect(probePython(executable)).rejects.toThrow(/PLAYBOOK_PYTHON/)
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+test('ignores inherited PYTHONHOME and PYTHONPATH while preserving explicit runtime selection', async () => {
+  const oldHome = process.env.PYTHONHOME,
+    oldPath = process.env.PYTHONPATH
+  process.env.PYTHONHOME = '/no/such/home'
+  process.env.PYTHONPATH = '/no/such/module/path'
+  try {
+    expect((await run()).stdout).toBe('ok\n')
+  } finally {
+    if (oldHome === undefined) delete process.env.PYTHONHOME
+    else process.env.PYTHONHOME = oldHome
+    if (oldPath === undefined) delete process.env.PYTHONPATH
+    else process.env.PYTHONPATH = oldPath
+  }
 })
 test.each([
   { entry: 'missing.py' },

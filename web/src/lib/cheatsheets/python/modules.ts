@@ -196,7 +196,7 @@ export const modules = family(
         ],
       },
       contrast:
-        'A bare pip command can refer to a different interpreter on PATH. A project-local json.py can shadow the standard library even in a venv; isolation is not a sandbox or a cure for module names. These lessons use only the standard library and install nothing during verification. Production compatibility depends on the actual Python implementation, patch and build, not just a requirement string.',
+        'A bare pip command can refer to a different interpreter on PATH. A project-local json.py can shadow the standard library even in a venv; isolation is not a sandbox or a cure for module names. These lessons use only the standard library and install nothing during verification. Check compatibility against the actual Python implementation, patch and build.',
       question: 'What would you record to reproduce a Python example failure?',
       answer:
         'The exact interpreter path, version/build/platform, invocation and working directory, input fixture, dependency resolution and full exception. A venv identifies installation context but is not a portable deployment artifact. Recreate it from declared and resolved requirements with the supported interpreter.',

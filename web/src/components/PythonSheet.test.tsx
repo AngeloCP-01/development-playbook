@@ -67,3 +67,24 @@ test('registered Python lesson shows the shared child trace and a local repair t
     screen.getByRole('button', { name }).getAttribute('aria-expanded'),
   ).toBe('false')
 })
+
+test('async ownership trace distinguishes a pending sibling from joined cleanup', () => {
+  window.history.replaceState(null, '', '/reference/python#asyncio')
+  render(<CheatsheetView sheet={cheatsheetBySlug('python')!} />)
+  fireEvent.click(
+    screen
+      .getByText('Join cancellation before leaving the owner')
+      .closest('button')!,
+  )
+  const trace = within(
+    screen.getByRole('table', { name: 'TaskGroup owns sibling cleanup' }),
+  )
+  expect(
+    trace.getByRole('cell', {
+      name: 'Sibling finally has run before the caller handles the group error.',
+    }),
+  ).toBeTruthy()
+  expect(
+    screen.getByText(/Cancellation is delivered at a suspension opportunity/),
+  ).toBeTruthy()
+})

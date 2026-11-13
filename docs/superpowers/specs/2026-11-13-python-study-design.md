@@ -101,6 +101,11 @@ solutions closed, reaches 2275.2px for the longest single open names/objects top
 and 2759.7px for functions/scope. Both fit 3072px; no split required here.
 Iteration, errors/cleanup and files/data respectively reach 2182.5px, 2356.9px
 and 2503.7px under the same conditions. No split required for those families.
+Asyncio reaches 2797.4px and threads/processes 2609.0px. The combined capstone
+panel reached 3174.2px, above 3072px. Implementation splits its existing testing
+topics under `testing-and-capstone` (Testing and diagnosis) and moves the intact
+`interview-capstone` topic to `report-capstone`. Final composition is **15 panels /
+45 topics / 45 activities**, preserving all teaching and the existing topic IDs.
 
 | Panel hash | Topic IDs | Required teaching and contrast |
 | --- | --- | --- |

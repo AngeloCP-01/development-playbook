@@ -10,6 +10,9 @@ import { errors } from './python/errors'
 import { files } from './python/files'
 import { modules } from './python/modules'
 import { stdlib } from './python/stdlib'
+import { async } from './python/async'
+import { concurrency } from './python/concurrency'
+import { testing } from './python/testing'
 const families = [
   runtime,
   objects,
@@ -22,6 +25,9 @@ const families = [
   files,
   modules,
   stdlib,
+  async,
+  concurrency,
+  testing,
 ]
 export const python: Cheatsheet = {
   slug: 'python',

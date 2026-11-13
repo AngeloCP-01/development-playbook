@@ -91,9 +91,13 @@ async function execute(executable: string, args: string[], cwd?: string) {
     stdio: ['ignore', 'pipe', 'pipe'],
     env: { ...process.env },
   })
-  let stdout = '',
-    stderr = '',
-    bytes = 0
+  const stdout: Buffer[] = [],
+    stderr: Buffer[] = []
+  const closed = new Promise<void>((resolve) =>
+    child.once('close', () => resolve()),
+  )
+  let bytes = 0
+  let status: number | null = null
   let failure: Error | undefined
   let timer: ReturnType<typeof setTimeout> | undefined
   const signal = (kind: NodeJS.Signals) => {
@@ -105,7 +109,7 @@ async function execute(executable: string, args: string[], cwd?: string) {
     }
   }
   try {
-    const status = await new Promise<number | null>((resolve, reject) => {
+    status = await new Promise<number | null>((resolve, reject) => {
       const stop = (error: Error) => {
         if (!failure) {
           failure = error
@@ -127,17 +131,16 @@ async function execute(executable: string, args: string[], cwd?: string) {
       child.stdout.on('data', (chunk: Buffer) => {
         bytes += chunk.length
         if (bytes > 1024 * 1024) stop(new Error('Python output exceeds 1 MiB'))
-        else stdout += chunk.toString()
+        else stdout.push(chunk)
       })
       child.stderr.on('data', (chunk: Buffer) => {
         bytes += chunk.length
         if (bytes > 1024 * 1024) stop(new Error('Python output exceeds 1 MiB'))
-        else stderr += chunk.toString()
+        else stderr.push(chunk)
       })
       // exit, not close: a descendant may retain inherited output descriptors.
       child.once('exit', (code) => resolve(code))
     })
-    return { stdout, stderr, status }
   } finally {
     if (timer) clearTimeout(timer)
     signal('SIGTERM')
@@ -154,6 +157,13 @@ async function execute(executable: string, args: string[], cwd?: string) {
     }
     if (child.exitCode === null && child.signalCode === null && child.pid)
       await new Promise<void>((resolve) => child.once('exit', () => resolve()))
+    await closed
+  }
+  if (failure) throw failure
+  return {
+    stdout: Buffer.concat(stdout).toString('utf8'),
+    stderr: Buffer.concat(stderr).toString('utf8'),
+    status,
   }
 }
 export async function probePython(

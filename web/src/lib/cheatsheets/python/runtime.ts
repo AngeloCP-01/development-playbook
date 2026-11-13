@@ -34,7 +34,7 @@ export const runtime = family(
         ],
       },
       contrast:
-        'Change return cleaned.upper() to print(cleaned.upper()). The inner print still displays RIVER, but result becomes None and the outer print displays None. Indentation defines the body: moving return outside the function is a SyntaxError. For an exception, read the traceback from the final exception type/message back through the listed calls; it describes the failing execution path, not just the last line of your file.',
+        'Change return cleaned.upper() to print(cleaned.upper()). The inner print still displays RIVER, but result becomes None and the outer print displays None. Indentation defines the body: moving return outside the function is a SyntaxError. For an exception, read the traceback from the final exception type/message back through the listed calls; the listed frames show the failing call path.',
       question:
         'What runs when a function is defined, and what runs when it is called?',
       answer:
