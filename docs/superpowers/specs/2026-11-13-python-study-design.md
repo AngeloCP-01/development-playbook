@@ -96,6 +96,10 @@ Initial composition: **14 panels / 45 topics / 45 owned activities**. Each topic
 gets enough connected examples to teach its mechanism. Split at measured seams
 rather than deleting explanations or forcing the count.
 
+Implementation measurement (2026-11-13): the initial core page at 1024×768,
+solutions closed, reaches 2275.2px for the longest single open names/objects topic
+and 2759.7px for functions/scope. Both fit 3072px; no split required here.
+
 | Panel hash | Topic IDs | Required teaching and contrast |
 | --- | --- | --- |
 | `runtime-and-syntax` | `execution-basics`, `values-and-expressions`, `control-flow` | Python language versus CPython; script/REPL and traceback; indentation, literals, assignment, calls/return, expressions and operators; truthiness versus missing values, short circuiting, if/for/while, range, break/continue and loop-else. Trace a small input-to-report program. |

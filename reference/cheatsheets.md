@@ -6,7 +6,7 @@
 Look up a command or study a focused topic. Study sheets include worked
 examples and local practice; stages teach lifecycle decisions.
 
-Drawn: 28 of 31. A sheet listed as not drawn is
+Drawn: 29 of 31. A sheet listed as not drawn is
 registered on purpose — the gap is the point, so it can be seen and filled.
 
 | Sheet | Group | Stage | Status |
@@ -39,7 +39,7 @@ registered on purpose — the gap is the point, so it can be seen and filled.
 | JavaScript | Languages | — | Drawn |
 | DSA Patterns | Algorithms | — | Drawn |
 | Node.js & Express | Languages | — | Drawn |
-| Python | Languages | — | Not drawn |
+| Python | Languages | — | Drawn |
 | Java | Languages | — | Not drawn |
 | Spring Boot | Languages | — | Not drawn |
 
@@ -5655,9 +5655,1151 @@ Source: [Authorization](https://cheatsheetseries.owasp.org/cheatsheets/Authoriza
 
 ## Python
 
-Data structures, comprehensions, and the standard library worth knowing.
+Trace Python objects, repair small programs and defend their validation, resource and concurrency boundaries.
 
-*Not drawn yet.*
+### Runtime and syntax
+
+Start here without JavaScript prerequisites\. Read assignment, calls and indentation before tracing the report\. Python is the language; CPython is one implementation\. All worked \.py files use standard\-library Python 3\.12\+; fixtures and multi\-file layouts are labelled\. Later panels link back to the mechanisms they need\.
+
+#### Follow a script through calls and returns
+
+Separate a function definition from the call that runs its body\.
+
+Save this as execution\-basics\.py and run python3 execution\-basics\.py from its directory\. A script executes top\-level statements in order\. def creates a function; its indented body runs when called\. Parameters are local names bound to the supplied objects\. return passes a result to the caller; reaching the end returns None\. print writes a representation for a person\. CPython compiles Python to internal bytecode and executes it; that implementation detail does not change the language meaning\.
+
+execution\-basics\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+def label(title):
+    cleaned = title.strip()
+    return cleaned.upper()
+
+raw = "  River  "
+result = label(raw)
+print(result)
+print(raw)
+```
+
+Call and return boundary
+
+| Statement | State | Reason |
+| --- | --- | --- |
+| def label | label refers to a function | The body has not cleaned any input yet\. |
+| label\(raw\) | title names "  River  "; cleaned is "River" | strip returns a new string\. |
+| return / print | RIVER then the original padded title | Returning does not rebind raw in the caller\. |
+
+Change return cleaned\.upper\(\) to print\(cleaned\.upper\(\)\)\. The inner print still displays RIVER, but result becomes None and the outer print displays None\. Indentation defines the body: moving return outside the function is a SyntaxError\. For an exception, read the traceback from the final exception type/message back through the listed calls; it describes the failing execution path, not just the last line of your file\.
+
+##### What runs when a function is defined, and what runs when it is called?
+
+The definition creates and binds a callable object; later calls bind arguments and execute the body\. The caller resumes with the returned object\. Printing is an observable side effect, so replacing return with print changes both the result and output contract\. A REPL also displays expression results, which can hide a missing explicit print in a script\.
+
+##### Practice
+
+###### Return a reusable label
+
+A formatter prints its result and a caller stores None\. Repair the interface and explain how a nested call would appear in a traceback\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Return a reusable label
+
+Return the formatted string, and let the entry script print it\. A traceback contains the caller and failing callee frames, ending in the exception type and message\.
+
+Why it works
+
+Keeping the value separate from presentation lets tests compare it and lets another function reuse it\. A successful print alone does not prove the return contract\.
+
+#### Keep zero distinct from missing
+
+Trace truthiness, short circuiting and operand results before choosing a fallback\.
+
+An expression produces a value: 2 \+ 3 produces an integer; a comparison produces a Boolean\. Assignment binds the name on the left to the evaluated object\. None represents absence by convention\. False, numeric zero and empty containers are falsey; they still may be valid supplied values\. and/or short circuit and return an operand, rather than always returning True or False\. Use is None for the absence sentinel\.
+
+values\-and\-expressions\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+def limit(value):
+    return 10 if value is None else value
+
+for value in [None, 0, 3]:
+    print(value, value or 10, limit(value))
+
+def read():
+    print("read")
+    return 4
+
+print(False and read())
+print("ready" or read())
+```
+
+Fallback and evaluation decisions
+
+| Input | or fallback | Explicit absence |
+| --- | --- | --- |
+| None | 10 | 10 |
+| 0 | 10 | 0; zero was supplied |
+| 3 | 3 | 3 |
+| False and read\(\) | False; no read output | Right operand was skipped\. |
+| "ready" or read\(\) | ready; no read output | First truthy operand is returned\. |
+
+Replacing the None test with if not value merges absence with an intentional zero\. Conversely, checking only None does not validate a negative limit or a wrong type: missing\-value policy and domain validation are separate\. Parentheses can clarify precedence when comparisons and Boolean operators mix; avoid compact conditions whose evaluation order you cannot explain\.
+
+##### Why is value or default a bug in a pagination limit?
+
+It is a bug when zero has a domain meaning, because or uses truthiness and discards it\. Test the chosen sentinel explicitly and validate the retained value separately\. If None itself is meaningful data, choose a unique sentinel object for omission instead\.
+
+##### Practice
+
+###### Preserve a disabled threshold
+
+A configuration threshold accepts 0 to disable an alert and None for the default\. Predict both fallback forms for 0, then write the correct expression\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Preserve a disabled threshold
+
+default if threshold is None else threshold preserves zero\. threshold or default replaces it\.
+
+Why it works
+
+The condition expresses absence directly; it does not conflate an empty value with a missing one\.
+
+#### Distinguish rejection, stopping and exhaustion
+
+Trace indentation, for/range, continue, break and a loop’s else\.
+
+if chooses a branch; for requests items from an iterable; while repeats while its condition is truthy\. A colon starts a suite whose indentation defines membership\. range\(3\) supplies 0, 1, 2: its stop is excluded\. continue skips the remaining body for this item\. break exits the nearest loop\. A loop else runs when the loop finishes without break, including an empty traversal; it is not paired with the body’s if\.
+
+control\-flow\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+titles = [" River ", " ", "Hill"]
+report = []
+for raw in titles:
+    title = raw.strip()
+    if not title:
+        continue
+    report.append(title)
+else:
+    print("exhausted")
+print(report)
+
+for index in range(3):
+    if index == 1:
+        break
+else:
+    print("not reached")
+print(index)
+
+remaining = 2
+while remaining > 0:
+    remaining -= 1
+print(remaining)
+```
+
+Rejected input still permits exhaustion
+
+| raw / phase | Action | report / state |
+| --- | --- | --- |
+| " River " | strip, accept, append | \["River"\] |
+| " " | empty title; continue | \["River"\] unchanged |
+| "Hill" | append, then exhaust | \["River", "Hill"\]; else prints exhausted |
+| range reaches 1 | break | No loop else; index remains 1\. |
+| while | 2 → 1 → 0 | Condition becomes false\. |
+
+Change continue to break: Hill is never inspected and exhausted is not printed\. With titles = \[\], else still runs because no break occurred\. A while loop whose body never changes its condition can run forever; identify which state must advance before using it for input processing\.
+
+##### How would you search for an invalid record and report success only if none exists?
+
+Break when an invalid record is found; put the success path in the loop else\. The else means no early break, not that every body if was false\. For a more involved policy, an explicit found flag or a separate function returning a result may be clearer\.
+
+##### Practice
+
+###### Change the rejection policy
+
+The input is \[" ", "River"\]\. First skip invalid titles, then change the requirement to stop at the first invalid title\. Give the report and whether else runs in each version\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Change the rejection policy
+
+continue yields \["River"\] and runs else\. break yields \[\] and skips else\.
+
+Why it works
+
+continue advances to another item; break ends traversal\. Empty input still exhausts, which is a separate case to test\.
+
+### Names and objects
+
+Prerequisite: Runtime and syntax \(\#runtime\-and\-syntax\)\. Draw names and container slots as references to objects\. Use this panel to explain what a function may change, isolate a report’s children and assign explicit cleanup ownership\.
+
+#### Trace binding before choosing is or ==
+
+A parameter gets a reference; mutation and rebinding have different reach\.
+
+A name refers to an object with identity, type and value\. Assignment makes a binding, not an independent object\. A list is a mutable ordered container; its slots refer to objects too\. When calling a function, the parameter is a new local binding to the supplied object\. == asks for equality according to the type’s contract; is asks whether both references name the same object\. Test the None singleton with is None; avoid identity puzzles involving literal caching\.
+
+binding\-and\-identity\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+def revise(items):
+    items.append("reviewed")
+    items = ["local"]
+    return items
+
+original = ["draft"]
+alias = original
+returned = revise(original)
+equal = ["draft", "reviewed"]
+print(original, returned)
+print(alias is original, equal == original, equal is original)
+box = (original,)
+box[0].append("approved")
+print(original)
+```
+
+Parameter binding and caller state
+
+| Step | Local binding | Caller sees |
+| --- | --- | --- |
+| revise\(original\) | items and original reach one list | \["draft"\] |
+| append | Same list changes | \["draft", "reviewed"\] |
+| items = \["local"\] | items now reaches a second list | original still reaches the first list\. |
+| tuple child append | Tuple slot is unchanged | The list reached through it gains approved\. |
+
+Changing items = \["local"\] to items\[:\] = \["local"\] would replace the contents of the shared list and affect the caller\. A tuple prevents changing its slots; it does not freeze objects stored in those slots\. Equality of separate lists can be true while identity is false\. Use the distinction to describe the object graph instead of an ambiguous pass\-by\-reference label\.
+
+##### Why can a function append to my list but cannot rebind my variable?
+
+Its parameter initially refers to the caller’s list, so mutation reaches the shared object\. Reassigning that parameter changes only the function’s local binding\. To replace the caller’s binding deliberately, return a result and assign it in the caller\. Neither call nor assignment implies copying\.
+
+##### Practice
+
+###### Change a tuple’s contents indirectly
+
+A tuple holds a list of tags\. Can a function append through the tuple? Can it replace the tuple’s slot? Explain both without running an identity\-address experiment\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Change a tuple’s contents indirectly
+
+Appending mutates the child list and succeeds\. Assigning to the tuple slot raises TypeError\.
+
+Why it works
+
+Immutability describes the tuple’s references; the child object has its own mutation rules\. Test observable state, not CPython address or interning details\.
+
+#### Copy the child you intend to own
+
+A shallow copy makes another outer container while retaining child references\.
+
+Prerequisite: binding\-and\-identity above\. A dictionary maps keys to value objects\. A shallow copy creates a new dictionary whose entries initially refer to the same values\. In this report, the title is an immutable string and tags is a mutable list\. Replacing an entry differs from mutating its child: replacing copied\["title"\] changes that dictionary slot; append changes the list reached through either dictionary\.
+
+mutation\-and\-copying\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+original = {"title": "River", "tags": ["draft"]}
+alias = original
+copied = original.copy()
+copied["title"] = "Hill"
+copied["tags"].append("reviewed")
+print(original["title"], original["tags"])
+print(alias is original, copied is original)
+
+original = {"tags": ["draft"]}
+copied = original.copy()
+copied["tags"] = ["reviewed"]
+print(original["tags"], copied["tags"])
+```
+
+Two dictionaries, one child list
+
+| Operation | Outer dictionary | Child / cause |
+| --- | --- | --- |
+| alias = original | One dictionary, two bindings | No copy occurred\. |
+| original\.copy\(\) | A second dictionary exists | Both dictionaries still refer to the tags list\. |
+| replace copied title | Only copied changes its title slot | The shared list has not changed yet\. |
+| append through copied | Dictionaries remain distinct | original reaches \["draft", "reviewed"\] too\. |
+| replace copied tags | Only copied gets a new list reference | The original list remains \["draft"\]\. |
+
+To isolate a list of strings, copy the dictionary and the tags list\. If tags contains dictionaries with child lists, that selective shallow repair still shares deeper state\. deepcopy recursively copies supported objects and uses a memo to preserve sharing and cycles inside the copied graph\. It may copy more than the contract needs; it cannot generally clone external resources such as open files\. Decide which relationships should remain shared first\.
+
+##### What does dict\.copy guarantee for a nested report?
+
+A separate outer mapping, with the same initial key/value references\. An independent title assignment is safe, but a nested append can still affect the source\. Selectively copy the mutable children the new owner may change, or choose a deep\-copy contract with suitable inputs\. Copying depth is an ownership decision\.
+
+##### Practice
+
+###### Independent report requests
+
+Implement independent\(report\) for tags shaped as \[\{"labels": \["draft"\]\}\]\. Two requests must change their own nested labels without changing each other or the source\. Then explain a cheaper repair when tags is only a list of strings\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Incomplete interface — implement the TODO
+
+```
+def independent(report):
+    # TODO: isolate nested tag records
+    pass
+```
+
+Solution: Independent report requests
+
+Use a recursive copy for this plain nested data\. With string\-only tags, a fresh dictionary plus tags\.copy\(\) isolates the only mutable child\.
+
+mutation\-and\-copying\-repair\.py — executable reference solution
+
+```
+from copy import deepcopy
+
+def independent(report):
+    return deepcopy(report)
+
+source = {"tags": [{"labels": ["draft"]}]}
+a = independent(source)
+b = independent(source)
+a["tags"][0]["labels"].append("reviewed")
+assert source["tags"][0]["labels"] == ["draft"]
+assert b["tags"][0]["labels"] == ["draft"]
+assert a["tags"][0]["labels"] == ["draft", "reviewed"]
+```
+
+Why it works
+
+deepcopy preserves internal sharing within each copied graph via its memo\. The test needs two independent calls and a nested mutation; different outer identities alone would miss the bug\.
+
+Follow-up
+
+If two source fields intentionally share one tag record, should the copy retain that sharing? What if a field is a live file handle?
+
+#### Separate reachability from resource ownership
+
+Removing a name does not establish when an external handle closes\.
+
+Objects remain reachable while references lead to them, including container slots and closures\. del removes a binding or container entry; it is not a portable command to destroy an object now\. CPython often reclaims unreferenced objects promptly through reference counting, but cycles and implementation details make that unsuitable as a file\-cleanup contract\. A context manager gives a lexical owner a defined exit boundary\.
+
+lifetime\-and\-resources\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+from tempfile import TemporaryFile
+
+with TemporaryFile(mode="w+", encoding="utf-8") as handle:
+    alias = handle
+    handle.write("River\n")
+    handle.seek(0)
+    print(alias.readline().strip(), handle.closed)
+print(alias.closed)
+
+items = ["draft"]
+keepers = [items]
+del items
+print(keepers[0])
+```
+
+Reference lifetime versus file lifetime
+
+| Point | Reference | Resource |
+| --- | --- | --- |
+| Inside with | handle and alias name the same file | Open; prints River False\. |
+| After with | alias still names the file object | Closed; prints True\. |
+| del items | keepers still holds the list | The list remains reachable; no file involved\. |
+
+Keeping alias does not keep a with\-owned file open after exit; closing a resource and destroying its object are separate events\. Forgetting with and relying on del handle is fragile if another reference survives\. Files and data later shows how generators can retain open files while suspended and why early exit needs an explicit owner\.
+
+##### Does a garbage collector replace with?
+
+No\. Garbage collection concerns object memory and reachability\. with invokes a resource’s exit protocol at a specific scope boundary, including exceptional exits\. Keep resource use inside its owner’s lifetime and test closed state after success and failure instead of depending on collection timing\.
+
+##### Practice
+
+###### Retained reference, closed handle
+
+A callback captures a file alias, then runs after the with block\. Will the alias keep the file usable? Choose where to move the callback or ownership boundary\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Retained reference, closed handle
+
+The alias survives but the file is closed\. Run the callback inside with or let the callback open and close its own file\.
+
+Why it works
+
+A reference retains the Python object; it does not extend the context manager’s resource lifetime\. Reopening also requires an explicit policy about changes to the file between calls\.
+
+### Collections
+
+Prerequisites: Runtime and syntax \(\#runtime\-and\-syntax\), Names and objects \(\#names\-and\-objects\)\. Choose sequences, mappings and sets by the operations you need\. Trace slots and keys before reasoning about cost\.
+
+#### Read slices and unpacking as new bindings
+
+Slices exclude their stop and copy the outer sequence; unpacking binds positions\.
+
+A list is an ordered mutable sequence\. A tuple is an ordered sequence with fixed slots\. Indices start at zero; negative indices count from the end\. a\[start:stop:step\] selects positions and excludes stop; omitted bounds span the sequence\. A list slice is a new outer list and still shares its element objects\. Unpacking assigns items to names; a starred target collects remaining items into a list\.
+
+sequences\-and\-slicing\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+rows = [["River"], ["Hill"], ["Lake"]]
+part = rows[1:]
+part[0].append("read")
+first, *rest = rows
+print(rows)
+print(first, len(rest))
+print([0, 1, 2, 3, 4][::-2])
+values = [3, 1, 2]
+result = values.sort()
+print(values, result)
+```
+
+Positions, slices and children
+
+| Expression | Result | Ownership |
+| --- | --- | --- |
+| rows\[1:\] | Outer list containing Hill and Lake lists | Children still shared with rows\. |
+| part\[0\]\.append | rows\[1\] becomes \["Hill", "read"\] | Mutation reaches the shared child\. |
+| first, \*rest | first reaches River; rest has two items | Bindings do not recursively copy\. |
+| \[::\-2\] | \[4, 2, 0\] | Starts at the end, steps backwards by two\. |
+| values\.sort\(\) | values is \[1, 2, 3\]; result is None | sort mutates and does not return the list\. |
+
+Use sorted\(values\) when you need a new outer list and want to preserve the input order\. values = values\.sort\(\) accidentally replaces the caller’s binding with None\. A zero slice step raises ValueError; an out\-of\-range slice clips, while a single out\-of\-range index raises IndexError\. Do not infer identical failure rules from similar bracket syntax\.
+
+##### Does rows\[:\] create independent rows?
+
+It copies the sequence slots, not the mutable rows they refer to\. A later element append affects both views, while replacing a slot affects only its owning list\. Decide whether you need another sequence, independent row records or an immutable representation\.
+
+##### Practice
+
+###### Repair a sorted report
+
+report = rows\.sort\(\) leaves report unusable\. Preserve rows for another display and return only the last two items in sorted order\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Repair a sorted report
+
+Use sorted\(rows\)\[\-2:\]\. The new outer list is sorted and sliced; nested objects remain shared\.
+
+Why it works
+
+Choosing a copying operation fixes the return contract but does not imply nested isolation\. Empty and one\-element inputs are safe slices\.
+
+#### Deduplicate while retaining first appearance
+
+Keep a set for membership and a list for the output order\.
+
+A dict maps unique hashable keys to values and preserves insertion order\. A set records unique hashable values, without an ordering promise\. Membership in a dictionary tests keys, not values\. get\(key, fallback\) supplies a value without inserting it; indexing a missing key raises KeyError\. A keys view is live, so changing dictionary size during its iteration is unsafe\. If a traversal must remove entries, snapshot the keys deliberately\.
+
+mappings\-and\-sets\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+labels = ["river", "hill", "river"]
+seen = set()
+ordered = []
+for label in labels:
+    if label not in seen:
+        seen.add(label)
+        ordered.append(label)
+print(ordered)
+counts = {"river": 1, "hill": 2}
+keys = counts.keys()
+counts["river"] = 3
+counts["lake"] = 1
+print(list(keys), counts.get("missing", 0), "missing" in counts)
+for key in list(counts):
+    if counts[key] == 1:
+        del counts[key]
+print(counts)
+```
+
+Membership and output order have separate jobs
+
+| Input / update | Membership state | Ordered state |
+| --- | --- | --- |
+| river | river added to seen | \["river"\] |
+| hill | hill added to seen | \["river", "hill"\] |
+| river again | Already seen | No append\. |
+| replace river then insert lake | Same river key; new lake key | river, hill, lake; replacement keeps position\. |
+| delete via key snapshot | Original key list remains iterable | Only river and hill remain in counts\. |
+
+list\(set\(labels\)\) gives uniqueness but cannot promise first\-seen order\. dict\.fromkeys\(labels\) can combine those requirements, but learn the membership/output trace before compressing it\. Iterating counts directly while deleting entries can raise RuntimeError; iterating a deliberate list\(counts\) snapshot separates traversal state from mutation\.
+
+##### Why use both seen and ordered?
+
+The set answers whether an item already appeared; the list records the order of accepted first appearances\. Their responsibilities differ\. Dictionary insertion order can also express this contract, while set iteration order is unsuitable for deterministic display or tests\.
+
+##### Practice
+
+###### Normalize before deduplication
+
+Input is \[" River ", "river", "HILL"\]\. Keep first appearance after strip and casefold\. Explain whether normalization belongs before or after membership\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Incomplete interface — implement the TODO
+
+```
+def unique_labels(labels):
+    # TODO: normalize, skip blanks, preserve first appearance
+    pass
+```
+
+Solution: Normalize before deduplication
+
+Normalize before checking membership, so equivalent labels share a key\.
+
+mappings\-and\-sets\-repair\.py — executable reference solution
+
+```
+def unique_labels(labels):
+    seen = set()
+    result = []
+    for raw in labels:
+        label = raw.strip().casefold()
+        if label and label not in seen:
+            seen.add(label)
+            result.append(label)
+    return result
+
+assert unique_labels([" River ", "river", "HILL", " "]) == ["river", "hill"]
+assert unique_labels([]) == []
+```
+
+Why it works
+
+The result remains ordered by first normalized appearance\. If original spelling must be displayed, retain it separately from the normalized membership key\.
+
+#### Choose a stable identity key
+
+Equal keys need equal hashes, and a key’s hash must stay stable while stored\.
+
+A hash narrows candidate positions for a hash table; equality distinguishes colliding candidates\. Hashable objects must keep a stable hash through their lifetime, and objects that compare equal must have equal hashes\. Lists and dicts are unhashable\. A tuple is hashable only if its elements are hashable\. Mutability alone is not a complete rule: a custom object can be mutable and use identity equality/hash, but a mutable value\-based key is dangerous\.
+
+hash\-and\-equality\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+print(1 == True, hash(1) == hash(True))
+lookup = {1: "integer", True: "boolean"}
+print(len(lookup), lookup[1])
+key = ("river", 2026)
+print({key: 2}[key])
+try:
+    invalid = {("river", []): 1}
+except TypeError:
+    print("unhashable child")
+```
+
+Hash and equality decide key identity
+
+| Key | Decision | Result |
+| --- | --- | --- |
+| 1 then True | Equal values and equal hashes | One entry; boolean replaces its value\. |
+| \("river", 2026\) | Both tuple members hashable | Can address the count 2\. |
+| \("river", \[\]\) | List member is unhashable | TypeError, even though the outer tuple is immutable\. |
+
+A hash collision does not mean two objects are equal\. Never persist Python’s hash as a stable cross\-process identifier; string hashes can vary across runs\. For records, define an explicit immutable key such as \(title, year\), and explain whether case normalization or omitting other fields intentionally merges records\. Custom equality should return NotImplemented for unsupported types; classes\-and\-protocols develops that contract\.
+
+##### Why can a tuple fail as a dictionary key?
+
+Tuple hashing needs hashes of all its members\. A tuple containing a list cannot supply one\. Convert the relevant data into a deliberately immutable key, rather than assuming that wrapping a mutable record in parentheses freezes it\.
+
+##### Practice
+
+###### Choose the deduplication identity
+
+Two books have the same title and different editions\. Is title a sufficient key? Propose a key and explain which duplicates it will merge\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Choose the deduplication identity
+
+Use \(normalized\_title, edition\) if editions are distinct domain identities\. Use a stable external ID when available and appropriate\.
+
+Why it works
+
+Hashability makes storage possible; only the domain decides whether the equality rule is correct\. A lossy key can silently merge different books\.
+
+#### State the work hidden by an operation
+
+Compare scans, hash lookups and copies with size and key\-cost assumptions\.
+
+Cost depends on the representation and operation, not just the syntax\. In conventional CPython a list stores indexed references: indexing is constant\-time with respect to list length, scanning membership may inspect every element, and slicing k items copies k references\. Dict/set hash tables usually provide expected constant\-time lookup under suitable hashing and bounded key costs; collisions and expensive equality can change that\. These are qualified implementation expectations, not universal language complexity guarantees\.
+
+collection\-costs\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+titles = ["River", "Hill", "Lake"]
+index = {title: position for position, title in enumerate(titles)}
+checks = 0
+for title in titles:
+    checks += 1
+    if title == "Lake":
+        break
+print(checks, index["Lake"])
+copy = titles[:2]
+copy.append("Sea")
+print(titles, copy)
+```
+
+Where work and storage are spent
+
+| Operation | Work / extra storage | Observed value |
+| --- | --- | --- |
+| Build index | Visits n items; stores up to n keys | River:0, Hill:1, Lake:2 |
+| Scan for Lake | Three comparisons here; up to n generally | checks = 3 |
+| index\["Lake"\] | Hash and candidate equality checks | position = 2; hash costs still count\. |
+| titles\[:2\] | Copies two references | Appending to copy does not append to titles\. |
+
+For one lookup, building a complete index may cost more total work and memory than scanning\. For repeated lookups over stable data it can be useful\. Growing integer/string keys can make hashing or comparison costs significant\. Measure realistic input and include index construction when that is part of the workload; a tiny timing is not proof of asymptotic behavior\.
+
+##### Is dictionary lookup always O\(1\)?
+
+Expected constant time is a useful CPython hash\-table model under assumptions about distribution and bounded hashing/equality costs\. It is not a guaranteed worst\-case statement or a Python\-language promise\. State input size, key costs and whether construction is included before comparing designs\.
+
+##### Practice
+
+###### Pay for a one\-off lookup
+
+A report scans ten records once; another checks a million IDs repeatedly\. Compare the value and cost of a dictionary index\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Pay for a one\-off lookup
+
+A short one\-off scan avoids index allocation\. Repeated checks can amortize index construction and use expected fast membership, at the cost of extra memory and invalidation policy\.
+
+Why it works
+
+The operation mix and lifecycle determine the choice\. Neither an index nor a list is globally fastest\.
+
+### Text and numbers
+
+Prerequisite: Runtime and syntax \(\#runtime\-and\-syntax\)\. Distinguish decoded text from bytes, parse a bounded format and choose numeric rules from the domain\. These examples use explicit encodings and hand\-checkable values\.
+
+#### Decode bytes at an explicit boundary
+
+A str indexes Unicode code points; encoded bytes have a different length\.
+
+str represents Unicode text; bytes represents octets\. encode turns text into bytes using an encoding; decode interprets bytes as text\. UTF\-8 uses variable numbers of bytes per code point\. A displayed character may combine several code points, so len\(str\) is not generally a count of grapheme clusters\. Keep bytes intact until the decoding boundary, and choose an error policy rather than silently deleting invalid input\.
+
+unicode\-and\-bytes\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+text = "café"
+raw = text.encode("utf-8")
+print(len(text), len(raw), raw.decode("utf-8"))
+combined = "e\u0301"
+print(len(combined))
+try:
+    raw[-1:].decode("utf-8")
+except UnicodeDecodeError:
+    print("incomplete UTF-8")
+print(b"bad\xff".decode("utf-8", errors="replace"))
+```
+
+Text and byte boundaries
+
+| Value | Length / result | Reason |
+| --- | --- | --- |
+| café | 4 code points, 5 UTF\-8 bytes | é uses two bytes\. |
+| e plus combining accent | 2 code points | One visual cluster need not be one indexed element\. |
+| Last UTF\-8 byte alone | UnicodeDecodeError | It is a continuation byte, not a complete character\. |
+| errors="replace" | bad� | The invalid byte is visibly replaced; information is lost\. |
+
+Using errors="ignore" can erase evidence and merge distinct malformed values\. Strict decoding fails at the boundary; replacement can be suitable for display with an explicit loss policy\. Streaming byte chunks may split a character, requiring an incremental decoder; iterating an already\-open UTF\-8 text file lets its decoder handle those boundaries\.
+
+##### Can I truncate user text by slicing its UTF\-8 bytes?
+
+An arbitrary byte slice can cut a multi\-byte code point and fail decoding\. Decode valid input first, then decide whether your limit counts bytes, code points or user\-visible grapheme clusters\. Those are different contracts, and the standard str slice does not implement grapheme segmentation\.
+
+##### Practice
+
+###### Reject malformed encoded records
+
+A UTF\-8 label includes b"\\xff"\. Choose strict versus replace for an identifier and for a diagnostic preview, and explain the effect of ignore\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Reject malformed encoded records
+
+Reject malformed identifiers with strict decoding\. A diagnostic preview may use replacement if labelled as lossy\. ignore deletes the byte and can hide the defect\.
+
+Why it works
+
+Encoding policy belongs at the bytes/text boundary\. A successful decode with data loss does not establish a valid domain identifier\.
+
+#### Parse a small format without hiding its grammar
+
+Bound splitting, preserve field policy and format the validated result\.
+
+strip removes characters at the ends, not a substring in the middle\. split separates text; maxsplit bounds the number of splits\. join builds text from an iterable of strings with a separator\. An f\-string evaluates expressions inside braces and applies an optional format specification\. This lesson accepts title:count with one separator and a nonnegative integer; it is not a CSV parser or a general escaping grammar\.
+
+text\-parsing\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+def parse(line):
+    title, count_text = line.strip().split(":", 1)
+    title = title.strip()
+    count = int(count_text)
+    if not title or count < 0:
+        raise ValueError("title and nonnegative count required")
+    return title, count
+
+title, count = parse(" River : 2 ")
+print(f"{title}: {count:03d}")
+print(" / ".join([title, "ready"]))
+for bad in ["River", ":2", "River:-1", "River:2:3"]:
+    try:
+        parse(bad)
+    except ValueError:
+        print("invalid", bad)
+```
+
+A format has separate parsing and policy steps
+
+| Stage | State | Boundary |
+| --- | --- | --- |
+| split once | \["River ", " 2"\] | Unpacking needs exactly two fields\. |
+| int | count = 2 | Invalid integer text raises ValueError\. |
+| domain check | title = River; count = 2 | Nonempty title and nonnegative count\. |
+| format | River: 002 | Display width does not validate input\. |
+
+A second colon remains in count\_text because maxsplit is one; int then rejects it\. If titles may contain colons or quoting, define a different format and use a suitable parser\. str\.strip\("prefix"\) removes any of those characters at either end; use removeprefix for an exact prefix\. Formatting a number with a width does not cap its magnitude\.
+
+##### Why not just split and trust the result?
+
+Syntactic separation, numeric conversion and domain validation are distinct checks\. Each can fail for a different reason\. A bounded split expresses this tiny grammar, while explicit checks make errors predictable\. A richer grammar needs an actual parser and input\-size limits\.
+
+##### Practice
+
+###### Keep zero, reject a missing title
+
+Implement parse\_count\(text\) for title:count\. Accept zero, reject negative counts, missing fields and blank titles\. Do not use eval\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Incomplete interface — implement the TODO
+
+```
+def parse_count(text):
+    # TODO: split, convert and validate
+    pass
+```
+
+Solution: Keep zero, reject a missing title
+
+Split once, unpack, convert using int and apply the domain checks\. Count zero survives\.
+
+text\-parsing\-repair\.py — executable reference solution
+
+```
+def parse_count(text):
+    title, raw = text.strip().split(":", 1)
+    count = int(raw)
+    title = title.strip()
+    if not title or count < 0:
+        raise ValueError("invalid record")
+    return title, count
+
+assert parse_count("River:0") == ("River", 0)
+```
+
+Why it works
+
+The conversion errors and explicit domain rejection are ValueError paths\. No executable interpretation of input is needed\.
+
+#### Choose division and comparison deliberately
+
+Floor division, growing integers and floating approximation answer different questions\.
+
+Python integers have arbitrary precision limited by resources, so arithmetic cost and storage grow with magnitude\. / performs true division; // floors toward negative infinity; % supplies a remainder satisfying a == \(a // b\) \* b \+ a % b for these integer operands\. A float usually uses binary floating point, where many decimal fractions are approximations\. math\.isclose compares with chosen relative/absolute tolerances; Decimal from strings can express decimal arithmetic without first importing a float approximation\.
+
+numeric\-boundaries\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+from math import isclose
+from decimal import Decimal
+
+print(-7 // 3, -7 % 3, -7 / 3)
+print((-7 // 3) * 3 + (-7 % 3))
+print(10 ** 30 + 1 > 10 ** 30)
+print(0.1 + 0.2 == 0.3)
+print(isclose(0.1 + 0.2, 0.3, rel_tol=1e-12, abs_tol=1e-12))
+print(Decimal("0.1") + Decimal("0.2") == Decimal("0.3"))
+```
+
+Arithmetic contracts at the boundary
+
+| Expression | Result | Why |
+| --- | --- | --- |
+| \-7 // 3, \-7 % 3 | \-3, 2 | Floor is below \-2; the identity reconstructs \-7\. |
+| 10\*\*30 \+ 1 | Distinct larger integer | No fixed 64\-bit overflow here\. |
+| 0\.1 \+ 0\.2 == 0\.3 | False | Binary approximations differ\. |
+| isclose / Decimal strings | True / True | Tolerance and decimal representation are distinct policies\. |
+
+int\(\-7 / 3\) truncates toward zero and gives \-2; it is not integer floor division and also passes through floating point\. Rounding display text does not change stored arithmetic\. Money in bounded integer minor units, Decimal with a rounding policy, and measured floats with tolerances solve different problems\. Near zero, an absolute tolerance may matter when a relative tolerance alone cannot help\.
+
+##### Should every floating comparison use a fixed epsilon?
+
+No\. Choose tolerances from the units, scale and acceptable error of the domain, often with both relative and absolute terms\. Exact discrete counts should use integers\. Decimal is useful for decimal rules, but precision and rounding still need a policy; constructing it from a float retains that float’s approximation\.
+
+##### Practice
+
+###### Change the sign and scale
+
+Predict \-8 // 3 and \-8 % 3\. Then choose a representation for item counts, money rounded to cents and sensor measurements near zero\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Change the sign and scale
+
+\-3 and 1\. Use integer counts, integer minor units or Decimal with explicit monetary rounding, and floats with domain tolerances for measurements\.
+
+Why it works
+
+Floor division and truncation diverge for negative nonmultiples\. Representation must match what counts as an acceptable error\.
+
+### Functions and scope
+
+Prerequisites: Runtime and syntax \(\#runtime\-and\-syntax\) and Names and objects \(\#names\-and\-objects\)\. Separate definition time, call time and later invocation\. Predict argument binding before following defaults, scope and closures\.
+
+#### Bind a call to an explicit interface
+
+Use positional\-only, keyword\-only and collected arguments intentionally\.
+
+In a definition, / ends positional\-only parameters and \* starts keyword\-only parameters\. \*args collects extra positional values into a tuple; \*\*kwargs collects extra named values into a dictionary\. At a call, \*sequence and \*\*mapping instead unpack supplied values\. These forms have opposite roles\. Return can produce a tuple which the caller unpacks\. Binding errors such as a duplicate argument or missing keyword\-only argument raise TypeError before the body runs\.
+
+arguments\-and\-binding\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+def export(rows, /, *tags, limit=2, **options):
+    return rows[:limit], tags, options
+
+rows = ["River", "Hill", "Lake"]
+selected, tags, options = export(rows, *["review"], **{"limit": 1, "format": "text"})
+print(selected, tags, options)
+try:
+    export(rows=rows)
+except TypeError:
+    print("positional rows required")
+
+def count(rows, /, *, limit):
+    return len(rows[:limit])
+print(count(rows, limit=0))
+```
+
+Collected arguments versus call unpacking
+
+| Site | Binding | Result |
+| --- | --- | --- |
+| export call | rows positional; tags=\("review",\); limit=1 | options contains format:text\. |
+| return tuple | Caller unpacks three values | \["River"\], \("review",\), \{"format":"text"\} |
+| export\(rows=rows\) | rows positional\-only parameter remains unbound | TypeError before export body\. |
+| count limit=0 | Required keyword supplied | Zero rows selected\. |
+
+Keyword\-only parameters make optional policy readable at the call site\. Positional\-only parameters let an implementation rename internal parameters without exposing them as keyword names\. Do not add \*args/\*\*kwargs to hide a poorly specified interface; accepting an option is different from validating or using it\. A duplicate explicit keyword and unpacked keyword fails binding rather than silently choosing one\.
+
+##### What does \* mean in a function interface versus a call?
+
+In a definition it either gathers positional arguments or separates keyword\-only parameters\. In a call it expands a sequence of arguments\. \*\* similarly gathers or expands named arguments\. Trace the resulting parameter bindings before reasoning about the function body\.
+
+##### Practice
+
+###### Make a limit explicit
+
+Design summarize\(rows, …\) so rows is positional\-only and limit must be named\. Give one valid call and one rejected call\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Make a limit explicit
+
+def summarize\(rows, /, \*, limit\): \.\.\.; summarize\(rows, limit=2\) is valid; summarize\(rows, 2\) raises TypeError\.
+
+Why it works
+
+The signature expresses the contract before implementation\. Validation must still reject invalid limit types or negative limits if the domain requires that\.
+
+#### Allocate per\-call state at call time
+
+A default expression runs once when def executes, not once per call\.
+
+A function object stores its default argument objects when the definition executes\. Omitting an argument reuses that stored object\. A mutable list default therefore shares state across calls\. None is a convenient omission sentinel when it is not meaningful input; test is None so a deliberately supplied empty list is retained\. If None is legitimate input, use a unique object sentinel\. The allocation belongs inside the function when each omitted call needs fresh state\.
+
+defaults\-and\-state\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+def shared(label, bucket=[]):
+    bucket.append(label)
+    return bucket
+
+first = shared("River")
+second = shared("Hill")
+print(first, second, first is second)
+
+def collect(label, bucket=None):
+    if bucket is None:
+        bucket = []
+    bucket.append(label)
+    return bucket
+
+a = collect("River")
+b = collect("Hill")
+provided = []
+print(a, b, a is b)
+print(collect("Lake", provided) is provided, provided)
+```
+
+Definition time versus two calls
+
+| Point | Default / local state | Visible effect |
+| --- | --- | --- |
+| def shared | One default list allocated | No label appended yet\. |
+| two shared calls | Both omit bucket and reuse it | Both results show River and Hill\. |
+| two collect calls | Each omission enters the None branch | a=\[River\], b=\[Hill\]; distinct lists\. |
+| provided=\[\] | Argument is not None | Caller’s list receives Lake intentionally\. |
+
+bucket = bucket or \[\] discards a supplied empty list and breaks intentional caller ownership\. A timestamp default such as now\(\) also freezes at definition time; a call\-time default needs explicit computation inside\. Sharing can be deliberate for a cache, but then expose and test its lifetime, invalidation and concurrency policy instead of relying on an accidental list default\.
+
+##### Why do mutable defaults and late\-bound closures fail differently?
+
+A default is evaluated when def executes, then reused for omissions\. A closure reads an enclosing binding when its body later runs\. Both involve time and references, but one stores an object early and the other performs a later name lookup\. Copying or capturing must follow the intended ownership contract\.
+
+##### Practice
+
+###### Repair a request\-local accumulator
+
+Implement collect\(label, bucket=None\)\. Two omitted calls must be independent, while an explicitly supplied empty list must be mutated and returned\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Incomplete interface — implement the TODO
+
+```
+def collect(label, bucket=None):
+    # TODO: preserve supplied empty containers
+    pass
+```
+
+Solution: Repair a request\-local accumulator
+
+Allocate only when bucket is None\. Reuse caller\-supplied containers intentionally\.
+
+defaults\-and\-state\-repair\.py — executable reference solution
+
+```
+def collect(label, bucket=None):
+    if bucket is None:
+        bucket = []
+    bucket.append(label)
+    return bucket
+
+a = collect("River")
+b = collect("Hill")
+provided = []
+assert a == ["River"] and b == ["Hill"]
+assert a is not b
+assert collect("Lake", provided) is provided
+assert provided == ["Lake"]
+```
+
+Why it works
+
+Two calls detect default sharing; the empty supplied list detects a falsey fallback that would otherwise look correct\.
+
+#### Find the local binding before the failing read
+
+An assignment anywhere in the function makes that name local unless declared otherwise\.
+
+Ordinary name lookup searches local, enclosing function, module global and built\-in scopes\. Python determines local bindings for a function from its code, not by waiting to see which statement executes first\. Assigning count inside revise makes count local throughout revise\. Reading it before its local assignment raises UnboundLocalError, a NameError subclass\. global redirects binding to the module; nonlocal redirects it to an existing enclosing function binding\. Prefer explicit input/result when that makes ownership clearer\.
+
+lexical\-scope\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+count = 10
+def broken():
+    count = count + 1
+    return count
+
+try:
+    broken()
+except UnboundLocalError:
+    print("local read before binding")
+print(count)
+
+def increment(value):
+    return value + 1
+print(increment(count), count)
+
+def counter():
+    value = 0
+    def step():
+        nonlocal value
+        value += 1
+        return value
+    return step
+step = counter()
+print(step(), step())
+```
+
+Lexical binding decisions
+
+| Function | Lookup target | Result |
+| --- | --- | --- |
+| broken | Local count, not module count | Read occurs before local assignment; error\. |
+| module after broken | Global count remains bound | 10 |
+| increment\(count\) | value local to call | Returns 11; global count still 10\. |
+| counter step twice | One enclosing value via nonlocal | 1 then 2; retained closure state\. |
+
+Adding global count would make broken modify module state, but introduces hidden coupling between callers\. nonlocal is appropriate when the closure intentionally owns evolving state; it does not create a missing enclosing variable\. Mutating an enclosing list via append needs no rebinding declaration because the operation changes an object instead of assigning the name\.
+
+##### Why does Python not fall back to the global count?
+
+The assignment classifies count as local in this function\. At the read, that local binding has no value yet, so lookup fails with UnboundLocalError\. Repair the ownership model: pass and return a value, or explicitly declare shared scope when that is intended and tested\.
+
+##### Practice
+
+###### Remove a hidden global dependency
+
+A module count is changed by many request functions\. Repair increment so tests can supply a starting value, and explain how nonlocal differs from global\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Remove a hidden global dependency
+
+Use increment\(value\) returning value \+ 1 and assign the result at the owner\. nonlocal targets an enclosing function binding; global targets the module\.
+
+Why it works
+
+Explicit inputs make each call independent\. Scope declarations can support intentional shared state but do not provide synchronization or validation\.
+
+#### Separate late lookup from explicit capture
+
+A closure retains bindings; a default can capture a current object without copying it\.
+
+A closure is a function that can use bindings from an enclosing function after that outer call returns\. Loop iterations usually rebind one loop name, so callbacks read its final value when invoked later\. A default argument can capture the current object at function creation\. Capturing a mutable object retains a reference, not a snapshot\. A decorator is a callable applied at definition time: @audit above report is equivalent to report = audit\(report\)\. wraps copies metadata and exposes the wrapped function; the wrapper must still return its delegated result\.
+
+closures\-and\-decorators\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+from functools import wraps
+
+def callbacks():
+    late = []
+    captured = []
+    for name in ["River", "Hill"]:
+        late.append(lambda: name)
+        captured.append(lambda name=name: name)
+    return late, captured
+late, captured = callbacks()
+print([f() for f in late], [f() for f in captured])
+state = []
+keep = lambda state=state: state
+state.append("changed")
+print(keep())
+
+def audit(fn):
+    @wraps(fn)
+    def wrapped(*args, **kwargs):
+        print("enter")
+        return fn(*args, **kwargs)
+    return wrapped
+
+@audit
+def report(title):
+    return title.upper()
+print(report("River"), report.__name__)
+```
+
+Creation, rebinding and later calls
+
+| Time | Retained object / binding | Outcome |
+| --- | --- | --- |
+| Loop builds late callbacks | Both refer to one name binding | After loop both read Hill\. |
+| Default capture | Each default holds the current string | River then Hill\. |
+| Mutable default capture | keep holds state’s list reference | Later append is visible\. |
+| Decorator definition / call | report becomes wrapped; fn retains original | enter, then RIVER; metadata name report\. |
+
+A factory can give each callback a fresh enclosing binding instead of using a default\. Neither method automatically copies nested data\. Removing return from wrapped loses the result even with wraps\. With @outer above @inner, decoration is outer\(inner\(fn\)\); call behavior follows the wrappers’ own bodies\. A synchronous wrapper does not automatically await an async function or own its task lifetime\.
+
+##### What exactly did the closure capture?
+
+For the late callbacks it retains access to the enclosing name binding, so later invocation reads its final object\. For default capture it stores the object evaluated at creation\. Immutable strings make that look like a value snapshot; mutating a captured list shows the retained\-reference limit\. A factory or explicit copying must match the intended semantics\.
+
+##### Practice
+
+###### Build independent callbacks and preserve returns
+
+Implement make\_readers\(records\) so later nested label mutations do not affect callbacks\. Repair the audit wrapper so it returns the delegated value and retains metadata\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Incomplete interface — implement the TODO
+
+```
+def make_readers(records):
+    # TODO: one independent nested snapshot per callback
+    pass
+
+def audit(fn):
+    # TODO: preserve return and metadata
+    pass
+```
+
+Solution: Build independent callbacks and preserve returns
+
+Capture a fresh deep\-copied record as each default and return the wrapped call result\. wraps handles metadata, not return propagation\.
+
+closures\-and\-decorators\-repair\.py — executable reference solution
+
+```
+from copy import deepcopy
+from functools import wraps
+
+def make_readers(records):
+    return [lambda record=deepcopy(record): record for record in records]
+
+def audit(fn):
+    @wraps(fn)
+    def wrapped(*args, **kwargs):
+        return fn(*args, **kwargs)
+    return wrapped
+
+source = [{"labels": ["River"]}, {"labels": ["Hill"]}]
+readers = make_readers(source)
+source[0]["labels"].append("changed")
+assert [read()["labels"] for read in readers] == [["River"], ["Hill"]]
+@audit
+def double(value):
+    return value * 2
+assert double(3) == 6 and double.__name__ == "double"
+```
+
+Why it works
+
+The nested mutation proves snapshot isolation\. The wrapper’s value test catches a missing return that metadata checks alone cannot detect\.
+
+Follow-up
+
+If callers may mutate the value returned by a reader, does this promise a fresh snapshot per read or only one private snapshot per callback?
+
+Sources:
+
+Source: [Python 3.12 tutorial](https://docs.python.org/3.12/tutorial/) — Python contributors / PSF.
+
+Source: [Data model and object protocols](https://docs.python.org/3.12/reference/datamodel.html) — Python contributors / PSF.
+
+Source: [Copying and nested ownership](https://docs.python.org/3.12/library/copy.html) — Python contributors / PSF.
+
+Source: [Coroutines, TaskGroup and cancellation (3.12 baseline)](https://docs.python.org/3.12/library/asyncio-task.html) — Python contributors / PSF.
+
+Source: [Collections and queue operations](https://docs.python.org/3.12/library/collections.html) — Python contributors / PSF.
+
+Source: [Process startup and isolation](https://docs.python.org/3.12/library/multiprocessing.html) — Python contributors / PSF.
+
+Source: [Free-threaded build boundaries](https://docs.python.org/3.14/howto/free-threading-python.html) — Python contributors / PSF.
+
+Source: [Installing packages into a selected interpreter](https://packaging.python.org/en/latest/tutorials/installing-packages/) — PyPA.
 
 ## Java
 
