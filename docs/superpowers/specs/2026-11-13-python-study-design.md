@@ -99,6 +99,8 @@ rather than deleting explanations or forcing the count.
 Implementation measurement (2026-11-13): the initial core page at 1024×768,
 solutions closed, reaches 2275.2px for the longest single open names/objects topic
 and 2759.7px for functions/scope. Both fit 3072px; no split required here.
+Iteration, errors/cleanup and files/data respectively reach 2182.5px, 2356.9px
+and 2503.7px under the same conditions. No split required for those families.
 
 | Panel hash | Topic IDs | Required teaching and contrast |
 | --- | --- | --- |

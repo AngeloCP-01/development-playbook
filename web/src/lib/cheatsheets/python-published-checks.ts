@@ -199,7 +199,18 @@ export async function runPythonCase(options: PythonCase): Promise<PythonRun> {
     !options.module || !options.checkEntry,
     'module and checkEntry are mutually exclusive',
   )
-  assert.ok(!options.module, 'module mode not implemented')
+  if (options.module) {
+    assert.match(
+      options.module,
+      /^[a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*$/,
+      'unsafe module name',
+    )
+    assert.equal(
+      options.module.replaceAll('.', '/') + '.py',
+      options.entry,
+      'module must match entry',
+    )
+  }
   if (options.checkEntry)
     assert.ok(
       options.checkEntry in (options.checks ?? {}),
@@ -243,7 +254,12 @@ export async function runPythonCase(options: PythonCase): Promise<PythonRun> {
     }
     const result = await execute(
       runtime.executable,
-      [options.checkEntry ?? options.entry, ...(options.args ?? [])],
+      [
+        ...(options.module
+          ? ['-m', options.module]
+          : [options.checkEntry ?? options.entry]),
+        ...(options.args ?? []),
+      ],
       dir,
     )
     assert.equal(

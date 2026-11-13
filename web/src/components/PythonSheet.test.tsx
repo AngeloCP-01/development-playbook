@@ -3,6 +3,36 @@ import { expect, test } from 'vitest'
 import { cheatsheetBySlug } from '@/lib/cheatsheets'
 import { CheatsheetView } from './Cheatsheet'
 
+test.each([
+  [
+    'iteration-and-generators',
+    'Resume a generator at the demand boundary',
+    'Demand controls parsing',
+    'Exhausted',
+    /Iteration itself is synchronous/,
+  ],
+  [
+    'errors-and-cleanup',
+    'Give cleanup a defined exit boundary',
+    'Cleanup across success and failure',
+    'finally closes the handle before propagation.',
+    /A truthy __exit__ result suppresses/,
+  ],
+])(
+  'Python %s renders the causal trace independently',
+  (hash, title, caption, cell, explanation) => {
+    window.history.replaceState(null, '', '/reference/python#' + hash)
+    render(<CheatsheetView sheet={cheatsheetBySlug('python')!} />)
+    fireEvent.click(screen.getByText(title).closest('button')!)
+    expect(
+      within(screen.getByRole('table', { name: caption })).getByRole('cell', {
+        name: cell,
+      }),
+    ).toBeTruthy()
+    expect(screen.getByText(explanation)).toBeTruthy()
+  },
+)
+
 test('registered Python lesson shows the shared child trace and a local repair that resets', () => {
   window.history.replaceState(null, '', '/reference/python#names-and-objects')
   render(<CheatsheetView sheet={cheatsheetBySlug('python')!} />)

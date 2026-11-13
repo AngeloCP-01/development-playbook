@@ -126,6 +126,35 @@ test('matches status and specified error, rejecting accidental failures and warn
     run('raise ValueError("intended")', { exit: 1 }),
   ).rejects.toThrow(/expected.*stderr/)
 })
+test('module execution preserves package-relative imports and validates the entry contract', async () => {
+  const data = sheet('from .helper import value\nprint(value)')
+  data.sections[0].introduction!.push({
+    id: 'helper',
+    kind: 'code',
+    label: 'helper.py',
+    code: 'value = 7',
+  })
+  const options = {
+    sheet: data,
+    files: { 'pkg/main.py': 'main', 'pkg/helper.py': 'helper' },
+    entry: 'pkg/main.py',
+    module: 'pkg.main',
+  }
+  expect((await runPythonCase(options)).stdout).toBe('7\n')
+  await expect(
+    runPythonCase({ ...options, module: 'pkg.helper' }),
+  ).rejects.toThrow(/module.*entry/)
+  await expect(
+    runPythonCase({
+      ...options,
+      checkEntry: 'check.py',
+      checks: { 'check.py': 'pass' },
+    }),
+  ).rejects.toThrow(/mutually exclusive/)
+  await expect(
+    runPythonCase({ ...options, module: undefined }),
+  ).rejects.toThrow(/relative import/)
+})
 // Killing only the parent, leaking cwd, or ignoring output bounds breaks these.
 test.each(['timeout', 'overflow', 'failure'] as const)(
   'cleans descendant and cwd after %s using a handshake',

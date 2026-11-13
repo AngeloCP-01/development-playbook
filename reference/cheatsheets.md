@@ -6783,6 +6783,1381 @@ Follow-up
 
 If callers may mutate the value returned by a reader, does this promise a fresh snapshot per read or only one private snapshot per callback?
 
+### Iteration and generators
+
+Prerequisites: Collections \(\#collections\) and Functions and scope \(\#functions\-and\-scope\)\. Trace one item request at a time\. Decide whether two report passes should retain values or create fresh traversals; resource ownership is developed in Files and data \(\#files\-and\-data\)\.
+
+#### Track the cursor through exhaustion
+
+A reusable iterable can create fresh iterators; one iterator is one advancing traversal\.
+
+An iterable can supply an iterator through iter\(value\)\. An iterator supplies successive items through next\(iterator\) and raises StopIteration when finished\. for hides that protocol and stops on StopIteration\. A list is reusable because iter\(list\) creates a fresh cursor\. An iterator’s iter returns itself; asking it to iterate again does not rewind it\. next\(iterator, default\) supplies a fallback instead of raising on exhaustion\.
+
+iterable\-and\-iterator\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+values = [2, 4, 6]
+cursor = iter(values)
+print(next(cursor))
+print(list(cursor))
+print(list(cursor))
+print(next(cursor, "done"))
+print(list(values), list(values))
+print(iter(cursor) is cursor)
+```
+
+One advancing cursor
+
+| Request | Cursor position | Returned values |
+| --- | --- | --- |
+| iter\(values\) | Before first item | No item consumed\. |
+| next\(cursor\) | After 2 | 2 |
+| list\(cursor\) | Exhausted after 6 | \[4, 6\] |
+| list\(cursor\) again | Still exhausted | \[\]; no rewind\. |
+| iter\(values\) again | Fresh cursor | Can visit 2, 4, 6 again\. |
+
+Materializing list\(cursor\) once stores only its remaining items and lets that resulting list be traversed repeatedly\. A factory that calls iter\(values\) or reopens a source avoids keeping every parsed result, but the underlying source may change or have side effects\. Choose repeatability and memory semantics explicitly; calling iter on the same exhausted generator does not repair it\.
+
+##### Why did my second report pass see zero records?
+
+Both passes shared one advancing iterator\. The first consumed it to exhaustion, leaving no items for the second\. Materialize once if memory permits, or supply a factory that creates a fresh traversal\. A factory also needs a source\-consistency policy if the input can change between passes\.
+
+##### Practice
+
+###### Make two report passes repeatable
+
+Implement two\_pass\(factory\): sum one traversal, then count a second fresh traversal\. Test an empty source and \[2,4,6\]\. Explain why two\_pass\(lambda: cursor\) is still broken\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Incomplete interface — implement the TODO
+
+```
+def two_pass(factory):
+    # TODO: request independent traversals
+    pass
+```
+
+Solution: Make two report passes repeatable
+
+Call the factory separately for each pass\. It must return a fresh traversal rather than one shared cursor\.
+
+iterable\-and\-iterator\-repair\.py — executable reference solution
+
+```
+def two_pass(factory):
+    total = sum(factory())
+    count = sum(1 for _ in factory())
+    return total, count
+
+assert two_pass(lambda: iter([2, 4, 6])) == (12, 3)
+assert two_pass(lambda: iter([])) == (0, 0)
+```
+
+Why it works
+
+The factory interface separates creation from consumption\. Returning the same exhausted iterator merely renames the bug\.
+
+Follow-up
+
+If input can change between passes, would one materialized snapshot better match the contract?
+
+#### Resume a generator at the demand boundary
+
+Calling a generator function creates an iterator; next starts or resumes its body\.
+
+A function containing yield is a generator function\. Calling it creates a generator object without executing its body\. next resumes its frame until the next yield; local state survives suspension\. A generator expression similarly delays its element computation until consumption, though its outer iterable expression is evaluated at creation\. Laziness changes when errors and side effects happen; it does not guarantee bounded memory if a stage or consumer buffers all values\.
+
+lazy\-pipelines\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+def parse(lines):
+    for line in lines:
+        print("parse", line)
+        yield int(line)
+
+values = parse(["2", "4", "6"])
+print("created")
+print("first", next(values))
+print("rest", list(values))
+print("again", list(values))
+
+eager = [int(line) for line in ["2", "4"]]
+print("eager", eager)
+```
+
+Demand controls parsing
+
+| Caller action | Producer frame | Visible output |
+| --- | --- | --- |
+| parse\(\.\.\.\) | Created; body has not run | created precedes every parse line\. |
+| next\(values\) | Loop reads "2" and suspends at yield | parse 2, then first 2 |
+| list\(values\) | Resumes after yield, reads remaining lines | parse 4, parse 6, then rest \[4, 6\] |
+| second list\(values\) | Exhausted | again \[\] |
+
+Replacing the generator with a list comprehension parses all lines immediately, including a bad late line the caller never intended to request\. A lazy producer can keep a file open while suspended; break alone does not promise to close it\. The consumer must own a context or explicitly close the generator, as the streaming lesson shows\. Iteration itself is synchronous here; yield is not an asyncio scheduling operation\.
+
+##### Where will an invalid third line fail if the caller only asks for one result?
+
+It will not be parsed yet in this generator\. The failure occurs when demand reaches that line\. An eager comprehension fails while building the list\. The difference affects error timing, resource lifetime and which inputs a partial consumer actually inspects\.
+
+##### Practice
+
+###### Keep parsing demand\-driven
+
+Implement integers\(lines\) lazily\. next on \["2", "bad"\] must return 2 without failing; the next request must raise ValueError\. Explain where to validate the entire file if all\-or\-nothing acceptance is required\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Incomplete interface — implement the TODO
+
+```
+def integers(lines):
+    # TODO: yield one conversion per requested line
+    pass
+```
+
+Solution: Keep parsing demand\-driven
+
+Yield conversions inside the loop\. Complete validation requires complete traversal before publishing an all\-or\-nothing result\.
+
+lazy\-pipelines\-repair\.py — executable reference solution
+
+```
+def integers(lines):
+    for line in lines:
+        yield int(line)
+
+values = integers(["2", "bad"])
+assert next(values) == 2
+try:
+    next(values)
+except ValueError:
+    pass
+else:
+    raise AssertionError("second conversion must fail")
+```
+
+Why it works
+
+The test distinguishes a lazy generator from an eagerly computed list wrapped in iter\. Success of one requested item does not certify unseen input\.
+
+#### Keep compact traversal honest about consumption
+
+enumerate, zip and short\-circuit consumers expose different traversal contracts\.
+
+A list comprehension constructs a new list from an iterable and optional filter\. A generator expression supplies results lazily\. enumerate pairs an increasing index with each item\. zip pairs items from multiple inputs and normally stops at the shortest; strict=True rejects unequal lengths\. any stops at the first truthy result; all stops at the first falsey result\. Empty any is False; empty all is True\. Side effects inside predicates can expose which items were inspected\.
+
+comprehensions\-and\-loop\-tools\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+titles = ["River", "", "Hill"]
+print([(i, title.upper()) for i, title in enumerate(titles, start=1) if title])
+seen = []
+def valid(value):
+    seen.append(value)
+    return value > 0
+print(all(valid(n) for n in [1, 0, 2]), seen)
+print(any([]), all([]))
+print(list(zip(["River", "Hill"], [2])))
+try:
+    list(zip(["River", "Hill"], [2], strict=True))
+except ValueError:
+    print("length mismatch")
+```
+
+Compact forms still have stopping rules
+
+| Consumer | Inspected state | Result |
+| --- | --- | --- |
+| enumerate then filter | Indices assigned before blank is removed | \[\(1, RIVER\), \(3, HILL\)\] |
+| all generator | 1 then 0; 2 never tested | False; seen=\[1,0\] |
+| empty consumers | No predicate runs | any=False; all=True |
+| zip default / strict | Shortest stops / mismatch rejected | One pair / ValueError |
+
+all\(\[valid\(n\) for n in values\]\) builds the entire list before all can short circuit\. zip without strict may silently drop an unmatched record, which is wrong when lengths must agree\. For complex validation with line numbers and error policies, a normal loop is often clearer than a nested comprehension\. Readability and consumption behavior both matter\.
+
+##### Can all validate every item for side effects?
+
+Not when fed a lazy iterable and a false result occurs early\. It answers a Boolean question and stops when that answer is known\. Use an explicit full traversal to collect every validation error\. Also decide whether an empty collection is valid; all’s mathematical empty result does not settle your domain policy\.
+
+##### Practice
+
+###### Find every invalid row
+
+You need all invalid indices, including after the first failure\. Replace an all\-based validator and reject unequal title/count inputs\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Find every invalid row
+
+Collect indices in an explicit loop or list comprehension, and pair inputs with zip\(\.\.\., strict=True\)\. Handle the mismatch as a separate validation error\.
+
+Why it works
+
+A Boolean aggregate cannot report all errors after short circuiting\. Strict zip makes the length precondition executable\.
+
+### Classes and protocols
+
+Prerequisites: Names and objects \(\#names\-and\-objects\), Functions and scope \(\#functions\-and\-scope\), Iteration and generators \(\#iteration\-and\-generators\)\. Follow class lookup and protocol calls before using dataclasses to represent validated records\.
+
+#### Give each instance its own mutable fields
+
+Class attributes are shared; bound methods supply self to instance operations\.
+
+A class is an object used to construct instances\. \_\_init\_\_ initializes a new instance; self is the instance parameter by convention\. A method accessed through an instance is bound: calling batch\.add\("River"\) supplies batch as self\. Attribute lookup can find class attributes when the instance has no override, so a class\-level mutable collection can be accidentally shared\. A property exposes controlled attribute access; classmethod receives the class, while staticmethod receives no implicit instance or class\.
+
+instances\-and\-methods\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+class Batch:
+    category = "books"
+    def __init__(self, titles=None):
+        self.titles = [] if titles is None else list(titles)
+    def add(self, title):
+        self.titles.append(title)
+    @property
+    def size(self):
+        return len(self.titles)
+    @classmethod
+    def empty(cls):
+        return cls()
+    @staticmethod
+    def clean(title):
+        return title.strip()
+
+a = Batch.empty()
+b = Batch.empty()
+a.add(Batch.clean(" River "))
+Batch.add(a, "Hill")
+print(a.titles, b.titles, a.size, a.category)
+```
+
+Class lookup and instance state
+
+| Operation | Owner | Result |
+| --- | --- | --- |
+| Batch\.empty\(\) | cls is Batch; \_\_init\_\_ creates titles | Two independent instance lists\. |
+| a\.add | Bound method supplies a | River appended only to a\.titles\. |
+| Batch\.add\(a, \.\.\.\) | Explicit self supplied | Hill appended to the same a list\. |
+| a\.size / a\.category | Property computes / class lookup finds | 2 / books |
+
+Moving titles=\[\] to the class and removing per\-instance assignment makes a\.add affect b’s view too\. Rebinding a\.category creates an instance attribute that shadows the class value; mutating a shared class list changes the shared object\. A property can enforce a field rule but should avoid surprising hidden I/O\. Initialization is still a runtime boundary: a class annotation alone validates nothing\.
+
+##### Why did two instances share a list?
+
+They looked up the same class\-level mutable object because neither instance owned a replacement\. Allocate mutable fields during initialization or with a dataclass default\_factory\. A bound method chooses the receiver; it does not copy class attributes for it\.
+
+##### Practice
+
+###### Repair shared batch state
+
+A Batch class stores titles=\[\] on the class\. Move ownership to instances, accept optional initial titles and prevent later input\-list appends from changing the batch\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Repair shared batch state
+
+Initialize self\.titles = \[\] if titles is None else list\(titles\)\. This copies the outer sequence; nested records would still require an ownership choice\.
+
+Why it works
+
+A separate list per instance prevents cross\-instance appends, while copying supplied titles separates the input container\. It does not freeze mutable title objects\.
+
+#### Follow super along the method resolution order
+
+super delegates to the next class in the MRO, while composition delegates to an owned object\.
+
+Inheritance supports substituting a specialized object where the base contract is expected\. Python computes a method resolution order \(MRO\) for lookup, including multiple inheritance\. super\(\) continues lookup after the current class in that order; it does not mean “call my textual parent” in every hierarchy\. Cooperative methods agree on signatures and delegate once\. Composition instead stores another object and calls its methods, often making a configurable dependency clearer\.
+
+inheritance\-and\-composition\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+class Base:
+    def describe(self):
+        return ["Base"]
+class Left(Base):
+    def describe(self):
+        return ["Left"] + super().describe()
+class Right(Base):
+    def describe(self):
+        return ["Right"] + super().describe()
+class Report(Left, Right):
+    pass
+
+print(Report().describe())
+print([cls.__name__ for cls in Report.__mro__])
+
+class Display:
+    def __init__(self, formatter):
+        self.formatter = formatter
+    def render(self, title):
+        return self.formatter(title)
+print(Display(str.upper).render("River"))
+```
+
+One cooperative lookup chain
+
+| Call | Next lookup | Accumulated result |
+| --- | --- | --- |
+| Report\.describe | Find Left\.describe | \[Left\] \+ remaining chain |
+| Left super | Next is Right in Report MRO | \[Right\] \+ Base result |
+| Right super | Next is Base | \[Left, Right, Base\] |
+| Display\.render | Stored formatter callable | RIVER; no inheritance chain needed\. |
+
+Calling Base\.describe\(self\) directly from Left bypasses Right in this hierarchy\. That may be intentional in a noncooperative design, but mixing direct\-base and cooperative calls can skip or repeat work\. When only formatting policy varies, passing a formatter makes the dependency explicit without imposing an inheritance relationship\.
+
+##### Does super always call the direct parent?
+
+It follows the receiver’s MRO after the class where the method was defined\. In a diamond hierarchy that can reach a sibling branch before the common base\. Use cooperative signatures consistently, and prefer composition when the relationship is “uses a policy” rather than a stable subtype contract\.
+
+##### Practice
+
+###### Change formatting without a subclass
+
+A report needs upper\-case output today and JSON tomorrow\. Choose composition or inheritance and identify what the caller must be able to assume about the formatter\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Change formatting without a subclass
+
+Inject a formatter callable with an explicit input/result contract\. The report owns when to call it; the policy owns formatting\.
+
+Why it works
+
+Composition exposes a replaceable dependency\. Tests should assert the resulting display and errors rather than a private inheritance shape\.
+
+#### Implement the protocol the consumer actually uses
+
+Special methods connect syntax to type\-level behavior; duck typing needs a behavioral contract\.
+
+A protocol is a set of operations a consumer relies on\. Duck typing uses those operations without requiring a specific base class\. Python special methods connect syntax to operations: iter\(x\) uses \_\_iter\_\_, len\(x\) uses \_\_len\_\_, repr\(x\) uses \_\_repr\_\_, and == negotiates equality\. Return NotImplemented for an unsupported equality partner so Python can try the other operand’s comparison; False would prematurely assert inequality\. Implicit special\-method lookup is generally on the type, not an arbitrary instance attribute\.
+
+protocols\-and\-special\-methods\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+class Titles:
+    def __init__(self, values):
+        self.values = tuple(values)
+    def __iter__(self):
+        return iter(self.values)
+    def __len__(self):
+        return len(self.values)
+    def __repr__(self):
+        return f"Titles({self.values!r})"
+    def __eq__(self, other):
+        if not isinstance(other, Titles):
+            return NotImplemented
+        return self.values == other.values
+    def __hash__(self):
+        return hash(self.values)
+
+a = Titles(["River", "Hill"])
+b = Titles(["River", "Hill"])
+print(list(a), list(a), len(a))
+print(a == b, hash(a) == hash(b), len({a, b}))
+print(repr(a), a.__eq__(42) is NotImplemented)
+```
+
+Syntax delegates to protocols
+
+| Consumer | Method / state | Result |
+| --- | --- | --- |
+| list\(a\) twice | \_\_iter\_\_ creates a fresh tuple iterator | Two complete traversals\. |
+| len\(a\) | \_\_len\_\_ returns element count | 2 |
+| a == b / set | Equal tuple values, matching hash | True; one set entry\. |
+| comparison with int | Unsupported type | NotImplemented lets comparison negotiation continue\. |
+
+Returning one stored exhausted iterator would make a reusable Titles object fail on its second traversal\. Hashing by tuple contents is safe here only because the stored strings and tuple remain stable; exposing mutable hash\-participating state would break key lookup assumptions\. A method name alone does not establish compatible behavior or a meaningful result\.
+
+##### How do duck typing, inheritance and Protocol differ?
+
+Duck typing is runtime use of required operations\. Inheritance declares a nominal relationship and can share implementation\. typing\.Protocol describes structural capabilities for static checking; it does not validate values at runtime\. Every approach still needs a clear behavioral contract and tests at the consumer boundary\.
+
+##### Practice
+
+###### Repair an exhausted custom iterable
+
+A container stores self\.cursor = iter\(values\) and returns it in \_\_iter\_\_\. Repair it to allow two traversals, then explain how concurrent mutation changes the contract\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Repair an exhausted custom iterable
+
+Store a stable sequence and return a fresh iterator for each traversal\. If mutation is supported, define whether traversals see a snapshot or live changes\.
+
+Why it works
+
+An iterable supplies traversal state; it should not accidentally force every consumer to share one cursor\. Two list\(container\) calls expose the defect\.
+
+#### Separate generated structure from validated data
+
+default\_factory isolates fields; frozen and annotations have narrower guarantees\.
+
+dataclass generates methods such as \_\_init\_\_, \_\_repr\_\_ and equality from annotated fields\. field\(default\_factory=list\) calls list for each omitted field during instance creation\. frozen=True blocks ordinary field reassignment, not mutation of referenced children\. Type annotations guide tools but do not enforce field or function argument types at runtime\. Protocol describes a static structural interface; even runtime\_checkable only checks attribute presence rather than full signature/value behavior\.
+
+dataclasses\-and\-typing\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+from dataclasses import dataclass, field, FrozenInstanceError
+from typing import Protocol
+
+class Sized(Protocol):
+    def __len__(self) -> int: ...
+
+@dataclass(frozen=True)
+class Batch:
+    title: str
+    tags: list[str] = field(default_factory=list)
+
+a = Batch("River")
+b = Batch("River")
+print(a == b, a.tags is b.tags)
+a.tags.append("read")
+print(a.tags, b.tags)
+try:
+    a.title = "Hill"
+except FrozenInstanceError:
+    print("field frozen")
+wrong = Batch(42)
+print(wrong.title)
+```
+
+Generated methods have specific limits
+
+| Action | Guarantee | Limit |
+| --- | --- | --- |
+| Batch twice | Fresh tags lists; initial equality | True False; equality does not imply identity\. |
+| a\.tags\.append | Field binding is unchanged | Child changes despite frozen\. |
+| a\.title assignment | FrozenInstanceError | Ordinary field assignment blocked\. |
+| Batch\(42\) | Constructor accepts 42 | Annotation did not validate a title\. |
+
+A frozen dataclass with a list field is not automatically a useful hashable key; hashing the list can fail\. Use immutable fields when immutable value semantics are required\. For JSON input, validate shape, exact types and domain before constructing the dataclass\. bool is an int subclass, so type\(value\) is int can express a domain that excludes booleans\.
+
+##### Can a dataclass replace input validation?
+
+No\. It generates structure from annotations but accepts runtime values without enforcing those hints\. Validate decoded input at the boundary, then build the record\. default\_factory solves mutable default ownership; frozen limits reassignment; neither establishes domain correctness\.
+
+##### Practice
+
+###### Create isolated typed batches
+
+Implement Batch with independent tags for omitted fields, then prove frozen does not freeze the tags child and an integer can still enter a str\-annotated field\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Incomplete interface — implement the TODO
+
+```
+# TODO: dataclass Batch(title, tags) with default_factory and frozen fields
+```
+
+Solution: Create isolated typed batches
+
+Use field\(default\_factory=list\), then validate separately at an input boundary\.
+
+dataclasses\-and\-typing\-repair\.py — executable reference solution
+
+```
+from dataclasses import dataclass, field
+
+@dataclass(frozen=True)
+class Batch:
+    title: str
+    tags: list[str] = field(default_factory=list)
+
+a, b = Batch("River"), Batch("Hill")
+a.tags.append("read")
+assert b.tags == [] and a.tags == ["read"]
+assert Batch(42).title == 42
+```
+
+Why it works
+
+Independent list state and runtime type acceptance are different claims\. The tests demonstrate both instead of trusting the annotations\.
+
+### Errors and cleanup
+
+Prerequisites: Functions and scope \(\#functions\-and\-scope\), Classes and protocols \(\#classes\-and\-protocols\)\. Follow success and failure paths separately\. Put recovery policy at the boundary that can decide it, and cleanup at the boundary that owns the resource\.
+
+#### Trace propagation, translation and finally
+
+Specific handlers recover deliberately; chained errors retain the original cause\.
+
+raise interrupts ordinary execution and searches outward for a matching except handler\. A handler for ValueError also catches its subclasses\. else runs only if the try suite finishes without an exception; keep it small so unrelated errors do not get mislabeled\. finally runs as control leaves the construct, including return and exceptions\. raise NewError\(\.\.\.\) from error translates a boundary failure while preserving its cause\. Avoid returning from finally: it can replace a pending result or suppress a failure\.
+
+exception\-flow\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+def parse(raw):
+    try:
+        value = int(raw)
+    except ValueError as error:
+        raise ValueError("invalid count") from error
+    else:
+        print("converted", value)
+        return value
+    finally:
+        print("leave parse")
+
+print("value", parse("2"))
+try:
+    parse("bad")
+except ValueError as error:
+    print(str(error), type(error.__cause__).__name__)
+```
+
+Specific error paths
+
+| Input | Path | Observable result |
+| --- | --- | --- |
+| "2" | try succeeds → else → finally → caller | converted 2; leave parse; value 2 |
+| "bad" | int raises → except translates → finally → caller handler | leave parse; invalid count ValueError |
+| Unrelated TypeError | No ValueError handler matches | finally still runs; TypeError propagates\. |
+
+A broad except Exception: return 0 would turn invalid input and programmer defects into a plausible count\. Catch only failures the boundary can handle\. Bare raise in a handler preserves the active exception; raise from creates an explicit causal relationship\. Assertions can be disabled with optimization, so do not use assert to validate untrusted input; use explicit exceptions\.
+
+##### Where should a parser catch an exception?
+
+At a boundary with a defined recovery or translation policy\. The parser may translate a low\-level conversion failure into a domain error with its cause, while a caller chooses whether to reject a record or stop the report\. Cleanup belongs in finally or with so it does not depend on which handler matches\.
+
+##### Practice
+
+###### Preserve an invalid\-count cause
+
+Repair a function that catches everything and returns zero\. Invalid integer text should become ValueError\("invalid count"\) with the conversion error as cause; a wrong input type must still propagate TypeError\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Preserve an invalid\-count cause
+
+Catch ValueError around int only and raise the domain ValueError from the caught exception\. Do not catch TypeError unless the boundary explicitly handles it\.
+
+Why it works
+
+Zero is valid data, so silently returning it would erase the difference between a count and a rejected record\. Chaining preserves diagnostics without exposing them as user\-facing success\.
+
+#### Give cleanup a defined exit boundary
+
+with invokes the exit protocol even when the body raises or returns\.
+
+A context manager implements entry/exit behavior for a with block\. contextlib\.contextmanager lets a generator define it: code before yield acquires and supplies the resource; execution after yield runs when the body exits\. The body’s exception is thrown back at yield\. Put unconditional cleanup in finally and let failures propagate unless suppression is an intentional policy\. This in\-memory file makes closed state observable without collection timing\.
+
+context\-managers\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+from contextlib import contextmanager
+from io import StringIO
+
+@contextmanager
+def opened(text):
+    handle = StringIO(text)
+    try:
+        yield handle
+    finally:
+        handle.close()
+        print("closed", handle.closed)
+
+with opened("2") as good:
+    print(int(good.read()))
+try:
+    with opened("bad") as bad:
+        int(bad.read())
+except ValueError:
+    print("rejected", bad.closed)
+```
+
+Cleanup across success and failure
+
+| Path | Body state | Exit boundary |
+| --- | --- | --- |
+| Success | Reads 2 and prints it | finally closes the handle before normal continuation\. |
+| Conversion failure | ValueError leaves body | finally closes the handle before propagation\. |
+| Caller catches | bad still refers to object | rejected True proves closed resource\. |
+
+A truthy \_\_exit\_\_ result suppresses an exception; a contextmanager generator that catches the body error and finishes without re\-raising also suppresses it\. with does not promise rollback or successful validation\. Move a return inside the with body and cleanup still runs\. Keep cleanup code small: a new exception in cleanup can obscure the original failure, although Python retains exception context\.
+
+##### How can a context manager accidentally hide a parser failure?
+
+Its exit method may return a truthy value, or a contextmanager generator may swallow the exception injected at yield\. The caller then continues as if the body succeeded\. Put closure in finally and re\-raise body errors unless a documented suppression policy applies\.
+
+##### Practice
+
+###### Close on failure without swallowing it
+
+Implement managed\(text\) as a context manager yielding StringIO\. Verify closure after a successful read, a ValueError in the body and an early return\. The caller must observe the ValueError\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Incomplete interface — implement the TODO
+
+```
+from contextlib import contextmanager
+
+@contextmanager
+def managed(text):
+    # TODO: acquire, yield and close without suppression
+    pass
+```
+
+Solution: Close on failure without swallowing it
+
+Use try/finally around yield, closing unconditionally and leaving propagation intact\.
+
+context\-managers\-repair\.py — executable reference solution
+
+```
+from contextlib import contextmanager
+from io import StringIO
+
+@contextmanager
+def managed(text):
+    handle = StringIO(text)
+    try:
+        yield handle
+    finally:
+        handle.close()
+
+with managed("ok") as good:
+    assert good.read() == "ok"
+assert good.closed
+try:
+    with managed("bad") as bad:
+        raise ValueError("body")
+except ValueError as error:
+    assert str(error) == "body" and bad.closed
+else:
+    raise AssertionError("body failure was swallowed")
+
+def early():
+    with managed("early") as handle:
+        return handle
+assert early().closed
+```
+
+Why it works
+
+The caller’s handler proves the body error survived\. Checking closed alone would miss an exit method that hides failures\.
+
+#### Validate shape, exact type and domain
+
+Annotations and decoding do not establish that external values are acceptable\.
+
+A boundary receives data from outside your trusted model\. Validation checks what that model needs: container shape, required fields, types and value restrictions\. A JSON Boolean becomes Python bool, which is a subclass of int; isinstance\(value, int\) accepts True\. If counts must be integers excluding booleans, type\(value\) is int expresses that choice\. Reject invalid values with explicit exceptions\. Keep permissive conversion separate from a strict data contract\.
+
+validation\-boundaries\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+def validate_count(record):
+    if not isinstance(record, dict):
+        raise ValueError("object required")
+    count = record.get("count")
+    if type(count) is not int or count < 0:
+        raise ValueError("nonnegative integer count required")
+    return count
+
+for record in [{"count": 0}, {"count": True}, {"count": -1}, {}, []]:
+    try:
+        print("accepted", validate_count(record))
+    except ValueError as error:
+        print("rejected", error)
+```
+
+Boundary decisions before computation
+
+| Decoded value | Validation | Outcome |
+| --- | --- | --- |
+| \{"count":0\} | Exact int and nonnegative | accepted 0 |
+| \{"count":True\} | bool excluded by exact\-type contract | rejected |
+| \{"count":\-1\} | Type correct; domain wrong | rejected |
+| \{\} / \[\] | Missing count / wrong shape | rejected before arithmetic |
+
+int\("2"\) is conversion, not proof that the caller sent an integer\. Coercion can be useful in a documented text parser but surprising for a JSON API\. A count: int annotation alone accepts runtime strings until some later operation fails\. Validate once at the boundary and keep downstream code’s preconditions explicit\. Bound input size before parsing when untrusted data can exhaust resources\.
+
+##### Why reject True as a count if Python treats it as an integer?
+
+The domain distinguishes an affirmative flag from a measured count\. Python’s inheritance relationship does not decide that policy\. Use exact type checks when appropriate, then check nonnegativity and other constraints\. A schema or annotation is useful only to the extent its runtime validator actually enforces those rules\.
+
+##### Practice
+
+###### Test the boundary, not the annotation
+
+Name cases that distinguish decoding, shape, type and domain errors in a book\-count record\. Include a valid falsey value\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Test the boundary, not the annotation
+
+Malformed JSON, a decoded list, a missing count, a Boolean or string count, a negative integer, and valid zero\.
+
+Why it works
+
+Each case crosses a different boundary\. Testing only a happy dictionary and one negative value can miss bool coercion and missing fields\.
+
+### Files and data
+
+Prerequisites: Iteration and generators \(\#iteration\-and\-generators\), Errors and cleanup \(\#errors\-and\-cleanup\)\. Use local fixture files, explicit UTF\-8 and owned with boundaries\. Distinguish decoding a document from accepting a domain record\.
+
+#### Own a path and its decoding policy
+
+Path names locate resources; a with\-owned text handle decodes bytes and closes at exit\.
+
+pathlib\.Path represents a filesystem path, not an open file\. Relative paths resolve from the process working directory\. open in text mode decodes bytes using an explicit encoding and can translate newlines; binary mode returns bytes unchanged\. TemporaryDirectory owns a fixture directory here\. The inner with owns the file handle, including when UTF\-8 decoding fails\. Keep file\-system errors distinct from decoding and domain errors\.
+
+text\-files\-and\-paths\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
+with TemporaryDirectory() as directory:
+    path = Path(directory) / "books.txt"
+    path.write_bytes("café\r\nHill\n".encode("utf-8"))
+    with path.open(encoding="utf-8") as handle:
+        print([line.rstrip("\n") for line in handle])
+    print(handle.closed, path.read_bytes().endswith(b"\n"))
+    path.write_bytes(b"\xff")
+    try:
+        with path.open(encoding="utf-8") as broken:
+            broken.read()
+    except UnicodeDecodeError:
+        print("decode rejected", broken.closed)
+```
+
+Bytes, text and resource ownership
+
+| Boundary | State | Result |
+| --- | --- | --- |
+| write\_bytes | UTF\-8 plus CRLF/LF bytes stored | Raw bytes remain unchanged\. |
+| text iteration | Decoder plus universal newline handling | \[café, Hill\] after stripping newline\. |
+| with exit | handle\.closed is True | Path still exists until directory owner exits\. |
+| bad UTF\-8 read | Decode error inside with | broken closes before caller catches it\. |
+
+Path\.read\_text is convenient for small bounded files and owns its internal handle, but materializes all text\. For large files, iterate inside with and retain only needed state\. A path does not certify existence or authorization, and a relative path is not relative to the source file unless you construct that base explicitly\. Choose newline preservation deliberately for formats where exact bytes matter\.
+
+##### Why specify an encoding even if a file reads correctly on my machine?
+
+A default encoding depends on environment and runtime configuration\. Explicit UTF\-8 states a portable interchange contract and produces a clear decode failure for invalid bytes\. Binary processing is appropriate when the format is bytes, while text parsing should begin after decoding succeeds\.
+
+##### Practice
+
+###### Preserve the failure boundary
+
+A file is missing, a second has invalid UTF\-8 and a third has a negative count\. Which layer should report each error? Should all become an empty report?
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Preserve the failure boundary
+
+File opening reports FileNotFoundError, text decoding reports UnicodeDecodeError, and record validation reports a domain ValueError\. Do not turn them all into an empty successful report\.
+
+Why it works
+
+Empty input is legitimate data and deserves its own result\. Catching every failure as empty would conceal deployment, encoding and domain defects\.
+
+#### Decode JSON, then validate the record
+
+Syntax success can still produce the wrong shape, type or domain value\.
+
+json\.loads converts JSON text into Python dictionaries, lists, strings, numbers, booleans and None\. Invalid syntax raises JSONDecodeError\. A syntactically valid document may still be a list or have invalid fields\. This format requires an object with a nonblank title and a nonnegative integer count excluding bool; extra fields are ignored by this deliberately narrow reader\. Input\-size limits belong before loads\. Never use eval or untrusted pickle to decode this interchange format\.
+
+json\-and\-records\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+import json
+
+def decode_record(text):
+    value = json.loads(text)
+    if not isinstance(value, dict):
+        raise ValueError("object required")
+    title, count = value.get("title"), value.get("count")
+    if not isinstance(title, str) or not title.strip():
+        raise ValueError("nonblank title required")
+    if type(count) is not int or count < 0:
+        raise ValueError("nonnegative integer required")
+    return {"title": title.strip(), "count": count}
+
+print(decode_record('{"title":" River ","count":0}'))
+for text in ["{", "[]", '{"title":"River","count":true}']:
+    try:
+        decode_record(text)
+    except json.JSONDecodeError:
+        print("syntax")
+    except ValueError:
+        print("domain")
+```
+
+Two acceptance boundaries
+
+| Input | Decoder result | Policy result |
+| --- | --- | --- |
+| \{ | JSONDecodeError | No record exists to validate\. |
+| \[\] | Python list | Reject wrong top\-level shape\. |
+| count:true | Python bool | Reject exact count type\. |
+| River with count:0 | Python dict with int zero | Accept normalized title and zero\. |
+
+Catching JSONDecodeError before ValueError matters because it is a ValueError subclass\. A dataclass constructor would not automatically add these checks\. JSON round trips may change tuple to list and numeric dictionary keys to strings; it is an interchange format, not an identity\-preserving object clone\. Choose an explicit duplicate\-record policy later in the report rather than confusing it with duplicate JSON member names\.
+
+##### What did successful JSON decoding prove?
+
+Only that the parser produced a Python value from acceptable syntax under its decoding rules\. It did not prove shape, field types or domain validity\. Apply a small explicit validator before constructing trusted records, and reject oversized input before parsing when needed\.
+
+##### Practice
+
+###### Repair record acceptance
+
+Implement record\(text\) using the displayed format\. Accept zero and strip a title\. Reject malformed JSON, wrong shape, blank or missing title, Boolean/string/negative counts\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Incomplete interface — implement the TODO
+
+```
+def record(text):
+    # TODO: decode and validate without coercing counts
+    pass
+```
+
+Solution: Repair record acceptance
+
+Decode first, then check each domain condition explicitly\. Keep JSONDecodeError distinguishable from domain ValueError at a caller boundary\.
+
+json\-and\-records\-repair\.py — executable reference solution
+
+```
+import json
+
+def record(text):
+    value = json.loads(text)
+    if not isinstance(value, dict):
+        raise ValueError("object required")
+    title, count = value.get("title"), value.get("count")
+    if not isinstance(title, str) or not title.strip():
+        raise ValueError("title required")
+    if type(count) is not int or count < 0:
+        raise ValueError("count required")
+    return {"title": title.strip(), "count": count}
+
+assert record('{"title":" River ","count":0}') == {"title": "River", "count": 0}
+```
+
+Why it works
+
+A valid zero prevents an overly broad truthiness check from passing unnoticed\. No annotation or constructor can substitute for these explicit checks\.
+
+#### Keep the source open while a lazy reader needs it
+
+A suspended file generator retains its handle; early termination requires an explicit close boundary\.
+
+A generator yielding inside with pauses before leaving that block\. The file remains open between yielded records until exhaustion, error or explicit generator close resumes cleanup\. A plain break in a caller does not universally close the generator\. contextlib\.closing gives the consumer an explicit generator\-close boundary\. This reader limits each line request to 129 characters and accepts at most 128, so one unbounded line cannot defeat the streaming memory contract\. It emits nonblank integer lines for this small format\.
+
+streaming\-report\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+from contextlib import closing
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
+def counts(path, state):
+    with path.open(encoding="utf-8") as handle:
+        state["handle"] = handle
+        while True:
+            line = handle.readline(129)
+            if not line:
+                return
+            if len(line) > 128:
+                raise ValueError("line too long")
+            if line.strip():
+                yield int(line)
+
+with TemporaryDirectory() as directory:
+    path = Path(directory) / "counts.txt"
+    path.write_text("2\n4\n", encoding="utf-8")
+    state = {}
+    with closing(counts(path, state)) as values:
+        print(next(values), state["handle"].closed)
+    print(state["handle"].closed)
+    print(sum(counts(path, state)), state["handle"].closed)
+```
+
+Suspended producer owns an open file
+
+| Demand / boundary | Generator state | File state |
+| --- | --- | --- |
+| First next | Suspended at yield of 2 | Open; prints 2 False\. |
+| closing exit | close injects GeneratorExit; with exits | Closed before consumer continues\. |
+| Full sum | Consumes 2,4 then EOF | 6; closed on normal exhaustion\. |
+| Bad integer / long line | Exception leaves generator’s with | Closed before failure propagates\. |
+
+Returning a generator expression from inside a with that has already exited gives the caller a closed source\. Reading the entire file into a list avoids that lifetime bug but changes memory and eager\-validation behavior\. Streaming bounds temporary record storage, not a grouping map with arbitrarily many distinct keys; capstone makes that limit explicit\. Closing after an early break does not validate unseen records\.
+
+##### Who owns cleanup if only the first record is consumed?
+
+The consumer must enter an explicit close boundary around the generator or own the file directly and pass its handle to a lazy parser\. The generator’s with only exits when execution leaves it\. Relying on reference counting after break is a runtime accident, not a portable ownership contract\.
+
+##### Practice
+
+###### Repair early\-exit file cleanup
+
+Implement first\_count\(path\)\. Read the first nonblank integer within with, reject a line over 128 characters and return None for empty input\. Prove closure on normal return and conversion failure\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Incomplete interface — implement the TODO
+
+```
+def first_count(path):
+    # TODO: own the handle even on early return
+    pass
+```
+
+Solution: Repair early\-exit file cleanup
+
+Let first\_count own the with block directly\. Every return and raised conversion error leaves that scope and closes the handle\.
+
+streaming\-report\-repair\.py — executable reference solution
+
+```
+def first_count(path):
+    with path.open(encoding="utf-8") as handle:
+        while True:
+            line = handle.readline(129)
+            if not line:
+                return None
+            if len(line) > 128:
+                raise ValueError("line too long")
+            if line.strip():
+                return int(line)
+```
+
+Why it works
+
+A first\-item API need not return a lazy object\. The verification uses an observable handle and a real temporary file, including the error path\.
+
+Follow-up
+
+If you return an iterator instead, which caller must own its close boundary?
+
+### Modules and environments
+
+Prerequisites: Runtime and syntax \(\#runtime\-and\-syntax\), Functions and scope \(\#functions\-and\-scope\)\. Save every labelled file in the shown layout\. Run from its root\. Imports execute module code and bind names; environment setup selects which interpreter and dependencies that program can see\.
+
+#### Observe import execution and caching
+
+A module is a namespace; first import executes it and later imports normally reuse the cached object\.
+
+A module is a Python namespace usually loaded from a file\. import catalog finds/loads the module, executes top\-level statements on first load and binds its object\. sys\.modules normally caches it within this interpreter, so a later import reuses it\. A name imported with from catalog import title binds that current object; later rebinding catalog\.title does not update the separate local name\. \_\_name\_\_ is "\_\_main\_\_" for an entry module, which lets a guard keep script work out of imports\.
+
+main\.py — beside catalog\.py; run python3 main\.py
+
+```
+import catalog
+from catalog import title
+import catalog as again
+
+catalog.title = "Hill"
+print(catalog is again, title, catalog.title)
+if __name__ == "__main__":
+    print("entry")
+```
+
+First load versus cached import
+
+| Statement | Namespace / cache | Output |
+| --- | --- | --- |
+| import catalog | Module executes and is cached | catalog loaded once |
+| from import / alias import | Separate title binding / same cached module | No second load print\. |
+| catalog\.title = Hill | Module binding changes; local title stays River | True River Hill |
+| main guard | main\.py is entry | entry; no catalog entry\. |
+
+catalog\.py — sibling module
+
+```
+print("catalog loaded")
+title = "River"
+
+def name():
+    return title
+
+if __name__ == "__main__":
+    print("catalog entry")
+```
+
+Import side effects such as file writes or starting threads happen during loading and can surprise tests or spawn children\. Keep reusable definitions importable and entry actions guarded\. reload is an explicit different operation and does not refresh every existing reference\. Never name your own file json\.py or asyncio\.py when you intend to import the standard library: search\-path shadowing can load your file instead\.
+
+##### Why did from\-import retain the old title?
+
+It created a local binding to the string object present at import time\. Rebinding catalog\.title changes the module’s binding, not every imported name\. A shared mutable object would expose its mutations through both references, which is the same binding\-versus\-mutation distinction taught in Names and objects\.
+
+##### Practice
+
+###### Move work behind an entry boundary
+
+A reusable module starts a process every time it is imported\. Choose what belongs at top level and what belongs in a guarded main function\. What happens under spawn?
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Move work behind an entry boundary
+
+Keep definitions/import\-safe constants at top level; put process startup in main and call it under if \_\_name\_\_ == "\_\_main\_\_"\. Spawn imports the module, so unguarded startup can recursively create processes\.
+
+Why it works
+
+The guard defines entry ownership\. Caching is per interpreter and does not prevent a new child interpreter from importing the module\.
+
+#### Run a package with its import context
+
+\-m supplies package context for relative imports; a cycle can observe partially initialized names\.
+
+A package groups modules under an import namespace\. In this regular package, \_\_init\_\_\.py marks the directory and is intentionally minimal\. A relative import such as from \.model imports within that package\. Running python3 \-m books\.main from the root establishes package context; python3 books/main\.py runs a file without that context, so the relative import fails\. Import cycles are not always errors, but a module can be cached before its top\-level execution has created every name\.
+
+books/main\.py — root contains books/\_\_init\_\_\.py and books/model\.py; run python3 \-m books\.main
+
+```
+from .model import title
+
+def main():
+    print(title)
+
+if __name__ == "__main__":
+    main()
+```
+
+Package execution and an incomplete module
+
+| Invocation / import | Context / state | Outcome |
+| --- | --- | --- |
+| \-m books\.main | books package context exists | Relative model import succeeds; River\. |
+| books/main\.py directly | No known parent package | ImportError before main\. |
+| cycle\_a → cycle\_b → cycle\_a | First module has not finished assigning names | ImportError for a partially initialized module\. |
+| Repair direction | Move shared definition to a third leaf module | Both depend on it; no back edge\. |
+
+books/\_\_init\_\_\.py — complete file
+
+```
+"""Local book-report package."""
+```
+
+books/model\.py — complete file
+
+```
+title = "River"
+```
+
+cycle\_a\.py — intentional broken sibling cycle; run python3 cycle\_a\.py
+
+```
+from cycle_b import label
+name = "River"
+print(label)
+```
+
+cycle\_b\.py — broken cycle partner
+
+```
+from cycle_a import name
+label = name.upper()
+```
+
+Changing a relative import to an accidental working\-directory import can hide the context defect and fail elsewhere\. Design a clear package entry and dependency direction\. A local import inside a function can defer a dependency, but it does not cure every cycle or make startup side effects safe\. The repair activity removes the back edge by placing the shared data in a leaf module\.
+
+##### Why is an import cycle sometimes visible only at startup?
+
+A first import executes modules in dependency order and may expose a cached but partially initialized module\. A later import after successful initialization can find all names\. Keep definitions in a dependency direction that does not require reading unfinished peer state; a successful warm import is not evidence that fresh startup works\.
+
+##### Practice
+
+###### Remove the cycle’s back edge
+
+Repair cycle\_a/cycle\_b by making the shared name a leaf dependency\. Provide common\.py, formatter\.py and entry\.py with no hidden helper\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Remove the cycle’s back edge
+
+Place name in common\.py, import it from formatter\.py, and let entry\.py import the formatter result\.
+
+package\-layout\-repair\.py — executable reference solution
+
+```
+from formatter import label
+
+if __name__ == "__main__":
+    print(label)
+```
+
+Why it works
+
+The dependency graph becomes entry → formatter → common\. The actual multi\-file check runs fresh startup, so cached state cannot conceal the cycle\.
+
+Follow-up
+
+Use the two companion files below with this entry; why is moving only the print insufficient?
+
+#### Select the interpreter before installing dependencies
+
+venv isolates installed packages; declared ranges and resolved environments serve different purposes\.
+
+A virtual environment is a directory containing interpreter entry points and an isolated package installation context\. It reuses a base Python runtime and is disposable rather than portable across arbitrary machines\. python \-m pip runs pip associated with that selected interpreter\. Activation mainly changes shell PATH; an explicit \.venv/bin/python works without activation on POSIX, while Windows uses \.venv\\Scripts\\python\.exe\. Dependency declarations express permitted requirements; a reproducible resolution also records selected versions and installation artifacts/tool policies\.
+
+environments\-and\-dependencies\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+import sys
+import platform
+
+print(platform.python_implementation())
+print("supported", sys.version_info >= (3, 12))
+print("venv", sys.prefix != sys.base_prefix)
+print("executable", sys.executable)
+```
+
+Interpreter and installation identities
+
+| Action | What it chooses | Limit |
+| --- | --- | --- |
+| python \-m venv | Base runtime for a new environment | Does not itself choose all application dependencies\. |
+| Explicit environment Python | Runtime and its package paths | No activation required\. |
+| python \-m pip | pip for this interpreter | Distribution names need not match import names\. |
+| Version range / resolution | Allowed versions / chosen artifacts | A range alone is not a reproducible lock\. |
+
+POSIX setup commands — provision separately, never run by example tests
+
+```
+python3.12 -m venv .venv
+.venv/bin/python -m pip --version
+.venv/bin/python -m pip install -e .
+```
+
+common\.py — cycle repair companion
+
+```
+name = "River"
+```
+
+formatter\.py — cycle repair companion
+
+```
+from common import name
+label = name.upper()
+```
+
+A bare pip command can refer to a different interpreter on PATH\. A project\-local json\.py can shadow the standard library even in a venv; isolation is not a sandbox or a cure for module names\. These lessons use only the standard library and install nothing during verification\. Production compatibility depends on the actual Python implementation, patch and build, not just a requirement string\.
+
+##### What would you record to reproduce a Python example failure?
+
+The exact interpreter path, version/build/platform, invocation and working directory, input fixture, dependency resolution and full exception\. A venv identifies installation context but is not a portable deployment artifact\. Recreate it from declared and resolved requirements with the supported interpreter\.
+
+##### Practice
+
+###### Diagnose the wrong pip
+
+A dependency is installed but import fails in \.venv/bin/python\. What do you inspect before installing it again, and what does a dependency range leave unresolved?
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Diagnose the wrong pip
+
+Inspect the interpreter path and run \.venv/bin/python \-m pip to inspect its installation context\. Check distribution versus import names and local shadowing\. A range leaves exact versions/artifacts and resolution choices open\.
+
+Why it works
+
+Repeated installation into the wrong interpreter repeats the defect\. Reproducibility starts by identifying the process that actually runs the program\.
+
+### Standard library
+
+Prerequisites: Collections \(\#collections\) and Iteration and generators \(\#iteration\-and\-generators\)\. Pick structures by observable state and operations\. These examples use APIs present in Python 3\.12, including the min\-heap API rather than newer max\-heap additions\.
+
+#### Count and group with an explicit missing\-key policy
+
+Counter reads missing counts as zero; defaultdict indexing creates missing groups\.
+
+Counter is a dict subclass for counts: accessing a missing key yields zero without inserting it\. defaultdict calls a supplied factory when indexing a missing key, then inserts that result\. get does not invoke that factory\. Grouping retains values and can require memory proportional to all input records; counting retains only one entry per distinct key\. This example preserves the first\-seen order of groups and makes zero\-count retention visible\.
+
+counting\-and\-grouping\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+from collections import Counter, defaultdict
+
+labels = ["River", "Hill", "River"]
+counts = Counter(labels)
+groups = defaultdict(list)
+for index, label in enumerate(labels):
+    groups[label].append(index)
+print(dict(counts), dict(groups))
+print(counts["Lake"], "Lake" in counts)
+print(groups.get("Lake"), "Lake" in groups)
+print(groups["Lake"], "Lake" in groups)
+counts["River"] -= 2
+print(counts["River"], "River" in counts)
+```
+
+Missing reads can mutate or leave state alone
+
+| Operation | State transition | Result |
+| --- | --- | --- |
+| Counter labels | River:1 → River:2; Hill:1 | \{River:2, Hill:1\} |
+| counts\[Lake\] | No insertion | 0 and membership False\. |
+| groups\.get\(Lake\) | No factory call | None and membership False\. |
+| groups\[Lake\] | list\(\) then insertion | \[\] and membership True\. |
+| Subtract to zero | Entry retained | River:0 still present\. |
+
+Using groups\[key\] just to inspect can create empty groups\. Choose get for a nonmutating optional read\. Removing zero counts is a separate normalization policy, not automatic subtraction behavior\. For a streaming report with many distinct titles, even Counter can grow with distinct\-key count; “streaming” does not mean constant memory for arbitrary grouping\.
+
+##### When should I store groups instead of counts?
+
+Store groups when later work needs each original member; store counts when only frequencies are needed\. A defaultdict simplifies append\-to\-group initialization but changes missing\-key indexing into a write\. State the retained\-data and missing\-read contracts before choosing the convenience API\.
+
+##### Practice
+
+###### Count normalized labels without retaining rows
+
+Implement frequencies\(labels\): strip/casefold, ignore blanks, count duplicates and return a plain dict\. Test empty input and repeated variants\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Incomplete interface — implement the TODO
+
+```
+def frequencies(labels):
+    # TODO: count without grouping original rows
+    pass
+```
+
+Solution: Count normalized labels without retaining rows
+
+Increment a Counter by normalized key and return dict\(counts\)\.
+
+counting\-and\-grouping\-repair\.py — executable reference solution
+
+```
+from collections import Counter
+
+def frequencies(labels):
+    counts = Counter()
+    for raw in labels:
+        label = raw.strip().casefold()
+        if label:
+            counts[label] += 1
+    return dict(counts)
+
+assert frequencies([" River ", "river", "HILL", " "]) == {"river": 2, "hill": 1}
+assert frequencies([]) == {}
+```
+
+Why it works
+
+Only aggregate counts survive; duplicate source rows are not retained\. Memory still grows with distinct normalized labels\.
+
+#### Separate FIFO order from priority order
+
+deque serves endpoints; a heap keeps the smallest item at its root, not a fully sorted array\.
+
+A deque supports appends and pops at either end with approximately constant\-time endpoint operations\. Removing index zero from a CPython list shifts later references and costs linear work\. A min\-heap maintains parent ≤ child so heap\[0\] is the smallest; other positions need not be sorted\. Heap insertion/removal is logarithmic in element count under bounded comparison costs\. Add a monotonically increasing tie breaker before an unorderable payload to define equal\-priority order\.
+
+queues\-and\-heaps\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+from collections import deque
+from heapq import heappush, heappop
+from itertools import count
+
+queue = deque(["River", "Hill"])
+queue.append("Lake")
+print(queue.popleft(), list(queue))
+heap = []
+serial = count()
+for priority, title in [(2, "Hill"), (1, "River"), (1, "Lake")]:
+    heappush(heap, (priority, next(serial), {"title": title}))
+print(heap[0][2]["title"])
+print([heappop(heap)[2]["title"] for _ in range(len(heap))])
+```
+
+Queue and priority states
+
+| Operation | Intermediate structure | Promise |
+| --- | --- | --- |
+| deque append Lake | \[River,Hill,Lake\] | popleft returns River; Hill,Lake remain\. |
+| push priority 2 then 1 | Root becomes River priority 1 | Root smallest; array not globally sorted\. |
+| push Lake priority 1 | Serial distinguishes equal priorities | No comparison of dict payloads needed\. |
+| Repeated pop | River, Lake, Hill | Ascending priority; stable tie policy from serial\. |
+
+Without the serial, equal priorities can force tuple comparison of dict payloads and raise TypeError\. Sorting heap’s backing list for display is separate from maintaining the heap; never assume iteration emits priority order\. For top\-k largest values under 3\.12, retain a min\-heap of at most k and replace the root when a larger candidate arrives\. Validate k and account for O\(k\) storage\.
+
+##### Why did adding a second equal\-priority job raise TypeError?
+
+Tuple comparison moved past equal priorities to compare payloads that have no ordering\. A distinct serial field resolves ties before reaching the payload\. That also states which equal\-priority job should run first, instead of relying on incidental object ordering\.
+
+##### Practice
+
+###### Choose a recent\-history and priority structure
+
+Choose structures for the last 50 events, FIFO job dispatch and repeatedly selecting the highest\-scoring ten items from a stream\. What extra policy do equal priorities require?
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Choose a recent\-history and priority structure
+
+deque\(maxlen=50\), deque with append/popleft, and a size\-ten min\-heap for top scores\. Use a tie breaker and define equal\-priority order\.
+
+Why it works
+
+The operation pattern determines the invariant\. A heap supports repeated selection without retaining every stream value; it is not a sorted\-view replacement\.
+
+#### Preserve ties and separate search from insertion
+
+Stable sort retains equal\-key order; bisect finds a position without moving any items\.
+
+sorted returns a new list; list\.sort mutates in place and returns None\. Both are stable: items whose keys compare equal retain their original relative order\. key computes the comparison key once per element for sorting\. bisect\_left/right find insertion positions in an already sorted sequence using comparisons; they do not establish that precondition or prove equality\. Binary search uses logarithmic comparisons, while inserting into a CPython list still shifts references and is linear\.
+
+ordering\-and\-search\.py — run with python3 \(CPython 3\.12\+\)
+
+```
+from bisect import bisect_left, bisect_right, insort_right
+
+rows = [("River", 2), ("Hill", 1), ("Lake", 2)]
+ordered = sorted(rows, key=lambda row: row[1])
+print(ordered)
+print(rows)
+values = [1, 2, 2, 4]
+print(bisect_left(values, 2), bisect_right(values, 2))
+print(bisect_left(values, 0), bisect_right(values, 9))
+insort_right(values, 2)
+print(values)
+```
+
+Equal keys and insertion boundaries
+
+| Operation | State | Reason |
+| --- | --- | --- |
+| sort by count | Hill, River, Lake | River remains before Lake at equal count 2\. |
+| original rows | River,Hill,Lake unchanged | sorted allocated another outer list\. |
+| bisect 2 | left=1, right=3 | Positions before/after the equal run\. |
+| outside bounds | 0 and 4 | Valid insertion positions, not matching indices\. |
+| insort\_right 2 | \[1,2,2,2,4\] | Search plus actual list insertion\. |
+
+For membership after bisect\_left, first test index \< len\(values\), then values\[index\] == target\. The insertion index may be len\(values\) or point at a different value\. Sorting an index while source data changes needs an update policy\. Cost includes comparison/key work; a more complex ordered index may be justified for frequent insertions at large scale\.
+
+##### Does binary search make sorted\-list insertion O\(log n\)?
+
+It reduces the search comparisons to logarithmic work, but insertion into a list can shift a linear number of elements\. State both phases and the operation mix\. Stability also gives a useful correctness contract for equal sort keys, independent of the final key values\.
+
+##### Practice
+
+###### Find exact membership at the boundary
+
+Use bisect\_left to search \[\], \[1,2,2,4\] for 2, 3 and 9\. Explain the bounds/equality checks and which equal element is selected\.
+
+Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
+
+Solution: Find exact membership at the boundary
+
+Reject index == len\(values\); otherwise compare values\[index\] to target\. For 2 choose the first equal index 1; 3 points at 4 but is absent; 9 points after the end\.
+
+Why it works
+
+An insertion point is not proof of presence\. Empty and after\-end cases catch unchecked indexing\.
+
 Sources:
 
 Source: [Python 3.12 tutorial](https://docs.python.org/3.12/tutorial/) — Python contributors / PSF.

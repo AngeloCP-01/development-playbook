@@ -1,4 +1,5 @@
 import type { PythonCase } from './python-published-checks'
+import { programCases, programFragments } from './python-checks/programs'
 export type PublishedCase = Omit<PythonCase, 'sheet'> & {
   name: string
   stdout?: string
@@ -6,6 +7,7 @@ export type PublishedCase = Omit<PythonCase, 'sheet'> & {
 }
 // Explicit IDs: adding a block cannot silently add a passing case.
 export const pythonCases: PublishedCase[] = [
+  ...programCases,
   {
     name: 'execution-basics',
     files: { 'main.py': 'execution-basics-example' },
@@ -152,6 +154,7 @@ export const pythonCases: PublishedCase[] = [
   },
 ]
 export const pythonFragments: { id: string; reason: string }[] = [
+  ...programFragments,
   {
     id: 'mutation-and-copying-practice-starter',
     reason:

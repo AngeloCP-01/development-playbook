@@ -4,7 +4,25 @@ import { objects } from './python/objects'
 import { collections } from './python/collections'
 import { text } from './python/text'
 import { functions } from './python/functions'
-const families = [runtime, objects, collections, text, functions]
+import { iteration } from './python/iteration'
+import { classes } from './python/classes'
+import { errors } from './python/errors'
+import { files } from './python/files'
+import { modules } from './python/modules'
+import { stdlib } from './python/stdlib'
+const families = [
+  runtime,
+  objects,
+  collections,
+  text,
+  functions,
+  iteration,
+  classes,
+  errors,
+  files,
+  modules,
+  stdlib,
+]
 export const python: Cheatsheet = {
   slug: 'python',
   title: 'Python',
