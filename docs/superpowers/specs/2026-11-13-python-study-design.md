@@ -1,9 +1,11 @@
 # Python study reference
 
-Proposed 2026-11-13. The user requested assessment and design for Python with the
-same goal as the completed Node.js & Express reference. The teaching goal is
-selected; the topic structure and verification choices below are coordinator
-proposals, awaiting design approval. This document does not authorize implementation.
+Approved 2026-11-13: the user accepted assessment **c6f3986** with “looks good
+to me”. The goal matches the completed Node.js & Express reference. The initial
+topic structure and verification choices are selected; fresh-session execution
+and separate integration approval still follow project policy.
+
+Implementation: [compact plan](../plans/2026-11-13-python-study.md).
 
 ## Reader outcome
 
@@ -26,12 +28,12 @@ A short syntax lookup would be easy to scan but would not supply the requested
 reasoning or practice. A broad tutorial with a browser interpreter would require
 new runtime/product behavior and distract from the current reader task.
 
-Recommend a substantial, selective study sheet using existing StudySheet,
+Use a substantial, selective study sheet using existing StudySheet,
 TeachingBlock and SheetActivity support. This follows the approach the user
 referenced. Keep explanations local to each topic, with one small book-report
 program providing continuity where it helps. Use separate, clearly introduced
-examples when that story would obscure the mechanism. The coordinator recommends
-this approach; no new runtime, interaction or complete-course requirement is inferred.
+examples when that story would obscure the mechanism. The user accepted this recommended
+approach; no new runtime, interaction or complete-course requirement is inferred.
 
 ## Product and version boundaries
 
@@ -88,7 +90,7 @@ validation, counting/grouping, async ownership/cancellation and the report capst
 The remaining activities may ask for traces, counterexamples or justified choices.
 The initial count is a coordinator acceptance choice, not a user quota or ceiling.
 
-## Proposed sections
+## Selected initial sections
 
 Initial composition: **14 panels / 45 topics / 45 owned activities**. Each topic
 gets enough connected examples to teach its mechanism. Split at measured seams
@@ -239,12 +241,12 @@ lessons for the user's depth feedback before recommending integration.
 
 Starting application: **c768af4**, pushed develop. Assessment branch:
 `docs/2026-11-13-python-study-assessment`. Research/design/coordination recommendation:
-**GPT-6.1 Sol / High**. After design selection and a compact plan, use a fresh
+**GPT-6.1 Sol / High**. Use the compact plan and a fresh
 user-selected **GPT-6.1 Sol / Medium** implementation session on
 `feat/python-study-sheet`; return branch/commit, actual diff/checks, unresolved
 issues and session reference to this coordinating conversation.
 
-Defer implementation until the design is selected. Java/Spring Boot, broader
+Begin implementation in the fresh user-selected session. Java/Spring Boot, broader
 JavaScript/Node revisions, backend frameworks, scientific libraries, browser
 execution, scoring/progress, new highlighting, images and universal interview
 coverage remain separate. Merge approval is a separate user decision; main

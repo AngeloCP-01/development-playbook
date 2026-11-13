@@ -80,6 +80,17 @@ included.
 | K2 | [Writing pyproject.toml](https://packaging.python.org/en/latest/guides/writing-pyproject-toml/), PyPA, living guide | Build backend requirements, project metadata/dependencies, dependency groups, tool configuration. |
 | K3 | [Distribution versus import package](https://packaging.python.org/en/latest/discussions/distribution-package-vs-import-package/), PyPA, living guide | Distribution names and import names have no enforced one-to-one correspondence. |
 
+### Verification tooling sources (planning follow-up)
+
+Opened 2026-11-13 by the coordinator to settle the implementation plan's runtime
+provisioning. These sources describe CI configuration, not Python language semantics.
+
+| ID | Primary source, organization, version/context | Finding supported |
+| --- | --- | --- |
+| C1 | [setup-python README](https://github.com/actions/setup-python/blob/main/README.md), GitHub/actions, observed v7 documentation | Explicit interpreter version selection; v6+ action runtime uses Node24 and needs a compatible runner. Existing app Node selection is separate. |
+| C2 | [setup-python action inputs/outputs](https://raw.githubusercontent.com/actions/setup-python/main/action.yml), GitHub/actions, observed main/v7 | python-version and check-latest inputs; python-path output; pre-release/free-threaded selection defaults false. |
+| C3 | [Matrix jobs](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations), GitHub Docs, living documentation | String-version matrix creates one job per version; fail-fast controls cancellation of other matrix legs. |
+
 ## Teaching mechanisms and original example proposals
 
 All snippets, expected states, repairs, interview prompts and activities below are

@@ -16,7 +16,8 @@ grep it by id, don't read it whole.
 **Current state (2026-11-13): develop pushed; Python assessment/design prepared.**
 User authorized pushing develop, then assessing/designing Python with the same
 teaching goal as Node.js & Express. Push **c768af4** succeeded; pre-push typecheck
-and **1841 tests / 242 files** passed. Python design is proposed, not implemented.
+and **1841 tests / 242 files** passed. Python design **c6f3986** is approved; the compact implementation plan is ready.
+No Python application changes yet.
 
 **Latest integrated work: W-6.3u.2 Node.js & Express.**
 The user approved local no-ff integration of feature tip **1a4cad0** after the
@@ -83,10 +84,9 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **28 drawn / 31 registered**, including W-6.3v and W-6.3u.2. W-6.4 is integrated as **b8515a0**; three language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** review/select the proposed Python study design, recommended
-**GPT-6.1 Sol / High**. Python, Java and Spring Boot remain undrawn. After design
-selection, prepare a compact plan and fresh **GPT-6.1 Sol / Medium** implementation
-handoff. Main promotion remains the user's.
+**Next task/model:** implement the approved Python study design/plan in a fresh
+user-selected **GPT-6.1 Sol / Medium** session. Python, Java and Spring Boot remain
+undrawn. Return results here for **GPT-6.1 Sol / High** coordination/review. Main promotion remains the user's.
 
 Two deliverables from one body of content.
 
@@ -1260,7 +1260,7 @@ panel. Five coordinator draft trace probes passed on Node22.23.4. New Worker,
 stream and lifetime examples still require implementation-time actual-code checks.
 Return the actual event-loop lesson for reader assessment before integration.
 
-**W-6.3u.3 — Python study reference ◐** *(assessment/design prepared; implementation not started)*
+**W-6.3u.3 — Python study reference ◐** *(design approved; compact plan ready; implementation not started)*
 
 User selected Python assessment/design on 2026-11-13 with the same goal as
 Node.js & Express: explain fundamentals, trace programs, implement/repair code
@@ -1270,26 +1270,26 @@ pushed to origin/develop. Assessment branch `docs/2026-11-13-python-study-assess
 - [x] Inspect the Python placeholder, shared study contracts and Node depth acceptance.
 - [x] Assess primary Python/PSF/PyPA sources with version and evidence boundaries.
 - [x] Propose teaching structure, activities, actual-code verification and page acceptance.
-- [ ] Select the design; then write the compact implementation plan.
+- [x] User approved design **c6f3986** with “looks good to me”; compact plan prepared.
 - [ ] Implement in a fresh user-selected **GPT-6.1 Sol / Medium** session.
 - [ ] Verify actual Python programs/repairs, final web gate/dev-console and affected states;
       obtain one independent final **GPT-6.1 Sol / High** content/page/branch review.
 - [ ] Return live lessons for reader depth feedback and request separate integration approval.
 
 [Research](../reference/python-source-research.md),
-[proposed design](superpowers/specs/2026-11-13-python-study-design.md).
-Coordinator proposal: fourteen panels, 45 topics and one owned activity per topic,
+[approved design](superpowers/specs/2026-11-13-python-study-design.md),
+[compact plan](superpowers/plans/2026-11-13-python-study.md).
+Selected initial structure: fourteen panels, 45 topics and one owned activity per topic,
 with at least ten coding/repair activities; split where teaching/layout requires.
 Use existing structured teaching/disclosure/solution patterns and generated Markdown.
 Python 3.12+ compatibility, standard library only, explicit maintained interpreter
 provisioning and published-code checks. No browser runtime or new renderer.
 
 Assessment/coordination recommendation **GPT-6.1 Sol / High**; return results to
-this coordinating conversation. Future implementation starts from its committed
+coordinator **01a1d36c-4998-7d31-91c4-6b41e9694eba**. Future implementation starts from its committed
 handoff, not an assumed develop tip, and reports branch/commit, actual checks,
 limits and session reference. Counts stay **28/31**, **18/18** until implementation;
-expected Python delivery **29/31**, with Java and Spring Boot deferred. Design
-selection, plan, implementation, integration and main promotion remain outstanding.
+expected Python delivery **29/31**, with Java and Spring Boot deferred. Implementation, integration and main promotion remain outstanding.
 
 **W-6.3v — DSA Patterns study reference ☑** *(reviewed and merged locally into develop)*
 
