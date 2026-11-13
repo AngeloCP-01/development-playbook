@@ -328,3 +328,32 @@ output/errors, verify version-specific behavior and check that each activity tes
 mechanism rather than literal recall. Confirm chosen complexity claims against their
 implementation and assumptions; no benchmarks or universal collection-operation table
 were established here.
+## Implementation verification follow-up (2026-11-13)
+
+The approved examples are now canonical in `web/src/lib/cheatsheets/python/`;
+this record's earlier snippets remain dated assessment proposals. The published
+manifest executes the actual canonical blocks and solutions, with separately
+labelled assertion scripts and local fixtures. No package/network installation
+occurs during tests. The CI action inputs were re-opened at [C2](https://raw.githubusercontent.com/actions/setup-python/main/action.yml);
+version/support listings were rechecked at [V1](https://devguide.python.org/versions/)
+and [V2](https://www.python.org/downloads/) on 2026-11-13.
+
+Provisioned from PSF source archives [3.12.16](https://www.python.org/ftp/python/3.12.16/Python-3.12.16.tar.xz)
+and [3.15.2](https://www.python.org/ftp/python/3.15.2/Python-3.15.2.tar.xz), rather
+than the installed uv 0.9.10 catalogue, which selected 3.12.12/3.15.0a1. Both
+maintained runtimes are conventional GIL-enabled CPython built locally on Darwin
+26.3 arm64 using Clang 17.0.0. Executables:
+`/private/tmp/playbook-cpython/runtime-3.12.16/bin/python3.12` and
+`/private/tmp/playbook-cpython/runtime-3.15.2/bin/python3.15`.
+The 3.12 build omits `_ssl`/`_hashlib` after incompatible local OpenSSL headers;
+none of the displayed programs uses those modules. This is local example
+compatibility evidence, not a complete Python distribution certification.
+The standard hosted setup-python matrix is configured but remains unrun.
+
+Observed version difference: the deliberate import cycle raises ImportError for
+missing `label` from `cycle_b` in both versions. 3.15 changes the diagnostic
+wording, omitting “partially initialized module” and adding a shadowing hint.
+The oracle requires the exception, missing name and module while accepting both
+observed renderings. Completion counts, final source commit, review and app/page
+verification belong in the W-6.3u.3 tracker entry, keeping this as the single
+source/provenance record.

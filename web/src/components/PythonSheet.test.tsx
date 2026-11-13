@@ -3,6 +3,34 @@ import { expect, test } from 'vitest'
 import { cheatsheetBySlug } from '@/lib/cheatsheets'
 import { CheatsheetView } from './Cheatsheet'
 
+test('the package repair exposes its entry and both dependencies in the same topic', () => {
+  window.history.replaceState(
+    null,
+    '',
+    '/reference/python#modules-and-environments',
+  )
+  render(<CheatsheetView sheet={cheatsheetBySlug('python')!} />)
+  const button = screen
+    .getByText('Run a package with its import context')
+    .closest('button')!
+  fireEvent.click(button)
+  const topic = within(
+    document.getElementById(button.getAttribute('aria-controls')!)!,
+  )
+  expect(
+    topic.getByLabelText('common.py — cycle repair companion').textContent,
+  ).toContain('name = "River"')
+  expect(
+    topic.getByLabelText('formatter.py — cycle repair companion').textContent,
+  ).toContain('from common import name')
+  fireEvent.click(
+    topic.getByRole('button', {
+      name: 'Solution: Remove the cycle’s back edge',
+    }),
+  )
+  expect(topic.getByText(/from formatter import label/)).toBeTruthy()
+})
+
 test.each([
   [
     'iteration-and-generators',

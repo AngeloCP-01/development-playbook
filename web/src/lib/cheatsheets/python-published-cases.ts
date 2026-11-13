@@ -89,7 +89,7 @@ export const pythonCases: PublishedCase[] = [
     files: { 'main.py': 'text-parsing-example' },
     entry: 'main.py',
     stdout:
-      'River: 002\nRiver / ready\ninvalid River\ninvalid :2\ninvalid River:-1\ninvalid River:2:3\n',
+      'River: 002\nRiver / ready\ninvalid River\ninvalid \u003a2\ninvalid River:-1\ninvalid River:2:3\n',
   },
   {
     name: 'numeric-boundaries',

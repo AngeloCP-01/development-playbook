@@ -56,8 +56,8 @@ test('local, CI and host contracts select Node 22 without admitting patches belo
   const ci = read('../../../.github/workflows/ci.yml')
   expect(
     ci.match(/node-version-file: web\/\.nvmrc/g)?.length,
-    'both verification and audit jobs must use the local runtime selection',
-  ).toBe(2)
+    'verification, Python examples and audit jobs must use the local runtime selection',
+  ).toBe(3)
 })
 
 // The review found the recorded evidence for metadataBase was vacuous: "no

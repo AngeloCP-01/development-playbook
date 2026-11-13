@@ -94,6 +94,18 @@ export const modules = family(
           label: 'cycle_b.py — broken cycle partner',
           code: 'from cycle_a import name\nlabel = name.upper()',
         },
+        {
+          id: 'package-layout-common',
+          kind: 'code',
+          label: 'common.py — cycle repair companion',
+          code: 'name = "River"',
+        },
+        {
+          id: 'package-layout-formatter',
+          kind: 'code',
+          label: 'formatter.py — cycle repair companion',
+          code: 'from common import name\nlabel = name.upper()',
+        },
       ],
       trace: {
         label: 'Package execution and an incomplete module',
@@ -129,7 +141,7 @@ export const modules = family(
       practice: {
         title: 'Remove the cycle’s back edge',
         prompt:
-          'Repair cycle_a/cycle_b by making the shared name a leaf dependency. Provide common.py, formatter.py and entry.py with no hidden helper.',
+          'Repair cycle_a/cycle_b by making the shared name a leaf dependency. Use common.py and formatter.py above; implement entry.py beside them and run python3 entry.py.',
         answer:
           'Place name in common.py, import it from formatter.py, and let entry.py import the formatter result.',
         explanation:
@@ -137,7 +149,7 @@ export const modules = family(
         solution:
           'from formatter import label\n\nif __name__ == "__main__":\n    print(label)',
         followUp:
-          'Use the two companion files below with this entry; why is moving only the print insufficient?',
+          'Why is moving only the print insufficient to remove the import cycle?',
       },
     },
     {
@@ -155,18 +167,6 @@ export const modules = family(
           label:
             'POSIX setup commands — provision separately, never run by example tests',
           code: 'python3.12 -m venv .venv\n.venv/bin/python -m pip --version\n.venv/bin/python -m pip install -e .',
-        },
-        {
-          id: 'package-layout-common',
-          kind: 'code',
-          label: 'common.py — cycle repair companion',
-          code: 'name = "River"',
-        },
-        {
-          id: 'package-layout-formatter',
-          kind: 'code',
-          label: 'formatter.py — cycle repair companion',
-          code: 'from common import name\nlabel = name.upper()',
         },
       ],
       trace: {

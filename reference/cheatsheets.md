@@ -7859,6 +7859,19 @@ from cycle_a import name
 label = name.upper()
 ```
 
+common\.py — cycle repair companion
+
+```
+name = "River"
+```
+
+formatter\.py — cycle repair companion
+
+```
+from common import name
+label = name.upper()
+```
+
 Changing a relative import to an accidental working\-directory import can hide the context defect and fail elsewhere\. Design a clear package entry and dependency direction\. A local import inside a function can defer a dependency, but it does not cure every cycle or make startup side effects safe\. The repair activity removes the back edge by placing the shared data in a leaf module\.
 
 ##### Why is an import cycle sometimes visible only at startup?
@@ -7869,7 +7882,7 @@ A first import executes modules in dependency order and may expose a cached but 
 
 ###### Remove the cycle’s back edge
 
-Repair cycle\_a/cycle\_b by making the shared name a leaf dependency\. Provide common\.py, formatter\.py and entry\.py with no hidden helper\.
+Repair cycle\_a/cycle\_b by making the shared name a leaf dependency\. Use common\.py and formatter\.py above; implement entry\.py beside them and run python3 entry\.py\.
 
 Context: Use the displayed Python files and stated input\. Make your attempt before revealing the reference answer\.
 
@@ -7892,7 +7905,7 @@ The dependency graph becomes entry → formatter → common\. The actual multi\-
 
 Follow-up
 
-Use the two companion files below with this entry; why is moving only the print insufficient?
+Why is moving only the print insufficient to remove the import cycle?
 
 #### Select the interpreter before installing dependencies
 
@@ -7927,19 +7940,6 @@ POSIX setup commands — provision separately, never run by example tests
 python3.12 -m venv .venv
 .venv/bin/python -m pip --version
 .venv/bin/python -m pip install -e .
-```
-
-common\.py — cycle repair companion
-
-```
-name = "River"
-```
-
-formatter\.py — cycle repair companion
-
-```
-from common import name
-label = name.upper()
 ```
 
 A bare pip command can refer to a different interpreter on PATH\. A project\-local json\.py can shadow the standard library even in a venv; isolation is not a sandbox or a cure for module names\. These lessons use only the standard library and install nothing during verification\. Check compatibility against the actual Python implementation, patch and build\.
