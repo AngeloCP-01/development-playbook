@@ -32,7 +32,14 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
+      - uses: actions/setup-python@v7
+        id: python
+        with:
+          python-version: '3.12'
+          check-latest: true
       - run: pnpm test
+        env:
+          PLAYBOOK_PYTHON: ${{ steps.python.outputs.python-path }}
       - run: pnpm build
 
   audit:
