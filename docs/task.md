@@ -13,22 +13,23 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current work (2026-11-10): DSA Patterns reviewed and integrated locally into develop (W-6.3v).**
-The user selected a new reference for learning DSA patterns, interview reasoning,
-well-fitting practice problems, and time/space complexity, with JavaScript
-examples. The [research record](../reference/dsa-patterns-source-research.md)
-contains primary-source findings and teaching examples. The user accepted all
-fifteen core patterns with JavaScript and everyday analogies. The
-[design](superpowers/specs/2026-11-09-dsa-patterns-design.md) and
-[compact plan](superpowers/plans/2026-11-09-dsa-patterns.md) carry the delivery
-details. Delivery **49ac670**, application **0ffca35**, is implemented on
-`feat/dsa-patterns-reference`: **27/31** sheets and **18/18** stages. Coordinator
-review of the actual branch, implementation/reviewer threads and evidence found
-two P2s: lost mixed-choice explanation and tree tests blind to right subtrees.
-Correction **8dfc0fd** addresses both; focused coordinator recheck passed at
-**89436fb**. The user approved local no-ff integration into develop, with parents
-**c996177** and **89436fb**. Local develop now has **27/31** sheets and **18/18**
-stages. [KICKOFF](../KICKOFF.md) records fresh and retained checks. No push or promotion.
+**Current state (2026-11-19): develop merged into local main by explicit user request.**
+The user authorized a local no-ff merge with parents **4432994** (main) and
+**e7dd0af** (develop). This brings Node.js & Express and Python into local main;
+application remains reviewed **0bc7010**. The merge includes promotion records,
+while develop stays at e7dd0af. **PY-R1/PY-R2 remain closed**; local main/develop
+have **29/31** drawn references and **18/18** stages. No push or deployment.
+Retained application evidence and fresh record checks are in
+[KICKOFF](../KICKOFF.md) and [tracker](tracker.md).
+
+**Previous integrated work: W-6.3u.2 Node.js & Express.**
+The user approved local no-ff integration of feature tip **1a4cad0** after the
+verified depth revision (**7ee4b54**, test extension **d122175**). The merged
+application tree is identical to that tested tree: 15 panels, 49 topics/activities,
+six coding repairs, 28/31 drawn references and 18/18 stages. NE-R1–NE-R6 stay
+closed. One prerequisite-navigation minor remains deferred. Develop was pushed
+on 2026-11-13; no main promotion.
+See [KICKOFF](../KICKOFF.md) and [tracker](tracker.md) for retained evidence.
 
 **Previous completed work: JavaScript sheet merged locally into develop (D-105).**
 Application **7975be9** on `feat/javascript-promises-lesson` implements and verifies
@@ -84,11 +85,12 @@ interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. That width repair was the pre-Stage-10 baseline. Tracked `origin/develop` remains
 `79f9e31`; the current local develop merge is recorded above.
 
-On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **27 drawn / 31 registered**, including W-6.3v. W-6.4 is integrated as **b8515a0**; four language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
+On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **29 drawn / 31 registered**, including W-6.3v and W-6.3u.2/u.3. W-6.4 is integrated as **b8515a0**; two language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Current status:** W-6.3v is integrated locally after the approved coordinator
-recheck. Four other language sheets, broader JavaScript teaching, push and main
-promotion remain separate. No next implementation task has been selected.
+**Next task/model:** select the next reference priority, recommended
+**GPT-6.1 Sol / High**. Python is integrated locally; Java and Spring Boot remain
+undrawn. No next implementation is selected. Main was merged locally at the
+user's direct request; a push/deployment is separate.
 
 Two deliverables from one body of content.
 
@@ -140,7 +142,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-3** | Stages 02–18 interactive | ☑ *(18/18 merged to local `develop`; Stage 18 landed as `c9e5d07`.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(25 of 30 registered sheets drawn; native glossary/stack integrated as `b8515a0`. Five language placeholders remain.)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(29 of 31 registered sheets drawn on local develop; native glossary/stack integrated as `b8515a0`. Java and Spring Boot remain placeholders.)* |
 
 ### Dependency map
 
@@ -924,7 +926,7 @@ now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
 
-**W-6.3u — Language and framework study sheets ◐** *(JavaScript expansion selected; four sheets remain)*
+**W-6.3u — Language and framework study sheets ◐** *(JavaScript, Node.js & Express and Python integrated; Java/Spring Boot remain placeholders)*
 
 **User direction, 2026-11-05 (D-101):** for JavaScript, Python, Java, Spring Boot
 and Express & Node, focus on fundamentals, important topics and concepts that
@@ -1198,6 +1200,143 @@ User accepted the preview and approved local no-ff integration of **f3f376c**
 into develop **ede8e1f** on 2026-11-09; the merge includes its integration records.
 Runtime/version evidence stays in internal records. A page-wide teaching rewrite,
 other-sheet rollout, runner/scoring/persistence, push and promotion remain outside scope.
+
+**W-6.3u.2 — Node.js & Express study reference ☑** *(merged locally into develop)*
+
+User direction (D-109), 2026-11-10: use the DSA review/interview approach,
+fundamentals are mandatory, give many worked examples and add subsections when
+needed for proper coverage. Reader outcome: explain, predict, build, debug and
+test Node/Express behavior, including failures and basic production trade-offs.
+The requested interview-preparation goal is not a guarantee of interview success.
+
+- [x] Record user direction and investigate primary Node/Express/security sources.
+- [x] Define teaching depth, content families, example-verification boundaries and
+  compact implementation plan using existing study components.
+- [x] Implement all selected families and meaningful local activities; fill
+  `/reference/express`, title Node.js & Express, without adding a backend.
+- [x] Execute actual published Node/Express examples and failure/security paths;
+  verify the delivered page and final web/dev-console checks.
+- [x] Obtain one independent final review; findings fixed with focused regressions.
+- [x] Correct NE-R1/R2/R3: worked modules, real filtering/pagination and a concrete
+  explained CSRF-defense contrast.
+- [x] Correct NE-R4/R5/R6: complete Express dev-console IDs, nested-query contract
+  and SIGTERM drain/cleanup-sensitive tests.
+- [x] Coordinator accepted **fa724bb...e852170** at handoff **b2c1cdc**;
+  NE-R1–NE-R6 closed, no remaining Standards/Spec findings.
+- [x] Reassess and design deeper Node fundamentals after reader feedback (D-111/112),
+  including a full event-loop lesson and connected worked explanations.
+- [x] Implement the depth plan, executable changed-case examples and six coding repairs (**7ee4b54**, **d122175**).
+- [x] Independent Sol High review of the revised page/branch supports all six transfer tasks; one prerequisite-link minor deferred.
+- [x] User authorized local integration of verified **1a4cad0** on 2026-11-12 after the independent depth review. Further reader feedback remains welcome.
+- [x] Obtain separate user approval and integrate into develop with a no-ff merge (2026-11-12).
+
+[Sources](../reference/node-express-source-research.md),
+[design](superpowers/specs/2026-11-10-node-express-design.md),
+[plan](superpowers/plans/2026-11-10-node-express.md). The original delivery used twelve
+panels/38 topics and a recurring small API. The Node fundamentals extension below
+now governs depth and composition; split when measured without reducing coverage.
+Keep slug/group and thirty other sheet bodies. Target 28/31 drawn/registered and
+18/18 stages. Node 22-compatible JavaScript, actual validation baseline 22.23.4;
+Express 5.3.0 may be an exact test-only devDependency. No Node/tooling upgrade.
+
+Documentation branch `docs/2026-11-10-node-express-study` starts at **e28401e**;
+implementation starts from its exact committed tip, creating
+`feat/node-express-study`. Use fresh user-selected **GPT-6.1 Sol / Medium** under
+D-100/D-110; return to coordinator `01a1bedf-bdad-7b72-ba40-9b5406807d43`, recommended
+**GPT-6.1 Sol / High**. No new renderer/runner/scoring/persistence, real DB/auth
+service, other language sheet, integration, push or promotion is selected.
+
+Coordinator reviewed **976198b...67b8cb6** and found six P2s: missing worked
+module mechanisms, incomplete filtering/pagination, no explained CSRF-defense
+contrast, missing Express dev-console ID completeness assertion, no nested-query
+contract check and a SIGTERM test insensitive to skipped cleanup. See KICKOFF
+for exact evidence and acceptance. Fresh focused checks **66/5** pass but do not
+establish those missing requirements. Correction/recheck are now complete at
+**e852170** / **b2c1cdc**; the original findings above remain historical evidence. Fresh focused **87/5** and live corrected
+lesson checks pass; full **1779/241**, production **52/52** and dev-console **1/1**
+evidence verified in the implementation thread/logs. Integration needs user approval.
+
+The [Node fundamentals extension](superpowers/specs/2026-11-10-node-fundamentals-depth-design.md)
+and its [plan](superpowers/plans/2026-11-10-node-fundamentals-depth.md) now govern
+this revision. Initial composition is 15 panels/49 topics, preserving twelve
+existing hashes and 38 existing topic IDs; scheduling moves into the new event-loop
+panel. Five coordinator draft trace probes passed on Node22.23.4. New Worker,
+stream and lifetime examples still require implementation-time actual-code checks.
+Return the actual event-loop lesson for reader assessment before integration.
+
+**W-6.3u.3 — Python study reference ☑** *(user-approved local no-ff integration into develop)*
+
+Implemented from approved handoff **c0ae407** on `feat/python-study-sheet`;
+application **fb76f25** includes the independent review fix; final corrections are
+**0bc7010**. The user approved local no-ff integration of reviewed **d85b9b1**
+plus these records from develop **c768af4**. No push or main promotion.
+The approved [design](superpowers/specs/2026-11-13-python-study-design.md) and
+[plan](superpowers/plans/2026-11-13-python-study.md) are delivered as one canonical
+web/generated-Markdown source. [Sources and runtime provenance](../reference/python-source-research.md).
+
+- [x] Assess sources, select the design and prepare the implementation plan.
+- [x] Implement 45 topics and 45 exclusively owned activities; 16 executable solutions,
+      15 with starters. Split the capstone into a fifteenth panel without cutting
+      code/reasoning. Other thirty generated reference bodies remain byte-identical.
+- [x] Verify all 87 displayed-code/input locations by exact ownership (71 program/input
+      locations and 16 explained fragments), including direct repairs, errors, nested state,
+      iterator/resource lifetime, cancellation, capacity and process cleanup.
+- [x] Verify maintained CPython 3.12.16/3.15.2, final app/browser/development-console
+      checks and one independent Sol High content/page review.
+- [x] Resolve the Important same-topic dependency finding with RED→GREEN render
+      coverage, fresh full suite and page checks. Humanizer editing pass applied.
+- [x] Return live names/objects and asyncio lessons in KICKOFF for reader depth feedback.
+- [x] Coordinator reviewed **c0ae407...675b4b3**, actual thread/evidence/page;
+      Standards clean, two P2 Spec findings reproduced.
+- [x] **PY-R1:** publish the capstone's concrete books.jsonl input and verify that
+      displayed fixture with render/actual-code coverage and the panel-height budget.
+- [x] **PY-R2:** verify direct-script failure on the actual package example files,
+      alongside module-invocation success.
+- [x] Prepare correction **59c00b7**, checks and session handoff in KICKOFF.
+- [x] Focused coordinator recheck of **59c00b7** at **7262249** closes PY-R2;
+      confirms published input/entry success but finds PY-R1 input order differs
+      from its intermediate-state walkthrough.
+- [x] Finish **PY-R1**: align displayed fixture order with the trace and protect
+      the first-two-record state using the actual program, plus render expectation.
+- [x] Focused Sol High technical recheck of remaining alignment; reader acceptance is separate.
+- [x] Coordinator rechecked **0bc7010** at **fe66fd0**: fixture order, actual
+      prefix totals and authored table agree; **PY-R1 closed**, **PY-R2 stays closed**.
+      Fresh **94/5** and four live capstone states pass; 3064px under 3072px.
+- [x] User accepted delivery for local develop integration; further depth feedback
+      can be assessed separately.
+- [x] User explicitly approved no-ff integration into develop as **e7dd0af**.
+- [x] User then directly requested develop → main; local no-ff merge includes
+      the reviewed application. No push or deployment.
+
+Counts on local develop: **29/31** references, **18/18** stages. The tracker
+completion row records the November 13 application checks, review and focused
+reruns; November 19 closing records retain them for unchanged production inputs.
+Correction **59c00b7** publishes the actual input and checks both package startup
+modes. Fresh **1952/247**, maintained 3.12.16/3.15.2 actual-code checks, production
+build, Python browser 5/5 and 16 focused states pass. Capstone 3064px fits 3072px;
+other thirty generated bodies remain unchanged. Current inventory is 87 classified
+locations, including the new input. Current handoff: [KICKOFF](../KICKOFF.md).
+Alignment **0bc7010** reorders only the displayed input, preserving the table
+and program. Its RED→GREEN actual-prefix regression checks all three intermediate
+states and ties the first-two/complete totals to the authored table. Fresh 94/5
+on 3.12.16 and 70 published checks on 3.15.2 pass, plus build/typecheck/scoped lint/
+format and four live capstone states. Generated Markdown agrees; other thirty
+bodies and the 3064px height remain unchanged. Focused coordinator recheck is
+complete; user approved local integration. Next priority selection uses
+**GPT-6.1 Sol / High**. Coordinator
+**01a1d36c-4998-7d31-91c4-6b41e9694eba**, implementation session
+**01a1d3ec-7518-7d72-a49d-9b12a3cf3fde**.
+
+Deferred minor: prerequisite references are plain text, navigated through named
+rail tabs; inline links need a separate shared teaching-pattern change. Evidence
+is local conventional GIL-enabled macOS; 3.12 omitted unused TLS modules. Hosted
+CI, Windows checker, free-threaded execution, TLS, deployment, throughput and
+learner/interview outcomes are unclaimed. Official source archives supplied the
+maintained runtimes because the uv catalogue was outdated; exact build strings
+are in the source record. Correction runtimes were reprovisioned; exact build/path evidence is in the source record.
+Java/Spring Boot, frameworks, browser execution/scoring and renderer changes remain
+out of scope. Develop integration is explicitly approved; main promotion remains
+the user's.
 
 **W-6.3v — DSA Patterns study reference ☑** *(reviewed and merged locally into develop)*
 

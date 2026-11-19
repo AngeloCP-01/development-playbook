@@ -292,12 +292,12 @@ that fits this task instead of asking for a choice at every phase.
 
 ### Models and session handoffs
 
-Approved 2026-10-29 (D-100), for the current cost budget:
+Approved 2026-10-29 (D-100); model assignments updated 2026-11-10 (D-110):
 
 | Role | Model | Reasoning effort |
 | --- | --- | --- |
-| Research, brainstorming, planning, coordination and review | `gpt-6-astra` | `low` |
-| Implementation, test writing, running checks and diagnosing failures | `gpt-6.1-sol` | `high` |
+| Research, brainstorming, planning, coordination and review | `gpt-6.1-sol` | `high` |
+| Implementation, test writing, running checks and diagnosing failures | `gpt-6.1-sol` | `medium` |
 
 Every next-task recommendation must name the task, recommended model **and**
 effort before work starts. Each implementation task starts in a fresh session,

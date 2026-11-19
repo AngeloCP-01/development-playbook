@@ -15,10 +15,10 @@ test('offers the glossary and stack alongside the existing drawn and undrawn she
     const link = screen.getByText(sheet.title, { exact: true }).closest('a')!
     expect(link.getAttribute('href')).toBe(`/reference/${sheet.slug}`)
   }
-  expect(screen.getByRole('link', { name: /Python/ }).textContent).toContain(
-    'Not drawn',
-  )
-  expect(screen.getByText('27 of 31')).toBeTruthy()
+  expect(
+    screen.getByRole('link', { name: /Java.*Not drawn/ }).textContent,
+  ).toContain('Not drawn')
+  expect(screen.getByText('29 of 31')).toBeTruthy()
 })
 
 test('discovers Algorithms and the DSA reference', () => {

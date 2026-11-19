@@ -1,37 +1,75 @@
-# Kickoff: DSA Patterns integrated locally
+# Kickoff: develop merged into local main
 
-Updated 2026-11-10. Follow [AGENTS.md](AGENTS.md), especially D-99/D-100.
+Updated 2026-11-19. Follow [AGENTS.md](AGENTS.md), especially promotion rules.
 
-W-6.3v is reviewed and merged locally into `develop` with user approval and
-`--no-ff`. Merge parents are **c996177** and **89436fb**. The merge includes
-integration records; application/generated output matches correction **8dfc0fd**.
-Nothing pushed or promoted to main. Feature branch is deleted after the merge.
-Local totals: **27/31** sheets, **18/18** stages, all fifteen DSA patterns,
-eight stable hashes and eighteen local activities.
+The user directly requested a **develop → main** merge after approving Python's
+local develop integration. This explicit session instruction authorizes this
+local main merge despite the default main restriction in AGENTS; it does not
+change that standing rule for future work.
 
-Both review findings are closed. Composition retains the authored mixed-choice
-refund explanation; render coverage checks hidden/revealed/re-collapsed reasoning.
-Both tree functions have right-only and branching fixtures, with mutation checks
-that reject omission of either right-child traversal. Algorithms are unchanged.
+The local **no-ff** main merge has parents **4432994** (previous main) and
+**e7dd0af** (develop). It includes Node.js & Express and Python plus these promotion
+records. Git merged without conflicts; before the records update, the combined
+index tree equalled develop exactly. Final application/CI/generated Markdown
+remain byte-identical to reviewed **0bc7010**. No push or deployment was performed;
+origin/main remains **4432994**. Develop remains **e7dd0af**.
 
-Fresh coordinator checks on the corrected tree: **25 tests / 5 files**, all pass;
-thirty prior generated sheet bodies unchanged; live refund solution reveal and
-re-collapse pass with zero page errors. `git diff --check` passes.
-Retained **8dfc0fd** evidence, verified in the implementation thread/raw logs:
-format/lint/generated-route typecheck, **1694 tests / 237 files**, **58-page build**,
-DSA production browser **2/2**. Retained original **0ffca35** broad audit combined
-**49/49** and development-console **1/1** cover unchanged shared behavior.
-No redundant full gate for integration records; application tree is unchanged.
+Python's earlier develop merge **e7dd0af** has parents **c768af4 / 7ccfe26**.
+Its feature branch was deleted after successful tree verification; commits remain
+in history. The current main merge includes these records; use git log for its ID.
 
-See [tracker](docs/tracker.md), W-6.3v coordinator recheck/integration row, and
-[task](docs/task.md). [Design](docs/superpowers/specs/2026-11-09-dsa-patterns-design.md),
-[plan](docs/superpowers/plans/2026-11-09-dsa-patterns.md) and
-[source record](reference/dsa-patterns-source-research.md) retain scope and sources.
-Implementation thread: **01a1bf85-6807-7190-aba1-f90aff6ec680**.
-Coordinator return: **01a1bedf-bdad-7b72-ba40-9b5406807d43**.
+**W-6.3u.3 is complete and integrated locally.** Both **PY-R1/PY-R2** remain
+closed. The capstone's published input, actual prefix results and authored trace
+agree. Its package example checks successful module invocation and intended
+direct-script failure. Delivery has **15 panels / 45 topics / 45 activities /
+16 solutions**, with **87 classified locations**. Totals on local main/develop: **29/31**
+references drawn, **18/18** stages; Java and Spring Boot remain undrawn.
 
-Preview: http://localhost:3210/reference/dsa-patterns. Other servers preserved.
-The earlier 1px narrow overflow observation was not reproduced by the coordinator;
-DSA layout checks pass. Four other language sheets, broader JavaScript teaching,
-union-find and runner/scoring/persistence remain deferred. No next task selected.
-Main promotion remains the user's; this merge did not authorize a push.
+Retained application evidence (not rerun for integration records):
+
+- **0bc7010 / fe66fd0:** final alignment's **94 tests / five files** on maintained
+  CPython **3.12.16**, **70/70** published checks on **3.15.2**, scoped format/lint,
+  generated-route typecheck and production build **KZn2NpROQYiWG9RP37I1W**.
+  Coordinator recheck repeats 94/5 and four live light/dark 320/1024 capstone
+  states; visible input, keyboard controls, clean console/no overflow and
+  **3064px** height under 3072px. Other thirty generated bodies equal c768af4.
+- **59c00b7:** full **1952 tests / 247 files**, format/lint/typecheck/build,
+  **89/89** checker/published tests on 3.15.2, Python browser **5/5** and sixteen
+  affected theme/width states. Final alignment adds the prefix regression and
+  reorders the fixture; it does not change program/shared interaction behavior.
+- Earlier unchanged global-audit/dev-console evidence remains scoped to the
+  trees in [tracker](docs/tracker.md): all 59 audit cases have passing evidence
+  (57 original passes plus two corrected discovery-count reruns), dev-console
+  **1/1**, independent source/page review and focused correction rechecks.
+
+Fresh integration/promotion checks cover the records and exact application
+correspondence; no repeated full suite/build/browser matrix is claimed. Hosted CI
+remains unrun. Develop is retained; user servers and scratch are preserved.
+
+- [Live capstone](http://localhost:3100/reference/python#report-capstone)
+- [Names and objects](http://localhost:3100/reference/python#names-and-objects)
+- [Asyncio](http://localhost:3100/reference/python#asyncio)
+- [Task](docs/task.md), [tracker](docs/tracker.md),
+  [design](docs/superpowers/specs/2026-11-13-python-study-design.md),
+  [plan](docs/superpowers/plans/2026-11-13-python-study.md),
+  [source/runtime record](reference/python-source-research.md).
+
+Runtime executables currently reside in
+`/private/tmp/python-review-runtimes/runtime-3.12.16/bin/python3.12` and
+`/private/tmp/python-review-runtimes/runtime-3.15.2/bin/python3.15`; exact builds
+and local TLS-module limits are in the source record. Preview 3100 and dev 3300
+are preserved. No Windows/free-threaded/TLS/deployment/throughput/learner-study
+claim is added by integration.
+
+**Recommended next task: select the next reference priority, GPT-6.1 Sol / High.**
+Java and Spring Boot remain undrawn; no next implementation is selected. Further
+Python depth feedback can be assessed separately. The plain-text prerequisite
+navigation minor remains deferred. A remote push/deployment is a separate action.
+Coordinator **01a1d36c-4998-7d31-91c4-6b41e9694eba**; implementation
+**01a1d3ec-7518-7d72-a49d-9b12a3cf3fde**. Both threads were read during review.
+
+Fresh local-main record checks: ledger/source citations **5/5**, local links
+**181 targets / three documents / zero missing**, staged/working whitespace and
+exact application/CI/generated-Markdown correspondence to develop and **0bc7010**,
+all exit 0. Only KICKOFF/task/tracker differ from develop; no application change.
+Final merge-parent/application checks precede completion. Humanizer pass applied.

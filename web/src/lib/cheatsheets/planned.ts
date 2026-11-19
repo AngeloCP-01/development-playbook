@@ -8,14 +8,6 @@ import type { Cheatsheet } from './types'
  */
 export const PLANNED: Cheatsheet[] = [
   {
-    slug: 'python',
-    title: 'Python',
-    group: 'Languages',
-    blurb:
-      'Data structures, comprehensions, and the standard library worth knowing.',
-    sections: [],
-  },
-  {
     slug: 'java',
     title: 'Java',
     group: 'Languages',
@@ -27,13 +19,6 @@ export const PLANNED: Cheatsheet[] = [
     title: 'Spring Boot',
     group: 'Languages',
     blurb: 'Annotations, bean lifecycle, and where configuration comes from.',
-    sections: [],
-  },
-  {
-    slug: 'express',
-    title: 'Express & Node',
-    group: 'Languages',
-    blurb: 'Middleware order, routing, and what blocks the event loop.',
     sections: [],
   },
 ]

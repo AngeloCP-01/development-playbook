@@ -48,7 +48,7 @@ test('marks the current sheet, so the rail still answers "you are here" off the 
 test('flags a not-drawn sheet in the rail, which is how the gap stays visible without opening it', () => {
   render(<Sidebar />)
   const refNav = screen.getByRole('navigation', { name: 'Reference index' })
-  const link = within(refNav).getByRole('link', { name: /Python/ })
+  const link = within(refNav).getByRole('link', { name: /^JavaWIP/ })
   expect(within(link).getByText('WIP')).toBeTruthy()
 })
 
