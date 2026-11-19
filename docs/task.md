@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current state (2026-11-19): PY-R2 closed; PY-R1 input/trace alignment remains.**
+**Current state (2026-11-19): PY-R2 closed; PY-R1 alignment fixed in 0bc7010, focused recheck pending.**
 User authorized pushing develop, then assessing/designing Python with the same
 teaching goal as Node.js & Express. Push **c768af4** succeeded; pre-push typecheck
 and **1841 tests / 242 files** passed. Python design **c6f3986** and plan are implemented
@@ -85,11 +85,11 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **28 drawn / 31 registered**, including W-6.3v and W-6.3u.2. W-6.4 is integrated as **b8515a0**; three language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** finish PY-R1 input/trace alignment, fresh **GPT-6.1 Sol /
-Medium**, then **Sol / High** recheck and reader depth feedback. Correction **59c00b7** is verified on
-`feat/python-study-sheet`; coordinator acceptance remains pending. Java and
-Spring Boot remain undrawn. See W-6.3u.3 and KICKOFF for checks and live lessons.
-Separate develop integration and user-only main promotion remain outstanding.
+**Next task/model:** focused PY-R1 alignment coordinator recheck, **GPT-6.1 Sol /
+High**, then reader depth feedback. Correction **0bc7010** is verified on
+`feat/python-study-sheet`; PY-R2 is closed and coordinator acceptance remains
+pending for the alignment. Java and Spring Boot remain undrawn. See W-6.3u.3 and
+KICKOFF for checks/live lessons. Integration/main promotion remain separate.
 
 Two deliverables from one body of content.
 
@@ -1293,7 +1293,7 @@ web/generated-Markdown source. [Sources and runtime provenance](../reference/pyt
 - [x] Focused coordinator recheck of **59c00b7** at **7262249** closes PY-R2;
       confirms published input/entry success but finds PY-R1 input order differs
       from its intermediate-state walkthrough.
-- [ ] Finish **PY-R1**: align displayed fixture order with the trace and protect
+- [x] Finish **PY-R1**: align displayed fixture order with the trace and protect
       the first-two-record state using the actual program, plus render expectation.
 - [ ] Focused Sol High recheck of remaining alignment and reader depth acceptance.
 - [ ] Separate user approval/integration into develop; main promotion remains the user's.
@@ -1306,9 +1306,14 @@ modes. Fresh **1952/247**, maintained 3.12.16/3.15.2 actual-code checks, product
 build, Python browser 5/5 and 16 focused states pass. Capstone 3064px fits 3072px;
 other thirty generated bodies remain unchanged. Current inventory is 87 classified
 locations, including the new input. Current handoff: [KICKOFF](../KICKOFF.md).
-Next: finish PY-R1 alignment with fresh **GPT-6.1 Sol / Medium**, then focused
-**Sol / High** recheck and reader depth feedback;
-coordinator **01a1d36c-4998-7d31-91c4-6b41e9694eba**, implementation session
+Alignment **0bc7010** reorders only the displayed input, preserving the table
+and program. Its RED→GREEN actual-prefix regression checks all three intermediate
+states and ties the first-two/complete totals to the authored table. Fresh 94/5
+on 3.12.16 and 70 published checks on 3.15.2 pass, plus build/typecheck/scoped lint/
+format and four live capstone states. Generated Markdown agrees; other thirty
+bodies and the 3064px height remain unchanged. Next: focused **GPT-6.1 Sol / High**
+coordinator recheck and reader feedback; coordinator
+**01a1d36c-4998-7d31-91c4-6b41e9694eba**, implementation session
 **01a1d3ec-7518-7d72-a49d-9b12a3cf3fde**.
 
 Deferred minor: prerequisite references are plain text, navigated through named
