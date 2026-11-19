@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current state (2026-11-19): PY-R2 closed; PY-R1 alignment fixed in 0bc7010, focused recheck pending.**
+**Current state (2026-11-19): PY-R1/PY-R2 closed by coordinator; reader feedback remains.**
 User authorized pushing develop, then assessing/designing Python with the same
 teaching goal as Node.js & Express. Push **c768af4** succeeded; pre-push typecheck
 and **1841 tests / 242 files** passed. Python design **c6f3986** and plan are implemented
@@ -85,11 +85,10 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **28 drawn / 31 registered**, including W-6.3v and W-6.3u.2. W-6.4 is integrated as **b8515a0**; three language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** focused PY-R1 alignment coordinator recheck, **GPT-6.1 Sol /
-High**, then reader depth feedback. Correction **0bc7010** is verified on
-`feat/python-study-sheet`; PY-R2 is closed and coordinator acceptance remains
-pending for the alignment. Java and Spring Boot remain undrawn. See W-6.3u.3 and
-KICKOFF for checks/live lessons. Integration/main promotion remain separate.
+**Next task/model:** reader depth feedback and coordination, **GPT-6.1 Sol / High**.
+Python application **0bc7010** passed focused coordinator recheck at **fe66fd0**;
+both findings are closed. User depth acceptance and separate develop integration
+remain outstanding. Java/Spring Boot remain undrawn; main promotion is the user's.
 
 Two deliverables from one body of content.
 
@@ -1263,7 +1262,7 @@ panel. Five coordinator draft trace probes passed on Node22.23.4. New Worker,
 stream and lifetime examples still require implementation-time actual-code checks.
 Return the actual event-loop lesson for reader assessment before integration.
 
-**W-6.3u.3 — Python study reference ◐** *(PY-R2 closed; PY-R1 trace alignment pending)*
+**W-6.3u.3 — Python study reference ☑** *(implemented; PY-R1/PY-R2 closed; reader feedback/integration outstanding)*
 
 Implemented from approved handoff **c0ae407** on `feat/python-study-sheet`;
 application **fb76f25** includes the independent review fix. No merge or push.
@@ -1295,7 +1294,11 @@ web/generated-Markdown source. [Sources and runtime provenance](../reference/pyt
       from its intermediate-state walkthrough.
 - [x] Finish **PY-R1**: align displayed fixture order with the trace and protect
       the first-two-record state using the actual program, plus render expectation.
-- [ ] Focused Sol High recheck of remaining alignment and reader depth acceptance.
+- [x] Focused Sol High technical recheck of remaining alignment; reader acceptance is separate.
+- [x] Coordinator rechecked **0bc7010** at **fe66fd0**: fixture order, actual
+      prefix totals and authored table agree; **PY-R1 closed**, **PY-R2 stays closed**.
+      Fresh **94/5** and four live capstone states pass; 3064px under 3072px.
+- [ ] Reader depth feedback/acceptance of the delivered lessons.
 - [ ] Separate user approval/integration into develop; main promotion remains the user's.
 
 Counts on the feature branch: **29/31** references, **18/18** stages. The tracker
@@ -1311,8 +1314,8 @@ and program. Its RED→GREEN actual-prefix regression checks all three intermedi
 states and ties the first-two/complete totals to the authored table. Fresh 94/5
 on 3.12.16 and 70 published checks on 3.15.2 pass, plus build/typecheck/scoped lint/
 format and four live capstone states. Generated Markdown agrees; other thirty
-bodies and the 3064px height remain unchanged. Next: focused **GPT-6.1 Sol / High**
-coordinator recheck and reader feedback; coordinator
+bodies and the 3064px height remain unchanged. Focused coordinator recheck is
+complete; next is reader depth feedback with **GPT-6.1 Sol / High**. Coordinator
 **01a1d36c-4998-7d31-91c4-6b41e9694eba**, implementation session
 **01a1d3ec-7518-7d72-a49d-9b12a3cf3fde**.
 
