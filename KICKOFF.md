@@ -1,3 +1,21 @@
+# Kickoff: theme reveal merged locally into main
+
+Updated 2026-11-19. The user explicitly requested local feature → develop →
+main integration. Develop merge **8617af7** has parents **e7dd0af / 628a441**.
+The main no-ff merge has parents **5c4350b / 8617af7**; use git log for its ID.
+No push/deployment was performed. The feature branch is deleted after verification.
+
+Application content matches verified **1ac229d** exactly. Retained evidence:
+format/lint/typecheck/build, **1956 tests / 248 files**, production audit
+**59/59**, dev-console **1/1**, focused browser checks and independent review.
+Fresh integration checks cover application-tree equality and record integrity;
+full application suites were not repeated for records-only changes.
+Details: [tracker](docs/tracker.md#theme-circle-reveal--2026-11-19).
+
+Recommended next task: choose the next reference priority, **gpt-6.1-sol / high**.
+
+Previous promotion handoff follows for historical context.
+
 # Kickoff: develop merged into local main
 
 Updated 2026-11-19. Follow [AGENTS.md](AGENTS.md), especially promotion rules.

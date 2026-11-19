@@ -1457,6 +1457,16 @@ copy-to-clipboard on code rows, which waits for the first sheet that has any.
 
 ---
 
+### Theme circle reveal — 2026-11-19
+
+- [x] Inspect reference and add a button-centered expanding circle to theme changes.
+- [x] Preserve theme cycling, persistence, keyboard use and reduced-motion fallback.
+- [x] Add behavior tests; run format/lint/typecheck, full tests, build and dev-console.
+- [x] Check live animation and obtain independent final diff review.
+- [x] Production audit **59/59**. User authorized local develop then main merges;
+  application commit `1ac229d`. Develop merge **8617af7**; local main merge
+  parents **5c4350b / 8617af7**. No push/deployment.
+
 ## Backlog — not scheduled
 
 - ~~Single source of truth for stage metadata (**TD-2**)~~ ✓ closed 2026-07-27 by **D-36**,
