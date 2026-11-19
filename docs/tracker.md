@@ -4,15 +4,15 @@
 debt was taken on. Scope and planning live in [task.md](task.md).
 
 **Last updated:** 2026-11-19
-**Current phase:** W-6.3u.3 **PY-R1/PY-R2 closed by coordinator** after focused
-recheck of application **0bc7010** at handoff **fe66fd0**. Input order, actual
-prefix totals and authored trace agree. Next: reader depth feedback/coordination,
-**GPT-6.1 Sol / High**. No merge/push; separate integration approval remains.
+**Current phase:** W-6.3u.3 Python integrated locally into **develop** after the
+user's explicit approval. No-ff integration starts from **c768af4**, includes
+reviewed **d85b9b1** plus these records, and preserves application **0bc7010**.
+Both PY-R1/PY-R2 remain closed; **29/31** references and **18/18** stages.
+No push/main promotion. Next: choose the next reference priority, **Sol / High**.
 
-**Latest integration and push:** Node.js & Express local no-ff merge **c768af4**
-is pushed to origin/develop on 2026-11-13. Pre-push route typecheck and **1841 tests /
-242 files** passed. Existing final application evidence stays in its completion
-rows. Counts: **28/31** references, **18/18** stages. No main promotion.
+**Previous integration and latest push:** Node.js & Express local merge
+**c768af4** was pushed to origin/develop on 2026-11-13. Current Python integration
+remains local. Main is unchanged.
 
 **Previous integration:** W-6.3u.1e / D-105 accepted by the user and merged locally
 into `develop` using no-ff integration, parents **ede8e1f** and **f3f376c**.
@@ -117,6 +117,7 @@ because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-11-19 | W-6.3u.3 local develop integration | User explicitly requested tracker updates and merge to develop. Local no-ff integration from develop **c768af4** includes reviewed **d85b9b1** plus these records; application remains **0bc7010**. Both PY-R1/PY-R2 closed. Delivery: 15 panels/45 topics/45 activities/16 solutions/87 classified locations; **29/31** references and **18/18** stages on develop. | Retain identified 0bc7010/fe66fd0 evidence: **94/5** maintained-3.12.16 focused tests, **70/70** on 3.15.2, scoped format/lint/typecheck/build **KZn2NpROQYiWG9RP37I1W**, coordinator source/actual-prefix recheck and four live capstone states at 3064px. Earlier **1952/247** full suite, Python browser **5/5**, sixteen affected states and global audit/dev-console remain scoped to their recorded unchanged areas/trees. Fresh integration-record ledger/link/whitespace checks and merge-tree/application correspondence are recorded in KICKOFF; no redundant full gate. Other thirty generated bodies unchanged. | No push, hosted CI or main promotion. Plain-text prerequisite navigation minor, Java/Spring Boot and earlier platform/runtime limits remain. Future user depth feedback is separate from this delivery acceptance. Delete the feature branch only after successful merge verification; preserve history, servers and scratch. |
 | 2026-11-19 | W-6.3u.3 final alignment recheck | Reviewed **504170f...fe66fd0**, application **0bc7010**, actual implementation thread/transcript and current capstone. **PY-R1 closed:** displayed River:2/Hill:0/river:3 order agrees with the authored walkthrough; regression runs the published summarize on actual-input prefixes and matches all hand-derived states plus table cells. **PY-R2 remains closed** with module/direct-script checks. No further actionable findings in this focused recheck. | Fresh **94 tests / 5 files**, exit 0 on maintained conventional **CPython 3.12.16**. Four isolated light/dark 320/1024 capstone states pass ordered-input visibility before solutions, keyboard reveal/re-collapse, clean console/no overflow; height **3064px** under unchanged 3072px. Thirty other generated bodies equal c768af4. Read implementation thread **01a1d3ec-7518-7d72-a49d-9b12a3cf3fde** and local transcript; retain inspected **70/70** on **3.15.2**, scoped format/lint/typecheck/build **KZn2NpROQYiWG9RP37I1W** for 0bc7010. Earlier full-suite/audit/dev-console evidence remains tied to its unchanged scope/trees; no redundant full gate. Closing records checks in KICKOFF. | Reader depth acceptance and separate user-approved integration remain. Hosted CI and earlier platform/runtime limits unchanged; plain-text prerequisite minor stays deferred. Records only, no application edits/merge/push/main promotion. |
 | 2026-11-19 | W-6.3u.3 PY-R1 intermediate-state alignment | **0bc7010**, from **504170f**. Reordered published books.jsonl to River 2/Hill 0/river 3, matching the existing table. Program/validator/table unchanged. Updated render expectation and generated Markdown; other thirty bodies remain byte-identical to c768af4. | Actual-prefix regression RED→GREEN: old first-two state {river:5} fails; published summarize now yields {river:2}, {river:2,hill:0}, {river:5,hill:0}; test also compares actual second/third totals with authored trace cells. Fresh **94 tests / 5 files** on maintained CPython **3.12.16**, **70/70** published checks on **3.15.2**; scoped format/lint, generated-route typecheck, build **KZn2NpROQYiWG9RP37I1W**, four live capstone theme/width states (320/1024) with ordered input, table, keyboard controls, clean console/no overflow. Height 3064px at 1024×768, under 3072px. Closing ledger/source-citation **5/5**, local links **210/7 documents/zero missing**, scoped format/lint and whitespace checks pass. Exact runtime builds/limits retained in source record; full-suite/global-audit evidence retained only for identified trees/unchanged scope. Humanizer pass applied to handoff prose. | Focused Sol High coordinator recheck/reader acceptance and separate integration approval. PY-R2 stays closed; existing prerequisite minor and hosted-CI/runtime limits unchanged. No merge/push/main promotion. Session **01a1d3ec-7518-7d72-a49d-9b12a3cf3fde**; coordinator **01a1d36c-4998-7d31-91c4-6b41e9694eba**. |
 | 2026-11-19 | W-6.3u.3 focused coordinator recheck | Reviewed **cc30b1c...7262249**, application **59c00b7**, actual correction diff and implementation thread/transcript. **PY-R2 closed:** published package uses both module success and intended direct-script ImportError. **PY-R1 partial:** actual input is now published and executed without hidden setup, but order River:2/river:3/Hill:0 conflicts with trace River:2/Hill:0/river:3. Keep PY-R1 open for alignment and an intermediate-state oracle. | Fresh **113 tests / 6 files**, exit 0 on maintained **CPython 3.12.16**; actual canonical summarize on displayed-file prefixes produces {river:2}, {river:5}, {river:5,hill:0}, reproducing the mismatch. Four isolated live capstone states (light/dark,320/1024) pass visible-input/hidden-solution/keyboard/console/overflow checks; expanded panel **3064px** at 1024x768. Initial ad-hoc browser helper closed a retained-open topic; corrected its state check, final four states pass. Inspected raw correction outputs confirm retained full **1952/247**, **89/89** on **3.15.2**, build/Python browser **5/5**; no redundant full gate. Closing records checks in KICKOFF. | Reorder displayed fixture to River:2/Hill:0/river:3 (or align trace), update render expectation and prove intermediate state with actual code. Fresh Sol Medium correction, focused Sol High recheck, reader depth feedback and separate integration approval. No application edits, merge/push/main promotion in this review. |
@@ -1007,11 +1008,11 @@ of new work, not assumed to survive from the last `git checkout`.
 
 ## Next up
 
-**Recommended next task/model:** reader depth feedback and coordination,
-**GPT-6.1 Sol / High**, using [KICKOFF](../KICKOFF.md) and the live Python lessons.
-Both PY-R1 and PY-R2 are closed by technical coordinator recheck of application
-**0bc7010** at **fe66fd0**. Reader acceptance and separate integration approval
-remain; no merge/push is inferred.
+**Recommended next task/model:** select the next reference priority,
+**GPT-6.1 Sol / High**, using [KICKOFF](../KICKOFF.md). Python is integrated locally
+into develop; Java and Spring Boot remain undrawn. No next implementation is
+selected. Further Python depth feedback can be assessed separately. Main
+promotion remains the user's; nothing has been pushed for this integration.
 
 **2026-10-30 integration complete:** user-approved merge **6b78fcf** includes Stage 17, Technical Debt Review, source/assessment records and D-100. Its tree equals reviewed feature **f86541c**, application identical to tested **5ea8cb2**. Develop W-3 **17/18**, references **24/29**. Five merged local work branches were deleted; no push or main promotion. The full final gate is retained for unchanged inputs; review scope is recorded in completion rows. New Stage 18 work has not started. Languages and W-6.4 remain separate.
 

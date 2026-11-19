@@ -1,34 +1,41 @@
-# Kickoff: Python review findings closed; reader feedback remains
+# Kickoff: Python study reference integrated into develop
 
-Updated 2026-11-19. Follow [AGENTS.md](AGENTS.md), including separate merge approval.
+Updated 2026-11-19. Follow [AGENTS.md](AGENTS.md), especially promotion rules.
 
-**PY-R1 and PY-R2 are closed by coordinator review.** Application **0bc7010**,
-implementation handoff **fe66fd0**, on `feat/python-study-sheet`. Focused review
-of **504170f...fe66fd0** confirms that the input, actual execution and walkthrough
-agree. No merge or push; develop remains **c768af4**, main promotion is the user's.
+The user explicitly approved updating the records and merging Python into
+**develop**. The local **no-ff** merge starts from **c768af4** and integrates
+reviewed feature **d85b9b1** plus these integration records. The merge contains
+these records; use `git log -1` on develop for its merge ID. Application
+**0bc7010** is unchanged by integration. No push or main promotion.
 
-The capstone now publishes **River 2 → Hill 0 → river 3**. Its regression reads
-prefixes of the actual displayed books.jsonl, runs the published summarize and
-checks all three hand-derived states, then matches the second/third totals to
-the authored table. The old second-state river:5 fails; the corrected state is
-river:2/hill:0. PY-R2's direct-script ImportError variant and module success remain
-passing. No program, validator or trace logic changed for this alignment.
+**W-6.3u.3 is complete and integrated locally.** Both **PY-R1/PY-R2** remain
+closed. The capstone's published input, actual prefix results and authored trace
+agree. Its package example checks successful module invocation and intended
+direct-script failure. Delivery has **15 panels / 45 topics / 45 activities /
+16 solutions**, with **87 classified locations**. Totals on develop: **29/31**
+references drawn, **18/18** stages; Java and Spring Boot remain undrawn.
 
-**Fresh coordinator checks at fe66fd0:** **94 tests / five files**, exit 0 using
-maintained conventional CPython **3.12.16** (published programs/repairs, rendered
-page, Python data/disclosures and generated Markdown). Four live capstone states
-(light/dark,320/1024) confirm ordered input before solutions, keyboard reveal/
-re-collapse, clean console/no document overflow; height **3064px** at 1024x768
-under the unchanged 3072px limit. Other thirty generated sheet bodies are
-byte-identical to c768af4. Application is unchanged by these review records.
+Retained application evidence (not rerun for integration records):
 
-Read implementation session **01a1d3ec-7518-7d72-a49d-9b12a3cf3fde** and inspected
-its local transcript. Retain inspected **70/70** published checks on maintained
-**3.15.2**, scoped format/lint/typecheck and production build
-**KZn2NpROQYiWG9RP37I1W** for application **0bc7010**. Earlier full-suite/global
-browser/dev-console results remain tied to the trees and unchanged scope in
-[tracker](docs/tracker.md); no full gate was unnecessarily repeated for this
-fixture-order correction. Hosted CI remains unrun.
+- **0bc7010 / fe66fd0:** final alignment's **94 tests / five files** on maintained
+  CPython **3.12.16**, **70/70** published checks on **3.15.2**, scoped format/lint,
+  generated-route typecheck and production build **KZn2NpROQYiWG9RP37I1W**.
+  Coordinator recheck repeats 94/5 and four live light/dark 320/1024 capstone
+  states; visible input, keyboard controls, clean console/no overflow and
+  **3064px** height under 3072px. Other thirty generated bodies equal c768af4.
+- **59c00b7:** full **1952 tests / 247 files**, format/lint/typecheck/build,
+  **89/89** checker/published tests on 3.15.2, Python browser **5/5** and sixteen
+  affected theme/width states. Final alignment adds the prefix regression and
+  reorders the fixture; it does not change program/shared interaction behavior.
+- Earlier unchanged global-audit/dev-console evidence remains scoped to the
+  trees in [tracker](docs/tracker.md): all 59 audit cases have passing evidence
+  (57 original passes plus two corrected discovery-count reruns), dev-console
+  **1/1**, independent source/page review and focused correction rechecks.
+
+Fresh integration checks cover the records and exact merged-tree correspondence;
+no repeated full suite/build/browser matrix is claimed. Hosted CI remains unrun.
+The feature branch is deleted only after successful local merge verification;
+its commits remain in develop history. User servers and scratch are preserved.
 
 - [Live capstone](http://localhost:3100/reference/python#report-capstone)
 - [Names and objects](http://localhost:3100/reference/python#names-and-objects)
@@ -38,22 +45,22 @@ fixture-order correction. Hosted CI remains unrun.
   [plan](docs/superpowers/plans/2026-11-13-python-study.md),
   [source/runtime record](reference/python-source-research.md).
 
-Current inventory: **15 panels / 45 topics / 45 activities / 16 solutions**,
-**87 classified locations**; **29/31** references drawn, **18/18** stages.
-Runtimes are `/private/tmp/python-review-runtimes/runtime-3.12.16/bin/python3.12`
-and `/private/tmp/python-review-runtimes/runtime-3.15.2/bin/python3.15`.
-Exact builds/limits are in the source record; local 3.12 omits unused TLS modules.
-Preview 3100 and existing dev 3300 are preserved. Tests install/download nothing.
+Runtime executables currently reside in
+`/private/tmp/python-review-runtimes/runtime-3.12.16/bin/python3.12` and
+`/private/tmp/python-review-runtimes/runtime-3.15.2/bin/python3.15`; exact builds
+and local TLS-module limits are in the source record. Preview 3100 and dev 3300
+are preserved. No Windows/free-threaded/TLS/deployment/throughput/learner-study
+claim is added by integration.
 
-**Next task recommendation: reader depth feedback and coordination, GPT-6.1 Sol /
-High**, coordinator **01a1d36c-4998-7d31-91c4-6b41e9694eba**. Technical correction
-acceptance does not imply user depth acceptance or integration approval. Every
-merge into develop needs separate approval; main promotion remains the user's.
+**Recommended next task: select the next reference priority, GPT-6.1 Sol / High.**
+Java and Spring Boot remain undrawn; no next implementation is selected. Further
+Python depth feedback can be assessed separately. The plain-text prerequisite
+navigation minor remains deferred. Main promotion belongs to the user.
+Coordinator **01a1d36c-4998-7d31-91c4-6b41e9694eba**; implementation
+**01a1d3ec-7518-7d72-a49d-9b12a3cf3fde**. Both threads were read during review.
 
-Deferred: plain-text prerequisite rail references, Java/Spring Boot, frameworks,
-browser execution/scoring, highlighting/renderer changes and main promotion.
-No Windows/free-threaded/TLS/deployment/throughput/learner-outcome claim.
-
-Closing coordinator records: tracker-ledger **2/2**, local links **179 targets /
-three documents / zero missing**, and whitespace checks pass (exit 0). New handoff
-prose received the humanizer editing pass. These records leave 0bc7010 unchanged.
+Fresh integration-record checks: ledger/source citations **5/5**, local links
+**181 targets / three documents / zero missing**, `git diff --check` and exact
+application/CI/generated-Markdown comparison to **0bc7010**, all exit 0. Retain
+these results when the merge tree equals the committed feature tree; verify its
+parents/tree before deleting the branch. Humanizer editing pass applied.

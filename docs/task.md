@@ -13,14 +13,15 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current state (2026-11-19): PY-R1/PY-R2 closed by coordinator; reader feedback remains.**
-User authorized pushing develop, then assessing/designing Python with the same
-teaching goal as Node.js & Express. Push **c768af4** succeeded; pre-push typecheck
-and **1841 tests / 242 files** passed. Python design **c6f3986** and plan are implemented
-from **c0ae407**; application **fb76f25**, closing records and live preview below.
-Python remains unmerged and unpushed.
+**Current state (2026-11-19): Python integrated locally into develop.**
+The user explicitly approved record updates and a no-ff merge. Integration starts
+from develop **c768af4**, includes reviewed feature **d85b9b1** plus these records,
+and preserves application **0bc7010**. **PY-R1/PY-R2 remain closed**. Develop now
+has **29/31** drawn references and **18/18** stages. No push or main promotion.
+Retained application checks and fresh integration-record checks are in
+[KICKOFF](../KICKOFF.md) and [tracker](tracker.md).
 
-**Latest integrated work: W-6.3u.2 Node.js & Express.**
+**Previous integrated work: W-6.3u.2 Node.js & Express.**
 The user approved local no-ff integration of feature tip **1a4cad0** after the
 verified depth revision (**7ee4b54**, test extension **d122175**). The merged
 application tree is identical to that tested tree: 15 panels, 49 topics/activities,
@@ -83,12 +84,11 @@ interactive port as `7a5576a`, and its caching/scaling references as `9de6c99`.
 The single-example width repair followed as `79f9e31`. That width repair was the pre-Stage-10 baseline. Tracked `origin/develop` remains
 `79f9e31`; the current local develop merge is recorded above.
 
-On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **28 drawn / 31 registered**, including W-6.3v and W-6.3u.2. W-6.4 is integrated as **b8515a0**; three language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
+On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **29 drawn / 31 registered**, including W-6.3v and W-6.3u.2/u.3. W-6.4 is integrated as **b8515a0**; two language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** reader depth feedback and coordination, **GPT-6.1 Sol / High**.
-Python application **0bc7010** passed focused coordinator recheck at **fe66fd0**;
-both findings are closed. User depth acceptance and separate develop integration
-remain outstanding. Java/Spring Boot remain undrawn; main promotion is the user's.
+**Next task/model:** select the next reference priority, recommended
+**GPT-6.1 Sol / High**. Python is integrated locally; Java and Spring Boot remain
+undrawn. No next implementation is selected. Main promotion remains the user's.
 
 Two deliverables from one body of content.
 
@@ -140,7 +140,7 @@ response — so the app has to introduce concepts, not only remind.
 | **W-3** | Stages 02–18 interactive | ☑ *(18/18 merged to local `develop`; Stage 18 landed as `c9e5d07`.)* |
 | **W-4** | Quality gates — tests, CI, committed a11y/responsive checks | ☑ |
 | **W-5** | Deploy | ☑ *(live 2026-08-11; the deployment verifies itself via `pnpm test:prod`)* |
-| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(25 of 30 registered sheets drawn; native glossary/stack integrated as `b8515a0`. Five language placeholders remain.)* |
+| **W-6** | Reference hub — cheatsheets, glossary and stack in one consultable section | ◐ *(29 of 31 registered sheets drawn on local develop; native glossary/stack integrated as `b8515a0`. Java and Spring Boot remain placeholders.)* |
 
 ### Dependency map
 
@@ -924,7 +924,7 @@ now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
 
-**W-6.3u — Language and framework study sheets ◐** *(JavaScript and Node.js & Express integrated; Python verified on feature branch; two feature-branch placeholders remain)*
+**W-6.3u — Language and framework study sheets ◐** *(JavaScript, Node.js & Express and Python integrated; Java/Spring Boot remain placeholders)*
 
 **User direction, 2026-11-05 (D-101):** for JavaScript, Python, Java, Spring Boot
 and Express & Node, focus on fundamentals, important topics and concepts that
@@ -1262,10 +1262,12 @@ panel. Five coordinator draft trace probes passed on Node22.23.4. New Worker,
 stream and lifetime examples still require implementation-time actual-code checks.
 Return the actual event-loop lesson for reader assessment before integration.
 
-**W-6.3u.3 — Python study reference ☑** *(implemented; PY-R1/PY-R2 closed; reader feedback/integration outstanding)*
+**W-6.3u.3 — Python study reference ☑** *(user-approved local no-ff integration into develop)*
 
 Implemented from approved handoff **c0ae407** on `feat/python-study-sheet`;
-application **fb76f25** includes the independent review fix. No merge or push.
+application **fb76f25** includes the independent review fix; final corrections are
+**0bc7010**. The user approved local no-ff integration of reviewed **d85b9b1**
+plus these records from develop **c768af4**. No push or main promotion.
 The approved [design](superpowers/specs/2026-11-13-python-study-design.md) and
 [plan](superpowers/plans/2026-11-13-python-study.md) are delivered as one canonical
 web/generated-Markdown source. [Sources and runtime provenance](../reference/python-source-research.md).
@@ -1274,8 +1276,8 @@ web/generated-Markdown source. [Sources and runtime provenance](../reference/pyt
 - [x] Implement 45 topics and 45 exclusively owned activities; 16 executable solutions,
       15 with starters. Split the capstone into a fifteenth panel without cutting
       code/reasoning. Other thirty generated reference bodies remain byte-identical.
-- [x] Verify all 86 displayed-code locations by exact ownership (70 executable,
-      16 explained fragments), including direct repairs, errors, nested state,
+- [x] Verify all 87 displayed-code/input locations by exact ownership (71 program/input
+      locations and 16 explained fragments), including direct repairs, errors, nested state,
       iterator/resource lifetime, cancellation, capacity and process cleanup.
 - [x] Verify maintained CPython 3.12.16/3.15.2, final app/browser/development-console
       checks and one independent Sol High content/page review.
@@ -1298,10 +1300,12 @@ web/generated-Markdown source. [Sources and runtime provenance](../reference/pyt
 - [x] Coordinator rechecked **0bc7010** at **fe66fd0**: fixture order, actual
       prefix totals and authored table agree; **PY-R1 closed**, **PY-R2 stays closed**.
       Fresh **94/5** and four live capstone states pass; 3064px under 3072px.
-- [ ] Reader depth feedback/acceptance of the delivered lessons.
-- [ ] Separate user approval/integration into develop; main promotion remains the user's.
+- [x] User accepted delivery for local develop integration; further depth feedback
+      can be assessed separately.
+- [x] User explicitly approved no-ff integration into develop; main promotion remains
+      the user's.
 
-Counts on the feature branch: **29/31** references, **18/18** stages. The tracker
+Counts on local develop: **29/31** references, **18/18** stages. The tracker
 completion row records the November 13 application checks, review and focused
 reruns; November 19 closing records retain them for unchanged production inputs.
 Correction **59c00b7** publishes the actual input and checks both package startup
@@ -1315,7 +1319,8 @@ states and ties the first-two/complete totals to the authored table. Fresh 94/5
 on 3.12.16 and 70 published checks on 3.15.2 pass, plus build/typecheck/scoped lint/
 format and four live capstone states. Generated Markdown agrees; other thirty
 bodies and the 3064px height remain unchanged. Focused coordinator recheck is
-complete; next is reader depth feedback with **GPT-6.1 Sol / High**. Coordinator
+complete; user approved local integration. Next priority selection uses
+**GPT-6.1 Sol / High**. Coordinator
 **01a1d36c-4998-7d31-91c4-6b41e9694eba**, implementation session
 **01a1d3ec-7518-7d72-a49d-9b12a3cf3fde**.
 
@@ -1327,7 +1332,8 @@ learner/interview outcomes are unclaimed. Official source archives supplied the
 maintained runtimes because the uv catalogue was outdated; exact build strings
 are in the source record. Correction runtimes were reprovisioned; exact build/path evidence is in the source record.
 Java/Spring Boot, frameworks, browser execution/scoring and renderer changes remain
-out of scope. Integration is a separate user decision.
+out of scope. Develop integration is explicitly approved; main promotion remains
+the user's.
 
 **W-6.3v — DSA Patterns study reference ☑** *(reviewed and merged locally into develop)*
 
