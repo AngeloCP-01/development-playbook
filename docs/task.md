@@ -13,12 +13,13 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current state (2026-11-19): Python integrated locally into develop.**
-The user explicitly approved record updates and a no-ff merge. Integration starts
-from develop **c768af4**, includes reviewed feature **d85b9b1** plus these records,
-and preserves application **0bc7010**. **PY-R1/PY-R2 remain closed**. Develop now
-has **29/31** drawn references and **18/18** stages. No push or main promotion.
-Retained application checks and fresh integration-record checks are in
+**Current state (2026-11-19): develop merged into local main by explicit user request.**
+The user authorized a local no-ff merge with parents **4432994** (main) and
+**e7dd0af** (develop). This brings Node.js & Express and Python into local main;
+application remains reviewed **0bc7010**. The merge includes promotion records,
+while develop stays at e7dd0af. **PY-R1/PY-R2 remain closed**; local main/develop
+have **29/31** drawn references and **18/18** stages. No push or deployment.
+Retained application evidence and fresh record checks are in
 [KICKOFF](../KICKOFF.md) and [tracker](tracker.md).
 
 **Previous integrated work: W-6.3u.2 Node.js & Express.**
@@ -88,7 +89,8 @@ On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, mer
 
 **Next task/model:** select the next reference priority, recommended
 **GPT-6.1 Sol / High**. Python is integrated locally; Java and Spring Boot remain
-undrawn. No next implementation is selected. Main promotion remains the user's.
+undrawn. No next implementation is selected. Main was merged locally at the
+user's direct request; a push/deployment is separate.
 
 Two deliverables from one body of content.
 
@@ -1302,8 +1304,9 @@ web/generated-Markdown source. [Sources and runtime provenance](../reference/pyt
       Fresh **94/5** and four live capstone states pass; 3064px under 3072px.
 - [x] User accepted delivery for local develop integration; further depth feedback
       can be assessed separately.
-- [x] User explicitly approved no-ff integration into develop; main promotion remains
-      the user's.
+- [x] User explicitly approved no-ff integration into develop as **e7dd0af**.
+- [x] User then directly requested develop → main; local no-ff merge includes
+      the reviewed application. No push or deployment.
 
 Counts on local develop: **29/31** references, **18/18** stages. The tracker
 completion row records the November 13 application checks, review and focused
@@ -1453,6 +1456,15 @@ stage→sheet backlinks, since the tether is one-directional today; search; and
 copy-to-clipboard on code rows, which waits for the first sheet that has any.
 
 ---
+
+### Theme circle reveal — 2026-11-19
+
+- [x] Inspect reference and add a button-centered expanding circle to theme changes.
+- [x] Preserve theme cycling, persistence, keyboard use and reduced-motion fallback.
+- [x] Add behavior tests; run format/lint/typecheck, full tests, build and dev-console.
+- [x] Check live animation and obtain independent final diff review.
+- [x] Production audit **59/59**. User authorized local develop then main merges;
+  application commit `1ac229d`. No push/deployment requested.
 
 ## Backlog — not scheduled
 

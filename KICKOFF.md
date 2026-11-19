@@ -1,18 +1,47 @@
-# Kickoff: Python study reference integrated into develop
+# Kickoff: theme circle reveal
+
+Updated 2026-11-19. Branch `feat/theme-circle-transition` over `5c4350b`.
+User requested implementation directly after reference inspection, bypassing
+brainstorming. Application is committed as `1ac229d`; the user explicitly authorized local
+develop then main merges. No push/deployment requested.
+
+The theme button reveals the new theme through a 560ms expanding circle.
+Reduced motion and unsupported browsers switch instantly. Tests **1956/248**,
+format/lint/typecheck/build and dev-console **1/1** pass. Focused browser checks
+and independent static review pass. Production audit **59/59** passes; its
+temporary config and server are removed.
+Evidence: [tracker](docs/tracker.md#theme-circle-reveal--2026-11-19).
+
+Retain the identified application checks for integration; compare merged
+application trees and check changed records.
+
+Previous promotion handoff follows for historical context.
+
+# Kickoff: develop merged into local main
 
 Updated 2026-11-19. Follow [AGENTS.md](AGENTS.md), especially promotion rules.
 
-The user explicitly approved updating the records and merging Python into
-**develop**. The local **no-ff** merge starts from **c768af4** and integrates
-reviewed feature **d85b9b1** plus these integration records. The merge contains
-these records; use `git log -1` on develop for its merge ID. Application
-**0bc7010** is unchanged by integration. No push or main promotion.
+The user directly requested a **develop → main** merge after approving Python's
+local develop integration. This explicit session instruction authorizes this
+local main merge despite the default main restriction in AGENTS; it does not
+change that standing rule for future work.
+
+The local **no-ff** main merge has parents **4432994** (previous main) and
+**e7dd0af** (develop). It includes Node.js & Express and Python plus these promotion
+records. Git merged without conflicts; before the records update, the combined
+index tree equalled develop exactly. Final application/CI/generated Markdown
+remain byte-identical to reviewed **0bc7010**. No push or deployment was performed;
+origin/main remains **4432994**. Develop remains **e7dd0af**.
+
+Python's earlier develop merge **e7dd0af** has parents **c768af4 / 7ccfe26**.
+Its feature branch was deleted after successful tree verification; commits remain
+in history. The current main merge includes these records; use git log for its ID.
 
 **W-6.3u.3 is complete and integrated locally.** Both **PY-R1/PY-R2** remain
 closed. The capstone's published input, actual prefix results and authored trace
 agree. Its package example checks successful module invocation and intended
 direct-script failure. Delivery has **15 panels / 45 topics / 45 activities /
-16 solutions**, with **87 classified locations**. Totals on develop: **29/31**
+16 solutions**, with **87 classified locations**. Totals on local main/develop: **29/31**
 references drawn, **18/18** stages; Java and Spring Boot remain undrawn.
 
 Retained application evidence (not rerun for integration records):
@@ -32,10 +61,9 @@ Retained application evidence (not rerun for integration records):
   (57 original passes plus two corrected discovery-count reruns), dev-console
   **1/1**, independent source/page review and focused correction rechecks.
 
-Fresh integration checks cover the records and exact merged-tree correspondence;
-no repeated full suite/build/browser matrix is claimed. Hosted CI remains unrun.
-The feature branch is deleted only after successful local merge verification;
-its commits remain in develop history. User servers and scratch are preserved.
+Fresh integration/promotion checks cover the records and exact application
+correspondence; no repeated full suite/build/browser matrix is claimed. Hosted CI
+remains unrun. Develop is retained; user servers and scratch are preserved.
 
 - [Live capstone](http://localhost:3100/reference/python#report-capstone)
 - [Names and objects](http://localhost:3100/reference/python#names-and-objects)
@@ -55,12 +83,12 @@ claim is added by integration.
 **Recommended next task: select the next reference priority, GPT-6.1 Sol / High.**
 Java and Spring Boot remain undrawn; no next implementation is selected. Further
 Python depth feedback can be assessed separately. The plain-text prerequisite
-navigation minor remains deferred. Main promotion belongs to the user.
+navigation minor remains deferred. A remote push/deployment is a separate action.
 Coordinator **01a1d36c-4998-7d31-91c4-6b41e9694eba**; implementation
 **01a1d3ec-7518-7d72-a49d-9b12a3cf3fde**. Both threads were read during review.
 
-Fresh integration-record checks: ledger/source citations **5/5**, local links
-**181 targets / three documents / zero missing**, `git diff --check` and exact
-application/CI/generated-Markdown comparison to **0bc7010**, all exit 0. Retain
-these results when the merge tree equals the committed feature tree; verify its
-parents/tree before deleting the branch. Humanizer editing pass applied.
+Fresh local-main record checks: ledger/source citations **5/5**, local links
+**181 targets / three documents / zero missing**, staged/working whitespace and
+exact application/CI/generated-Markdown correspondence to develop and **0bc7010**,
+all exit 0. Only KICKOFF/task/tracker differ from develop; no application change.
+Final merge-parent/application checks precede completion. Humanizer pass applied.

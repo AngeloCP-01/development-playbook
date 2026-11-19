@@ -4,15 +4,16 @@
 debt was taken on. Scope and planning live in [task.md](task.md).
 
 **Last updated:** 2026-11-19
-**Current phase:** W-6.3u.3 Python integrated locally into **develop** after the
-user's explicit approval. No-ff integration starts from **c768af4**, includes
-reviewed **d85b9b1** plus these records, and preserves application **0bc7010**.
-Both PY-R1/PY-R2 remain closed; **29/31** references and **18/18** stages.
-No push/main promotion. Next: choose the next reference priority, **Sol / High**.
+**Current phase:** explicit user-requested local **develop → main** no-ff merge,
+parents **4432994 / e7dd0af**. Includes Node.js & Express and Python; application
+matches reviewed **0bc7010**. Both PY-R1/PY-R2 remain closed; **29/31** references
+and **18/18** stages. No push/deployment; develop remains e7dd0af. Next: choose the
+next reference priority, **Sol / High**.
 
 **Previous integration and latest push:** Node.js & Express local merge
 **c768af4** was pushed to origin/develop on 2026-11-13. Current Python integration
-remains local. Main is unchanged.
+remains local. Main is now merged locally by the user's direct request;
+origin/main remains **4432994**, with no deployment initiated.
 
 **Previous integration:** W-6.3u.1e / D-105 accepted by the user and merged locally
 into `develop` using no-ff integration, parents **ede8e1f** and **f3f376c**.
@@ -111,12 +112,44 @@ green, green across the typegen fix. TD-10 closed; W-4 is fully done.
 
 ## Completed
 
+### Theme circle reveal — 2026-11-19
+
+- Application commit `1ac229d` on `feat/theme-circle-transition` over
+  `5c4350b`. User explicitly authorized local develop then main integration;
+  no push/deployment requested. Retained checks below tested this exact
+  application diff. Commit hook format/lint also passed without changes.
+- Theme changes reveal the new drawing through a button-centered circle over
+  560ms. Existing system/light/dark cycling and persistence remain; reduced
+  motion and unsupported browsers switch immediately. Repeated clicks wait
+  until the current reveal finishes.
+- Reference: [Designed to Scale](https://designed-to-scale.vercel.app/#/sql-nosql/1),
+  accessed 2026-11-19; author attribution unverified. Inspected the delivered
+  theme handler: View Transitions, button-center geometry, 560ms and
+  `cubic-bezier(0.4, 0, 0.2, 1)`. No image assets copied.
+- Fresh checks on this application diff: animation test RED (transition absent),
+  GREEN **3/3**; format, lint, generated-route typecheck and production build
+  **V-AijDMHdnP65EvYEqYUV** exit 0; full tests **1956/248 files** exit 0;
+  development-console **1/1** exit 0. Initial sandbox runs could not bind HTTP
+  servers or download fonts; authorized reruns passed.
+- Live checks at 320/390/768/1470px: theme cycling, button-center animation,
+  retained focus and no overflow; Enter activation and clean console.
+  Production midpoint screenshot confirms the circular theme boundary;
+  browser reduced-motion emulation confirms instant switching.
+  Independent static diff review (Sol/high) found no blockers.
+- Production audit **59/59**, exit 0 (11.1m), using a temporary config with
+  the existing suite on dedicated port 3199 and the fresh build above. The
+  default freshness hook hardcodes 3100, so this isolated run used its own
+  newly started server instead; existing user servers were preserved.
+  Temporary config removed. Records-only ledger check **2/2**, exit 0.
+
+
 Conventions ported from `SmartJobSearchCRM`: evidence cites a SHA, a count, or what a
 review caught — never just "done". Every entry records what it deliberately deferred,
 because scope creep is invisible otherwise.
 
 | Date | ID | What shipped | Evidence | Deferred |
 |---|---|---|---|---|
+| 2026-11-19 | Explicit local develop → main promotion | User directly instructed the main merge after approving develop integration. Local no-ff parents **4432994 / e7dd0af** bring Node.js & Express and Python into local main, including these records. This one explicit session authorization overrides the standing main restriction for this action only. Develop remains e7dd0af; main/develop contain **29/31** drawn references and **18/18** stages. | Git merged without conflicts. Before promotion-record edits, combined index tree equalled e7dd0af exactly; application/CI/generated Markdown remain identical to reviewed **0bc7010**. Retain the already identified application/review/runtime/browser evidence in KICKOFF and prior completion rows; fresh records ledger/link/whitespace and final merge-parent/application checks validate this records-only promotion delta. No full suite/build/browser matrix repeated for unchanged application inputs. | No push, hosted CI or deployment. origin/main stays **4432994**; production checks await an actual deployment. Develop is retained; no default main policy change. Earlier prerequisite-navigation/platform/runtime limits and Java/Spring Boot scope remain. |
 | 2026-11-19 | W-6.3u.3 local develop integration | User explicitly requested tracker updates and merge to develop. Local no-ff integration from develop **c768af4** includes reviewed **d85b9b1** plus these records; application remains **0bc7010**. Both PY-R1/PY-R2 closed. Delivery: 15 panels/45 topics/45 activities/16 solutions/87 classified locations; **29/31** references and **18/18** stages on develop. | Retain identified 0bc7010/fe66fd0 evidence: **94/5** maintained-3.12.16 focused tests, **70/70** on 3.15.2, scoped format/lint/typecheck/build **KZn2NpROQYiWG9RP37I1W**, coordinator source/actual-prefix recheck and four live capstone states at 3064px. Earlier **1952/247** full suite, Python browser **5/5**, sixteen affected states and global audit/dev-console remain scoped to their recorded unchanged areas/trees. Fresh integration-record ledger/link/whitespace checks and merge-tree/application correspondence are recorded in KICKOFF; no redundant full gate. Other thirty generated bodies unchanged. | No push, hosted CI or main promotion. Plain-text prerequisite navigation minor, Java/Spring Boot and earlier platform/runtime limits remain. Future user depth feedback is separate from this delivery acceptance. Delete the feature branch only after successful merge verification; preserve history, servers and scratch. |
 | 2026-11-19 | W-6.3u.3 final alignment recheck | Reviewed **504170f...fe66fd0**, application **0bc7010**, actual implementation thread/transcript and current capstone. **PY-R1 closed:** displayed River:2/Hill:0/river:3 order agrees with the authored walkthrough; regression runs the published summarize on actual-input prefixes and matches all hand-derived states plus table cells. **PY-R2 remains closed** with module/direct-script checks. No further actionable findings in this focused recheck. | Fresh **94 tests / 5 files**, exit 0 on maintained conventional **CPython 3.12.16**. Four isolated light/dark 320/1024 capstone states pass ordered-input visibility before solutions, keyboard reveal/re-collapse, clean console/no overflow; height **3064px** under unchanged 3072px. Thirty other generated bodies equal c768af4. Read implementation thread **01a1d3ec-7518-7d72-a49d-9b12a3cf3fde** and local transcript; retain inspected **70/70** on **3.15.2**, scoped format/lint/typecheck/build **KZn2NpROQYiWG9RP37I1W** for 0bc7010. Earlier full-suite/audit/dev-console evidence remains tied to its unchanged scope/trees; no redundant full gate. Closing records checks in KICKOFF. | Reader depth acceptance and separate user-approved integration remain. Hosted CI and earlier platform/runtime limits unchanged; plain-text prerequisite minor stays deferred. Records only, no application edits/merge/push/main promotion. |
 | 2026-11-19 | W-6.3u.3 PY-R1 intermediate-state alignment | **0bc7010**, from **504170f**. Reordered published books.jsonl to River 2/Hill 0/river 3, matching the existing table. Program/validator/table unchanged. Updated render expectation and generated Markdown; other thirty bodies remain byte-identical to c768af4. | Actual-prefix regression RED→GREEN: old first-two state {river:5} fails; published summarize now yields {river:2}, {river:2,hill:0}, {river:5,hill:0}; test also compares actual second/third totals with authored trace cells. Fresh **94 tests / 5 files** on maintained CPython **3.12.16**, **70/70** published checks on **3.15.2**; scoped format/lint, generated-route typecheck, build **KZn2NpROQYiWG9RP37I1W**, four live capstone theme/width states (320/1024) with ordered input, table, keyboard controls, clean console/no overflow. Height 3064px at 1024×768, under 3072px. Closing ledger/source-citation **5/5**, local links **210/7 documents/zero missing**, scoped format/lint and whitespace checks pass. Exact runtime builds/limits retained in source record; full-suite/global-audit evidence retained only for identified trees/unchanged scope. Humanizer pass applied to handoff prose. | Focused Sol High coordinator recheck/reader acceptance and separate integration approval. PY-R2 stays closed; existing prerequisite minor and hosted-CI/runtime limits unchanged. No merge/push/main promotion. Session **01a1d3ec-7518-7d72-a49d-9b12a3cf3fde**; coordinator **01a1d36c-4998-7d31-91c4-6b41e9694eba**. |
@@ -1012,7 +1045,7 @@ of new work, not assumed to survive from the last `git checkout`.
 **GPT-6.1 Sol / High**, using [KICKOFF](../KICKOFF.md). Python is integrated locally
 into develop; Java and Spring Boot remain undrawn. No next implementation is
 selected. Further Python depth feedback can be assessed separately. Main
-promotion remains the user's; nothing has been pushed for this integration.
+was explicitly requested and performed locally; nothing has been pushed or deployed.
 
 **2026-10-30 integration complete:** user-approved merge **6b78fcf** includes Stage 17, Technical Debt Review, source/assessment records and D-100. Its tree equals reviewed feature **f86541c**, application identical to tested **5ea8cb2**. Develop W-3 **17/18**, references **24/29**. Five merged local work branches were deleted; no push or main promotion. The full final gate is retained for unchanged inputs; review scope is recorded in completion rows. New Stage 18 work has not started. Languages and W-6.4 remain separate.
 
