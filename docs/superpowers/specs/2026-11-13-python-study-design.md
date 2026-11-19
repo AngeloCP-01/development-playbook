@@ -124,6 +124,12 @@ topics under `testing-and-capstone` (Testing and diagnosis) and moves the intact
 | `threads-and-processes` | `concurrency-and-parallelism`, `shared-state-and-locks`, `process-boundaries` | Async tasks versus OS threads/processes, I/O versus Python CPU work, conventional GIL and free-threaded-build caveats; deterministic lost update and lock repair; explicit spawn context, top-level picklable worker/main guard, serialization and separate state, bounded executor lifecycle. No claimed speedup from tiny timings. |
 | `testing-and-capstone` | `unit-and-boundary-tests`, `debug-and-measure`, `interview-capstone` | unittest/assertions and temp fixtures; arrange/action/result, invalid/empty/duplicate cases, limited mocking and cleanup; traceback/debugger/logging, timeit/profile and qualified complexity; implement/repair/test the book report, then change input, memory or concurrency constraints and explain the choice. |
 
+Correction measurement (2026-11-19, PY-R1): publishing the complete JSON-lines
+input initially raised the open capstone to 3112.7px. Clarifying the three-file
+setup and removing redundant wording retains every rule, program, trace and
+practice; both themes now measure 3064px at 1024×768, below 3072px. The 15-panel /
+45-topic structure stays intact.
+
 ## Teaching specimen: a shallow copy still shares a child
 
 This original draft freezes the expected depth, not a second maintained lesson

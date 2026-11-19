@@ -370,3 +370,24 @@ Resumption on 2026-11-19 found the application unchanged and the temporary
 runtime directories/logs cleaned. The exact builds above describe the November 13
 verification, not currently installed runtimes. Provision an explicit supported
 interpreter before rerunning; retained release evidence stays tied to fb76f25.
+
+## PY-R1/PY-R2 correction checks (2026-11-19)
+
+Re-opened the [PSF release inventory](https://www.python.org/downloads/) on
+2026-11-19: 3.12.16 and 3.15.2 remain the listed patches for the selected branches.
+Reprovisioned from the same official source archives into
+`/private/tmp/python-review-runtimes/`. Both are conventional GIL-enabled CPython:
+
+- `runtime-3.12.16/bin/python3.12`: `3.12.16 (main, Nov 19 2026, 09:46:45)
+  [Clang 17.0.0 (clang-1700.6.3.2)]`, platform `macOS-26.3-arm64-arm-64bit`.
+- `runtime-3.15.2/bin/python3.15`: `3.15.2 (main, Nov 19 2026, 09:44:49)
+  [Clang 17.0.0 (clang-1700.6.3.2)]`, platform `macOS-26.3-arm64-arm-64bit-Mach-O`.
+
+The 3.12 build again omits unused `_ssl`/`_hashlib` after the local OpenSSL 4 header
+incompatibility; this remains example compatibility evidence, not TLS coverage.
+The published capstone now includes its UTF-8 JSON-lines input and its entry case
+materializes that exact displayed block. No hidden setup fixture is needed.
+The actual package files run both through `-m books.main` and directly; the
+latter must raise `ImportError: attempted relative import with no known parent
+package`. Tests still download/install nothing. Counts and final command evidence
+belong in the correction tracker entry.
