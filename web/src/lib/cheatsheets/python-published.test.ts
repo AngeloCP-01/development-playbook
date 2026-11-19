@@ -15,6 +15,44 @@ test('capstone command succeeds from only its published files, including the inp
   expect(result.stdout).toBe('hill: 0\nriver: 5\n')
 })
 
+test('capstone prefixes produce the intermediate totals shown in its walkthrough', async () => {
+  const item = pythonCases.find(
+    (c) => c.name === 'report entry and all boundary contracts',
+  )!
+  const result = await runPythonCase({
+    ...item,
+    sheet: python,
+    args: [],
+    checkEntry: 'trace.py',
+    checks: {
+      'trace.py':
+        'import json\nfrom pathlib import Path\nfrom report import summarize\n\nlines = Path("books.jsonl").read_text(encoding="utf-8").splitlines(keepends=True)\nstates = []\nfor length in [1, 2, 3]:\n    prefix = Path("prefix.jsonl")\n    prefix.write_text("".join(lines[:length]), encoding="utf-8")\n    states.append(summarize(prefix))\nprint(json.dumps(states))',
+    },
+  })
+  const states = JSON.parse(result.stdout) as Record<string, number>[]
+  expect(states).toEqual([
+    { river: 2 },
+    { river: 2, hill: 0 },
+    { river: 5, hill: 0 },
+  ])
+  const topic = python.sections
+    .flatMap((section) => section.rows)
+    .find((row) => row.study?.id === 'interview-capstone')!
+  const trace = topic.teaching!.find(
+    (block) => block.id === 'interview-capstone-trace',
+  )!
+  expect(trace.kind).toBe('table')
+  if (trace.kind !== 'table') throw new Error('missing capstone trace table')
+  const notation = (state: Record<string, number>) =>
+    '{' +
+    Object.entries(state)
+      .map(([key, value]) => `${key}:${value}`)
+      .join(', ') +
+    '}'
+  expect(trace.rows[0][1]).toBe(notation(states[1]))
+  expect(trace.rows[1][1]).toBe(notation(states[2]))
+}, 15000)
+
 test('published package owns a direct-script failure contrast using its original files', async () => {
   const item = pythonCases.find(
     (c) => c.name === 'package-layout module context',

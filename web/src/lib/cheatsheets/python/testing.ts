@@ -110,7 +110,7 @@ const combined = family(
           kind: 'code',
           label:
             'books.jsonl — UTF-8 input beside report.py and report_record.py',
-          code: '{"title":"River","count":2}\n{"title":"river","count":3}\n{"title":"Hill","count":0}',
+          code: '{"title":"River","count":2}\n{"title":"Hill","count":0}\n{"title":"river","count":3}',
         },
         {
           id: 'interview-capstone-validator',

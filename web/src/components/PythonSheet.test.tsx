@@ -15,7 +15,7 @@ test('capstone exposes its concrete UTF-8 input beside the program before reveal
     'books.jsonl — UTF-8 input beside report.py and report_record.py',
   )
   expect(input.textContent).toBe(
-    '{"title":"River","count":2}\n{"title":"river","count":3}\n{"title":"Hill","count":0}',
+    '{"title":"River","count":2}\n{"title":"Hill","count":0}\n{"title":"river","count":3}',
   )
   expect(
     screen
