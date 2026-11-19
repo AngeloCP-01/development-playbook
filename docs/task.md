@@ -13,7 +13,7 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current state (2026-11-19): Python implemented and verified on feature branch; no integration.**
+**Current state (2026-11-19): Python implemented; coordinator corrections PY-R1/PY-R2 open.**
 User authorized pushing develop, then assessing/designing Python with the same
 teaching goal as Node.js & Express. Push **c768af4** succeeded; pre-push typecheck
 and **1841 tests / 242 files** passed. Python design **c6f3986** and plan are implemented
@@ -85,9 +85,10 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **28 drawn / 31 registered**, including W-6.3v and W-6.3u.2. W-6.4 is integrated as **b8515a0**; three language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** reader depth feedback and coordination, **GPT-6.1 Sol / High**.
-Python is implemented and verified on `feat/python-study-sheet`; Java and Spring
-Boot remain undrawn. See W-6.3u.3 and KICKOFF for retained checks and live lessons.
+**Next task/model:** fix PY-R1/PY-R2, fresh **GPT-6.1 Sol / Medium**, then
+**Sol / High** coordinator recheck and reader feedback. Python is implemented on
+`feat/python-study-sheet`; coordinator acceptance awaits those corrections. Java
+and Spring Boot remain undrawn. See W-6.3u.3 and KICKOFF for retained checks and live lessons.
 Separate develop integration and user-only main promotion remain outstanding.
 
 Two deliverables from one body of content.
@@ -1262,7 +1263,7 @@ panel. Five coordinator draft trace probes passed on Node22.23.4. New Worker,
 stream and lifetime examples still require implementation-time actual-code checks.
 Return the actual event-loop lesson for reader assessment before integration.
 
-**W-6.3u.3 — Python study reference ☑** *(implemented and verified on feature branch; reader feedback/integration outstanding)*
+**W-6.3u.3 — Python study reference ◐** *(implemented; coordinator acceptance reopened for PY-R1/PY-R2)*
 
 Implemented from approved handoff **c0ae407** on `feat/python-study-sheet`;
 application **fb76f25** includes the independent review fix. No merge or push.
@@ -1282,13 +1283,21 @@ web/generated-Markdown source. [Sources and runtime provenance](../reference/pyt
 - [x] Resolve the Important same-topic dependency finding with RED→GREEN render
       coverage, fresh full suite and page checks. Humanizer editing pass applied.
 - [x] Return live names/objects and asyncio lessons in KICKOFF for reader depth feedback.
+- [x] Coordinator reviewed **c0ae407...675b4b3**, actual thread/evidence/page;
+      Standards clean, two P2 Spec findings reproduced.
+- [ ] **PY-R1:** publish the capstone's concrete books.jsonl input and verify that
+      displayed fixture with render/actual-code coverage and the panel-height budget.
+- [ ] **PY-R2:** verify direct-script failure on the actual package example files,
+      alongside module-invocation success.
+- [ ] Return correction commit/checks/session for focused Sol High coordinator recheck.
 - [ ] Separate user approval/integration into develop; main promotion remains the user's.
 
 Counts on the feature branch: **29/31** references, **18/18** stages. The tracker
 completion row records the November 13 application checks, review and focused
 reruns; November 19 closing records retain them for unchanged production inputs.
-Current handoff: [KICKOFF](../KICKOFF.md). Recommendation for reader feedback and
-coordination: **GPT-6.1 Sol / High**, coordinator
+Current handoff: [KICKOFF](../KICKOFF.md). Next: correct PY-R1/PY-R2 in a fresh
+user-selected **GPT-6.1 Sol / Medium** session, then focused **Sol / High** recheck
+and reader depth feedback. Coordinator
 **01a1d36c-4998-7d31-91c4-6b41e9694eba**. Implementation session:
 **01a1d3ec-7518-7d72-a49d-9b12a3cf3fde**.
 

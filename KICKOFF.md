@@ -1,6 +1,38 @@
-# Kickoff: Python implemented; reader feedback and integration remain
+# Kickoff: Python coordinator review; two corrections before integration
 
 Updated 2026-11-19. Follow [AGENTS.md](AGENTS.md), including separate merge approval.
+
+**Coordinator review completed 2026-11-19:** reviewed **c0ae407...675b4b3**
+(application **fb76f25**), implementation thread/local transcript and actual page.
+Standards: no actionable findings. Spec: two confirmed **P2** gaps; do not recommend
+integration until corrected and rechecked.
+
+- **PY-R1:** the capstone names `books.jsonl` but publishes no concrete input file.
+  Running its displayed Python files/command raises FileNotFoundError; only the
+  checker supplies the fixture. Publish the labelled input beside the program,
+  consume that actual displayed fixture in its case and add rendered coverage.
+- **PY-R2:** the actual package files are checked with `-m books.main`, but their
+  documented direct-script ImportError contrast has no actual-code case. Add a
+  direct-script variant requiring the intended ImportError, keeping module success.
+
+**Next task recommendation: fix PY-R1/PY-R2, fresh user-selected GPT-6.1 Sol /
+Medium.** Start from this committed review handoff on `feat/python-study-sheet`;
+return actual diff/checks/session to coordinator **01a1d36c-4998-7d31-91c4-6b41e9694eba**,
+recommended **Sol / High**. Reprovision maintained Python for correction release
+checks. Keep the expanded capstone under 3072px: current height is **2968.4px**, so
+measure the added fixture and split at a teaching seam if necessary. Preserve
+canonical Markdown/manifest ownership and other thirty sheet bodies. No new
+feature, renderer, merge or push is requested by this review.
+
+Fresh review evidence at **675b4b3**: **25 tests / 5 files**, **12** live
+names/objects + asyncio theme/width states (320/768/1440), keyboard solution
+reveal/re-collapse, module repair companions, clean console/no overflow; expanded
+capstone **2968.4px**. Actual-file reproduction on installed conventional CPython
+**3.13.7** confirms both issues and the successful hidden-fixture/module controls.
+This is bounded compatibility/reproduction evidence, not refreshed maintained
+3.12/3.15 release evidence. Other thirty generated bodies match c768af4. Historical
+full-suite/audit/runtime results below were inspected in the implementation
+transcript and retained; hosted CI remains unrun. No application source changed.
 
 **W-6.3u.3 is implemented on `feat/python-study-sheet`**, from approved handoff
 **c0ae407**. Application **fb76f25** includes the independent review fix. Closing
@@ -60,8 +92,13 @@ Limits: local conventional GIL-enabled macOS source builds; 3.12 omitted unused
 free-threaded execution, TLS, deployment, throughput and learner/interview outcomes
 are unclaimed. Use the recorded evidence within those boundaries.
 
-**Next task recommendation: reader depth feedback / coordination, GPT-6.1 Sol /
+**After correction/recheck:** reader depth feedback / coordination, **GPT-6.1 Sol /
 High**, coordinator **01a1d36c-4998-7d31-91c4-6b41e9694eba**. Implementation session
 **01a1d3ec-7518-7d72-a49d-9b12a3cf3fde**. Review the live names/objects and asyncio
 lessons before deciding integration. Every develop merge needs separate approval;
 main promotion remains the user's. This handoff requests no integration.
+
+Closing coordinator-review records checks: tracker-ledger **2/2**, local targets
+**178 / 3 documents / zero missing**, and `git diff --check`, exit 0. These are
+fresh records checks; the 25 focused app tests and live/reproduction checks above
+apply to reviewed **675b4b3**, whose application is unchanged by these records.
