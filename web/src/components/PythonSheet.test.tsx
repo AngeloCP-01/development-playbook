@@ -3,6 +3,27 @@ import { expect, test } from 'vitest'
 import { cheatsheetBySlug } from '@/lib/cheatsheets'
 import { CheatsheetView } from './Cheatsheet'
 
+test('capstone exposes its concrete UTF-8 input beside the program before revealing a solution', () => {
+  window.history.replaceState(null, '', '/reference/python#report-capstone')
+  render(<CheatsheetView sheet={cheatsheetBySlug('python')!} />)
+  fireEvent.click(
+    screen
+      .getByText('Build and defend a validated streaming report')
+      .closest('button')!,
+  )
+  const input = screen.getByLabelText(
+    'books.jsonl — UTF-8 input beside report.py and report_record.py',
+  )
+  expect(input.textContent).toBe(
+    '{"title":"River","count":2}\n{"title":"river","count":3}\n{"title":"Hill","count":0}',
+  )
+  expect(
+    screen
+      .getByRole('button', { name: 'Solution: Implement and test the report' })
+      .getAttribute('aria-expanded'),
+  ).toBe('false')
+})
+
 test('the package repair exposes its entry and both dependencies in the same topic', () => {
   window.history.replaceState(
     null,

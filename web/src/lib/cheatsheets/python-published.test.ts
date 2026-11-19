@@ -7,6 +7,32 @@ import {
   runPythonCase,
 } from './python-published-checks'
 
+test('capstone command succeeds from only its published files, including the input', async () => {
+  const item = pythonCases.find(
+    (c) => c.name === 'report entry and all boundary contracts',
+  )!
+  const result = await runPythonCase({ ...item, sheet: python, fixtures: {} })
+  expect(result.stdout).toBe('hill: 0\nriver: 5\n')
+})
+
+test('published package owns a direct-script failure contrast using its original files', async () => {
+  const item = pythonCases.find(
+    (c) => c.name === 'package-layout module context',
+  )!
+  const direct = item.variants?.find(
+    (v) => v.module === undefined && v.exit === 1,
+  )
+  expect(
+    direct,
+    'missing direct-script contrast for the published package',
+  ).toBeDefined()
+  const result = await runPythonCase({ ...item, ...direct, sheet: python })
+  expect(result.stdout).toBe('')
+  expect(result.stderr).toContain(
+    'ImportError: attempted relative import with no known parent package',
+  )
+})
+
 test.each([
   [
     'mutation-and-copying-practice-solution',

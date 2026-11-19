@@ -102,9 +102,16 @@ const combined = family(
       filename:
         'report.py — beside report_record.py; run python3 report.py books.jsonl',
       model:
-        'The input is UTF-8 JSON lines: each nonblank line contains an object with title and count, using the earlier Files and data contract. Blank lines are ignored; duplicate normalized titles add counts, including zero. The file owner streams lines limited to 1024 decoded characters including the newline, rejecting a longer line before parsing it. The validator below is a complete companion file. A Counter retains one total per distinct normalized title; sorted display makes output deterministic. Any invalid record fails the report with a line number and chained cause; no partial result is returned.',
+        'Save all three labelled files together; run the report.py command. Input is UTF-8 JSON lines. Skip blanks; sum duplicate normalized titles, retaining zero. Reject lines over 1024 decoded characters (including newline) before parsing. The validator checks title/count records. Counter retains distinct-title totals; sorting makes output deterministic. Invalid records raise a chained error with line context; partial totals stay internal.',
       code: 'import json\nimport sys\nfrom collections import Counter\nfrom pathlib import Path\nfrom report_record import validate\n\ndef summarize(path):\n    totals = Counter()\n    with path.open(encoding="utf-8") as handle:\n        line_number = 0\n        while True:\n            line = handle.readline(1025)\n            if not line:\n                return dict(totals)\n            line_number += 1\n            if len(line) > 1024:\n                raise ValueError(f"line {line_number}: too long")\n            if not line.strip():\n                continue\n            try:\n                title, count = validate(json.loads(line))\n            except ValueError as error:\n                raise ValueError(f"line {line_number}: invalid record") from error\n            totals[title] += count\n\ndef display(totals):\n    return "\\n".join(f"{title}: {totals[title]}" for title in sorted(totals))\n\nif __name__ == "__main__":\n    output = display(summarize(Path(sys.argv[1])))\n    if output:\n        print(output)',
       extra: [
+        {
+          id: 'interview-capstone-input',
+          kind: 'code',
+          label:
+            'books.jsonl — UTF-8 input beside report.py and report_record.py',
+          code: '{"title":"River","count":2}\n{"title":"river","count":3}\n{"title":"Hill","count":0}',
+        },
         {
           id: 'interview-capstone-validator',
           kind: 'code',

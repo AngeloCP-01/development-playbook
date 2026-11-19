@@ -8824,7 +8824,7 @@ Prerequisites: Files and data \(\#files\-and\-data\), Standard library \(\#stand
 
 Own decoding, validation, duplicate aggregation, deterministic display and retained\-memory limits\.
 
-The input is UTF\-8 JSON lines: each nonblank line contains an object with title and count, using the earlier Files and data contract\. Blank lines are ignored; duplicate normalized titles add counts, including zero\. The file owner streams lines limited to 1024 decoded characters including the newline, rejecting a longer line before parsing it\. The validator below is a complete companion file\. A Counter retains one total per distinct normalized title; sorted display makes output deterministic\. Any invalid record fails the report with a line number and chained cause; no partial result is returned\.
+Save all three labelled files together; run the report\.py command\. Input is UTF\-8 JSON lines\. Skip blanks; sum duplicate normalized titles, retaining zero\. Reject lines over 1024 decoded characters \(including newline\) before parsing\. The validator checks title/count records\. Counter retains distinct\-title totals; sorting makes output deterministic\. Invalid records raise a chained error with line context; partial totals stay internal\.
 
 report\.py — beside report\_record\.py; run python3 report\.py books\.jsonl
 
@@ -8872,6 +8872,14 @@ Report state across input boundaries
 | EOF | Owner exits with | Display: hill: 0 then river: 5\. |
 | Malformed third record | Earlier internal totals discarded | Line 3 error; with closes; no result returned\. |
 | Empty / blank file | \{\} | Empty display; no fabricated record\. |
+
+books\.jsonl — UTF\-8 input beside report\.py and report\_record\.py
+
+```
+{"title":"River","count":2}
+{"title":"river","count":3}
+{"title":"Hill","count":0}
+```
 
 report\_record\.py — complete boundary validator
 

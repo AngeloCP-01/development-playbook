@@ -108,6 +108,15 @@ export const programCases: PublishedCase[] = [
     entry: 'books/main.py',
     module: 'books.main',
     stdout: 'River\n',
+    variants: [
+      {
+        module: undefined,
+        exit: 1,
+        stdout: '',
+        stderr:
+          /ImportError: attempted relative import with no known parent package/,
+      },
+    ],
   },
   {
     name: 'package-layout deliberate cycle',

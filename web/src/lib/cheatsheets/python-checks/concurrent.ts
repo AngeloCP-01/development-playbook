@@ -193,12 +193,9 @@ export const concurrentCases: PublishedCase[] = [
     files: {
       'report.py': 'interview-capstone-example',
       'report_record.py': 'interview-capstone-validator',
+      'books.jsonl': 'interview-capstone-input',
     },
     entry: 'report.py',
-    fixtures: {
-      'books.jsonl':
-        '{"title":"River","count":2}\n{"title":"river","count":3}\n{"title":"Hill","count":0}\n',
-    },
     args: ['books.jsonl'],
     stdout: 'hill: 0\nriver: 5\n',
     variants: [
