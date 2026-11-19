@@ -112,6 +112,37 @@ green, green across the typegen fix. TD-10 closed; W-4 is fully done.
 
 ## Completed
 
+### Theme circle reveal — 2026-11-19
+
+- Application commit `1ac229d` on `feat/theme-circle-transition` over
+  `5c4350b`. User explicitly authorized local develop then main integration;
+  no push/deployment requested. Retained checks below tested this exact
+  application diff. Commit hook format/lint also passed without changes.
+- Theme changes reveal the new drawing through a button-centered circle over
+  560ms. Existing system/light/dark cycling and persistence remain; reduced
+  motion and unsupported browsers switch immediately. Repeated clicks wait
+  until the current reveal finishes.
+- Reference: [Designed to Scale](https://designed-to-scale.vercel.app/#/sql-nosql/1),
+  accessed 2026-11-19; author attribution unverified. Inspected the delivered
+  theme handler: View Transitions, button-center geometry, 560ms and
+  `cubic-bezier(0.4, 0, 0.2, 1)`. No image assets copied.
+- Fresh checks on this application diff: animation test RED (transition absent),
+  GREEN **3/3**; format, lint, generated-route typecheck and production build
+  **V-AijDMHdnP65EvYEqYUV** exit 0; full tests **1956/248 files** exit 0;
+  development-console **1/1** exit 0. Initial sandbox runs could not bind HTTP
+  servers or download fonts; authorized reruns passed.
+- Live checks at 320/390/768/1470px: theme cycling, button-center animation,
+  retained focus and no overflow; Enter activation and clean console.
+  Production midpoint screenshot confirms the circular theme boundary;
+  browser reduced-motion emulation confirms instant switching.
+  Independent static diff review (Sol/high) found no blockers.
+- Production audit **59/59**, exit 0 (11.1m), using a temporary config with
+  the existing suite on dedicated port 3199 and the fresh build above. The
+  default freshness hook hardcodes 3100, so this isolated run used its own
+  newly started server instead; existing user servers were preserved.
+  Temporary config removed. Records-only ledger check **2/2**, exit 0.
+
+
 Conventions ported from `SmartJobSearchCRM`: evidence cites a SHA, a count, or what a
 review caught — never just "done". Every entry records what it deliberately deferred,
 because scope creep is invisible otherwise.

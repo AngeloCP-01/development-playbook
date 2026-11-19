@@ -1,3 +1,22 @@
+# Kickoff: theme circle reveal
+
+Updated 2026-11-19. Branch `feat/theme-circle-transition` over `5c4350b`.
+User requested implementation directly after reference inspection, bypassing
+brainstorming. Application is committed as `1ac229d`; the user explicitly authorized local
+develop then main merges. No push/deployment requested.
+
+The theme button reveals the new theme through a 560ms expanding circle.
+Reduced motion and unsupported browsers switch instantly. Tests **1956/248**,
+format/lint/typecheck/build and dev-console **1/1** pass. Focused browser checks
+and independent static review pass. Production audit **59/59** passes; its
+temporary config and server are removed.
+Evidence: [tracker](docs/tracker.md#theme-circle-reveal--2026-11-19).
+
+Retain the identified application checks for integration; compare merged
+application trees and check changed records.
+
+Previous promotion handoff follows for historical context.
+
 # Kickoff: develop merged into local main
 
 Updated 2026-11-19. Follow [AGENTS.md](AGENTS.md), especially promotion rules.
