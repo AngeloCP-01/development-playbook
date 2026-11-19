@@ -146,6 +146,13 @@ export const concurrentCases: PublishedCase[] = [
     checks: { 'check.py': boundedChecks },
     checkEntry: 'check.py',
     stdout: '',
+    variants: [
+      {
+        checkEntry: undefined,
+        checks: undefined,
+        stdout: "[0, 2, 4, 6]\n{'workers': 2, 'max_queued': 2}\n",
+      },
+    ],
   },
   {
     name: 'thread outlives cancelled wrapper and stops cooperatively',

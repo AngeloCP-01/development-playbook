@@ -13,11 +13,12 @@ grep it by id, don't read it whole.
 
 ## Overview
 
-**Current state (2026-11-13): develop pushed; Python assessment/design prepared.**
+**Current state (2026-11-19): Python implemented and verified on feature branch; no integration.**
 User authorized pushing develop, then assessing/designing Python with the same
 teaching goal as Node.js & Express. Push **c768af4** succeeded; pre-push typecheck
-and **1841 tests / 242 files** passed. Python design **c6f3986** is approved; the compact implementation plan is ready.
-No Python application changes yet.
+and **1841 tests / 242 files** passed. Python design **c6f3986** and plan are implemented
+from **c0ae407**; application **fb76f25**, closing records and live preview below.
+Python remains unmerged and unpushed.
 
 **Latest integrated work: W-6.3u.2 Node.js & Express.**
 The user approved local no-ff integration of feature tip **1a4cad0** after the
@@ -84,9 +85,10 @@ The single-example width repair followed as `79f9e31`. That width repair was the
 
 On **local develop**, W-3 is **18/18**: all eighteen stages are interactive, merged through **c9e5d07**. W-6 is **28 drawn / 31 registered**, including W-6.3v and W-6.3u.2. W-6.4 is integrated as **b8515a0**; three language placeholders remain open. Older Stage 09/reference/width-repair evidence belongs to those historical trees.
 
-**Next task/model:** implement the approved Python study design/plan in a fresh
-user-selected **GPT-6.1 Sol / Medium** session. Python, Java and Spring Boot remain
-undrawn. Return results here for **GPT-6.1 Sol / High** coordination/review. Main promotion remains the user's.
+**Next task/model:** reader depth feedback and coordination, **GPT-6.1 Sol / High**.
+Python is implemented and verified on `feat/python-study-sheet`; Java and Spring
+Boot remain undrawn. See W-6.3u.3 and KICKOFF for retained checks and live lessons.
+Separate develop integration and user-only main promotion remain outstanding.
 
 Two deliverables from one body of content.
 
@@ -922,7 +924,7 @@ now has **25/30** references. Implementation session: **01a1a431-2038-7931-b6c7-
 Five language sheets, W-6.4, actual product research, push and main promotion
 remain separate. No companion is registered or published by this assessment.
 
-**W-6.3u — Language and framework study sheets ◐** *(JavaScript and Node.js & Express integrated; Python assessment/design; three placeholders remain)*
+**W-6.3u — Language and framework study sheets ◐** *(JavaScript and Node.js & Express integrated; Python verified on feature branch; two feature-branch placeholders remain)*
 
 **User direction, 2026-11-05 (D-101):** for JavaScript, Python, Java, Spring Boot
 and Express & Node, focus on fundamentals, important topics and concepts that
@@ -1260,36 +1262,45 @@ panel. Five coordinator draft trace probes passed on Node22.23.4. New Worker,
 stream and lifetime examples still require implementation-time actual-code checks.
 Return the actual event-loop lesson for reader assessment before integration.
 
-**W-6.3u.3 — Python study reference ◐** *(design approved; compact plan ready; implementation not started)*
+**W-6.3u.3 — Python study reference ☑** *(implemented and verified on feature branch; reader feedback/integration outstanding)*
 
-User selected Python assessment/design on 2026-11-13 with the same goal as
-Node.js & Express: explain fundamentals, trace programs, implement/repair code
-and reason through interview follow-ups. Starting application **c768af4** is now
-pushed to origin/develop. Assessment branch `docs/2026-11-13-python-study-assessment`.
+Implemented from approved handoff **c0ae407** on `feat/python-study-sheet`;
+application **fb76f25** includes the independent review fix. No merge or push.
+The approved [design](superpowers/specs/2026-11-13-python-study-design.md) and
+[plan](superpowers/plans/2026-11-13-python-study.md) are delivered as one canonical
+web/generated-Markdown source. [Sources and runtime provenance](../reference/python-source-research.md).
 
-- [x] Inspect the Python placeholder, shared study contracts and Node depth acceptance.
-- [x] Assess primary Python/PSF/PyPA sources with version and evidence boundaries.
-- [x] Propose teaching structure, activities, actual-code verification and page acceptance.
-- [x] User approved design **c6f3986** with “looks good to me”; compact plan prepared.
-- [ ] Implement in a fresh user-selected **GPT-6.1 Sol / Medium** session.
-- [ ] Verify actual Python programs/repairs, final web gate/dev-console and affected states;
-      obtain one independent final **GPT-6.1 Sol / High** content/page/branch review.
-- [ ] Return live lessons for reader depth feedback and request separate integration approval.
+- [x] Assess sources, select the design and prepare the implementation plan.
+- [x] Implement 45 topics and 45 exclusively owned activities; 16 executable solutions,
+      15 with starters. Split the capstone into a fifteenth panel without cutting
+      code/reasoning. Other thirty generated reference bodies remain byte-identical.
+- [x] Verify all 86 displayed-code locations by exact ownership (70 executable,
+      16 explained fragments), including direct repairs, errors, nested state,
+      iterator/resource lifetime, cancellation, capacity and process cleanup.
+- [x] Verify maintained CPython 3.12.16/3.15.2, final app/browser/development-console
+      checks and one independent Sol High content/page review.
+- [x] Resolve the Important same-topic dependency finding with RED→GREEN render
+      coverage, fresh full suite and page checks. Humanizer editing pass applied.
+- [x] Return live names/objects and asyncio lessons in KICKOFF for reader depth feedback.
+- [ ] Separate user approval/integration into develop; main promotion remains the user's.
 
-[Research](../reference/python-source-research.md),
-[approved design](superpowers/specs/2026-11-13-python-study-design.md),
-[compact plan](superpowers/plans/2026-11-13-python-study.md).
-Selected initial structure: fourteen panels, 45 topics and one owned activity per topic,
-with at least ten coding/repair activities; split where teaching/layout requires.
-Use existing structured teaching/disclosure/solution patterns and generated Markdown.
-Python 3.12+ compatibility, standard library only, explicit maintained interpreter
-provisioning and published-code checks. No browser runtime or new renderer.
+Counts on the feature branch: **29/31** references, **18/18** stages. The tracker
+completion row records the November 13 application checks, review and focused
+reruns; November 19 closing records retain them for unchanged production inputs.
+Current handoff: [KICKOFF](../KICKOFF.md). Recommendation for reader feedback and
+coordination: **GPT-6.1 Sol / High**, coordinator
+**01a1d36c-4998-7d31-91c4-6b41e9694eba**. Implementation session:
+**01a1d3ec-7518-7d72-a49d-9b12a3cf3fde**.
 
-Assessment/coordination recommendation **GPT-6.1 Sol / High**; return results to
-coordinator **01a1d36c-4998-7d31-91c4-6b41e9694eba**. Future implementation starts from its committed
-handoff, not an assumed develop tip, and reports branch/commit, actual checks,
-limits and session reference. Counts stay **28/31**, **18/18** until implementation;
-expected Python delivery **29/31**, with Java and Spring Boot deferred. Implementation, integration and main promotion remain outstanding.
+Deferred minor: prerequisite references are plain text, navigated through named
+rail tabs; inline links need a separate shared teaching-pattern change. Evidence
+is local conventional GIL-enabled macOS; 3.12 omitted unused TLS modules. Hosted
+CI, Windows checker, free-threaded execution, TLS, deployment, throughput and
+learner/interview outcomes are unclaimed. Official source archives supplied the
+maintained runtimes because the uv catalogue was outdated; exact build strings
+are in the source record. Temporary runtimes have expired since those checks.
+Java/Spring Boot, frameworks, browser execution/scoring and renderer changes remain
+out of scope. Integration is a separate user decision.
 
 **W-6.3v — DSA Patterns study reference ☑** *(reviewed and merged locally into develop)*
 

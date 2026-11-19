@@ -350,6 +350,13 @@ none of the displayed programs uses those modules. This is local example
 compatibility evidence, not a complete Python distribution certification.
 The standard hosted setup-python matrix is configured but remains unrun.
 
+Exact `probePython()` build strings, both with `gil: true`:
+
+- `3.12.16 (main, Nov 13 2026, 16:17:03) [Clang 17.0.0 (clang-1700.6.3.2)]`;
+  platform `macOS-26.3-arm64-arm-64bit`.
+- `3.15.2 (main, Nov 13 2026, 16:08:22) [Clang 17.0.0 (clang-1700.6.3.2)]`;
+  platform `macOS-26.3-arm64-arm-64bit-Mach-O`.
+
 Observed version difference: the deliberate import cycle raises ImportError for
 missing `label` from `cycle_b` in both versions. 3.15 changes the diagnostic
 wording, omitting “partially initialized module” and adding a shadowing hint.
@@ -357,3 +364,9 @@ The oracle requires the exception, missing name and module while accepting both
 observed renderings. Completion counts, final source commit, review and app/page
 verification belong in the W-6.3u.3 tracker entry, keeping this as the single
 source/provenance record.
+
+
+Resumption on 2026-11-19 found the application unchanged and the temporary
+runtime directories/logs cleaned. The exact builds above describe the November 13
+verification, not currently installed runtimes. Provision an explicit supported
+interpreter before rerunning; retained release evidence stays tied to fb76f25.
