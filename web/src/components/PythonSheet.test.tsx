@@ -1,0 +1,139 @@
+import { fireEvent, render, screen, within } from '@testing-library/react'
+import { expect, test } from 'vitest'
+import { cheatsheetBySlug } from '@/lib/cheatsheets'
+import { CheatsheetView } from './Cheatsheet'
+
+test('capstone exposes its concrete UTF-8 input beside the program before revealing a solution', () => {
+  window.history.replaceState(null, '', '/reference/python#report-capstone')
+  render(<CheatsheetView sheet={cheatsheetBySlug('python')!} />)
+  fireEvent.click(
+    screen
+      .getByText('Build and defend a validated streaming report')
+      .closest('button')!,
+  )
+  const input = screen.getByLabelText(
+    'books.jsonl — UTF-8 input beside report.py and report_record.py',
+  )
+  expect(input.textContent).toBe(
+    '{"title":"River","count":2}\n{"title":"Hill","count":0}\n{"title":"river","count":3}',
+  )
+  expect(
+    screen
+      .getByRole('button', { name: 'Solution: Implement and test the report' })
+      .getAttribute('aria-expanded'),
+  ).toBe('false')
+})
+
+test('the package repair exposes its entry and both dependencies in the same topic', () => {
+  window.history.replaceState(
+    null,
+    '',
+    '/reference/python#modules-and-environments',
+  )
+  render(<CheatsheetView sheet={cheatsheetBySlug('python')!} />)
+  const button = screen
+    .getByText('Run a package with its import context')
+    .closest('button')!
+  fireEvent.click(button)
+  const topic = within(
+    document.getElementById(button.getAttribute('aria-controls')!)!,
+  )
+  expect(
+    topic.getByLabelText('common.py — cycle repair companion').textContent,
+  ).toContain('name = "River"')
+  expect(
+    topic.getByLabelText('formatter.py — cycle repair companion').textContent,
+  ).toContain('from common import name')
+  fireEvent.click(
+    topic.getByRole('button', {
+      name: 'Solution: Remove the cycle’s back edge',
+    }),
+  )
+  expect(topic.getByText(/from formatter import label/)).toBeTruthy()
+})
+
+test.each([
+  [
+    'iteration-and-generators',
+    'Resume a generator at the demand boundary',
+    'Demand controls parsing',
+    'Exhausted',
+    /Iteration itself is synchronous/,
+  ],
+  [
+    'errors-and-cleanup',
+    'Give cleanup a defined exit boundary',
+    'Cleanup across success and failure',
+    'finally closes the handle before propagation.',
+    /A truthy __exit__ result suppresses/,
+  ],
+])(
+  'Python %s renders the causal trace independently',
+  (hash, title, caption, cell, explanation) => {
+    window.history.replaceState(null, '', '/reference/python#' + hash)
+    render(<CheatsheetView sheet={cheatsheetBySlug('python')!} />)
+    fireEvent.click(screen.getByText(title).closest('button')!)
+    expect(
+      within(screen.getByRole('table', { name: caption })).getByRole('cell', {
+        name: cell,
+      }),
+    ).toBeTruthy()
+    expect(screen.getByText(explanation)).toBeTruthy()
+  },
+)
+
+test('registered Python lesson shows the shared child trace and a local repair that resets', () => {
+  window.history.replaceState(null, '', '/reference/python#names-and-objects')
+  render(<CheatsheetView sheet={cheatsheetBySlug('python')!} />)
+  fireEvent.click(
+    screen.getByText('Copy the child you intend to own').closest('button')!,
+  )
+  const trace = within(
+    screen.getByRole('table', { name: 'Two dictionaries, one child list' }),
+  )
+  expect(
+    trace.getByRole('cell', {
+      name: 'Both dictionaries still refer to the tags list.',
+    }),
+  ).toBeTruthy()
+  expect(
+    screen.getByText(/Replacing an entry differs from mutating its child/),
+  ).toBeTruthy()
+  const name = 'Solution: Independent report requests'
+  const control = screen.getByRole('button', { name })
+  expect(control.getAttribute('aria-expanded')).toBe('false')
+  fireEvent.click(control)
+  expect(screen.getByText(/deepcopy preserves internal sharing/)).toBeTruthy()
+  fireEvent.click(control)
+  expect(control.getAttribute('aria-expanded')).toBe('false')
+  fireEvent.click(control)
+  fireEvent.click(screen.getByRole('tab', { name: /Runtime and syntax/ }))
+  fireEvent.click(screen.getByRole('tab', { name: /Names and objects/ }))
+  fireEvent.click(
+    screen.getByText('Copy the child you intend to own').closest('button')!,
+  )
+  expect(
+    screen.getByRole('button', { name }).getAttribute('aria-expanded'),
+  ).toBe('false')
+})
+
+test('async ownership trace distinguishes a pending sibling from joined cleanup', () => {
+  window.history.replaceState(null, '', '/reference/python#asyncio')
+  render(<CheatsheetView sheet={cheatsheetBySlug('python')!} />)
+  fireEvent.click(
+    screen
+      .getByText('Join cancellation before leaving the owner')
+      .closest('button')!,
+  )
+  const trace = within(
+    screen.getByRole('table', { name: 'TaskGroup owns sibling cleanup' }),
+  )
+  expect(
+    trace.getByRole('cell', {
+      name: 'Sibling finally has run before the caller handles the group error.',
+    }),
+  ).toBeTruthy()
+  expect(
+    screen.getByText(/Cancellation is delivered at a suspension opportunity/),
+  ).toBeTruthy()
+})

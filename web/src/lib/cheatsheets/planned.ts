@@ -8,14 +8,6 @@ import type { Cheatsheet } from './types'
  */
 export const PLANNED: Cheatsheet[] = [
   {
-    slug: 'python',
-    title: 'Python',
-    group: 'Languages',
-    blurb:
-      'Data structures, comprehensions, and the standard library worth knowing.',
-    sections: [],
-  },
-  {
     slug: 'java',
     title: 'Java',
     group: 'Languages',
